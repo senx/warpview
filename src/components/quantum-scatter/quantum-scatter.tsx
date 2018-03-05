@@ -8,23 +8,26 @@ import { GTSLib } from '../../gts.lib';
     shadow: true
 })
 export class QuantumScatter extends GTSLib {
-
-    @Prop() data: string = '[]';
     @Prop() unit: string = '';
     @Prop() type: string = 'line';
     @Prop() chartTitle: string = '';
-    @Prop() options: object = {};
     @Prop() responsive: boolean = false;
+
+    @Prop() data: string = '[]';
+    @Prop() options: object = {};
     @Element() el: HTMLElement;
 
-    @Watch('name')
-    redraw() {
-        this.drawChart();
+    @Watch('data')
+    redraw(newValue: string, oldValue: string) {
+        if(oldValue !== newValue) {
+            this.data = newValue;
+            this.drawChart();
+        }
     }
 
     drawChart() {
-        var ctx = this.el.shadowRoot.querySelector("#myChart");
-        var gts = this.gtsToScatter(JSON.parse(this.data));
+        let ctx = this.el.shadowRoot.querySelector("#myChart");
+        let gts = this.gtsToScatter(JSON.parse(this.data));
         new Chart.Scatter(ctx, {
             data: {
                 datasets: gts.datasets
@@ -51,16 +54,13 @@ export class QuantumScatter extends GTSLib {
     }
 
     componentDidLoad() {
-        console.log('The component has been rendered');
         this.drawChart()
     }
     
     render() {
-        return (
-            <div>
-                <h1>{this.chartTitle}</h1>
-                <canvas id="myChart" width="400" height="400"></canvas>
-            </div>
-        );
+        return <div>
+            <h1>{this.chartTitle}</h1>
+            <canvas id="myChart" width="400" height="400"/>
+        </div>;
     }
 }

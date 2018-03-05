@@ -50,6 +50,41 @@ declare global {
 
 
 import {
+  QuantumPie as QuantumPie
+} from './components/quantum-pie/quantum-pie';
+
+declare global {
+  interface HTMLQuantumPieElement extends QuantumPie, HTMLStencilElement {
+  }
+  var HTMLQuantumPieElement: {
+    prototype: HTMLQuantumPieElement;
+    new (): HTMLQuantumPieElement;
+  };
+  interface HTMLElementTagNameMap {
+    "quantum-pie": HTMLQuantumPieElement;
+  }
+  interface ElementTagNameMap {
+    "quantum-pie": HTMLQuantumPieElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "quantum-pie": JSXElements.QuantumPieAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumPieAttributes extends HTMLAttributes {
+      chartTitle?: string;
+      data?: string;
+      options?: object;
+      responsive?: boolean;
+      type?: string;
+      unit?: string;
+    }
+  }
+}
+
+
+import {
   QuantumScatter as QuantumScatter
 } from './components/quantum-scatter/quantum-scatter';
 
@@ -108,7 +143,10 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumTileAttributes extends HTMLAttributes {
+      chartTitle?: string;
+      responsive?: boolean;
       type?: string;
+      unit?: string;
       url?: string;
     }
   }
