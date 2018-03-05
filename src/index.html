@@ -5,31 +5,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Quantumviz</title>
-  <script src="/build/quantumviz.js"></script>
+  <script src="./build/quantumviz.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
 </head>
 
 <body>
   <div class="container">
+    <quantum-tile url="https://warp.cityzendata.net/api/v0/exec">
+      'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV' 'readToken' STORE
+      [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' '1234' } NOW 3 d  ] FETCH 100 LTTB
+    </quantum-tile>
     <div class="card-deck">
       <div class="card">
         <div class="card-body">
-          <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures" 
+          <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures"
           data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-scatter>
         </div>
       </div>
 
       <div class="card">
           <div class="card-body">
-            <quantum-chart responsive="true" unit="°C" chart-title="Temperatures" 
+            <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
             data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
           </div>
         </div>
 
       <div class="card">
           <div class="card-body">
-            <quantum-chart responsive="true" unit="°C" chart-title="Temperatures" 
+            <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
             type="bar"
             data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
           </div>

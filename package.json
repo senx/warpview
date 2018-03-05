@@ -20,7 +20,8 @@
   "dependencies": {
     "@stencil/core": "^0.6.1",
     "@types/chartjs": "0.0.31",
-    "chart.js": "^2.7.2"
+    "chart.js": "^2.7.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "@stencil/dev-server": "latest",

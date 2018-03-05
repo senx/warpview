@@ -83,4 +83,35 @@ declare global {
   }
 }
 
+
+import {
+  QuantumTile as QuantumTile
+} from './components/quantum-tile/quantum-tile';
+
+declare global {
+  interface HTMLQuantumTileElement extends QuantumTile, HTMLStencilElement {
+  }
+  var HTMLQuantumTileElement: {
+    prototype: HTMLQuantumTileElement;
+    new (): HTMLQuantumTileElement;
+  };
+  interface HTMLElementTagNameMap {
+    "quantum-tile": HTMLQuantumTileElement;
+  }
+  interface ElementTagNameMap {
+    "quantum-tile": HTMLQuantumTileElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "quantum-tile": JSXElements.QuantumTileAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumTileAttributes extends HTMLAttributes {
+      type?: string;
+      url?: string;
+    }
+  }
+}
+
 declare global { namespace JSX { interface StencilJSX {} } }
