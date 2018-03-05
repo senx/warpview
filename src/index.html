@@ -14,7 +14,7 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="card col-6">
+       <!-- <div class="card col-6">
             <div class="card-body">
                 <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" chart-title="Default">
                     'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
@@ -72,7 +72,35 @@
                 </quantum-tile>
             </div>
         </div>
-        <div class="card col-4">
+        <div class="card col-6">
+            <div class="card-body">
+                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut" chart-title="doughnut">
+                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV' 'readToken' STORE
+                    [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'uuid' '5577caaa-efe9-4b37-9a3f-c0b84d2685c2'  } NOW -1 ] FETCH
+                    [ ] 'values' STORE [ ] 'name' STORE
+                    <%
+                    DROP
+                    DUP  NAME [ SWAP ] $name APPEND 'name' STORE
+                    DUP VALUES  $values APPEND 'values' STORE
+                    %> LMAP DROP [ $name $values ] ZIP
+                </quantum-tile>
+            </div>
+        </div>-->
+        <div class="card col-6">
+            <div class="card-body">
+                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar" chart-title="polar">
+                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV' 'readToken' STORE
+                    [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'uuid' '5577caaa-efe9-4b37-9a3f-c0b84d2685c2'  } NOW -1 ] FETCH
+                    [ ] 'values' STORE [ ] 'name' STORE
+                    <%
+                    DROP
+                    DUP  NAME [ SWAP ] $name APPEND 'name' STORE
+                    DUP VALUES  $values APPEND 'values' STORE
+                    %> LMAP DROP [ $name $values ] ZIP
+                </quantum-tile>
+            </div>
+        </div>
+     <!--   <div class="card col-4">
             <div class="card-body">
                 <quantum-pie responsive="true" unit="$" chart-title="A nice pie"
                              data='[["data 1", 20], ["data 2", 30], ["data 3", 80]]'></quantum-pie>
@@ -105,7 +133,7 @@
                                type="bar"
                                data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 </body>

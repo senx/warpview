@@ -85,6 +85,41 @@ declare global {
 
 
 import {
+  QuantumPolar as QuantumPolar
+} from './components/quantum-polar/quantum-polar';
+
+declare global {
+  interface HTMLQuantumPolarElement extends QuantumPolar, HTMLStencilElement {
+  }
+  var HTMLQuantumPolarElement: {
+    prototype: HTMLQuantumPolarElement;
+    new (): HTMLQuantumPolarElement;
+  };
+  interface HTMLElementTagNameMap {
+    "quantum-polar": HTMLQuantumPolarElement;
+  }
+  interface ElementTagNameMap {
+    "quantum-polar": HTMLQuantumPolarElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "quantum-polar": JSXElements.QuantumPolarAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumPolarAttributes extends HTMLAttributes {
+      chartTitle?: string;
+      data?: string;
+      options?: object;
+      responsive?: boolean;
+      type?: string;
+      unit?: string;
+    }
+  }
+}
+
+
+import {
   QuantumScatter as QuantumScatter
 } from './components/quantum-scatter/quantum-scatter';
 

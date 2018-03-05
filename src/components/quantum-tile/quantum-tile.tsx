@@ -27,14 +27,14 @@ export class QuantumTile extends GTSLib {
                 let gtsList = JSON.parse(gtsStr);
                 let data = [];
 
-                if (me.type === 'doughnut' || me.type === 'pie') {
+                if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar') {
                     if (gtsList.length > 0) {
                         if (Array.isArray(gtsList[0])) {
                             gtsList = gtsList[0];
                         }
                     }
                     me.data = JSON.stringify(gtsList);
-                    console.log(me.data)
+                    console.log('QuantumTile', me.data)
                 } else {
                     if (gtsList.length > 0) {
                         if (Array.isArray(gtsList[0])) {
@@ -78,6 +78,10 @@ export class QuantumTile extends GTSLib {
                 responsive={this.responsive} unit={this.unit} data={this.data} chartTitle={this.chartTitle}/>;
         } else if (this.type == 'pie' || this.type == 'doughnut') {
             return <quantum-pie
+                responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+                chartTitle={this.chartTitle}/>;
+        } else if (this.type == 'polar' ) {
+            return <quantum-polar
                 responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
                 chartTitle={this.chartTitle}/>;
         }
