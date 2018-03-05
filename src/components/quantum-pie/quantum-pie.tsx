@@ -48,7 +48,7 @@ export class QuantumPie extends GTSLib {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.parseData(JSON.parse(this.data));
         new Chart(ctx, {
-            type: this.type,
+            type: (this.type === 'gauge')?'doughnut':this.type,
             data: {
                 datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
                 labels: gts.labels
@@ -58,9 +58,27 @@ export class QuantumPie extends GTSLib {
                 tooltips: {
                     mode: 'index',
                     intersect: true,
-                }
+                },
+                circumference: this.getCirc(),
+                rotation: this.getRotation(),
             }
         });
+    }
+
+    getRotation() {
+        if('gauge' === this.type) {
+            return  Math.PI;
+        } else {
+            return -0.5 * Math.PI;
+        }
+    }
+
+    getCirc() {
+        if('gauge' === this.type) {
+            return Math.PI;
+        } else {
+            return 2 * Math.PI;
+        }
     }
 
     componentDidLoad() {

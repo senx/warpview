@@ -27,7 +27,7 @@ export class QuantumTile extends GTSLib {
                 let gtsList = JSON.parse(gtsStr);
                 let data = [];
 
-                if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar') {
+                if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar' || me.type === 'gauge') {
                     if (gtsList.length > 0) {
                         if (Array.isArray(gtsList[0])) {
                             gtsList = gtsList[0];
@@ -76,11 +76,11 @@ export class QuantumTile extends GTSLib {
         } else if (this.type == 'area') {
             return <quantum-chart
                 responsive={this.responsive} unit={this.unit} data={this.data} chartTitle={this.chartTitle}/>;
-        } else if (this.type == 'pie' || this.type == 'doughnut') {
+        } else if (this.type == 'pie' || this.type == 'doughnut' || this.type == 'gauge') {
             return <quantum-pie
                 responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
                 chartTitle={this.chartTitle}/>;
-        } else if (this.type == 'polar' ) {
+        } else if (this.type == 'polar') {
             return <quantum-polar
                 responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
                 chartTitle={this.chartTitle}/>;
