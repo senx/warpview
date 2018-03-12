@@ -15,6 +15,41 @@ declare global {
 
 
 import {
+  QuantumBubble as QuantumBubble
+} from './components/quantum-bubble/quantum-bubble';
+
+declare global {
+  interface HTMLQuantumBubbleElement extends QuantumBubble, HTMLStencilElement {
+  }
+  var HTMLQuantumBubbleElement: {
+    prototype: HTMLQuantumBubbleElement;
+    new (): HTMLQuantumBubbleElement;
+  };
+  interface HTMLElementTagNameMap {
+    "quantum-bubble": HTMLQuantumBubbleElement;
+  }
+  interface ElementTagNameMap {
+    "quantum-bubble": HTMLQuantumBubbleElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "quantum-bubble": JSXElements.QuantumBubbleAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumBubbleAttributes extends HTMLAttributes {
+      chartTitle?: string;
+      data?: string;
+      options?: object;
+      responsive?: boolean;
+      showLegend?: boolean;
+      unit?: string;
+    }
+  }
+}
+
+
+import {
   QuantumChart as QuantumChart
 } from './components/quantum-chart/quantum-chart';
 
@@ -42,6 +77,7 @@ declare global {
       data?: string;
       options?: object;
       responsive?: boolean;
+      showLegend?: boolean;
       type?: string;
       unit?: string;
     }
@@ -77,6 +113,7 @@ declare global {
       data?: string;
       options?: object;
       responsive?: boolean;
+      showLegend?: boolean;
       type?: string;
       unit?: string;
     }
@@ -112,6 +149,7 @@ declare global {
       data?: string;
       options?: object;
       responsive?: boolean;
+      showLegend?: boolean;
       type?: string;
       unit?: string;
     }
@@ -147,7 +185,7 @@ declare global {
       data?: string;
       options?: object;
       responsive?: boolean;
-      type?: string;
+      showLegend?: boolean;
       unit?: string;
     }
   }
@@ -180,6 +218,7 @@ declare global {
     export interface QuantumTileAttributes extends HTMLAttributes {
       chartTitle?: string;
       responsive?: boolean;
+      showLegend?: boolean;
       type?: string;
       unit?: string;
       url?: string;

@@ -12,6 +12,7 @@ export class QuantumChart extends GTSLib {
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
+  @Prop() showLegend: boolean = true;
 
   @Prop() data: string = '[]';
   @Prop() options: object = {};
@@ -34,6 +35,7 @@ export class QuantumChart extends GTSLib {
     let gts = this.gtsToData(data);
     new Chart(ctx, {
       type: (this.interpolations.indexOf(this.type) > -1)?'line':this.type,
+      legend: {display: this.showLegend},
       data: {
         labels: gts.ticks,
         datasets: gts.datasets
@@ -82,10 +84,11 @@ export class QuantumChart extends GTSLib {
           let ds = {
             label: label,
             data: data,
-            pointRadius: 2,
+            pointRadius: 1,
             fill: false,
             steppedLine: this.isStepped(),
             borderColor: color,
+            borderWidth: 1,
             backgroundColor: GTSLib.transparentize(color, 0.5)
           };
           if (d.params && d.params[i] && d.params[i].interpolate) {

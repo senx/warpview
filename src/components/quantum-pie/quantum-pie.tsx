@@ -12,7 +12,7 @@ export class QuantumPie extends GTSLib {
   @Prop() type: string = 'pie';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
-
+  @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
   @Prop() options: object = {};
   @Element() el: HTMLElement;
@@ -49,6 +49,7 @@ export class QuantumPie extends GTSLib {
 
     new Chart(ctx, {
       type: (this.type === 'gauge') ? 'doughnut' : this.type,
+      legend: {display: this.showLegend},
       data: {
         datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
         labels: gts.labels

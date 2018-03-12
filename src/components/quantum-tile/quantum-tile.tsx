@@ -15,13 +15,13 @@ export class QuantumTile extends GTSLib {
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
-
+  @Prop() showLegend: boolean = true;
   @Prop() url: string = '';
   @Element() wsElement: HTMLElement;
 
   graphs = {
     'scatter': ['scatter'],
-    'chart' : ['line', 'spline', 'step-after', 'step-before', 'area', 'bar'],
+    'chart': ['line', 'spline', 'step-after', 'step-before', 'area', 'bar'],
     'pie': ['pie', 'doughnut', 'gauge'],
     'polar': ['polar']
   };
@@ -34,7 +34,7 @@ export class QuantumTile extends GTSLib {
         let gtsList = JSON.parse(gtsStr);
         let data = [];
 
-        if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar' || me.type === 'gauge') {
+        if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar' || me.type === 'gauge' || me.type === 'bubble') {
           if (gtsList.length > 0) {
             if (Array.isArray(gtsList[0])) {
               gtsList = gtsList[0];
@@ -73,23 +73,25 @@ export class QuantumTile extends GTSLib {
 
   render() {
     if (this.graphs['scatter'].indexOf(this.type) > -1) {
-      return <quantum-scatter responsive={this.responsive} unit={this.unit} data={this.data}
-                              chartTitle={this.chartTitle}/>
+      return <quantum-scatter
+        responsive={this.responsive} unit={this.unit} data={this.data}
+        show-legend={this.showLegend} chartTitle={this.chartTitle}/>
     } else if (this.graphs['chart'].indexOf(this.type) > -1) {
       return <quantum-chart
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
+    } else if (this.type == 'bubble') {
+      return <quantum-bubble
+        show-legend={this.showLegend} responsive={this.responsive} unit={this.unit} data={this.data}
         chartTitle={this.chartTitle}/>;
-    }/* else if (this.type == 'area') {
-      return <quantum-chart
-        responsive={this.responsive} unit={this.unit} data={this.data} chartTitle={this.chartTitle}/>;
-    }*/ else if (this.graphs['pie'].indexOf(this.type) > -1) {
+    } else if (this.graphs['pie'].indexOf(this.type) > -1) {
       return <quantum-pie
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
-        chartTitle={this.chartTitle}/>;
+        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
     } else if (this.graphs['polar'].indexOf(this.type) > -1) {
       return <quantum-polar
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
-        chartTitle={this.chartTitle}/>;
+        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
     }
   }
 }

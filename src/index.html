@@ -12,9 +12,20 @@
 </head>
 
 <body>
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bubble"
+                      chart-title="Bubbles">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV' 'readToken' STORE
+          [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW 30 m ] FETCH
+          10 LTTB
+          <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * $val 10 / ] %> LMAP } %> LMAP
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
                       chart-title="Default">
@@ -27,7 +38,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step-before"
                       chart-title="step-before">
@@ -40,7 +51,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="spline"
                       chart-title="spline">
@@ -53,7 +64,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
                       chart-title="Area">
@@ -66,7 +77,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
                       chart-title="Scatter">
@@ -75,11 +86,11 @@
           [ $readToken
           '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
           'cityzendata' } NOW 1
-          d ] FETCH 100 LTTB
+          d ] FETCH 10 LTTB
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
                       chart-title="Bar">
@@ -92,7 +103,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
                       chart-title="gauge">
@@ -106,7 +117,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
                       chart-title="pie">
@@ -120,7 +131,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
                       chart-title="doughnut">
@@ -134,7 +145,7 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-6">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
                       chart-title="polar">
@@ -148,34 +159,34 @@
         </quantum-tile>
       </div>
     </div>
-    <div class="card col-4">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-pie responsive="true" unit="$" chart-title="A nice pie"
                      data='[["data 1", 20], ["data 2", 30], ["data 3", 80]]'></quantum-pie>
       </div>
     </div>
-    <div class="card col-4">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-pie responsive="true" unit="$" chart-title="A nice donut" type="doughnut"
                      data='[["eu.amzair.input.inlet.primary.circ",110],["eu.amzair.input.evd.suct.temp",107],["eu.amzair.input.outlet.primary.circ",123],["eu.amzair.input.temp.discharge",110]]'></quantum-pie>
       </div>
     </div>
 
-    <div class="card col-4">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures"
                          data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-scatter>
       </div>
     </div>
 
-    <div class="card col-4">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
                        data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-chart>
       </div>
     </div>
 
-    <div class="card col-4">
+    <div class="card col-lg-4 col-md-12">
       <div class="card-body">
         <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
                        type="bar"
