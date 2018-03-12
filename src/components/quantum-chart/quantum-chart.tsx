@@ -17,6 +17,8 @@ export class QuantumChart extends GTSLib {
   @Prop() options: object = {};
   @Element() el: HTMLElement;
 
+  interpolations = ['spline', 'step-before', 'step-after', 'area'];
+
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
@@ -31,88 +33,12 @@ export class QuantumChart extends GTSLib {
     if (!data) return;
     let gts = this.gtsToData(data);
     new Chart(ctx, {
-      type: this.type,
+      type: (this.interpolations.indexOf(this.type) > -1)?'line':this.type,
       data: {
         labels: gts.ticks,
         datasets: gts.datasets
       },
       options: {
-        /*  tooltips: {
-
-              enabled: false,
-
-              custom: function(tooltipModel) {
-                  // Tooltip Element
-                  var tooltipEl = document.getElementById('chartjs-tooltip');
-
-                  // Create element on first render
-                  if (!tooltipEl) {
-                      tooltipEl = document.createElement('div');
-                      tooltipEl.id = 'chartjs-tooltip';
-                      tooltipEl.innerHTML = "<table></table>";
-                      document.body.appendChild(tooltipEl);
-                  }
-
-                  // Hide if no tooltip
-                  if (tooltipModel.opacity === 0) {
-                      tooltipEl.style.opacity = '0';
-                      return;
-                  }
-
-                  // Set caret Position
-                  tooltipEl.classList.remove('above', 'below', 'no-transform');
-                  if (tooltipModel.yAlign) {
-                      tooltipEl.classList.add(tooltipModel.yAlign);
-                  } else {
-                      tooltipEl.classList.add('no-transform');
-                  }
-
-                  function getBody(bodyItem) {
-                      return bodyItem.lines;
-                  }
-
-                  // Set Text
-                  if (tooltipModel.body) {
-                      var titleLines = tooltipModel.title || [];
-                      var bodyLines = tooltipModel.body.map(getBody);
-
-                      var innerHtml = '<thead>';
-
-                      titleLines.forEach(function(title) {
-                          innerHtml += '<tr><th>' + title + '</th></tr>';
-                      });
-                      innerHtml += '</thead><tbody>';
-
-                      bodyLines.forEach(function(body, i) {
-                          var colors = tooltipModel.labelColors[i];
-                          var style = 'background:' + colors.backgroundColor;
-                          style += '; border-color:' + colors.borderColor;
-                          style += '; border-width: 2px';
-                          var span = '<span style="' + style + '"></span>';
-                          innerHtml += '<tr><td>' + span + body + '</td></tr>';
-                      });
-                      innerHtml += '</tbody>';
-
-                      var tableRoot = tooltipEl.querySelector('table');
-                      tableRoot.innerHTML = innerHtml;
-                  }
-
-                  // `this` will be the overall tooltip
-                  var position = this._chart.canvas.getBoundingClientRect();
-
-                  // Display, position, and set styles for font
-                  tooltipEl.style.opacity = '1';
-                  tooltipEl.style.position = 'absolute';
-                  tooltipEl.style.left =  position.x + 'px';
-                  tooltipEl.style.bottom = position.y + 'px';
-                  tooltipEl.style.backgroundColor = 'rgba(0,0,0,0.5)'
-                  tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily;
-                  tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px';
-                  tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle;
-                  tooltipEl.style.padding = tooltipModel.yPadding + 'px ' + tooltipModel.xPadding + 'px';
-              }
-          },*/
-
         tooltips: {
           mode: 'index',
           position: 'nearest'
@@ -120,10 +46,6 @@ export class QuantumChart extends GTSLib {
         scales: {
           xAxes: [{
             type: 'time',
-            /*	distribution: 'series',
-                ticks: {
-                    source: 'labels'
-                }*/
           }],
           yAxes: [{
             scaleLabel: {
@@ -135,6 +57,61 @@ export class QuantumChart extends GTSLib {
         responsive: this.responsive
       }
     });
+  }
+
+  gtsToData(gts) {
+    let datasets = [];
+    let ticks = [];
+    gts.forEach(d => {
+      if (d.gts)
+        for (let i = 0; i < d.gts.length; i++) {
+          let g = d.gts[i];
+          let data = [];
+          g.v.forEach(d => {
+            ticks.push(d[0] / 10000);
+            data.push(d[d.length - 1])
+          });
+          let color = this.getColor(i);
+          if (d.params && d.params[i] && d.params[i].color) {
+            color = d.params[i].color
+          }
+          let label = `${g.c} - ${JSON.stringify(g.l)}`;
+          if (d.params && d.params[i] && d.params[i].key) {
+            label = d.params[i].key
+          }
+          let ds = {
+            label: label,
+            data: data,
+            pointRadius: 2,
+            fill: false,
+            steppedLine: this.isStepped(),
+            borderColor: color,
+            backgroundColor: GTSLib.transparentize(color, 0.5)
+          };
+          if (d.params && d.params[i] && d.params[i].interpolate) {
+            switch (d.params[i].interpolate) {
+              case 'line':
+                ds['lineTension'] = 0;
+                break;
+              case 'spline':
+                break;
+              case 'area':
+                ds.fill = true
+            }
+          }
+          datasets.push(ds)
+        }
+    });
+    return {datasets: datasets, ticks: GTSLib.unique(ticks)}
+  }
+
+
+  isStepped() {
+    if(this.type.startsWith('step')) {
+      return this.type.replace('step-', '');
+    } else {
+      return false;
+    }
   }
 
   componentDidLoad() {

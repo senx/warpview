@@ -19,6 +19,13 @@ export class QuantumTile extends GTSLib {
   @Prop() url: string = '';
   @Element() wsElement: HTMLElement;
 
+  graphs = {
+    'scatter': ['scatter'],
+    'chart' : ['line', 'spline', 'step-after', 'step-before', 'area', 'bar'],
+    'pie': ['pie', 'doughnut', 'gauge'],
+    'polar': ['polar']
+  };
+
   componentDidLoad() {
     this.warpscript = this.wsElement.textContent;
     let me = this;
@@ -34,7 +41,6 @@ export class QuantumTile extends GTSLib {
             }
           }
           me.data = JSON.stringify(gtsList);
-          console.log('QuantumTile', me.data)
         } else {
           if (gtsList.length > 0) {
             if (Array.isArray(gtsList[0])) {
@@ -66,21 +72,21 @@ export class QuantumTile extends GTSLib {
   }
 
   render() {
-    if (this.type == 'scatter') {
+    if (this.graphs['scatter'].indexOf(this.type) > -1) {
       return <quantum-scatter responsive={this.responsive} unit={this.unit} data={this.data}
                               chartTitle={this.chartTitle}/>
-    } else if (this.type == 'line' || this.type == 'bar' || this.type == 'spline') {
+    } else if (this.graphs['chart'].indexOf(this.type) > -1) {
       return <quantum-chart
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
         chartTitle={this.chartTitle}/>;
-    } else if (this.type == 'area') {
+    }/* else if (this.type == 'area') {
       return <quantum-chart
         responsive={this.responsive} unit={this.unit} data={this.data} chartTitle={this.chartTitle}/>;
-    } else if (this.type == 'pie' || this.type == 'doughnut' || this.type == 'gauge') {
+    }*/ else if (this.graphs['pie'].indexOf(this.type) > -1) {
       return <quantum-pie
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
         chartTitle={this.chartTitle}/>;
-    } else if (this.type == 'polar') {
+    } else if (this.graphs['polar'].indexOf(this.type) > -1) {
       return <quantum-polar
         responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
         chartTitle={this.chartTitle}/>;

@@ -2,153 +2,187 @@
 <html dir="ltr" lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-    <title>Quantumviz</title>
-    <script src="/build/quantumviz.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Quantumviz</title>
+  <script src="/build/quantumviz.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
 </head>
 
 <body>
 <div class="container">
-    <div class="row">
-       <!-- <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
-                              chart-title="Default">
-                              'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                              'readToken' STORE
-                              [ $readToken
-                              '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW 30
-                              m ] FETCH 100 LTTB
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
-                              chart-title="Area">
-                              'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                              'readToken' STORE
-                              [ $readToken
-                              '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW 30
-                              m ] FETCH 100 LTTB
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
-                              chart-title="Scatter">
-                              'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                              'readToken' STORE
-                              [ $readToken
-                              '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW 1
-                              d ] FETCH 100 LTTB
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
-                              chart-title="Bar">
-                              'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                              'readToken' STORE
-                              [ $readToken
-                              '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW 30
-                              m ] FETCH 5 LTTB
-                </quantum-tile>
-            </div>
-        </div>-->
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
-                              chart-title="gauge">
-                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                    'readToken' STORE
-                    [ $readToken
-                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW -1 ] FETCH
-                    NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-                </quantum-tile>
-            </div>
-        </div>
-      <!--  <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
-                              chart-title="pie">
-                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                    'readToken' STORE
-                    [ $readToken
-                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' {  'serial' 'cityzendata'  } NOW -1 ] FETCH
-                    NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
-                              chart-title="doughnut">
-                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                    'readToken' STORE
-                    [ $readToken
-                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'  {  'serial' 'cityzendata'  } NOW -1 ] FETCH
-                    NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-6">
-            <div class="card-body">
-                <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
-                              chart-title="polar">
-                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                    'readToken' STORE
-                    [ $readToken
-                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'  {  'serial' 'cityzendata'  } NOW -1 ] FETCH
-                    NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-                </quantum-tile>
-            </div>
-        </div>
-        <div class="card col-4">
-            <div class="card-body">
-                <quantum-pie responsive="true" unit="$" chart-title="A nice pie"
-                             data='[["data 1", 20], ["data 2", 30], ["data 3", 80]]'></quantum-pie>
-            </div>
-        </div>
-        <div class="card col-4">
-            <div class="card-body">
-                <quantum-pie responsive="true" unit="$" chart-title="A nice donut" type="doughnut"
-                             data='[["eu.amzair.input.inlet.primary.circ",110],["eu.amzair.input.evd.suct.temp",107],["eu.amzair.input.outlet.primary.circ",123],["eu.amzair.input.temp.discharge",110]]'></quantum-pie>
-            </div>
-        </div>
-
-        <div class="card col-4">
-            <div class="card-body">
-                <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures"
-                                 data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-scatter>
-            </div>
-        </div>
-
-        <div class="card col-4">
-            <div class="card-body">
-                <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
-                               data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-chart>
-            </div>
-        </div>
-
-        <div class="card col-4">
-            <div class="card-body">
-                <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
-                               type="bar"
-                               data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
-            </div>
-        </div>-->
+  <div class="row">
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                      chart-title="Default">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 30
+          m ] FETCH 50 LTTB
+        </quantum-tile>
+      </div>
     </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step-before"
+                      chart-title="step-before">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 30
+          m ] FETCH 10 LTTB
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="spline"
+                      chart-title="spline">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 30
+          m ] FETCH 10 LTTB
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
+                      chart-title="Area">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 30
+          m ] FETCH 100 LTTB
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
+                      chart-title="Scatter">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 1
+          d ] FETCH 100 LTTB
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
+                      chart-title="Bar">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW 30
+          m ] FETCH 5 LTTB
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
+                      chart-title="gauge">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW -1 ] FETCH
+          NOW 24 h TIMECLIP NONEMPTY
+          <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
+                      chart-title="pie">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW -1 ] FETCH
+          NOW 24 h TIMECLIP NONEMPTY
+          <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
+                      chart-title="doughnut">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW -1 ] FETCH
+          NOW 24 h TIMECLIP NONEMPTY
+          <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-6">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
+                      chart-title="polar">
+          'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+          'readToken' STORE
+          [ $readToken
+          '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial'
+          'cityzendata' } NOW -1 ] FETCH
+          NOW 24 h TIMECLIP NONEMPTY
+          <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+        </quantum-tile>
+      </div>
+    </div>
+    <div class="card col-4">
+      <div class="card-body">
+        <quantum-pie responsive="true" unit="$" chart-title="A nice pie"
+                     data='[["data 1", 20], ["data 2", 30], ["data 3", 80]]'></quantum-pie>
+      </div>
+    </div>
+    <div class="card col-4">
+      <div class="card-body">
+        <quantum-pie responsive="true" unit="$" chart-title="A nice donut" type="doughnut"
+                     data='[["eu.amzair.input.inlet.primary.circ",110],["eu.amzair.input.evd.suct.temp",107],["eu.amzair.input.outlet.primary.circ",123],["eu.amzair.input.temp.discharge",110]]'></quantum-pie>
+      </div>
+    </div>
+
+    <div class="card col-4">
+      <div class="card-body">
+        <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures"
+                         data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-scatter>
+      </div>
+    </div>
+
+    <div class="card col-4">
+      <div class="card-body">
+        <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
+                       data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-chart>
+      </div>
+    </div>
+
+    <div class="card col-4">
+      <div class="card-body">
+        <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
+                       type="bar"
+                       data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 

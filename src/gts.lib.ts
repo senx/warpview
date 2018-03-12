@@ -1,6 +1,6 @@
 export class GTSLib {
 
-  color = ['#F44336', '#9C27B0', '#3F51B5', '#2196F3', '#009688', '#CDDC39', '#8BC34A', '#FFC107', '#795548', '#607D8B'];
+  color = ['#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#607D8B'];
 
   /**
    * Get a color from index
@@ -407,48 +407,4 @@ export class GTSLib {
     return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
   }
 
-  gtsToData(gts) {
-    let datasets = [];
-    let ticks = [];
-    gts.forEach(d => {
-      if (d.gts)
-        for (let i = 0; i < d.gts.length; i++) {
-          let g = d.gts[i];
-          let data = [];
-          g.v.forEach(d => {
-            ticks.push(d[0] / 10000);
-            data.push(d[d.length - 1])
-          });
-          let color = this.getColor(i);
-          if (d.params && d.params[i] && d.params[i].color) {
-            color = d.params[i].color
-          }
-          let label = `${g.c} - ${JSON.stringify(g.l)}`;
-          if (d.params && d.params[i] && d.params[i].key) {
-            label = d.params[i].key
-          }
-          let ds = {
-            label: label,
-            data: data,
-            pointRadius: 2,
-            fill: false,
-            borderColor: color,
-            backgroundColor: GTSLib.transparentize(color, 0.5)
-          };
-          if (d.params && d.params[i] && d.params[i].interpolate) {
-            switch (d.params[i].interpolate) {
-              case 'line':
-                ds['lineTension'] = 0;
-                break;
-              case 'spline':
-                break;
-              case 'area':
-                ds.fill = true
-            }
-          }
-          datasets.push(ds)
-        }
-    });
-    return {datasets: datasets, ticks: GTSLib.unique(ticks)}
-  }
 }

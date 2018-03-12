@@ -28,13 +28,12 @@ export class QuantumPolar extends GTSLib {
   generateColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
-      color.push(this.getColor(i));
+      color.push(GTSLib.transparentize(this.getColor(i), 0.5));
     }
     return color;
   }
 
   parseData(gts) {
-    console.log(gts)
     let labels = [];
     let datas = [];
     gts.forEach(d => {
