@@ -37,10 +37,6 @@ export class QuantumBubble extends GTSLib {
       },
       options: {
         borderWidth: 1,
-        tooltips: {
-          mode: 'index',
-          position: 'nearest'
-        },
         responsive: this.responsive
       }
     });
