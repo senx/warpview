@@ -1,424 +1,454 @@
-
 export class GTSLib {
 
-    color = ['#F44336', '#9C27B0', '#3F51B5', '#2196F3', '#009688', '#CDDC39', '#8BC34A', '#FFC107', '#795548', '#607D8B']
+  color = ['#F44336', '#9C27B0', '#3F51B5', '#2196F3', '#009688', '#CDDC39', '#8BC34A', '#FFC107', '#795548', '#607D8B'];
 
-    getColor(i) {
-        return this.color[i % this.color.length]
+  /**
+   * Get a color from index
+   * @param i
+   * @returns {string}
+   */
+  getColor(i) {
+    return this.color[i % this.color.length]
+  }
+
+  /**
+   * Return a Set
+   * @param arr
+   * @returns {any[]}
+   */
+  static unique(arr) {
+    let u = {}, a = [];
+    for (let i = 0, l = arr.length; i < l; ++i) {
+      if (!u.hasOwnProperty(arr[i])) {
+        a.push(arr[i]);
+        u[arr[i]] = 1;
+      }
     }
+    return a;
+  }
 
-    static unique(arr) {
-        let u = {}, a = [];
-        for (let i = 0, l = arr.length; i < l; ++i) {
-            if (!u.hasOwnProperty(arr[i])) {
-                a.push(arr[i]);
-                u[arr[i]] = 1;
-            }
-        }
-        return a;
-    }
+  /**
+   * Convert hex to RGB
+   * @param hex
+   * @returns {number[]}
+   */
+  static hexToRgb(hex) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [
+      parseInt(result[1], 16),
+      parseInt(result[2], 16),
+      parseInt(result[3], 16)
+    ] : null;
+  }
 
-    static hexToRgb(hex) {
-        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? [
-            parseInt(result[1], 16),
-            parseInt(result[2], 16),
-            parseInt(result[3], 16)
-        ] : null;
-    }
+  /**
+   * Add an alpha channel
+   * @param color
+   * @param {number} alpha
+   * @returns {string}
+   */
+  static transparentize(color, alpha: number): string {
+    return 'rgba(' + GTSLib.hexToRgb(color).concat(alpha).join(',') + ')';
+  }
 
-    static transparentize(color, alpha: number): string {
-        return 'rgba(' + GTSLib.hexToRgb(color).concat(alpha).join(',') + ')';
-    }
-
-    gtsToScatter(gts) {
-        let datasets = [];
-        gts.forEach(d => {
-            for (let i = 0; i < d.gts.length; i++) {
-                let g = d.gts[i];
-                let data = [];
-                g.v.forEach(d => {
-                    data.push({x: d[0] / 10000, y: d[d.length - 1]})
-                });
-                let color = this.getColor(i);
-                if (d.params && d.params[i] && d.params[i].color) {
-                    color = d.params[i].color
-                }
-                let label = `${g.c} - ${JSON.stringify(g.l)}`;
-                if (d.params && d.params[i] && d.params[i].key) {
-                    label = d.params[i].key
-                }
-                let ds = {
-                    label: label,
-                    data: data,
-                    pointRadius: 2,
-                    fill: false,
-                    borderColor: color,
-                    backgroundColor: GTSLib.transparentize(color, 0.5)
-                };
-                if (d.params && d.params[i] && d.params[i].interpolate) {
-                    switch (d.params[i].interpolate) {
-                        case 'line':
-                            ds['lineTension'] = 0;
-                            break;
-                        case 'spline':
-                            break;
-                        case 'area':
-                            ds.fill = true
-                    }
-                }
-                datasets.push(ds)
-            }
+  /**
+   * Convert a GTS into scatter data
+   * @param gts
+   * @returns {{datasets: any[]; ticks: any[]}}
+   */
+  gtsToScatter(gts) {
+    let datasets = [];
+    gts.forEach(d => {
+      for (let i = 0; i < d.gts.length; i++) {
+        let g = d.gts[i];
+        let data = [];
+        g.v.forEach(d => {
+          data.push({x: d[0] / 10000, y: d[d.length - 1]})
         });
-        return {datasets: datasets, ticks: []}
-    }
-
-    isArray(value) {
-        return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
-            && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
-    }
-
-    isValidResponse(data) {
-        let response;
-        try {
-            response = JSON.parse(data);
-        } catch (e) {
-            console.error('Response non JSON compliant', data);
-            return false;
+        let color = this.getColor(i);
+        if (d.params && d.params[i] && d.params[i].color) {
+          color = d.params[i].color
         }
-        if (!this.isArray(response)) {
-            console.error('Response isn\'t an Array', response);
-            return false;
+        let label = `${g.c} - ${JSON.stringify(g.l)}`;
+        if (d.params && d.params[i] && d.params[i].key) {
+          label = d.params[i].key
         }
-        return true;
-    }
-
-    isEmbeddedImage(item) {
-        return !(typeof item !== 'string' || !/^data:image/.test(item));
-    }
-
-    isEmbeddedImageObject(item) {
-        return !((item === null) || (item.image === null) ||
-            (item.caption === null) || !this.isEmbeddedImage(item.image));
-    }
-
-    isPositionArray(item) {
-        if (!item || !item.positions) {
-            return false;
-        }
-        if (this.isPositionsArrayWithValues(item) || this.isPositionsArrayWithTwoValues(item)) {
-            return true;
-        }
-        for (let i in item.positions) {
-            if (item.positions[i].length < 2 || item.positions[i].length > 3) {
-                return false;
-            }
-            for (let j in item.positions[i]) {
-                if (typeof item.positions[i][j] !== 'number') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    isPositionsArrayWithValues(item) {
-        if ((item === null) || (item.positions === null)) {
-            return false;
-        }
-        for (let i in item.positions) {
-            if (item.positions[i].length !== 3) {
-                return false;
-            }
-            for (let j in item.positions[i]) {
-                if (typeof item.positions[i][j] !== 'number') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    isPositionsArrayWithTwoValues(item) {
-        if ((item === null) || (item.positions === null)) {
-            return false;
-        }
-        for (let i in item.positions) {
-            if (item.positions[i].length !== 4) {
-                return false;
-            }
-            for (let j in item.positions[i]) {
-                if (typeof item.positions[i][j] !== 'number') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    metricFromJSON(json) {
-        let metric = {
-            ts: json[0],
-            value: undefined,
-            alt: undefined,
-            lon: undefined,
-            lat: undefined
+        let ds = {
+          label: label,
+          data: data,
+          pointRadius: 2,
+          fill: false,
+          borderColor: color,
+          backgroundColor: GTSLib.transparentize(color, 0.5)
         };
-        switch (json.length) {
-            case 2:
-                metric.value = json[1];
-                break;
-            case 3:
-                metric.alt = json[1];
-                metric.value = json[2];
-                break;
-            case 4:
-                metric.lat = json[1];
-                metric.lon = json[2];
-                metric.value = json[3];
-                break;
-            case 5:
-                metric.lat = json[1];
-                metric.lon = json[2];
-                metric.alt = json[3];
-                metric.value = json[4];
+        if (d.params && d.params[i] && d.params[i].interpolate) {
+          switch (d.params[i].interpolate) {
+            case 'line':
+              ds['lineTension'] = 0;
+              break;
+            case 'spline':
+              break;
+            case 'area':
+              ds.fill = true
+          }
         }
-        return metric;
-    }
+        datasets.push(ds)
+      }
+    });
+    return {datasets: datasets, ticks: []}
+  }
 
-    gtsFromJSON(json, id) {
-        return {
-            gts: {
-                c: json.c,
-                l: json.l,
-                a: json.a,
-                v: json.v,
-                id: id,
-            },
-        };
-    }
+  /**
+   * Test if value is an array
+   * @param value
+   * @returns {any | boolean}
+   */
+  isArray(value) {
+    return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
+      && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
+  }
 
-    gtsFromJSONList(jsonList, prefixId) {
-        let gts;
-        let gtsList = [];
-        let i;
-        let id;
-        for (i = 0; i < jsonList.length; i++) {
-            gts = jsonList[i];
-            if ((prefixId !== undefined) && (prefixId !== '')) {
-                id = prefixId + '-' + i;
-            } else {
-                id = '' + i;
-            }
-            if (this.isArray(gts)) {
-                gtsList.push(this.gtsFromJSONList(gts, id));
-            }
-            if (this.isGts(gts)) {
-                gtsList.push(this.gtsFromJSON(gts, id));
-            }
-            if (this.isEmbeddedImage(gts)) {
-                gtsList.push({
-                    image: gts,
-                    caption: 'Image',
-                    id: id,
-                });
-            }
-            if (this.isEmbeddedImageObject(gts)) {
-                gtsList.push({
-                    image: gts.image,
-                    caption: gts.caption,
-                    id: id,
-                });
-            }
-        }
-        return {
-            content: gtsList,
-        };
+  isValidResponse(data) {
+    let response;
+    try {
+      response = JSON.parse(data);
+    } catch (e) {
+      console.error('Response non JSON compliant', data);
+      return false;
     }
-
-    flattenGtsIdArray(a, r) {
-        let elem;
-        let j;
-        if (!r) {
-            r = [];
-        }
-        for (j = 0; j < a.content.length; j++) {
-            elem = a.content[j];
-            if (elem.content) {
-                this.flattenGtsIdArray(elem, r);
-            } else {
-                if (elem.gts) {
-                    r.push(elem.gts);
-                }
-            }
-        }
-        return r;
+    if (!this.isArray(response)) {
+      console.error('Response isn\'t an Array', response);
+      return false;
     }
+    return true;
+  }
 
-    serializeGtsMetadata(gts) {
-        let serializedLabels = [];
-        Object.keys(gts.l).forEach((key) => {
-            serializedLabels.push(key + '=' + gts.l[key]);
-        });
-        return (gts.id ? (gts.id + ' ') : '') + gts.c + '{' + serializedLabels.join(',') + '}';
+  isEmbeddedImage(item) {
+    return !(typeof item !== 'string' || !/^data:image/.test(item));
+  }
+
+  isEmbeddedImageObject(item) {
+    return !((item === null) || (item.image === null) ||
+      (item.caption === null) || !this.isEmbeddedImage(item.image));
+  }
+
+  isPositionArray(item) {
+    if (!item || !item.positions) {
+      return false;
     }
-
-    gtsToPath(gts) {
-        let path = [];
-        // Sort values
-        gts.v = gts.v.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-        for (let i = 0; i < gts.v.length; i++) {
-            let metric = gts.v[i];
-            if (metric.length === 2) {
-                // timestamp, value
-            }
-            if (metric.length === 3) {
-                // timestamp, elevation, value
-            }
-            if (metric.length === 4) {
-                // timestamp, lat, lon, value
-                path.push({ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: metric[2], val: metric[3]});
-            }
-            if (metric.length === 5) {
-                // timestamp, lat, lon, elevation, value
-                path.push({
-                    ts: Math.floor(metric[0] / 1000),
-                    lat: metric[1],
-                    lon: metric[2],
-                    elev: metric[3],
-                    val: metric[4],
-                });
-            }
-        }
-        return path;
+    if (this.isPositionsArrayWithValues(item) || this.isPositionsArrayWithTwoValues(item)) {
+      return true;
     }
-
-    equalMetadata(a, b) {
-        if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
-            !(a.l instanceof Object) || !(b.l instanceof Object)) {
-            console.error('[warp10-gts-tools] equalMetadata - Error in GTS, metadata is not well formed');
-            return false;
-        }
-        if (a.c !== b.c) {
-            return false;
-        }
-        for (let p in a.l) {
-            if (!b.l.hasOwnProperty(p)) return false;
-            if (a.l[p] !== b.l[p]) return false;
-        }
-        for (let p in b.l) {
-            if (!a.l.hasOwnProperty(p)) return false;
-        }
-        return true;
-    }
-
-    isGts(item) {
-        return !(!item || item === null || item.c === null || item.l === null ||
-            item.a === null || item.v === null || !this.isArray(item.v));
-    }
-
-    isGtsToPlot(gts) {
-        if (!this.isGts(gts) || gts.v.length === 0) {
-            return false;
-        }
-        // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
-        // if it's a number it's a GTS to plot
-        for (let i = 0; i < gts.v.length; i++) {
-            if (gts.v[i][gts.v[i].length - 1] !== null) {
-                // console.log("[warp10-gts-tools] isGtsToPlot - First value type", gts.v[i][gts.v[i].length - 1] );
-                if (typeof (gts.v[i][gts.v[i].length - 1]) === 'number' ||
-                    // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
-                    gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed !== undefined) {
-                    return true;
-                }
-                break;
-            }
-        }
+    for (let i in item.positions) {
+      if (item.positions[i].length < 2 || item.positions[i].length > 3) {
         return false;
+      }
+      for (let j in item.positions[i]) {
+        if (typeof item.positions[i][j] !== 'number') {
+          return false;
+        }
+      }
     }
+    return true;
+  }
 
-    isGtsToAnnotate (gts) {
-        if (!this.isGts(gts) || gts.v.length === 0) {
-            return false;
-        }
-        // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
-        // if it's a number it's a GTS to plot
-        for (let i = 0; i < gts.v.length; i++) {
-            if (gts.v[i][gts.v[i].length - 1] !== null) {
-                if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'number' &&
-                    (!!gts.v[i][gts.v[i].length - 1].constructor &&
-                        gts.v[i][gts.v[i].length - 1].constructor.name !== 'Big') &&
-                    gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed === undefined) {
-                    return true;
-                }
-                break;
-            }
-        }
+  isPositionsArrayWithValues(item) {
+    if ((item === null) || (item.positions === null)) {
+      return false;
+    }
+    for (let i in item.positions) {
+      if (item.positions[i].length !== 3) {
         return false;
-    }
-
-    gtsSort(gts) {
-        if (gts.isSorted) {
-            return;
+      }
+      for (let j in item.positions[i]) {
+        if (typeof item.positions[i][j] !== 'number') {
+          return false;
         }
-        gts.v = gts.v.sort(function (a, b) {
-            return a[0] - b[0];
-        });
-        gts.isSorted = true;
+      }
     }
+    return true;
+  }
 
-    gtsTimeRange(gts) {
-        this.gtsSort(gts);
-        if (gts.v.length === 0) {
-            return null;
+  isPositionsArrayWithTwoValues(item) {
+    if ((item === null) || (item.positions === null)) {
+      return false;
+    }
+    for (let i in item.positions) {
+      if (item.positions[i].length !== 4) {
+        return false;
+      }
+      for (let j in item.positions[i]) {
+        if (typeof item.positions[i][j] !== 'number') {
+          return false;
         }
-        return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
+      }
     }
+    return true;
+  }
 
-    gtsToData(gts) {
-        let datasets = [];
-        let ticks = [];
-        gts.forEach(d => {
-            if (d.gts)
-                for (let i = 0; i < d.gts.length; i++) {
-                    let g = d.gts[i];
-                    let data = [];
-                    g.v.forEach(d => {
-                        ticks.push(d[0] / 10000);
-                        data.push(d[d.length - 1])
-                    });
-                    let color = this.getColor(i);
-                    if (d.params && d.params[i] && d.params[i].color) {
-                        color = d.params[i].color
-                    }
-                    let label = `${g.c} - ${JSON.stringify(g.l)}`;
-                    if (d.params && d.params[i] && d.params[i].key) {
-                        label = d.params[i].key
-                    }
-                    let ds = {
-                        label: label,
-                        data: data,
-                        pointRadius: 2,
-                        fill: false,
-                        borderColor: color,
-                        backgroundColor: GTSLib.transparentize(color, 0.5)
-                    };
-                    if (d.params && d.params[i] && d.params[i].interpolate) {
-                        switch (d.params[i].interpolate) {
-                            case 'line':
-                                ds['lineTension'] = 0;
-                                break;
-                            case 'spline':
-                                break;
-                            case 'area':
-                                ds.fill = true
-                        }
-                    }
-                    datasets.push(ds)
-                }
-        });
-        return {datasets: datasets, ticks: GTSLib.unique(ticks)}
+  metricFromJSON(json) {
+    let metric = {
+      ts: json[0],
+      value: undefined,
+      alt: undefined,
+      lon: undefined,
+      lat: undefined
+    };
+    switch (json.length) {
+      case 2:
+        metric.value = json[1];
+        break;
+      case 3:
+        metric.alt = json[1];
+        metric.value = json[2];
+        break;
+      case 4:
+        metric.lat = json[1];
+        metric.lon = json[2];
+        metric.value = json[3];
+        break;
+      case 5:
+        metric.lat = json[1];
+        metric.lon = json[2];
+        metric.alt = json[3];
+        metric.value = json[4];
     }
+    return metric;
+  }
+
+  gtsFromJSON(json, id) {
+    return {
+      gts: {
+        c: json.c,
+        l: json.l,
+        a: json.a,
+        v: json.v,
+        id: id,
+      },
+    };
+  }
+
+  gtsFromJSONList(jsonList, prefixId) {
+    let gts;
+    let gtsList = [];
+    let i;
+    let id;
+    for (i = 0; i < jsonList.length; i++) {
+      gts = jsonList[i];
+      if ((prefixId !== undefined) && (prefixId !== '')) {
+        id = prefixId + '-' + i;
+      } else {
+        id = '' + i;
+      }
+      if (this.isArray(gts)) {
+        gtsList.push(this.gtsFromJSONList(gts, id));
+      }
+      if (this.isGts(gts)) {
+        gtsList.push(this.gtsFromJSON(gts, id));
+      }
+      if (this.isEmbeddedImage(gts)) {
+        gtsList.push({
+          image: gts,
+          caption: 'Image',
+          id: id,
+        });
+      }
+      if (this.isEmbeddedImageObject(gts)) {
+        gtsList.push({
+          image: gts.image,
+          caption: gts.caption,
+          id: id,
+        });
+      }
+    }
+    return {
+      content: gtsList,
+    };
+  }
+
+  flattenGtsIdArray(a, r) {
+    let elem;
+    let j;
+    if (!r) {
+      r = [];
+    }
+    for (j = 0; j < a.content.length; j++) {
+      elem = a.content[j];
+      if (elem.content) {
+        this.flattenGtsIdArray(elem, r);
+      } else {
+        if (elem.gts) {
+          r.push(elem.gts);
+        }
+      }
+    }
+    return r;
+  }
+
+  serializeGtsMetadata(gts) {
+    let serializedLabels = [];
+    Object.keys(gts.l).forEach((key) => {
+      serializedLabels.push(key + '=' + gts.l[key]);
+    });
+    return (gts.id ? (gts.id + ' ') : '') + gts.c + '{' + serializedLabels.join(',') + '}';
+  }
+
+  gtsToPath(gts) {
+    let path = [];
+    // Sort values
+    gts.v = gts.v.sort(function (a, b) {
+      return a[0] - b[0];
+    });
+    for (let i = 0; i < gts.v.length; i++) {
+      let metric = gts.v[i];
+      if (metric.length === 2) {
+        // timestamp, value
+      }
+      if (metric.length === 3) {
+        // timestamp, elevation, value
+      }
+      if (metric.length === 4) {
+        // timestamp, lat, lon, value
+        path.push({ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: metric[2], val: metric[3]});
+      }
+      if (metric.length === 5) {
+        // timestamp, lat, lon, elevation, value
+        path.push({
+          ts: Math.floor(metric[0] / 1000),
+          lat: metric[1],
+          lon: metric[2],
+          elev: metric[3],
+          val: metric[4],
+        });
+      }
+    }
+    return path;
+  }
+
+  equalMetadata(a, b) {
+    if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
+      !(a.l instanceof Object) || !(b.l instanceof Object)) {
+      console.error('[warp10-gts-tools] equalMetadata - Error in GTS, metadata is not well formed');
+      return false;
+    }
+    if (a.c !== b.c) {
+      return false;
+    }
+    for (let p in a.l) {
+      if (!b.l.hasOwnProperty(p)) return false;
+      if (a.l[p] !== b.l[p]) return false;
+    }
+    for (let p in b.l) {
+      if (!a.l.hasOwnProperty(p)) return false;
+    }
+    return true;
+  }
+
+  isGts(item) {
+    return !(!item || item === null || item.c === null || item.l === null ||
+      item.a === null || item.v === null || !this.isArray(item.v));
+  }
+
+  isGtsToPlot(gts) {
+    if (!this.isGts(gts) || gts.v.length === 0) {
+      return false;
+    }
+    // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
+    // if it's a number it's a GTS to plot
+    for (let i = 0; i < gts.v.length; i++) {
+      if (gts.v[i][gts.v[i].length - 1] !== null) {
+        // console.log("[warp10-gts-tools] isGtsToPlot - First value type", gts.v[i][gts.v[i].length - 1] );
+        if (typeof (gts.v[i][gts.v[i].length - 1]) === 'number' ||
+          // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
+          gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed !== undefined) {
+          return true;
+        }
+        break;
+      }
+    }
+    return false;
+  }
+
+  isGtsToAnnotate(gts) {
+    if (!this.isGts(gts) || gts.v.length === 0) {
+      return false;
+    }
+    // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
+    // if it's a number it's a GTS to plot
+    for (let i = 0; i < gts.v.length; i++) {
+      if (gts.v[i][gts.v[i].length - 1] !== null) {
+        if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'number' &&
+          (!!gts.v[i][gts.v[i].length - 1].constructor &&
+            gts.v[i][gts.v[i].length - 1].constructor.name !== 'Big') &&
+          gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed === undefined) {
+          return true;
+        }
+        break;
+      }
+    }
+    return false;
+  }
+
+  gtsSort(gts) {
+    if (gts.isSorted) {
+      return;
+    }
+    gts.v = gts.v.sort(function (a, b) {
+      return a[0] - b[0];
+    });
+    gts.isSorted = true;
+  }
+
+  gtsTimeRange(gts) {
+    this.gtsSort(gts);
+    if (gts.v.length === 0) {
+      return null;
+    }
+    return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
+  }
+
+  gtsToData(gts) {
+    let datasets = [];
+    let ticks = [];
+    gts.forEach(d => {
+      if (d.gts)
+        for (let i = 0; i < d.gts.length; i++) {
+          let g = d.gts[i];
+          let data = [];
+          g.v.forEach(d => {
+            ticks.push(d[0] / 10000);
+            data.push(d[d.length - 1])
+          });
+          let color = this.getColor(i);
+          if (d.params && d.params[i] && d.params[i].color) {
+            color = d.params[i].color
+          }
+          let label = `${g.c} - ${JSON.stringify(g.l)}`;
+          if (d.params && d.params[i] && d.params[i].key) {
+            label = d.params[i].key
+          }
+          let ds = {
+            label: label,
+            data: data,
+            pointRadius: 2,
+            fill: false,
+            borderColor: color,
+            backgroundColor: GTSLib.transparentize(color, 0.5)
+          };
+          if (d.params && d.params[i] && d.params[i].interpolate) {
+            switch (d.params[i].interpolate) {
+              case 'line':
+                ds['lineTension'] = 0;
+                break;
+              case 'spline':
+                break;
+              case 'area':
+                ds.fill = true
+            }
+          }
+          datasets.push(ds)
+        }
+    });
+    return {datasets: datasets, ticks: GTSLib.unique(ticks)}
+  }
 }
