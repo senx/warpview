@@ -34,7 +34,6 @@ export class QuantumPie extends GTSLib {
   }
 
   parseData(gts) {
-    console.log(gts)
     let labels = [];
     let datas = [];
     gts.forEach(d => {
@@ -47,6 +46,7 @@ export class QuantumPie extends GTSLib {
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.parseData(JSON.parse(this.data));
+
     new Chart(ctx, {
       type: (this.type === 'gauge') ? 'doughnut' : this.type,
       data: {
@@ -62,7 +62,7 @@ export class QuantumPie extends GTSLib {
         circumference: this.getCirc(),
         rotation: this.getRotation(),
       }
-    });
+    })
   }
 
   getRotation() {
@@ -86,11 +86,9 @@ export class QuantumPie extends GTSLib {
   }
 
   render() {
-    return (
-      <div>
-        <h1>{this.chartTitle}</h1>
-        <canvas id="myChart" width="400" height="400"/>
-      </div>
-    );
+    return <div>
+      <h1>{this.chartTitle}</h1>
+      <canvas id="myChart" width="400" height="400"/>
+    </div>;
   }
 }

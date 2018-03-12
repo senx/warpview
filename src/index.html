@@ -14,7 +14,7 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="card col-6">
+       <!-- <div class="card col-6">
             <div class="card-body">
                 <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
                               chart-title="Default">
@@ -61,7 +61,7 @@
                               m ] FETCH 5 LTTB
                 </quantum-tile>
             </div>
-        </div>
+        </div>-->
         <div class="card col-6">
             <div class="card-body">
                 <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
@@ -71,11 +71,11 @@
                     [ $readToken
                     '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' { 'serial' 'cityzendata' } NOW -1 ] FETCH
                     NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
                 </quantum-tile>
             </div>
         </div>
-        <div class="card col-6">
+      <!--  <div class="card col-6">
             <div class="card-body">
                 <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
                               chart-title="pie">
@@ -84,7 +84,7 @@
                     [ $readToken
                     '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' {  'serial' 'cityzendata'  } NOW -1 ] FETCH
                     NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
                 </quantum-tile>
             </div>
         </div>
@@ -97,7 +97,7 @@
                     [ $readToken
                     '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'  {  'serial' 'cityzendata'  } NOW -1 ] FETCH
                     NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
                 </quantum-tile>
             </div>
         </div>
@@ -110,7 +110,7 @@
                     [ $readToken
                     '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'  {  'serial' 'cityzendata'  } NOW -1 ] FETCH
                     NOW 24 h TIMECLIP NONEMPTY
-                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
                 </quantum-tile>
             </div>
         </div>
@@ -147,7 +147,7 @@
                                type="bar"
                                data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{ "tickList": [42, 1389150000000000,1389180000000000]}}]'></quantum-chart>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 </body>
