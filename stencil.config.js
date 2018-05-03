@@ -1,7 +1,17 @@
+const sass = require('@stencil/sass');
 exports.config = {
   namespace: 'quantumviz',
-  generateDistribution: true,
-  serviceWorker: false
+  plugins: [
+    sass()
+  ],
+  outputTargets: [
+    {
+      type: 'dist'
+    },
+    {
+      type: 'www'
+    }
+  ]
 };
 
 exports.devServer = {

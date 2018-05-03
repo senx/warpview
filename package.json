@@ -18,16 +18,22 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "@stencil/core": "^0.6.1",
-    "@types/chartjs": "0.0.31",
+    "@stencil/core": "^0.8.0",
+    "@timkendrick/monaco-editor": "0.0.9",
     "chart.js": "^2.7.2",
-    "whatwg-fetch": "^2.0.3"
+    "clipboard": "^2.0.1",
+    "monaco-editor": "^0.12.0",
+    "prismjs": "^1.14.0",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "@stencil/dev-server": "latest",
-    "@stencil/utils": "latest",
-    "@types/jest": "^21.1.1",
-    "jest": "^21.2.1"
+    "@stencil/dev-server": "0.0.18",
+    "@stencil/utils": "0.0.4",
+    "@stencil/sass": "^0.0.5",
+    "@types/chartjs": "0.0.31",
+    "@types/jest": "^22.2.3",
+    "@types/prismjs": "^1.9.0",
+    "jest": "^22.4.3"
   },
   "repository": {
     "type": "git",

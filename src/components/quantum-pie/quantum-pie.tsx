@@ -83,7 +83,7 @@ export class QuantumPie extends GTSLib {
   }
 
   componentDidLoad() {
-    this.drawChart()
+    this.drawChart();
   }
 
   render() {

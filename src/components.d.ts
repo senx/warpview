@@ -4,224 +4,318 @@
  * and imports for stencil collections that might be configured in your stencil.config.js file
  */
 
+import '@stencil/core';
 
 declare global {
+  namespace JSX {
+    interface Element {}
+    export interface IntrinsicElements {}
+  }
+  namespace JSXElements {}
+
   interface HTMLStencilElement extends HTMLElement {
     componentOnReady(): Promise<this>;
     componentOnReady(done: (ele?: this) => void): void;
+
+    forceUpdate(): void;
   }
+
+  interface HTMLAttributes {}
 }
 
 
-
-import {
-  QuantumBubble as QuantumBubble
-} from './components/quantum-bubble/quantum-bubble';
-
 declare global {
-  interface HTMLQuantumBubbleElement extends QuantumBubble, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumBubble {
+      'chartTitle': string;
+      'data': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'unit': string;
+    }
   }
+
+  interface HTMLQuantumBubbleElement extends StencilComponents.QuantumBubble, HTMLStencilElement {}
+
   var HTMLQuantumBubbleElement: {
     prototype: HTMLQuantumBubbleElement;
     new (): HTMLQuantumBubbleElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-bubble": HTMLQuantumBubbleElement;
+    'quantum-bubble': HTMLQuantumBubbleElement;
   }
   interface ElementTagNameMap {
-    "quantum-bubble": HTMLQuantumBubbleElement;
+    'quantum-bubble': HTMLQuantumBubbleElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-bubble": JSXElements.QuantumBubbleAttributes;
+      'quantum-bubble': JSXElements.QuantumBubbleAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumBubbleAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      data?: string;
-      options?: object;
-      responsive?: boolean;
-      showLegend?: boolean;
-      unit?: string;
+      'chartTitle'?: string;
+      'data'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'unit'?: string;
     }
   }
 }
 
 
-import {
-  QuantumChart as QuantumChart
-} from './components/quantum-chart/quantum-chart';
-
 declare global {
-  interface HTMLQuantumChartElement extends QuantumChart, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumChart {
+      'chartTitle': string;
+      'data': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'type': string;
+      'unit': string;
+    }
   }
+
+  interface HTMLQuantumChartElement extends StencilComponents.QuantumChart, HTMLStencilElement {}
+
   var HTMLQuantumChartElement: {
     prototype: HTMLQuantumChartElement;
     new (): HTMLQuantumChartElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-chart": HTMLQuantumChartElement;
+    'quantum-chart': HTMLQuantumChartElement;
   }
   interface ElementTagNameMap {
-    "quantum-chart": HTMLQuantumChartElement;
+    'quantum-chart': HTMLQuantumChartElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-chart": JSXElements.QuantumChartAttributes;
+      'quantum-chart': JSXElements.QuantumChartAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumChartAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      data?: string;
-      options?: object;
-      responsive?: boolean;
-      showLegend?: boolean;
-      type?: string;
-      unit?: string;
+      'chartTitle'?: string;
+      'data'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'type'?: string;
+      'unit'?: string;
     }
   }
 }
 
 
-import {
-  QuantumPie as QuantumPie
-} from './components/quantum-pie/quantum-pie';
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumEditor {
+      'url': string;
+    }
+  }
+
+  interface HTMLQuantumEditorElement extends StencilComponents.QuantumEditor, HTMLStencilElement {}
+
+  var HTMLQuantumEditorElement: {
+    prototype: HTMLQuantumEditorElement;
+    new (): HTMLQuantumEditorElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-editor': HTMLQuantumEditorElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-editor': HTMLQuantumEditorElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-editor': JSXElements.QuantumEditorAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumEditorAttributes extends HTMLAttributes {
+      'url'?: string;
+    }
+  }
+}
+
 
 declare global {
-  interface HTMLQuantumPieElement extends QuantumPie, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumPie {
+      'chartTitle': string;
+      'data': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'type': string;
+      'unit': string;
+    }
   }
+
+  interface HTMLQuantumPieElement extends StencilComponents.QuantumPie, HTMLStencilElement {}
+
   var HTMLQuantumPieElement: {
     prototype: HTMLQuantumPieElement;
     new (): HTMLQuantumPieElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-pie": HTMLQuantumPieElement;
+    'quantum-pie': HTMLQuantumPieElement;
   }
   interface ElementTagNameMap {
-    "quantum-pie": HTMLQuantumPieElement;
+    'quantum-pie': HTMLQuantumPieElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-pie": JSXElements.QuantumPieAttributes;
+      'quantum-pie': JSXElements.QuantumPieAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumPieAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      data?: string;
-      options?: object;
-      responsive?: boolean;
-      showLegend?: boolean;
-      type?: string;
-      unit?: string;
+      'chartTitle'?: string;
+      'data'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'type'?: string;
+      'unit'?: string;
     }
   }
 }
 
 
-import {
-  QuantumPolar as QuantumPolar
-} from './components/quantum-polar/quantum-polar';
-
 declare global {
-  interface HTMLQuantumPolarElement extends QuantumPolar, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumPolar {
+      'chartTitle': string;
+      'data': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'type': string;
+      'unit': string;
+    }
   }
+
+  interface HTMLQuantumPolarElement extends StencilComponents.QuantumPolar, HTMLStencilElement {}
+
   var HTMLQuantumPolarElement: {
     prototype: HTMLQuantumPolarElement;
     new (): HTMLQuantumPolarElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-polar": HTMLQuantumPolarElement;
+    'quantum-polar': HTMLQuantumPolarElement;
   }
   interface ElementTagNameMap {
-    "quantum-polar": HTMLQuantumPolarElement;
+    'quantum-polar': HTMLQuantumPolarElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-polar": JSXElements.QuantumPolarAttributes;
+      'quantum-polar': JSXElements.QuantumPolarAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumPolarAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      data?: string;
-      options?: object;
-      responsive?: boolean;
-      showLegend?: boolean;
-      type?: string;
-      unit?: string;
+      'chartTitle'?: string;
+      'data'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'type'?: string;
+      'unit'?: string;
     }
   }
 }
 
 
-import {
-  QuantumScatter as QuantumScatter
-} from './components/quantum-scatter/quantum-scatter';
-
 declare global {
-  interface HTMLQuantumScatterElement extends QuantumScatter, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumScatter {
+      'chartTitle': string;
+      'data': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'unit': string;
+    }
   }
+
+  interface HTMLQuantumScatterElement extends StencilComponents.QuantumScatter, HTMLStencilElement {}
+
   var HTMLQuantumScatterElement: {
     prototype: HTMLQuantumScatterElement;
     new (): HTMLQuantumScatterElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-scatter": HTMLQuantumScatterElement;
+    'quantum-scatter': HTMLQuantumScatterElement;
   }
   interface ElementTagNameMap {
-    "quantum-scatter": HTMLQuantumScatterElement;
+    'quantum-scatter': HTMLQuantumScatterElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-scatter": JSXElements.QuantumScatterAttributes;
+      'quantum-scatter': JSXElements.QuantumScatterAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumScatterAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      data?: string;
-      options?: object;
-      responsive?: boolean;
-      showLegend?: boolean;
-      unit?: string;
+      'chartTitle'?: string;
+      'data'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'unit'?: string;
     }
   }
 }
 
 
-import {
-  QuantumTile as QuantumTile
-} from './components/quantum-tile/quantum-tile';
-
 declare global {
-  interface HTMLQuantumTileElement extends QuantumTile, HTMLStencilElement {
+
+  namespace StencilComponents {
+    interface QuantumTile {
+      'chartTitle': string;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'type': string;
+      'unit': string;
+      'url': string;
+    }
   }
+
+  interface HTMLQuantumTileElement extends StencilComponents.QuantumTile, HTMLStencilElement {}
+
   var HTMLQuantumTileElement: {
     prototype: HTMLQuantumTileElement;
     new (): HTMLQuantumTileElement;
   };
   interface HTMLElementTagNameMap {
-    "quantum-tile": HTMLQuantumTileElement;
+    'quantum-tile': HTMLQuantumTileElement;
   }
   interface ElementTagNameMap {
-    "quantum-tile": HTMLQuantumTileElement;
+    'quantum-tile': HTMLQuantumTileElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      "quantum-tile": JSXElements.QuantumTileAttributes;
+      'quantum-tile': JSXElements.QuantumTileAttributes;
     }
   }
   namespace JSXElements {
     export interface QuantumTileAttributes extends HTMLAttributes {
-      chartTitle?: string;
-      responsive?: boolean;
-      showLegend?: boolean;
-      type?: string;
-      unit?: string;
-      url?: string;
+      'chartTitle'?: string;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'type'?: string;
+      'unit'?: string;
+      'url'?: string;
     }
   }
 }
