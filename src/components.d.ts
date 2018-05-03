@@ -116,6 +116,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumEditor {
+      'theme': string;
       'url': string;
     }
   }
@@ -141,6 +142,7 @@ declare global {
     export interface QuantumEditorAttributes extends HTMLAttributes {
       'onWarpscriptChanged'?: (event: CustomEvent) => void;
       'onWarpscriptResult'?: (event: CustomEvent) => void;
+      'theme'?: string;
       'url'?: string;
     }
   }

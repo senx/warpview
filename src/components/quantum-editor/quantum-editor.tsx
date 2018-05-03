@@ -1,4 +1,4 @@
-import { Component, Element, Prop, Event } from "@stencil/core";
+import { Component, Element, Prop, Event, Watch, State } from "@stencil/core";
 import monaco from '@timkendrick/monaco-editor';
 import { Monarch } from '../../monarch'
 import { WarpScript } from '../../ref';
@@ -15,7 +15,7 @@ declare var Prism: any;
   tag: 'quantum-editor',
   styleUrls: [
     '../../../node_modules/monaco-editor/min/vs/editor/editor.main.css',
-    '../../../node_modules/prismjs/themes/prism-okaidia.css',
+    '../../../node_modules/prismjs/themes/prism.css',
     '../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css',
     '../../../node_modules/prismjs/plugins/toolbar/prism-toolbar.css',
     'quantum-editor.scss'
@@ -24,16 +24,30 @@ declare var Prism: any;
 })
 export class QuantumEditor {
   @Element() el: HTMLStencilElement;
-  @Prop() url: string = '';
+  @Prop({ mutable: true }) url: string = '';
+  @Prop({ mutable: true }) theme: string = 'light';
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
 
-  ed: any;
-  warpscript: string;
-  result: string;
-  status: string;
-  error: string;
-  themes = ['vs', 'vs-dark', 'hc-black']
+  private ed: any;
+  @State() warpscript: string;
+  @State() result: string;
+  @State() status: string;
+  @State() error: string;
+  private monacoTheme = 'vs';
+
+  @Watch('theme')
+  themeHandler(newValue: string, oldValue: string) {
+    console.debug('[QuantumEditor] - The new value of theme is: ', newValue);
+    if ('dark' === newValue) {
+      this.monacoTheme = 'vs-dark';
+    } else {
+      this.monacoTheme = 'vs';
+    }
+    this.ed.updateOptions({
+      theme: this.monacoTheme
+    });
+  }
 
   componentWillLoad() {
     this.warpscript = this.el.textContent.slice();
@@ -49,6 +63,9 @@ export class QuantumEditor {
       'boolean': /\b(?:true|false)\b/i,
       'null': /\bnull\b/i
     };
+    if ('dark' === this.theme) {
+      this.monacoTheme = 'vs-dark';
+    }
 
     Prism.languages.jsonp = Prism.languages.json;
   }
@@ -69,20 +86,13 @@ export class QuantumEditor {
     this.ed = monaco.editor.create(this.el.querySelector('#editor'), {
       value: this.warpscript,
       language: 'warpscript',
-      theme: 'vs-dark'
+      theme: this.monacoTheme
     });
     this.ed.model.onDidChangeContent((event) => {
       this.warpscript = this.ed.getValue();
       console.debug('ws changed');
       this.warpscriptChanged.emit(this.warpscript);
     });
-    // this.el.textContent = ''
-    /*
-    editor.updateOptions({
-		lineNumbers: "on"
-  });
-  */
-    // this.ed.setTheme('vs-dark');
   }
 
   private getType(tags: string[], name: string): monaco.languages.CompletionItemKind {
@@ -125,27 +135,18 @@ export class QuantumEditor {
           this.status = `Your script execution took ${this.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
           fetched ${response.headers.get('x-warp10-fetched')} datapoints 
           and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`
-          this.el.forceUpdate();
+        //  this.el.forceUpdate();
           window.setTimeout(() => Prism.highlightAllUnder(this.el.querySelector('#result')), 100);
         }, err => {
           console.error(err);
         });
       } else {
         console.error(response.statusText);
-        if (response.headers.has('x-warp10-error-message')) {
-          let line = parseInt(response.headers.get('x-warp10-error-line'))
 
-          // Check if error message contains infos from LINEON
-          let lineonPattern = /\[Line #(\d+)\]/g;  // Captures the lines sections name
-          let lineonMatch: RegExpMatchArray | null;
-          while ((lineonMatch = lineonPattern.exec(response.headers.get('x-warp10-error-message')))) {
-            line = parseInt(lineonMatch[1]);
-          }
-          this.error = 'Error at line ' + line + ' : ' + response.headers.get('x-warp10-error-message');
-        }
       }
     }, err => {
       console.error(err);
+      this.error = err;
     });
   }
 
