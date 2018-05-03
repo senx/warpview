@@ -1,4 +1,4 @@
-import { Component, Element, Prop } from "@stencil/core";
+import { Component, Element, Prop, Event } from "@stencil/core";
 import monaco from '@timkendrick/monaco-editor';
 import { Monarch } from '../../monarch'
 import { WarpScript } from '../../ref';
@@ -8,6 +8,7 @@ import 'prismjs/components/prism-json';
 import 'prismjs/plugins/toolbar/prism-toolbar';
 import 'prismjs/plugins/line-numbers/prism-line-numbers';
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard';
+import { EventEmitter } from "events";
 declare var Prism: any;
 
 @Component({
@@ -24,12 +25,16 @@ declare var Prism: any;
 export class QuantumEditor {
   @Element() el: HTMLStencilElement;
   @Prop() url: string = '';
+  @Event() warpscriptChanged: EventEmitter;
+  @Event() warpscriptResult: EventEmitter;
+
   ed: any;
   warpscript: string;
   result: string;
   status: string;
   error: string;
   themes = ['vs', 'vs-dark', 'hc-black']
+
   componentWillLoad() {
     this.warpscript = this.el.textContent.slice();
     Prism.languages.json = {
@@ -68,6 +73,8 @@ export class QuantumEditor {
     });
     this.ed.model.onDidChangeContent((event) => {
       this.warpscript = this.ed.getValue();
+      console.debug('ws changed');
+      this.warpscriptChanged.emit(this.warpscript);
     });
     // this.el.textContent = ''
     /*
@@ -111,6 +118,7 @@ export class QuantumEditor {
       if (response.ok) {
         console.debug('[QuantumEditor] - execute - response', response);
         response.json().then(res => {
+          this.warpscriptResult.emit(res);
           this.result = '[\n';
           res.forEach(l => this.result += '\t' + JSON.stringify(l) + '\n');
           this.result += ']';
@@ -171,7 +179,6 @@ export class QuantumEditor {
       </div>
     ) : (<span></span>);
     return <div>
-      <h1>WarpScript</h1>
       <div id="editor"></div>
       <button type="button" class="btn btn-primary float-right m-3" onClick={(event: UIEvent) => this.execute(event)} >Execute</button>
       <div class="clearfix"></div>

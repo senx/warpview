@@ -139,6 +139,8 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumEditorAttributes extends HTMLAttributes {
+      'onWarpscriptChanged'?: (event: CustomEvent) => void;
+      'onWarpscriptResult'?: (event: CustomEvent) => void;
       'url'?: string;
     }
   }
