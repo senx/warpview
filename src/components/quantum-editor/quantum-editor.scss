@@ -1,16 +1,66 @@
 quantum-editor {
-    font-size: 0;
-    > div {
-        font-size: initial;
-    }
-    #editor {
-        width: 100%;
-        height: 500px;
-    }
+  font-size: 0;
+  > div {
+    font-size: initial;
+  }
+  .editor {
+    width: 100%;
+    height: 500px;
+  }
+  .editor-res {
+    width: 100%;
+    height: 300px;
+  }
 
-    #result {
-        code {
-            white-space: pre-wrap;
-        }
+  .loader .spinner {
+    border: 5px solid #f3f3f3;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    border-top: 5px solid #555;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    overflow: visible;
+    z-index: 999;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  .loader:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
     }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
 }

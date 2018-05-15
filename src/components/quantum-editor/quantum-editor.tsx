@@ -1,101 +1,210 @@
-import { Component, Element, Prop, Event, Watch, State } from "@stencil/core";
-import monaco from '@timkendrick/monaco-editor';
-import { Monarch } from '../../monarch'
-import { WarpScript } from '../../ref';
-import 'clipboard';
-import 'prismjs';
-import 'prismjs/components/prism-json';
-import 'prismjs/plugins/toolbar/prism-toolbar';
-import 'prismjs/plugins/line-numbers/prism-line-numbers';
-import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard';
-import { EventEmitter } from "events";
+import {Component, Element, Prop, Event, Watch, State} from "@stencil/core";
+import monaco, {MarkedString} from '@timkendrick/monaco-editor';
+import {Monarch} from '../../monarch'
+import {WarpScript} from '../../ref';
+import {globalfunctions as wsGlobals} from '../../wsGlobals';
+import {EventEmitter} from "events";
+import Hover = monaco.languages.Hover;
+import IReadOnlyModel = monaco.editor.IReadOnlyModel;
+import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
+
 declare var Prism: any;
 
 @Component({
   tag: 'quantum-editor',
   styleUrls: [
     '../../../node_modules/monaco-editor/min/vs/editor/editor.main.css',
-    '../../../node_modules/prismjs/themes/prism.css',
-    '../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css',
-    '../../../node_modules/prismjs/plugins/toolbar/prism-toolbar.css',
     'quantum-editor.scss'
   ],
   shadow: false
 })
 export class QuantumEditor {
+
   @Element() el: HTMLStencilElement;
-  @Prop({ mutable: true }) url: string = '';
-  @Prop({ mutable: true }) theme: string = 'light';
+
+  @Prop() url: string = '';
+  @Prop() theme: string = 'light';
+
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
 
-  private ed: any;
   @State() warpscript: string;
   @State() result: string;
   @State() status: string;
   @State() error: string;
-  private monacoTheme = 'vs';
 
+
+  private WARPSCRIPT_LANGUAGE = 'warpscript';
+  private ed: IStandaloneCodeEditor;
+  private resEd: IStandaloneCodeEditor;
+  private monacoTheme = 'vs';
+  private loading = false;
+  private edUid: string;
+  private resUid: string;
+
+  /**
+   *
+   * @param {string} newValue
+   * @param {string} _oldValue
+   */
   @Watch('theme')
-  themeHandler(newValue: string, oldValue: string) {
-    console.debug('[QuantumEditor] - The new value of theme is: ', newValue);
+  themeHandler(newValue: string, _oldValue: string) {
+    console.log('[QuantumEditor] - The new value of theme is: ', newValue, _oldValue);
     if ('dark' === newValue) {
       this.monacoTheme = 'vs-dark';
     } else {
       this.monacoTheme = 'vs';
     }
-    this.ed.updateOptions({
-      theme: this.monacoTheme
-    });
+    console.log('[QuantumEditor] - The new value of theme is: ', this.monacoTheme);
+    monaco.editor.setTheme(this.monacoTheme);
   }
 
+  /**
+   *
+   */
   componentWillLoad() {
     this.warpscript = this.el.textContent.slice();
-    Prism.languages.json = {
-      'property': /"(?:\\.|[^\\"\r\n])*"(?=\s*:)/i,
-      'string': {
-        pattern: /"(?:\\.|[^\\"\r\n])*"(?!\s*:)/,
-        greedy: true
-      },
-      'number': /\b0x[\dA-Fa-f]+\b|(?:\b\d+\.?\d*|\B\.\d+)(?:[Ee][+-]?\d+)?/,
-      'punctuation': /[{}[\]);,]/,
-      'operator': /:/g,
-      'boolean': /\b(?:true|false)\b/i,
-      'null': /\bnull\b/i
-    };
+    this.edUid = this.guid();
+    this.resUid = this.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
     }
 
-    Prism.languages.jsonp = Prism.languages.json;
-  }
+    console.log('[QuantumEditor] - componentWillLoad theme is: ', this.theme);
+    monaco.languages.register({id: this.WARPSCRIPT_LANGUAGE});
+    monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
+    monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
+        wordPattern: /(-?\d*\.\d\w*)|([^`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\<\>\/\?\s]+)/g,
+        comments: {
+          lineComment: "//",
+          blockComment: ["/**", "*/"]
+        },
+        brackets: [
+          ["{", "}"],
+          ["[", "]"],
+          ["(", ")"],
+          ["<%", "%>"],
+          ["<'", "'>"],
+          ["[[", "]]"]
+        ],
+        autoClosingPairs: [
+          {open: "{", close: "}"},
+          {open: "[", close: "]"},
+          {open: "(", close: ")"},
+          {open: "<%", close: "%>"},
+          {open: "[[", close: "]]"},
+          {open: " '", close: "'", notIn: ["string", "comment"]},
+          {open: "<'", close: "'>"},
+          {open: "\"", close: "\"", notIn: ["string"]},
+          {open: "`", close: "`", notIn: ["string", "comment"]},
+          {open: "/**", close: " */", notIn: ["string"]}
+        ],
+        surroundingPairs: [
+          {open: "{", close: "}"},
+          {open: "[", close: "]"},
+          {open: "(", close: ")"},
+          {open: "[[", close: "]]"},
+          {open: "<%", close: "%>"},
+          {open: "<'", close: "'>"},
+          {open: "'", close: "'"},
+          {open: "\"", close: "\""},
+          {open: "`", close: "`"}
+        ],
+        onEnterRules: [
+          {
+            // e.g. /** | */
+            beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
+            afterText: /^\s*\*\/$/,
+            action: {indentAction: monaco.languages.IndentAction.IndentOutdent, appendText: ' * '}
+          },
+          {
+            // e.g. /** ...|
+            beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
+            action: {indentAction: monaco.languages.IndentAction.None, appendText: ' * '}
+          },
+          {
+            // e.g.  * ...|
+            beforeText: /^(\t|( {2}))* \*( ([^*]|\*(?!\/))*)?$/,
+            action: {indentAction: monaco.languages.IndentAction.None, appendText: '* '}
+          },
+          {
+            // e.g.  */|
+            beforeText: /^(\t|( {2}))* \*\/\s*$/,
+            action: {indentAction: monaco.languages.IndentAction.None, removeText: 1}
+          }
+        ],
+      }
+    );
+    monaco.languages.registerHoverProvider(this.WARPSCRIPT_LANGUAGE, {
+      provideHover: (model: IReadOnlyModel, position: monaco.Position) => {
+        let word = model.getWordAtPosition(position);
+        let range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
+        console.log('[wsHoverProvider] - provideHover', model, position, word);
+        let name = word.word;
+        let entry = wsGlobals[name];
+        if (entry && entry.description) {
+          let signature = (entry.signature || '');
+          let contents: MarkedString[] = ['### ' + name, {
+            language: this.WARPSCRIPT_LANGUAGE,
+            value: signature
+          }, entry.description];
+          return {
+            range: range,
+            contents: contents
+          } as Hover
+        }
 
-  componentDidLoad() {
-    console.debug('[QuantumEditor] - componentDidLoad - warpscript', this.warpscript);
-    monaco.languages.register({ id: 'warpscript' });
-    monaco.languages.setMonarchTokensProvider('warpscript', Monarch.rules);
-    monaco.languages.registerCompletionItemProvider('warpscript', {
+        return undefined;
+      }
+    });
+
+    monaco.languages.registerCompletionItemProvider(this.WARPSCRIPT_LANGUAGE, {
       provideCompletionItems: () => {
         let defs = [];
         WarpScript.reference.forEach(f => {
-          defs.push({ label: f.name, kind: this.getType(f.tags, f.name) });
+          defs.push({label: f.name, kind: QuantumEditor.getType(f.tags, f.name)});
         });
         return defs;
       }
     });
-    this.ed = monaco.editor.create(this.el.querySelector('#editor'), {
+  }
+
+
+  componentDidUnload() {
+    console.log('Component removed from the DOM');
+    if (this.ed) {
+      this.ed.dispose();
+    }
+    if (this.resEd) {
+      this.resEd.dispose();
+    }
+  }
+
+  /**
+   *
+   */
+  componentDidLoad() {
+    console.log('[QuantumEditor] - componentDidLoad - warpscript', this.warpscript);
+    this.ed = monaco.editor.create(this.el.querySelector('#editor-' + this.edUid), {
       value: this.warpscript,
-      language: 'warpscript',
-      theme: this.monacoTheme
+      language: this.WARPSCRIPT_LANGUAGE, automaticLayout: true,
+      theme: this.monacoTheme, hover: true
     });
-    this.ed.model.onDidChangeContent((event) => {
+
+    this.ed.getModel().onDidChangeContent((event) => {
+      console.debug('ws changed', event);
       this.warpscript = this.ed.getValue();
-      console.debug('ws changed');
       this.warpscriptChanged.emit(this.warpscript);
     });
   }
 
-  private getType(tags: string[], name: string): monaco.languages.CompletionItemKind {
+  /**
+   *
+   * @param {string[]} tags
+   * @param {string} name
+   * @returns {monaco.languages.CompletionItemKind}
+   */
+  private static getType(tags: string[], name: string): monaco.languages.CompletionItemKind {
     let t = tags.join(' ');
     if (t.indexOf('constant') > -1) {
       return monaco.languages.CompletionItemKind.Enum;
@@ -118,39 +227,68 @@ export class QuantumEditor {
     }
   }
 
+  /**
+   *
+   * @param {UIEvent} _event
+   * @param {string} theme
+   */
+  setTheme(_event: UIEvent, theme: string) {
+    this.theme = theme;
+  }
+
+  /**
+   *
+   * @param {UIEvent} _event
+   */
   execute(_event: UIEvent) {
-    let me = this;
-    this.result = undefined;
+  //  this.result = undefined;
     this.status = undefined;
     this.error = undefined;
-    console.debug('[QuantumEditor] - execute - this.ed.getValue()', this.ed.getValue());
-    fetch(this.url, { method: 'POST', body: this.ed.getValue() }).then(response => {
+    console.debug('[QuantumEditor] - execute - this.ed.getValue()', this.ed.getValue(), _event);
+    this.loading = true;
+    fetch(this.url, {method: 'POST', body: this.ed.getValue()}).then(response => {
       if (response.ok) {
         console.debug('[QuantumEditor] - execute - response', response);
-        response.json().then(res => {
+        response.text().then(res => {
           this.warpscriptResult.emit(res);
-          this.result = '[\n';
-          res.forEach(l => this.result += '\t' + JSON.stringify(l) + '\n');
-          this.result += ']';
-          this.status = `Your script execution took ${this.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
+          this.result = res;
+          this.status = `Your script execution took ${QuantumEditor.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
           fetched ${response.headers.get('x-warp10-fetched')} datapoints 
-          and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`
-        //  this.el.forceUpdate();
-          window.setTimeout(() => Prism.highlightAllUnder(this.el.querySelector('#result')), 100);
+          and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`;
+          window.setTimeout(() => {
+            if(!this.resEd) {
+              this.resEd = monaco.editor.create(this.el.querySelector('#result-' + this.resUid), {
+                value: res,
+                language: 'json', automaticLayout: true,
+                scrollBeyondLastLine: false,
+                theme: this.monacoTheme, readOnly: false
+              });
+            } else {
+              this.resEd.setValue(res);
+            }
+          });
+          this.loading = false;
         }, err => {
           console.error(err);
+          this.loading = false;
         });
       } else {
         console.error(response.statusText);
-
+        this.loading = false;
       }
     }, err => {
       console.error(err);
       this.error = err;
+      this.loading = false;
     });
   }
 
-  private formatElapsedTime(elapsed: number) {
+  /**
+   *
+   * @param {number} elapsed
+   * @returns {string}
+   */
+  private static formatElapsedTime(elapsed: number) {
     if (elapsed < 1000) {
       return elapsed.toFixed(3) + ' ns';
     }
@@ -167,23 +305,44 @@ export class QuantumEditor {
     return (elapsed / 60000000000).toFixed(3) + ' m ';
   }
 
+  /**
+   * Generate a guid
+   * @returns {string}
+   */
+  guid() {
+    let uuid = '', i, random;
+    for (i = 0; i < 32; i++) {
+      random = Math.random() * 16 | 0;
+      if (i == 8 || i == 12 || i == 16 || i == 20) {
+        uuid += "-"
+      }
+      uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+    }
+    return uuid;
+  }
+
   render() {
     const status = this.status ? (
       <div class="alert alert-primary">{this.status}</div>
-    ) : (<span></span>);
+    ) : (<span/>);
     const error = this.error ? (
       <div class="alert alert-danger">{this.error}</div>
-    ) : (<span></span>);
+    ) : (<span/>);
+    const loading = this.loading ? (
+      <div class="loader"><div class="spinner"/></div>
+    ) : (<span/>);
     const result = this.result ? (
-      <div id="result">
-        <pre class="line-numbers"><code class="language-json">{this.result}</code></pre>
-      </div>
-    ) : (<span></span>);
+      <div id={'result-' + this.resUid} class="editor-res"/>
+    ) : (<span />);
     return <div>
-      <div id="editor"></div>
-      <button type="button" class="btn btn-primary float-right m-3" onClick={(event: UIEvent) => this.execute(event)} >Execute</button>
-      <div class="clearfix"></div>
-      {result}{status}{error}
+      <div class="clearfix"/>
+      <div id={'editor-' + this.edUid} class="editor"/>
+      <button type="button" class="btn btn-primary float-right m-3"
+              onClick={(event: UIEvent) => this.execute(event)}>Execute
+      </button>
+      <div class="clearfix"/>
+      {loading}
+      {status}{error}{result}
     </div>;
   }
 }
