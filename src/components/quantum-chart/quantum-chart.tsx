@@ -30,11 +30,12 @@ export class QuantumChart extends GTSLib {
 
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
+    console.debug('[QuantumChart] drawChart', this.data);
     let data = JSON.parse(this.data);
     if (!data) return;
     let gts = this.gtsToData(data);
     new Chart(ctx, {
-      type: (this.interpolations.indexOf(this.type) > -1)?'line':this.type,
+      type: (this.interpolations.indexOf(this.type) > -1) ? 'line' : this.type,
       legend: {display: this.showLegend},
       data: {
         labels: gts.ticks,
@@ -65,7 +66,7 @@ export class QuantumChart extends GTSLib {
     let datasets = [];
     let ticks = [];
     gts.forEach(d => {
-      if (d.gts)
+      if (d.gts) {
         for (let i = 0; i < d.gts.length; i++) {
           let g = d.gts[i];
           let data = [];
@@ -104,13 +105,14 @@ export class QuantumChart extends GTSLib {
           }
           datasets.push(ds)
         }
+      }
     });
     return {datasets: datasets, ticks: GTSLib.unique(ticks)}
   }
 
 
   isStepped() {
-    if(this.type.startsWith('step')) {
+    if (this.type.startsWith('step')) {
       return this.type.replace('step-', '');
     } else {
       return false;

@@ -118,6 +118,7 @@ declare global {
     interface QuantumEditor {
       'theme': string;
       'url': string;
+      'warpscript': string;
     }
   }
 
@@ -144,6 +145,7 @@ declare global {
       'onWarpscriptResult'?: (event: CustomEvent) => void;
       'theme'?: string;
       'url'?: string;
+      'warpscript'?: string;
     }
   }
 }

@@ -7,9 +7,6 @@ import {EventEmitter} from "events";
 import Hover = monaco.languages.Hover;
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
-
-declare var Prism: any;
-
 @Component({
   tag: 'quantum-editor',
   styleUrls: [
@@ -28,7 +25,7 @@ export class QuantumEditor {
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
 
-  @State() warpscript: string;
+  @Prop() warpscript: string;
   @State() result: string;
   @State() status: string;
   @State() error: string;
@@ -57,6 +54,13 @@ export class QuantumEditor {
     }
     console.log('[QuantumEditor] - The new value of theme is: ', this.monacoTheme);
     monaco.editor.setTheme(this.monacoTheme);
+  }
+
+  @Watch('warpscript')
+  warpscriptHandler(newValue: string, _oldValue: string) {
+    console.log('[QuantumEditor] - The new value of warpscript is: ', newValue, _oldValue);
+    this.result = undefined;
+    this.ed.setValue(newValue);
   }
 
   /**
