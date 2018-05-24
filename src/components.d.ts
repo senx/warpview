@@ -119,6 +119,8 @@ declare global {
   namespace StencilComponents {
     interface QuantumEditor {
       'config': string;
+      'horizontalLayout': boolean;
+      'showDataviz': boolean;
       'theme': string;
       'url': string;
       'warpscript': string;
@@ -145,8 +147,11 @@ declare global {
   namespace JSXElements {
     export interface QuantumEditorAttributes extends HTMLAttributes {
       'config'?: string;
+      'horizontalLayout'?: boolean;
+      'onDatavizRequested'?: (event: CustomEvent) => void;
       'onWarpscriptChanged'?: (event: CustomEvent) => void;
       'onWarpscriptResult'?: (event: CustomEvent) => void;
+      'showDataviz'?: boolean;
       'theme'?: string;
       'url'?: string;
       'warpscript'?: string;

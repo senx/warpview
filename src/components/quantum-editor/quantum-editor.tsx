@@ -8,7 +8,6 @@ import Hover = monaco.languages.Hover;
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 import {GTSLib} from "../../gts.lib";
-import {h} from "@stencil/core/dist/renderer/vdom";
 
 @Component({
   tag: 'quantum-editor',
@@ -25,11 +24,13 @@ export class QuantumEditor {
   @Prop() url: string = '';
   @Prop() theme: string = 'light';
   @Prop() warpscript: string;
-
+  @Prop() showDataviz = false;
+  @Prop() horizontalLayout = false;
   @Prop() config: string = '{}';
 
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
+  @Event() datavizRequested: EventEmitter;
 
   @State() result: string;
   @State() status: string;
@@ -42,7 +43,14 @@ export class QuantumEditor {
   private monacoTheme = 'vs';
   private loading = false;
   private _config = {
-    buttonClass: '',
+    execButton: {
+      class: '',
+      label: 'Execute'
+    },
+    datavizButton: {
+      class: '',
+      label: 'Visualize'
+    }
   };
 
   /**
@@ -73,7 +81,7 @@ export class QuantumEditor {
    *
    */
   componentWillLoad() {
-    this._config = {...this._config, ...JSON.parse(this.config)};
+    this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     console.log('[QuantumEditor] - _config: ', this._config);
     this.warpscript = this.el.textContent.slice();
     this.edUid = GTSLib.guid();
@@ -248,7 +256,7 @@ export class QuantumEditor {
    * @param {UIEvent} _event
    */
   execute(_event: UIEvent) {
-  //  this.result = undefined;
+    //  this.result = undefined;
     this.status = undefined;
     this.error = undefined;
     console.debug('[QuantumEditor] - execute - this.ed.getValue()', this.ed.getValue(), _event);
@@ -280,6 +288,14 @@ export class QuantumEditor {
 
   /**
    *
+   * @param {UIEvent} _event
+   */
+  requestDataviz(_event: UIEvent) {
+    this.datavizRequested.emit(this.result);
+  }
+
+  /**
+   *
    * @param {number} elapsed
    * @returns {string}
    */
@@ -302,24 +318,42 @@ export class QuantumEditor {
 
   render() {
     const loading = this.loading ? (
-      <div class="loader"><div class="spinner"/></div>
+      <div class="loader">
+        <div class="spinner"/>
+      </div>
     ) : (<span/>);
     const result = this.result ? (
       <quantum-result
         theme={this.theme}
-        result={ {json: this.result,error: this.error, message: this.status }  }
-        config={ JSON.stringify(this._config) }
+        result={{json: this.result, error: this.error, message: this.status}}
+        config={JSON.stringify(this._config)}
       />
-    ) : (<span />);
-    return <div>
-      <div class="clearfix"/>
-      <div id={'editor-' + this.edUid} class="editor"/>
-      <button type="button" class={this._config.buttonClass}
-              onClick={(event: UIEvent) => this.execute(event)}>Execute
+    ) : (<span/>);
+    const datavizBtn = this.showDataviz && this.result ? (
+      <button type="button" class={this._config.datavizButton.class}
+              onClick={(event: UIEvent) => this.requestDataviz(event)} innerHTML={this._config.datavizButton.label}>
       </button>
-      <div class="clearfix"/>
-      {loading}
-      {result}
-    </div>;
+    ) : (<span/>);
+
+
+    return (
+      <div>
+        <div class="clearfix"/>
+        <div class={'layout ' + (this.horizontalLayout ? 'horizontal-layout' : 'vertical-layout')}>
+          <div class="panel1">
+            <div id={'editor-' + this.edUid} class="editor"/>
+            <div class="clearfix"/>
+            {loading}
+            {datavizBtn}
+            <button type="button" class={this._config.execButton.class}
+                    onClick={(event: UIEvent) => this.execute(event)} innerHTML={this._config.execButton.label}>
+            </button>
+          </div>
+          <div class="panel2">
+            {result}
+          </div>
+        </div>
+      </div>
+    );
   }
 }

@@ -30,8 +30,17 @@
 
 
   <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor"
-
-                  config='{"buttonClass": "btn btn-primary float-right m-3", "messageClass": "alert alert-primary", "errorClass": "alert alert-danger" }'
+                  show-dataviz="true" horizontal-layout="true"
+                  config='{
+                  "execButton": {
+                    "class": "btn btn-primary float-right m-3"
+                   },
+                   "datavizButton": {
+                      "class": "btn btn-primary float-right m-3"
+                   },
+                   "messageClass": "alert alert-primary",
+                   "errorClass": "alert alert-danger"
+                  }'
 
                   warpscript="42
                   'ggg'
@@ -64,10 +73,10 @@
   <script language="JavaScript">
     $(function() {
       $("#dark").click(function() {
-        $("#editor").attr("theme", "dark");
+        $("#editor").attr("theme", "dark").attr("horizontal-layout", "true");
       });
       $("#light").click(function() {
-        $("#editor").attr("theme", "light");
+        $("#editor").attr("theme", "light").attr("horizontal-layout", "false");
       });
     });
   </script>

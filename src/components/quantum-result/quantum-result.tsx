@@ -2,7 +2,6 @@ import {Component, Element, Prop, Watch} from "@stencil/core";
 import monaco from '@timkendrick/monaco-editor';
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 import {GTSLib} from "../../gts.lib";
-import {h} from "@stencil/core/dist/renderer/vdom";
 
 import "@code-dimension/stencil-components"
 
@@ -57,7 +56,7 @@ export class QuantumResult {
    *
    */
   componentWillLoad() {
-    this._config = {...this._config, ...JSON.parse(this.config)};
+    this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     this.resUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';

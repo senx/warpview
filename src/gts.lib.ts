@@ -376,4 +376,32 @@ export class GTSLib {
     return uuid;
   }
 
+  /**
+   *
+   * @param target
+   * @param sources
+   * @returns {any}
+   */
+  static mergeDeep(target, ...sources) {
+    if (!sources.length) return target;
+    const source = sources.shift();
+
+    if (GTSLib.isObject(target) && GTSLib.isObject(source)) {
+      for (const key in source) {
+        if (GTSLib.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, {[key]: {}});
+          GTSLib.mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(target, {[key]: source[key]});
+        }
+      }
+    }
+
+    return GTSLib.mergeDeep(target, ...sources);
+  }
+
+  static isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  }
+
 }
