@@ -7,6 +7,8 @@ import {EventEmitter} from "events";
 import Hover = monaco.languages.Hover;
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
+import {GTSLib} from "../../gts.lib";
+
 @Component({
   tag: 'quantum-editor',
   styleUrls: [
@@ -21,11 +23,13 @@ export class QuantumEditor {
 
   @Prop() url: string = '';
   @Prop() theme: string = 'light';
+  @Prop() warpscript: string;
+
+  @Prop() config: string = '{}';
 
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
 
-  @Prop() warpscript: string;
   @State() result: string;
   @State() status: string;
   @State() error: string;
@@ -33,11 +37,12 @@ export class QuantumEditor {
 
   private WARPSCRIPT_LANGUAGE = 'warpscript';
   private ed: IStandaloneCodeEditor;
-  private resEd: IStandaloneCodeEditor;
+  private edUid: string;
   private monacoTheme = 'vs';
   private loading = false;
-  private edUid: string;
-  private resUid: string;
+  private _config = {
+    buttonClass: '',
+  };
 
   /**
    *
@@ -67,9 +72,10 @@ export class QuantumEditor {
    *
    */
   componentWillLoad() {
+    this._config = {...this._config, ...JSON.parse(this.config)};
+    console.log('[QuantumEditor] - _config: ', this._config);
     this.warpscript = this.el.textContent.slice();
-    this.edUid = this.guid();
-    this.resUid = this.guid();
+    this.edUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
     }
@@ -179,9 +185,6 @@ export class QuantumEditor {
     if (this.ed) {
       this.ed.dispose();
     }
-    if (this.resEd) {
-      this.resEd.dispose();
-    }
   }
 
   /**
@@ -197,8 +200,7 @@ export class QuantumEditor {
 
     this.ed.getModel().onDidChangeContent((event) => {
       console.debug('ws changed', event);
-      this.warpscript = this.ed.getValue();
-      this.warpscriptChanged.emit(this.warpscript);
+      this.warpscriptChanged.emit(this.ed.getValue());
     });
   }
 
@@ -259,18 +261,6 @@ export class QuantumEditor {
           this.status = `Your script execution took ${QuantumEditor.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
           fetched ${response.headers.get('x-warp10-fetched')} datapoints 
           and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`;
-          window.setTimeout(() => {
-            if(!this.resEd) {
-              this.resEd = monaco.editor.create(this.el.querySelector('#result-' + this.resUid), {
-                value: res,
-                language: 'json', automaticLayout: true,
-                scrollBeyondLastLine: false,
-                theme: this.monacoTheme, readOnly: false
-              });
-            } else {
-              this.resEd.setValue(res);
-            }
-          });
           this.loading = false;
         }, err => {
           console.error(err);
@@ -309,44 +299,26 @@ export class QuantumEditor {
     return (elapsed / 60000000000).toFixed(3) + ' m ';
   }
 
-  /**
-   * Generate a guid
-   * @returns {string}
-   */
-  guid() {
-    let uuid = '', i, random;
-    for (i = 0; i < 32; i++) {
-      random = Math.random() * 16 | 0;
-      if (i == 8 || i == 12 || i == 16 || i == 20) {
-        uuid += "-"
-      }
-      uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
-    }
-    return uuid;
-  }
-
   render() {
-    const status = this.status ? (
-      <div class="alert alert-primary">{this.status}</div>
-    ) : (<span/>);
-    const error = this.error ? (
-      <div class="alert alert-danger">{this.error}</div>
-    ) : (<span/>);
     const loading = this.loading ? (
       <div class="loader"><div class="spinner"/></div>
     ) : (<span/>);
     const result = this.result ? (
-      <div id={'result-' + this.resUid} class="editor-res"/>
+      <quantum-result
+        theme={this.theme}
+        result={ {json: this.result,error: this.error, message: this.status }  }
+        config={ this._config }
+      />
     ) : (<span />);
     return <div>
       <div class="clearfix"/>
       <div id={'editor-' + this.edUid} class="editor"/>
-      <button type="button" class="btn btn-primary float-right m-3"
+      <button type="button" class={this._config.buttonClass}
               onClick={(event: UIEvent) => this.execute(event)}>Execute
       </button>
       <div class="clearfix"/>
       {loading}
-      {status}{error}{result}
+      {result}
     </div>;
   }
 }

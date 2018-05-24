@@ -116,6 +116,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumEditor {
+      'config': string;
       'theme': string;
       'url': string;
       'warpscript': string;
@@ -141,6 +142,7 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumEditorAttributes extends HTMLAttributes {
+      'config'?: string;
       'onWarpscriptChanged'?: (event: CustomEvent) => void;
       'onWarpscriptResult'?: (event: CustomEvent) => void;
       'theme'?: string;
@@ -236,6 +238,43 @@ declare global {
       'showLegend'?: boolean;
       'type'?: string;
       'unit'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumResult {
+      'config': string;
+      'result': any;
+      'theme': string;
+    }
+  }
+
+  interface HTMLQuantumResultElement extends StencilComponents.QuantumResult, HTMLStencilElement {}
+
+  var HTMLQuantumResultElement: {
+    prototype: HTMLQuantumResultElement;
+    new (): HTMLQuantumResultElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-result': HTMLQuantumResultElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-result': HTMLQuantumResultElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-result': JSXElements.QuantumResultAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumResultAttributes extends HTMLAttributes {
+      'config'?: string;
+      'result'?: any;
+      'theme'?: string;
     }
   }
 }

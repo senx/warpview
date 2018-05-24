@@ -29,7 +29,13 @@
   <button type="button" class="btn btn-primary float-right m-3" id="light">Light</button>
 
 
-  <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor" warpscript="[
+  <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor"
+
+                  config='{"buttonClass": "btn btn-primary float-right m-3", "messageClass": "alert alert-primary", "errorClass": "alert alert-danger" }'
+
+                  warpscript="42
+                  'ggg'
+                  [
     NEWGTS 'testname' RENAME
     { 'label0' '42' 'label1' 'foo' } RELABEL
     100 NaN NaN NaN true ADDVALUE

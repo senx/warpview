@@ -3,10 +3,6 @@ quantum-editor {
     width: 100%;
     height: 500px;
   }
-  .editor-res {
-    width: 100%;
-    height: 300px;
-  }
 
   .loader .spinner {
     border: 5px solid #f3f3f3;
@@ -25,6 +21,7 @@ quantum-editor {
     bottom: 0;
     right: 0;
   }
+
   .loader:after {
     content: '';
     display: block;

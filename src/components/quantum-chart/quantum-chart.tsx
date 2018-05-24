@@ -65,45 +65,49 @@ export class QuantumChart extends GTSLib {
   gtsToData(gts) {
     let datasets = [];
     let ticks = [];
-    gts.forEach(d => {
+    if(!gts) {
+      return;
+    } else gts.forEach(d => {
       if (d.gts) {
         for (let i = 0; i < d.gts.length; i++) {
           let g = d.gts[i];
           let data = [];
-          g.v.forEach(d => {
-            ticks.push(d[0] / 10000);
-            data.push(d[d.length - 1])
-          });
-          let color = this.getColor(i);
-          if (d.params && d.params[i] && d.params[i].color) {
-            color = d.params[i].color
-          }
-          let label = `${g.c} - ${JSON.stringify(g.l)}`;
-          if (d.params && d.params[i] && d.params[i].key) {
-            label = d.params[i].key
-          }
-          let ds = {
-            label: label,
-            data: data,
-            pointRadius: 1,
-            fill: false,
-            steppedLine: this.isStepped(),
-            borderColor: color,
-            borderWidth: 1,
-            backgroundColor: GTSLib.transparentize(color, 0.5)
-          };
-          if (d.params && d.params[i] && d.params[i].interpolate) {
-            switch (d.params[i].interpolate) {
-              case 'line':
-                ds['lineTension'] = 0;
-                break;
-              case 'spline':
-                break;
-              case 'area':
-                ds.fill = true
+          if (g.v) {
+            g.v.forEach(d => {
+              ticks.push(d[0] / 10000);
+              data.push(d[d.length - 1])
+            });
+            let color = this.getColor(i);
+            if (d.params && d.params[i] && d.params[i].color) {
+              color = d.params[i].color
             }
+            let label = `${g.c} - ${JSON.stringify(g.l)}`;
+            if (d.params && d.params[i] && d.params[i].key) {
+              label = d.params[i].key
+            }
+            let ds = {
+              label: label,
+              data: data,
+              pointRadius: 1,
+              fill: false,
+              steppedLine: this.isStepped(),
+              borderColor: color,
+              borderWidth: 1,
+              backgroundColor: GTSLib.transparentize(color, 0.5)
+            };
+            if (d.params && d.params[i] && d.params[i].interpolate) {
+              switch (d.params[i].interpolate) {
+                case 'line':
+                  ds['lineTension'] = 0;
+                  break;
+                case 'spline':
+                  break;
+                case 'area':
+                  ds.fill = true
+              }
+            }
+            datasets.push(ds)
           }
-          datasets.push(ds)
         }
       }
     });
