@@ -14,8 +14,10 @@ export class QuantumBubble extends GTSLib {
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
   @Prop() options: object = {};
-  @Element() el: HTMLElement;
+  @Prop() width = '';
+  @Prop() height = '';
 
+  @Element() el: HTMLElement;
 
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
@@ -78,7 +80,9 @@ export class QuantumBubble extends GTSLib {
     return (
       <div>
         <h1>{this.chartTitle}</h1>
-        <canvas id="myChart" width="400" height="400"/>
+        <div class="chart-container">
+          <canvas id="myChart" width={this.width} height={this.height}/>
+        </div>
       </div>
     );
   }

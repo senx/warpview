@@ -4,7 +4,7 @@ import {GTSLib} from '../../gts.lib';
 
 @Component({
   tag: 'quantum-chart',
-  styleUrl: 'quantum-chart.css',
+  styleUrl: 'quantum-chart.scss',
   shadow: true
 })
 export class QuantumChart extends GTSLib {
@@ -13,9 +13,11 @@ export class QuantumChart extends GTSLib {
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-
   @Prop() data: string = '[]';
   @Prop() options: object = {};
+  @Prop() width = '';
+  @Prop() height = '';
+
   @Element() el: HTMLElement;
 
   interpolations = ['spline', 'step-before', 'step-after', 'area'];
@@ -65,7 +67,7 @@ export class QuantumChart extends GTSLib {
   gtsToData(gts) {
     let datasets = [];
     let ticks = [];
-    if(!gts) {
+    if (!gts) {
       return;
     } else gts.forEach(d => {
       if (d.gts) {
@@ -131,7 +133,9 @@ export class QuantumChart extends GTSLib {
     return (
       <div>
         <h1>{this.chartTitle}</h1>
-        <canvas id="myChart" width="400" height="400"/>
+        <div class="chart-container">
+          <canvas id="myChart" width={this.width} height={this.height}/>
+        </div>
       </div>
     );
   }

@@ -75,11 +75,13 @@ declare global {
     interface QuantumChart {
       'chartTitle': string;
       'data': string;
+      'height': string;
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;
       'unit': string;
+      'width': string;
     }
   }
 
@@ -104,11 +106,13 @@ declare global {
     export interface QuantumChartAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'data'?: string;
+      'height'?: string;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'type'?: string;
       'unit'?: string;
+      'width'?: string;
     }
   }
 }
