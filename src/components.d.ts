@@ -23,6 +23,8 @@ declare global {
   interface HTMLAttributes {}
 }
 
+import '@code-dimension/stencil-components';
+
 
 declare global {
 

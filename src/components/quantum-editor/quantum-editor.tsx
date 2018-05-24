@@ -8,6 +8,7 @@ import Hover = monaco.languages.Hover;
 import IReadOnlyModel = monaco.editor.IReadOnlyModel;
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 import {GTSLib} from "../../gts.lib";
+import {h} from "@stencil/core/dist/renderer/vdom";
 
 @Component({
   tag: 'quantum-editor',
@@ -307,7 +308,7 @@ export class QuantumEditor {
       <quantum-result
         theme={this.theme}
         result={ {json: this.result,error: this.error, message: this.status }  }
-        config={ this._config }
+        config={ JSON.stringify(this._config) }
       />
     ) : (<span />);
     return <div>

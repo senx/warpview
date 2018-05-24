@@ -2,6 +2,9 @@ import {Component, Element, Prop, Watch} from "@stencil/core";
 import monaco from '@timkendrick/monaco-editor';
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 import {GTSLib} from "../../gts.lib";
+import {h} from "@stencil/core/dist/renderer/vdom";
+
+import "@code-dimension/stencil-components"
 
 @Component({
   tag: 'quantum-result',
@@ -59,6 +62,7 @@ export class QuantumResult {
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
     }
+    console.debug(this.result.json)
   }
 
   componentDidUnload() {
@@ -90,7 +94,28 @@ export class QuantumResult {
     return <div>
       {message}
       {error}
-      <div id={'result-' + this.resUid} class="editor-res"/>
+      <div class={'wrapper ' + this.theme}>
+        <stc-tabs>
+          <stc-tab-header slot="header" name="tab1">Stack</stc-tab-header>
+          <stc-tab-header slot="header" name="tab2">Raw JSON</stc-tab-header>
+
+          <stc-tab-content slot="content" name="tab1">
+            <div class={this.theme + ' raw'}>
+              {JSON.parse(this.result.json).map((line, index) =>
+                  <span class="line">
+              <span class="line-num">{index === 0?'[TOP]':index}</span>
+              <span class="line-content">{JSON.stringify(line)}</span>
+              </span>
+              )}
+            </div>
+          </stc-tab-content>
+
+          <stc-tab-content slot="content" name="tab2">
+            <div id={'result-' + this.resUid} class="editor-res"/>
+          </stc-tab-content>
+
+        </stc-tabs>
+      </div>
     </div>
   }
 }
