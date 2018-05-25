@@ -32,10 +32,12 @@ declare global {
     interface QuantumBubble {
       'chartTitle': string;
       'data': string;
+      'height': string;
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
       'unit': string;
+      'width': string;
     }
   }
 
@@ -60,10 +62,12 @@ declare global {
     export interface QuantumBubbleAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'data'?: string;
+      'height'?: string;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'unit'?: string;
+      'width'?: string;
     }
   }
 }
@@ -123,6 +127,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumEditor {
       'config': string;
+      'displayMessages': boolean;
       'horizontalLayout': boolean;
       'showDataviz': boolean;
       'theme': string;
@@ -151,8 +156,11 @@ declare global {
   namespace JSXElements {
     export interface QuantumEditorAttributes extends HTMLAttributes {
       'config'?: string;
+      'displayMessages'?: boolean;
       'horizontalLayout'?: boolean;
       'onDatavizRequested'?: (event: CustomEvent) => void;
+      'onErrorEvent'?: (event: CustomEvent) => void;
+      'onStatusEvent'?: (event: CustomEvent) => void;
       'onWarpscriptChanged'?: (event: CustomEvent) => void;
       'onWarpscriptResult'?: (event: CustomEvent) => void;
       'showDataviz'?: boolean;
@@ -170,11 +178,13 @@ declare global {
     interface QuantumPie {
       'chartTitle': string;
       'data': string;
+      'height': string;
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;
       'unit': string;
+      'width': string;
     }
   }
 
@@ -199,11 +209,13 @@ declare global {
     export interface QuantumPieAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'data'?: string;
+      'height'?: string;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'type'?: string;
       'unit'?: string;
+      'width'?: string;
     }
   }
 }
@@ -215,11 +227,13 @@ declare global {
     interface QuantumPolar {
       'chartTitle': string;
       'data': string;
+      'height': string;
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;
       'unit': string;
+      'width': string;
     }
   }
 
@@ -244,11 +258,13 @@ declare global {
     export interface QuantumPolarAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'data'?: string;
+      'height'?: string;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'type'?: string;
       'unit'?: string;
+      'width'?: string;
     }
   }
 }
@@ -297,10 +313,12 @@ declare global {
     interface QuantumScatter {
       'chartTitle': string;
       'data': string;
+      'height': string;
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
       'unit': string;
+      'width': string;
     }
   }
 
@@ -325,10 +343,12 @@ declare global {
     export interface QuantumScatterAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'data'?: string;
+      'height'?: string;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'unit'?: string;
+      'width'?: string;
     }
   }
 }

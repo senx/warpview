@@ -87,33 +87,43 @@ export class QuantumResult {
     const message = this.result.message ? (
       <div class={this._config.messageClass}>{this.result.message}</div>
     ) : (<span/>);
+
     const error = this.result.error ? (
       <div class={this._config.errorClass}>{this.result.error}</div>
     ) : (<span/>);
+
+    const stack = this.result.json ? (
+      <div class={this.theme + ' raw'}>
+        {JSON.parse(this.result.json).map((line, index) =>
+          <span class="line">
+              <span class="line-num">{index === 0 ? '[TOP]' : index}</span>
+              <span class="line-content">{JSON.stringify(line)}</span>
+              </span>
+        )}
+      </div>
+    ) : (<span/>);
+
+    const result = this.result.json? (
+      <stc-tabs>
+        <stc-tab-header slot="header" name="tab1">Stack</stc-tab-header>
+        <stc-tab-header slot="header" name="tab2">Raw JSON</stc-tab-header>
+
+        <stc-tab-content slot="content" name="tab1">
+          {stack}
+        </stc-tab-content>
+
+        <stc-tab-content slot="content" name="tab2">
+          <div id={'result-' + this.resUid} class="editor-res"/>
+        </stc-tab-content>
+
+      </stc-tabs>
+    ) : (<span/>);
+
     return <div>
       {message}
       {error}
       <div class={'wrapper ' + this.theme}>
-        <stc-tabs>
-          <stc-tab-header slot="header" name="tab1">Stack</stc-tab-header>
-          <stc-tab-header slot="header" name="tab2">Raw JSON</stc-tab-header>
-
-          <stc-tab-content slot="content" name="tab1">
-            <div class={this.theme + ' raw'}>
-              {JSON.parse(this.result.json).map((line, index) =>
-                  <span class="line">
-              <span class="line-num">{index === 0?'[TOP]':index}</span>
-              <span class="line-content">{JSON.stringify(line)}</span>
-              </span>
-              )}
-            </div>
-          </stc-tab-content>
-
-          <stc-tab-content slot="content" name="tab2">
-            <div id={'result-' + this.resUid} class="editor-res"/>
-          </stc-tab-content>
-
-        </stc-tabs>
+        {result}
       </div>
     </div>
   }

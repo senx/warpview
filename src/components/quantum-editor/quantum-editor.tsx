@@ -27,7 +27,10 @@ export class QuantumEditor {
   @Prop() showDataviz = false;
   @Prop() horizontalLayout = false;
   @Prop() config: string = '{}';
+  @Prop() displayMessages = true;
 
+  @Event() statusEvent: EventEmitter;
+  @Event() errorEvent: EventEmitter;
   @Event() warpscriptChanged: EventEmitter;
   @Event() warpscriptResult: EventEmitter;
   @Event() datavizRequested: EventEmitter;
@@ -270,18 +273,24 @@ export class QuantumEditor {
           this.status = `Your script execution took ${QuantumEditor.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
           fetched ${response.headers.get('x-warp10-fetched')} datapoints 
           and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`;
+          this.statusEvent.emit(this.status);
           this.loading = false;
         }, err => {
           console.error(err);
+          this.error = err;
+          this.errorEvent.emit(this.error);
           this.loading = false;
         });
       } else {
         console.error(response.statusText);
+        this.error = response.statusText;
+        this.errorEvent.emit(this.error);
         this.loading = false;
       }
     }, err => {
       console.error(err);
       this.error = err;
+      this.errorEvent.emit(this.error);
       this.loading = false;
     });
   }
@@ -322,8 +331,9 @@ export class QuantumEditor {
         <div class="spinner"/>
       </div>
     ) : (<span/>);
-    const result = this.result ? (
+    const result = this.result || this.error ? (
       <quantum-result
+        display-messages={this.displayMessages}
         theme={this.theme}
         result={{json: this.result, error: this.error, message: this.status}}
         config={JSON.stringify(this._config)}
