@@ -275,6 +275,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumResult {
       'config': string;
+      'displayMessages': boolean;
       'result': any;
       'theme': string;
     }
@@ -300,6 +301,7 @@ declare global {
   namespace JSXElements {
     export interface QuantumResultAttributes extends HTMLAttributes {
       'config'?: string;
+      'displayMessages'?: boolean;
       'result'?: any;
       'theme'?: string;
     }

@@ -24,6 +24,7 @@ export class QuantumResult {
   };
   @Prop() theme: string = 'light';
   @Prop() config: string = '{}';
+  @Prop() displayMessages = true;
 
   private _config = {
     messageClass: '',
@@ -84,11 +85,11 @@ export class QuantumResult {
   }
 
   render() {
-    const message = this.result.message ? (
+    const message = this.result.message && this.displayMessages ? (
       <div class={this._config.messageClass}>{this.result.message}</div>
     ) : (<span/>);
 
-    const error = this.result.error ? (
+    const error = this.result.error && this.displayMessages ? (
       <div class={this._config.errorClass}>{this.result.error}</div>
     ) : (<span/>);
 
