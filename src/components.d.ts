@@ -175,6 +175,76 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumChip {
+      'color': string;
+    }
+  }
+
+  interface HTMLQuantumChipElement extends StencilComponents.QuantumChip, HTMLStencilElement {}
+
+  var HTMLQuantumChipElement: {
+    prototype: HTMLQuantumChipElement;
+    new (): HTMLQuantumChipElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-chip': HTMLQuantumChipElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-chip': HTMLQuantumChipElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-chip': JSXElements.QuantumChipAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumChipAttributes extends HTMLAttributes {
+      'color'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumGtsTree {
+      'branch': boolean;
+      'data': string;
+      'index': number;
+    }
+  }
+
+  interface HTMLQuantumGtsTreeElement extends StencilComponents.QuantumGtsTree, HTMLStencilElement {}
+
+  var HTMLQuantumGtsTreeElement: {
+    prototype: HTMLQuantumGtsTreeElement;
+    new (): HTMLQuantumGtsTreeElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-gts-tree': HTMLQuantumGtsTreeElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-gts-tree': HTMLQuantumGtsTreeElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-gts-tree': JSXElements.QuantumGtsTreeAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumGtsTreeAttributes extends HTMLAttributes {
+      'branch'?: boolean;
+      'data'?: string;
+      'index'?: number;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumPie {
       'chartTitle': string;
       'data': string;

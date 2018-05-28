@@ -7,7 +7,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-bubble.css',
   shadow: true
 })
-export class QuantumBubble extends GTSLib {
+export class QuantumBubble {
   @Prop() unit: string = '';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
@@ -51,7 +51,7 @@ export class QuantumBubble extends GTSLib {
       let label = Object.keys(gts[i])[0];
       let data = [];
       let g = gts[i][label];
-      if (this.isArray(g)) {
+      if (GTSLib.isArray(g)) {
         g.forEach(d => {
           data.push({
               x: d[0],
@@ -64,8 +64,8 @@ export class QuantumBubble extends GTSLib {
       datasets.push({
         data: data,
         label: label,
-        backgroundColor: GTSLib.transparentize(this.getColor(i), 0.5),
-        borderColor: this.getColor(i),
+        backgroundColor: GTSLib.transparentize(GTSLib.getColor(i), 0.5),
+        borderColor: GTSLib.getColor(i),
         borderWidth: 1
       });
     }

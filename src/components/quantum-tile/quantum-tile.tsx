@@ -1,4 +1,4 @@
-import {Component, Prop, Element, State} from '@stencil/core';
+import {Component, Element, Prop, State} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 
 @Component({
@@ -6,7 +6,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-tile.css',
   shadow: true
 })
-export class QuantumTile extends GTSLib {
+export class QuantumTile {
 
   warpscript: string = '';
   @State() data: string = '[]';
@@ -66,7 +66,7 @@ export class QuantumTile extends GTSLib {
     let me = this;
     for (let i = 0; i < gtsList.length; i++) {
       let gts = gtsList[i];
-      params.push({color: me.getColor(i), key: gts.c, interpolate: me.type})
+      params.push({color: GTSLib.getColor(i), key: gts.c, interpolate: me.type})
     }
     return params;
   }

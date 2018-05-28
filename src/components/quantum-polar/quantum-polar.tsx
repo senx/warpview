@@ -7,7 +7,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-polar.css',
   shadow: true
 })
-export class QuantumPolar extends GTSLib {
+export class QuantumPolar {
   @Prop() unit: string = '';
   @Prop() type: string = 'polar';
   @Prop() chartTitle: string = '';
@@ -31,7 +31,7 @@ export class QuantumPolar extends GTSLib {
   generateColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
-      color.push(GTSLib.transparentize(this.getColor(i), 0.5));
+      color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
     }
     return color;
   }

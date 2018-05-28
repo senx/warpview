@@ -7,7 +7,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-chart.scss',
   shadow: true
 })
-export class QuantumChart extends GTSLib {
+export class QuantumChart {
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
@@ -76,14 +76,14 @@ export class QuantumChart extends GTSLib {
           let data = [];
           if (g.v) {
             g.v.forEach(d => {
-              ticks.push(d[0] / 10000);
+              ticks.push(d[0] / 1000);
               data.push(d[d.length - 1])
             });
-            let color = this.getColor(i);
+            let color = GTSLib.getColor(i);
             if (d.params && d.params[i] && d.params[i].color) {
               color = d.params[i].color
             }
-            let label = `${g.c} - ${JSON.stringify(g.l)}`;
+            let label = GTSLib.serializeGtsMetadata(g);
             if (d.params && d.params[i] && d.params[i].key) {
               label = d.params[i].key
             }

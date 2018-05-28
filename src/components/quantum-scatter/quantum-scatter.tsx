@@ -7,7 +7,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-scatter.css',
   shadow: true
 })
-export class QuantumScatter extends GTSLib {
+export class QuantumScatter {
   @Prop() unit: string = '';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
@@ -66,7 +66,7 @@ export class QuantumScatter extends GTSLib {
         g.v.forEach(d => {
           data.push({x: d[0] / 10000, y: d[d.length - 1]})
         });
-        let color = this.getColor(i);
+        let color = GTSLib.getColor(i);
         if (d.params && d.params[i] && d.params[i].color) {
           color = d.params[i].color
         }

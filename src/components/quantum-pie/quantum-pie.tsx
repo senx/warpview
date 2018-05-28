@@ -7,7 +7,7 @@ import {GTSLib} from '../../gts.lib';
   styleUrl: 'quantum-pie.css',
   shadow: true
 })
-export class QuantumPie extends GTSLib {
+export class QuantumPie {
   @Prop() unit: string = '';
   @Prop() type: string = 'pie';
   @Prop() chartTitle: string = '';
@@ -31,7 +31,7 @@ export class QuantumPie extends GTSLib {
   generateColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
-      color.push(this.getColor(i));
+      color.push(GTSLib.getColor(i));
     }
     return color;
   }

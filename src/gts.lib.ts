@@ -1,14 +1,14 @@
 export class GTSLib {
 
-  color = ['#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#607D8B'];
+  static color = ['#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#607D8B'];
 
   /**
    * Get a color from index
    * @param i
    * @returns {string}
    */
-  getColor(i) {
-    return this.color[i % this.color.length]
+  static getColor(i) {
+    return GTSLib.color[i % GTSLib.color.length]
   }
 
   /**
@@ -56,12 +56,12 @@ export class GTSLib {
    * @param value
    * @returns {any | boolean}
    */
-  isArray(value) {
+  static isArray(value) {
     return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
       && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
   }
 
-  isValidResponse(data) {
+  static isValidResponse(data) {
     let response;
     try {
       response = JSON.parse(data);
@@ -69,27 +69,27 @@ export class GTSLib {
       console.error('Response non JSON compliant', data);
       return false;
     }
-    if (!this.isArray(response)) {
+    if (!GTSLib.isArray(response)) {
       console.error('Response isn\'t an Array', response);
       return false;
     }
     return true;
   }
 
-  isEmbeddedImage(item) {
+  static isEmbeddedImage(item) {
     return !(typeof item !== 'string' || !/^data:image/.test(item));
   }
 
-  isEmbeddedImageObject(item) {
+  static isEmbeddedImageObject(item) {
     return !((item === null) || (item.image === null) ||
-      (item.caption === null) || !this.isEmbeddedImage(item.image));
+      (item.caption === null) || !GTSLib.isEmbeddedImage(item.image));
   }
 
-  isPositionArray(item) {
+  static isPositionArray(item) {
     if (!item || !item.positions) {
       return false;
     }
-    if (this.isPositionsArrayWithValues(item) || this.isPositionsArrayWithTwoValues(item)) {
+    if (GTSLib.isPositionsArrayWithValues(item) || GTSLib.isPositionsArrayWithTwoValues(item)) {
       return true;
     }
     for (let i in item.positions) {
@@ -105,7 +105,7 @@ export class GTSLib {
     return true;
   }
 
-  isPositionsArrayWithValues(item) {
+  static isPositionsArrayWithValues(item) {
     if ((item === null) || (item.positions === null)) {
       return false;
     }
@@ -122,7 +122,7 @@ export class GTSLib {
     return true;
   }
 
-  isPositionsArrayWithTwoValues(item) {
+  static isPositionsArrayWithTwoValues(item) {
     if ((item === null) || (item.positions === null)) {
       return false;
     }
@@ -139,7 +139,7 @@ export class GTSLib {
     return true;
   }
 
-  metricFromJSON(json) {
+  static metricFromJSON(json) {
     let metric = {
       ts: json[0],
       value: undefined,
@@ -169,7 +169,7 @@ export class GTSLib {
     return metric;
   }
 
-  gtsFromJSON(json, id) {
+  static gtsFromJSON(json, id) {
     return {
       gts: {
         c: json.c,
@@ -181,7 +181,7 @@ export class GTSLib {
     };
   }
 
-  gtsFromJSONList(jsonList, prefixId) {
+  static gtsFromJSONList(jsonList, prefixId) {
     let gts;
     let gtsList = [];
     let i;
@@ -193,20 +193,20 @@ export class GTSLib {
       } else {
         id = '' + i;
       }
-      if (this.isArray(gts)) {
-        gtsList.push(this.gtsFromJSONList(gts, id));
+      if (GTSLib.isArray(gts)) {
+        gtsList.push(GTSLib.gtsFromJSONList(gts, id));
       }
-      if (this.isGts(gts)) {
-        gtsList.push(this.gtsFromJSON(gts, id));
+      if (GTSLib.isGts(gts)) {
+        gtsList.push(GTSLib.gtsFromJSON(gts, id));
       }
-      if (this.isEmbeddedImage(gts)) {
+      if (GTSLib.isEmbeddedImage(gts)) {
         gtsList.push({
           image: gts,
           caption: 'Image',
           id: id,
         });
       }
-      if (this.isEmbeddedImageObject(gts)) {
+      if (GTSLib.isEmbeddedImageObject(gts)) {
         gtsList.push({
           image: gts.image,
           caption: gts.caption,
@@ -219,7 +219,7 @@ export class GTSLib {
     };
   }
 
-  flattenGtsIdArray(a, r) {
+  static flattenGtsIdArray(a, r) {
     let elem;
     let j;
     if (!r) {
@@ -228,7 +228,7 @@ export class GTSLib {
     for (j = 0; j < a.content.length; j++) {
       elem = a.content[j];
       if (elem.content) {
-        this.flattenGtsIdArray(elem, r);
+        GTSLib.flattenGtsIdArray(elem, r);
       } else {
         if (elem.gts) {
           r.push(elem.gts);
@@ -238,7 +238,7 @@ export class GTSLib {
     return r;
   }
 
-  serializeGtsMetadata(gts) {
+  static serializeGtsMetadata(gts) {
     let serializedLabels = [];
     Object.keys(gts.l).forEach((key) => {
       serializedLabels.push(key + '=' + gts.l[key]);
@@ -246,7 +246,7 @@ export class GTSLib {
     return (gts.id ? (gts.id + ' ') : '') + gts.c + '{' + serializedLabels.join(',') + '}';
   }
 
-  gtsToPath(gts) {
+  static gtsToPath(gts) {
     let path = [];
     // Sort values
     gts.v = gts.v.sort(function (a, b) {
@@ -278,7 +278,7 @@ export class GTSLib {
     return path;
   }
 
-  equalMetadata(a, b) {
+  static equalMetadata(a, b) {
     if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
       !(a.l instanceof Object) || !(b.l instanceof Object)) {
       console.error('[warp10-gts-tools] equalMetadata - Error in GTS, metadata is not well formed');
@@ -297,13 +297,13 @@ export class GTSLib {
     return true;
   }
 
-  isGts(item) {
+  static isGts(item) {
     return !(!item || item === null || item.c === null || item.l === null ||
-      item.a === null || item.v === null || !this.isArray(item.v));
+      item.a === null || item.v === null || !GTSLib.isArray(item.v));
   }
 
-  isGtsToPlot(gts) {
-    if (!this.isGts(gts) || gts.v.length === 0) {
+  static isGtsToPlot(gts) {
+    if (!GTSLib.isGts(gts) || gts.v.length === 0) {
       return false;
     }
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
@@ -322,8 +322,8 @@ export class GTSLib {
     return false;
   }
 
-  isGtsToAnnotate(gts) {
-    if (!this.isGts(gts) || gts.v.length === 0) {
+  static isGtsToAnnotate(gts) {
+    if (!GTSLib.isGts(gts) || gts.v.length === 0) {
       return false;
     }
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
@@ -342,7 +342,7 @@ export class GTSLib {
     return false;
   }
 
-  gtsSort(gts) {
+  static gtsSort(gts) {
     if (gts.isSorted) {
       return;
     }
@@ -352,8 +352,8 @@ export class GTSLib {
     gts.isSorted = true;
   }
 
-  gtsTimeRange(gts) {
-    this.gtsSort(gts);
+  static gtsTimeRange(gts) {
+    GTSLib.gtsSort(gts);
     if (gts.v.length === 0) {
       return null;
     }

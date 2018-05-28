@@ -1,0 +1,54 @@
+quantum-gts-tree {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    overflow: hidden;
+  }
+
+  li {
+    position: relative;
+    padding: 0 0 0 20px;
+    line-height: 20px;
+  }
+
+  li .stack-level {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-top: 25px;
+    padding-bottom: 10px;
+  }
+
+  li .stack-level + div {
+    padding-left: 25px;
+  }
+
+  li .expanded {
+    padding: 1px 10px;
+    background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAKElEQVQ4jWNgGFbgFQMDw38i8UuYJiYkA5hJsIwUtXQEo2EwGgZkAwBP/yN0kY5JiwAAAABJRU5ErkJggg==) no-repeat;
+  }
+
+  li .collapsed {
+    padding: 1px 10px;
+    background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAXUlEQVQ4jWNgGCzgJwMDw38S8U8GBgYGJqgBjGRYSo4e3GAfAwMDP5oYIW/9RFb8n4GB4RQDA4MgktgvAgb8QjfgPwMDwyxyvYDNBSR54SADZhiQ5AWKwTBISAMHAKXXR27jzC2pAAAAAElFTkSuQmCC) no-repeat;
+  }
+
+  .gts-classname {
+    color: #0074D9;
+  }
+
+  .gts-labelname {
+    color: #3d9970;
+  }
+
+  .gts-separator {
+    color: #bbbbbb;
+  }
+
+  .gts-labelvalue {
+    color: #AAAAAA;
+    font-style: italic;
+  }
+
+}
