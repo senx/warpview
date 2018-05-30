@@ -176,7 +176,9 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumChip {
-      'color': string;
+      'index': number;
+      'name': string;
+      'node': any;
     }
   }
 
@@ -199,7 +201,10 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumChipAttributes extends HTMLAttributes {
-      'color'?: string;
+      'index'?: number;
+      'name'?: string;
+      'node'?: any;
+      'onSelected'?: (event: CustomEvent) => void;
     }
   }
 }
@@ -209,9 +214,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumGtsTree {
-      'branch': boolean;
       'data': string;
-      'index': number;
     }
   }
 
@@ -234,9 +237,46 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
-      'branch'?: boolean;
       'data'?: string;
+      'onSelected'?: (event: CustomEvent) => void;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumTreeView {
+      'branch': boolean;
+      'gtsList': any;
+      'index': number;
+    }
+  }
+
+  interface HTMLQuantumTreeViewElement extends StencilComponents.QuantumTreeView, HTMLStencilElement {}
+
+  var HTMLQuantumTreeViewElement: {
+    prototype: HTMLQuantumTreeViewElement;
+    new (): HTMLQuantumTreeViewElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-tree-view': HTMLQuantumTreeViewElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-tree-view': HTMLQuantumTreeViewElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-tree-view': JSXElements.QuantumTreeViewAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumTreeViewAttributes extends HTMLAttributes {
+      'branch'?: boolean;
+      'gtsList'?: any;
       'index'?: number;
+      'onSelected'?: (event: CustomEvent) => void;
     }
   }
 }

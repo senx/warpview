@@ -186,6 +186,7 @@ export class GTSLib {
     let gtsList = [];
     let i;
     let id;
+    console.debug('[GTSLib] - gtsFromJSONList - jsonList', jsonList);
     for (i = 0; i < jsonList.length; i++) {
       gts = jsonList[i];
       if ((prefixId !== undefined) && (prefixId !== '')) {
@@ -194,12 +195,15 @@ export class GTSLib {
         id = '' + i;
       }
       if (GTSLib.isArray(gts)) {
+        console.debug('[GTSLib] - gtsFromJSONList - isArray', gts);
         gtsList.push(GTSLib.gtsFromJSONList(gts, id));
       }
       if (GTSLib.isGts(gts)) {
+        console.debug('[GTSLib] - gtsFromJSONList - isGTS', gts);
         gtsList.push(GTSLib.gtsFromJSON(gts, id));
       }
       if (GTSLib.isEmbeddedImage(gts)) {
+        console.debug('[GTSLib] - gtsFromJSONList - isEmbeddedImage', gts);
         gtsList.push({
           image: gts,
           caption: 'Image',
@@ -207,6 +211,7 @@ export class GTSLib {
         });
       }
       if (GTSLib.isEmbeddedImageObject(gts)) {
+        console.debug('[GTSLib] - gtsFromJSONList - isEmbeddedImageObject', gts);
         gtsList.push({
           image: gts.image,
           caption: gts.caption,
@@ -214,6 +219,7 @@ export class GTSLib {
         });
       }
     }
+    console.debug('[GTSLib] - gtsFromJSONList - return', gtsList);
     return {
       content: gtsList,
     };
