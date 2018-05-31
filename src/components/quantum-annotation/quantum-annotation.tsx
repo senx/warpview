@@ -3,25 +3,29 @@ import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/cor
 import {GTSLib} from '../../gts.lib';
 
 @Component({
-  tag: 'quantum-scatter',
-  styleUrl: 'quantum-scatter.scss',
+  tag: 'quantum-annotation',
+  styleUrl: 'quantum-annotation.scss',
   shadow: true
 })
-export class QuantumScatter {
-  @Prop() unit: string = '';
+export class QuantumAnnotation {
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
   @Prop() options: object = {};
-  @Prop() width = '';
-  @Prop() height = '';
   @Prop() timeMin: number;
   @Prop() timeMax: number;
+  @Prop() width = '';
+  @Prop({
+    mutable: true
+  }) height = '';
 
   @Event() pointHover: EventEmitter;
 
   @Element() el: HTMLElement;
+
+  private legendOffset = 50;
+  private lineHeight = 15;
 
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
@@ -34,12 +38,24 @@ export class QuantumScatter {
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
+    let height = (this.height !== '')
+      ? (Math.max(gts.length * this.lineHeight + this.legendOffset, parseInt(this.height)))
+      : (gts.length * this.lineHeight + this.legendOffset);
+    this.height = height + '';
+    console.log('height', this.height);
+    (ctx as HTMLElement).parentElement.style.height = height + 'px';
+    (ctx as HTMLElement).parentElement.style.width = '100%';
     const me = this;
     new Chart.Scatter(ctx, {
       data: {
         datasets: gts
       },
       options: {
+        layout: {
+          padding: {
+            left: 51
+          }
+        },
         legend: {display: this.showLegend},
         responsive: this.responsive,
         tooltips: {
@@ -55,19 +71,37 @@ export class QuantumScatter {
             }
             return;
           },
+          callbacks: {
+            label: function (tooltipItem, data) {
+              const label = tooltipItem.xLabel || '';
+              const val = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val;
+              return `(${label}, ${val})`;
+            }
+          }
         },
         scales: {
           xAxes: [{
+            drawTicks: false,
             type: 'time',
             time: {
               min: this.timeMin,
               max: this.timeMax,
+            },
+            gridLines: {
+              display: false
             }
           }],
           yAxes: [{
+            display: false,
+            drawTicks: false,
             scaleLabel: {
-              display: true,
-              labelString: this.unit
+              display: false
+            },
+            ticks: {
+              min: 0,
+              max: gts.length - 1,
+              beginAtZero: true,
+              stepSize: 1
             }
           }]
         },
@@ -82,7 +116,7 @@ export class QuantumScatter {
         let g = d.gts[i];
         let data = [];
         g.v.forEach(d => {
-          data.push({x: d[0] / 1000, y: d[d.length - 1]})
+          data.push({x: d[0] / 1000, y: i, val: d[d.length - 1]})
         });
         let color = GTSLib.getColor(i);
         if (d.params && d.params[i] && d.params[i].color) {
@@ -95,7 +129,10 @@ export class QuantumScatter {
         datasets.push({
           label: label,
           data: data,
-          pointRadius: 2,
+          pointRadius: 5,
+          pointHoverRadius: 5,
+          pointHitRadius: 5,
+          pointStyle: 'rect',
           borderColor: color,
           backgroundColor: GTSLib.transparentize(color, 0.5)
         })
@@ -112,7 +149,7 @@ export class QuantumScatter {
   render() {
     return <div>
       <h1>{this.chartTitle}</h1>
-      <div class="chart-container">
+      <div class="chart-container" style={{position: 'relative', width: this.width, height: this.height}}>
         <canvas id="myChart" width={this.width} height={this.height}/>
       </div>
     </div>;

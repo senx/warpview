@@ -29,6 +29,56 @@ import '@code-dimension/stencil-components';
 declare global {
 
   namespace StencilComponents {
+    interface QuantumAnnotation {
+      'chartTitle': string;
+      'data': string;
+      'height': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumAnnotationElement extends StencilComponents.QuantumAnnotation, HTMLStencilElement {}
+
+  var HTMLQuantumAnnotationElement: {
+    prototype: HTMLQuantumAnnotationElement;
+    new (): HTMLQuantumAnnotationElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-annotation': HTMLQuantumAnnotationElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-annotation': HTMLQuantumAnnotationElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-annotation': JSXElements.QuantumAnnotationAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumAnnotationAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
+      'data'?: string;
+      'height'?: string;
+      'onPointHover'?: (event: CustomEvent) => void;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumBubble {
       'chartTitle': string;
       'data': string;
@@ -36,6 +86,8 @@ declare global {
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
       'unit': string;
       'width': string;
     }
@@ -63,9 +115,12 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
+      'onPointHover'?: (event: CustomEvent) => void;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
       'unit'?: string;
       'width'?: string;
     }
@@ -83,6 +138,8 @@ declare global {
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
       'type': string;
       'unit': string;
       'width': string;
@@ -111,9 +168,12 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
+      'onPointHover'?: (event: CustomEvent) => void;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
       'type'?: string;
       'unit'?: string;
       'width'?: string;
@@ -429,6 +489,8 @@ declare global {
       'options': object;
       'responsive': boolean;
       'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
       'unit': string;
       'width': string;
     }
@@ -456,9 +518,12 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
+      'onPointHover'?: (event: CustomEvent) => void;
       'options'?: object;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
       'unit'?: string;
       'width'?: string;
     }

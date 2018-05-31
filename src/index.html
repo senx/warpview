@@ -20,6 +20,23 @@
 
 
   <script src="/build/quantumviz.js"></script>
+
+  <style>
+    .bar {
+      width: 1px;
+      height: 100%;
+      left: -100px;
+      position: absolute;
+      background-color: red;
+      top: 0;
+      bottom: 0;
+    }
+
+    #maincontainer {
+      overflow: hidden;
+      background-color: #2d2f31;
+    }
+  </style>
 </head>
 
 <body>
@@ -27,59 +44,83 @@
 <div class="container-fluid">
   <button type="button" class="btn btn-primary float-right m-3" id="dark">Dark</button>
   <button type="button" class="btn btn-primary float-right m-3" id="light">Light</button>
-<quantum-gts-tree  data='[[{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1049,true],[732,true],[415,false]]},{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[2000,false],[732,true],[415,true]]}]]'></quantum-gts-tree>
-<!--
-  <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor"
-                  show-dataviz="true" horizontal-layout="true"
-                  config='{
-                  "execButton": {
-                    "class": "btn btn-primary float-right m-3"
-                   },
-                   "datavizButton": {
-                      "class": "btn btn-primary float-right m-3"
-                   },
-                   "messageClass": "alert alert-primary",
-                   "errorClass": "alert alert-danger"
-                  }'
 
-                  warpscript="42
-                  'ggg'
-                  [
-    NEWGTS 'testname' RENAME
-    { 'label0' '42' 'label1' 'foo' } RELABEL
-    100 NaN NaN NaN true ADDVALUE
-    200 NaN NaN NaN false ADDVALUE
-    300 NaN NaN NaN true ADDVALUE
-    400 NaN NaN NaN true ADDVALUE
-    500 NaN NaN NaN true ADDVALUE
-    600 NaN NaN NaN true ADDVALUE
-    700 NaN NaN NaN true ADDVALUE
-    800 NaN NaN NaN true ADDVALUE
-
-    NEWGTS
-    'testname' RENAME
-    { 'label0' '42' 'label1' 'foo' } RELABEL
-    100 NaN NaN NaN true ADDVALUE
-    200 NaN NaN NaN true ADDVALUE
-    300 NaN NaN NaN true ADDVALUE
-    400 NaN NaN NaN true ADDVALUE
-    500 NaN NaN NaN true ADDVALUE
-    600 NaN NaN NaN true ADDVALUE
-    700 NaN NaN NaN true ADDVALUE
-    2000 NaN NaN NaN false ADDVALUE
-    ]
-    [ SWAP bucketizer.and 2000 0 6 ] BUCKETIZE">
-  </quantum-editor>
+  <quantum-gts-tree
+    data='[[{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389140000000000,true],[1389150000000000,true],[1389160000000000,false]]},{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389160000000000,false],[1389180000000000,true],[1389200000000000,true]]}]]'></quantum-gts-tree>
+  <div id="maincontainer">
+    <quantum-annotation responsive="true" id="annotation"
+                        data='[{"gts":[{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389140000000000,true],[1389150000000000,true],[1389160000000000,false]]},{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389160000000000,false],[1389180000000000,true],[1389200000000000,true]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-annotation>
+    <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures" height="500" id="scatter"
+                     data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-scatter>
+  </div>
   <script language="JavaScript">
-    $(function() {
-      $("#dark").click(function() {
-        $("#editor").attr("theme", "dark").attr("horizontal-layout", "true");
+    $(function () {
+      var main = $('#maincontainer');
+      var line = $('<div />').addClass('bar');
+      main.append(line);
+      $('#annotation').on('pointHover', function (event) {
+        console.log(event.originalEvent.detail);
+        line.css({left: event.originalEvent.detail.x}).css({top: main.position().top, height: main.height() + 'px'});
       });
-      $("#light").click(function() {
-        $("#editor").attr("theme", "light").attr("horizontal-layout", "false");
+      $('#scatter').on('pointHover', function (event) {
+        console.log(event.originalEvent.detail);
+        line.css({left: event.originalEvent.detail.x}).css({top: main.position().top, height: main.height() + 'px'});
       });
     });
-  </script> -->
+  </script>
+  <!---->
+  <!--
+    <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor"
+                    show-dataviz="true" horizontal-layout="true"
+                    config='{
+                    "execButton": {
+                      "class": "btn btn-primary float-right m-3"
+                     },
+                     "datavizButton": {
+                        "class": "btn btn-primary float-right m-3"
+                     },
+                     "messageClass": "alert alert-primary",
+                     "errorClass": "alert alert-danger"
+                    }'
+
+                    warpscript="42
+                    'ggg'
+                    [
+      NEWGTS 'testname' RENAME
+      { 'label0' '42' 'label1' 'foo' } RELABEL
+      100 NaN NaN NaN true ADDVALUE
+      200 NaN NaN NaN false ADDVALUE
+      300 NaN NaN NaN true ADDVALUE
+      400 NaN NaN NaN true ADDVALUE
+      500 NaN NaN NaN true ADDVALUE
+      600 NaN NaN NaN true ADDVALUE
+      700 NaN NaN NaN true ADDVALUE
+      800 NaN NaN NaN true ADDVALUE
+
+      NEWGTS
+      'testname' RENAME
+      { 'label0' '42' 'label1' 'foo' } RELABEL
+      100 NaN NaN NaN true ADDVALUE
+      200 NaN NaN NaN true ADDVALUE
+      300 NaN NaN NaN true ADDVALUE
+      400 NaN NaN NaN true ADDVALUE
+      500 NaN NaN NaN true ADDVALUE
+      600 NaN NaN NaN true ADDVALUE
+      700 NaN NaN NaN true ADDVALUE
+      2000 NaN NaN NaN false ADDVALUE
+      ]
+      [ SWAP bucketizer.and 2000 0 6 ] BUCKETIZE">
+    </quantum-editor>
+    <script language="JavaScript">
+      $(function() {
+        $("#dark").click(function() {
+          $("#editor").attr("theme", "dark").attr("horizontal-layout", "true");
+        });
+        $("#light").click(function() {
+          $("#editor").attr("theme", "light").attr("horizontal-layout", "false");
+        });
+      });
+    </script> -->
   <!--
   <div class="row">
     <div class="card col-lg-4 col-md-12">

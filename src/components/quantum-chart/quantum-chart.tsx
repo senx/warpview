@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 
 @Component({
@@ -17,6 +17,10 @@ export class QuantumChart {
   @Prop() options: object = {};
   @Prop() width = '';
   @Prop() height = '';
+  @Prop() timeMin: number;
+  @Prop() timeMax: number;
+
+  @Event() pointHover: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -36,6 +40,7 @@ export class QuantumChart {
     let data = JSON.parse(this.data);
     if (!data) return;
     let gts = this.gtsToData(data);
+    const me = this;
     new Chart(ctx, {
       type: (this.interpolations.indexOf(this.type) > -1) ? 'line' : this.type,
       legend: {display: this.showLegend},
@@ -45,12 +50,26 @@ export class QuantumChart {
       },
       options: {
         tooltips: {
-          mode: 'index',
-          position: 'nearest'
+          mode: 'x',
+          position: 'nearest',
+          custom: function( tooltip ) {
+            if( tooltip.opacity > 0 ) {
+              console.log( "Tooltip is showing", tooltip, this._eventPosition );
+              me.pointHover.emit({x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y});
+            } else {
+              console.log( "Tooltip is hidden", tooltip );
+              me.pointHover.emit({x: -100, y: this._eventPosition.y});
+            }
+            return;
+          },
         },
         scales: {
           xAxes: [{
             type: 'time',
+            time: {
+              min: this.timeMin,
+              max: this.timeMax,
+            }
           }],
           yAxes: [{
             scaleLabel: {

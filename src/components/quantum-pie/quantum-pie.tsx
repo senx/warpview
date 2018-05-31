@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch} from '@stencil/core';
+import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 
 @Component({
