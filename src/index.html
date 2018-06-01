@@ -48,10 +48,10 @@
   <quantum-gts-tree
     data='[[{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389140000000000,true],[1389150000000000,true],[1389160000000000,false]]},{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389160000000000,false],[1389180000000000,true],[1389200000000000,true]]}]]'></quantum-gts-tree>
   <div id="maincontainer">
-    <quantum-annotation responsive="true" id="annotation"
+    <quantum-annotation responsive="true" id="annotation"  show-legend="false"
                         data='[{"gts":[{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389140000000000,true],[1389150000000000,true],[1389160000000000,false]]},{"c":"testname","l":{"label0":"42","label1":"foo"},"a":{},"v":[[1389160000000000,false],[1389180000000000,true],[1389200000000000,true]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-annotation>
-    <quantum-scatter responsive="true" unit="°C" chart-title="Temperatures" height="500" id="scatter"
-                     data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-scatter>
+    <quantum-chart responsive="true" unit="°C" chart-title="Temperatures" height="500" id="scatter" show-legend="false"
+                     data='[{"gts":[{"c":"a","l":{"b":"42"},"a":{},"v":[[1389140000000000,15.2],[1389150000000000,17.2],[1389160000000000,11.2],[1389180000000000,10.2]]},{"c":"b","l":{"b":"42"},"a":{},"v":[[1389140000000000,5.2],[1389150000000000,7.2],[1389160000000000,1.2],[1389180000000000,1.8],[1389200000000000,2.5]]}],"params":[{"color":"#ff1010","key":"Temperature A", "interpolate":"line"},{"color":"#10ff10","key":"Temperature B", "interpolate":"area"}],"globalParams":{}}]'></quantum-chart>
   </div>
   <script language="JavaScript">
     $(function () {

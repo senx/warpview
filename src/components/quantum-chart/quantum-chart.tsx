@@ -43,12 +43,12 @@ export class QuantumChart {
     const me = this;
     new Chart(ctx, {
       type: (this.interpolations.indexOf(this.type) > -1) ? 'line' : this.type,
-      legend: {display: this.showLegend},
       data: {
         labels: gts.ticks,
         datasets: gts.datasets
       },
       options: {
+        legend: {display: this.showLegend},
         tooltips: {
           mode: 'x',
           position: 'nearest',
