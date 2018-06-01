@@ -37,8 +37,12 @@ export class QuantumGtsTree {
 
   render() {
     return (
-      <quantum-tree-view gtsList={this.gtsList} branch={false}  onSelected={(event: CustomEvent) => this.onSelected(event)} />
+      <quantum-tree-view gtsList={this.gtsList} branch={false} onSelected={(event: CustomEvent) => this.onSelected(event)} />
     )
   }
 
+}
+
+export class Counter {
+  public static item: number = -1;
 }

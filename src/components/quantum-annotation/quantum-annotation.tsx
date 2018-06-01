@@ -24,8 +24,8 @@ export class QuantumAnnotation {
 
   @Element() el: HTMLElement;
 
-  private legendOffset = 50;
-  private lineHeight = 15;
+  private legendOffset = 70;
+  private lineHeight = 5;
 
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
@@ -53,7 +53,7 @@ export class QuantumAnnotation {
       options: {
         layout: {
           padding: {
-            left: 51
+            bottom: 25  * gts.length
           }
         },
         legend: {display: this.showLegend},
@@ -63,19 +63,18 @@ export class QuantumAnnotation {
           position: 'nearest',
           custom: function( tooltip ) {
             if( tooltip.opacity > 0 ) {
-              console.log( "Tooltip is showing", tooltip, this._eventPosition );
               me.pointHover.emit({x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y});
             } else {
-              console.log( "Tooltip is hidden", tooltip );
               me.pointHover.emit({x: -100, y: this._eventPosition.y});
             }
             return;
           },
           callbacks: {
-            label: function (tooltipItem, data) {
-              const label = tooltipItem.xLabel || '';
-              const val = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val;
-              return `(${label}, ${val})`;
+            title: (tooltipItems, data) => {
+              return tooltipItems[0].xLabel || '';
+            },
+            label:  (tooltipItem, data)  => {
+              return `${data.datasets[tooltipItem.datasetIndex].label}: ${data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val}`;
             }
           }
         },
@@ -97,9 +96,12 @@ export class QuantumAnnotation {
             scaleLabel: {
               display: false
             },
+            afterFit: function(scaleInstance) {
+              scaleInstance.width = 100; // sets the width to 100px
+            },
             ticks: {
               min: 0,
-              max: gts.length - 1,
+              max: gts.length,
               beginAtZero: true,
               stepSize: 1
             }

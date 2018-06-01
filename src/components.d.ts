@@ -310,7 +310,6 @@ declare global {
     interface QuantumTreeView {
       'branch': boolean;
       'gtsList': any;
-      'index': number;
     }
   }
 
@@ -335,7 +334,6 @@ declare global {
     export interface QuantumTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsList'?: any;
-      'index'?: number;
       'onSelected'?: (event: CustomEvent) => void;
     }
   }

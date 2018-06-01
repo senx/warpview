@@ -43,10 +43,8 @@ export class QuantumBubble {
         position: 'nearest',
         custom: function (tooltip) {
           if (tooltip.opacity > 0) {
-            console.log("Tooltip is showing", tooltip, this._eventPosition);
             me.pointHover.emit({x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y});
           } else {
-            console.log("Tooltip is hidden", tooltip);
             me.pointHover.emit({x: -100, y: this._eventPosition.y});
           }
           return;
@@ -58,6 +56,15 @@ export class QuantumBubble {
       },
       options: {
         borderWidth: 1,
+        scales: {
+          yAxes: [
+            {
+              afterFit: function(scaleInstance) {
+                scaleInstance.width = 100; // sets the width to 100px
+              }
+            }
+          ]
+        },
         responsive: this.responsive
       }
     });
