@@ -38,11 +38,13 @@ export class QuantumAnnotation {
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
-    let height = (this.height !== '')
-      ? (Math.max(gts.length * this.lineHeight + this.legendOffset, parseInt(this.height)))
-      : (gts.length * this.lineHeight + this.legendOffset);
+    console.log(gts.length);
+    let calculatedHeight = 30  * gts.length + gts.length * this.lineHeight + this.legendOffset
+    let height = (this.height  || this.height !== '')
+      ? (Math.max(calculatedHeight, parseInt(this.height)))
+      : (calculatedHeight);
     this.height = height + '';
-    console.log('height', this.height);
+    console.log('height', this.height, calculatedHeight);
     (ctx as HTMLElement).parentElement.style.height = height + 'px';
     (ctx as HTMLElement).parentElement.style.width = '100%';
     const me = this;
@@ -53,7 +55,7 @@ export class QuantumAnnotation {
       options: {
         layout: {
           padding: {
-            bottom: 25  * gts.length
+            bottom: 30  * gts.length
           }
         },
         legend: {display: this.showLegend},
