@@ -39,7 +39,7 @@ export class QuantumAnnotation {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
     console.log(gts.length);
-    let calculatedHeight = 30  * gts.length + gts.length * this.lineHeight + this.legendOffset
+    let calculatedHeight = 30  * gts.length +  this.legendOffset;
     let height = (this.height  || this.height !== '')
       ? (Math.max(calculatedHeight, parseInt(this.height)))
       : (calculatedHeight);
@@ -103,7 +103,7 @@ export class QuantumAnnotation {
             },
             ticks: {
               min: 0,
-              max: gts.length,
+              max: 1,
               beginAtZero: true,
               stepSize: 1
             }
@@ -113,16 +113,35 @@ export class QuantumAnnotation {
     });
   }
 
+  /**
+   *
+   * @param {number} w
+   * @param {number} h
+   * @param {string} color
+   * @returns {HTMLImageElement}
+   */
+  buildImage(w: number, h: number, color: string) {
+    const img = new Image(w,h);
+    const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">
+<rect width="${w}" height="${h}" style="fill:${color};" />
+</svg>`;
+    // 	myImage.src = "ripple.svg"
+    img.src = 'data:image/svg+xml;base64,'+ btoa(svg);
+    return img;
+}
+
   gtsToScatter(gts) {
     let datasets = [];
+
     gts.forEach(d => {
       for (let i = 0; i < d.gts.length; i++) {
         let g = d.gts[i];
         let data = [];
-        g.v.forEach(d => {
-          data.push({x: d[0] / 1000, y: i, val: d[d.length - 1]})
-        });
         let color = GTSLib.getColor(i);
+        const myImage = this.buildImage(1, 30, color);
+        g.v.forEach(d => {
+          data.push({x: d[0] / 1000, y: 0.5, val: d[d.length - 1]});
+        });
         if (d.params && d.params[i] && d.params[i].color) {
           color = d.params[i].color
         }
@@ -136,7 +155,7 @@ export class QuantumAnnotation {
           pointRadius: 5,
           pointHoverRadius: 5,
           pointHitRadius: 5,
-          pointStyle: 'rect',
+          pointStyle: myImage,
           borderColor: color,
           backgroundColor: GTSLib.transparentize(color, 0.5)
         })
