@@ -46,7 +46,7 @@ export class QuantumChart {
     console.debug("[QuantumChart] drawChart", this.data);
     let data = JSON.parse(this.data);
     if (!data) return;
-    let gts = this.gtsToData(data);
+    let gts = this.gtsToData(JSON.parse(this.data));
     const me = this;
     new Chart(ctx, {
       type: this.interpolations.indexOf(this.type) > -1 ? "line" : this.type,
@@ -61,13 +61,11 @@ export class QuantumChart {
           position: "nearest",
           custom: function(tooltip) {
             if (tooltip.opacity > 0) {
-              console.log("Tooltip is showing", tooltip, this._eventPosition);
               me.pointHover.emit({
                 x: tooltip.dataPoints[0].x + 15,
                 y: this._eventPosition.y
               });
             } else {
-              console.log("Tooltip is hidden", tooltip);
               me.pointHover.emit({ x: -100, y: this._eventPosition.y });
             }
             return;
@@ -108,8 +106,8 @@ export class QuantumChart {
     } else
       gts.forEach(d => {
         if (d.gts) {
-          for (let i = 0; i < d.gts.length; i++) {
-            let g = d.gts[i];
+          d.gts = GTSLib.flatDeep(d.gts);
+          d.gts.forEach((g, i) => {
             let data = [];
             if (g.v) {
               g.v.forEach(d => {
@@ -147,7 +145,7 @@ export class QuantumChart {
               }
               datasets.push(ds);
             }
-          }
+          });
         }
       });
     return { datasets: datasets, ticks: GTSLib.unique(ticks) };

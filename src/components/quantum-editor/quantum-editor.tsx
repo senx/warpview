@@ -192,6 +192,9 @@ export class QuantumEditor {
   }
 
 
+  /**
+   *
+   */
   componentDidUnload() {
     console.log('Component removed from the DOM');
     if (this.ed) {

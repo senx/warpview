@@ -181,14 +181,22 @@ export class GTSLib {
     };
   }
 
+  /**
+   *
+   * @param jsonList
+   * @param prefixId
+   * @returns {{content: any[]}}
+   */
   static gtsFromJSONList(jsonList, prefixId) {
-    let gts;
     let gtsList = [];
-    let i;
     let id;
     console.debug('[GTSLib] - gtsFromJSONList - jsonList', jsonList);
-    for (i = 0; i < jsonList.length; i++) {
-      gts = jsonList[i];
+    jsonList.forEach((item, i) => {
+      let gts = item;
+      if(item.gts) {
+        gts = item.gts;
+      }
+      console.debug('[GTSLib] - gtsFromJSONList - jsonList[i]', i, gts);
       if ((prefixId !== undefined) && (prefixId !== '')) {
         id = prefixId + '-' + i;
       } else {
@@ -218,13 +226,28 @@ export class GTSLib {
           id: id,
         });
       }
-    }
+    });
     console.debug('[GTSLib] - gtsFromJSONList - return', gtsList);
     return {
       content: gtsList,
     };
   }
 
+  /**
+   *
+   * @param arr1
+   * @returns {any}
+   */
+  static flatDeep(arr1) {
+    return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
+  };
+
+  /**
+   *
+   * @param a
+   * @param r
+   * @returns {any}
+   */
   static flattenGtsIdArray(a, r) {
     let elem;
     let j;

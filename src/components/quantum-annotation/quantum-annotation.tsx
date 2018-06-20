@@ -25,7 +25,6 @@ export class QuantumAnnotation {
   @Element() el: HTMLElement;
 
   private legendOffset = 70;
-  private lineHeight = 5;
 
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
@@ -35,10 +34,12 @@ export class QuantumAnnotation {
     }
   }
 
+  /**
+   *
+   */
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
-    console.log(gts.length);
     let calculatedHeight = 30  * gts.length +  this.legendOffset;
     let height = (this.height  || this.height !== '')
       ? (Math.max(calculatedHeight, parseInt(this.height)))
@@ -72,7 +73,7 @@ export class QuantumAnnotation {
             return;
           },
           callbacks: {
-            title: (tooltipItems, data) => {
+            title: (tooltipItems, _data) => {
               return tooltipItems[0].xLabel || '';
             },
             label:  (tooltipItem, data)  => {
@@ -130,36 +131,45 @@ export class QuantumAnnotation {
     return img;
 }
 
+  /**
+   *
+   * @param gts
+   * @returns {any[]}
+   */
   gtsToScatter(gts) {
     let datasets = [];
-
+    if (!gts) {
+      return;
+    } else
     gts.forEach(d => {
-      for (let i = 0; i < d.gts.length; i++) {
-        let g = d.gts[i];
-        let data = [];
-        let color = GTSLib.getColor(i);
-        const myImage = this.buildImage(1, 30, color);
-        g.v.forEach(d => {
-          data.push({x: d[0] / 1000, y: 0.5, val: d[d.length - 1]});
-        });
-        if (d.params && d.params[i] && d.params[i].color) {
-          color = d.params[i].color
+      d.gts = GTSLib.flatDeep(d.gts);
+      d.gts.forEach((g, i) => {
+        if (GTSLib.isGtsToAnnotate(g)) {
+          let data = [];
+          let color = GTSLib.getColor(i);
+          const myImage = this.buildImage(1, 30, color);
+          g.v.forEach(d => {
+            data.push({x: d[0] / 1000, y: 0.5, val: d[d.length - 1]});
+          });
+          if (d.params && d.params[i] && d.params[i].color) {
+            color = d.params[i].color
+          }
+          let label = `${g.c} - ${JSON.stringify(g.l)}`;
+          if (d.params && d.params[i] && d.params[i].key) {
+            label = d.params[i].key
+          }
+          datasets.push({
+            label: label,
+            data: data,
+            pointRadius: 5,
+            pointHoverRadius: 5,
+            pointHitRadius: 5,
+            pointStyle: myImage,
+            borderColor: color,
+            backgroundColor: GTSLib.transparentize(color, 0.5)
+          })
         }
-        let label = `${g.c} - ${JSON.stringify(g.l)}`;
-        if (d.params && d.params[i] && d.params[i].key) {
-          label = d.params[i].key
-        }
-        datasets.push({
-          label: label,
-          data: data,
-          pointRadius: 5,
-          pointHoverRadius: 5,
-          pointHitRadius: 5,
-          pointStyle: myImage,
-          borderColor: color,
-          backgroundColor: GTSLib.transparentize(color, 0.5)
-        })
-      }
+      });
     });
     return datasets;
   }
