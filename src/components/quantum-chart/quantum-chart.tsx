@@ -31,12 +31,9 @@ export class QuantumChart {
 
   @Element() el: HTMLElement;
 
-  interpolations = ["spline", "step-before", "step-after", "area"];
-
   @Watch("data")
   redraw(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
-      this.data = newValue;
       this.drawChart();
     }
   }
@@ -48,53 +45,61 @@ export class QuantumChart {
     if (!data) return;
     let gts = this.gtsToData(JSON.parse(this.data));
     const me = this;
+    const graphOpts = {
+      legend: { display: this.showLegend },
+      tooltips: {
+        mode: "x",
+        position: "nearest",
+        custom: function(tooltip) {
+          if (tooltip.opacity > 0) {
+            me.pointHover.emit({
+              x: tooltip.dataPoints[0].x + 15,
+              y: this._eventPosition.y
+            });
+          } else {
+            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
+          }
+          return;
+        }
+      },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            time: {
+              min: this.timeMin,
+              max: this.timeMax
+            }
+          }
+        ],
+        yAxes: [
+          {
+            afterFit: function(scaleInstance) {
+              scaleInstance.width = 100; // sets the width to 100px
+            },
+            scaleLabel: {
+              display: true,
+              labelString: this.unit
+            }
+          }
+        ]
+      },
+      responsive: this.responsive
+    };
+
+    if(this.type === "spline") {
+      graphOpts['elements'] = { line: { lineTension: 0}};
+    }
+    if(this.type === "area") {
+      graphOpts['elements'] = { line: { fill: 'start'}};
+    }
     new Chart(ctx, {
-      type: this.interpolations.indexOf(this.type) > -1 ? "line" : this.type,
+      type: this.type === "bar" ? this.type: "line",
       data: {
         labels: gts.ticks,
         datasets: gts.datasets
       },
-      options: {
-        legend: { display: this.showLegend },
-        tooltips: {
-          mode: "x",
-          position: "nearest",
-          custom: function(tooltip) {
-            if (tooltip.opacity > 0) {
-              me.pointHover.emit({
-                x: tooltip.dataPoints[0].x + 15,
-                y: this._eventPosition.y
-              });
-            } else {
-              me.pointHover.emit({ x: -100, y: this._eventPosition.y });
-            }
-            return;
-          }
-        },
-        scales: {
-          xAxes: [
-            {
-              type: "time",
-              time: {
-                min: this.timeMin,
-                max: this.timeMax
-              }
-            }
-          ],
-          yAxes: [
-            {
-              afterFit: function(scaleInstance) {
-                scaleInstance.width = 100; // sets the width to 100px
-              },
-              scaleLabel: {
-                display: true,
-                labelString: this.unit
-              }
-            }
-          ]
-        },
-        responsive: this.responsive
-      }
+      options: graphOpts
     });
   }
 

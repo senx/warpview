@@ -29,7 +29,6 @@ export class QuantumAnnotation {
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
-      this.data = newValue;
       this.drawChart();
     }
   }

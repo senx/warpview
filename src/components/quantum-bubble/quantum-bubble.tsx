@@ -26,7 +26,6 @@ export class QuantumBubble {
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
-      this.data = newValue;
       this.drawChart();
     }
   }
@@ -107,7 +106,10 @@ export class QuantumBubble {
       <div>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
-          <canvas id="myChart" width={this.width} height={this.height}/>
+          {this.responsive
+            ? <canvas id="myChart" />
+            : <canvas id="myChart" width={this.width} height={this.height}/>
+          }
         </div>
       </div>
     );
