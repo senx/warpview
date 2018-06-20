@@ -28,6 +28,11 @@ export class QuantumPie {
     }
   }
 
+  /**
+   *
+   * @param num
+   * @returns {any[]}
+   */
   generateColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
@@ -36,26 +41,32 @@ export class QuantumPie {
     return color;
   }
 
-  parseData(gts) {
+  /**
+   *
+   * @param data
+   * @returns {{labels: any[]; data: any[]}}
+   */
+  parseData(data) {
     let labels = [];
-    let datas = [];
-    gts.forEach(d => {
-      datas.push(d[1]);
+    let _data = [];
+    data.forEach(d => {
+      _data.push(d[1]);
       labels.push(d[0]);
     });
-    return {labels: labels, datas: datas}
+    return {labels: labels, data: _data}
   }
 
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
-    let gts = this.parseData(JSON.parse(this.data));
+    let data = this.parseData(JSON.parse(this.data));
+    console.debug('[QuantumPie]', this.data, data);
 
     new Chart(ctx, {
       type: (this.type === 'gauge') ? 'doughnut' : this.type,
       legend: {display: this.showLegend},
       data: {
-        datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
-        labels: gts.labels
+        datasets: [{data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle}],
+        labels: data.labels
       },
       options: {
         responsive: this.responsive,
@@ -93,7 +104,10 @@ export class QuantumPie {
     return <div>
       <h1>{this.chartTitle}</h1>
       <div class="chart-container">
-        <canvas id="myChart" width={this.width} height={this.height}/>
+        {this.responsive
+          ? <canvas id="myChart" />
+          : <canvas id="myChart" width={this.width} height={this.height}/>
+        }
       </div>
     </div>;
   }

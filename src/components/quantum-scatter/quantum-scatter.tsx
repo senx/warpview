@@ -114,7 +114,10 @@ export class QuantumScatter {
     return <div>
       <h1>{this.chartTitle}</h1>
       <div class="chart-container">
-        <canvas id="myChart" width={this.width} height={this.height}/>
+        {this.responsive
+          ? <canvas id="myChart" />
+          : <canvas id="myChart" width={this.width} height={this.height}/>
+        }
       </div>
     </div>;
   }
