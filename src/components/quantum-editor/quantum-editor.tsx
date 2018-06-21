@@ -86,7 +86,7 @@ export class QuantumEditor {
   componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     console.log('[QuantumEditor] - _config: ', this._config);
-    this.warpscript = this.el.textContent.slice();
+    this.warpscript = this.el.textContent.slice(); // FIXME
     this.edUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
@@ -272,9 +272,9 @@ export class QuantumEditor {
         console.debug('[QuantumEditor] - execute - response', response);
         response.text().then(res => {
           this.warpscriptResult.emit(res);
-          this.result = res;
+          this.result = JSON.parse(res);
           this.status = `Your script execution took ${QuantumEditor.formatElapsedTime(parseInt(response.headers.get('x-warp10-elapsed')))} serverside,
-          fetched ${response.headers.get('x-warp10-fetched')} datapoints 
+          fetched ${response.headers.get('x-warp10-fetched')} datapoints
           and performed ${response.headers.get('x-warp10-ops')}  WarpScript operations.`;
           this.statusEvent.emit(this.status);
           this.loading = false;
@@ -338,7 +338,7 @@ export class QuantumEditor {
       <quantum-result
         display-messages={this.displayMessages}
         theme={this.theme}
-        result={{json: this.result, error: this.error, message: this.status}}
+        result={JSON.stringify({json: this.result, error: this.error, message: this.status})}
         config={JSON.stringify(this._config)}
       />
     ) : (<span/>);
