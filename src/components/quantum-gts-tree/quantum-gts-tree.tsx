@@ -22,8 +22,9 @@ export class QuantumGtsTree {
    * @param {CustomEvent} event
    */
   onSelected(event: CustomEvent) {
-    console.debug('[QuantumGtsTree] - onSelected', event);
+    //console.debug('[QuantumGtsTree] - onSelected', event);
     this.selected.emit(event);
+
   }
 
   /**

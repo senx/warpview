@@ -3,15 +3,14 @@ import {Component, Prop, Element, Watch} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 
 @Component({
-  tag: 'quantum-polar',
-  styleUrl: 'quantum-polar.css',
+  tag: 'quantum-radar',
+  styleUrl: 'quantum-radar.css',
   shadow: true
 })
-export class QuantumPolar {
+export class QuantumRadar {
   @Prop() unit: string = '';
-  @Prop() type: string = 'polar';
   @Prop() chartTitle: string = '';
-  @Prop() responsive: boolean = false;
+  @Prop() responsive: boolean = true;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
   @Prop() options: object = {};
@@ -47,19 +46,30 @@ export class QuantumPolar {
 
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
-    let gts = this.parseData(JSON.parse(this.data));
-    new Chart.PolarArea(ctx, {
-      type: this.type,
+    //let gts = this.parseData(JSON.parse(this.data));
+    new Chart(ctx, {
+      type: 'radar',
       legend: {display: this.showLegend},
       data: {
-        datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
-        labels: gts.labels
+      /*
+      datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
+      labels: gts.labels
+      */
+        labels: ['Beer', 'Rum', 'Peanut', 'Crisps'],
+        datasets: [{
+            data: [50, 25, 10, 10],
+            backgroundColor: '#64aa3939'
+          },{
+            data: [35, 75, 90, 5],
+            backgroundColor: '#642d882d'
+          }
+        ]
       },
       options: {
         responsive: this.responsive,
         tooltips: {
           mode: 'index',
-          intersect: true,
+          intersect: true
         }
       }
     });

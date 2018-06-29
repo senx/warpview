@@ -63,19 +63,19 @@ export class QuantumEditor {
    */
   @Watch('theme')
   themeHandler(newValue: string, _oldValue: string) {
-    console.log('[QuantumEditor] - The new value of theme is: ', newValue, _oldValue);
+    //console.log('[QuantumEditor] - The new value of theme is: ', newValue, _oldValue);
     if ('dark' === newValue) {
       this.monacoTheme = 'vs-dark';
     } else {
       this.monacoTheme = 'vs';
     }
-    console.log('[QuantumEditor] - The new value of theme is: ', this.monacoTheme);
+    //console.log('[QuantumEditor] - The new value of theme is: ', this.monacoTheme);
     monaco.editor.setTheme(this.monacoTheme);
   }
 
   @Watch('warpscript')
   warpscriptHandler(newValue: string, _oldValue: string) {
-    console.log('[QuantumEditor] - The new value of warpscript is: ', newValue, _oldValue);
+    //console.log('[QuantumEditor] - The new value of warpscript is: ', newValue, _oldValue);
     this.result = undefined;
     this.ed.setValue(newValue);
   }
@@ -85,14 +85,14 @@ export class QuantumEditor {
    */
   componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
-    console.log('[QuantumEditor] - _config: ', this._config);
+    //console.log('[QuantumEditor] - _config: ', this._config);
     this.warpscript = this.el.textContent.slice();
     this.edUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
     }
 
-    console.log('[QuantumEditor] - componentWillLoad theme is: ', this.theme);
+    //console.log('[QuantumEditor] - componentWillLoad theme is: ', this.theme);
     monaco.languages.register({id: this.WARPSCRIPT_LANGUAGE});
     monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
     monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
@@ -161,7 +161,7 @@ export class QuantumEditor {
       provideHover: (model: IReadOnlyModel, position: monaco.Position) => {
         let word = model.getWordAtPosition(position);
         let range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
-        console.log('[wsHoverProvider] - provideHover', model, position, word);
+        //console.log('[wsHoverProvider] - provideHover', model, position, word);
         let name = word.word;
         let entry = wsGlobals[name];
         if (entry && entry.description) {
@@ -196,7 +196,7 @@ export class QuantumEditor {
    *
    */
   componentDidUnload() {
-    console.log('Component removed from the DOM');
+    //console.log('Component removed from the DOM');
     if (this.ed) {
       this.ed.dispose();
     }
@@ -206,7 +206,7 @@ export class QuantumEditor {
    *
    */
   componentDidLoad() {
-    console.log('[QuantumEditor] - componentDidLoad - warpscript', this.warpscript);
+    //console.log('[QuantumEditor] - componentDidLoad - warpscript', this.warpscript);
     this.ed = monaco.editor.create(this.el.querySelector('#editor-' + this.edUid), {
       value: this.warpscript,
       language: this.WARPSCRIPT_LANGUAGE, automaticLayout: true,
@@ -214,7 +214,7 @@ export class QuantumEditor {
     });
 
     this.ed.getModel().onDidChangeContent((event) => {
-      console.debug('ws changed', event);
+      //console.debug('ws changed', event);
       this.warpscriptChanged.emit(this.ed.getValue());
     });
   }
@@ -265,11 +265,11 @@ export class QuantumEditor {
     //  this.result = undefined;
     this.status = undefined;
     this.error = undefined;
-    console.debug('[QuantumEditor] - execute - this.ed.getValue()', this.ed.getValue(), _event);
+    //console.debug('[QuantumEditor] - execute - this.ed.getValue()', this.ed.getValue(), _event);
     this.loading = true;
     fetch(this.url, {method: 'POST', body: this.ed.getValue()}).then(response => {
       if (response.ok) {
-        console.debug('[QuantumEditor] - execute - response', response);
+        //console.debug('[QuantumEditor] - execute - response', response);
         response.text().then(res => {
           this.warpscriptResult.emit(res);
           this.result = res;
@@ -279,19 +279,19 @@ export class QuantumEditor {
           this.statusEvent.emit(this.status);
           this.loading = false;
         }, err => {
-          console.error(err);
+          //console.error(err);
           this.error = err;
           this.errorEvent.emit(this.error);
           this.loading = false;
         });
       } else {
-        console.error(response.statusText);
+        //console.error(response.statusText);
         this.error = response.statusText;
         this.errorEvent.emit(this.error);
         this.loading = false;
       }
     }, err => {
-      console.error(err);
+      //console.error(err);
       this.error = err;
       this.errorEvent.emit(this.error);
       this.loading = false;

@@ -1,6 +1,7 @@
 import Chart from 'chart.js';
 import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
+import { publicDecrypt } from 'crypto';
 
 @Component({
   tag: 'quantum-annotation',
@@ -12,7 +13,8 @@ export class QuantumAnnotation {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: object = {};
+  @Prop() hiddenData: number;
+  @Prop() options: string = "";
   @Prop() timeMin: number;
   @Prop() timeMax: number;
   @Prop() width = '';
@@ -21,10 +23,12 @@ export class QuantumAnnotation {
   }) height = '';
 
   @Event() pointHover: EventEmitter;
+  @Event() didHideOrShowAnomaly: EventEmitter;
 
   @Element() el: HTMLElement;
 
   private legendOffset = 70;
+  private _chart;
 
   @Watch('data')
   redraw(newValue: string, oldValue: string) {
@@ -32,6 +36,36 @@ export class QuantumAnnotation {
       this.drawChart();
     }
   }
+
+  @Watch("options")
+    changeScale(newValue: string, oldValue: string){
+      if (oldValue !== newValue) {
+        var data = JSON.parse(newValue);
+        
+        if(data.time.timeMode === "timestamp"){
+          this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
+          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
+          this._chart.options.scales.xAxes[0].time.displayFormats.millisecond = data.time.displayFormats;
+          this._chart.update();
+        }
+        else{
+          this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
+          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;                                                                                                                                                                                                                                                                                                                                                                                                                                        
+          this._chart.update();
+        }
+      }
+    }
+
+  @Watch("hiddenData")
+  hideData(newValue: number){
+      if(newValue %2 !== 0 && newValue !== -1){
+        var index = Math.trunc(newValue / 2);
+        var meta = this._chart.getDatasetMeta(index);
+        meta.hidden === null ? meta.hidden = true : meta.hidden = null;
+        this._chart.update();
+      }
+      this.didHideOrShowAnomaly.emit();
+    }
 
   /**
    *
@@ -48,7 +82,7 @@ export class QuantumAnnotation {
     (ctx as HTMLElement).parentElement.style.height = height + 'px';
     (ctx as HTMLElement).parentElement.style.width = '100%';
     const me = this;
-    new Chart.Scatter(ctx, {
+    this._chart = new Chart.Scatter(ctx, {
       data: {
         datasets: gts
       },
@@ -87,6 +121,7 @@ export class QuantumAnnotation {
             time: {
               min: this.timeMin,
               max: this.timeMax,
+              unit: 'day'
             },
             gridLines: {
               display: false
@@ -136,11 +171,13 @@ export class QuantumAnnotation {
    * @returns {any[]}
    */
   gtsToScatter(gts) {
+    console.log(gts);
     let datasets = [];
     if (!gts) {
       return;
     } else
     gts.forEach(d => {
+      console.log(d.gts);
       d.gts = GTSLib.flatDeep(d.gts);
       d.gts.forEach((g, i) => {
         if (GTSLib.isGtsToAnnotate(g)) {

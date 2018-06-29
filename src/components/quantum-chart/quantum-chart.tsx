@@ -5,7 +5,8 @@ import {
   Event,
   EventEmitter,
   Prop,
-  Watch
+  Watch,
+  Listen
 } from "@stencil/core";
 import { GTSLib } from "../../gts.lib";
 
@@ -19,17 +20,21 @@ export class QuantumChart {
   @Prop() type: string = "line";
   @Prop() chartTitle: string = "";
   @Prop() responsive: boolean = false;
-  @Prop() showLegend: boolean = true;
+  @Prop() showLegend: boolean = false;
   @Prop() data: string = "[]";
-  @Prop() options: object = {};
+  @Prop() hiddenData: number;
+  @Prop() options: string = "{}";
   @Prop() width = "";
   @Prop() height = "";
   @Prop() timeMin: number;
   @Prop() timeMax: number;
 
   @Event() pointHover: EventEmitter;
+  @Event() didHideOrShowData: EventEmitter;
 
   @Element() el: HTMLElement;
+
+  private _chart;
 
   @Watch("data")
   redraw(newValue: string, oldValue: string) {
@@ -38,15 +43,42 @@ export class QuantumChart {
     }
   }
 
+  @Watch("options")
+    changeScale(newValue: string, oldValue: string){
+      if (oldValue !== newValue) {
+        //this.drawChart();
+        var data = JSON.parse(newValue);
+        if(data.time.timeMode === "timestamp"){
+          this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
+          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
+          this._chart.options.scales.xAxes[0].time.displayFormats.millisecond = data.time.displayFormats;
+          this._chart.update();
+        }
+        else{
+          this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
+          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;                                                                                                                                                                                                                                                                                                                                                                                                                                        
+          this._chart.update();
+        }
+      }
+    }
+
+  @Watch("hiddenData")
+    hideData(newValue: number){
+      var meta = this._chart.getDatasetMeta(newValue);
+      meta.hidden === null ? meta.hidden = true : meta.hidden = null;
+      this._chart.update();
+      this.didHideOrShowData.emit();
+    }
+
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
-    console.debug("[QuantumChart] drawChart", this.data);
+    //console.debug("[QuantumChart] drawChart", this.data);
     let data = JSON.parse(this.data);
     if (!data) return;
     let gts = this.gtsToData(JSON.parse(this.data));
     const me = this;
     const graphOpts = {
-      legend: { display: this.showLegend },
+      legend: { display: /*this.showLegend*/ false },
       tooltips: {
         mode: "x",
         position: "nearest",
@@ -65,11 +97,12 @@ export class QuantumChart {
       scales: {
         xAxes: [
           {
-            type: "time",
             time: {
               min: this.timeMin,
-              max: this.timeMax
-            }
+              max: this.timeMax,
+              unit: 'day'
+            },
+            type: 'time'
           }
         ],
         yAxes: [
@@ -86,14 +119,18 @@ export class QuantumChart {
       },
       responsive: this.responsive
     };
-
+/*
+    if(this.options === "timestamp"){
+      delete graphOpts.scales.xAxes[0].type;
+    }
+*/
     if(this.type === "spline") {
       graphOpts['elements'] = { line: { lineTension: 0}};
     }
     if(this.type === "area") {
       graphOpts['elements'] = { line: { fill: 'start'}};
     }
-    new Chart(ctx, {
+    this._chart = new Chart(ctx, {
       type: this.type === "bar" ? this.type: "line",
       data: {
         labels: gts.ticks,

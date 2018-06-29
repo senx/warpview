@@ -27,7 +27,7 @@ export class QuantumChip {
    * @returns {string}
    */
   gtsColor(state: boolean): string {
-    console.debug('[QuantumChip] - gtsColor', state);
+    //console.debug('[QuantumChip] - gtsColor', state);
     if (state) {
       return GTSLib.getColor(this.index);
     } else {
@@ -84,10 +84,10 @@ export class QuantumChip {
    * @param {UIEvent} event
    */
   switchPlotState(event: UIEvent) {
-    console.debug('[QuantumChip] - switchPlotState', event);
-    console.debug('[QuantumChip] - switchPlotState', this._node);
+    //console.debug('[QuantumChip] - switchPlotState', event);
+    //console.debug('[QuantumChip] - switchPlotState', this._node);
     this._node = {...this._node, selected: !this._node.selected};
-    console.debug('[QuantumChip] - switchPlotState', this._node);
+    //console.debug('[QuantumChip] - switchPlotState', this._node);
     (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected));
     this.selected.emit(this.node);
   }

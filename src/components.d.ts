@@ -33,7 +33,8 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'hiddenData': number;
+      'options': string;
       'responsive': boolean;
       'showLegend': boolean;
       'timeMax': number;
@@ -64,8 +65,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
+      'hiddenData'?: number;
+      'onDidHideOrShowAnomaly'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: object;
+      'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'timeMax'?: number;
@@ -135,7 +138,8 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'hiddenData': number;
+      'options': string;
       'responsive': boolean;
       'showLegend': boolean;
       'timeMax': number;
@@ -168,8 +172,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
+      'hiddenData'?: number;
+      'onDidHideOrShowData'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: object;
+      'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'timeMax'?: number;
@@ -441,6 +447,53 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumRadar {
+      'chartTitle': string;
+      'data': string;
+      'height': string;
+      'options': object;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'unit': string;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumRadarElement extends StencilComponents.QuantumRadar, HTMLStencilElement {}
+
+  var HTMLQuantumRadarElement: {
+    prototype: HTMLQuantumRadarElement;
+    new (): HTMLQuantumRadarElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-radar': HTMLQuantumRadarElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-radar': HTMLQuantumRadarElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-radar': JSXElements.QuantumRadarAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumRadarAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
+      'data'?: string;
+      'height'?: string;
+      'options'?: object;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumResult {
       'config': string;
       'displayMessages': boolean;
@@ -567,6 +620,42 @@ declare global {
       'type'?: string;
       'unit'?: string;
       'url'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumToggle {
+      'checked': boolean;
+      'option': string;
+    }
+  }
+
+  interface HTMLQuantumToggleElement extends StencilComponents.QuantumToggle, HTMLStencilElement {}
+
+  var HTMLQuantumToggleElement: {
+    prototype: HTMLQuantumToggleElement;
+    new (): HTMLQuantumToggleElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-toggle': HTMLQuantumToggleElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-toggle': HTMLQuantumToggleElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-toggle': JSXElements.QuantumToggleAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumToggleAttributes extends HTMLAttributes {
+      'checked'?: boolean;
+      'onTimeSwitched'?: (event: CustomEvent) => void;
+      'option'?: string;
     }
   }
 }
