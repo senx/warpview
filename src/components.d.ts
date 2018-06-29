@@ -497,7 +497,7 @@ declare global {
     interface QuantumResult {
       'config': string;
       'displayMessages': boolean;
-      'result': any;
+      'result': string;
       'theme': string;
     }
   }
@@ -523,7 +523,7 @@ declare global {
     export interface QuantumResultAttributes extends HTMLAttributes {
       'config'?: string;
       'displayMessages'?: boolean;
-      'result'?: any;
+      'result'?: string;
       'theme'?: string;
     }
   }
