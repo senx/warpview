@@ -85,13 +85,8 @@ export class QuantumEditor {
    */
   componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
-<<<<<<< HEAD
-    //console.log('[QuantumEditor] - _config: ', this._config);
-    this.warpscript = this.el.textContent.slice();
-=======
     console.log('[QuantumEditor] - _config: ', this._config);
     this.warpscript = this.el.textContent.slice(); // FIXME
->>>>>>> 6d7b7e5658072a007b969d8494ab3cefd6d74aaa
     this.edUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';

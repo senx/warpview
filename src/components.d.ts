@@ -349,6 +349,45 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumHeatmap {
+      'height': number;
+      'mapTitle': string;
+      'responsive': boolean;
+      'width': number;
+    }
+  }
+
+  interface HTMLQuantumHeatmapElement extends StencilComponents.QuantumHeatmap, HTMLStencilElement {}
+
+  var HTMLQuantumHeatmapElement: {
+    prototype: HTMLQuantumHeatmapElement;
+    new (): HTMLQuantumHeatmapElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-heatmap': HTMLQuantumHeatmapElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-heatmap': HTMLQuantumHeatmapElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-heatmap': JSXElements.QuantumHeatmapAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumHeatmapAttributes extends HTMLAttributes {
+      'height'?: number;
+      'mapTitle'?: string;
+      'responsive'?: boolean;
+      'width'?: number;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumPie {
       'chartTitle': string;
       'data': string;
