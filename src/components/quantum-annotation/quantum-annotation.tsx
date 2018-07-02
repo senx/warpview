@@ -1,7 +1,6 @@
 import Chart from 'chart.js';
 import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
-import { publicDecrypt } from 'crypto';
 
 @Component({
   tag: 'quantum-annotation',
@@ -40,8 +39,7 @@ export class QuantumAnnotation {
   @Watch("options")
     changeScale(newValue: string, oldValue: string){
       if (oldValue !== newValue) {
-        var data = JSON.parse(newValue);
-        
+        const data = JSON.parse(newValue);
         if(data.time.timeMode === "timestamp"){
           this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
           this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
@@ -50,7 +48,7 @@ export class QuantumAnnotation {
         }
         else{
           this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
-          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;                                                                                                                                                                                                                                                                                                                                                                                                                                        
+          this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
           this._chart.update();
         }
       }
@@ -59,8 +57,8 @@ export class QuantumAnnotation {
   @Watch("hiddenData")
   hideData(newValue: number){
       if(newValue %2 !== 0 && newValue !== -1){
-        var index = Math.trunc(newValue / 2);
-        var meta = this._chart.getDatasetMeta(index);
+        const index = Math.trunc(newValue / 2);
+        const meta = this._chart.getDatasetMeta(index);
         meta.hidden === null ? meta.hidden = true : meta.hidden = null;
         this._chart.update();
       }

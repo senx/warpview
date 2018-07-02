@@ -100,11 +100,8 @@ export class QuantumResult {
 
   render() {
     const message =
-      this._result.message && this.displayMessages ? (
-        <div class={this._config.messageClass}>{this._result.message}</div>
-      ) : (
-        ""
-      );
+  this._result.message && this.displayMessages ?
+    <div class={this._config.messageClass}>{this._result.message}</div> : "";
 
     const error =
       this._result.error && this.displayMessages ? (
@@ -113,18 +110,14 @@ export class QuantumResult {
         ""
       );
 
-    const stack = this._result.json && GTSLib.isArray(this._result.json) ? (
-      <div class={this.theme + " raw"}>
-        {this._result.json.map((line, index) => (
-          <span class="line">
+    const stack = this._result.json && GTSLib.isArray(this._result.json) ? <div class={this.theme + " raw"}>
+      {this._result.json.map((line, index) => (
+        <span class="line">
             <span class="line-num">{index === 0 ? "[TOP]" : index}</span>
             <span class="line-content">{JSON.stringify(line)}</span>
           </span>
-        ))}
-      </div>
-    ) : (
-      ""
-    );
+      ))}
+    </div> : "";
 
     return (
       <div>

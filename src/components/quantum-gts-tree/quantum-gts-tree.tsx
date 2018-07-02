@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, Prop, State, Watch} from "@stencil/core";
+import {Component, Event, EventEmitter, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../gts.lib";
 
 @Component({
@@ -22,7 +22,7 @@ export class QuantumGtsTree {
    * @param {CustomEvent} event
    */
   onSelected(event: CustomEvent) {
-    //console.debug('[QuantumGtsTree] - onSelected', event);
+    console.debug('[QuantumGtsTree] - onSelected', event);
     this.selected.emit(event);
 
   }

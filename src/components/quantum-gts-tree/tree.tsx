@@ -19,7 +19,7 @@ export class QuantumTreeView {
   getIndex(node: any): number {
     Counter.item++;
     node.index = Counter.item;
-    //console.debug("[QuantumTreeView] - getIndex", Counter.item, node);
+    console.debug("[QuantumTreeView] - getIndex", Counter.item, node);
     return Counter.item;
   }
 
@@ -36,7 +36,7 @@ export class QuantumTreeView {
    *
    */
   componentWillLoad() {
-    //console.debug("[QuantumTreeView] - componentWillLoad", Counter.item);
+    console.debug("[QuantumTreeView] - componentWillLoad", Counter.item);
   }
 
   /**

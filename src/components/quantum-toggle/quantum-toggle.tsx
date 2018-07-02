@@ -19,8 +19,8 @@ export class QuantumToggle {
     switchClass: '',
     switchLabelClass: '',
     switchHandleClass: ''
-  }
-  
+  };
+
   componentWillLoad(){
     this._option = GTSLib.mergeDeep(this._option, JSON.parse(this.option));
   }
@@ -36,8 +36,8 @@ export class QuantumToggle {
           ? <input type="checkbox" class="switch-input" checked onClick={() => this.switched()}/>
           : <input type="checkbox" class="switch-input" onClick={() => this.switched()}/>
         }
-        <span class={ 'switch-label ' + this._option.switchLabelClass }></span>
-        <span class={ 'switch-handle ' + this._option.switchHandleClass }></span>
+        <span class={ 'switch-label ' + this._option.switchLabelClass } />
+        <span class={ 'switch-handle ' + this._option.switchHandleClass } />
       </label>
     );
   }
