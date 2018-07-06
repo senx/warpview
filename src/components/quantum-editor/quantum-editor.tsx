@@ -95,7 +95,7 @@ export class QuantumEditor {
     monaco.languages.register({id: this.WARPSCRIPT_LANGUAGE});
     monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
     monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
-        wordPattern: /[^\s]+/,
+        wordPattern: /[^\s\t]+/,
         comments: {
           lineComment: "//",
           blockComment: ["/**", "*/"]
