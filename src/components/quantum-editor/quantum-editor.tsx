@@ -92,102 +92,107 @@ export class QuantumEditor {
     }
    // const wordPattern = new RegExp("((->|\\$)?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\|\\;\\:\\'\\\"\\,\\<\\>\/\\?\\s\\t])+");
     console.log('[QuantumEditor] - componentWillLoad theme is: ', this.theme);
-    monaco.languages.register({id: this.WARPSCRIPT_LANGUAGE});
-    monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
-    monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
-        wordPattern: /[^\s\t]+/,
-        comments: {
-          lineComment: "//",
-          blockComment: ["/**", "*/"]
-        },
-        brackets: [
-          ["{", "}"],
-          ["[", "]"],
-          ["(", ")"],
-          ["<%", "%>"],
-          ["<'", "'>"],
-          ["[[", "]]"]
-        ],
-        autoClosingPairs: [
-          {open: "{", close: "}"},
-          {open: "[", close: "]"},
-          {open: "(", close: ")"},
-          {open: "<%", close: "%>"},
-          {open: "[[", close: "]]"},
-          {open: " '", close: "'", notIn: ["string", "comment"]},
-          {open: "<'", close: "'>"},
-          {open: "\"", close: "\"", notIn: ["string"]},
-          {open: "`", close: "`", notIn: ["string", "comment"]},
-          {open: "/**", close: " */", notIn: ["string"]}
-        ],
-        surroundingPairs: [
-          {open: "{", close: "}"},
-          {open: "[", close: "]"},
-          {open: "(", close: ")"},
-          {open: "[[", close: "]]"},
-          {open: "<%", close: "%>"},
-          {open: "<'", close: "'>"},
-          {open: "'", close: "'"},
-          {open: "\"", close: "\""},
-          {open: "`", close: "`"}
-        ],
-        onEnterRules: [
-          {
-            // e.g. /** | */
-            beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
-            afterText: /^\s*\*\/$/,
-            action: {indentAction: monaco.languages.IndentAction.IndentOutdent, appendText: ' * '}
+    console.log(    monaco.languages.getLanguages().find(l => l.id === this.WARPSCRIPT_LANGUAGE));
+    console.log(monaco.languages.getLanguages());
+    monaco.languages.register({ id: this.WARPSCRIPT_LANGUAGE });
+
+    if(!monaco.languages.getLanguages().find(l => l.id === this.WARPSCRIPT_LANGUAGE)) {
+      monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
+      monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
+          wordPattern: /[^\s\t]+/,
+          comments: {
+            lineComment: "//",
+            blockComment: ["/**", "*/"]
           },
-          {
-            // e.g. /** ...|
-            beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
-            action: {indentAction: monaco.languages.IndentAction.None, appendText: ' * '}
-          },
-          {
-            // e.g.  * ...|
-            beforeText: /^(\t|( {2}))* \*( ([^*]|\*(?!\/))*)?$/,
-            action: {indentAction: monaco.languages.IndentAction.None, appendText: '* '}
-          },
-          {
-            // e.g.  */|
-            beforeText: /^(\t|( {2}))* \*\/\s*$/,
-            action: {indentAction: monaco.languages.IndentAction.None, removeText: 1}
-          }
-        ],
-      }
-    );
-    monaco.languages.registerHoverProvider(this.WARPSCRIPT_LANGUAGE, {
-      provideHover: (model: IReadOnlyModel, position: monaco.Position) => {
-        let word = model.getWordAtPosition(position);
-        let range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
-        console.log('[wsHoverProvider] - provideHover', model, position, word);
-        let name = word.word;
-        let entry = wsGlobals[name];
-        if (entry && entry.description) {
-          let signature = entry.signature || '';
-          let contents: MarkedString[] = ['### ' + name, {
-            language: this.WARPSCRIPT_LANGUAGE,
-            value: signature
-          }, entry.description];
-          return {
-            range: range,
-            contents: contents
-          } as Hover
+          brackets: [
+            ["{", "}"],
+            ["[", "]"],
+            ["(", ")"],
+            ["<%", "%>"],
+            ["<'", "'>"],
+            ["[[", "]]"]
+          ],
+          autoClosingPairs: [
+            {open: "{", close: "}"},
+            {open: "[", close: "]"},
+            {open: "(", close: ")"},
+            {open: "<%", close: "%>"},
+            {open: "[[", close: "]]"},
+            {open: " '", close: "'", notIn: ["string", "comment"]},
+            {open: "<'", close: "'>"},
+            {open: "\"", close: "\"", notIn: ["string"]},
+            {open: "`", close: "`", notIn: ["string", "comment"]},
+            {open: "/**", close: " */", notIn: ["string"]}
+          ],
+          surroundingPairs: [
+            {open: "{", close: "}"},
+            {open: "[", close: "]"},
+            {open: "(", close: ")"},
+            {open: "[[", close: "]]"},
+            {open: "<%", close: "%>"},
+            {open: "<'", close: "'>"},
+            {open: "'", close: "'"},
+            {open: "\"", close: "\""},
+            {open: "`", close: "`"}
+          ],
+          onEnterRules: [
+            {
+              // e.g. /** | */
+              beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
+              afterText: /^\s*\*\/$/,
+              action: {indentAction: monaco.languages.IndentAction.IndentOutdent, appendText: ' * '}
+            },
+            {
+              // e.g. /** ...|
+              beforeText: /^\s*\/\*\*(?!\/)([^*]|\*(?!\/))*$/,
+              action: {indentAction: monaco.languages.IndentAction.None, appendText: ' * '}
+            },
+            {
+              // e.g.  * ...|
+              beforeText: /^(\t|( {2}))* \*( ([^*]|\*(?!\/))*)?$/,
+              action: {indentAction: monaco.languages.IndentAction.None, appendText: '* '}
+            },
+            {
+              // e.g.  */|
+              beforeText: /^(\t|( {2}))* \*\/\s*$/,
+              action: {indentAction: monaco.languages.IndentAction.None, removeText: 1}
+            }
+          ],
         }
+      );
+      monaco.languages.registerHoverProvider(this.WARPSCRIPT_LANGUAGE, {
+        provideHover: (model: IReadOnlyModel, position: monaco.Position) => {
+          let word = model.getWordAtPosition(position);
+          let range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
+          console.log('[wsHoverProvider] - provideHover', model, position, word);
+          let name = word.word;
+          let entry = wsGlobals[name];
+          if (entry && entry.description) {
+            let signature = entry.signature || '';
+            let contents: MarkedString[] = ['### ' + name, {
+              language: this.WARPSCRIPT_LANGUAGE,
+              value: signature
+            }, entry.description];
+            return {
+              range: range,
+              contents: contents
+            } as Hover
+          }
 
-        return undefined;
-      }
-    });
+          return undefined;
+        }
+      });
 
-    monaco.languages.registerCompletionItemProvider(this.WARPSCRIPT_LANGUAGE, {
-      provideCompletionItems: () => {
-        let defs = [];
-        WarpScript.reference.forEach(f => {
-          defs.push({label: f.name, kind: QuantumEditor.getType(f.tags, f.name)});
-        });
-        return defs;
-      }
-    });
+      monaco.languages.registerCompletionItemProvider(this.WARPSCRIPT_LANGUAGE, {
+        provideCompletionItems: () => {
+          let defs = [];
+          WarpScript.reference.forEach(f => {
+            defs.push({label: f.name, kind: QuantumEditor.getType(f.tags, f.name)});
+          });
+          return defs;
+        }
+      });
+    }
   }
 
 
