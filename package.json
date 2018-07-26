@@ -10,7 +10,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "stencil build",
+    "build": "sd concurrent \"node --max_old_space_size=4096 --optimize_for_size --stack_size=4096 ./node_modules/.bin/stencil build\"",
     "dev": "sd concurrent \"node --max_old_space_size=4096 --optimize_for_size --stack_size=4096 ./node_modules/.bin/stencil build --dev --watch\" \"stencil-dev-server\"",
     "serve": "stencil-dev-server",
     "start": "npm run dev ",
