@@ -94,7 +94,7 @@ export class QuantumHorizontalZoomSlider {
   }
   dragX(event, elem) {
     event.preventDefault();
-    if ((event.clientX - elem._mouseCursorLeftOffset) >= elem._railMin && (event.clientX + elem._mouseCursorRightOffset) <= elem._railMax) {
+    if ((event.clientX - elem._mouseCursorLeftOffset) >= elem._railMin + 1 && (event.clientX + elem._mouseCursorRightOffset) <= elem._railMax - 1) {
       let v = event.clientX - elem._rail.offsetLeft - elem._mouseCursorLeftOffset;
       v = v < 0 ? 0 : v;
       elem._cursor.style.left = v + "px";

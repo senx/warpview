@@ -206,6 +206,15 @@ export class QuantumChart {
     slider.setAttribute("max-value", this._xSlider.max.toString());
     slider.setAttribute("width", this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().width.toString());
     this._xSlider.element = slider as HTMLElement;
+/*
+    let min = this._chart.options.scales.xAxes[0].time.min._i;
+    let max = this._chart.options.scales.xAxes[0].time.max._i;
+    this._xSlider.element.setAttribute("max-value", (this._xSlider.max - (max - min)).toString());
+    let cursorSize = ((max - min) / (this._xSlider.max - this._xSlider.min));
+    let cursorOffset = ((min - this._xSlider.min) / (this._xSlider.max - this._xSlider.min));
+    this._xSlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
+    this.boundsDidChange.emit({bounds:{min: min, max: max}});
+    */
   }
 
   ySliderInit(){
@@ -214,6 +223,14 @@ export class QuantumChart {
     slider.setAttribute("max-value", this._ySlider.max.toString());
     slider.setAttribute("height", this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().height.toString());
     this._ySlider.element = slider as HTMLElement;
+/*
+    let min = this._chart.options.scales.yAxes[0].ticks.min;
+    let max = this._chart.options.scales.yAxes[0].ticks.max;
+    this._ySlider.element.setAttribute("max-value", (this._ySlider.max - (max - min)).toString());
+    let cursorSize = ((max - min) / (this._ySlider.max - this._ySlider.min));
+    let cursorOffset = ((this._ySlider.max - max) / (this._ySlider.max - this._ySlider.min));
+    this._ySlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
+    */
   }
   
   gtsToData(gts) {
@@ -283,12 +300,8 @@ export class QuantumChart {
       let min = this._chart.options.scales.xAxes[0].time.min._i;
       let max = this._chart.options.scales.xAxes[0].time.max._i;
       let diff = max - min;
-      //console.log("min Y", this._chart.options.scales.yAxes[0]);
-      //console.log("max Y", this._chart.options.scales.yAxes[0]);
 
       if(event.detail.zoomValue.zoomType > 0){
-        //console.log("zoom +");
-        //console.log("zoom coef", event.detail.zoomValue.coef);
 
         min = min + 0.1 * diff * event.detail.zoomValue.coef;
         max = max - 0.1 * diff * (1 - event.detail.zoomValue.coef);
@@ -299,8 +312,6 @@ export class QuantumChart {
         this._chart.options.scales.xAxes[0].time.min = moment(min, "x");
         this._chart.options.scales.xAxes[0].time.max = moment(max, "x");
       }else{
-        //console.log("zoom -");
-        //console.log("zoom coef", event.detail.zoomValue.coef);
 
         min = min - 0.15 * diff * event.detail.zoomValue.coef;
         max = max + 0.15 * diff * (1 - event.detail.zoomValue.coef);
@@ -315,11 +326,8 @@ export class QuantumChart {
       this._chart.update();
       this._xSlider.element.setAttribute("max-value", (this._xSlider.max - (max - min)).toString());
       let cursorSize = ((max - min) / (this._xSlider.max - this._xSlider.min));
-      //console.log("cursor size", cursorSize);
       let cursorOffset = ((min - this._xSlider.min) / (this._xSlider.max - this._xSlider.min));
-      //console.log("offset", cursorOffset);
       this._xSlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
-
       this.boundsDidChange.emit({bounds:{min: min, max: max}});
     }
 
@@ -329,10 +337,7 @@ export class QuantumChart {
       let max = this._chart.options.scales.yAxes[0].ticks.max;
       let diff = max - min;
 
-
       if(event.detail.zoomValue.zoomType > 0){
-        //console.log("zoom +");
-        //console.log("zoom coef", event.detail.zoomValue.coef);
 
         min = min + 0.1 * diff * (1 - event.detail.zoomValue.coef);
         max = max - 0.1 * diff * event.detail.zoomValue.coef;
@@ -343,8 +348,6 @@ export class QuantumChart {
         this._chart.options.scales.yAxes[0].ticks.min = min;
         this._chart.options.scales.yAxes[0].ticks.max = max;
       }else{
-        //console.log("zoom -");
-        //console.log("zoom coef", event.detail.zoomValue.coef);
 
         min = min - 0.15 * diff * (1 - event.detail.zoomValue.coef);
         max = max + 0.15 * diff * 1 - event.detail.zoomValue.coef;
@@ -359,10 +362,7 @@ export class QuantumChart {
       this._chart.update();
       this._ySlider.element.setAttribute("max-value", (this._ySlider.max - (max - min)).toString());
       let cursorSize = ((max - min) / (this._ySlider.max - this._ySlider.min));
-      //console.log("cursor size", cursorSize);
-      //let cursorOffset = ((min - this._ySlider.min) / (this._ySlider.max - this._ySlider.min));
       let cursorOffset = ((this._ySlider.max - max) / (this._ySlider.max - this._ySlider.min));
-      //console.log("offset", cursorOffset);
       this._ySlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
     }
 
@@ -375,7 +375,6 @@ export class QuantumChart {
       this._chart.options.scales.xAxes[0].time.min = moment(min + offset, "x");
       this._chart.options.scales.xAxes[0].time.max = moment(max + offset, "x");
       this._chart.update();
-      
     }
     
     @Listen("ySliderValueChanged")
@@ -384,7 +383,6 @@ export class QuantumChart {
       let min = this._chart.options.scales.yAxes[0].ticks.min;
       let max = this._chart.options.scales.yAxes[0].ticks.max;
       let offset = event.detail.sliderValue - min;
-      
       
       this._chart.options.scales.yAxes[0].ticks.min = min + offset;
       this._chart.options.scales.yAxes[0].ticks.max = max + offset;

@@ -68,7 +68,7 @@ export class QuantumVerticalZoomSlider {
     }
     dragY(event, elem) {
         event.preventDefault();
-        if ((event.pageY - elem._mouseCursorTopOffset) >= elem._railMin && (event.pageY + elem._mouseCursorBottomOffset) <= elem._railMax) {
+        if ((event.pageY - elem._mouseCursorTopOffset) >= elem._railMin + 1 && (event.pageY + elem._mouseCursorBottomOffset) <= elem._railMax - 1) {
             //let v = (elem._railMin - elem._railMax) - (event.y - elem._railMax) - elem._mouseCursorLeftOffset;
             let v = event.pageY - elem._rail.offsetTop - elem._mouseCursorTopOffset;
             v = v < 0 ? 0 : v;
