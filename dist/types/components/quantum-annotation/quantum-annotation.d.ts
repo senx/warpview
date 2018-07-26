@@ -19,6 +19,8 @@ export declare class QuantumAnnotation {
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: number): void;
+    minBoundChange(newValue: number, oldValue: number): void;
+    maxBoundChange(newValue: number, oldValue: number): void;
     /**
      *
      */

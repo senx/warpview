@@ -41,6 +41,22 @@ export class QuantumAnnotation {
         }
         this.didHideOrShowAnomaly.emit();
     }
+    minBoundChange(newValue, oldValue) {
+        this._chart.options.animation.duration = 0;
+        if (oldValue !== newValue) {
+            this._chart.options.scales.xAxes[0].time.min = newValue;
+            this._chart.update();
+        }
+        //console.log(this._chart.options.scales.xAxes[0].time.min);
+    }
+    maxBoundChange(newValue, oldValue) {
+        this._chart.options.animation.duration = 0;
+        if (oldValue !== newValue) {
+            this._chart.options.scales.xAxes[0].time.max = newValue;
+            this._chart.update();
+        }
+        //console.log(this._chart.options.scales.xAxes[0].time.max);
+    }
     /**
      *
      */
@@ -232,11 +248,13 @@ export class QuantumAnnotation {
         },
         "timeMax": {
             "type": Number,
-            "attr": "time-max"
+            "attr": "time-max",
+            "watchCallbacks": ["maxBoundChange"]
         },
         "timeMin": {
             "type": Number,
-            "attr": "time-min"
+            "attr": "time-min",
+            "watchCallbacks": ["minBoundChange"]
         },
         "width": {
             "type": String,

@@ -5,7 +5,7 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   QuantumAnnotation.is = 'quantum-annotation';
   QuantumAnnotation.getModule = function(opts) {
     
-    return import('./hgbemubx.js').then(function(m) {
+    return import('./quantum-annotation.js').then(function(m) {
         return m.QuantumAnnotation;
       });
 
@@ -18,7 +18,7 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-bubble.js').then(function(m) {
         return m.QuantumBubble;
       });
 
@@ -31,7 +31,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-chart.js').then(function(m) {
         return m.QuantumChart;
       });
 
@@ -44,7 +44,7 @@ var QuantumChipComponent = /** @class **/ (function() {
   QuantumChip.is = 'quantum-chip';
   QuantumChip.getModule = function(opts) {
     
-    return import('./wp5ta4bj.js').then(function(m) {
+    return import('./quantum-chip.js').then(function(m) {
         return m.QuantumChip;
       });
 
@@ -57,7 +57,7 @@ var QuantumEditorComponent = /** @class **/ (function() {
   QuantumEditor.is = 'quantum-editor';
   QuantumEditor.getModule = function(opts) {
     
-    return import('./v3aiaxjp.js').then(function(m) {
+    return import('./quantum-editor.js').then(function(m) {
         return m.QuantumEditor;
       });
 
@@ -70,7 +70,7 @@ var QuantumGtsTreeComponent = /** @class **/ (function() {
   QuantumGtsTree.is = 'quantum-gts-tree';
   QuantumGtsTree.getModule = function(opts) {
     
-    return import('./wp5ta4bj.js').then(function(m) {
+    return import('./quantum-chip.js').then(function(m) {
         return m.QuantumGtsTree;
       });
 
@@ -83,8 +83,34 @@ var QuantumHeatmapComponent = /** @class **/ (function() {
   QuantumHeatmap.is = 'quantum-heatmap';
   QuantumHeatmap.getModule = function(opts) {
     
-    return import('./jvmpvywm.js').then(function(m) {
+    return import('./quantum-heatmap.js').then(function(m) {
         return m.QuantumHeatmap;
+      });
+
+  }
+});
+
+var QuantumHeatmapSlidersComponent = /** @class **/ (function() {
+  function QuantumHeatmapSliders() {
+  }
+  QuantumHeatmapSliders.is = 'quantum-heatmap-sliders';
+  QuantumHeatmapSliders.getModule = function(opts) {
+    
+    return import('./quantum-heatmap.js').then(function(m) {
+        return m.QuantumHeatmapSliders;
+      });
+
+  }
+});
+
+var QuantumHorizontalZoomSliderComponent = /** @class **/ (function() {
+  function QuantumHorizontalZoomSlider() {
+  }
+  QuantumHorizontalZoomSlider.is = 'quantum-horizontal-zoom-slider';
+  QuantumHorizontalZoomSlider.getModule = function(opts) {
+    
+    return import('./quantum-chart.js').then(function(m) {
+        return m.QuantumHorizontalZoomSlider;
       });
 
   }
@@ -96,7 +122,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-bubble.js').then(function(m) {
         return m.QuantumPie;
       });
 
@@ -109,7 +135,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-bubble.js').then(function(m) {
         return m.QuantumPolar;
       });
 
@@ -122,7 +148,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-    return import('./y53r0zcf.js').then(function(m) {
+    return import('./quantum-radar.js').then(function(m) {
         return m.QuantumRadar;
       });
 
@@ -135,7 +161,7 @@ var QuantumResultComponent = /** @class **/ (function() {
   QuantumResult.is = 'quantum-result';
   QuantumResult.getModule = function(opts) {
     
-    return import('./v3aiaxjp.js').then(function(m) {
+    return import('./quantum-editor.js').then(function(m) {
         return m.QuantumResult;
       });
 
@@ -148,7 +174,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-bubble.js').then(function(m) {
         return m.QuantumScatter;
       });
 
@@ -161,7 +187,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-    return import('./6wlybjiv.js').then(function(m) {
+    return import('./quantum-bubble.js').then(function(m) {
         return m.QuantumTile;
       });
 
@@ -174,7 +200,7 @@ var QuantumToggleComponent = /** @class **/ (function() {
   QuantumToggle.is = 'quantum-toggle';
   QuantumToggle.getModule = function(opts) {
     
-    return import('./ifeyeqtj.js').then(function(m) {
+    return import('./quantum-toggle.js').then(function(m) {
         return m.QuantumToggle;
       });
 
@@ -187,8 +213,21 @@ var QuantumTreeViewComponent = /** @class **/ (function() {
   QuantumTreeView.is = 'quantum-tree-view';
   QuantumTreeView.getModule = function(opts) {
     
-    return import('./wp5ta4bj.js').then(function(m) {
+    return import('./quantum-chip.js').then(function(m) {
         return m.QuantumTreeView;
+      });
+
+  }
+});
+
+var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
+  function QuantumVerticalZoomSlider() {
+  }
+  QuantumVerticalZoomSlider.is = 'quantum-vertical-zoom-slider';
+  QuantumVerticalZoomSlider.getModule = function(opts) {
+    
+    return import('./quantum-chart.js').then(function(m) {
+        return m.QuantumVerticalZoomSlider;
       });
 
   }
@@ -200,7 +239,7 @@ var StcTabContentComponent = /** @class **/ (function() {
   StcTabContent.is = 'stc-tab-content';
   StcTabContent.getModule = function(opts) {
     
-    return import('./v3aiaxjp.js').then(function(m) {
+    return import('./quantum-editor.js').then(function(m) {
         return m.StcTabContent;
       });
 
@@ -213,7 +252,7 @@ var StcTabHeaderComponent = /** @class **/ (function() {
   StcTabHeader.is = 'stc-tab-header';
   StcTabHeader.getModule = function(opts) {
     
-    return import('./v3aiaxjp.js').then(function(m) {
+    return import('./quantum-editor.js').then(function(m) {
         return m.StcTabHeader;
       });
 
@@ -226,7 +265,7 @@ var StcTabsComponent = /** @class **/ (function() {
   StcTabs.is = 'stc-tabs';
   StcTabs.getModule = function(opts) {
     
-    return import('./v3aiaxjp.js').then(function(m) {
+    return import('./quantum-editor.js').then(function(m) {
         return m.StcTabs;
       });
 
@@ -242,6 +281,8 @@ export {
   QuantumEditor,
   QuantumGtsTree,
   QuantumHeatmap,
+  QuantumHeatmapSliders,
+  QuantumHorizontalZoomSlider,
   QuantumPie,
   QuantumPolar,
   QuantumRadar,
@@ -250,6 +291,7 @@ export {
   QuantumTile,
   QuantumToggle,
   QuantumTreeView,
+  QuantumVerticalZoomSlider,
   StcTabContent,
   StcTabHeader,
   StcTabs,

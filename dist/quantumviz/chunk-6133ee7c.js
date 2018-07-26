@@ -1,2 +1,14 @@
 /*! Built with http://stenciljs.com */
-const{h:e}=window.quantumviz;var o="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function t(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}function n(e,o){return e(o={exports:{}},o.exports),o.exports}export{o as a,t as b,n as c};
+const { h } = window.quantumviz;
+
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+export { commonjsGlobal as a, unwrapExports as b, createCommonjsModule as c };

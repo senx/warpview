@@ -13,19 +13,31 @@ export declare class QuantumChart {
     height: string;
     timeMin: number;
     timeMax: number;
+    config: string;
     pointHover: EventEmitter;
     didHideOrShowData: EventEmitter;
+    boundsDidChange: EventEmitter;
     el: HTMLElement;
     private _chart;
+    private _xSlider;
+    private _ySlider;
+    private _config;
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: number): void;
     drawChart(): void;
+    xSliderInit(): void;
+    ySliderInit(): void;
     gtsToData(gts: any): {
         datasets: any[];
         ticks: any[];
     };
     isStepped(): string | false;
+    xZoomListener(event: CustomEvent): void;
+    yZoomListener(event: CustomEvent): void;
+    xSliderListener(event: CustomEvent): void;
+    ySliderListener(event: CustomEvent): void;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

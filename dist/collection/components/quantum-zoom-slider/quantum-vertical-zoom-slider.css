@@ -1,0 +1,27 @@
+.rail{
+  position: absolute;
+  background: grey;
+  opacity: 0.7;
+  width: 20px;
+  /*height: 94%;*/
+  margin: 0px 0px 20px 0px;
+  border: 1px solid black;
+  border-radius: 6px;
+  padding: 0px 0px 0px 0px ;
+}
+
+.rail:hover{
+  opacity: 1;
+}
+
+.cursor{
+  background: red;
+  position: relative;
+  cursor: move;
+  width: 20px;
+  height: 100%;
+  border: 1px solid black;
+  border-radius: 6px;
+  /*left: 0px;*/
+  transition: top .01s;
+}
