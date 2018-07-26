@@ -5,7 +5,7 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   QuantumAnnotation.is = 'quantum-annotation';
   QuantumAnnotation.getModule = function(opts) {
     
-    return import('./pgq9whnt.js').then(function(m) {
+    return import('./lzve9r7d.js').then(function(m) {
         return m.QuantumAnnotation;
       });
 
@@ -18,7 +18,7 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-    return import('./igzhaxkj.js').then(function(m) {
+    return import('./adtclgvl.js').then(function(m) {
         return m.QuantumBubble;
       });
 
@@ -31,7 +31,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-    return import('./rkjcccmw.js').then(function(m) {
+    return import('./aaldhgyu.js').then(function(m) {
         return m.QuantumChart;
       });
 
@@ -96,7 +96,7 @@ var QuantumHorizontalZoomSliderComponent = /** @class **/ (function() {
   QuantumHorizontalZoomSlider.is = 'quantum-horizontal-zoom-slider';
   QuantumHorizontalZoomSlider.getModule = function(opts) {
     
-    return import('./rkjcccmw.js').then(function(m) {
+    return import('./aaldhgyu.js').then(function(m) {
         return m.QuantumHorizontalZoomSlider;
       });
 
@@ -109,7 +109,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-    return import('./igzhaxkj.js').then(function(m) {
+    return import('./adtclgvl.js').then(function(m) {
         return m.QuantumPie;
       });
 
@@ -122,7 +122,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-    return import('./igzhaxkj.js').then(function(m) {
+    return import('./adtclgvl.js').then(function(m) {
         return m.QuantumPolar;
       });
 
@@ -135,7 +135,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-    return import('./3wgojtvf.js').then(function(m) {
+    return import('./t1aaauen.js').then(function(m) {
         return m.QuantumRadar;
       });
 
@@ -148,7 +148,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-    return import('./igzhaxkj.js').then(function(m) {
+    return import('./adtclgvl.js').then(function(m) {
         return m.QuantumScatter;
       });
 
@@ -161,7 +161,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-    return import('./igzhaxkj.js').then(function(m) {
+    return import('./adtclgvl.js').then(function(m) {
         return m.QuantumTile;
       });
 
@@ -200,7 +200,7 @@ var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
   QuantumVerticalZoomSlider.is = 'quantum-vertical-zoom-slider';
   QuantumVerticalZoomSlider.getModule = function(opts) {
     
-    return import('./rkjcccmw.js').then(function(m) {
+    return import('./aaldhgyu.js').then(function(m) {
         return m.QuantumVerticalZoomSlider;
       });
 
