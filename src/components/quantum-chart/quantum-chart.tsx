@@ -9,6 +9,8 @@ import {
   Listen
 } from "@stencil/core";
 import {GTSLib} from "../../gts.lib";
+//import 'chartjs-plugin-zoom';
+import moment from "moment";
 
 @Component({
   tag: "quantum-chart",
@@ -28,13 +30,35 @@ export class QuantumChart {
   @Prop() height = "";
   @Prop() timeMin: number;
   @Prop() timeMax: number;
+  @Prop() config: string = "{}";
 
   @Event() pointHover: EventEmitter;
   @Event() didHideOrShowData: EventEmitter;
+  @Event() boundsDidChange: EventEmitter;
 
   @Element() el: HTMLElement;
 
   private _chart;
+  private _xSlider = {
+    element: null,
+
+    min: 0,
+    max: 0
+  };
+  private _ySlider = {
+    element: null,
+
+    min: 0,
+    max: 0
+  };
+  private _config = {
+    rail: {
+      class: ''
+    },
+    cursor: {
+      class: ''
+    }
+  };
 
   @Watch("data")
   redraw(newValue: string, oldValue: string) {
@@ -46,7 +70,6 @@ export class QuantumChart {
   @Watch("options")
   changeScale(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
-      //this.drawChart();
       const data = JSON.parse(newValue);
       if (data.time.timeMode === "timestamp") {
         this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
@@ -78,6 +101,7 @@ export class QuantumChart {
     let gts = this.gtsToData(JSON.parse(this.data));
     const me = this;
     const graphOpts = {
+      animation: false,
       legend: {display: /*this.showLegend*/ false},
       tooltips: {
         mode: "x",
@@ -98,8 +122,8 @@ export class QuantumChart {
         xAxes: [
           {
             time: {
-              min: this.timeMin,
-              max: this.timeMax,
+              min: moment(!! this.timeMin ? this.timeMin : gts.ticks[0], "x"),
+              max: moment(!! this.timeMax ? this.timeMax : gts.ticks[gts.ticks.length - 1], "x"),
               unit: 'day'
             },
             type: 'time'
@@ -107,6 +131,12 @@ export class QuantumChart {
         ],
         yAxes: [
           {
+            /*
+            ticks: {
+              min: 500,
+              max: 1000
+            },
+            */
             afterFit: function (scaleInstance) {
               scaleInstance.width = 100; // sets the width to 100px
             },
@@ -117,7 +147,13 @@ export class QuantumChart {
           }
         ]
       },
-      responsive: this.responsive
+      responsive: this.responsive,
+      zoom: {
+        enabled: true,
+        drag: false,
+        sensitivity: 0.5,
+        mode: 'x'
+      }
     };
     /*
         if(this.options === "timestamp"){
@@ -137,9 +173,49 @@ export class QuantumChart {
         datasets: gts.datasets
       },
       options: graphOpts
+
     });
+
+    let maxArray = [];
+    let minArray = [];
+    gts.datasets.forEach(g => {
+      let max = Math.max(...g.data);
+      if(!! max && max != Infinity){
+        maxArray.push(max);
+      }
+    });
+    gts.datasets.forEach(g => {
+      let min = Math.min(...g.data);
+      if(min == 0 || (!! min && min != Infinity)){
+        minArray.push(min);
+      }
+    });
+    
+    this._ySlider.min = Math.min(...minArray);
+    this._ySlider.max = Math.max(...maxArray) * 1.05;
+    this._chart.options.scales.yAxes[0].ticks.min = this._ySlider.min;
+    this._chart.options.scales.yAxes[0].ticks.max = this._ySlider.max;
+    this._chart.update();
+    this._xSlider.min = gts.ticks[0];
+    this._xSlider.max = gts.ticks[gts.ticks.length - 1];
   }
 
+  xSliderInit(){
+    let slider = this.el.shadowRoot.querySelector("#xSlider");
+    slider.setAttribute("min-value", this._xSlider.min.toString());
+    slider.setAttribute("max-value", this._xSlider.max.toString());
+    slider.setAttribute("width", this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().width.toString());
+    this._xSlider.element = slider as HTMLElement;
+  }
+
+  ySliderInit(){
+    let slider = this.el.shadowRoot.querySelector("#ySlider");
+    slider.setAttribute("min-value", this._ySlider.min.toString());
+    slider.setAttribute("max-value", this._ySlider.max.toString());
+    slider.setAttribute("height", this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().height.toString());
+    this._ySlider.element = slider as HTMLElement;
+  }
+  
   gtsToData(gts) {
     let datasets = [];
     let ticks = [];
@@ -201,8 +277,129 @@ export class QuantumChart {
     }
   }
 
+
+  @Listen("xZoom")
+    xZoomListener(event: CustomEvent){
+      let min = this._chart.options.scales.xAxes[0].time.min._i;
+      let max = this._chart.options.scales.xAxes[0].time.max._i;
+      let diff = max - min;
+      //console.log("min Y", this._chart.options.scales.yAxes[0]);
+      //console.log("max Y", this._chart.options.scales.yAxes[0]);
+
+      if(event.detail.zoomValue.zoomType > 0){
+        //console.log("zoom +");
+        //console.log("zoom coef", event.detail.zoomValue.coef);
+
+        min = min + 0.1 * diff * event.detail.zoomValue.coef;
+        max = max - 0.1 * diff * (1 - event.detail.zoomValue.coef);
+
+        max = max > this._xSlider.max ? this._xSlider.max : max;
+        min = min < this._xSlider.min ? this._xSlider.min : min;
+
+        this._chart.options.scales.xAxes[0].time.min = moment(min, "x");
+        this._chart.options.scales.xAxes[0].time.max = moment(max, "x");
+      }else{
+        //console.log("zoom -");
+        //console.log("zoom coef", event.detail.zoomValue.coef);
+
+        min = min - 0.15 * diff * event.detail.zoomValue.coef;
+        max = max + 0.15 * diff * (1 - event.detail.zoomValue.coef);
+
+        max = max > this._xSlider.max ? this._xSlider.max : max;
+        min = min < this._xSlider.min ? this._xSlider.min : min;
+
+        this._chart.options.scales.xAxes[0].time.min = moment(min, "x");
+        this._chart.options.scales.xAxes[0].time.max = moment(max, "x");
+      }
+
+      this._chart.update();
+      this._xSlider.element.setAttribute("max-value", (this._xSlider.max - (max - min)).toString());
+      let cursorSize = ((max - min) / (this._xSlider.max - this._xSlider.min));
+      //console.log("cursor size", cursorSize);
+      let cursorOffset = ((min - this._xSlider.min) / (this._xSlider.max - this._xSlider.min));
+      //console.log("offset", cursorOffset);
+      this._xSlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
+
+      this.boundsDidChange.emit({bounds:{min: min, max: max}});
+    }
+
+  @Listen("yZoom")
+    yZoomListener(event: CustomEvent){
+      let min = this._chart.options.scales.yAxes[0].ticks.min;
+      let max = this._chart.options.scales.yAxes[0].ticks.max;
+      let diff = max - min;
+
+
+      if(event.detail.zoomValue.zoomType > 0){
+        //console.log("zoom +");
+        //console.log("zoom coef", event.detail.zoomValue.coef);
+
+        min = min + 0.1 * diff * (1 - event.detail.zoomValue.coef);
+        max = max - 0.1 * diff * event.detail.zoomValue.coef;
+
+        max = max > this._ySlider.max ? this._ySlider.max : max;
+        min = min < this._ySlider.min ? this._ySlider.min : min;
+
+        this._chart.options.scales.yAxes[0].ticks.min = min;
+        this._chart.options.scales.yAxes[0].ticks.max = max;
+      }else{
+        //console.log("zoom -");
+        //console.log("zoom coef", event.detail.zoomValue.coef);
+
+        min = min - 0.15 * diff * (1 - event.detail.zoomValue.coef);
+        max = max + 0.15 * diff * 1 - event.detail.zoomValue.coef;
+
+        max = max > this._ySlider.max ? this._ySlider.max : max;
+        min = min < this._ySlider.min ? this._ySlider.min : min;
+
+        this._chart.options.scales.yAxes[0].ticks.min = min;
+        this._chart.options.scales.yAxes[0].ticks.max = max;
+      }
+
+      this._chart.update();
+      this._ySlider.element.setAttribute("max-value", (this._ySlider.max - (max - min)).toString());
+      let cursorSize = ((max - min) / (this._ySlider.max - this._ySlider.min));
+      //console.log("cursor size", cursorSize);
+      //let cursorOffset = ((min - this._ySlider.min) / (this._ySlider.max - this._ySlider.min));
+      let cursorOffset = ((this._ySlider.max - max) / (this._ySlider.max - this._ySlider.min));
+      //console.log("offset", cursorOffset);
+      this._ySlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
+    }
+
+  @Listen("xSliderValueChanged")
+    xSliderListener(event: CustomEvent){
+      let min = this._chart.options.scales.xAxes[0].time.min._i;
+      let max = this._chart.options.scales.xAxes[0].time.max._i;
+      let offset = event.detail.sliderValue - min;
+      
+      this._chart.options.scales.xAxes[0].time.min = moment(min + offset, "x");
+      this._chart.options.scales.xAxes[0].time.max = moment(max + offset, "x");
+      this._chart.update();
+      
+    }
+    
+    @Listen("ySliderValueChanged")
+    ySliderListener(event: CustomEvent){
+      
+      let min = this._chart.options.scales.yAxes[0].ticks.min;
+      let max = this._chart.options.scales.yAxes[0].ticks.max;
+      let offset = event.detail.sliderValue - min;
+      
+      
+      this._chart.options.scales.yAxes[0].ticks.min = min + offset;
+      this._chart.options.scales.yAxes[0].ticks.max = max + offset;
+      this._chart.update();
+      
+    }
+
+  componentWillLoad(){
+    this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+  }
+
   componentDidLoad() {
     this.drawChart();
+    this.xSliderInit();
+    this.ySliderInit();
   }
 
   render() {
@@ -210,10 +407,12 @@ export class QuantumChart {
       <div>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
+        <quantum-vertical-zoom-slider id="ySlider" min-value="" max-value=""  config={JSON.stringify(this._config)}></quantum-vertical-zoom-slider>
           {this.responsive
             ? <canvas id="myChart"/>
             : <canvas id="myChart" width={this.width} height={this.height}/>
           }
+        <quantum-horizontal-zoom-slider id="xSlider" min-value="" max-value=""  config={JSON.stringify(this._config)}></quantum-horizontal-zoom-slider>
         </div>
       </div>
     );

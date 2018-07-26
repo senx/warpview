@@ -1,9 +1,9 @@
-/*
-import { Component, Prop, EventEmitter, Event, State, Listen} from '@stencil/core';
+
+import { Component, Prop, EventEmitter, Event, Element} from '@stencil/core';
 
 @Component({
   tag: 'quantum-heatmap-sliders',
-  styleUrl: 'quantum-heatmap-sliders.css',
+  //styleUrl: 'quantum-heatmap-sliders.css',
   shadow: true
 })
 
@@ -17,18 +17,24 @@ export class QuantumHeatmapSliders{
   @Prop() minBlurValue: number;
   @Prop() maxBlurValue: number;
 
+  @Element() el: HTMLElement;
 
-  @Event() radiusChange: EventEmitter;
-  @Event() blurChange: EventEmitter;
+  @Event() heatRadiusDidChange: EventEmitter;
+  @Event() heatBlurDidChange: EventEmitter;
+  @Event() heatOpacityDidChange: EventEmitter;
 
-
-  @Watch("data")
-  redraw(newValue: string, oldValue: string){
-    if (oldValue !== newValue){
-      this.drawHeatmap();
-    }
+  radiusChanged(value){
+    this.heatRadiusDidChange.emit(value);
   }
 
+  blurChanged(value){
+    this.heatBlurDidChange.emit(value);
+  }
+
+  opacityChanged(value){
+    this.heatOpacityDidChange.emit(value);
+  }
+/*
   @Listen('radiusChange')
     radiusChangeListener(event: CustomEvent){
       _radius = this.el.shadowRoot.querySelector("#radius");
@@ -38,39 +44,28 @@ export class QuantumHeatmapSliders{
     blurChangeListener(event: CustomEvent){
       _blur = this.el.shadowRoot.querySelector("#blur");
     }
-
-
-
-  drawHeatmap(){
-    let ctx = this.el.shadowRoot.querySelector("#myHeatmap");
-    let data = JSON.parse(this.data);
-    this._heatmap = new HeatmapLib.Heatmap(ctx).(data).max(this.maxScale);
-    this._heatmap.draw();
-    
-  }
-
+*/
 
 
   componentWillLoad(){
-
   }
 
   componentDidLoad(){
-    this.drawHeatmap();
   }
 
   render() {
     return (
       <div>
-        <h1>{this.title}</h1>
         <div class="container">
           <div class="options">
-              <label>Radius </label><input type="range" id="radius" value="20" min="10" max="50" /><br />
-              <label>Blur </label><input type="range" id="blur" value="20" min="10" max="50" />
+              <label>Radius </label><input type="number" id="radius" value="20" min="10" max="50" onClick={(event: UIEvent) => this.radiusChanged(event.target)}/>
+              <br />
+              <label>Blur </label><input type="number" id="blur" value="20" min="10" max="50" onClick={(event: UIEvent) => this.blurChanged(event.target)}/>
+              <br/>
+              <label>Opacity </label><input type="number" id="opacity" value="50" min="10" max="100" onClick={(event: UIEvent) => this.opacityChanged(event.target)}/>
           </div>
         </div>
       </div>
     );
   }
 }
-*/

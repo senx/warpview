@@ -1,16 +1,19 @@
-import {Component, Element, Prop} from '@stencil/core';
+import {Component, Element, Prop, Listen} from '@stencil/core';
 
-import Leaflet/*, { geoJSON }*/ from 'leaflet';
+import Leaflet /*, { geoJSON }*/, { GeoJSONOptions, StyleFunction, PathOptions }/*, { geoJSON }*/ from 'leaflet';
 import 'leaflet.heat';
 import {GTSLib} from "../../gts.lib";
 //import { GeoJsonObject } from 'geojson';
-
+import 'leaflet.markercluster';
+import { GeoJsonTypes, GeoJsonObject } from 'geojson';
 
 @Component({
   tag: 'quantum-heatmap',
   styleUrls: [
     '../../../node_modules/leaflet/dist/leaflet.css',
-    'quantum-heatmap.scss'
+    'quantum-heatmap.scss',
+    '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.css',
+    '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css'
   ],
   shadow: true
 })
@@ -22,9 +25,10 @@ export class QuantumHeatmap {
   @Prop() height: number;
   @Prop() responsive: boolean = false;
   @Prop() data: string = "[]";
-  @Prop() startLat: number;
-  @Prop() startLong: number;
-  @Prop() startZoom: number;
+  @Prop() startLat: number = 90;
+  @Prop() startLong: number = 90;
+  @Prop() startZoom: number = 2;
+  @Prop() dotsLimit: number = 1000;
 
   @Prop() heatRadius: number;
   @Prop() heatBlur: number;
@@ -47,28 +51,59 @@ export class QuantumHeatmap {
   }
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
+
+  private _heatLayer;
   
+  @Listen('heatRadiusDidChange')
+    radiuschange(event){
+      this._heatLayer.setOptions({radius: event.detail.valueAsNumber});
+    }
+
+  @Listen('heatBlurDidChange')
+    blurChange(event){
+      this._heatLayer.setOptions({blur: event.detail.valueAsNumber});
+      console.log(event.detail.valueAsNumber);
+    }
+
+    @Listen('heatOpacityDidChange')
+    opacityChange(event){
+      let minOpacity = event.detail.valueAsNumber / 100;
+      this._heatLayer.setOptions({minOpacity: minOpacity});
+      console.log(minOpacity);
+    }
 
   drawMap() {
     let ctx = this.el.shadowRoot.querySelector('#mymap');
     this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat, this.startLong], this.startZoom);
     
     Leaflet.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + this._token, {
-      maxZoom: 23,
+      maxZoom: 30,
       id: 'mapbox.streets'
     }).addTo(this._map);
 
     let geoData = this.gtsToGeoJSON(JSON.parse(this.data));
-    geoData.forEach(d => {
-      d.addTo(this._map)
-    });
 
-    var heat = Leaflet.heatLayer(JSON.parse(this.heatData),
+    if(geoData.length > this.dotsLimit){
+      let cluster = (Leaflet as any).markerClusterGroup();
+      geoData.forEach(d => {
+        cluster.addLayer(d);
+      });
+      this._map.addLayer(cluster);
+    }else{
+      geoData.forEach(d => {
+        d.addTo(this._map)
+      });
+
+    }
+    
+    this._heatLayer = Leaflet.heatLayer(JSON.parse(this.heatData),
       {radius: this.heatRadius,
       blur: this.heatBlur,
       minOpacity: this.heatOpacity
       });
-    heat.addTo(this._map);
+    this._heatLayer.addTo(this._map);
+    
+
   }
 
   icon(color, marker = ""){
@@ -89,30 +124,30 @@ export class QuantumHeatmap {
       d.gts.forEach((g, i) => {
         let key = d.params[i].key.toLowerCase();
 
-        switch(key){/*
+        switch(key){
           case 'path':
-            let path = {
-              'type': 'LineString',
-              'properties': {
-                'color': !! d.params[i].color
-                ? d.params[i].color
-                : GTSLib.getColor(i),
-                "weight": this._pathStyle.weight,
-                "opacity": this._pathStyle.opacity,
-                'popupContent': d.params[i].legend
-              },
-              'coordinates': []
+            let style ={
+              color: !! d.params[i].color
+              ? d.params[i].color
+              : GTSLib.getColor(i),
+              weight: this._pathStyle.weight,
+              opacity: this._pathStyle.opacity,
+              popupContent: d.params[i].legend
+            };
+          const coordinates= []
+            let path: GeoJsonObject = {
+              type: 'LineString'
             };
             g.v.forEach(p => {
-              path.coordinates.push([p[2], p[1]]);
+              coordinates.push([p[2], p[1]]);
             });
             geoData.push(Leaflet.geoJSON(path, {
-              style: path.properties,
+              style: style as PathOptions,
               onEachFeature: function (feature, layer) {
                 layer.bindPopup(feature.properties.popupContent);
               }
-            }));
-            break;*/
+            } as GeoJSONOptions));
+            break;
 
           case 'point':
             let point = {} as any;
@@ -264,8 +299,11 @@ export class QuantumHeatmap {
       <div>
         <h1>{this.mapTitle}</h1>
         <div class="map-container">
-          <div id="mymap" style={ {'width': '100%', 'height': '800px' }} />
+          <div id="mymap" style={{'width': '100%', 'height': '800px' }} />
         </div>
+        {this.heatData !== "[]"
+          ? <quantum-heatmap-sliders></quantum-heatmap-sliders>
+          : ""}
       </div>
     );
   }
