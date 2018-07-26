@@ -1,0 +1,934 @@
+{
+  "components": [
+    {
+      "tag": "quantum-annotation",
+      "dependencies": [],
+      "componentClass": "QuantumAnnotation",
+      "componentPath": "components/quantum-annotation/quantum-annotation.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-annotation/quantum-annotation.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "Number",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "didHideOrShowAnomaly"
+        },
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-bubble",
+      "dependencies": [],
+      "componentClass": "QuantumBubble",
+      "componentPath": "components/quantum-bubble/quantum-bubble.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-bubble/quantum-bubble.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-chart",
+      "dependencies": [],
+      "componentClass": "QuantumChart",
+      "componentPath": "components/quantum-chart/quantum-chart.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-chart/quantum-chart.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "Number",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "didHideOrShowData"
+        },
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-chip",
+      "dependencies": [],
+      "componentClass": "QuantumChip",
+      "componentPath": "components/quantum-gts-tree/chip.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-gts-tree/chip.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "index",
+          "type": "Number",
+          "attr": "index"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "attr": "name"
+        },
+        {
+          "name": "node",
+          "type": "Any",
+          "attr": "node"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "selected"
+        }
+      ]
+    },
+    {
+      "tag": "quantum-editor",
+      "dependencies": [
+        "quantum-result"
+      ],
+      "componentClass": "QuantumEditor",
+      "componentPath": "components/quantum-editor/quantum-editor.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/monaco-editor/min/vs/editor/editor.main.css",
+            "components/quantum-editor/quantum-editor.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "displayMessages",
+          "type": "Boolean",
+          "attr": "display-messages"
+        },
+        {
+          "name": "horizontalLayout",
+          "type": "Boolean",
+          "attr": "horizontal-layout"
+        },
+        {
+          "name": "showDataviz",
+          "type": "Boolean",
+          "attr": "show-dataviz"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "themeHandler"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "String",
+          "attr": "url"
+        },
+        {
+          "name": "warpscript",
+          "type": "String",
+          "attr": "warpscript",
+          "watch": [
+            "warpscriptHandler"
+          ]
+        }
+      ],
+      "states": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "result"
+        },
+        {
+          "name": "status"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "datavizRequested"
+        },
+        {
+          "event": "errorEvent"
+        },
+        {
+          "event": "statusEvent"
+        },
+        {
+          "event": "warpscriptChanged"
+        },
+        {
+          "event": "warpscriptResult"
+        }
+      ]
+    },
+    {
+      "tag": "quantum-gts-tree",
+      "dependencies": [
+        "quantum-tree-view"
+      ],
+      "componentClass": "QuantumGtsTree",
+      "componentPath": "components/quantum-gts-tree/quantum-gts-tree.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-gts-tree/quantum-gts-tree.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "dataChanged"
+          ]
+        }
+      ],
+      "events": [
+        {
+          "event": "selected"
+        }
+      ]
+    },
+    {
+      "tag": "quantum-heatmap",
+      "dependencies": [],
+      "componentClass": "QuantumHeatmap",
+      "componentPath": "components/quantum-heatmap/quantum-heatmap.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/leaflet/dist/leaflet.css",
+            "components/quantum-heatmap/quantum-heatmap.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "height",
+          "type": "Number",
+          "attr": "height"
+        },
+        {
+          "name": "mapTitle",
+          "type": "String",
+          "attr": "map-title"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "width",
+          "type": "Number",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-pie",
+      "dependencies": [],
+      "componentClass": "QuantumPie",
+      "componentPath": "components/quantum-pie/quantum-pie.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-pie/quantum-pie.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-polar",
+      "dependencies": [],
+      "componentClass": "QuantumPolar",
+      "componentPath": "components/quantum-polar/quantum-polar.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-polar/quantum-polar.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-radar",
+      "dependencies": [],
+      "componentClass": "QuantumRadar",
+      "componentPath": "components/quantum-radar/quantum-radar.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-radar/quantum-radar.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-result",
+      "dependencies": [
+        "stc-tab-content",
+        "stc-tab-header",
+        "stc-tabs"
+      ],
+      "componentClass": "QuantumResult",
+      "componentPath": "components/quantum-result/quantum-result.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/monaco-editor/min/vs/editor/editor.main.css",
+            "components/quantum-result/quantum-result.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "displayMessages",
+          "type": "Boolean",
+          "attr": "display-messages"
+        },
+        {
+          "name": "result",
+          "type": "String",
+          "attr": "result",
+          "watch": [
+            "resultHandler"
+          ]
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "themeHandler"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      }
+    },
+    {
+      "tag": "quantum-scatter",
+      "dependencies": [],
+      "componentClass": "QuantumScatter",
+      "componentPath": "components/quantum-scatter/quantum-scatter.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-scatter/quantum-scatter.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-tile",
+      "dependencies": [
+        "quantum-bubble",
+        "quantum-chart",
+        "quantum-pie",
+        "quantum-polar",
+        "quantum-scatter"
+      ],
+      "componentClass": "QuantumTile",
+      "componentPath": "components/quantum-tile/quantum-tile.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-tile/quantum-tile.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "url",
+          "type": "String",
+          "attr": "url"
+        }
+      ],
+      "states": [
+        {
+          "name": "data"
+        }
+      ],
+      "hostElement": {
+        "name": "wsElement"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-toggle",
+      "dependencies": [],
+      "componentClass": "QuantumToggle",
+      "componentPath": "components/quantum-toggle/quantum-toggle.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-toggle/quantum-toggle.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "checked",
+          "type": "Boolean",
+          "attr": "checked"
+        },
+        {
+          "name": "option",
+          "type": "String",
+          "attr": "option"
+        }
+      ],
+      "states": [
+        {
+          "name": "state"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "timeSwitched",
+          "method": "switchedListener",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "events": [
+        {
+          "event": "timeSwitched"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-tree-view",
+      "dependencies": [
+        "quantum-chip",
+        "quantum-tree-view"
+      ],
+      "componentClass": "QuantumTreeView",
+      "componentPath": "components/quantum-gts-tree/tree.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-gts-tree/tree.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "branch",
+          "type": "Boolean",
+          "attr": "branch"
+        },
+        {
+          "name": "gtsList",
+          "type": "Any",
+          "attr": "gts-list"
+        }
+      ],
+      "events": [
+        {
+          "event": "selected"
+        }
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "name": "@code-dimension/stencil-components",
+      "tags": [
+        "stc-chip",
+        "stc-tab-content",
+        "stc-tab-header",
+        "stc-tabs",
+        "stc-tags"
+      ]
+    }
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.8.2",
+    "typescriptVersion": "2.9.2"
+  },
+  "bundles": []
+}

@@ -1,5 +1,3 @@
-dist/
-
 *~
 *.sw[mnpcod]
 *.log
@@ -22,7 +20,6 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 .env
 www/*
-dist
 doc
 .yarndoc
 .editorconfig
