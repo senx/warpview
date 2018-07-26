@@ -21,7 +21,6 @@
 
 
   <script src="/build/quantumviz.js"></script>
-
   <style>
     .bar {
       width: 1px;
@@ -52,14 +51,17 @@
 
   <!-- synchronizes zoom on graphs -->
   <script language="JavaScript">
+    $(function() {
+      $("#dark").click(function() {
+        $("#editor").attr("theme", "dark").attr("horizontal-layout", "true");
+      });
+      $("#light").click(function() {
+        $("#editor").attr("theme", "light").attr("horizontal-layout", "false");
+      });
     $('#chart').on('boundsDidChange', function (event){
       $('#annotation').attr('time-min', event.detail.bounds.min);
       $('#annotation').attr('time-max', event.detail.bounds.max);
     });
-  </script>
-
-  <!-- hide or show a GTS by clicking on a GTS in the tree -->
-  <script language="JavaScript">
     $('#tree').on("selected", function (event) {
       $('#chart').attr('hidden-data', event.detail.index);
       $('#annotation').attr('hidden-data', event.detail.index);
@@ -71,10 +73,6 @@
     $('#annotation').on("didHideOrShowAnomaly", function () {
       $('#annotation').attr('hidden-data', -1);
     });
-  </script>
-
-  <!-- switch to timestamp display -->
-  <script language="JavaScript">
     $('#timeSwitch').on("timeSwitched", function (event) {
       var state = JSON.stringify(event.detail.state);
 
@@ -89,10 +87,6 @@
         $('quantum-annotation').attr('options', JSON.stringify(object));
       }
     });
-  </script>
-
-  <script language="JavaScript">
-    $(function () {
       var data = [[[{
         "c": "warp.store.hbase.puts.committed",
         "l": {

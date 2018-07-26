@@ -1,76 +1,89 @@
-/*
-import { Component, Prop, EventEmitter, Event, State, Listen} from '@stencil/core';
-
-@Component({
-  tag: 'quantum-heatmap-sliders',
-  styleUrl: 'quantum-heatmap-sliders.css',
-  shadow: true
-})
-
-export class QuantumHeatmapSliders{
-
-  @Prop() radiusValue: number;
-  @Prop() minRadiusValue: number;
-  @Prop() maxRadiusValue: number;
-
-  @Prop() blurValue: number;
-  @Prop() minBlurValue: number;
-  @Prop() maxBlurValue: number;
-
-
-  @Event() radiusChange: EventEmitter;
-  @Event() blurChange: EventEmitter;
-
-
-  @Watch("data")
-  redraw(newValue: string, oldValue: string){
-    if (oldValue !== newValue){
-      this.drawHeatmap();
+export class QuantumHeatmapSliders {
+    radiusChanged(value) {
+        this.heatRadiusDidChange.emit(value);
     }
-  }
-
-  @Listen('radiusChange')
-    radiusChangeListener(event: CustomEvent){
-      _radius = this.el.shadowRoot.querySelector("#radius");
+    blurChanged(value) {
+        this.heatBlurDidChange.emit(value);
     }
-
-  @Listen('blurChange')
-    blurChangeListener(event: CustomEvent){
-      _blur = this.el.shadowRoot.querySelector("#blur");
+    opacityChanged(value) {
+        this.heatOpacityDidChange.emit(value);
     }
-
-
-
-  drawHeatmap(){
-    let ctx = this.el.shadowRoot.querySelector("#myHeatmap");
-    let data = JSON.parse(this.data);
-    this._heatmap = new HeatmapLib.Heatmap(ctx).(data).max(this.maxScale);
-    this._heatmap.draw();
+    /*
+      @Listen('radiusChange')
+        radiusChangeListener(event: CustomEvent){
+          _radius = this.el.shadowRoot.querySelector("#radius");
+        }
     
-  }
-
-
-
-  componentWillLoad(){
-
-  }
-
-  componentDidLoad(){
-    this.drawHeatmap();
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>{this.title}</h1>
-        <div class="container">
-          <div class="options">
-              <label>Radius </label><input type="range" id="radius" value="20" min="10" max="50" /><br />
-              <label>Blur </label><input type="range" id="blur" value="20" min="10" max="50" />
-          </div>
-        </div>
-      </div>
-    );
-  }
+      @Listen('blurChange')
+        blurChangeListener(event: CustomEvent){
+          _blur = this.el.shadowRoot.querySelector("#blur");
+        }
+    */
+    componentWillLoad() {
+    }
+    componentDidLoad() {
+    }
+    render() {
+        return (h("div", null,
+            h("div", { class: "container" },
+                h("div", { class: "options" },
+                    h("label", null, "Radius "),
+                    h("input", { type: "number", id: "radius", value: "20", min: "10", max: "50", onClick: (event) => this.radiusChanged(event.target) }),
+                    h("br", null),
+                    h("label", null, "Blur "),
+                    h("input", { type: "number", id: "blur", value: "20", min: "10", max: "50", onClick: (event) => this.blurChanged(event.target) }),
+                    h("br", null),
+                    h("label", null, "Opacity "),
+                    h("input", { type: "number", id: "opacity", value: "50", min: "10", max: "100", onClick: (event) => this.opacityChanged(event.target) })))));
+    }
+    static get is() { return "quantum-heatmap-sliders"; }
+    static get encapsulation() { return "shadow"; }
+    static get properties() { return {
+        "blurValue": {
+            "type": Number,
+            "attr": "blur-value"
+        },
+        "el": {
+            "elementRef": true
+        },
+        "maxBlurValue": {
+            "type": Number,
+            "attr": "max-blur-value"
+        },
+        "maxRadiusValue": {
+            "type": Number,
+            "attr": "max-radius-value"
+        },
+        "minBlurValue": {
+            "type": Number,
+            "attr": "min-blur-value"
+        },
+        "minRadiusValue": {
+            "type": Number,
+            "attr": "min-radius-value"
+        },
+        "radiusValue": {
+            "type": Number,
+            "attr": "radius-value"
+        }
+    }; }
+    static get events() { return [{
+            "name": "heatRadiusDidChange",
+            "method": "heatRadiusDidChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "heatBlurDidChange",
+            "method": "heatBlurDidChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "heatOpacityDidChange",
+            "method": "heatOpacityDidChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }]; }
 }
-*/ 
