@@ -37,6 +37,7 @@ export class QuantumVerticalZoomSlider {
     }
     componentWillLoad() {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+        console.log('V slider :', this._config);
     }
     componentDidLoad() {
         this._rail = this.el.shadowRoot.querySelector("#rail");

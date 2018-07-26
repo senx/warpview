@@ -5,11 +5,7 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   QuantumAnnotation.is = 'quantum-annotation';
   QuantumAnnotation.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-annotation.js').then(function(m) {
-=======
-    return import('./pgq9whnt.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumAnnotation;
       });
 
@@ -22,11 +18,7 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-bubble.js').then(function(m) {
-=======
-    return import('./igzhaxkj.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumBubble;
       });
 
@@ -39,11 +31,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-chart.js').then(function(m) {
-=======
-    return import('./rkjcccmw.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumChart;
       });
 
@@ -108,11 +96,7 @@ var QuantumHorizontalZoomSliderComponent = /** @class **/ (function() {
   QuantumHorizontalZoomSlider.is = 'quantum-horizontal-zoom-slider';
   QuantumHorizontalZoomSlider.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-chart.js').then(function(m) {
-=======
-    return import('./rkjcccmw.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumHorizontalZoomSlider;
       });
 
@@ -125,11 +109,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-bubble.js').then(function(m) {
-=======
-    return import('./igzhaxkj.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumPie;
       });
 
@@ -142,11 +122,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-bubble.js').then(function(m) {
-=======
-    return import('./igzhaxkj.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumPolar;
       });
 
@@ -159,11 +135,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-radar.js').then(function(m) {
-=======
-    return import('./3wgojtvf.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumRadar;
       });
 
@@ -176,11 +148,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-bubble.js').then(function(m) {
-=======
-    return import('./igzhaxkj.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumScatter;
       });
 
@@ -193,11 +161,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-bubble.js').then(function(m) {
-=======
-    return import('./igzhaxkj.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumTile;
       });
 
@@ -236,11 +200,7 @@ var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
   QuantumVerticalZoomSlider.is = 'quantum-vertical-zoom-slider';
   QuantumVerticalZoomSlider.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-chart.js').then(function(m) {
-=======
-    return import('./rkjcccmw.js').then(function(m) {
->>>>>>> 94794278025a45164d0c942ea5cf7c4a8ed5b5a4
         return m.QuantumVerticalZoomSlider;
       });
 

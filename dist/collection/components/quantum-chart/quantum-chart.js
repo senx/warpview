@@ -328,6 +328,7 @@ export class QuantumChart {
     }
     componentWillLoad() {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+        console.log('chart :', this._config);
     }
     componentDidLoad() {
         this.drawChart();

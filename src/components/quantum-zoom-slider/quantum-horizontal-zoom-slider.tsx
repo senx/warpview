@@ -4,7 +4,7 @@ import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: 'quantum-horizontal-zoom-slider',
-  styleUrl: 'quantum-horizontal-zoom-slider.css',
+  styleUrl: 'quantum-horizontal-zoom-slider.scss',
   shadow: true
 })
 
@@ -38,7 +38,7 @@ export class QuantumHorizontalZoomSlider {
   private _railMax;
   private _mouseCursorLeftOffset; //is used as bottom offset for vertical slide
   private _mouseCursorRightOffset; //is used as top for vertical slide
-  
+
   @Watch("cursorSize")
     changeCursorSize(newValue: string, oldValue: string) {
       if (oldValue !== newValue) {
@@ -82,7 +82,7 @@ export class QuantumHorizontalZoomSlider {
     this._rail.onmouseup = (event) => {me.stopDrag(me)};
     this._rail.onmouseout = (event) => {me.stopDrag(me)};
   }
-  
+
   dimsX(event){
     let railDims = this._rail.getBoundingClientRect() as DOMRect;
     let cursorDims = this._cursor.getBoundingClientRect() as DOMRect;
@@ -98,7 +98,7 @@ export class QuantumHorizontalZoomSlider {
       let v = event.clientX - elem._rail.offsetLeft - elem._mouseCursorLeftOffset;
       v = v < 0 ? 0 : v;
       elem._cursor.style.left = v + "px";
-    
+
       let value = ((v) / ((this._railMax - this._railMin) - this._cursorWidth)) * (this.maxValue - this.minValue) + this.minValue;
       this.xSliderValueChanged.emit({sliderValue: value});
     }
@@ -126,7 +126,7 @@ export class QuantumHorizontalZoomSlider {
   render() {
       return(
         <div id="rail" class={'rail ' + this._config.rail.class} onWheel={(event) => this.xWheel(event)}>
-          <div id="cursor" class={'cursor ' + this._config.cursor.class} onMouseDown={(event) => this.mouseDown(event)}></div> 
+          <div id="cursor" class={'cursor ' + this._config.cursor.class} onMouseDown={(event) => this.mouseDown(event)}></div>
         </div>
       );
   }

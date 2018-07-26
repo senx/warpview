@@ -32,6 +32,14 @@
       top: 0;
       bottom: 0;
     }
+  body {
+    --quantum-bg-rail-color: orange;
+    --quantum-border-rail-color: #10ff10;
+    --quantum-bg-cursor-color: teal;
+    --quantum-border-cursor-color: pink;
+    --quantum-border-radius: 20px;
+  }
+
   </style>
 </head>
 
@@ -44,54 +52,46 @@
 
   <div id="maincontainer">
     <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data= options=""></quantum-annotation>
-    <quantum-chart responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data= options={} config="{'cursor' : {'class':'toto'}}"></quantum-chart>
-    
+    <quantum-chart responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data= options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart>
+    <button type="button">ZooM reset</button>
+
   </div>
   <quantum-toggle id="timeSwitch" style="margin-top: 10px;" ></quantum-toggle>
 
   <!-- synchronizes zoom on graphs -->
   <script language="JavaScript">
-    $('#chart').on('boundsDidChange', function (event){
-      $('#annotation').attr('time-min', event.detail.bounds.min);
-      $('#annotation').attr('time-max', event.detail.bounds.max);
-    });
-  </script>
 
-  <!-- hide or show a GTS by clicking on a GTS in the tree -->
-  <script language="JavaScript">
-    $('#tree').on("selected", function (event) {
-      $('#chart').attr('hidden-data', event.detail.index);
-      $('#annotation').attr('hidden-data', event.detail.index);
-    });
-    
-    $('#chart').on("didHideOrShowData", function () {
-      $('#chart').attr('hidden-data', -1);
-    });
-    $('#annotation').on("didHideOrShowAnomaly", function () {
-      $('#annotation').attr('hidden-data', -1);
-    });
-  </script>
-
-  <!-- switch to timestamp display -->
-  <script language="JavaScript">
-    $('#timeSwitch').on("timeSwitched", function (event) {
-      var state = JSON.stringify(event.detail.state);
-
-      if(state === "true"){
-        var object = {"time":{"timeMode": "timestamp", "stepSize": 86400000, "unit": "millisecond", "displayFormats": "x"}};                    
-        $('quantum-chart').attr('options', JSON.stringify(object));
-        $('quantum-annotation').attr('options', JSON.stringify(object));
-      }
-      else{
-        var object = {"time":{"timeMode": "", "stepSize": 1, "unit": "day"}};
-        $('quantum-chart').attr('options', JSON.stringify(object));
-        $('quantum-annotation').attr('options', JSON.stringify(object));
-      }
-    });
-  </script>
-
-  <script language="JavaScript">
     $(function () {
+      $('#chart').on('boundsDidChange', function (event) {
+        $('#annotation').attr('time-min', event.detail.bounds.min).attr('time-max', event.detail.bounds.max);
+      }).on("didHideOrShowData", function () {
+        $('#chart').attr('hidden-data', -1);
+      });
+
+      $('#tree').on("selected", function (event) {
+        $('#chart').attr('hidden-data', event.detail.index);
+        $('#annotation').attr('hidden-data', event.detail.index);
+      });
+
+      $('#annotation').on("didHideOrShowAnomaly", function () {
+        $('#annotation').attr('hidden-data', -1);
+      });
+      $('#timeSwitch').on("timeSwitched", function (event) {
+        var state = JSON.stringify(event.detail.state);
+
+        if (state === "true") {
+          var object = { "time": { "timeMode": "timestamp", "stepSize": 86400000, "unit": "millisecond", "displayFormats": "x" } };
+          $('quantum-chart').attr('options', JSON.stringify(object));
+          $('quantum-annotation').attr('options', JSON.stringify(object));
+        }
+        else {
+          var object = { "time": { "timeMode": "", "stepSize": 1, "unit": "day" } };
+          $('quantum-chart').attr('options', JSON.stringify(object));
+          $('quantum-annotation').attr('options', JSON.stringify(object));
+        }
+      });
+
+
       var data = [[[{
         "c": "warp.store.hbase.puts.committed",
         "l": {
@@ -198,7 +198,7 @@
         console.log(event.originalEvent.detail);
         line.css({left: event.originalEvent.detail.x}).css({top: main.position().top, height: main.height() + 'px'});
       }).attr("data", JSON.stringify([formatedData]));
-      
+
       $('#chart').on('pointHover', function (event) {
         console.log(event.originalEvent.detail);
         line.css({left: event.originalEvent.detail.x}).css({top: main.position().top, height: main.height() + 'px'});
@@ -207,7 +207,7 @@
       $('#tree').attr("data", JSON.stringify(data));
     });
   </script>
-  
+
   <!--
     </div>
 
