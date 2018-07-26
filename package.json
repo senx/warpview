@@ -21,8 +21,6 @@
     "@code-dimension/stencil-components": "0.0.0-beta.1",
     "@stencil/core": "^0.8.0",
     "@timkendrick/monaco-editor": "0.0.9",
-    "@types/leaflet": "^1.2.7",
-    "@types/leaflet.heat": "^0.2.0",
     "chart.js": "^2.7.2",
     "chartjs-plugin-zoom": "^0.6.3",
     "clipboard": "^2.0.1",
@@ -39,6 +37,8 @@
     "@stencil/utils": "0.0.4",
     "@types/chartjs": "0.0.31",
     "@types/jest": "^22.2.3",
+    "@types/leaflet": "^1.2.8",
+    "@types/leaflet.heat": "^0.2.0",
     "@types/prismjs": "^1.9.0",
     "jest": "^22.4.3"
   },

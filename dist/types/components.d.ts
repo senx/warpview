@@ -195,56 +195,6 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumEditor {
-      'config': string;
-      'displayMessages': boolean;
-      'horizontalLayout': boolean;
-      'showDataviz': boolean;
-      'theme': string;
-      'url': string;
-      'warpscript': string;
-    }
-  }
-
-  interface HTMLQuantumEditorElement extends StencilComponents.QuantumEditor, HTMLStencilElement {}
-
-  var HTMLQuantumEditorElement: {
-    prototype: HTMLQuantumEditorElement;
-    new (): HTMLQuantumEditorElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-editor': HTMLQuantumEditorElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-editor': HTMLQuantumEditorElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-editor': JSXElements.QuantumEditorAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumEditorAttributes extends HTMLAttributes {
-      'config'?: string;
-      'displayMessages'?: boolean;
-      'horizontalLayout'?: boolean;
-      'onDatavizRequested'?: (event: CustomEvent) => void;
-      'onErrorEvent'?: (event: CustomEvent) => void;
-      'onStatusEvent'?: (event: CustomEvent) => void;
-      'onWarpscriptChanged'?: (event: CustomEvent) => void;
-      'onWarpscriptResult'?: (event: CustomEvent) => void;
-      'showDataviz'?: boolean;
-      'theme'?: string;
-      'url'?: string;
-      'warpscript'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
     interface QuantumChip {
       'index': number;
       'name': string;
@@ -593,45 +543,6 @@ declare global {
       'showLegend'?: boolean;
       'unit'?: string;
       'width'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumResult {
-      'config': string;
-      'displayMessages': boolean;
-      'result': string;
-      'theme': string;
-    }
-  }
-
-  interface HTMLQuantumResultElement extends StencilComponents.QuantumResult, HTMLStencilElement {}
-
-  var HTMLQuantumResultElement: {
-    prototype: HTMLQuantumResultElement;
-    new (): HTMLQuantumResultElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-result': HTMLQuantumResultElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-result': HTMLQuantumResultElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-result': JSXElements.QuantumResultAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumResultAttributes extends HTMLAttributes {
-      'config'?: string;
-      'displayMessages'?: boolean;
-      'result'?: string;
-      'theme'?: string;
     }
   }
 }

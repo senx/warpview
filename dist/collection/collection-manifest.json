@@ -341,96 +341,6 @@
       ]
     },
     {
-      "tag": "quantum-editor",
-      "dependencies": [
-        "quantum-result"
-      ],
-      "componentClass": "QuantumEditor",
-      "componentPath": "components/quantum-editor/quantum-editor.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "../node_modules/monaco-editor/min/vs/editor/editor.main.css",
-            "components/quantum-editor/quantum-editor.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "displayMessages",
-          "type": "Boolean",
-          "attr": "display-messages"
-        },
-        {
-          "name": "horizontalLayout",
-          "type": "Boolean",
-          "attr": "horizontal-layout"
-        },
-        {
-          "name": "showDataviz",
-          "type": "Boolean",
-          "attr": "show-dataviz"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "themeHandler"
-          ]
-        },
-        {
-          "name": "url",
-          "type": "String",
-          "attr": "url"
-        },
-        {
-          "name": "warpscript",
-          "type": "String",
-          "attr": "warpscript",
-          "watch": [
-            "warpscriptHandler"
-          ]
-        }
-      ],
-      "states": [
-        {
-          "name": "error"
-        },
-        {
-          "name": "result"
-        },
-        {
-          "name": "status"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "datavizRequested"
-        },
-        {
-          "event": "errorEvent"
-        },
-        {
-          "event": "statusEvent"
-        },
-        {
-          "event": "warpscriptChanged"
-        },
-        {
-          "event": "warpscriptResult"
-        }
-      ]
-    },
-    {
       "tag": "quantum-gts-tree",
       "dependencies": [
         "quantum-tree-view"
@@ -542,6 +452,145 @@
           "name": "width",
           "type": "Number",
           "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "heatBlurDidChange",
+          "method": "blurChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "heatOpacityDidChange",
+          "method": "opacityChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "heatRadiusDidChange",
+          "method": "radiuschange",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "quantum-heatmap-sliders",
+      "dependencies": [],
+      "componentClass": "QuantumHeatmapSliders",
+      "componentPath": "components/quantum-heatmap/quantum-heatmap-sliders.js",
+      "styles": {},
+      "props": [
+        {
+          "name": "blurValue",
+          "type": "Number",
+          "attr": "blur-value"
+        },
+        {
+          "name": "maxBlurValue",
+          "type": "Number",
+          "attr": "max-blur-value"
+        },
+        {
+          "name": "maxRadiusValue",
+          "type": "Number",
+          "attr": "max-radius-value"
+        },
+        {
+          "name": "minBlurValue",
+          "type": "Number",
+          "attr": "min-blur-value"
+        },
+        {
+          "name": "minRadiusValue",
+          "type": "Number",
+          "attr": "min-radius-value"
+        },
+        {
+          "name": "radiusValue",
+          "type": "Number",
+          "attr": "radius-value"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "heatBlurDidChange"
+        },
+        {
+          "event": "heatOpacityDidChange"
+        },
+        {
+          "event": "heatRadiusDidChange"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-horizontal-zoom-slider",
+      "dependencies": [],
+      "componentClass": "QuantumHorizontalZoomSlider",
+      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "cursorSize",
+          "type": "String",
+          "attr": "cursor-size",
+          "watch": [
+            "changeCursorSize"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": "Number",
+          "attr": "max-value"
+        },
+        {
+          "name": "minValue",
+          "type": "Number",
+          "attr": "min-value"
+        },
+        {
+          "name": "startLat",
+          "type": "Number",
+          "attr": "start-lat"
+        },
+        {
+          "name": "startLong",
+          "type": "Number",
+          "attr": "start-long"
+        },
+        {
+          "name": "startZoom",
+          "type": "Number",
+          "attr": "start-zoom"
+        },
+        {
+          "name": "width",
+          "type": "Number",
+          "attr": "width",
+          "watch": [
+            "initSize"
+          ]
         }
       ],
       "listeners": [
@@ -873,55 +922,6 @@
         "name": "el"
       },
       "shadow": true
-    },
-    {
-      "tag": "quantum-result",
-      "dependencies": [
-        "stc-tab-content",
-        "stc-tab-header",
-        "stc-tabs"
-      ],
-      "componentClass": "QuantumResult",
-      "componentPath": "components/quantum-result/quantum-result.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "../node_modules/monaco-editor/min/vs/editor/editor.main.css",
-            "components/quantum-result/quantum-result.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "displayMessages",
-          "type": "Boolean",
-          "attr": "display-messages"
-        },
-        {
-          "name": "result",
-          "type": "String",
-          "attr": "result",
-          "watch": [
-            "resultHandler"
-          ]
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "themeHandler"
-          ]
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      }
     },
     {
       "tag": "quantum-scatter",

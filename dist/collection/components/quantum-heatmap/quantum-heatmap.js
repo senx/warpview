@@ -1,7 +1,6 @@
-import Leaflet /*, { geoJSON }*/ /*, { geoJSON }*/ from 'leaflet';
+import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import { GTSLib } from "../../gts.lib";
-//import { GeoJsonObject } from 'geojson';
 import 'leaflet.markercluster';
 export class QuantumHeatmap {
     constructor() {
@@ -59,7 +58,8 @@ export class QuantumHeatmap {
                 d.addTo(this._map);
             });
         }
-        this._heatLayer = Leaflet.heatLayer(JSON.parse(this.heatData), { radius: this.heatRadius,
+        this._heatLayer = Leaflet.heatLayer(JSON.parse(this.heatData), {
+            radius: this.heatRadius,
             blur: this.heatBlur,
             minOpacity: this.heatOpacity
         });
