@@ -541,7 +541,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.css"
+            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.scss"
           ]
         }
       },
@@ -1005,7 +1005,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-zoom-slider/quantum-vertical-zoom-slider.css"
+            "components/quantum-zoom-slider/quantum-vertical-zoom-slider.scss"
           ]
         }
       },
