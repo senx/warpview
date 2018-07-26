@@ -85,18 +85,14 @@ export class QuantumEditor {
   componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     console.log('[QuantumEditor] - _config: ', this._config);
-    this.warpscript = this.el.textContent.slice(); // FIXME
     this.edUid = GTSLib.guid();
     if ('dark' === this.theme) {
       this.monacoTheme = 'vs-dark';
     }
-   // const wordPattern = new RegExp("((->|\\$)?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\#\\%\\^\\&\\*\\(\\)\\-\\=\\+\\[\\{\\]\\}\\\\|\\;\\:\\'\\\"\\,\\<\\>\/\\?\\s\\t])+");
     console.log('[QuantumEditor] - componentWillLoad theme is: ', this.theme);
-    console.log(    monaco.languages.getLanguages().find(l => l.id === this.WARPSCRIPT_LANGUAGE));
-    console.log(monaco.languages.getLanguages());
-    monaco.languages.register({ id: this.WARPSCRIPT_LANGUAGE });
-
     if(!monaco.languages.getLanguages().find(l => l.id === this.WARPSCRIPT_LANGUAGE)) {
+      monaco.languages.register({ id: this.WARPSCRIPT_LANGUAGE });
+      console.log('[QuantumEditor] - componentWillLoad register: ', this.WARPSCRIPT_LANGUAGE);
       monaco.languages.setMonarchTokensProvider(this.WARPSCRIPT_LANGUAGE, Monarch.rules);
       monaco.languages.setLanguageConfiguration(this.WARPSCRIPT_LANGUAGE, {
           wordPattern: /[^\s\t]+/,
