@@ -190,7 +190,7 @@ export class QuantumChart {
         minArray.push(min);
       }
     });
-    
+
     this._ySlider.min = Math.min(...minArray);
     this._ySlider.max = Math.max(...maxArray) * 1.05;
     this._chart.options.scales.yAxes[0].ticks.min = this._ySlider.min;
@@ -232,7 +232,7 @@ export class QuantumChart {
     this._ySlider.element.setAttribute("cursor-size",JSON.stringify({"cursorSize": cursorSize, "cursorOffset": cursorOffset}));
     */
   }
-  
+
   gtsToData(gts) {
     let datasets = [];
     let ticks = [];
@@ -371,27 +371,28 @@ export class QuantumChart {
       let min = this._chart.options.scales.xAxes[0].time.min._i;
       let max = this._chart.options.scales.xAxes[0].time.max._i;
       let offset = event.detail.sliderValue - min;
-      
+
       this._chart.options.scales.xAxes[0].time.min = moment(min + offset, "x");
       this._chart.options.scales.xAxes[0].time.max = moment(max + offset, "x");
       this._chart.update();
     }
-    
+
     @Listen("ySliderValueChanged")
     ySliderListener(event: CustomEvent){
-      
+
       let min = this._chart.options.scales.yAxes[0].ticks.min;
       let max = this._chart.options.scales.yAxes[0].ticks.max;
       let offset = event.detail.sliderValue - min;
-      
+
       this._chart.options.scales.yAxes[0].ticks.min = min + offset;
       this._chart.options.scales.yAxes[0].ticks.max = max + offset;
       this._chart.update();
-      
+
     }
 
   componentWillLoad(){
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+    console.log('chart :' , this._config)
   }
 
   componentDidLoad() {

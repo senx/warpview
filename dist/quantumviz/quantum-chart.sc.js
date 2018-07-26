@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart, b as moment } from './chunk-35f9f27a.js';
+import { a as Chart, b as moment } from './chunk-cbb0389a.js';
 import { a as GTSLib } from './chunk-faa0a089.js';
 import './chunk-ee323282.js';
 
@@ -331,6 +331,7 @@ class QuantumChart {
     }
     componentWillLoad() {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+        console.log('chart :', this._config);
     }
     componentDidLoad() {
         this.drawChart();
@@ -576,7 +577,7 @@ class QuantumHorizontalZoomSlider {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ".rail[data-quantum-horizontal-zoom-slider]{\n  position: relative;\n  background: grey;\n  opacity: 0.7;\n  float: right;\n  \n  left: 0;\n  height: 20px;\n  margin: 0px 0px 0px 0px;\n  border: 1px solid black;\n  border-radius: 6px;\n  padding: 0px 0px 0px 0px ;\n}\n.rail[data-quantum-horizontal-zoom-slider]:hover{\n  opacity: 1;\n}\n.cursor[data-quantum-horizontal-zoom-slider]{\n  background: red;\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 20px;\n  border: 1px solid black;\n  border-radius: 6px;\n  left: 0px;\n  -webkit-transition: left .01s;\n  transition: left .01s;\n}"; }
+    static get style() { return "[data-quantum-horizontal-zoom-slider-host]   .rail[data-quantum-horizontal-zoom-slider] {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  float: right;\n  \n  left: 0;\n  height: 20px;\n  margin: 0 0 0 0;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0; }\n\n[data-quantum-horizontal-zoom-slider-host]   .rail[data-quantum-horizontal-zoom-slider]:hover {\n  opacity: 1; }\n\n[data-quantum-horizontal-zoom-slider-host]   .cursor[data-quantum-horizontal-zoom-slider] {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 20px;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  left: 0px;\n  -webkit-transition: left .01s;\n  transition: left .01s; }"; }
 }
 
 //import { start } from 'repl';
@@ -617,6 +618,7 @@ class QuantumVerticalZoomSlider {
     }
     componentWillLoad() {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+        console.log('V slider :', this._config);
     }
     componentDidLoad() {
         this._rail = this.el.shadowRoot.querySelector("#rail");
@@ -730,7 +732,7 @@ class QuantumVerticalZoomSlider {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ".rail[data-quantum-vertical-zoom-slider]{\n  position: absolute;\n  background: grey;\n  opacity: 0.7;\n  width: 20px;\n  \n  margin: 0px 0px 20px 0px;\n  border: 1px solid black;\n  border-radius: 6px;\n  padding: 0px 0px 0px 0px ;\n}\n\n.rail[data-quantum-vertical-zoom-slider]:hover{\n  opacity: 1;\n}\n\n.cursor[data-quantum-vertical-zoom-slider]{\n  background: red;\n  position: relative;\n  cursor: move;\n  width: 20px;\n  height: 100%;\n  border: 1px solid black;\n  border-radius: 6px;\n  \n  -webkit-transition: top .01s;\n  transition: top .01s;\n}"; }
+    static get style() { return "[data-quantum-vertical-zoom-slider-host]   .rail[data-quantum-vertical-zoom-slider] {\n  position: absolute;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  width: 20px;\n  \n  margin: 0px 0px 20px 0px;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0px 0px 0px 0px; }\n\n[data-quantum-vertical-zoom-slider-host]   .rail[data-quantum-vertical-zoom-slider]:hover {\n  opacity: 1; }\n\n[data-quantum-vertical-zoom-slider-host]   .cursor[data-quantum-vertical-zoom-slider] {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 20px;\n  height: 100%;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  \n  -webkit-transition: top .01s;\n  transition: top .01s; }"; }
 }
 
 export { QuantumChart, QuantumHorizontalZoomSlider, QuantumVerticalZoomSlider };

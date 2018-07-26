@@ -1,27 +1,24 @@
-.rail{
+:host .rail {
   position: absolute;
-  background: grey;
+  background-color: var(--quantum-bg-rail-color, grey);
   opacity: 0.7;
   width: 20px;
   /*height: 94%;*/
   margin: 0px 0px 20px 0px;
-  border: 1px solid black;
-  border-radius: 6px;
-  padding: 0px 0px 0px 0px ;
-}
+  border: 1px solid var(--quantum-border-rail-color, black);
+  border-radius: var(--quantum-border-radius, 6px);
+  padding: 0px 0px 0px 0px; }
 
-.rail:hover{
-  opacity: 1;
-}
+:host .rail:hover {
+  opacity: 1; }
 
-.cursor{
-  background: red;
+:host .cursor {
+  background-color: var(--quantum-bg-cursor-color, red);
   position: relative;
   cursor: move;
   width: 20px;
   height: 100%;
-  border: 1px solid black;
-  border-radius: 6px;
+  border: 1px solid var(--quantum-border-cursor-color, black);
+  border-radius: var(--quantum-border-radius, 6px);
   /*left: 0px;*/
-  transition: top .01s;
-}
+  transition: top .01s; }

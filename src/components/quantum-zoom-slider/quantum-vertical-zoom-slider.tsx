@@ -4,7 +4,7 @@ import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: 'quantum-vertical-zoom-slider',
-  styleUrl: 'quantum-vertical-zoom-slider.css',
+  styleUrl: 'quantum-vertical-zoom-slider.scss',
   shadow: true
 })
 
@@ -38,7 +38,7 @@ export class QuantumVerticalZoomSlider {
   private _railMax;
   private _mouseCursorTopOffset; //is used as bottom offset for vertical slide
   private _mouseCursorBottomOffset; //is used as top for vertical slide
-  
+
   @Watch("cursorSize")
     changeCursorSize(newValue: string, oldValue: string) {
       if (oldValue !== newValue) {
@@ -65,13 +65,14 @@ export class QuantumVerticalZoomSlider {
 
   componentWillLoad(){
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+    console.log('V slider :', this._config)
   }
 
   componentDidLoad() {
     this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
     this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
   }
-  
+
   mouseDown(event) {
     console.log("min et max", this.minValue, this.maxValue);
     event.preventDefault();
