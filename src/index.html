@@ -51,8 +51,8 @@
   <quantum-gts-tree data='[]' id="tree"></quantum-gts-tree>
 
   <div id="maincontainer">
-    <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data= options=""></quantum-annotation>
-    <quantum-chart responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data= options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart>
+    <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]' options=""></quantum-annotation>
+    <quantum-chart responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data='[]' options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart>
     <button type="button">ZooM reset</button>
 
   </div>
@@ -67,11 +67,11 @@
         $('#annotation').attr('time-min', event.detail.bounds.min).attr('time-max', event.detail.bounds.max);
       });
 
-      $('#tree').on("selectedChip", function (event) {
-        if(!toHide.find(function (i) { return i === event.detail.index; })&& !event.detail.selected) {
-          toHide.push(event.detail.index);
+      $('#tree').on("quantumSelectedGTS", function (event) {
+        if(!toHide.find(function (i) { return i === event.detail.label; })&& !event.detail.selected) {
+          toHide.push(event.detail.label);
         } else {
-          toHide = toHide.filter(function (i) { return i !== event.detail.index; });
+          toHide = toHide.filter(function (i) { return i !== event.detail.label; });
         }
         $('#chart').attr('hidden-data', JSON.stringify(toHide));
         $('#annotation').attr('hidden-data', JSON.stringify(toHide));

@@ -1,5 +1,8 @@
 import { GTSLib } from "../../gts.lib";
 export class QuantumGtsTree {
+    constructor() {
+        this.data = "[]";
+    }
     dataChanged(newValue, _oldValue) {
         if (newValue !== _oldValue) {
             this.gtsList = JSON.parse(newValue);

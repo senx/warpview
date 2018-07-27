@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-quantumviz.loadBundle("chunk-042f9e1f.js", ["exports"], function (t) { window.quantumviz.h;
+quantumviz.loadBundle("chunk-5499c89c.js", ["exports"], function (t) { window.quantumviz.h;
     var e = /** @class */ (function () {
         function e() {
         }
@@ -60,7 +60,7 @@ quantumviz.loadBundle("chunk-042f9e1f.js", ["exports"], function (t) { window.qu
         e.flatDeep = function (t) { return t.reduce(function (t, r) { return Array.isArray(r) ? t.concat(e.flatDeep(r)) : t.concat(r); }, []); };
         e.flattenGtsIdArray = function (t, r) { var n, i; for (r || (r = []), i = 0; i < t.content.length; i++)
             (n = t.content[i]).content ? e.flattenGtsIdArray(n, r) : n.gts && r.push(n.gts); return r; };
-        e.serializeGtsMetadata = function (t) { var e = []; return delete t.l.elm, Object.keys(t.l).forEach(function (r) { e.push(r + "=" + t.l[r]); }), (t.id ? t.id + " " : "") + t.c + "{" + e.join(",") + "}"; };
+        e.serializeGtsMetadata = function (t) { var e = []; return Object.keys(t.l).forEach(function (r) { "string" == typeof t.l[r] && e.push(r + "=" + t.l[r]); }), (t.id ? t.id + " " : "") + t.c + "{" + e.join(",") + "}"; };
         e.gtsToPath = function (t) { var e = []; t.v = t.v.sort(function (t, e) { return t[0] - e[0]; }); for (var r = 0; r < t.v.length; r++) {
             var n = t.v[r];
             n.length, n.length, 4 === n.length && e.push({ ts: Math.floor(n[0] / 1e3), lat: n[1], lon: n[2], val: n[3] }), 5 === n.length && e.push({ ts: Math.floor(n[0] / 1e3), lat: n[1], lon: n[2], elev: n[3], val: n[4] });

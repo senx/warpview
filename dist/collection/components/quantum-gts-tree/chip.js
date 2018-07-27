@@ -66,10 +66,10 @@ export class QuantumChip {
      * @param {UIEvent} event
      */
     switchPlotState(event) {
-        this._node = Object.assign({}, this._node, { selected: !this._node.selected, index: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a }) });
+        this._node = Object.assign({}, this._node, { selected: !this._node.selected, label: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a }) });
         console.debug('[QuantumChip] - switchPlotState', this._node);
         this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected));
-        this.selectedChip.emit(this._node);
+        this.quantumSelectedGTS.emit(this._node);
     }
     render() {
         return (h("div", null, this._node !== undefined && this._node.gts !== undefined
@@ -107,8 +107,8 @@ export class QuantumChip {
         }
     }; }
     static get events() { return [{
-            "name": "selectedChip",
-            "method": "selectedChip",
+            "name": "quantumSelectedGTS",
+            "method": "quantumSelectedGTS",
             "bubbles": true,
             "cancelable": true,
             "composed": true

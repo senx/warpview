@@ -5,7 +5,7 @@ export declare class QuantumChip {
     index: number;
     node: any;
     _node: any;
-    selectedChip: EventEmitter;
+    quantumSelectedGTS: EventEmitter;
     el: HTMLElement;
     /**
      *

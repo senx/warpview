@@ -222,7 +222,7 @@ declare global {
       'index'?: number;
       'name'?: string;
       'node'?: any;
-      'onSelectedChip'?: (event: CustomEvent) => void;
+      'onQuantumSelectedGTS'?: (event: CustomEvent) => void;
     }
   }
 }

@@ -1,12 +1,19 @@
-import {Component, Event, EventEmitter, Prop, Watch, Listen} from "@stencil/core";
-import {GTSLib} from "../../gts.lib";
+import {
+  Component,
+  Event,
+  EventEmitter,
+  Prop,
+  Watch,
+  Listen
+} from "@stencil/core";
+import { GTSLib } from "../../gts.lib";
 
 @Component({
   tag: "quantum-gts-tree",
   styleUrls: ["quantum-gts-tree.scss"]
 })
 export class QuantumGtsTree {
-  @Prop() data: string;
+  @Prop() data: string = "[]";
   @Event() selectedGTS: EventEmitter;
   gtsList: any;
 

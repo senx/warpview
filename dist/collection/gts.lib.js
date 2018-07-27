@@ -256,9 +256,10 @@ export class GTSLib {
     }
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];
-        delete gts.l.elm;
         Object.keys(gts.l).forEach((key) => {
-            serializedLabels.push(key + '=' + gts.l[key]);
+            if (typeof gts.l[key] === "string") {
+                serializedLabels.push(key + "=" + gts.l[key]);
+            }
         });
         return (gts.id ? (gts.id + ' ') : '') + gts.c + '{' + serializedLabels.join(',') + '}';
     }

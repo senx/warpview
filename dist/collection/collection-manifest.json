@@ -330,7 +330,7 @@
       },
       "events": [
         {
-          "event": "selectedChip"
+          "event": "quantumSelectedGTS"
         }
       ]
     },
