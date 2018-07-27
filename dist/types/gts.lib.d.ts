@@ -6,6 +6,7 @@ export declare class GTSLib {
      * @returns {string}
      */
     static getColor(i: any): string;
+    static cleanArray(actual: any[]): any[];
     /**
      * Return a Set
      * @param arr

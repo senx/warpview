@@ -11,6 +11,16 @@ export class GTSLib {
     return GTSLib.color[i % GTSLib.color.length]
   }
 
+  static cleanArray(actual: any[]) {
+    var newArray = [];
+    actual.forEach(element => {
+      if(element) {
+        newArray.push(element);
+      }
+    });
+    return newArray;
+  }
+
   /**
    * Return a Set
    * @param arr
@@ -198,7 +208,7 @@ export class GTSLib {
       if ((prefixId !== undefined) && (prefixId !== '')) {
         id = prefixId + '-' + i;
       } else {
-        id = '' + i;
+        id =  i;
       }
       if (GTSLib.isArray(gts)) {
         gtsList.push(GTSLib.gtsFromJSONList(gts, id));
@@ -262,6 +272,7 @@ export class GTSLib {
 
   static serializeGtsMetadata(gts) {
     let serializedLabels = [];
+    delete gts.l.elm;
     Object.keys(gts.l).forEach((key) => {
       serializedLabels.push(key + '=' + gts.l[key]);
     });

@@ -1,6 +1,11 @@
-import Chart from 'chart.js';
-import { GTSLib } from '../../gts.lib';
-export class QuantumAnnotation {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+import { a as Chart } from './chunk-d48f8ecd.js';
+import { a as GTSLib } from './chunk-be650d54.js';
+import './chunk-ee323282.js';
+
+class QuantumAnnotation {
     constructor() {
         this.chartTitle = "";
         this.responsive = false;
@@ -283,5 +288,7 @@ export class QuantumAnnotation {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "/**style-placeholder:quantum-annotation:**/"; }
+    static get style() { return "quantum-annotation[data-quantum-annotation]   .chart-container[data-quantum-annotation] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
 }
+
+export { QuantumAnnotation };

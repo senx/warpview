@@ -62,20 +62,21 @@
   <script language="JavaScript">
 
     $(function () {
+      var toHide = [];
       $('#chart').on('boundsDidChange', function (event) {
         $('#annotation').attr('time-min', event.detail.bounds.min).attr('time-max', event.detail.bounds.max);
-      }).on("didHideOrShowData", function () {
-        $('#chart').attr('hidden-data', -1);
       });
 
-      $('#tree').on("selected", function (event) {
-        $('#chart').attr('hidden-data', event.detail.index);
-        $('#annotation').attr('hidden-data', event.detail.index);
+      $('#tree').on("selectedChip", function (event) {
+        if(!toHide.find(function (i) { return i === event.detail.index; })&& !event.detail.selected) {
+          toHide.push(event.detail.index);
+        } else {
+          toHide = toHide.filter(function (i) { return i !== event.detail.index; });
+        }
+        $('#chart').attr('hidden-data', JSON.stringify(toHide));
+        $('#annotation').attr('hidden-data', JSON.stringify(toHide));
       });
 
-      $('#annotation').on("didHideOrShowAnomaly", function () {
-        $('#annotation').attr('hidden-data', -1);
-      });
       $('#timeSwitch').on("timeSwitched", function (event) {
         var state = JSON.stringify(event.detail.state);
 
@@ -205,6 +206,7 @@
       }).attr("data", JSON.stringify([formatedData]));
 
       $('#tree').attr("data", JSON.stringify(data));
+      console.log('index', data);
     });
   </script>
 

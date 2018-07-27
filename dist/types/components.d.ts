@@ -34,7 +34,7 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'hiddenData': number;
+      'hiddenData': string;
       'options': string;
       'responsive': boolean;
       'showLegend': boolean;
@@ -66,8 +66,7 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'hiddenData'?: number;
-      'onDidHideOrShowAnomaly'?: (event: CustomEvent) => void;
+      'hiddenData'?: string;
       'onPointHover'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
@@ -140,7 +139,7 @@ declare global {
       'config': string;
       'data': string;
       'height': string;
-      'hiddenData': number;
+      'hiddenData': string;
       'options': string;
       'responsive': boolean;
       'showLegend': boolean;
@@ -175,9 +174,8 @@ declare global {
       'config'?: string;
       'data'?: string;
       'height'?: string;
-      'hiddenData'?: number;
+      'hiddenData'?: string;
       'onBoundsDidChange'?: (event: CustomEvent) => void;
-      'onDidHideOrShowData'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
@@ -224,7 +222,7 @@ declare global {
       'index'?: number;
       'name'?: string;
       'node'?: any;
-      'onSelected'?: (event: CustomEvent) => void;
+      'onSelectedChip'?: (event: CustomEvent) => void;
     }
   }
 }
@@ -258,7 +256,7 @@ declare global {
   namespace JSXElements {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
       'data'?: string;
-      'onSelected'?: (event: CustomEvent) => void;
+      'onSelectedGTS'?: (event: CustomEvent) => void;
     }
   }
 }

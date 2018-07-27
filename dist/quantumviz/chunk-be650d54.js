@@ -1,4 +1,7 @@
-export class GTSLib {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+class GTSLib {
     /**
      * Get a color from index
      * @param i
@@ -270,12 +273,8 @@ export class GTSLib {
         });
         for (let i = 0; i < gts.v.length; i++) {
             let metric = gts.v[i];
-            if (metric.length === 2) {
-                // timestamp, value
-            }
-            if (metric.length === 3) {
-                // timestamp, elevation, value
-            }
+            if (metric.length === 2) ;
+            if (metric.length === 3) ;
             if (metric.length === 4) {
                 // timestamp, lat, lon, value
                 path.push({ ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: metric[2], val: metric[3] });
@@ -416,3 +415,5 @@ export class GTSLib {
     }
 }
 GTSLib.color = ['#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#607D8B'];
+
+export { GTSLib as a };

@@ -12,12 +12,13 @@ export class QuantumChip {
   @Prop() index: number;
   @Prop() node: any;
   _node: any = {
-    selected: true, gts: {
+    selected: true,
+    gts: {
       c: '', l: {}, a: {}, v: []
     }
   };
 
-  @Event() selected: EventEmitter;
+  @Event() selectedChip: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -27,7 +28,6 @@ export class QuantumChip {
    * @returns {string}
    */
   gtsColor(state: boolean): string {
-    //console.debug('[QuantumChip] - gtsColor', state);
     if (state) {
       return GTSLib.getColor(this.index);
     } else {
@@ -84,12 +84,10 @@ export class QuantumChip {
    * @param {UIEvent} event
    */
   switchPlotState(event: UIEvent) {
-    //console.debug('[QuantumChip] - switchPlotState', event);
-    //console.debug('[QuantumChip] - switchPlotState', this._node);
-    this._node = {...this._node, selected: !this._node.selected};
-    //console.debug('[QuantumChip] - switchPlotState', this._node);
+    this._node = { ...this._node, selected: !this._node.selected, index: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a})};
+    console.debug('[QuantumChip] - switchPlotState', this._node);
     (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected));
-    this.selected.emit(this.node);
+    this.selectedChip.emit(this._node);
   }
 
   render() {
@@ -98,7 +96,7 @@ export class QuantumChip {
         {this._node !== undefined && this._node.gts !== undefined
           ?
           <span><i class="normal"/>
-          <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
+            <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>{this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>{this.node.gts.l}
             {this._toArray(this._node.gts.l).map((label, labelIndex) =>

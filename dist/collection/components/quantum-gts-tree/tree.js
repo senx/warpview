@@ -17,14 +17,6 @@ export class QuantumTreeView {
     }
     /**
      *
-     * @param {CustomEvent} event
-     */
-    onSelected(event) {
-        //console.debug("[QuantumTreeView] - onSelected", event);
-        this.selected.emit(event);
-    }
-    /**
-     *
      */
     componentWillLoad() {
         console.debug("[QuantumTreeView] - componentWillLoad", Counter.item);
@@ -38,13 +30,15 @@ export class QuantumTreeView {
             this.branch ? ("") : (h("div", { class: "stack-level" },
                 "Stack level ",
                 index)),
-            GTSLib.isGts(node.gts) ? (h("quantum-chip", { node: node, index: this.getIndex(node), name: node.gts.c, onSelected: (event) => this.onSelected(event) })) : (h("span", null, node.content ? (h("div", null,
+            GTSLib.isGts(node.gts) ? (h("quantum-chip", { node: node, index: this.getIndex(node), name: node.gts.c })) : (h("span", null, node.content ? (h("div", null,
                 h("span", { class: "expanded" }),
                 "List of ",
                 node.content.length,
                 " item",
-                node.content.length > 1 ? "s" : "",
-                h("quantum-tree-view", { gtsList: node, branch: true, onSelected: (event) => this.onSelected(event) }))) : (h("span", null)))))))));
+                node.content.length > 1
+                    ? "s"
+                    : "",
+                h("quantum-tree-view", { gtsList: node, branch: true }))) : (h("span", null)))))))));
     }
     static get is() { return "quantum-tree-view"; }
     static get properties() { return {

@@ -34,7 +34,7 @@
         },
         {
           "name": "hiddenData",
-          "type": "Number",
+          "type": "String",
           "attr": "hidden-data",
           "watch": [
             "hideData"
@@ -84,9 +84,6 @@
         "name": "el"
       },
       "events": [
-        {
-          "event": "didHideOrShowAnomaly"
-        },
         {
           "event": "pointHover"
         }
@@ -210,7 +207,7 @@
         },
         {
           "name": "hiddenData",
-          "type": "Number",
+          "type": "String",
           "attr": "hidden-data",
           "watch": [
             "hideData"
@@ -294,9 +291,6 @@
           "event": "boundsDidChange"
         },
         {
-          "event": "didHideOrShowData"
-        },
-        {
           "event": "pointHover"
         }
       ],
@@ -336,7 +330,7 @@
       },
       "events": [
         {
-          "event": "selected"
+          "event": "selectedChip"
         }
       ]
     },
@@ -366,7 +360,7 @@
       ],
       "events": [
         {
-          "event": "selected"
+          "event": "selectedGTS"
         }
       ]
     },

@@ -1,47 +1,37 @@
-import {Component, Event, EventEmitter, Prop, Watch} from "@stencil/core";
+import {Component, Event, EventEmitter, Prop, Watch, Listen} from "@stencil/core";
 import {GTSLib} from "../../gts.lib";
 
 @Component({
-  tag: 'quantum-gts-tree',
-  styleUrls: [
-    'quantum-gts-tree.scss'
-  ]
+  tag: "quantum-gts-tree",
+  styleUrls: ["quantum-gts-tree.scss"]
 })
 export class QuantumGtsTree {
   @Prop() data: string;
-  @Event() selected: EventEmitter;
+  @Event() selectedGTS: EventEmitter;
   gtsList: any;
 
-  @Watch('data')
+  @Watch("data")
   dataChanged(newValue: string, _oldValue: string) {
-    this.gtsList = JSON.parse(newValue);
-  }
-
-  /**
-   *
-   * @param {CustomEvent} event
-   */
-  onSelected(event: CustomEvent) {
-    console.debug('[QuantumGtsTree] - onSelected', event);
-    this.selected.emit(event);
-
+    if (newValue !== _oldValue) {
+      this.gtsList = JSON.parse(newValue);
+    }
   }
 
   /**
    *
    */
   componentWillLoad() {
-    console.debug('[QuantumGtsTree] - componentWillLoad', JSON.parse(this.data));
-    this.gtsList = GTSLib.gtsFromJSONList(JSON.parse(this.data), undefined);
-    console.debug('[QuantumGtsTree] - componentWillLoad - gtsList', this.gtsList);
+    const data = JSON.parse(this.data);
+    this.gtsList = GTSLib.gtsFromJSONList(data, "");
+    console.debug(
+      "[QuantumGtsTree] - componentWillLoad - gtsList",
+      this.gtsList
+    );
   }
 
   render() {
-    return (
-      <quantum-tree-view gtsList={this.gtsList} branch={false} onSelected={(event: CustomEvent) => this.onSelected(event)} />
-    )
+    return <quantum-tree-view gtsList={this.gtsList} branch={false} />;
   }
-
 }
 
 export class Counter {

@@ -12,11 +12,6 @@ export declare class QuantumTreeView {
     getIndex(node: any): number;
     /**
      *
-     * @param {CustomEvent} event
-     */
-    onSelected(event: CustomEvent): void;
-    /**
-     *
      */
     componentWillLoad(): void;
     /**

@@ -1,26 +1,20 @@
 import { GTSLib } from "../../gts.lib";
 export class QuantumGtsTree {
     dataChanged(newValue, _oldValue) {
-        this.gtsList = JSON.parse(newValue);
-    }
-    /**
-     *
-     * @param {CustomEvent} event
-     */
-    onSelected(event) {
-        console.debug('[QuantumGtsTree] - onSelected', event);
-        this.selected.emit(event);
+        if (newValue !== _oldValue) {
+            this.gtsList = JSON.parse(newValue);
+        }
     }
     /**
      *
      */
     componentWillLoad() {
-        console.debug('[QuantumGtsTree] - componentWillLoad', JSON.parse(this.data));
-        this.gtsList = GTSLib.gtsFromJSONList(JSON.parse(this.data), undefined);
-        console.debug('[QuantumGtsTree] - componentWillLoad - gtsList', this.gtsList);
+        const data = JSON.parse(this.data);
+        this.gtsList = GTSLib.gtsFromJSONList(data, "");
+        console.debug("[QuantumGtsTree] - componentWillLoad - gtsList", this.gtsList);
     }
     render() {
-        return (h("quantum-tree-view", { gtsList: this.gtsList, branch: false, onSelected: (event) => this.onSelected(event) }));
+        return h("quantum-tree-view", { gtsList: this.gtsList, branch: false });
     }
     static get is() { return "quantum-gts-tree"; }
     static get properties() { return {
@@ -31,8 +25,8 @@ export class QuantumGtsTree {
         }
     }; }
     static get events() { return [{
-            "name": "selected",
-            "method": "selected",
+            "name": "selectedGTS",
+            "method": "selectedGTS",
             "bubbles": true,
             "cancelable": true,
             "composed": true
@@ -49,8 +43,8 @@ export class Counter {
         }
     }; }
     static get events() { return [{
-            "name": "selected",
-            "method": "selected",
+            "name": "selectedGTS",
+            "method": "selectedGTS",
             "bubbles": true,
             "cancelable": true,
             "composed": true

@@ -7,7 +7,7 @@ export declare class QuantumChart {
     responsive: boolean;
     showLegend: boolean;
     data: string;
-    hiddenData: number;
+    hiddenData: string;
     options: string;
     width: string;
     height: string;
@@ -15,16 +15,16 @@ export declare class QuantumChart {
     timeMax: number;
     config: string;
     pointHover: EventEmitter;
-    didHideOrShowData: EventEmitter;
     boundsDidChange: EventEmitter;
     el: HTMLElement;
     private _chart;
+    private _mapIndex;
     private _xSlider;
     private _ySlider;
     private _config;
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
-    hideData(newValue: number): void;
+    hideData(newValue: string, oldValue: string): void;
     drawChart(): void;
     xSliderInit(): void;
     ySliderInit(): void;

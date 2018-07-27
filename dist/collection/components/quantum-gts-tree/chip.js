@@ -2,7 +2,8 @@ import { GTSLib } from "../../gts.lib";
 export class QuantumChip {
     constructor() {
         this._node = {
-            selected: true, gts: {
+            selected: true,
+            gts: {
                 c: '', l: {}, a: {}, v: []
             }
         };
@@ -13,7 +14,6 @@ export class QuantumChip {
      * @returns {string}
      */
     gtsColor(state) {
-        //console.debug('[QuantumChip] - gtsColor', state);
         if (state) {
             return GTSLib.getColor(this.index);
         }
@@ -66,12 +66,10 @@ export class QuantumChip {
      * @param {UIEvent} event
      */
     switchPlotState(event) {
-        //console.debug('[QuantumChip] - switchPlotState', event);
-        //console.debug('[QuantumChip] - switchPlotState', this._node);
-        this._node = Object.assign({}, this._node, { selected: !this._node.selected });
-        //console.debug('[QuantumChip] - switchPlotState', this._node);
+        this._node = Object.assign({}, this._node, { selected: !this._node.selected, index: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a }) });
+        console.debug('[QuantumChip] - switchPlotState', this._node);
         this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected));
-        this.selected.emit(this.node);
+        this.selectedChip.emit(this._node);
     }
     render() {
         return (h("div", null, this._node !== undefined && this._node.gts !== undefined
@@ -109,8 +107,8 @@ export class QuantumChip {
         }
     }; }
     static get events() { return [{
-            "name": "selected",
-            "method": "selected",
+            "name": "selectedChip",
+            "method": "selectedChip",
             "bubbles": true,
             "cancelable": true,
             "composed": true
