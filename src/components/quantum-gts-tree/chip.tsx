@@ -98,7 +98,7 @@ export class QuantumChip {
           <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>{this._node.gts.c}</span>
-          <span class='gts-separator' innerHTML={'&lcub; '}/>{this.node.gts.l}
+          <span class='gts-separator' innerHTML={'&lcub; '}/>
             {this._toArray(this._node.gts.l).map((label, labelIndex) =>
                 <span>
               <span class='gts-labelname'>{label.name}</span>
