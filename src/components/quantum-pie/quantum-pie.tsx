@@ -4,7 +4,7 @@ import {GTSLib} from '../../gts.lib';
 
 @Component({
   tag: 'quantum-pie',
-  styleUrl: 'quantum-pie.css',
+  styleUrl: 'quantum-pie.scss',
   shadow: true
 })
 export class QuantumPie {

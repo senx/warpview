@@ -599,7 +599,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-pie/quantum-pie.css"
+            "components/quantum-pie/quantum-pie.scss"
           ]
         }
       },
@@ -1073,5 +1073,50 @@
     "version": "0.8.2",
     "typescriptVersion": "2.9.2"
   },
-  "bundles": []
+  "bundles": [
+    {
+      "components": [
+        "quantum-annotation"
+      ]
+    },
+    {
+      "components": [
+        "quantum-chip",
+        "quantum-gts-tree",
+        "quantum-tree-view"
+      ]
+    },
+    {
+      "components": [
+        "quantum-heatmap",
+        "quantum-heatmap-sliders"
+      ]
+    },
+    {
+      "components": [
+        "quantum-tile"
+      ]
+    },
+    {
+      "components": [
+        "quantum-toggle"
+      ]
+    },
+    {
+      "components": [
+        "quantum-horizontal-zoom-slider",
+        "quantum-vertical-zoom-slider"
+      ]
+    },
+    {
+      "components": [
+        "quantum-bubble",
+        "quantum-chart",
+        "quantum-pie",
+        "quantum-polar",
+        "quantum-radar",
+        "quantum-scatter"
+      ]
+    }
+  ]
 }

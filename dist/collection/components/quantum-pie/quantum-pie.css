@@ -1,6 +1,4 @@
-.chart-container {
+host .chart-container {
   width: var(--quantum-chart-width, 100%);
   height: var(--quantum-chart-height, 100%);
-  position: relative;
-}
-
+  position: relative; }
