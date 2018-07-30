@@ -66,7 +66,7 @@
       });
 
       $('#tree').on("quantumSelectedGTS", function (event) {
-        if(!toHide.find(function (i) { return i === event.detail.label; })&& !event.detail.selected) {
+        if(!toHide.find(function (i) { return i === event.detail.label; }) && !event.detail.selected) {
           toHide.push(event.detail.label);
         } else {
           toHide = toHide.filter(function (i) { return i !== event.detail.label; });

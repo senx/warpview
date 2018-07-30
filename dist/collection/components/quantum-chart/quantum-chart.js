@@ -87,7 +87,7 @@ export class QuantumChart {
         let data = JSON.parse(this.data);
         if (!data)
             return;
-        let gts = this.gtsToData(JSON.parse(this.data));
+        let gts = this.gtsToData(data);
         const me = this;
         const graphOpts = {
             animation: false,

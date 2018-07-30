@@ -261,7 +261,7 @@ export class GTSLib {
                 serializedLabels.push(key + "=" + gts.l[key]);
             }
         });
-        return (gts.id ? (gts.id + ' ') : '') + gts.c + '{' + serializedLabels.join(',') + '}';
+        return gts.c + '{' + serializedLabels.join(',') + '}';
     }
     static gtsToPath(gts) {
         let path = [];
