@@ -292,131 +292,6 @@
       "shadow": true
     },
     {
-      "tag": "quantum-chart",
-      "dependencies": [],
-      "componentClass": "QuantumChart",
-      "componentPath": "components/quantum-chart/quantum-chart.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-chart/quantum-chart.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "alone",
-          "type": "Boolean",
-          "attr": "alone"
-        },
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "data",
-          "type": "String",
-          "attr": "data",
-          "watch": [
-            "redraw"
-          ]
-        },
-        {
-          "name": "height",
-          "type": "String",
-          "attr": "height"
-        },
-        {
-          "name": "hiddenData",
-          "type": "String",
-          "attr": "hidden-data",
-          "watch": [
-            "hideData"
-          ]
-        },
-        {
-          "name": "options",
-          "type": "String",
-          "attr": "options",
-          "watch": [
-            "changeScale"
-          ]
-        },
-        {
-          "name": "responsive",
-          "type": "Boolean",
-          "attr": "responsive"
-        },
-        {
-          "name": "showLegend",
-          "type": "Boolean",
-          "attr": "show-legend"
-        },
-        {
-          "name": "timeMax",
-          "type": "Number",
-          "attr": "time-max"
-        },
-        {
-          "name": "timeMin",
-          "type": "Number",
-          "attr": "time-min"
-        },
-        {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
-        },
-        {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
-        },
-        {
-          "name": "width",
-          "type": "String",
-          "attr": "width"
-        },
-        {
-          "name": "xView",
-          "type": "String",
-          "attr": "x-view",
-          "watch": [
-            "changeXView"
-          ]
-        },
-        {
-          "name": "yView",
-          "type": "String",
-          "attr": "y-view",
-          "watch": [
-            "changeYView"
-          ]
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "boundsDidChange"
-        },
-        {
-          "event": "chartInfos"
-        },
-        {
-          "event": "pointHover"
-        }
-      ],
-      "shadow": true
-    },
-    {
       "tag": "quantum-chart-zoom",
       "dependencies": [
         "quantum-chart",
@@ -823,7 +698,8 @@
         {
           "event": "xZoom"
         }
-      ]
+      ],
+      "shadow": true
     },
     {
       "tag": "quantum-pie",
@@ -1199,50 +1075,6 @@
       "shadow": true
     },
     {
-      "tag": "quantum-toggle",
-      "dependencies": [],
-      "componentClass": "QuantumToggle",
-      "componentPath": "components/quantum-toggle/quantum-toggle.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-toggle/quantum-toggle.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "checked",
-          "type": "Boolean",
-          "attr": "checked"
-        },
-        {
-          "name": "option",
-          "type": "String",
-          "attr": "option"
-        }
-      ],
-      "states": [
-        {
-          "name": "state"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "timeSwitched",
-          "method": "switchedListener",
-          "passive": false,
-          "capture": false
-        }
-      ],
-      "events": [
-        {
-          "event": "timeSwitched"
-        }
-      ],
-      "shadow": true
-    },
-    {
       "tag": "quantum-tree-view",
       "dependencies": [
         "quantum-chip",
@@ -1330,7 +1162,8 @@
         {
           "event": "yZoom"
         }
-      ]
+      ],
+      "shadow": true
     }
   ],
   "collections": [
@@ -1350,50 +1183,5 @@
     "version": "0.8.2",
     "typescriptVersion": "2.9.2"
   },
-  "bundles": [
-    {
-      "components": [
-        "quantum-annotation"
-      ]
-    },
-    {
-      "components": [
-        "quantum-chip",
-        "quantum-gts-tree",
-        "quantum-tree-view"
-      ]
-    },
-    {
-      "components": [
-        "quantum-heatmap",
-        "quantum-heatmap-sliders"
-      ]
-    },
-    {
-      "components": [
-        "quantum-tile"
-      ]
-    },
-    {
-      "components": [
-        "quantum-toggle"
-      ]
-    },
-    {
-      "components": [
-        "quantum-horizontal-zoom-slider",
-        "quantum-vertical-zoom-slider"
-      ]
-    },
-    {
-      "components": [
-        "quantum-bubble",
-        "quantum-chart",
-        "quantum-pie",
-        "quantum-polar",
-        "quantum-radar",
-        "quantum-scatter"
-      ]
-    }
-  ]
+  "bundles": []
 }

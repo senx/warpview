@@ -3,7 +3,8 @@ import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: 'quantum-horizontal-zoom-slider',
-  styleUrl: 'quantum-horizontal-zoom-slider.scss'
+  styleUrl: 'quantum-horizontal-zoom-slider.scss',
+  shadow: true
 })
 
 export class QuantumHorizontalZoomSlider {
@@ -65,8 +66,8 @@ export class QuantumHorizontalZoomSlider {
   }
 
   componentDidLoad() {
-    this._rail = this.el.querySelector("#rail") as HTMLElement;
-    this._cursor = this.el.querySelector("#cursor") as HTMLElement;
+    this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
+    this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
   }
 
   mouseDown(event) {
@@ -132,7 +133,7 @@ export class QuantumHorizontalZoomSlider {
   render() {
     return (
       <div id="rail" onWheel={(event) => this.xWheel(event)}>
-        <div id="cursor" onMouseDown={(event) => this.mouseDown(event)}></div>
+        <div id="cursor" onMouseDown={(event) => this.mouseDown(event)} />
       </div>
     );
   }

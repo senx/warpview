@@ -3,7 +3,8 @@ import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: 'quantum-vertical-zoom-slider',
-  styleUrl: 'quantum-vertical-zoom-slider.scss'
+  styleUrl: 'quantum-vertical-zoom-slider.scss',
+  shadow: true
 })
 
 export class QuantumVerticalZoomSlider {
@@ -65,8 +66,8 @@ export class QuantumVerticalZoomSlider {
   }
 
   componentDidLoad() {
-    this._rail = this.el.querySelector("#rail") as HTMLElement;
-    this._cursor = this.el.querySelector("#cursor") as HTMLElement;
+    this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
+    this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
   }
 
   mouseDown(event) {

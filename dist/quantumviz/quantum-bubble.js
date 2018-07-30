@@ -1,9 +1,8 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart } from './chunk-35f9f27a.js';
+import { a as Chart } from './chunk-49509f30.js';
 import { a as GTSLib } from './chunk-cadd3091.js';
-export { a as QuantumChart } from './chunk-57969280.js';
 import './chunk-ee323282.js';
 
 class QuantumBubble {
@@ -404,121 +403,6 @@ class QuantumPolar {
     static get style() { return ".chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative;\n}"; }
 }
 
-class QuantumRadar {
-    constructor() {
-        this.unit = '';
-        this.chartTitle = '';
-        this.responsive = true;
-        this.showLegend = true;
-        this.data = '[]';
-        this.options = {};
-        this.width = '';
-        this.height = '';
-    }
-    redraw(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.drawChart();
-        }
-    }
-    generateColors(num) {
-        let color = [];
-        for (let i = 0; i < num; i++) {
-            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-        }
-        return color;
-    }
-    parseData(gts) {
-        let labels = [];
-        let datas = [];
-        gts.forEach(d => {
-            datas.push(d[1]);
-            labels.push(d[0]);
-        });
-        return { labels: labels, datas: datas };
-    }
-    drawChart() {
-        let ctx = this.el.shadowRoot.querySelector("#myChart");
-        //let gts = this.parseData(JSON.parse(this.data));
-        new Chart(ctx, {
-            type: 'radar',
-            legend: { display: this.showLegend },
-            data: {
-                /*
-                datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
-                labels: gts.labels
-                */
-                labels: ['Beer', 'Rum', 'Peanut', 'Crisps'],
-                datasets: [{
-                        data: [50, 25, 10, 10],
-                        backgroundColor: '#64aa3939'
-                    }, {
-                        data: [35, 75, 90, 5],
-                        backgroundColor: '#642d882d'
-                    }
-                ]
-            },
-            options: {
-                responsive: this.responsive,
-                tooltips: {
-                    mode: 'index',
-                    intersect: true
-                }
-            }
-        });
-    }
-    componentDidLoad() {
-        this.drawChart();
-    }
-    render() {
-        return (h("div", null,
-            h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height }))));
-    }
-    static get is() { return "quantum-radar"; }
-    static get encapsulation() { return "shadow"; }
-    static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
-        "data": {
-            "type": String,
-            "attr": "data",
-            "watchCallbacks": ["redraw"]
-        },
-        "el": {
-            "elementRef": true
-        },
-        "height": {
-            "type": String,
-            "attr": "height"
-        },
-        "options": {
-            "type": "Any",
-            "attr": "options"
-        },
-        "responsive": {
-            "type": Boolean,
-            "attr": "responsive"
-        },
-        "showLegend": {
-            "type": Boolean,
-            "attr": "show-legend"
-        },
-        "unit": {
-            "type": String,
-            "attr": "unit"
-        },
-        "width": {
-            "type": String,
-            "attr": "width"
-        }
-    }; }
-    static get style() { return ".chart-container {\n    width: var(--quantum-chart-width, 100%);\n    height: var(--quantum-chart-height, 100%);\n    position: relative;\n  }"; }
-}
-
 class QuantumScatter {
     constructor() {
         this.unit = '';
@@ -676,4 +560,118 @@ class QuantumScatter {
     static get style() { return "quantum-scatter .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
 }
 
-export { QuantumBubble, QuantumPie, QuantumPolar, QuantumRadar, QuantumScatter };
+class QuantumTile {
+    constructor() {
+        this.warpscript = '';
+        this.data = '[]';
+        this.unit = '';
+        this.type = 'line';
+        this.chartTitle = '';
+        this.responsive = false;
+        this.showLegend = true;
+        this.url = '';
+        this.graphs = {
+            'scatter': ['scatter'],
+            'chart': ['line', 'spline', 'step-after', 'step-before', 'area', 'bar'],
+            'pie': ['pie', 'doughnut', 'gauge'],
+            'polar': ['polar']
+        };
+    }
+    componentDidLoad() {
+        this.warpscript = this.wsElement.textContent;
+        let me = this;
+        fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
+            response.text().then(gtsStr => {
+                let gtsList = JSON.parse(gtsStr);
+                let data = [];
+                if (me.type === 'doughnut' || me.type === 'pie' || me.type === 'polar' || me.type === 'gauge' || me.type === 'bubble') {
+                    if (gtsList.length > 0) {
+                        if (Array.isArray(gtsList[0])) {
+                            gtsList = gtsList[0];
+                        }
+                    }
+                    me.data = JSON.stringify(gtsList);
+                }
+                else {
+                    if (gtsList.length > 0) {
+                        if (Array.isArray(gtsList[0])) {
+                            gtsList = gtsList[0];
+                        }
+                    }
+                    data.push({
+                        gts: gtsList,
+                        params: me.getParams(gtsList)
+                    });
+                    me.data = JSON.stringify(data);
+                }
+            }, err => {
+                console.error(err);
+            });
+        }, err => {
+            console.error(err);
+        });
+    }
+    getParams(gtsList) {
+        let params = [];
+        let me = this;
+        for (let i = 0; i < gtsList.length; i++) {
+            let gts = gtsList[i];
+            params.push({ color: GTSLib.getColor(i), key: gts.c, interpolate: me.type });
+        }
+        return params;
+    }
+    render() {
+        if (this.graphs['scatter'].indexOf(this.type) > -1) {
+            return h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, "show-legend": this.showLegend, chartTitle: this.chartTitle });
+        }
+        else if (this.graphs['chart'].indexOf(this.type) > -1) {
+            return h("quantum-chart", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
+        }
+        else if (this.type == 'bubble') {
+            return h("quantum-bubble", { "show-legend": this.showLegend, responsive: this.responsive, unit: this.unit, data: this.data, chartTitle: this.chartTitle });
+        }
+        else if (this.graphs['pie'].indexOf(this.type) > -1) {
+            return h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
+        }
+        else if (this.graphs['polar'].indexOf(this.type) > -1) {
+            return h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
+        }
+    }
+    static get is() { return "quantum-tile"; }
+    static get encapsulation() { return "shadow"; }
+    static get properties() { return {
+        "chartTitle": {
+            "type": String,
+            "attr": "chart-title"
+        },
+        "data": {
+            "state": true
+        },
+        "responsive": {
+            "type": Boolean,
+            "attr": "responsive"
+        },
+        "showLegend": {
+            "type": Boolean,
+            "attr": "show-legend"
+        },
+        "type": {
+            "type": String,
+            "attr": "type"
+        },
+        "unit": {
+            "type": String,
+            "attr": "unit"
+        },
+        "url": {
+            "type": String,
+            "attr": "url"
+        },
+        "wsElement": {
+            "elementRef": true
+        }
+    }; }
+    static get style() { return ""; }
+}
+
+export { QuantumBubble, QuantumPie, QuantumPolar, QuantumScatter, QuantumTile };
