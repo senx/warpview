@@ -37,8 +37,8 @@ export class QuantumVerticalZoomSlider {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     }
     componentDidLoad() {
-        this._rail = this.el.querySelector("#rail");
-        this._cursor = this.el.querySelector("#cursor");
+        this._rail = this.el.shadowRoot.querySelector("#rail");
+        this._cursor = this.el.shadowRoot.querySelector("#cursor");
     }
     mouseDown(event) {
         event.preventDefault();
@@ -94,6 +94,7 @@ export class QuantumVerticalZoomSlider {
             h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
     }
     static get is() { return "quantum-vertical-zoom-slider"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "config": {
             "type": String,
