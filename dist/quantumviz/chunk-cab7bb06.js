@@ -1,8 +1,10 @@
-import Chart from "chart.js";
-import { GTSLib } from "../../gts.lib";
-//import 'chartjs-plugin-zoom';
-import moment from "moment";
-export class QuantumChart {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+import { a as Chart, b as moment } from './chunk-35f9f27a.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
+
+class QuantumChart {
     constructor() {
         this.alone = true;
         this.unit = "";
@@ -73,6 +75,7 @@ export class QuantumChart {
         let xView = JSON.parse(this.xView);
         this._chart.options.scales.xAxes[0].time.min = moment(xView.min, "x");
         this._chart.options.scales.xAxes[0].time.max = moment(xView.max, "x");
+        console.log("xView", this._chart.options.scales.xAxes[0].time.min._i, this._chart.options.scales.xAxes[0].time.max._i);
         this._chart.update();
     }
     changeYView() {
@@ -536,3 +539,5 @@ export class QuantumChart {
         }]; }
     static get style() { return "/**style-placeholder:quantum-chart:**/"; }
 }
+
+export { QuantumChart as a };

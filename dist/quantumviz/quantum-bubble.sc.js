@@ -2,8 +2,8 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-357e00db.js';
-export { a as QuantumChart } from './chunk-6007896e.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
+export { a as QuantumChart } from './chunk-57969280.js';
 import './chunk-ee323282.js';
 
 class QuantumBubble {

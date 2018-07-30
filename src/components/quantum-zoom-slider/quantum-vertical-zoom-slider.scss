@@ -1,21 +1,21 @@
-quantum-vertical-zoom-slider {
-  .rail {
-    position: absolute;
+:host {
+
+  #rail {
+    position: relative;
     background-color: var(--quantum-bg-rail-color, grey);
     opacity: 0.7;
     width: 20px;
-    /*height: 94%;*/
-    height: 10px;
-    width: 10px;
-    margin: 0px 0px 20px 0px;
+    margin: 0 0 20px 0;
     border: 1px solid var(--quantum-border-rail-color, black);
     border-radius: var(--quantum-border-radius, 6px);
-    padding: 0px 0px 0px 0px;
+    padding: 0 0 0 0;
   }
-  .rail:hover {
+
+  #rail:hover {
     opacity: 1;
   }
-  .cursor {
+
+  #cursor {
     background-color: var(--quantum-bg-cursor-color, red);
     position: relative;
     cursor: move;
@@ -23,7 +23,6 @@ quantum-vertical-zoom-slider {
     height: 100%;
     border: 1px solid var(--quantum-border-cursor-color, black);
     border-radius: var(--quantum-border-radius, 6px);
-    /*left: 0px;*/
     transition: top .01s;
   }
 }

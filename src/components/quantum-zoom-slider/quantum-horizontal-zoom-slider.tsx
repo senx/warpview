@@ -1,11 +1,9 @@
-import { Component, Prop, Element, EventEmitter, Event, Watch } from '@stencil/core';
+import {Component, Prop, Element, EventEmitter, Event, Watch} from '@stencil/core';
 import {GTSLib} from "../../gts.lib";
-//import { start } from 'repl';
 
 @Component({
   tag: 'quantum-horizontal-zoom-slider',
-  styleUrl: 'quantum-horizontal-zoom-slider.scss',
-  shadow: true
+  styleUrl: 'quantum-horizontal-zoom-slider.scss'
 })
 
 export class QuantumHorizontalZoomSlider {
@@ -40,35 +38,35 @@ export class QuantumHorizontalZoomSlider {
   private _mouseCursorRightOffset;
 
   @Watch("cursorSize")
-    changeCursorSize(newValue: string, oldValue: string) {
-      if (oldValue !== newValue) {
-        let object = JSON.parse(newValue);
-        if(object.cursorOffset + object.cursorSize <= 100){
-          this._cursor.style.left = (object.cursorOffset * 100).toString() + "%";
-          if(object.cursorSize * this._rail.getBoundingClientRect().width < this._cursorMinWidth){
-            this._cursor.style.width = this._cursorMinWidth.toString() + "px";
-          }else{
-            this._cursor.style.width = (object.cursorSize * 100).toString() + "%";
-          }
+  changeCursorSize(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      let object = JSON.parse(newValue);
+      if (object.cursorOffset + object.cursorSize <= 100) {
+        this._cursor.style.left = (object.cursorOffset * 100).toString() + "%";
+        if (object.cursorSize * this._rail.getBoundingClientRect().width < this._cursorMinWidth) {
+          this._cursor.style.width = this._cursorMinWidth.toString() + "px";
+        } else {
+          this._cursor.style.width = (object.cursorSize * 100).toString() + "%";
         }
       }
     }
+  }
 
   @Watch("width")
-    initSize(newValue: number, oldValue: number){
-      if (oldValue !== newValue) {
-        this._rail.style.width = (0.94 * newValue).toString() + "px";
-        console.log("width", this._rail.style.width);
-      }
+  initSize(newValue: number, oldValue: number) {
+    if (oldValue !== newValue) {
+      this._rail.style.width = (0.94 * newValue).toString() + "px";
+      console.log("width", this._rail.style.width);
     }
+  }
 
-  componentWillLoad(){
+  componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
   }
 
   componentDidLoad() {
-    this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
-    this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
+    this._rail = this.el.querySelector("#rail") as HTMLElement;
+    this._cursor = this.el.querySelector("#cursor") as HTMLElement;
   }
 
   mouseDown(event) {
@@ -76,13 +74,21 @@ export class QuantumHorizontalZoomSlider {
     let me = this;
 
     this.dimsX(event);
-    this._rail.onmousemove = (event) => {me.dragX(event, me)};
-    this._cursor.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseout = (event) => {me.stopDrag(me)};
+    this._rail.onmousemove = (event) => {
+      me.dragX(event, me)
+    };
+    this._cursor.onmouseup = (event) => {
+      me.stopDrag(me)
+    };
+    this._rail.onmouseup = (event) => {
+      me.stopDrag(me)
+    };
+    this._rail.onmouseout = (event) => {
+      me.stopDrag(me)
+    };
   }
 
-  dimsX(event){
+  dimsX(event) {
     let railDims = this._rail.getBoundingClientRect() as DOMRect;
     let cursorDims = this._cursor.getBoundingClientRect() as DOMRect;
     this._railMin = railDims.x;
@@ -91,6 +97,7 @@ export class QuantumHorizontalZoomSlider {
     this._mouseCursorLeftOffset = event.x - cursorDims.x;
     this._mouseCursorRightOffset = cursorDims.width - this._mouseCursorLeftOffset;
   }
+
   dragX(event, elem) {
     event.preventDefault();
     if ((event.clientX - elem._mouseCursorLeftOffset) >= elem._railMin + 1 && (event.clientX + elem._mouseCursorRightOffset) <= elem._railMax - 1) {
@@ -110,23 +117,23 @@ export class QuantumHorizontalZoomSlider {
     elem._rail.onmouseout = null;
   }
 
-  xWheel(event){
+  xWheel(event) {
     event.preventDefault();
     let railDims = this._rail.getBoundingClientRect() as DOMRect;
 
     let coef = (event.pageX - this._rail.offsetLeft) / railDims.width;
-    this.xZoom.emit({zoomValue:{coef: coef, zoomType: event.deltaY * -1}});
+    this.xZoom.emit({zoomValue: {coef: coef, zoomType: event.deltaY * -1}});
   }
 
-  yWheel(event){
+  yWheel(event) {
     event.preventDefault();
   }
 
   render() {
-      return(
-        <div id="rail" class={'rail ' + this._config.rail.class} onWheel={(event) => this.xWheel(event)}>
-          <div id="cursor" class={'cursor ' + this._config.cursor.class} onMouseDown={(event) => this.mouseDown(event)}></div>
-        </div>
-      );
+    return (
+      <div id="rail" onWheel={(event) => this.xWheel(event)}>
+        <div id="cursor" onMouseDown={(event) => this.mouseDown(event)}></div>
+      </div>
+    );
   }
 }

@@ -1,7 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class QuantumChart {
     alone: boolean;
@@ -35,8 +32,6 @@ export declare class QuantumChart {
     changeXView(): void;
     changeYView(): void;
     drawChart(): void;
-    xSliderInit(): void;
-    ySliderInit(): void;
     gtsToData(gts: any): {
         datasets: any[];
         ticks: any[];

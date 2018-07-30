@@ -2,7 +2,7 @@
 const { h } = window.quantumviz;
 
 import { a as Chart, b as moment } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-357e00db.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
 
 class QuantumChart {
     constructor() {
@@ -207,26 +207,35 @@ class QuantumChart {
             //this._chart.update();
         }
     }
-    xSliderInit() {
+    /*
+      xSliderInit() {
         let slider = this.el.shadowRoot.querySelector("#xSlider");
         slider.setAttribute("min-value", this._xSlider.min.toString());
         slider.setAttribute("max-value", this._xSlider.max.toString());
-        slider.setAttribute("width", this.el.shadowRoot
+        slider.setAttribute(
+          "width",
+          this.el.shadowRoot
             .querySelector("#myChart")
             .getBoundingClientRect()
-            .width.toString());
-        this._xSlider.element = slider;
-    }
-    ySliderInit() {
+            .width.toString()
+        );
+        this._xSlider.element = slider as HTMLElement;
+      }
+    
+      ySliderInit() {
         let slider = this.el.shadowRoot.querySelector("#ySlider");
         slider.setAttribute("min-value", this._ySlider.min.toString());
         slider.setAttribute("max-value", this._ySlider.max.toString());
-        slider.setAttribute("height", this.el.shadowRoot
+        slider.setAttribute(
+          "height",
+          this.el.shadowRoot
             .querySelector("#myChart")
             .getBoundingClientRect()
-            .height.toString());
-        this._ySlider.element = slider;
-    }
+            .height.toString()
+        );
+        this._ySlider.element = slider as HTMLElement;
+      }
+    */
     gtsToData(gts) {
         let datasets = [];
         let ticks = [];

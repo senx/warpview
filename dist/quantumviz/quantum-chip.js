@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as GTSLib } from './chunk-357e00db.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
 
 class QuantumChip {
     constructor() {
@@ -83,7 +83,6 @@ class QuantumChip {
                     h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
                         h("span", { class: 'gts-classname' }, this._node.gts.c),
                         h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
-                        this.node.gts.l,
                         this._toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
                             h("span", { class: 'gts-labelname' }, label.name),
                             h("span", { class: 'gts-separator' }, "="),

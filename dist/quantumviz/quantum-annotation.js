@@ -2,7 +2,7 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-357e00db.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
 import './chunk-ee323282.js';
 
 class QuantumAnnotation {

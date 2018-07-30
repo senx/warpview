@@ -1,7 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
