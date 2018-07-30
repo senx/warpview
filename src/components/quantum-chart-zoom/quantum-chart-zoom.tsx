@@ -174,6 +174,24 @@ export class QuantumChartZoom{
     this.wc.forceUpdate();
   }
 
+  @Listen("xSliderValueChanged")
+  xSliderListener(event: CustomEvent) {
+    let offset = event.detail.sliderValue - this._chart.xMinView;
+    this._chart.xMinView += offset;
+    this._chart.xMaxView += offset;
+    this._xView = JSON.stringify({min: moment(this._chart.xMinView, "x"), max: moment(this._chart.xMaxView, "x")});
+    this.wc.forceUpdate();
+  }
+
+  @Listen("ySliderValueChanged")
+  ySliderListener(event: CustomEvent) {
+    let offset = event.detail.sliderValue - this._chart.yMinView;
+    this._chart.yMinView += offset;
+    this._chart.yMaxView += offset;
+    this._yView = JSON.stringify({min: this._chart.yMinView, max: this._chart.yMaxView});
+    this.wc.forceUpdate();
+  }
+
   render(){
     return(
       <div>
