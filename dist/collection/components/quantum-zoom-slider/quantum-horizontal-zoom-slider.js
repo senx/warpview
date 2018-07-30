@@ -1,5 +1,4 @@
 import { GTSLib } from "../../gts.lib";
-//import { start } from 'repl';
 export class QuantumHorizontalZoomSlider {
     constructor() {
         this.cursorSize = "{}";
@@ -38,17 +37,25 @@ export class QuantumHorizontalZoomSlider {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     }
     componentDidLoad() {
-        this._rail = this.el.shadowRoot.querySelector("#rail");
-        this._cursor = this.el.shadowRoot.querySelector("#cursor");
+        this._rail = this.el.querySelector("#rail");
+        this._cursor = this.el.querySelector("#cursor");
     }
     mouseDown(event) {
         event.preventDefault();
         let me = this;
         this.dimsX(event);
-        this._rail.onmousemove = (event) => { me.dragX(event, me); };
-        this._cursor.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseout = (event) => { me.stopDrag(me); };
+        this._rail.onmousemove = (event) => {
+            me.dragX(event, me);
+        };
+        this._cursor.onmouseup = (event) => {
+            me.stopDrag(me);
+        };
+        this._rail.onmouseup = (event) => {
+            me.stopDrag(me);
+        };
+        this._rail.onmouseout = (event) => {
+            me.stopDrag(me);
+        };
     }
     dimsX(event) {
         let railDims = this._rail.getBoundingClientRect();
@@ -85,11 +92,10 @@ export class QuantumHorizontalZoomSlider {
         event.preventDefault();
     }
     render() {
-        return (h("div", { id: "rail", class: 'rail ' + this._config.rail.class, onWheel: (event) => this.xWheel(event) },
-            h("div", { id: "cursor", class: 'cursor ' + this._config.cursor.class, onMouseDown: (event) => this.mouseDown(event) })));
+        return (h("div", { id: "rail", onWheel: (event) => this.xWheel(event) },
+            h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
     }
     static get is() { return "quantum-horizontal-zoom-slider"; }
-    static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "config": {
             "type": String,

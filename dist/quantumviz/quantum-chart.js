@@ -1,12 +1,11 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { b as moment } from './chunk-35f9f27a.js';
-export { a as QuantumChart } from './chunk-6007896e.js';
-export { a as QuantumHorizontalZoomSlider, b as QuantumVerticalZoomSlider } from './chunk-9c6eac8f.js';
-export { a as QuantumToggle } from './chunk-08e7637d.js';
+import { b as moment } from './chunk-d48f8ecd.js';
+export { a as QuantumChart } from './chunk-592b3f01.js';
+export { a as QuantumToggle } from './chunk-bae6e449.js';
 import './chunk-ee323282.js';
-import './chunk-357e00db.js';
+import './chunk-cadd3091.js';
 
 class QuantumChartZoom {
     constructor() {
@@ -140,7 +139,7 @@ class QuantumChartZoom {
         this.wc.forceUpdate();
     }
     render() {
-        return (h("div", null,
+        return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, "chart-title": this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, "hidden-data": this.hiddenData, options: this.options, width: this.width, height: this.height, "time-min": this.timeMin, "time-max": this.timeMax, xView: this._xView, yView: this._yView }),
             h("quantum-toggle", { id: "timeSwitch" }),
@@ -221,7 +220,7 @@ class QuantumChartZoom {
             "name": "yZoom",
             "method": "yZoomListener"
         }]; }
-    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
+    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n:host .wrapper {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 30px;\n  margin: 10px; }\n\n:host #ySlider {\n  grid-row: 1;\n  grid-column: 1; }\n\n:host #xSlider {\n  grid-row: 2;\n  grid-column: 2; }\n\n:host #myChart {\n  grid-row: 1;\n  grid-column: 2; }"; }
 }
 
 export { QuantumChartZoom };

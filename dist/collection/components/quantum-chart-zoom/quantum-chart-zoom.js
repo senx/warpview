@@ -131,7 +131,7 @@ export class QuantumChartZoom {
         this.wc.forceUpdate();
     }
     render() {
-        return (h("div", null,
+        return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, "chart-title": this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, "hidden-data": this.hiddenData, options: this.options, width: this.width, height: this.height, "time-min": this.timeMin, "time-max": this.timeMax, xView: this._xView, yView: this._yView }),
             h("quantum-toggle", { id: "timeSwitch" }),

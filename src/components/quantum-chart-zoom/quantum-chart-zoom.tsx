@@ -1,14 +1,5 @@
-import {
-  Component,
-  Element,
-  Event,
-  EventEmitter,
-  Prop,
-  Watch,
-  Listen
-} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Listen, Prop} from "@stencil/core";
 import moment from "moment";
-import { stringify } from "querystring";
 
 @Component({
   tag: "quantum-chart-zoom",
@@ -176,7 +167,7 @@ export class QuantumChartZoom{
 
   render(){
     return(
-      <div>
+      <div class="wrapper">
         <quantum-vertical-zoom-slider height={this._slider.y.height} id="ySlider" min-value={this._chart.yMin} max-value={this._slider.y.max} cursorSize={this._slider.y.cursorSize}/>
         <quantum-chart id="myChart"
           alone={false}

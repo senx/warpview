@@ -811,66 +811,7 @@
         {
           "event": "xZoom"
         }
-      ],
-      "shadow": true
-    },
-    {
-      "tag": "quantum-horizontal-zoom-slider",
-      "dependencies": [],
-      "componentClass": "QuantumHorizontalZoomSlider",
-      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "cursorSize",
-          "type": "String",
-          "attr": "cursor-size",
-          "watch": [
-            "changeCursorSize"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": "Number",
-          "attr": "max-value"
-        },
-        {
-          "name": "minValue",
-          "type": "Number",
-          "attr": "min-value"
-        },
-        {
-          "name": "width",
-          "type": "Number",
-          "attr": "width",
-          "watch": [
-            "initSize"
-          ]
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "xSliderValueChanged"
-        },
-        {
-          "event": "xZoom"
-        }
-      ],
-      "shadow": true
+      ]
     },
     {
       "tag": "quantum-pie",
@@ -1377,66 +1318,7 @@
         {
           "event": "yZoom"
         }
-      ],
-      "shadow": true
-    },
-    {
-      "tag": "quantum-vertical-zoom-slider",
-      "dependencies": [],
-      "componentClass": "QuantumVerticalZoomSlider",
-      "componentPath": "components/quantum-zoom-slider/quantum-vertical-zoom-slider.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-zoom-slider/quantum-vertical-zoom-slider.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "cursorSize",
-          "type": "String",
-          "attr": "cursor-size",
-          "watch": [
-            "changeCursorSize"
-          ]
-        },
-        {
-          "name": "height",
-          "type": "Number",
-          "attr": "height",
-          "watch": [
-            "initSize"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": "Number",
-          "attr": "max-value"
-        },
-        {
-          "name": "minValue",
-          "type": "Number",
-          "attr": "min-value"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "ySliderValueChanged"
-        },
-        {
-          "event": "yZoom"
-        }
-      ],
-      "shadow": true
+      ]
     }
   ],
   "collections": [
