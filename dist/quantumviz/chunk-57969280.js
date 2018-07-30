@@ -1,8 +1,10 @@
-import Chart from "chart.js";
-import { GTSLib } from "../../gts.lib";
-//import 'chartjs-plugin-zoom';
-import moment from "moment";
-export class QuantumChart {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+import { a as Chart, b as moment } from './chunk-35f9f27a.js';
+import { a as GTSLib } from './chunk-cadd3091.js';
+
+class QuantumChart {
     constructor() {
         this.alone = true;
         this.unit = "";
@@ -536,3 +538,5 @@ export class QuantumChart {
         }]; }
     static get style() { return "/**style-placeholder:quantum-chart:**/"; }
 }
+
+export { QuantumChart as a };

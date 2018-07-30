@@ -378,8 +378,20 @@
           "capture": false
         },
         {
+          "event": "xSliderValueChanged",
+          "method": "xSliderListener",
+          "passive": false,
+          "capture": false
+        },
+        {
           "event": "xZoom",
           "method": "xZoomListener",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "ySliderValueChanged",
+          "method": "ySliderListener",
           "passive": false,
           "capture": false
         },

@@ -121,7 +121,7 @@ export class QuantumChart {
     //console.debug("[QuantumChart] drawChart", this.data);
     let data = JSON.parse(this.data);
     if (!data) return;
-    let gts = this.gtsToData(data);
+    let gts = this.gtsToData(JSON.parse(this.data));
     const me = this;
     const graphOpts = {
       animation: false,
@@ -249,7 +249,7 @@ export class QuantumChart {
     }
     
   }
-
+/*
   xSliderInit() {
     let slider = this.el.shadowRoot.querySelector("#xSlider");
     slider.setAttribute("min-value", this._xSlider.min.toString());
@@ -277,7 +277,7 @@ export class QuantumChart {
     );
     this._ySlider.element = slider as HTMLElement;
   }
-
+*/
   gtsToData(gts) {
     let datasets = [];
     let ticks = [];
@@ -490,7 +490,7 @@ export class QuantumChart {
           ) : (
             <canvas id="myChart" width={this.width} height={this.height} />
           )}
-
+          
         </div>
       </div>
     );
