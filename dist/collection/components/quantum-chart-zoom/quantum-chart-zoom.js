@@ -123,24 +123,19 @@ export class QuantumChartZoom {
         this._yView = JSON.stringify({ min: this._chart.yMinView, max: this._chart.yMaxView });
         this.wc.forceUpdate();
     }
-    /*
-      zoomReset() {
-        this._chart.options.scales.xAxes[0].time.min = moment(this._xSlider.min,"x");
-        this._chart.options.scales.xAxes[0].time.max = moment(this._xSlider.max,"x");
-        this._chart.options.scales.yAxes[0].ticks.min = this._ySlider.min;
-        this._chart.options.scales.yAxes[0].ticks.max = this._ySlider.max;
-        this._chart.update();
-    
-        this._ySlider.element.setAttribute("cursor-size",JSON.stringify({ cursorSize: 1, cursorOffset: 0 }));
-        this._xSlider.element.setAttribute("cursor-size",JSON.stringify({ cursorSize: 1, cursorOffset: 0 }));
-      }
-    */
+    zoomReset() {
+        this._xView = JSON.stringify({ min: this._chart.xMin, max: this._chart.xMax });
+        this._yView = JSON.stringify({ min: this._chart.yMin, max: this._chart.yMax });
+        this._slider.x.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
+        this._slider.y.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
+        this.wc.forceUpdate();
+    }
     render() {
         return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, "chart-title": this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, "hidden-data": this.hiddenData, options: this.options, width: this.width, height: this.height, "time-min": this.timeMin, "time-max": this.timeMax, xView: this._xView, yView: this._yView }),
             h("quantum-toggle", { id: "timeSwitch" }),
-            h("button", { type: "button" }, "ZooM reset"),
+            h("button", { type: "button", onClick: () => this.zoomReset() }, "ZooM ReseT"),
             h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize })));
     }
     static get is() { return "quantum-chart-zoom"; }

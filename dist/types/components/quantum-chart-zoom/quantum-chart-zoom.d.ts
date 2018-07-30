@@ -28,5 +28,6 @@ export declare class QuantumChartZoom {
     yZoomListener(event: CustomEvent): void;
     xSliderListener(event: CustomEvent): void;
     ySliderListener(event: CustomEvent): void;
+    zoomReset(): void;
     render(): JSX.Element;
 }
