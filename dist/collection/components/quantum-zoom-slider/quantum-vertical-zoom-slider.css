@@ -1,18 +1,20 @@
-:host .rail {
+quantum-vertical-zoom-slider .rail {
   position: absolute;
   background-color: var(--quantum-bg-rail-color, grey);
   opacity: 0.7;
   width: 20px;
   /*height: 94%;*/
+  height: 10px;
+  width: 10px;
   margin: 0px 0px 20px 0px;
   border: 1px solid var(--quantum-border-rail-color, black);
   border-radius: var(--quantum-border-radius, 6px);
   padding: 0px 0px 0px 0px; }
 
-:host .rail:hover {
+quantum-vertical-zoom-slider .rail:hover {
   opacity: 1; }
 
-:host .cursor {
+quantum-vertical-zoom-slider .cursor {
   background-color: var(--quantum-bg-cursor-color, red);
   position: relative;
   cursor: move;

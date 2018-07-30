@@ -18,6 +18,7 @@ import moment from "moment";
   shadow: true
 })
 export class QuantumChart {
+  @Prop() alone: boolean = true;
   @Prop() unit: string = "";
   @Prop() type: string = "line";
   @Prop() chartTitle: string = "";
@@ -31,9 +32,12 @@ export class QuantumChart {
   @Prop() timeMin: number;
   @Prop() timeMax: number;
   @Prop() config: string = "{}";
+  @Prop() xView: string = "{}";
+  @Prop() yView: string = "{}";
 
   @Event() pointHover: EventEmitter;
   @Event() boundsDidChange: EventEmitter;
+  @Event() chartInfos: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -96,6 +100,22 @@ export class QuantumChart {
     }
   }
 
+  @Watch("xView")
+  changeXView(){
+    let xView = JSON.parse(this.xView);
+    this._chart.options.scales.xAxes[0].time.min = moment(xView.min, "x");
+    this._chart.options.scales.xAxes[0].time.max = moment(xView.max, "x");
+    this._chart.update();
+  }
+
+  @Watch("yView")
+  changeYView(){
+    let yView = JSON.parse(this.yView);
+    this._chart.options.scales.yAxes[0].ticks.min = yView.min;
+    this._chart.options.scales.yAxes[0].ticks.max = yView.max;
+    this._chart.update();
+  }
+  
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     //console.debug("[QuantumChart] drawChart", this.data);
@@ -203,6 +223,31 @@ export class QuantumChart {
     this._chart.update();
     this._xSlider.min = gts.ticks[0];
     this._xSlider.max = gts.ticks[gts.ticks.length - 1];
+
+    if(!this.alone){
+      console.log("Alone");
+      let chartInfos = {
+
+          xMin: gts.ticks[0],
+          xMax: gts.ticks[gts.ticks.length - 1],
+          yMin: Math.min(...minArray),
+          yMax: Math.max(...maxArray) * 1.05
+
+      };
+    
+      this.chartInfos.emit(chartInfos);
+      
+      //this._chart.options.scales.yAxes[0].ticks.min = chartInfos.ySlider.min;
+      //this._chart.options.scales.yAxes[0].ticks.max = chartInfos.ySlider.max;
+      //this._chart.update();
+      
+    }else{
+      console.log("Not alone");
+      //this._chart.options.scales.yAxes[0].ticks.min = Math.min(...minArray);
+      //this._chart.options.scales.yAxes[0].ticks.max = Math.max(...maxArray) * 1.05;
+      //this._chart.update();
+    }
+    
   }
 
   xSliderInit() {
@@ -296,7 +341,7 @@ export class QuantumChart {
       return false;
     }
   }
-
+/*
   @Listen("xZoom")
   xZoomListener(event: CustomEvent) {
     let min = this._chart.options.scales.xAxes[0].time.min._i;
@@ -422,16 +467,16 @@ export class QuantumChart {
       JSON.stringify({ cursorSize: 1, cursorOffset: 0 })
     );
   }
-
+*/
   componentWillLoad() {
     this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
-    console.log("chart :", this._config);
+    //console.log("chart :", this._config);
   }
 
   componentDidLoad() {
     this.drawChart();
-    this.xSliderInit();
-    this.ySliderInit();
+    //this.xSliderInit();
+    //this.ySliderInit();
   }
 
   render() {
@@ -439,26 +484,13 @@ export class QuantumChart {
       <div>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
-          <button type="button" onClick={() => this.zoomReset()}>
-            ZooM reset
-          </button>
-          <quantum-vertical-zoom-slider
-            id="ySlider"
-            min-value=""
-            max-value=""
-            config={JSON.stringify(this._config)}
-          />
+
           {this.responsive ? (
             <canvas id="myChart" />
           ) : (
             <canvas id="myChart" width={this.width} height={this.height} />
           )}
-          <quantum-horizontal-zoom-slider
-            id="xSlider"
-            min-value=""
-            max-value=""
-            config={JSON.stringify(this._config)}
-          />
+
         </div>
       </div>
     );

@@ -134,7 +134,64 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumChartZoom {
+      'chartTitle': string;
+      'data': string;
+      'height': string;
+      'hiddenData': string;
+      'options': string;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
+      'type': string;
+      'unit': string;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumChartZoomElement extends StencilComponents.QuantumChartZoom, HTMLStencilElement {}
+
+  var HTMLQuantumChartZoomElement: {
+    prototype: HTMLQuantumChartZoomElement;
+    new (): HTMLQuantumChartZoomElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-chart-zoom': HTMLQuantumChartZoomElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-chart-zoom': HTMLQuantumChartZoomElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-chart-zoom': JSXElements.QuantumChartZoomAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumChartZoomAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
+      'data'?: string;
+      'height'?: string;
+      'hiddenData'?: string;
+      'onBoundsDidChange'?: (event: CustomEvent) => void;
+      'options'?: string;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
+      'type'?: string;
+      'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumChart {
+      'alone': boolean;
       'chartTitle': string;
       'config': string;
       'data': string;
@@ -148,6 +205,8 @@ declare global {
       'type': string;
       'unit': string;
       'width': string;
+      'xView': string;
+      'yView': string;
     }
   }
 
@@ -170,12 +229,14 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumChartAttributes extends HTMLAttributes {
+      'alone'?: boolean;
       'chartTitle'?: string;
       'config'?: string;
       'data'?: string;
       'height'?: string;
       'hiddenData'?: string;
       'onBoundsDidChange'?: (event: CustomEvent) => void;
+      'onChartInfos'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
@@ -185,6 +246,8 @@ declare global {
       'type'?: string;
       'unit'?: string;
       'width'?: string;
+      'xView'?: string;
+      'yView'?: string;
     }
   }
 }

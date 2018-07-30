@@ -168,10 +168,7 @@
     },
     {
       "tag": "quantum-chart",
-      "dependencies": [
-        "quantum-horizontal-zoom-slider",
-        "quantum-vertical-zoom-slider"
-      ],
+      "dependencies": [],
       "componentClass": "QuantumChart",
       "componentPath": "components/quantum-chart/quantum-chart.js",
       "styles": {
@@ -182,6 +179,11 @@
         }
       },
       "props": [
+        {
+          "name": "alone",
+          "type": "Boolean",
+          "attr": "alone"
+        },
         {
           "name": "chartTitle",
           "type": "String",
@@ -255,24 +257,254 @@
           "name": "width",
           "type": "String",
           "attr": "width"
+        },
+        {
+          "name": "xView",
+          "type": "String",
+          "attr": "x-view",
+          "watch": [
+            "changeXView"
+          ]
+        },
+        {
+          "name": "yView",
+          "type": "String",
+          "attr": "y-view",
+          "watch": [
+            "changeYView"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "boundsDidChange"
+        },
+        {
+          "event": "chartInfos"
+        },
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-chart",
+      "dependencies": [],
+      "componentClass": "QuantumChart",
+      "componentPath": "components/quantum-chart/quantum-chart.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-chart/quantum-chart.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "alone",
+          "type": "Boolean",
+          "attr": "alone"
+        },
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        },
+        {
+          "name": "xView",
+          "type": "String",
+          "attr": "x-view",
+          "watch": [
+            "changeXView"
+          ]
+        },
+        {
+          "name": "yView",
+          "type": "String",
+          "attr": "y-view",
+          "watch": [
+            "changeYView"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "boundsDidChange"
+        },
+        {
+          "event": "chartInfos"
+        },
+        {
+          "event": "pointHover"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-chart-zoom",
+      "dependencies": [
+        "quantum-chart",
+        "quantum-horizontal-zoom-slider",
+        "quantum-toggle",
+        "quantum-vertical-zoom-slider"
+      ],
+      "componentClass": "QuantumChartZoom",
+      "componentPath": "components/quantum-chart-zoom/quantum-chart-zoom.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-chart-zoom/quantum-chart-zoom.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data"
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
         }
       ],
       "listeners": [
         {
-          "event": "xSliderValueChanged",
-          "method": "xSliderListener",
+          "event": "chartInfos",
+          "method": "chartInfosWatcher",
           "passive": false,
           "capture": false
         },
         {
           "event": "xZoom",
           "method": "xZoomListener",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "ySliderValueChanged",
-          "method": "ySliderListener",
           "passive": false,
           "capture": false
         },
@@ -284,14 +516,11 @@
         }
       ],
       "hostElement": {
-        "name": "el"
+        "name": "wc"
       },
       "events": [
         {
           "event": "boundsDidChange"
-        },
-        {
-          "event": "pointHover"
         }
       ],
       "shadow": true
@@ -523,6 +752,64 @@
         },
         {
           "event": "heatRadiusDidChange"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-horizontal-zoom-slider",
+      "dependencies": [],
+      "componentClass": "QuantumHorizontalZoomSlider",
+      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "cursorSize",
+          "type": "String",
+          "attr": "cursor-size",
+          "watch": [
+            "changeCursorSize"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": "Number",
+          "attr": "max-value"
+        },
+        {
+          "name": "minValue",
+          "type": "Number",
+          "attr": "min-value"
+        },
+        {
+          "name": "width",
+          "type": "Number",
+          "attr": "width",
+          "watch": [
+            "initSize"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "xSliderValueChanged"
+        },
+        {
+          "event": "xZoom"
         }
       ],
       "shadow": true
@@ -959,6 +1246,50 @@
       "shadow": true
     },
     {
+      "tag": "quantum-toggle",
+      "dependencies": [],
+      "componentClass": "QuantumToggle",
+      "componentPath": "components/quantum-toggle/quantum-toggle.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-toggle/quantum-toggle.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "checked",
+          "type": "Boolean",
+          "attr": "checked"
+        },
+        {
+          "name": "option",
+          "type": "String",
+          "attr": "option"
+        }
+      ],
+      "states": [
+        {
+          "name": "state"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "timeSwitched",
+          "method": "switchedListener",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "events": [
+        {
+          "event": "timeSwitched"
+        }
+      ],
+      "shadow": true
+    },
+    {
       "tag": "quantum-tree-view",
       "dependencies": [
         "quantum-chip",
@@ -990,6 +1321,64 @@
           "event": "selected"
         }
       ]
+    },
+    {
+      "tag": "quantum-vertical-zoom-slider",
+      "dependencies": [],
+      "componentClass": "QuantumVerticalZoomSlider",
+      "componentPath": "components/quantum-zoom-slider/quantum-vertical-zoom-slider.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-zoom-slider/quantum-vertical-zoom-slider.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "cursorSize",
+          "type": "String",
+          "attr": "cursor-size",
+          "watch": [
+            "changeCursorSize"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "Number",
+          "attr": "height",
+          "watch": [
+            "initSize"
+          ]
+        },
+        {
+          "name": "maxValue",
+          "type": "Number",
+          "attr": "max-value"
+        },
+        {
+          "name": "minValue",
+          "type": "Number",
+          "attr": "min-value"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "ySliderValueChanged"
+        },
+        {
+          "event": "yZoom"
+        }
+      ],
+      "shadow": true
     },
     {
       "tag": "quantum-vertical-zoom-slider",

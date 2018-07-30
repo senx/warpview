@@ -1,4 +1,7 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumRadar {
     unit: string;
     chartTitle: string;

@@ -31,8 +31,7 @@ export class QuantumHorizontalZoomSlider {
     initSize(newValue, oldValue) {
         if (oldValue !== newValue) {
             this._rail.style.width = (0.94 * newValue).toString() + "px";
-            console.log("width", (0.94 * newValue).toString());
-            console.log(this._rail.getBoundingClientRect());
+            console.log("width", this._rail.style.width);
         }
     }
     componentWillLoad() {

@@ -36,8 +36,8 @@ export class QuantumHorizontalZoomSlider {
   private _cursorMinWidth = 30;
   private _railMin;
   private _railMax;
-  private _mouseCursorLeftOffset; //is used as bottom offset for vertical slide
-  private _mouseCursorRightOffset; //is used as top for vertical slide
+  private _mouseCursorLeftOffset;
+  private _mouseCursorRightOffset;
 
   @Watch("cursorSize")
     changeCursorSize(newValue: string, oldValue: string) {
@@ -58,8 +58,7 @@ export class QuantumHorizontalZoomSlider {
     initSize(newValue: number, oldValue: number){
       if (oldValue !== newValue) {
         this._rail.style.width = (0.94 * newValue).toString() + "px";
-        console.log("width", (0.94 * newValue).toString());
-        console.log(this._rail.getBoundingClientRect());
+        console.log("width", this._rail.style.width);
       }
     }
 

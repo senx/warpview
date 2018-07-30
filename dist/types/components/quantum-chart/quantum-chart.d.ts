@@ -1,6 +1,10 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class QuantumChart {
+    alone: boolean;
     unit: string;
     type: string;
     chartTitle: string;
@@ -14,8 +18,11 @@ export declare class QuantumChart {
     timeMin: number;
     timeMax: number;
     config: string;
+    xView: string;
+    yView: string;
     pointHover: EventEmitter;
     boundsDidChange: EventEmitter;
+    chartInfos: EventEmitter;
     el: HTMLElement;
     private _chart;
     private _mapIndex;
@@ -25,6 +32,8 @@ export declare class QuantumChart {
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: string, oldValue: string): void;
+    changeXView(): void;
+    changeYView(): void;
     drawChart(): void;
     xSliderInit(): void;
     ySliderInit(): void;
@@ -33,11 +42,6 @@ export declare class QuantumChart {
         ticks: any[];
     };
     isStepped(): string | false;
-    xZoomListener(event: CustomEvent): void;
-    yZoomListener(event: CustomEvent): void;
-    xSliderListener(event: CustomEvent): void;
-    ySliderListener(event: CustomEvent): void;
-    zoomReset(): void;
     componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
