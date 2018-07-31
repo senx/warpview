@@ -119,6 +119,7 @@ class QuantumChartZoom {
         this._chart.xMinView += offset;
         this._chart.xMaxView += offset;
         this._xView = JSON.stringify({ min: this._chart.xMinView, max: this._chart.xMaxView });
+        this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView } });
         this.wc.forceUpdate();
     }
     ySliderListener(event) {
@@ -129,18 +130,22 @@ class QuantumChartZoom {
         this.wc.forceUpdate();
     }
     zoomReset() {
+        this._chart.xMinView = this._chart.xMin;
+        this._chart.xMaxView = this._chart.xMax;
+        this._chart.yMinView = this._chart.yMin;
+        this._chart.yMaxView = this._chart.yMax;
         this._xView = JSON.stringify({ min: this._chart.xMin, max: this._chart.xMax });
         this._yView = JSON.stringify({ min: this._chart.yMin, max: this._chart.yMax });
         this._slider.x.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
         this._slider.y.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
+        this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax } });
         this.wc.forceUpdate();
     }
     render() {
         return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, "chart-title": this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, "hidden-data": this.hiddenData, options: this.options, width: this.width, height: this.height, "time-min": this.timeMin, "time-max": this.timeMax, xView: this._xView, yView: this._yView }),
-            h("quantum-toggle", { id: "timeSwitch" }),
-            h("button", { type: "button", onClick: () => this.zoomReset() }, "ZooM ReseT"),
+            h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "ZooM ReseT"),
             h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize })));
     }
     static get is() { return "quantum-chart-zoom"; }
@@ -224,7 +229,7 @@ class QuantumChartZoom {
             "name": "ySliderValueChanged",
             "method": "ySliderListener"
         }]; }
-    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n:host .wrapper {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 30px;\n  margin: 10px; }\n\n:host #ySlider {\n  grid-row: 1;\n  grid-column: 1; }\n\n:host #xSlider {\n  grid-row: 2;\n  grid-column: 2; }\n\n:host #myChart {\n  grid-row: 1;\n  grid-column: 2; }"; }
+    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n:host .wrapper {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 30px;\n  margin: 10px; }\n\n:host #ySlider {\n  margin-top: 25px;\n  grid-row: 1;\n  grid-column: 1; }\n\n:host #xSlider {\n  grid-row: 2;\n  grid-column: 2; }\n\n:host #myChart {\n  grid-row: 1;\n  grid-column: 2; }\n\n:host #reset {\n  background-color: greenyellow;\n  border-radius: var(--quantum-reset-border-radius, 0px);\n  border-color: var(--quantum-reset-border-color, black);\n  width: var(--quantum-reset-width, 10px);\n  height: var(--quantum-reset-height, 10px); }"; }
 }
 
 class QuantumHorizontalZoomSlider {
@@ -368,66 +373,6 @@ class QuantumHorizontalZoomSlider {
     static get style() { return ":host #rail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  height: 20px;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0;\n  float: right;\n  margin: 0 15px 0 0; }\n\n:host #rail:hover {\n  opacity: 1; }\n\n:host #cursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 20px;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: left .01s;\n  transition: left .01s; }"; }
 }
 
-class QuantumToggle {
-    constructor() {
-        this.option = '{}';
-        this.checked = false;
-        this.state = false;
-        this._option = {
-            switchClass: '',
-            switchLabelClass: '',
-            switchHandleClass: ''
-        };
-    }
-    componentWillLoad() {
-        this._option = GTSLib.mergeDeep(this._option, JSON.parse(this.option));
-    }
-    componentDidLoad() { }
-    componentWillUpdate() { }
-    componentDidUpdate() { }
-    render() {
-        return (h("label", { class: 'switch ' + this._option.switchClass },
-            this.checked
-                ? h("input", { type: "checkbox", class: "switch-input", checked: true, onClick: () => this.switched() })
-                : h("input", { type: "checkbox", class: "switch-input", onClick: () => this.switched() }),
-            h("span", { class: 'switch-label ' + this._option.switchLabelClass }),
-            h("span", { class: 'switch-handle ' + this._option.switchHandleClass })));
-    }
-    switched() {
-        this.state = !this.state;
-        this.timeSwitched.emit({ state: this.state });
-    }
-    switchedListener(event) {
-    }
-    static get is() { return "quantum-toggle"; }
-    static get encapsulation() { return "shadow"; }
-    static get properties() { return {
-        "checked": {
-            "type": Boolean,
-            "attr": "checked"
-        },
-        "option": {
-            "type": String,
-            "attr": "option"
-        },
-        "state": {
-            "state": true
-        }
-    }; }
-    static get events() { return [{
-            "name": "timeSwitched",
-            "method": "timeSwitched",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
-    static get listeners() { return [{
-            "name": "timeSwitched",
-            "method": "switchedListener"
-        }]; }
-    static get style() { return ".switch {\n  position: relative;\n  display: block;\n  width: 100px;\n  height: 30px;\n  padding: 3px;\n  margin: 0 10px 10px 0;\n  border-radius: 18px;\n  cursor: pointer; }\n\n.switch-input {\n  display: none; }\n\n.switch-label {\n  position: relative;\n  display: block;\n  height: inherit;\n  font-size: 10px;\n  text-transform: uppercase;\n  background: #eceeef;\n  border-radius: inherit;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);\n  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15); }\n\n.switch-input:checked ~ .switch-label {\n  background: #00cd00;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);\n  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2); }\n\n.switch-handle {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  width: 28px;\n  height: 28px;\n  background: radial-gradient(#FFFFFF 15%, #f0f0f0 100%);\n  border-radius: 100%;\n  -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);\n  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }\n\n.switch-input:checked ~ .switch-handle {\n  left: 74px;\n  background: radial-gradient(#ffffff 15%, #00cd00 100%);\n  -webkit-box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);\n  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2); }\n\n.switch-label, .switch-handle {\n  -webkit-transition: All .3s ease;\n  transition: All .3s ease;\n  -webkit-transition: All 0.3s ease;\n  -moz-transition: All 0.3s ease;\n  -o-transition: All 0.3s ease; }"; }
-}
-
 class QuantumVerticalZoomSlider {
     constructor() {
         this.cursorSize = "{}";
@@ -458,7 +403,7 @@ class QuantumVerticalZoomSlider {
     }
     initSize(newValue, oldValue) {
         if (oldValue !== newValue) {
-            this._rail.style.height = (0.97 * newValue).toString() + "px";
+            this._rail.style.height = (0.95 * newValue).toString() + "px";
             console.log("height", this._rail.style.height);
         }
     }
@@ -567,4 +512,4 @@ class QuantumVerticalZoomSlider {
     static get style() { return ":host #rail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  width: 20px;\n  margin: 0 0 20px 0;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0; }\n\n:host #rail:hover {\n  opacity: 1; }\n\n:host #cursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 20px;\n  height: 100%;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: top .01s;\n  transition: top .01s; }"; }
 }
 
-export { QuantumChartZoom, QuantumHorizontalZoomSlider, QuantumToggle, QuantumVerticalZoomSlider };
+export { QuantumChartZoom, QuantumHorizontalZoomSlider, QuantumVerticalZoomSlider };

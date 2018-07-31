@@ -12,6 +12,7 @@
   }
 
   #ySlider {
+    margin-top: 25px;
     grid-row: 1;
     grid-column:1;
   }
@@ -24,5 +25,13 @@
   #myChart {
     grid-row: 1;
     grid-column:2;
+  }
+
+  #reset{
+    background-color: greenyellow;
+    border-radius: var(--quantum-reset-border-radius, 0px);
+    border-color: var(--quantum-reset-border-color, black);
+    width: var(--quantum-reset-width, 10px);
+    height: var(--quantum-reset-height, 10px);
   }
 }

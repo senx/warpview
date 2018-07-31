@@ -296,7 +296,6 @@
       "dependencies": [
         "quantum-chart",
         "quantum-horizontal-zoom-slider",
-        "quantum-toggle",
         "quantum-vertical-zoom-slider"
       ],
       "componentClass": "QuantumChartZoom",

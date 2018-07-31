@@ -38,6 +38,11 @@
     --quantum-bg-cursor-color: teal;
     --quantum-border-cursor-color: pink;
     --quantum-border-radius: 20px;
+
+    --quantum-reset-border-radius: 10px;
+    --quantum-reset-border-color: blue;
+    --quantum-reset-width: 80px;
+    --quantum-reset-height: 50px;
   }
 
   </style>
@@ -49,12 +54,12 @@
   <button type="button" class="btn btn-primary float-right m-3" id="light">Light</button>
 
   <quantum-gts-tree data='[]' id="tree"></quantum-gts-tree>
-
+  
   <div id="maincontainer">
+    <quantum-toggle id="timeSwitch" style="margin-top: 10px;" ></quantum-toggle>
     <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]' options=""></quantum-annotation>
     <quantum-chart-zoom responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data='[]' options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart-zoom>
   </div>
-  <!--<quantum-toggle id="timeSwitch" style="margin-top: 10px;" ></quantum-toggle>-->
 
   <!-- synchronizes zoom on graphs -->
   <script language="JavaScript">

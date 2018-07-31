@@ -152,6 +152,7 @@ export class QuantumChartZoom{
     this._chart.xMinView += offset;
     this._chart.xMaxView += offset;
     this._xView = JSON.stringify({min: this._chart.xMinView, max:this._chart.xMaxView});
+    this.boundsDidChange.emit({ bounds: {min: this._chart.xMinView, max: this._chart.xMaxView}});
     this.wc.forceUpdate();
   }
 
@@ -165,10 +166,15 @@ export class QuantumChartZoom{
   }
 
   zoomReset() {
+    this._chart.xMinView = this._chart.xMin;
+    this._chart.xMaxView = this._chart.xMax;
+    this._chart.yMinView = this._chart.yMin;
+    this._chart.yMaxView = this._chart.yMax;
     this._xView = JSON.stringify({min: this._chart.xMin, max:this._chart.xMax});
     this._yView = JSON.stringify({min: this._chart.yMin, max: this._chart.yMax});
     this._slider.x.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
     this._slider.y.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
+    this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax }});
     this.wc.forceUpdate();
   }
 
@@ -193,8 +199,7 @@ export class QuantumChartZoom{
           xView={this._xView}
           yView={this._yView}
         />
-        <quantum-toggle id="timeSwitch" ></quantum-toggle>
-        <button type="button" onClick={() => this.zoomReset()}>
+        <button id="reset" type="button" onClick={() => this.zoomReset()}>
             ZooM ReseT
         </button>
         <quantum-horizontal-zoom-slider id="xSlider" width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>

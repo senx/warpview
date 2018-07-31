@@ -56,7 +56,7 @@ export class QuantumVerticalZoomSlider {
   @Watch("height")
   initSize(newValue: number, oldValue: number) {
     if (oldValue !== newValue) {
-      this._rail.style.height = (0.97 * newValue).toString() + "px";
+      this._rail.style.height = (0.95 * newValue).toString() + "px";
       console.log("height", this._rail.style.height);
     }
   }

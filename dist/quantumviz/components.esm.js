@@ -187,7 +187,7 @@ var QuantumToggleComponent = /** @class **/ (function() {
   QuantumToggle.is = 'quantum-toggle';
   QuantumToggle.getModule = function(opts) {
     
-    return import('./quantum-chart-zoom.js').then(function(m) {
+    return import('./quantum-toggle.js').then(function(m) {
         return m.QuantumToggle;
       });
 
