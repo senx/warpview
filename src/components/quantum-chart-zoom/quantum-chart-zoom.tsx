@@ -202,14 +202,8 @@ export class QuantumChartZoom{
           xView={this._xView}
           yView={this._yView}
         />
-<<<<<<< HEAD
         <button id="reset" type="button" onClick={() => this.zoomReset()}>
-            ZooM ReseT
-=======
-        <quantum-toggle id="timeSwitch" />
-        <button type="button" onClick={() => this.zoomReset()}>
             Zoom Reset
->>>>>>> 0a4ba1dac32dcdcb58dd49e98cdb69f3ffd94bd9
         </button>
         <div id="xSliderWrapper">
         <quantum-horizontal-zoom-slider id="xSlider" width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
