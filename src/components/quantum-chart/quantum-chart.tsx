@@ -6,7 +6,7 @@ import {
   EventEmitter,
   Prop,
   Watch,
-  Listen
+  Listen, Method
 } from "@stencil/core";
 import {GTSLib} from "../../gts.lib";
 //import 'chartjs-plugin-zoom';
@@ -63,6 +63,11 @@ export class QuantumChart {
       class: ""
     }
   };
+
+  @Method()
+  toBase64Image() {
+    return this._chart.toBase64Image();
+  }
 
   @Watch("data")
   redraw(newValue: string, oldValue: string) {
@@ -307,7 +312,7 @@ export class QuantumChart {
               let ds = {
                 label: label,
                 data: data,
-                pointRadius: 1,
+                pointRadius: 0,
                 fill: false,
                 steppedLine: this.isStepped(),
                 borderColor: color,
@@ -324,6 +329,8 @@ export class QuantumChart {
                   case "area":
                     ds.fill = true;
                 }
+              } else {
+                ds["lineTension"] = 0;
               }
               datasets.push(ds);
               pos++;
@@ -475,8 +482,6 @@ export class QuantumChart {
 
   componentDidLoad() {
     this.drawChart();
-    //this.xSliderInit();
-    //this.ySliderInit();
   }
 
   render() {

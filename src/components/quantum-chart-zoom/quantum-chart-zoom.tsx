@@ -1,4 +1,5 @@
 import {Component, Element, Event, EventEmitter, Listen, Prop} from "@stencil/core";
+import {QuantumChart} from "../quantum-chart/quantum-chart";
 
 @Component({
   tag: "quantum-chart-zoom",
@@ -38,7 +39,7 @@ export class QuantumChartZoom{
 
   private _xView = "{}";
   private _yView = "{}";
-
+  private png: string;
   private _slider = {
     x:{
       element: null,
@@ -81,6 +82,8 @@ export class QuantumChartZoom{
     this.xSliderInit();
     this.ySliderInit();
     this.wc.forceUpdate();
+    const chart: any = this.el.shadowRoot.querySelector("#myChart");
+    this.png = chart.toBase64Image();
   }
 
   @Listen("xZoom")
@@ -186,23 +189,34 @@ export class QuantumChartZoom{
           alone={false}
           unit={this.unit}
           type={this.type}
-          chart-title={this.chartTitle}
+          chartTitle={this.chartTitle}
           responsive={this.responsive} 
           show-legend={this.showLegend}
           data={this.data}
-          hidden-data={this.hiddenData}
+          hiddenData={this.hiddenData}
           options={this.options}
           width={this.width}
           height={this.height}
-          time-min={this.timeMin}
-          time-max={this.timeMax}
+          timeMin={this.timeMin}
+          timeMax={this.timeMax}
           xView={this._xView}
           yView={this._yView}
         />
+<<<<<<< HEAD
         <button id="reset" type="button" onClick={() => this.zoomReset()}>
             ZooM ReseT
+=======
+        <quantum-toggle id="timeSwitch" />
+        <button type="button" onClick={() => this.zoomReset()}>
+            Zoom Reset
+>>>>>>> 0a4ba1dac32dcdcb58dd49e98cdb69f3ffd94bd9
         </button>
+        <div id="xSliderWrapper">
         <quantum-horizontal-zoom-slider id="xSlider" width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
+          <div class="imgWrapper">
+        <img src={this.png} />
+          </div>
+        </div>
       </div>
     );
   }

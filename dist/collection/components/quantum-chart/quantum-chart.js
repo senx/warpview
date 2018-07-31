@@ -38,6 +38,9 @@ export class QuantumChart {
             }
         };
     }
+    toBase64Image() {
+        return this._chart.toBase64Image();
+    }
     redraw(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
@@ -264,7 +267,7 @@ export class QuantumChart {
                             let ds = {
                                 label: label,
                                 data: data,
-                                pointRadius: 1,
+                                pointRadius: 0,
                                 fill: false,
                                 steppedLine: this.isStepped(),
                                 borderColor: color,
@@ -281,6 +284,9 @@ export class QuantumChart {
                                     case "area":
                                         ds.fill = true;
                                 }
+                            }
+                            else {
+                                ds["lineTension"] = 0;
                             }
                             datasets.push(ds);
                             pos++;
@@ -431,8 +437,6 @@ export class QuantumChart {
     }
     componentDidLoad() {
         this.drawChart();
-        //this.xSliderInit();
-        //this.ySliderInit();
     }
     render() {
         return (h("div", null,
@@ -491,6 +495,9 @@ export class QuantumChart {
         "timeMin": {
             "type": Number,
             "attr": "time-min"
+        },
+        "toBase64Image": {
+            "method": true
         },
         "type": {
             "type": String,

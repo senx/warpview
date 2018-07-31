@@ -1,4 +1,6 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class QuantumChart {
     alone: boolean;
@@ -26,6 +28,7 @@ export declare class QuantumChart {
     private _xSlider;
     private _ySlider;
     private _config;
+    toBase64Image(): any;
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: string, oldValue: string): void;

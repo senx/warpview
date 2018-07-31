@@ -1,4 +1,6 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class QuantumChartZoom {
     unit: string;
@@ -19,6 +21,7 @@ export declare class QuantumChartZoom {
     private _chart;
     private _xView;
     private _yView;
+    private png;
     private _slider;
     chartInfosWatcher(event: CustomEvent): void;
     xSliderInit(): void;

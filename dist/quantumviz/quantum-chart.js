@@ -1,7 +1,11 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
+<<<<<<< HEAD
 import { a as Chart, b as moment } from './chunk-35f9f27a.js';
+=======
+import { a as Chart, b as moment } from './chunk-d48f8ecd.js';
+>>>>>>> 0a4ba1dac32dcdcb58dd49e98cdb69f3ffd94bd9
 import { a as GTSLib } from './chunk-cadd3091.js';
 import './chunk-ee323282.js';
 
@@ -40,6 +44,9 @@ class QuantumChart {
                 class: ""
             }
         };
+    }
+    toBase64Image() {
+        return this._chart.toBase64Image();
     }
     redraw(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -267,7 +274,7 @@ class QuantumChart {
                             let ds = {
                                 label: label,
                                 data: data,
-                                pointRadius: 1,
+                                pointRadius: 0,
                                 fill: false,
                                 steppedLine: this.isStepped(),
                                 borderColor: color,
@@ -284,6 +291,9 @@ class QuantumChart {
                                     case "area":
                                         ds.fill = true;
                                 }
+                            }
+                            else {
+                                ds["lineTension"] = 0;
                             }
                             datasets.push(ds);
                             pos++;
@@ -434,8 +444,6 @@ class QuantumChart {
     }
     componentDidLoad() {
         this.drawChart();
-        //this.xSliderInit();
-        //this.ySliderInit();
     }
     render() {
         return (h("div", null,
@@ -494,6 +502,9 @@ class QuantumChart {
         "timeMin": {
             "type": Number,
             "attr": "time-min"
+        },
+        "toBase64Image": {
+            "method": true
         },
         "type": {
             "type": String,
