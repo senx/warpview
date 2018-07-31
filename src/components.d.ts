@@ -201,6 +201,7 @@ declare global {
       'showLegend': boolean;
       'timeMax': number;
       'timeMin': number;
+      'toBase64Image': () => any;
       'type': string;
       'unit': string;
       'width': string;

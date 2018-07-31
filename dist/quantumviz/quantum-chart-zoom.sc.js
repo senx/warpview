@@ -64,6 +64,8 @@ class QuantumChartZoom {
         this.xSliderInit();
         this.ySliderInit();
         this.wc.forceUpdate();
+        const chart = this.el.shadowRoot.querySelector("#myChart");
+        this.png = chart.toBase64Image();
     }
     xZoomListener(event) {
         let xMin = this._chart.xMinView;
@@ -138,10 +140,13 @@ class QuantumChartZoom {
     render() {
         return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
-            h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, "chart-title": this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, "hidden-data": this.hiddenData, options: this.options, width: this.width, height: this.height, "time-min": this.timeMin, "time-max": this.timeMax, xView: this._xView, yView: this._yView }),
+            h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this.options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("quantum-toggle", { id: "timeSwitch" }),
-            h("button", { type: "button", onClick: () => this.zoomReset() }, "ZooM ReseT"),
-            h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize })));
+            h("button", { type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
+            h("div", { id: "xSliderWrapper" },
+                h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }),
+                h("div", { class: "imgWrapper" },
+                    h("img", { src: this.png })))));
     }
     static get is() { return "quantum-chart-zoom"; }
     static get encapsulation() { return "shadow"; }
@@ -224,7 +229,7 @@ class QuantumChartZoom {
             "name": "ySliderValueChanged",
             "method": "ySliderListener"
         }]; }
-    static get style() { return "[data-quantum-chart-zoom-host]   .chart-container[data-quantum-chart-zoom] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n[data-quantum-chart-zoom-host]   .wrapper[data-quantum-chart-zoom] {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 30px;\n  margin: 10px; }\n\n[data-quantum-chart-zoom-host]   #ySlider[data-quantum-chart-zoom] {\n  grid-row: 1;\n  grid-column: 1; }\n\n[data-quantum-chart-zoom-host]   #xSlider[data-quantum-chart-zoom] {\n  grid-row: 2;\n  grid-column: 2; }\n\n[data-quantum-chart-zoom-host]   #myChart[data-quantum-chart-zoom] {\n  grid-row: 1;\n  grid-column: 2; }"; }
+    static get style() { return "[data-quantum-chart-zoom-host]   .chart-container[data-quantum-chart-zoom] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n[data-quantum-chart-zoom-host]   .wrapper[data-quantum-chart-zoom] {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 100px;\n  margin: 10px; }\n\n[data-quantum-chart-zoom-host]   #ySlider[data-quantum-chart-zoom] {\n  grid-row: 1;\n  grid-column: 1; }\n\n[data-quantum-chart-zoom-host]   #xSliderWrapper[data-quantum-chart-zoom] {\n  grid-row: 2;\n  grid-column: 2; }\n  [data-quantum-chart-zoom-host]   #xSliderWrapper[data-quantum-chart-zoom]   .imgWrapper[data-quantum-chart-zoom] {\n    position: absolute;\n    height: 100px;\n    width: 100%;\n    margin-left: 150px;\n    overflow: hidden;\n    z-index: 1; }\n    [data-quantum-chart-zoom-host]   #xSliderWrapper[data-quantum-chart-zoom]   .imgWrapper[data-quantum-chart-zoom]   img[data-quantum-chart-zoom] {\n      position: relative;\n      height: 100%;\n      width: 100%;\n      margin-left: -150px; }\n  [data-quantum-chart-zoom-host]   #xSliderWrapper[data-quantum-chart-zoom]   quantum-horizontal-zoom-slider[data-quantum-chart-zoom] {\n    position: absolute;\n    height: 100px;\n    width: 100%;\n    z-index: 10; }\n\n[data-quantum-chart-zoom-host]   #myChart[data-quantum-chart-zoom] {\n  grid-row: 1;\n  grid-column: 2; }"; }
 }
 
 class QuantumHorizontalZoomSlider {

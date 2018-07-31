@@ -275,6 +275,11 @@
           ]
         }
       ],
+      "methods": [
+        {
+          "name": "toBase64Image"
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
