@@ -27,6 +27,6 @@ export declare class QuantumHorizontalZoomSlider {
     dragX(event: any, elem: any): void;
     stopDrag(elem: any): void;
     xWheel(event: any): void;
-    yWheel(event: any): void;
+    positionClick(event: any): void;
     render(): JSX.Element;
 }

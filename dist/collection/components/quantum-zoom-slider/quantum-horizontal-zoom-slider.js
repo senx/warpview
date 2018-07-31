@@ -44,32 +44,35 @@ export class QuantumHorizontalZoomSlider {
         event.preventDefault();
         let me = this;
         this.dimsX(event);
-        this._rail.onmousemove = (event) => {
-            me.dragX(event, me);
-        };
-        this._cursor.onmouseup = (event) => {
-            me.stopDrag(me);
-        };
-        this._rail.onmouseup = (event) => {
-            me.stopDrag(me);
-        };
-        this._rail.onmouseout = (event) => {
-            me.stopDrag(me);
-        };
+        this._rail.onmousemove = (event) => { me.dragX(event, me); };
+        this._cursor.onmouseup = (event) => { me.stopDrag(me); };
+        this._rail.onmouseup = (event) => { me.stopDrag(me); };
+        this._rail.onmouseout = (event) => { me.stopDrag(me); };
     }
-    dimsX(event) {
-        let railDims = this._rail.getBoundingClientRect();
-        let cursorDims = this._cursor.getBoundingClientRect();
+    /*
+      dimsX(event) {
+        let railDims = this._rail.getBoundingClientRect() as DOMRect;
+        let cursorDims = this._cursor.getBoundingClientRect() as DOMRect;
         this._railMin = railDims.x;
         this._railMax = railDims.width + this._railMin;
         this._cursorWidth = cursorDims.width;
         this._mouseCursorLeftOffset = event.x - cursorDims.x;
         this._mouseCursorRightOffset = cursorDims.width - this._mouseCursorLeftOffset;
+      }
+    */
+    dimsX(event) {
+        let railDims = this._rail.getBoundingClientRect();
+        let cursorDims = this._cursor.getBoundingClientRect();
+        this._railMin = this._rail.offsetLeft;
+        this._railMax = railDims.width + this._rail.offsetLeft;
+        this._cursorWidth = cursorDims.width;
+        this._mouseCursorLeftOffset = event.pageX - this._cursor.offsetLeft - this._rail.offsetLeft;
+        this._mouseCursorRightOffset = cursorDims.width - this._mouseCursorLeftOffset;
     }
     dragX(event, elem) {
         event.preventDefault();
-        if ((event.clientX - elem._mouseCursorLeftOffset) >= elem._railMin + 1 && (event.clientX + elem._mouseCursorRightOffset) <= elem._railMax - 1) {
-            let v = event.clientX - elem._rail.offsetLeft - elem._mouseCursorLeftOffset;
+        if ((event.pageX - elem._mouseCursorLeftOffset) >= elem._railMin + 1 && (event.pageX + elem._mouseCursorRightOffset) <= elem._railMax - 1) {
+            let v = event.pageX - elem._rail.offsetLeft - elem._mouseCursorLeftOffset;
             v = v < 0 ? 0 : v;
             elem._cursor.style.left = v + "px";
             let value = ((v) / ((this._railMax - this._railMin) - this._cursorWidth)) * (this.maxValue - this.minValue) + this.minValue;
@@ -88,11 +91,10 @@ export class QuantumHorizontalZoomSlider {
         let coef = (event.pageX - this._rail.offsetLeft) / railDims.width;
         this.xZoom.emit({ zoomValue: { coef: coef, zoomType: event.deltaY * -1 } });
     }
-    yWheel(event) {
-        event.preventDefault();
+    positionClick(event) {
     }
     render() {
-        return (h("div", { id: "rail", onWheel: (event) => this.xWheel(event) },
+        return (h("div", { id: "rail", onWheel: (event) => this.xWheel(event), onClick: (event => this.positionClick(event)) },
             h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
     }
     static get is() { return "quantum-horizontal-zoom-slider"; }

@@ -1,11 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-<<<<<<< HEAD
 import { a as Chart } from './chunk-35f9f27a.js';
-=======
-import { a as Chart } from './chunk-d48f8ecd.js';
->>>>>>> 0a4ba1dac32dcdcb58dd49e98cdb69f3ffd94bd9
 import { a as GTSLib } from './chunk-cadd3091.js';
 import './chunk-ee323282.js';
 

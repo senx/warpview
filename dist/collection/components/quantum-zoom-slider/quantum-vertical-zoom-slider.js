@@ -44,18 +44,10 @@ export class QuantumVerticalZoomSlider {
         event.preventDefault();
         let me = this;
         this.dimsY(event);
-        this._rail.onmousemove = (event) => {
-            me.dragY(event, me);
-        };
-        this._cursor.onmouseup = (event) => {
-            me.stopDrag(me);
-        };
-        this._rail.onmouseup = (event) => {
-            me.stopDrag(me);
-        };
-        this._rail.onmouseout = (event) => {
-            me.stopDrag(me);
-        };
+        this._rail.onmousemove = (event) => { me.dragY(event, me); };
+        this._cursor.onmouseup = (event) => { me.stopDrag(me); };
+        this._rail.onmouseup = (event) => { me.stopDrag(me); };
+        this._rail.onmouseout = (event) => { me.stopDrag(me); };
     }
     dimsY(event) {
         let railDims = this._rail.getBoundingClientRect();

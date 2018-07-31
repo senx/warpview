@@ -208,7 +208,7 @@ export class QuantumChartZoom{
         <div id="xSliderWrapper">
         <quantum-horizontal-zoom-slider id="xSlider" width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
           <div class="imgWrapper">
-        <img src={this.png} />
+            <img src={this.png} />
           </div>
         </div>
       </div>
