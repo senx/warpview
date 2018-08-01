@@ -144,9 +144,7 @@ export class QuantumChartZoom {
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this.options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
             h("div", { id: "xSliderWrapper" },
-                h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }),
-                h("div", { class: "imgWrapper" },
-                    h("img", { src: this.png })))));
+                h("quantum-horizontal-zoom-map", { id: "xSlider", img: this.png, width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }))));
     }
     static get is() { return "quantum-chart-zoom"; }
     static get encapsulation() { return "shadow"; }

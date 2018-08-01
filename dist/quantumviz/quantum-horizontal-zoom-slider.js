@@ -1,5 +1,9 @@
-import { GTSLib } from "../../gts.lib";
-export class QuantumHorizontalZoomSlider {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+import { a as GTSLib } from './chunk-cadd3091.js';
+
+class QuantumHorizontalZoomSlider {
     constructor() {
         this.cursorSize = "{}";
         this.config = '{}';
@@ -137,5 +141,7 @@ export class QuantumHorizontalZoomSlider {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "/**style-placeholder:quantum-horizontal-zoom-slider:**/"; }
+    static get style() { return ":host #rail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  height: 20px;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0;\n  float: right;\n  margin: 0 15px 0 0; }\n\n:host #rail:hover {\n  opacity: 1; }\n\n:host #cursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 20px;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: left .01s;\n  transition: left .01s; }"; }
 }
+
+export { QuantumHorizontalZoomSlider };

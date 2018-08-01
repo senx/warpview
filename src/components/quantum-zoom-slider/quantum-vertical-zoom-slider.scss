@@ -1,6 +1,6 @@
 :host {
 
-  #rail {
+  #vrail {
     position: relative;
     background-color: var(--quantum-bg-rail-color, grey);
     opacity: 0.7;
@@ -11,11 +11,11 @@
     padding: 0 0 0 0;
   }
 
-  #rail:hover {
+  #vrail:hover {
     opacity: 1;
   }
 
-  #cursor {
+  #vcursor {
     background-color: var(--quantum-bg-cursor-color, red);
     position: relative;
     cursor: move;

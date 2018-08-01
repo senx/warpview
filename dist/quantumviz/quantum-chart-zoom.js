@@ -149,9 +149,7 @@ class QuantumChartZoom {
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this.options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
             h("div", { id: "xSliderWrapper" },
-                h("quantum-horizontal-zoom-slider", { id: "xSlider", width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }),
-                h("div", { class: "imgWrapper" },
-                    h("img", { src: this.png })))));
+                h("quantum-horizontal-zoom-map", { id: "xSlider", img: this.png, width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }))));
     }
     static get is() { return "quantum-chart-zoom"; }
     static get encapsulation() { return "shadow"; }
@@ -234,10 +232,10 @@ class QuantumChartZoom {
             "name": "ySliderValueChanged",
             "method": "ySliderListener"
         }]; }
-    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n:host .wrapper {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 100px;\n  margin: 10px; }\n\n:host #ySlider {\n  margin-top: 25px;\n  grid-row: 1;\n  grid-column: 1; }\n\n:host #xSliderWrapper {\n  grid-row: 2;\n  grid-column: 2; }\n  :host #xSliderWrapper .imgWrapper {\n    position: absolute;\n    height: 100px;\n    width: 100%;\n    margin-left: 150px;\n    overflow: hidden;\n    z-index: 1; }\n    :host #xSliderWrapper .imgWrapper img {\n      position: relative;\n      height: 100%;\n      width: 100%;\n      margin-left: -150px; }\n  :host #xSliderWrapper quantum-horizontal-zoom-slider {\n    position: absolute;\n    height: 100px;\n    width: 100%;\n    z-index: 10; }\n\n:host #myChart {\n  grid-row: 1;\n  grid-column: 2; }\n\n:host #reset {\n  background-color: greenyellow;\n  border-radius: var(--quantum-reset-border-radius, 0px);\n  border-color: var(--quantum-reset-border-color, black);\n  width: var(--quantum-reset-width, 10px);\n  height: var(--quantum-reset-height, 10px); }"; }
+    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }\n\n:host .wrapper {\n  display: grid;\n  grid-template-columns: 30px auto;\n  grid-template-rows: auto 100px;\n  margin: 10px; }\n\n:host #ySlider {\n  margin-top: 25px;\n  grid-row: 1;\n  grid-column: 1; }\n\n:host #xSliderWrapper {\n  grid-row: 2;\n  grid-column: 2;\n  /*\n    .imgWrapper {\n      position: absolute;\n      height: 100px;\n      width: 100%;\n      margin-left: 150px;\n      overflow: hidden;\n\n      z-index: 1;\n      img {\n        position: relative;\n        height: 100%;\n        width: 100%;\n        margin-left: -150px;\n      }\n    }\n    */ }\n  :host #xSliderWrapper quantum-horizontal-zoom-map {\n    height: 100px;\n    width: 100%;\n    z-index: 10; }\n\n:host #myChart {\n  grid-row: 1;\n  grid-column: 2; }\n\n:host #reset {\n  background-color: greenyellow;\n  border-radius: var(--quantum-reset-border-radius, 0px);\n  border-color: var(--quantum-reset-border-color, black);\n  width: var(--quantum-reset-width, 10px);\n  height: var(--quantum-reset-height, 10px); }"; }
 }
 
-class QuantumHorizontalZoomSlider {
+class QuantumHorizontalZoomMap {
     constructor() {
         this.cursorSize = "{}";
         this.config = '{}';
@@ -268,7 +266,8 @@ class QuantumHorizontalZoomSlider {
     initSize(newValue, oldValue) {
         if (oldValue !== newValue) {
             this._rail.style.width = (0.94 * newValue).toString() + "px";
-            console.log("width", this._rail.style.width);
+            //console.log("width", this._rail.style.width);
+            this._img.style.width = (newValue + 18).toString() + "px";
         }
     }
     componentWillLoad() {
@@ -277,15 +276,17 @@ class QuantumHorizontalZoomSlider {
     componentDidLoad() {
         this._rail = this.el.shadowRoot.querySelector("#rail");
         this._cursor = this.el.shadowRoot.querySelector("#cursor");
+        this._img = this.el.shadowRoot.querySelector("#img");
     }
     mouseDown(event) {
         event.preventDefault();
         let me = this;
         this.dimsX(event);
-        this._rail.onmousemove = (event) => { me.dragX(event, me); };
-        this._cursor.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseout = (event) => { me.stopDrag(me); };
+        this._rail.onmousemove = (event) => { this.dragX(event, me); };
+        this._cursor.onmouseup = (event) => { this.stopDrag(me); };
+        this._rail.onmouseup = (event) => { this.stopDrag(me); };
+        this._cursor.onmouseout = (event) => { this.stopDrag(me); };
+        console.log("click", event.pageX - this._rail.offsetLeft);
     }
     /*
       dimsX(event) {
@@ -330,12 +331,34 @@ class QuantumHorizontalZoomSlider {
         this.xZoom.emit({ zoomValue: { coef: coef, zoomType: event.deltaY * -1 } });
     }
     positionClick(event) {
+        event.preventDefault();
+        if (event.pageX < this._railMin + this._cursor.offsetLeft || event.pageX > this._railMin + this._cursor.offsetLeft + this._cursorWidth) {
+            this.dimsX(event);
+            let halfCursorWidth = this._cursorWidth / 2;
+            let v;
+            if (event.pageX - halfCursorWidth < this._rail.offsetLeft) {
+                v = 0;
+                this._cursor.style.left = "1px";
+            }
+            else if (event.pageX + halfCursorWidth > this._railMax) {
+                v = this._railMax - this._railMin - this._cursorWidth;
+                this._cursor.style.left = v.toString() + "px";
+            }
+            else {
+                v = event.pageX - this._railMin - halfCursorWidth;
+                //v = event.pageX - this._rail.offsetLeft - halfCursorWidth;
+                this._cursor.style.left = v.toString() + "px";
+            }
+            let value = ((v) / ((this._railMax - this._railMin) - this._cursorWidth)) * (this.maxValue - this.minValue) + this.minValue;
+            this.xSliderValueChanged.emit({ sliderValue: value });
+        }
     }
     render() {
-        return (h("div", { id: "rail", onWheel: (event) => this.xWheel(event), onClick: (event => this.positionClick(event)) },
-            h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
+        return (h("div", { id: "rail", onWheel: (event) => this.xWheel(event), onMouseUp: (event => this.positionClick(event)) },
+            h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) }),
+            h("img", { id: "img", src: this.img })));
     }
-    static get is() { return "quantum-horizontal-zoom-slider"; }
+    static get is() { return "quantum-horizontal-zoom-map"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "config": {
@@ -349,6 +372,10 @@ class QuantumHorizontalZoomSlider {
         },
         "el": {
             "elementRef": true
+        },
+        "img": {
+            "type": String,
+            "attr": "img"
         },
         "maxValue": {
             "type": Number,
@@ -377,7 +404,7 @@ class QuantumHorizontalZoomSlider {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ":host #rail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  height: 20px;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0;\n  float: right;\n  margin: 0 15px 0 0; }\n\n:host #rail:hover {\n  opacity: 1; }\n\n:host #cursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 20px;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: left .01s;\n  transition: left .01s; }"; }
+    static get style() { return ":host #rail {\n  position: relative;\n  border: 1px solid black;\n  float: right;\n  margin: 0 0 0 100px;\n  position: absolute;\n  height: 100px;\n  width: 100%;\n  overflow: hidden; }\n\n:host #img {\n  position: absolute;\n  height: 100px;\n  /*margin: -150px 0 -15px -155px;*/\n  top: 0;\n  right: -1.5%; }\n\n:host #cursor:hover {\n  opacity: 0.6; }\n\n:host #cursor {\n  z-index: 1;\n  opacity: 0.3;\n  background-color: grey;\n  position: relative;\n  cursor: move;\n  width: 100%;\n  height: 100%;\n  border-left: 3px solid red;\n  border-right: 3px solid red;\n  -webkit-transition: left .01s;\n  transition: left .01s; }"; }
 }
 
 class QuantumVerticalZoomSlider {
@@ -418,13 +445,14 @@ class QuantumVerticalZoomSlider {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     }
     componentDidLoad() {
-        this._rail = this.el.shadowRoot.querySelector("#rail");
-        this._cursor = this.el.shadowRoot.querySelector("#cursor");
+        this._rail = this.el.shadowRoot.querySelector("#vrail");
+        this._cursor = this.el.shadowRoot.querySelector("#vcursor");
     }
     mouseDown(event) {
         event.preventDefault();
         let me = this;
         this.dimsY(event);
+        console.log("vertical rail", event.pageY - this._rail.offsetTop);
         this._rail.onmousemove = (event) => { me.dragY(event, me); };
         this._cursor.onmouseup = (event) => { me.stopDrag(me); };
         this._rail.onmouseup = (event) => { me.stopDrag(me); };
@@ -463,8 +491,8 @@ class QuantumVerticalZoomSlider {
         this.yZoom.emit({ zoomValue: { coef: coef, zoomType: event.deltaY * -1 } });
     }
     render() {
-        return (h("div", { id: "rail", onWheel: (event) => this.yWheel(event) },
-            h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
+        return (h("div", { id: "vrail", onWheel: (event) => this.yWheel(event) },
+            h("div", { id: "vcursor", onMouseDown: (event) => this.mouseDown(event) })));
     }
     static get is() { return "quantum-vertical-zoom-slider"; }
     static get encapsulation() { return "shadow"; }
@@ -508,7 +536,7 @@ class QuantumVerticalZoomSlider {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ":host #rail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  width: 20px;\n  margin: 0 0 20px 0;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0; }\n\n:host #rail:hover {\n  opacity: 1; }\n\n:host #cursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 20px;\n  height: 100%;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: top .01s;\n  transition: top .01s; }"; }
+    static get style() { return ":host #vrail {\n  position: relative;\n  background-color: var(--quantum-bg-rail-color, grey);\n  opacity: 0.7;\n  width: 20px;\n  margin: 0 0 20px 0;\n  border: 1px solid var(--quantum-border-rail-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  padding: 0 0 0 0; }\n\n:host #vrail:hover {\n  opacity: 1; }\n\n:host #vcursor {\n  background-color: var(--quantum-bg-cursor-color, red);\n  position: relative;\n  cursor: move;\n  width: 20px;\n  height: 100%;\n  border: 1px solid var(--quantum-border-cursor-color, black);\n  border-radius: var(--quantum-border-radius, 6px);\n  -webkit-transition: top .01s;\n  transition: top .01s; }"; }
 }
 
-export { QuantumChartZoom, QuantumHorizontalZoomSlider, QuantumVerticalZoomSlider };
+export { QuantumChartZoom, QuantumHorizontalZoomMap, QuantumVerticalZoomSlider };

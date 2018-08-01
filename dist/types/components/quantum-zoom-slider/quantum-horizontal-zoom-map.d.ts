@@ -1,17 +1,19 @@
 import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
-export declare class QuantumHorizontalZoomSlider {
+export declare class QuantumHorizontalZoomMap {
     width: number;
     maxValue: number;
     minValue: number;
     cursorSize: string;
     config: string;
+    img: string;
     el: HTMLElement;
     xSliderValueChanged: EventEmitter;
     xZoom: EventEmitter;
     private _config;
     private _rail;
     private _cursor;
+    private _img;
     private _cursorWidth;
     private _cursorMinWidth;
     private _railMin;
@@ -27,5 +29,6 @@ export declare class QuantumHorizontalZoomSlider {
     dragX(event: any, elem: any): void;
     stopDrag(elem: any): void;
     xWheel(event: any): void;
+    positionClick(event: any): void;
     render(): JSX.Element;
 }

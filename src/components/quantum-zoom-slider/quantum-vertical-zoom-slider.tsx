@@ -66,15 +66,15 @@ export class QuantumVerticalZoomSlider {
   }
 
   componentDidLoad() {
-    this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
-    this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
+    this._rail = this.el.shadowRoot.querySelector("#vrail") as HTMLElement;
+    this._cursor = this.el.shadowRoot.querySelector("#vcursor") as HTMLElement;
   }
 
   mouseDown(event) {
     event.preventDefault();
     let me = this;
     this.dimsY(event);
-    
+    console.log("vertical rail", event.pageY - this._rail.offsetTop);
     this._rail.onmousemove = (event) => {me.dragY(event, me)};
     this._cursor.onmouseup = (event) => {me.stopDrag(me)};
     this._rail.onmouseup = (event) => {me.stopDrag(me)};
@@ -120,8 +120,8 @@ export class QuantumVerticalZoomSlider {
 
   render() {
     return (
-      <div id="rail" onWheel={(event) => this.yWheel(event)}>
-        <div id="cursor" onMouseDown={(event) => this.mouseDown(event)}/>
+      <div id="vrail" onWheel={(event) => this.yWheel(event)}>
+        <div id="vcursor" onMouseDown={(event) => this.mouseDown(event)}/>
       </div>
     );
   }

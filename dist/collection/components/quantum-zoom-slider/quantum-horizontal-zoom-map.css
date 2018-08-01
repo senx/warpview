@@ -1,0 +1,31 @@
+:host #rail {
+  position: relative;
+  border: 1px solid black;
+  float: right;
+  margin: 0 0 0 100px;
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  overflow: hidden; }
+
+:host #img {
+  position: absolute;
+  height: 100px;
+  /*margin: -150px 0 -15px -155px;*/
+  top: 0;
+  right: -1.5%; }
+
+:host #cursor:hover {
+  opacity: 0.6; }
+
+:host #cursor {
+  z-index: 1;
+  opacity: 0.3;
+  background-color: grey;
+  position: relative;
+  cursor: move;
+  width: 100%;
+  height: 100%;
+  border-left: 3px solid red;
+  border-right: 3px solid red;
+  transition: left .01s; }

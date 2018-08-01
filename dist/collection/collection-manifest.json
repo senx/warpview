@@ -300,7 +300,7 @@
       "tag": "quantum-chart-zoom",
       "dependencies": [
         "quantum-chart",
-        "quantum-horizontal-zoom-slider",
+        "quantum-horizontal-zoom-map",
         "quantum-vertical-zoom-slider"
       ],
       "componentClass": "QuantumChartZoom",
@@ -643,6 +643,69 @@
         },
         {
           "event": "heatRadiusDidChange"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-horizontal-zoom-map",
+      "dependencies": [],
+      "componentClass": "QuantumHorizontalZoomMap",
+      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-map.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-zoom-slider/quantum-horizontal-zoom-map.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "config",
+          "type": "String",
+          "attr": "config"
+        },
+        {
+          "name": "cursorSize",
+          "type": "String",
+          "attr": "cursor-size",
+          "watch": [
+            "changeCursorSize"
+          ]
+        },
+        {
+          "name": "img",
+          "type": "String",
+          "attr": "img"
+        },
+        {
+          "name": "maxValue",
+          "type": "Number",
+          "attr": "max-value"
+        },
+        {
+          "name": "minValue",
+          "type": "Number",
+          "attr": "min-value"
+        },
+        {
+          "name": "width",
+          "type": "Number",
+          "attr": "width",
+          "watch": [
+            "initSize"
+          ]
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "xSliderValueChanged"
+        },
+        {
+          "event": "xZoom"
         }
       ],
       "shadow": true

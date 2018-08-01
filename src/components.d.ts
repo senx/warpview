@@ -743,6 +743,51 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumHorizontalZoomMap {
+      'config': string;
+      'cursorSize': string;
+      'img': string;
+      'maxValue': number;
+      'minValue': number;
+      'width': number;
+    }
+  }
+
+  interface HTMLQuantumHorizontalZoomMapElement extends StencilComponents.QuantumHorizontalZoomMap, HTMLStencilElement {}
+
+  var HTMLQuantumHorizontalZoomMapElement: {
+    prototype: HTMLQuantumHorizontalZoomMapElement;
+    new (): HTMLQuantumHorizontalZoomMapElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-horizontal-zoom-map': HTMLQuantumHorizontalZoomMapElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-horizontal-zoom-map': HTMLQuantumHorizontalZoomMapElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-horizontal-zoom-map': JSXElements.QuantumHorizontalZoomMapAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumHorizontalZoomMapAttributes extends HTMLAttributes {
+      'config'?: string;
+      'cursorSize'?: string;
+      'img'?: string;
+      'maxValue'?: number;
+      'minValue'?: number;
+      'onXSliderValueChanged'?: (event: CustomEvent) => void;
+      'onXZoom'?: (event: CustomEvent) => void;
+      'width'?: number;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumHorizontalZoomSlider {
       'config': string;
       'cursorSize': string;

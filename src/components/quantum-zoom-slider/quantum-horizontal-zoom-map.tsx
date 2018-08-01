@@ -2,18 +2,19 @@ import {Component, Prop, Element, EventEmitter, Event, Watch} from '@stencil/cor
 import {GTSLib} from "../../gts.lib";
 
 @Component({
-  tag: 'quantum-horizontal-zoom-slider',
-  styleUrl: 'quantum-horizontal-zoom-slider.scss',
+  tag: 'quantum-horizontal-zoom-map',
+  styleUrl: 'quantum-horizontal-zoom-map.scss',
   shadow: true
 })
 
-export class QuantumHorizontalZoomSlider {
+export class QuantumHorizontalZoomMap {
 
   @Prop() width: number;
   @Prop() maxValue: number;
   @Prop() minValue: number;
   @Prop() cursorSize: string = "{}";
   @Prop() config: string = '{}';
+  @Prop() img: string;
 
   @Element() el: HTMLElement;
 
@@ -31,6 +32,7 @@ export class QuantumHorizontalZoomSlider {
   };
   private _rail: HTMLElement;
   private _cursor: HTMLElement;
+  private _img: HTMLElement;
   private _cursorWidth;
   private _cursorMinWidth = 30;
   private _railMin;
@@ -57,7 +59,8 @@ export class QuantumHorizontalZoomSlider {
   initSize(newValue: number, oldValue: number) {
     if (oldValue !== newValue) {
       this._rail.style.width = (0.94 * newValue).toString() + "px";
-      console.log("width", this._rail.style.width);
+      //console.log("width", this._rail.style.width);
+      this._img.style.width = (newValue + 18).toString() + "px";
     }
   }
 
@@ -68,6 +71,7 @@ export class QuantumHorizontalZoomSlider {
   componentDidLoad() {
     this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
     this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
+    this._img = this.el.shadowRoot.querySelector("#img") as HTMLElement;
   }
 
   mouseDown(event) {
@@ -75,10 +79,11 @@ export class QuantumHorizontalZoomSlider {
     let me = this;
 
     this.dimsX(event);
-    this._rail.onmousemove = (event) => {me.dragX(event, me)};
-    this._cursor.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseout = (event) => {me.stopDrag(me)};
+    this._rail.onmousemove = (event) => {this.dragX(event, me)};
+    this._cursor.onmouseup = (event) => {this.stopDrag(me)};
+    this._rail.onmouseup = (event) => {this.stopDrag(me)};
+    this._cursor.onmouseout = (event) => {this.stopDrag(me)};
+    console.log("click", event.pageX - this._rail.offsetLeft);
   }
 /*
   dimsX(event) {
@@ -129,10 +134,36 @@ export class QuantumHorizontalZoomSlider {
     this.xZoom.emit({zoomValue: {coef: coef, zoomType: event.deltaY * -1}});
   }
 
+  positionClick(event){
+    event.preventDefault();
+    
+    if(event.pageX < this._railMin + this._cursor.offsetLeft || event.pageX > this._railMin + this._cursor.offsetLeft + this._cursorWidth){
+      this.dimsX(event);
+      let halfCursorWidth = this._cursorWidth / 2
+      let v;
+      if(event.pageX - halfCursorWidth < this._rail.offsetLeft){
+        v = 0;
+        this._cursor.style.left = "1px";
+      }else if(event.pageX + halfCursorWidth > this._railMax){
+        v = this._railMax - this._railMin - this._cursorWidth;
+        this._cursor.style.left = v.toString() + "px";
+      }else{
+        v = event.pageX - this._railMin - halfCursorWidth;
+        //v = event.pageX - this._rail.offsetLeft - halfCursorWidth;
+        this._cursor.style.left = v.toString() + "px";
+      }
+     
+      let value = ((v) / ((this._railMax - this._railMin) - this._cursorWidth)) * (this.maxValue - this.minValue) + this.minValue;
+      this.xSliderValueChanged.emit({sliderValue: value});
+    }
+    
+  }
+
   render() {
     return (
-      <div id="rail" onWheel={(event) => this.xWheel(event)}>
+      <div id="rail" onWheel={(event) => this.xWheel(event)} onMouseUp={(event => this.positionClick(event))}>
         <div id="cursor" onMouseDown={(event) => this.mouseDown(event)} />
+        <img id="img" src={this.img} />
       </div>
     );
   }

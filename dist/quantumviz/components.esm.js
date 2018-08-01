@@ -103,13 +103,26 @@ var QuantumHeatmapSlidersComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumHorizontalZoomMapComponent = /** @class **/ (function() {
+  function QuantumHorizontalZoomMap() {
+  }
+  QuantumHorizontalZoomMap.is = 'quantum-horizontal-zoom-map';
+  QuantumHorizontalZoomMap.getModule = function(opts) {
+    
+    return import('./quantum-chart-zoom.js').then(function(m) {
+        return m.QuantumHorizontalZoomMap;
+      });
+
+  }
+});
+
 var QuantumHorizontalZoomSliderComponent = /** @class **/ (function() {
   function QuantumHorizontalZoomSlider() {
   }
   QuantumHorizontalZoomSlider.is = 'quantum-horizontal-zoom-slider';
   QuantumHorizontalZoomSlider.getModule = function(opts) {
     
-    return import('./quantum-chart-zoom.js').then(function(m) {
+    return import('./quantum-horizontal-zoom-slider.js').then(function(m) {
         return m.QuantumHorizontalZoomSlider;
       });
 
@@ -230,6 +243,7 @@ export {
   QuantumGtsTree,
   QuantumHeatmap,
   QuantumHeatmapSliders,
+  QuantumHorizontalZoomMap,
   QuantumHorizontalZoomSlider,
   QuantumPie,
   QuantumPolar,

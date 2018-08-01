@@ -37,13 +37,14 @@ export class QuantumVerticalZoomSlider {
         this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     }
     componentDidLoad() {
-        this._rail = this.el.shadowRoot.querySelector("#rail");
-        this._cursor = this.el.shadowRoot.querySelector("#cursor");
+        this._rail = this.el.shadowRoot.querySelector("#vrail");
+        this._cursor = this.el.shadowRoot.querySelector("#vcursor");
     }
     mouseDown(event) {
         event.preventDefault();
         let me = this;
         this.dimsY(event);
+        console.log("vertical rail", event.pageY - this._rail.offsetTop);
         this._rail.onmousemove = (event) => { me.dragY(event, me); };
         this._cursor.onmouseup = (event) => { me.stopDrag(me); };
         this._rail.onmouseup = (event) => { me.stopDrag(me); };
@@ -82,8 +83,8 @@ export class QuantumVerticalZoomSlider {
         this.yZoom.emit({ zoomValue: { coef: coef, zoomType: event.deltaY * -1 } });
     }
     render() {
-        return (h("div", { id: "rail", onWheel: (event) => this.yWheel(event) },
-            h("div", { id: "cursor", onMouseDown: (event) => this.mouseDown(event) })));
+        return (h("div", { id: "vrail", onWheel: (event) => this.yWheel(event) },
+            h("div", { id: "vcursor", onMouseDown: (event) => this.mouseDown(event) })));
     }
     static get is() { return "quantum-vertical-zoom-slider"; }
     static get encapsulation() { return "shadow"; }

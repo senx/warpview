@@ -206,10 +206,8 @@ export class QuantumChartZoom{
             Zoom Reset
         </button>
         <div id="xSliderWrapper">
-        <quantum-horizontal-zoom-slider id="xSlider" width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
-          <div class="imgWrapper">
-            <img src={this.png} />
-          </div>
+        
+        <quantum-horizontal-zoom-map id="xSlider" img={this.png} width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
         </div>
       </div>
     );
