@@ -1,16 +1,8 @@
-import { GTSLib } from "../../gts.lib";
+import Draggabilly from "draggabilly";
 export class QuantumVerticalZoomSlider {
     constructor() {
         this.cursorSize = "{}";
         this.config = '{}';
-        this._config = {
-            rail: {
-                class: ''
-            },
-            cursor: {
-                class: ''
-            }
-        };
         this._cursorMinHeight = 30;
     }
     changeCursorSize(newValue, oldValue) {
@@ -30,26 +22,43 @@ export class QuantumVerticalZoomSlider {
     initSize(newValue, oldValue) {
         if (oldValue !== newValue) {
             this._rail.style.height = (0.95 * newValue).toString() + "px";
-            console.log("height", this._rail.style.height);
         }
     }
     componentWillLoad() {
-        this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+        //this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
     }
     componentDidLoad() {
         this._rail = this.el.shadowRoot.querySelector("#vrail");
         this._cursor = this.el.shadowRoot.querySelector("#vcursor");
+        let drag = new Draggabilly(this._cursor, {
+            axis: "y",
+            containment: this._rail
+        });
+        drag.on("dragStart", (event, pointer) => {
+            this.dimsY(event);
+        });
+        drag.on("dragMove", (event, pointer, moveVector) => {
+            if ((event.pageY - this._mouseCursorTopOffset) >= this._railMin + 1 && (event.pageY + this._mouseCursorBottomOffset) <= this._railMax - 1) {
+                let v = event.pageY - this._rail.offsetTop - this._mouseCursorTopOffset;
+                v = Math.max(0, v);
+                let value = ((v) / ((this._railMax - this._railMin) - this._cursorHeight)) * (this.maxValue - this.minValue) + this.minValue;
+                value = (this.maxValue - this.minValue) - value;
+                window.setTimeout(() => this.ySliderValueChanged.emit({ sliderValue: value }));
+            }
+        });
     }
-    mouseDown(event) {
+    /*
+      mouseDown(event) {
         event.preventDefault();
         let me = this;
         this.dimsY(event);
         console.log("vertical rail", event.pageY - this._rail.offsetTop);
-        this._rail.onmousemove = (event) => { me.dragY(event, me); };
-        this._cursor.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseup = (event) => { me.stopDrag(me); };
-        this._rail.onmouseout = (event) => { me.stopDrag(me); };
-    }
+        this._rail.onmousemove = (event) => {me.dragY(event, me)};
+        this._cursor.onmouseup = (event) => {me.stopDrag(me)};
+        this._rail.onmouseup = (event) => {me.stopDrag(me)};
+        this._rail.onmouseout = (event) => {me.stopDrag(me)};
+      }
+    */
     dimsY(event) {
         let railDims = this._rail.getBoundingClientRect();
         let cursorDims = this._cursor.getBoundingClientRect();
@@ -59,23 +68,26 @@ export class QuantumVerticalZoomSlider {
         this._mouseCursorTopOffset = event.pageY - this._rail.offsetTop - this._cursor.offsetTop;
         this._mouseCursorBottomOffset = cursorDims.height - this._mouseCursorTopOffset;
     }
-    dragY(event, elem) {
+    /*
+      dragY(event, elem) {
         event.preventDefault();
         if ((event.pageY - elem._mouseCursorTopOffset) >= elem._railMin + 1 && (event.pageY + elem._mouseCursorBottomOffset) <= elem._railMax - 1) {
-            let v = event.pageY - elem._rail.offsetTop - elem._mouseCursorTopOffset;
-            v = v < 0 ? 0 : v;
-            elem._cursor.style.top = v + "px";
-            let value = ((v) / ((this._railMax - this._railMin) - this._cursorHeight)) * (this.maxValue - this.minValue) + this.minValue;
-            value = (this.maxValue - this.minValue) - value;
-            this.ySliderValueChanged.emit({ sliderValue: value });
+          let v = event.pageY - elem._rail.offsetTop - elem._mouseCursorTopOffset;
+          v = v < 0 ? 0 : v;
+          elem._cursor.style.top = v + "px";
+          let value = ((v) / ((this._railMax - this._railMin) - this._cursorHeight)) * (this.maxValue - this.minValue) + this.minValue;
+          value = (this.maxValue - this.minValue) - value;
+          this.ySliderValueChanged.emit({sliderValue: value});
         }
-    }
-    stopDrag(elem) {
+      }
+    
+      stopDrag(elem) {
         elem._rail.onmouseup = null;
         elem._rail.onmousemove = null;
         elem._cursor.onmouseup = null;
         elem._rail.onmouseout = null;
-    }
+      }
+    */
     yWheel(event) {
         event.preventDefault();
         let railDims = this._rail.getBoundingClientRect();
@@ -84,7 +96,7 @@ export class QuantumVerticalZoomSlider {
     }
     render() {
         return (h("div", { id: "vrail", onWheel: (event) => this.yWheel(event) },
-            h("div", { id: "vcursor", onMouseDown: (event) => this.mouseDown(event) })));
+            h("div", { id: "vcursor" })));
     }
     static get is() { return "quantum-vertical-zoom-slider"; }
     static get encapsulation() { return "shadow"; }

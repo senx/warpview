@@ -26,7 +26,7 @@ export class QuantumHorizontalZoomMap {
 
   @Event() xSliderValueChanged: EventEmitter;
   @Event() xZoom: EventEmitter;
-
+/*
   private _config = {
     rail: {
       class: ""
@@ -35,6 +35,7 @@ export class QuantumHorizontalZoomMap {
       class: ""
     }
   };
+  */
   private _rail: HTMLElement;
   private _cursor: HTMLElement;
   private _img: HTMLElement;
@@ -72,13 +73,12 @@ export class QuantumHorizontalZoomMap {
   initSize(newValue: number, oldValue: number) {
     if (oldValue !== newValue) {
       this._rail.style.width = (0.94 * newValue).toString() + "px";
-      //console.log("width", this._rail.style.width);
       this._img.style.width = (newValue + 18).toString() + "px";
     }
   }
 
   componentWillLoad() {
-    this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+    //this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
   }
 
   componentDidLoad() {
@@ -93,15 +93,17 @@ export class QuantumHorizontalZoomMap {
       this.dimsX(event);
     });
     drag.on("dragMove", (event: any, pointer, moveVector) => {
-      let v = event.pageX - this._rail.offsetLeft - this._mouseCursorLeftOffset;
-      v = Math.max(0, v);
-      let value =
-        (v / (this._railMax - this._railMin - this._cursorWidth)) *
-          (this.maxValue - this.minValue) +
-        this.minValue;
-      window.setTimeout(() =>
-        this.xSliderValueChanged.emit({ sliderValue: value })
-      );
+      if ((event.pageX - this._mouseCursorLeftOffset) >= this._railMin + 1 && (event.pageX + this._mouseCursorRightOffset) <= this._railMax - 1) {
+        let v = event.pageX - this._rail.offsetLeft - this._mouseCursorLeftOffset;
+        v = Math.max(0, v);
+        let value =
+          (v / (this._railMax - this._railMin - this._cursorWidth)) *
+            (this.maxValue - this.minValue) +
+          this.minValue;
+        window.setTimeout(() =>
+          this.xSliderValueChanged.emit({ sliderValue: value })
+        );
+      }
     });
   }
 
@@ -141,7 +143,6 @@ export class QuantumHorizontalZoomMap {
         this._cursor.style.left = v.toString() + "px";
       } else {
         v = event.pageX - this._railMin - halfCursorWidth;
-        //v = event.pageX - this._rail.offsetLeft - halfCursorWidth;
         this._cursor.style.left = v.toString() + "px";
       }
 

@@ -37,11 +37,11 @@
     "@stencil/sass": "^0.0.5",
     "@stencil/utils": "0.0.4",
     "@types/chartjs": "0.0.31",
+    "@types/draggabilly": "^2.1.1",
     "@types/jest": "^22.2.3",
     "@types/leaflet": "^1.2.8",
     "@types/leaflet.heat": "^0.2.0",
     "@types/prismjs": "^1.9.0",
-    "@types/draggabilly": "^2.1.1",
     "jest": "^22.4.3"
   },
   "repository": {

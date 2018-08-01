@@ -1,5 +1,6 @@
 import {Component, Prop, Element, EventEmitter, Event, Watch} from '@stencil/core';
 import {GTSLib} from "../../gts.lib";
+import Draggabilly from "draggabilly";
 
 @Component({
   tag: 'quantum-horizontal-zoom-slider',
@@ -20,7 +21,7 @@ export class QuantumHorizontalZoomSlider {
   @Event() xSliderValueChanged: EventEmitter;
   @Event() xZoom: EventEmitter;
 
-
+/*
   private _config = {
     rail: {
       class: ''
@@ -29,6 +30,7 @@ export class QuantumHorizontalZoomSlider {
       class: ''
     }
   };
+  */
   private _rail: HTMLElement;
   private _cursor: HTMLElement;
   private _cursorWidth;
@@ -57,40 +59,37 @@ export class QuantumHorizontalZoomSlider {
   initSize(newValue: number, oldValue: number) {
     if (oldValue !== newValue) {
       this._rail.style.width = (0.94 * newValue).toString() + "px";
-      console.log("width", this._rail.style.width);
     }
   }
 
   componentWillLoad() {
-    this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
+    //this._config = GTSLib.mergeDeep(this._config, JSON.parse(this.config));
   }
 
   componentDidLoad() {
     this._rail = this.el.shadowRoot.querySelector("#rail") as HTMLElement;
     this._cursor = this.el.shadowRoot.querySelector("#cursor") as HTMLElement;
+    let drag = new Draggabilly(this._cursor, {
+      axis: "x",
+      containment: this._rail
+    });
+    drag.on("dragStart", (event, pointer) => {
+      this.dimsX(event);
+    });
+    drag.on("dragMove", (event: any, pointer, moveVector) => {
+      if ((event.pageX - this._mouseCursorLeftOffset) >= this._railMin + 1 && (event.pageX + this._mouseCursorRightOffset) <= this._railMax - 1) {
+        let v = event.pageX - this._rail.offsetLeft - this._mouseCursorLeftOffset;
+        v = Math.max(0, v);
+        let value =
+          (v / (this._railMax - this._railMin - this._cursorWidth)) *
+            (this.maxValue - this.minValue) +
+          this.minValue;
+        window.setTimeout(() =>
+          this.xSliderValueChanged.emit({ sliderValue: value })
+        );
+      }
+    });
   }
-
-  mouseDown(event) {
-    event.preventDefault();
-    let me = this;
-
-    this.dimsX(event);
-    this._rail.onmousemove = (event) => {me.dragX(event, me)};
-    this._cursor.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseup = (event) => {me.stopDrag(me)};
-    this._rail.onmouseout = (event) => {me.stopDrag(me)};
-  }
-/*
-  dimsX(event) {
-    let railDims = this._rail.getBoundingClientRect() as DOMRect;
-    let cursorDims = this._cursor.getBoundingClientRect() as DOMRect;
-    this._railMin = railDims.x;
-    this._railMax = railDims.width + this._railMin;
-    this._cursorWidth = cursorDims.width;
-    this._mouseCursorLeftOffset = event.x - cursorDims.x;
-    this._mouseCursorRightOffset = cursorDims.width - this._mouseCursorLeftOffset;
-  }
-*/
 
   dimsX(event) {
     let railDims = this._rail.getBoundingClientRect() as DOMRect;
@@ -100,25 +99,6 @@ export class QuantumHorizontalZoomSlider {
     this._cursorWidth = cursorDims.width;
     this._mouseCursorLeftOffset = event.pageX - this._cursor.offsetLeft - this._rail.offsetLeft;
     this._mouseCursorRightOffset = cursorDims.width - this._mouseCursorLeftOffset;
-  }
-
-  dragX(event, elem) {
-    event.preventDefault();
-    if ((event.pageX - elem._mouseCursorLeftOffset) >= elem._railMin + 1 && (event.pageX + elem._mouseCursorRightOffset) <= elem._railMax - 1) {
-      let v = event.pageX - elem._rail.offsetLeft - elem._mouseCursorLeftOffset;
-      v = v < 0 ? 0 : v;
-      elem._cursor.style.left = v + "px";
-
-      let value = ((v) / ((this._railMax - this._railMin) - this._cursorWidth)) * (this.maxValue - this.minValue) + this.minValue;
-      this.xSliderValueChanged.emit({sliderValue: value});
-    }
-  }
-
-  stopDrag(elem) {
-    elem._rail.onmouseup = null;
-    elem._rail.onmousemove = null;
-    elem._cursor.onmouseup = null;
-    elem._rail.onmouseout = null;
   }
 
   xWheel(event) {
@@ -132,7 +112,7 @@ export class QuantumHorizontalZoomSlider {
   render() {
     return (
       <div id="rail" onWheel={(event) => this.xWheel(event)}>
-        <div id="cursor" onMouseDown={(event) => this.mouseDown(event)} />
+        <div id="cursor"/>
       </div>
     );
   }

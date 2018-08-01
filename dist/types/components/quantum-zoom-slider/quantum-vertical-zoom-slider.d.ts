@@ -9,7 +9,6 @@ export declare class QuantumVerticalZoomSlider {
     el: HTMLElement;
     ySliderValueChanged: EventEmitter;
     yZoom: EventEmitter;
-    private _config;
     private _rail;
     private _cursor;
     private _cursorHeight;
@@ -22,10 +21,7 @@ export declare class QuantumVerticalZoomSlider {
     initSize(newValue: number, oldValue: number): void;
     componentWillLoad(): void;
     componentDidLoad(): void;
-    mouseDown(event: any): void;
     dimsY(event: any): void;
-    dragY(event: any, elem: any): void;
-    stopDrag(elem: any): void;
     yWheel(event: any): void;
     render(): JSX.Element;
 }
