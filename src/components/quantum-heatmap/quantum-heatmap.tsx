@@ -77,9 +77,8 @@ export class QuantumHeatmap {
     let ctx = this.el.shadowRoot.querySelector('#mymap');
     this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat, this.startLong], this.startZoom);
 
-    Leaflet.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + this._token, {
-      maxZoom: 30,
-      id: 'mapbox.streets'
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this._map);
 
     let geoData = this.gtsToGeoJSON(JSON.parse(this.data));
@@ -113,13 +112,14 @@ export class QuantumHeatmap {
       ? "-" + marker
       : "";
     return Leaflet.icon({
-      iconUrl: 'https://api.mapbox.com/v4/marker/pin-s' + m + c + '@2x.png?access_token=' + this._token,
+      iconUrl: 'https://material.io/tools/icons/static/icons/sharp'+ m +'-24px.svg', //https://api.mapbox.com/v4/marker/pin-s' + m + c + '@2x.png?access_token=' + this._token,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
     });
   }
 
   gtsToGeoJSON(data) {
+    console.log(data)
     let geoData = [];
     data.forEach(d => {
       d.gts.forEach((g, i) => {
