@@ -336,7 +336,10 @@
         {
           "name": "options",
           "type": "String",
-          "attr": "options"
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
         },
         {
           "name": "responsive",
@@ -1119,6 +1122,16 @@
           "name": "option",
           "type": "String",
           "attr": "option"
+        },
+        {
+          "name": "text1",
+          "type": "String",
+          "attr": "text-1"
+        },
+        {
+          "name": "text2",
+          "type": "String",
+          "attr": "text-2"
         }
       ],
       "states": [

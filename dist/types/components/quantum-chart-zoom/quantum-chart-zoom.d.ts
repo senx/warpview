@@ -16,11 +16,13 @@ export declare class QuantumChartZoom {
     el: HTMLElement;
     wc: HTMLStencilElement;
     boundsDidChange: EventEmitter;
+    private _options;
     private _chart;
     private _xView;
     private _yView;
     private png;
     private _slider;
+    changeScale(newValue: string, oldValue: string): void;
     chartInfosWatcher(event: CustomEvent): void;
     xSliderInit(): void;
     ySliderInit(): void;

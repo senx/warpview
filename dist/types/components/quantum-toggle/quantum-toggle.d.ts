@@ -4,6 +4,8 @@ export declare class QuantumToggle {
     option: string;
     checked: boolean;
     state: boolean;
+    text1: string;
+    text2: string;
     timeSwitched: EventEmitter;
     private _option;
     componentWillLoad(): void;

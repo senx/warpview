@@ -4,7 +4,6 @@
   width: 100px;
   height: 30px;
   padding: 3px;
-  margin: 0 10px 10px 0;
   border-radius: 18px;
   cursor: pointer; }
 
@@ -15,7 +14,6 @@
   position: relative;
   display: block;
   height: inherit;
-  font-size: 10px;
   text-transform: uppercase;
   background: #eceeef;
   border-radius: inherit;
@@ -45,3 +43,9 @@
   -webkit-transition: All 0.3s ease;
   -moz-transition: All 0.3s ease;
   -o-transition: All 0.3s ease; }
+
+.container {
+  display: flex; }
+
+.text {
+  padding: 7px; }

@@ -1,4 +1,4 @@
-import {Component, Element, Event, EventEmitter, Listen, Prop} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Watch, Listen, Prop} from "@stencil/core";
 import {QuantumChart} from "../quantum-chart/quantum-chart";
 
 @Component({
@@ -26,6 +26,7 @@ export class QuantumChartZoom{
 
   @Event() boundsDidChange: EventEmitter;
 
+  private _options;
   private _chart = {
     xMin: 0,
     xMax: 0,
@@ -55,6 +56,12 @@ export class QuantumChartZoom{
     }
   };
 
+  @Watch("options")
+  changeScale(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this._options = newValue;
+    }
+  }
 
   @Listen("chartInfos")
   chartInfosWatcher(event: CustomEvent){
@@ -194,7 +201,7 @@ export class QuantumChartZoom{
           show-legend={this.showLegend}
           data={this.data}
           hiddenData={this.hiddenData}
-          options={this.options}
+          options={this._options}
           width={this.width}
           height={this.height}
           timeMin={this.timeMin}

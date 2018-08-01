@@ -710,6 +710,8 @@ declare global {
     interface QuantumToggle {
       'checked': boolean;
       'option': string;
+      'text1': string;
+      'text2': string;
     }
   }
 
@@ -735,6 +737,8 @@ declare global {
       'checked'?: boolean;
       'onTimeSwitched'?: (event: CustomEvent) => void;
       'option'?: string;
+      'text1'?: string;
+      'text2'?: string;
     }
   }
 }

@@ -44,6 +44,7 @@
   grid-column: 2; }
 
 :host #reset {
+  z-index: 10;
   background-color: greenyellow;
   border-radius: var(--quantum-reset-border-radius, 0px);
   border-color: var(--quantum-reset-border-color, black);

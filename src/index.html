@@ -56,7 +56,7 @@
   <quantum-gts-tree data='[]' id="tree"></quantum-gts-tree>
   
   <div id="maincontainer">
-    <quantum-toggle id="timeSwitch" style="margin-top: 10px;" ></quantum-toggle>
+    <quantum-toggle id="timeSwitch" text-1="date" text-2="timestamp" ></quantum-toggle>
     <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]' options=""></quantum-annotation>
     <quantum-chart-zoom responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="true" data='[]' hidden-data='[]' options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart-zoom>
   </div>
@@ -85,7 +85,7 @@
 
         if (state === "true") {
           var object = { "time": { "timeMode": "timestamp", "stepSize": 86400000, "unit": "millisecond", "displayFormats": "x" } };
-          $('quantum-chart').attr('options', JSON.stringify(object));
+          $('quantum-chart-zoom').attr('options', JSON.stringify(object));
           $('quantum-annotation').attr('options', JSON.stringify(object));
         }
         else {
