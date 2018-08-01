@@ -1,5 +1,9 @@
-import { GTSLib } from "../../gts.lib";
-export class QuantumToggle {
+/*! Built with http://stenciljs.com */
+const { h } = window.quantumviz;
+
+import { a as GTSLib } from './chunk-cadd3091.js';
+
+class QuantumToggle {
     constructor() {
         this.option = '{}';
         this.checked = false;
@@ -69,5 +73,7 @@ export class QuantumToggle {
             "name": "timeSwitched",
             "method": "switchedListener"
         }]; }
-    static get style() { return "/**style-placeholder:quantum-toggle:**/"; }
+    static get style() { return ".switch {\n  position: relative;\n  display: block;\n  width: 100px;\n  height: 30px;\n  padding: 3px;\n  border-radius: 18px;\n  cursor: pointer; }\n\n.switch-input {\n  display: none; }\n\n.switch-label {\n  position: relative;\n  display: block;\n  height: inherit;\n  text-transform: uppercase;\n  background: #eceeef;\n  border-radius: inherit;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);\n  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15); }\n\n.switch-input:checked ~ .switch-label {\n  background: #00cd00;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);\n  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2); }\n\n.switch-handle {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  width: 28px;\n  height: 28px;\n  background: radial-gradient(#FFFFFF 15%, #f0f0f0 100%);\n  border-radius: 100%;\n  -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);\n  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }\n\n.switch-input:checked ~ .switch-handle {\n  left: 74px;\n  background: radial-gradient(#ffffff 15%, #00cd00 100%);\n  -webkit-box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);\n  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2); }\n\n.switch-label, .switch-handle {\n  -webkit-transition: All .3s ease;\n  transition: All .3s ease;\n  -webkit-transition: All 0.3s ease;\n  -moz-transition: All 0.3s ease;\n  -o-transition: All 0.3s ease; }\n\n.container {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex; }\n\n.text {\n  padding: 7px; }"; }
 }
+
+export { QuantumToggle };

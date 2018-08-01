@@ -37,6 +37,11 @@ export class QuantumChartZoom {
             }
         };
     }
+    changeScale(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this._options = newValue;
+        }
+    }
     chartInfosWatcher(event) {
         this._chart.xMin = event.detail.xMin;
         this._chart.xMinView = event.detail.xMin;
@@ -141,7 +146,7 @@ export class QuantumChartZoom {
     render() {
         return (h("div", { class: "wrapper" },
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
-            h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this.options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
+            h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this._options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
             h("div", { id: "xSliderWrapper" },
                 h("quantum-horizontal-zoom-map", { id: "xSlider", img: this.png, width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }))));
@@ -170,7 +175,8 @@ export class QuantumChartZoom {
         },
         "options": {
             "type": String,
-            "attr": "options"
+            "attr": "options",
+            "watchCallbacks": ["changeScale"]
         },
         "responsive": {
             "type": Boolean,
