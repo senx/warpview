@@ -1,10 +1,2 @@
 /*! Built with http://stenciljs.com */
-const { h } = window.quantumviz;
-
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-export { commonjsGlobal as a, createCommonjsModule as b };
+const{h:e}=window.quantumviz;var n="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function o(e,n){return e(n={exports:{}},n.exports),n.exports}export{n as a,o as b};
