@@ -23,8 +23,10 @@ export class QuantumHeatmap {
             opacity: 1,
             fillOpacity: 0.8
         };
-        this._iconAnchor = [20, 52];
-        this._popupAnchor = [0, -50];
+        //private _iconAnchor: Leaflet.PointExpression = [20, 52];
+        //private _popupAnchor: Leaflet.PointExpression = [0, -50];
+        this._iconAnchor = [12, 24];
+        this._popupAnchor = [0, 0];
     }
     radiuschange(event) {
         this._heatLayer.setOptions({ radius: event.detail.valueAsNumber });
@@ -64,17 +66,23 @@ export class QuantumHeatmap {
         });
         this._heatLayer.addTo(this._map);
     }
-    icon(color, marker = "") {
+    /*
+      icon(color, marker = "") {
         let c = "+" + color.slice(1);
         let m = marker !== ""
-            ? "-" + marker
-            : "";
+          ? "-" + marker
+          : "";
         return Leaflet.icon({
-            iconUrl: 'https://material.io/tools/icons/static/icons/sharp' + m + '-24px.svg',
-            iconAnchor: this._iconAnchor,
-            popupAnchor: this._popupAnchor
+          iconUrl: 'https://material.io/tools/icons/static/icons/sharp-tag_faces-24px.svg', //https://api.mapbox.com/v4/marker/pin-s' + m + c + '@2x.png?access_token=' + this._token,
+          iconAnchor: this._iconAnchor,
+          popupAnchor: this._popupAnchor
         });
+      }
+    */
+    icon(color, marker = "") {
+        return (Leaflet.divIcon({ html: '<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>' }));
     }
+    //https://material.io/tools/icons/static/icons/baseline-tag_faces-24px.svg
     gtsToGeoJSON(data) {
         console.log(data);
         let geoData = [];
@@ -182,7 +190,7 @@ export class QuantumHeatmap {
                                                 ? d.params[i].color
                                                 : GTSLib.getColor(i),
                                         },
-                                        'value': p[p.lenght - 1],
+                                        'value': p[p.length - 1],
                                         'popupContent': 'timestamp : ' + p[0] + '<br/>date : ' + new Date(p[0]) + '<br/>lat : ' + p[1] + '<br/>long : ' + p[2]
                                     },
                                     'geometry': {

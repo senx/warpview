@@ -28,7 +28,7 @@ export declare class QuantumHeatmap {
     blurChange(event: any): void;
     opacityChange(event: any): void;
     drawMap(): void;
-    icon(color: any, marker?: string): Leaflet.Icon<Leaflet.IconOptions>;
+    icon(color: any, marker?: string): Leaflet.DivIcon;
     gtsToGeoJSON(data: any): any[];
     componentDidLoad(): void;
     render(): JSX.Element;

@@ -437,7 +437,7 @@ class QuantumVerticalZoomSlider {
                 let v = event.pageY - this._rail.offsetTop - this._mouseCursorTopOffset;
                 v = Math.max(0, v);
                 let value = ((v) / ((this._railMax - this._railMin) - this._cursorHeight)) * (this.maxValue - this.minValue) + this.minValue;
-                value = (this.maxValue - this.minValue) - value;
+                value = (this.maxValue - value) + this.minValue;
                 window.setTimeout(() => this.ySliderValueChanged.emit({ sliderValue: value }));
             }
         });

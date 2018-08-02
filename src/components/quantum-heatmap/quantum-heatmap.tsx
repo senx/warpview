@@ -12,7 +12,8 @@ import {GeoJsonObject} from 'geojson';
     '../../../node_modules/leaflet/dist/leaflet.css',
     'quantum-heatmap.scss',
     '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.css',
-    '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css'
+    '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css',
+    '../../../node_modules/font-awesome/scss/font-awesome.scss'
   ],
   shadow: true
 })
@@ -50,8 +51,11 @@ export class QuantumHeatmap {
     fillOpacity: 0.8
   };
 
-  private _iconAnchor: Leaflet.PointExpression = [20, 52];
-  private _popupAnchor: Leaflet.PointExpression = [0, -50];
+  //private _iconAnchor: Leaflet.PointExpression = [20, 52];
+  //private _popupAnchor: Leaflet.PointExpression = [0, -50];
+
+  private _iconAnchor: Leaflet.PointExpression = [12, 24];
+  private _popupAnchor: Leaflet.PointExpression = [0, 0];
 
   private _heatLayer;
 
@@ -105,18 +109,23 @@ export class QuantumHeatmap {
 
 
   }
-
+/*
   icon(color, marker = "") {
     let c = "+" + color.slice(1);
     let m = marker !== ""
       ? "-" + marker
       : "";
     return Leaflet.icon({
-      iconUrl: 'https://material.io/tools/icons/static/icons/sharp'+ m +'-24px.svg', //https://api.mapbox.com/v4/marker/pin-s' + m + c + '@2x.png?access_token=' + this._token,
+      iconUrl: 'https://material.io/tools/icons/static/icons/sharp-tag_faces-24px.svg', //https://api.mapbox.com/v4/marker/pin-s' + m + c + '@2x.png?access_token=' + this._token,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
     });
   }
+*/
+  icon(color, marker = ""){
+    return(Leaflet.divIcon({html:'<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>'}));
+  }
+  //https://material.io/tools/icons/static/icons/baseline-tag_faces-24px.svg
 
   gtsToGeoJSON(data) {
     console.log(data)
@@ -226,7 +235,7 @@ export class QuantumHeatmap {
                         ? d.params[i].color
                         : GTSLib.getColor(i),
                     },
-                    'value': p[p.lenght - 1],
+                    'value': p[p.length - 1],
                     'popupContent': 'timestamp : ' + p[0] + '<br/>date : ' + new Date(p[0]) + '<br/>lat : ' + p[1] + '<br/>long : ' + p[2]
                   },
                   'geometry': {

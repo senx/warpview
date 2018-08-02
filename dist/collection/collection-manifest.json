@@ -497,6 +497,7 @@
       "styles": {
         "$": {
           "stylePaths": [
+            "../node_modules/font-awesome/scss/font-awesome.scss",
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.css",
             "../node_modules/leaflet/dist/leaflet.css",
