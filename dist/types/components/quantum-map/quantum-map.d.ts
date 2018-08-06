@@ -1,0 +1,36 @@
+import '../../stencil.core';
+import Leaflet from 'leaflet';
+import 'leaflet.heat';
+import 'leaflet.markercluster';
+export declare class QuantumMap {
+    mapTitle: string;
+    width: string;
+    height: string;
+    responsive: boolean;
+    data: string;
+    startLat: number;
+    startLong: number;
+    startZoom: number;
+    dotsLimit: number;
+    heatRadius: number;
+    heatBlur: number;
+    heatOpacity: number;
+    heatData: string;
+    heatControls: boolean;
+    el: HTMLElement;
+    private _map;
+    private _mapSize;
+    private _pathStyle;
+    private _dotStyle;
+    private _iconAnchor;
+    private _popupAnchor;
+    private _heatLayer;
+    radiuschange(event: any): void;
+    blurChange(event: any): void;
+    opacityChange(event: any): void;
+    drawMap(): void;
+    icon(color: any, marker?: string): Leaflet.Icon<Leaflet.IconOptions>;
+    gtsToGeoJSON(data: any): any[];
+    componentDidLoad(): void;
+    render(): JSX.Element;
+}

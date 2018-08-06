@@ -3,7 +3,9 @@ import {QuantumChart} from "../quantum-chart/quantum-chart";
 
 @Component({
   tag: "quantum-chart-zoom",
-  styleUrl: "quantum-chart-zoom.scss",
+  styleUrls: [ 
+    '../../../node_modules/font-awesome/css/font-awesome.min.css',
+    "quantum-chart-zoom.scss"],
   shadow: true
 })
 
@@ -93,6 +95,10 @@ export class QuantumChartZoom{
     this.png = chart.toBase64Image();
   }
 
+  download(){
+    const chart: any = this.el.shadowRoot.querySelector("#myChart");
+    return(chart.toBase64Image());
+  }
   @Listen("xZoom")
   xZoomListener(event: CustomEvent) {
     let xMin = this._chart.xMinView;
@@ -212,9 +218,12 @@ export class QuantumChartZoom{
         <button id="reset" type="button" onClick={() => this.zoomReset()}>
             Zoom Reset
         </button>
+        <a href={this.png} download={"chart-" + Date.now()}>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </a>
+
         <div id="xSliderWrapper">
-        
-        <quantum-horizontal-zoom-map id="xSlider" img={this.png} width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
+          <quantum-horizontal-zoom-map id="xSlider" img={this.png} width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>
         </div>
       </div>
     );

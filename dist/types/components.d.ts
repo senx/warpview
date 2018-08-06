@@ -411,55 +411,57 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumHeatmap {
+    interface QuantumMap {
       'data': string;
       'dotsLimit': number;
       'heatBlur': number;
+      'heatControls': boolean;
       'heatData': string;
       'heatOpacity': number;
       'heatRadius': number;
-      'height': number;
+      'height': string;
       'mapTitle': string;
       'responsive': boolean;
       'startLat': number;
       'startLong': number;
       'startZoom': number;
-      'width': number;
+      'width': string;
     }
   }
 
-  interface HTMLQuantumHeatmapElement extends StencilComponents.QuantumHeatmap, HTMLStencilElement {}
+  interface HTMLQuantumMapElement extends StencilComponents.QuantumMap, HTMLStencilElement {}
 
-  var HTMLQuantumHeatmapElement: {
-    prototype: HTMLQuantumHeatmapElement;
-    new (): HTMLQuantumHeatmapElement;
+  var HTMLQuantumMapElement: {
+    prototype: HTMLQuantumMapElement;
+    new (): HTMLQuantumMapElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-heatmap': HTMLQuantumHeatmapElement;
+    'quantum-map': HTMLQuantumMapElement;
   }
   interface ElementTagNameMap {
-    'quantum-heatmap': HTMLQuantumHeatmapElement;
+    'quantum-map': HTMLQuantumMapElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-heatmap': JSXElements.QuantumHeatmapAttributes;
+      'quantum-map': JSXElements.QuantumMapAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumHeatmapAttributes extends HTMLAttributes {
+    export interface QuantumMapAttributes extends HTMLAttributes {
       'data'?: string;
       'dotsLimit'?: number;
       'heatBlur'?: number;
+      'heatControls'?: boolean;
       'heatData'?: string;
       'heatOpacity'?: number;
       'heatRadius'?: number;
-      'height'?: number;
+      'height'?: string;
       'mapTitle'?: string;
       'responsive'?: boolean;
       'startLat'?: number;
       'startLong'?: number;
       'startZoom'?: number;
-      'width'?: number;
+      'width'?: string;
     }
   }
 }

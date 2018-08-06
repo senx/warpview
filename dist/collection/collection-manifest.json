@@ -308,6 +308,7 @@
       "styles": {
         "$": {
           "stylePaths": [
+            "../node_modules/font-awesome/css/font-awesome.min.css",
             "components/quantum-chart-zoom/quantum-chart-zoom.scss"
           ]
         }
@@ -488,120 +489,10 @@
       ]
     },
     {
-      "tag": "quantum-heatmap",
-      "dependencies": [
-        "quantum-heatmap-sliders"
-      ],
-      "componentClass": "QuantumHeatmap",
-      "componentPath": "components/quantum-heatmap/quantum-heatmap.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "../node_modules/font-awesome/scss/font-awesome.scss",
-            "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
-            "../node_modules/leaflet.markercluster/dist/MarkerCluster.css",
-            "../node_modules/leaflet/dist/leaflet.css",
-            "components/quantum-heatmap/quantum-heatmap.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "data",
-          "type": "String",
-          "attr": "data"
-        },
-        {
-          "name": "dotsLimit",
-          "type": "Number",
-          "attr": "dots-limit"
-        },
-        {
-          "name": "heatBlur",
-          "type": "Number",
-          "attr": "heat-blur"
-        },
-        {
-          "name": "heatData",
-          "type": "String",
-          "attr": "heat-data"
-        },
-        {
-          "name": "heatOpacity",
-          "type": "Number",
-          "attr": "heat-opacity"
-        },
-        {
-          "name": "heatRadius",
-          "type": "Number",
-          "attr": "heat-radius"
-        },
-        {
-          "name": "height",
-          "type": "Number",
-          "attr": "height"
-        },
-        {
-          "name": "mapTitle",
-          "type": "String",
-          "attr": "map-title"
-        },
-        {
-          "name": "responsive",
-          "type": "Boolean",
-          "attr": "responsive"
-        },
-        {
-          "name": "startLat",
-          "type": "Number",
-          "attr": "start-lat"
-        },
-        {
-          "name": "startLong",
-          "type": "Number",
-          "attr": "start-long"
-        },
-        {
-          "name": "startZoom",
-          "type": "Number",
-          "attr": "start-zoom"
-        },
-        {
-          "name": "width",
-          "type": "Number",
-          "attr": "width"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "heatBlurDidChange",
-          "method": "blurChange",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "heatOpacityDidChange",
-          "method": "opacityChange",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "heatRadiusDidChange",
-          "method": "radiuschange",
-          "passive": false,
-          "capture": false
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "shadow": true
-    },
-    {
       "tag": "quantum-heatmap-sliders",
       "dependencies": [],
       "componentClass": "QuantumHeatmapSliders",
-      "componentPath": "components/quantum-heatmap/quantum-heatmap-sliders.js",
+      "componentPath": "components/quantum-map/quantum-heatmap-sliders.js",
       "styles": {},
       "props": [
         {
@@ -770,6 +661,121 @@
           "event": "xZoom"
         }
       ],
+      "shadow": true
+    },
+    {
+      "tag": "quantum-map",
+      "dependencies": [
+        "quantum-heatmap-sliders"
+      ],
+      "componentClass": "QuantumMap",
+      "componentPath": "components/quantum-map/quantum-map.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/font-awesome/scss/font-awesome.scss",
+            "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+            "../node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+            "../node_modules/leaflet/dist/leaflet.css",
+            "components/quantum-map/quantum-map.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data"
+        },
+        {
+          "name": "dotsLimit",
+          "type": "Number",
+          "attr": "dots-limit"
+        },
+        {
+          "name": "heatBlur",
+          "type": "Number",
+          "attr": "heat-blur"
+        },
+        {
+          "name": "heatControls",
+          "type": "Boolean",
+          "attr": "heat-controls"
+        },
+        {
+          "name": "heatData",
+          "type": "String",
+          "attr": "heat-data"
+        },
+        {
+          "name": "heatOpacity",
+          "type": "Number",
+          "attr": "heat-opacity"
+        },
+        {
+          "name": "heatRadius",
+          "type": "Number",
+          "attr": "heat-radius"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "mapTitle",
+          "type": "String",
+          "attr": "map-title"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "startLat",
+          "type": "Number",
+          "attr": "start-lat"
+        },
+        {
+          "name": "startLong",
+          "type": "Number",
+          "attr": "start-long"
+        },
+        {
+          "name": "startZoom",
+          "type": "Number",
+          "attr": "start-zoom"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "heatBlurDidChange",
+          "method": "blurChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "heatOpacityDidChange",
+          "method": "opacityChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "heatRadiusDidChange",
+          "method": "radiuschange",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
       "shadow": true
     },
     {

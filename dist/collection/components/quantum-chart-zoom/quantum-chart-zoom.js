@@ -67,6 +67,10 @@ export class QuantumChartZoom {
         const chart = this.el.shadowRoot.querySelector("#myChart");
         this.png = chart.toBase64Image();
     }
+    download() {
+        const chart = this.el.shadowRoot.querySelector("#myChart");
+        return (chart.toBase64Image());
+    }
     xZoomListener(event) {
         let xMin = this._chart.xMinView;
         let xMax = this._chart.xMaxView;
@@ -148,6 +152,8 @@ export class QuantumChartZoom {
             h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this._options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
+            h("a", { href: this.png, download: "chart-" + Date.now() },
+                h("i", { class: "fa fa-refresh fa-spin fa-3x fa-fw" })),
             h("div", { id: "xSliderWrapper" },
                 h("quantum-horizontal-zoom-map", { id: "xSlider", img: this.png, width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }))));
     }

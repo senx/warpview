@@ -1,4 +1,16 @@
+$fa-font-path: "/assets/fonts";
+@import "../../../node_modules/font-awesome/scss/font-awesome.scss";
+
 :host {
+  /*
+  @font-face {
+    font-family: 'FontAwesome';
+    src: url("/assets/fonts/fontawesome-webfont.eot?v=4.7.0");
+    src: url("/assets/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("/assets/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("/assets/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("/assets/fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("/assets/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+    font-weight: normal;
+    font-style: normal;
+    color: pink; }
+    */
 
   .chart-container {
     width: var(--quantum-chart-width, 100%);
@@ -59,4 +71,5 @@
     width: var(--quantum-reset-width, 10px);
     height: var(--quantum-reset-height, 10px);
   }
+  
 }
