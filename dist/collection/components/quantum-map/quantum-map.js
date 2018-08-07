@@ -69,6 +69,9 @@ export class QuantumMap {
             minOpacity: this.heatOpacity
         });
         this._heatLayer.addTo(this._map);
+        this._map.on('move', function (e) {
+            //console.log(this._map.getCenter());
+        });
     }
     icon(color, marker = "") {
         let c = "+" + color.slice(1);
@@ -153,7 +156,22 @@ export class QuantumMap {
                             type: 'LineString',
                             coordinates: []
                         };
+                        let previous;
                         g.v.forEach(p => {
+                            /*if(!!previous){
+                              if(p[2] >= -180 && p[2] < -90 && previous[2] > 90 && previous[2] <= 180){
+                                let diff1 = 180 + p[2];
+                                let diff2 = 180 - previous[2];
+                                let pY = p[2] * -1 + diff1 + diff2;
+                                let a = (pY - previous[2])/(p[1] - previous[1]);
+                                let b = previous[2] - previous[1] * a;
+                                let c = a * previous
+                
+                                
+                              }
+                            }
+                
+                            previous = p;*/
                             path.coordinates.push([p[2], p[1]]);
                         });
                         geoData.push(Leaflet.geoJSON(path, {
