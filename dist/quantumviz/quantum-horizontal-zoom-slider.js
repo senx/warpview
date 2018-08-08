@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Draggabilly } from './chunk-f78e876a.js';
+import { a as Draggabilly } from './chunk-d11d04ce.js';
 import './chunk-ee323282.js';
 
 class QuantumHorizontalZoomSlider {
