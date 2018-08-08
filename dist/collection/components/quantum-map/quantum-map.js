@@ -208,7 +208,7 @@ export class QuantumMap {
                         }));
                         let point = {};
                         junctionPoints.forEach((j, i) => {
-                            j.forEach(p => {
+                            j.forEach((p, n) => {
                                 point = {
                                     'type': 'Feature',
                                     'properties': {
@@ -219,7 +219,7 @@ export class QuantumMap {
                                             "opacity": this._pathStyle.opacity
                                         },
                                         'value': null,
-                                        'popupContent': "Junction " + (i + 1)
+                                        'popupContent': "Junction " + (i) + (n == 0 ? " IN" : " OUT")
                                     },
                                     'geometry': {
                                         'type': 'Point',
