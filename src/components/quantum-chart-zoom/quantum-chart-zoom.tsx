@@ -217,9 +217,9 @@ export class QuantumChartZoom{
         <button id="reset" type="button" onClick={() => this.zoomReset()}>
             Zoom Reset
         </button>
-        <a href={this.png} download={"chart-" + Date.now()}>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-        </a>
+      {/*  <a href={this.png} download={"chart-" + Date.now()}>
+          <i class="fa fa-download" />
+        </a>*/}
 
         <div id="xSliderWrapper">
           <quantum-horizontal-zoom-map id="xSlider" img={this.png} width={this._slider.x.width} min-value={this._chart.xMin} max-value={this._slider.x.max} cursorSize={this._slider.x.cursorSize}/>

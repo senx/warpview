@@ -44,7 +44,7 @@ var QuantumChartZoomComponent = /** @class **/ (function() {
   QuantumChartZoom.is = 'quantum-chart-zoom';
   QuantumChartZoom.getModule = function(opts) {
     
-    return import('./qka1iwtb.js').then(function(m) {
+    return import('./9macnke2.js').then(function(m) {
         return m.QuantumChartZoom;
       });
 
@@ -96,7 +96,7 @@ var QuantumHorizontalZoomMapComponent = /** @class **/ (function() {
   QuantumHorizontalZoomMap.is = 'quantum-horizontal-zoom-map';
   QuantumHorizontalZoomMap.getModule = function(opts) {
     
-    return import('./qka1iwtb.js').then(function(m) {
+    return import('./9macnke2.js').then(function(m) {
         return m.QuantumHorizontalZoomMap;
       });
 
@@ -226,7 +226,7 @@ var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
   QuantumVerticalZoomSlider.is = 'quantum-vertical-zoom-slider';
   QuantumVerticalZoomSlider.getModule = function(opts) {
     
-    return import('./qka1iwtb.js').then(function(m) {
+    return import('./9macnke2.js').then(function(m) {
         return m.QuantumVerticalZoomSlider;
       });
 
