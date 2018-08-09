@@ -5,7 +5,7 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   QuantumAnnotation.is = 'quantum-annotation';
   QuantumAnnotation.getModule = function(opts) {
     
-    return import('./bdw2isqv.js').then(function(m) {
+    return import('./tqusbidw.js').then(function(m) {
         return m.QuantumAnnotation;
       });
 
@@ -18,7 +18,7 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-    return import('./djdk9b9g.js').then(function(m) {
+    return import('./qw2fxzkv.js').then(function(m) {
         return m.QuantumBubble;
       });
 
@@ -31,7 +31,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-    return import('./e4phv6tm.js').then(function(m) {
+    return import('./rrezhglh.js').then(function(m) {
         return m.QuantumChart;
       });
 
@@ -135,7 +135,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-    return import('./djdk9b9g.js').then(function(m) {
+    return import('./qw2fxzkv.js').then(function(m) {
         return m.QuantumPie;
       });
 
@@ -148,7 +148,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-    return import('./djdk9b9g.js').then(function(m) {
+    return import('./qw2fxzkv.js').then(function(m) {
         return m.QuantumPolar;
       });
 
@@ -161,7 +161,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-    return import('./yrxxz7ni.js').then(function(m) {
+    return import('./ck2laxxa.js').then(function(m) {
         return m.QuantumRadar;
       });
 
@@ -174,7 +174,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-    return import('./djdk9b9g.js').then(function(m) {
+    return import('./qw2fxzkv.js').then(function(m) {
         return m.QuantumScatter;
       });
 
@@ -187,7 +187,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-    return import('./djdk9b9g.js').then(function(m) {
+    return import('./qw2fxzkv.js').then(function(m) {
         return m.QuantumTile;
       });
 
