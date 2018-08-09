@@ -1,5 +1,4 @@
-import {Component, Element, Event, EventEmitter, Watch, Listen, Prop} from "@stencil/core";
-import {QuantumChart} from "../quantum-chart/quantum-chart";
+import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from "@stencil/core";
 
 @Component({
   tag: "quantum-chart-zoom",

@@ -20,6 +20,14 @@
 </head>
 
 <body>
+<quantum-tile type="area" show-legend="false" responsive="true" url="https://warp.cityzendata.net/api/v0/exec">
+  @training/dataset0
+  [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 h ] FETCH
+  false RESETS
+  'gts' STORE
+  [ $gts mapper.delta 1 0 0 ] MAP
+  1000 LTTB
+</quantum-tile>
   <!--<quantum-map width="100%" height="800px" map-title="test" start-lat = 30 start-long = 0 start-zoom = 3
     data=
     '[{

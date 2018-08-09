@@ -3,7 +3,7 @@ import {GTSLib} from '../../gts.lib';
 
 @Component({
   tag: 'quantum-tile',
-  styleUrl: 'quantum-tile.css',
+  styleUrl: 'quantum-tile.scss',
   shadow: true
 })
 export class QuantumTile {
@@ -72,26 +72,35 @@ export class QuantumTile {
   }
 
   render() {
-    if (this.graphs['scatter'].indexOf(this.type) > -1) {
-      return <quantum-scatter
-        responsive={this.responsive} unit={this.unit} data={this.data}
-        show-legend={this.showLegend} chartTitle={this.chartTitle}/>
-    } else if (this.graphs['chart'].indexOf(this.type) > -1) {
-      return <quantum-chart
-        responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
-        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
-    } else if (this.type == 'bubble') {
-      return <quantum-bubble
-        show-legend={this.showLegend} responsive={this.responsive} unit={this.unit} data={this.data}
-        chartTitle={this.chartTitle}/>;
-    } else if (this.graphs['pie'].indexOf(this.type) > -1) {
-      return <quantum-pie
-        responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
-        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
-    } else if (this.graphs['polar'].indexOf(this.type) > -1) {
-      return <quantum-polar
-        responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
-        show-legend={this.showLegend} chartTitle={this.chartTitle}/>;
-    }
+    return <div class="wrapper">
+      <div class="warpscript">
+        <slot/>
+      </div>
+      {this.graphs['scatter'].indexOf(this.type) > -1 ?
+        <quantum-scatter
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          show-legend={this.showLegend} chartTitle={this.chartTitle} />
+        : ''}
+      {this.graphs['chart'].indexOf(this.type) > -1 ?
+        <quantum-chart
+          responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+          show-legend={this.showLegend} chartTitle={this.chartTitle}/>
+        : ''}
+      {this.type == 'bubble' ?
+        <quantum-bubble
+          show-legend={this.showLegend} responsive={this.responsive} unit={this.unit} data={this.data}
+          chartTitle={this.chartTitle}/> : ''
+      }
+      {this.graphs['pie'].indexOf(this.type) > -1 ?
+        <quantum-pie
+          responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+          show-legend={this.showLegend} chartTitle={this.chartTitle}/> : ''
+      }
+      {this.graphs['polar'].indexOf(this.type) > -1 ?
+        <quantum-polar
+          responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+          show-legend={this.showLegend} chartTitle={this.chartTitle}/> : ''
+      }
+    </div>
   }
 }

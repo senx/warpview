@@ -60,21 +60,21 @@ export class QuantumTile {
         return params;
     }
     render() {
-        if (this.graphs['scatter'].indexOf(this.type) > -1) {
-            return h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, "show-legend": this.showLegend, chartTitle: this.chartTitle });
-        }
-        else if (this.graphs['chart'].indexOf(this.type) > -1) {
-            return h("quantum-chart", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
-        }
-        else if (this.type == 'bubble') {
-            return h("quantum-bubble", { "show-legend": this.showLegend, responsive: this.responsive, unit: this.unit, data: this.data, chartTitle: this.chartTitle });
-        }
-        else if (this.graphs['pie'].indexOf(this.type) > -1) {
-            return h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
-        }
-        else if (this.graphs['polar'].indexOf(this.type) > -1) {
-            return h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle });
-        }
+        return h("div", { class: "wrapper" },
+            h("div", { class: "warpscript" },
+                h("slot", null)),
+            this.graphs['scatter'].indexOf(this.type) > -1 ?
+                h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, "show-legend": this.showLegend, chartTitle: this.chartTitle })
+                : '',
+            this.graphs['chart'].indexOf(this.type) > -1 ?
+                h("quantum-chart", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle })
+                : '',
+            this.type == 'bubble' ?
+                h("quantum-bubble", { "show-legend": this.showLegend, responsive: this.responsive, unit: this.unit, data: this.data, chartTitle: this.chartTitle }) : '',
+            this.graphs['pie'].indexOf(this.type) > -1 ?
+                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
+            this.graphs['polar'].indexOf(this.type) > -1 ?
+                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '');
     }
     static get is() { return "quantum-tile"; }
     static get encapsulation() { return "shadow"; }
