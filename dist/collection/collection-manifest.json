@@ -1166,7 +1166,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-tile/quantum-tile.css"
+            "components/quantum-tile/quantum-tile.scss"
           ]
         }
       },

@@ -26,12 +26,15 @@ export declare class QuantumChart {
     private _xSlider;
     private _ySlider;
     private _config;
+    private _data;
+    private _type;
     toBase64Image(): any;
     redraw(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: string, oldValue: string): void;
     changeXView(): void;
     changeYView(): void;
+    buildGraph(): void;
     drawChart(): void;
     gtsToData(gts: any): {
         datasets: any[];

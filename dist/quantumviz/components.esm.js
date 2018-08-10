@@ -96,7 +96,11 @@ var QuantumHorizontalZoomMapComponent = /** @class **/ (function() {
   QuantumHorizontalZoomMap.is = 'quantum-horizontal-zoom-map';
   QuantumHorizontalZoomMap.getModule = function(opts) {
     
+<<<<<<< HEAD
     return import('./quantum-chart.js').then(function(m) {
+=======
+    return import('./quantum-chart-zoom.js').then(function(m) {
+>>>>>>> f4af6fe528abb42130cf2c947228c27a4fbfb215
         return m.QuantumHorizontalZoomMap;
       });
 

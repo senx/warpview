@@ -72,20 +72,19 @@ export class QuantumChip {
         this.quantumSelectedGTS.emit(this._node);
     }
     render() {
-        return (h("div", null, this._node !== undefined && this._node.gts !== undefined
-            ?
-                h("span", null,
-                    h("i", { class: "normal" }),
-                    h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
-                        h("span", { class: 'gts-classname' }, this._node.gts.c),
-                        h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
-                        this._toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
-                            h("span", { class: 'gts-labelname' }, label.name),
-                            h("span", { class: 'gts-separator' }, "="),
-                            h("span", { class: 'gts-labelvalue' }, label.value),
-                            h("span", { hidden: this._lastIndex(labelIndex, this._node.gts.l) }, ", "))),
-                        h("span", { class: 'gts-separator', innerHTML: ' &rcub;' })))
-            : h("span", null)));
+        return (h("div", null, this._node && this._node.gts && this._node.gts.l ?
+            h("span", null,
+                h("i", { class: "normal" }),
+                h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
+                    h("span", { class: 'gts-classname' }, this._node.gts.c),
+                    h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
+                    this._toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
+                        h("span", { class: 'gts-labelname' }, label.name),
+                        h("span", { class: 'gts-separator' }, "="),
+                        h("span", { class: 'gts-labelvalue' }, label.value),
+                        h("span", { hidden: this._lastIndex(labelIndex, this._node.gts.l) }, ", "))),
+                    h("span", { class: 'gts-separator', innerHTML: ' &rcub;' })))
+            : ''));
     }
     static get is() { return "quantum-chip"; }
     static get properties() { return {

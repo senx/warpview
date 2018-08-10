@@ -1,12 +1,5 @@
-import {
-  Component,
-  Event,
-  EventEmitter,
-  Prop,
-  Watch,
-  Listen
-} from "@stencil/core";
-import { GTSLib } from "../../gts.lib";
+import {Component, Event, EventEmitter, Prop, Watch} from "@stencil/core";
+import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: "quantum-gts-tree",
