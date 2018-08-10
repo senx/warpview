@@ -93,8 +93,7 @@ export class QuantumChip {
   render() {
     return (
       <div>
-        {this._node !== undefined && this._node.gts !== undefined
-          ?
+        {this._node && this._node.gts && this._node.gts.l?
           <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>{this._node.gts.c}</span>
@@ -110,7 +109,7 @@ export class QuantumChip {
             <span class='gts-separator' innerHTML={' &rcub;'}/>
           </span>
           </span>
-          : <span/>
+          : ''
         }
       </div>
     )

@@ -212,11 +212,6 @@ return getSize;
 });
 });
 
-var getSize$1 = /*#__PURE__*/Object.freeze({
-  default: getSize,
-  __moduleExports: getSize
-});
-
 var evEmitter = createCommonjsModule(function (module) {
 /**
  * EvEmitter v1.1.0
@@ -330,13 +325,6 @@ return EvEmitter;
 }));
 });
 
-var evEmitter$1 = /*#__PURE__*/Object.freeze({
-  default: evEmitter,
-  __moduleExports: evEmitter
-});
-
-var require$$0 = ( evEmitter$1 && evEmitter ) || evEmitter$1;
-
 var unipointer = createCommonjsModule(function (module) {
 /*!
  * Unipointer v2.3.0
@@ -360,7 +348,7 @@ var unipointer = createCommonjsModule(function (module) {
     // CommonJS
     module.exports = factory(
       window,
-      require$$0
+      evEmitter
     );
   } else {
     // browser global
@@ -639,13 +627,6 @@ return Unipointer;
 }));
 });
 
-var unipointer$1 = /*#__PURE__*/Object.freeze({
-  default: unipointer,
-  __moduleExports: unipointer
-});
-
-var require$$0$1 = ( unipointer$1 && unipointer ) || unipointer$1;
-
 var unidragger = createCommonjsModule(function (module) {
 /*!
  * Unidragger v2.3.0
@@ -670,7 +651,7 @@ var unidragger = createCommonjsModule(function (module) {
     // CommonJS
     module.exports = factory(
       window,
-      require$$0$1
+      unipointer
     );
   } else {
     // browser global
@@ -926,15 +907,6 @@ return Unidragger;
 }));
 });
 
-var unidragger$1 = /*#__PURE__*/Object.freeze({
-  default: unidragger,
-  __moduleExports: unidragger
-});
-
-var require$$0$2 = ( getSize$1 && getSize ) || getSize$1;
-
-var require$$1 = ( unidragger$1 && unidragger ) || unidragger$1;
-
 var draggabilly = createCommonjsModule(function (module) {
 /*!
  * Draggabilly v2.2.0
@@ -954,15 +926,15 @@ var draggabilly = createCommonjsModule(function (module) {
         'get-size/get-size',
         'unidragger/unidragger'
       ],
-      function( getSize, Unidragger ) {
-        return factory( window, getSize, Unidragger );
+      function( getSize$$1, Unidragger ) {
+        return factory( window, getSize$$1, Unidragger );
       });
   } else if ( module.exports ) {
     // CommonJS
     module.exports = factory(
       window,
-      require$$0$2,
-      require$$1
+      getSize,
+      unidragger
     );
   } else {
     // browser global
@@ -973,7 +945,7 @@ var draggabilly = createCommonjsModule(function (module) {
     );
   }
 
-}( window, function factory( window, getSize, Unidragger ) {
+}( window, function factory( window, getSize$$1, Unidragger ) {
 
 // -------------------------- helpers & variables -------------------------- //
 
@@ -1104,7 +1076,7 @@ proto._getPosition = function() {
 proto._getPositionCoord = function( styleSide, measure ) {
   if ( styleSide.indexOf('%') != -1 ) {
     // convert percent into pixel for Safari, #75
-    var parentSize = getSize( this.element.parentNode );
+    var parentSize = getSize$$1( this.element.parentNode );
     // prevent not-in-DOM element throwing bug, #131
     return !parentSize ? 0 :
       ( parseFloat( styleSide ) / 100 ) * parentSize[ measure ];
@@ -1169,8 +1141,8 @@ proto.measureContainment = function() {
     return;
   }
 
-  var elemSize = getSize( this.element );
-  var containerSize = getSize( container );
+  var elemSize = getSize$$1( this.element );
+  var containerSize = getSize$$1( container );
   var elemRect = this.element.getBoundingClientRect();
   var containerRect = container.getBoundingClientRect();
 

@@ -26,7 +26,7 @@ export class QuantumTreeView {
      * @returns {any}
      */
     render() {
-        return (h("ul", null, this.gtsList.content.map((node, index) => (h("li", null,
+        return (h("div", null, this.gtsList && this.gtsList.content ? (h("ul", null, this.gtsList.content.map((node, index) => (h("li", null,
             this.branch ? ("") : (h("div", { class: "stack-level" },
                 "Stack level ",
                 index)),
@@ -38,7 +38,7 @@ export class QuantumTreeView {
                 node.content.length > 1
                     ? "s"
                     : "",
-                h("quantum-tree-view", { gtsList: node, branch: true }))) : (h("span", null)))))))));
+                h("quantum-tree-view", { gtsList: node, branch: true }))) : (h("span", null))))))))) : ''));
     }
     static get is() { return "quantum-tree-view"; }
     static get properties() { return {
