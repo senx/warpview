@@ -122,7 +122,7 @@ export class QuantumChart {
         const me = this;
         const graphOpts = {
             animation: false,
-            legend: { display: this.showLegend },
+            legend: { display: /*this.showLegend*/ false },
             tooltips: {
                 mode: "x",
                 position: "nearest",
@@ -156,13 +156,6 @@ export class QuantumChart {
                 ],
                 yAxes: [
                     {
-<<<<<<< HEAD
-                        ticks: {
-                        //min: 500,
-                        //max: 1000
-                        },
-=======
->>>>>>> f4af6fe528abb42130cf2c947228c27a4fbfb215
                         afterFit: function (scaleInstance) {
                             scaleInstance.width = 100; // sets the width to 100px
                         },
@@ -234,10 +227,6 @@ export class QuantumChart {
                 yMax: Math.max(...maxArray) * 1.05
             };
             this.chartInfos.emit(chartInfos);
-<<<<<<< HEAD
-        }
-    }
-=======
         }
         else {
             console.log("Not alone");
@@ -250,7 +239,6 @@ export class QuantumChart {
             return;
         this.buildGraph();
     }
->>>>>>> f4af6fe528abb42130cf2c947228c27a4fbfb215
     gtsToData(gts) {
         let datasets = [];
         let ticks = [];

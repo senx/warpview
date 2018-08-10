@@ -2364,3 +2364,11 @@
   border-color: var(--quantum-reset-border-color, black);
   width: var(--quantum-reset-width, 10px);
   height: var(--quantum-reset-height, 10px); }
+
+:host #download {
+  z-index: 10;
+  background-color: var(--quantum-download-bg-color, greenyellow);
+  border-radius: var(--quantum-download-border-radius, 0px);
+  border-color: var(--quantum-download-border-color, black);
+  width: var(--quantum-download-width, 10px);
+  height: var(--quantum-download-height, 10px); }
