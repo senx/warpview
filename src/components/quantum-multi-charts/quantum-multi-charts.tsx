@@ -1,14 +1,13 @@
 import {Component, Element, Event, EventEmitter, Watch, Listen, Prop} from "@stencil/core";
+import { GTSLib } from "../../gts.lib";
 
 @Component({
-  tag: "quantum-chart-zoom",
-  styleUrls: [ 
-    '../../../node_modules/font-awesome/css/font-awesome.min.css',
-    "quantum-chart-zoom.scss"],
+  tag: "quantum-multi-charts",
+  styleUrl: "quantum-multi-charts.scss",
   shadow: true
 })
 
-export class QuantumChartZoom{
+export class QuantumMultiCharts{
   @Prop() unit: string = "";
   @Prop() type: string = "line";
   @Prop() chartTitle: string = "";
@@ -25,7 +24,7 @@ export class QuantumChartZoom{
   @Element() el: HTMLElement;
   @Element() wc: HTMLStencilElement;
 
-  @Event() boundsDidChange: EventEmitter;
+  //@Event() boundsDidChange: EventEmitter;
 
   private _options;
   private _chart = {
@@ -78,17 +77,47 @@ export class QuantumChartZoom{
     this._chart.yMaxView = event.detail.yMax;
   }
 
+  dataParser(){
+    let datasets = [];
+    let data = JSON.parse(this.data);
+
+    if(Array.isArray(data[0].gts) && data[0].gts.length == 1){
+      data[0].gts = data[0].gts[0];
+      console.log(data[0].gts);
+    }
+
+    data[0].gts.forEach(d => {
+      if(Array.isArray(d)){
+        let a = [];
+        d.forEach((g) => {
+          if(GTSLib.isGts(g)){
+            a.push(g);
+          }
+        });
+        if(a.length > 0){
+          datasets.push(a);
+        }
+      }else if(GTSLib.isGts(d)){
+        datasets.push(d);
+      }
+    });
+    console.log("dataset", datasets);
+  }
+
+  componentWillLoad(){
+    this.dataParser();
+  }
   xSliderInit() {
     this._slider.x.width = this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().width;
   }
-
+/*
   ySliderInit() {
     this._slider.y.height = this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().height;
   }
-
+*/
   componentDidLoad() {
     this.xSliderInit();
-    this.ySliderInit();
+    //this.ySliderInit();
     this.wc.forceUpdate();
     const chart: any = this.el.shadowRoot.querySelector("#myChart");
     this.png = chart.toBase64Image();
@@ -122,10 +151,10 @@ export class QuantumChartZoom{
     let cursorSize = diff / (this._chart.xMax - this._chart.xMin);
     let cursorOffset = (this._chart.xMinView - this._chart.xMin) / (this._chart.xMax - this._chart.xMin);
     this._slider.x.cursorSize = JSON.stringify({ cursorSize: cursorSize, cursorOffset: cursorOffset });
-    this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView }});
+    //this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView }});
     this.wc.forceUpdate();
   }
-
+/*
   @Listen("yZoom")
   yZoomListener(event: CustomEvent) {
     let yMin = this._chart.yMinView;
@@ -156,17 +185,17 @@ export class QuantumChartZoom{
     this._slider.y.cursorSize = JSON.stringify({ cursorSize: cursorSize, cursorOffset: cursorOffset });
     this.wc.forceUpdate();
   }
-
+*/
   @Listen("xSliderValueChanged")
   xSliderListener(event: CustomEvent) {
     let offset = event.detail.sliderValue - this._chart.xMinView;
     this._chart.xMinView += offset;
     this._chart.xMaxView += offset;
     this._xView = JSON.stringify({min: this._chart.xMinView, max:this._chart.xMaxView});
-    this.boundsDidChange.emit({ bounds: {min: this._chart.xMinView, max: this._chart.xMaxView}});
+    //this.boundsDidChange.emit({ bounds: {min: this._chart.xMinView, max: this._chart.xMaxView}});
     this.wc.forceUpdate();
   }
-
+/*
   @Listen("ySliderValueChanged")
   ySliderListener(event: CustomEvent) {
     let offset = event.detail.sliderValue - this._chart.yMinView;
@@ -175,7 +204,7 @@ export class QuantumChartZoom{
     this._yView = JSON.stringify({min: this._chart.yMinView, max: this._chart.yMaxView});
     this.wc.forceUpdate();
   }
-
+*/
   zoomReset() {
     this._chart.xMinView = this._chart.xMin;
     this._chart.xMaxView = this._chart.xMax;
@@ -185,14 +214,13 @@ export class QuantumChartZoom{
     this._yView = JSON.stringify({min: this._chart.yMin, max: this._chart.yMax});
     this._slider.x.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
     this._slider.y.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
-    this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax }});
+    //this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax }});
     this.wc.forceUpdate();
   }
 
   render(){
     return(
-      <div class="wrapper">
-        <quantum-vertical-zoom-slider height={this._slider.y.height} id="ySlider" min-value={this._chart.yMin} max-value={this._slider.y.max} cursorSize={this._slider.y.cursorSize}/>
+      <div class="charts-container">
         <quantum-chart id="myChart"
           alone={false}
           unit={this.unit}

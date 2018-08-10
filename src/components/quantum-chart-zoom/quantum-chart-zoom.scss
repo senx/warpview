@@ -72,4 +72,13 @@ $fa-font-path: "/assets/fonts";
     height: var(--quantum-reset-height, 10px);
   }
   
+  #download{
+    z-index: 10;
+    background-color: var(--quantum-download-bg-color, greenyellow);
+    border-radius: var(--quantum-download-border-radius, 0px);
+    border-color: var(--quantum-download-border-color, black);
+    width: var(--quantum-download-width, 10px);
+    height: var(--quantum-download-height, 10px);
+  }
+  
 }

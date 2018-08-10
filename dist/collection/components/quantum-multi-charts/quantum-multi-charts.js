@@ -1,4 +1,5 @@
-export class QuantumChartZoom {
+import { GTSLib } from "../../gts.lib";
+export class QuantumMultiCharts {
     constructor() {
         this.unit = "";
         this.type = "line";
@@ -54,15 +55,45 @@ export class QuantumChartZoom {
         this._slider.y.max = event.detail.yMax;
         this._chart.yMaxView = event.detail.yMax;
     }
+    dataParser() {
+        let datasets = [];
+        let data = JSON.parse(this.data);
+        if (Array.isArray(data[0].gts) && data[0].gts.length == 1) {
+            data[0].gts = data[0].gts[0];
+            console.log(data[0].gts);
+        }
+        data[0].gts.forEach(d => {
+            if (Array.isArray(d)) {
+                let a = [];
+                d.forEach((g) => {
+                    if (GTSLib.isGts(g)) {
+                        a.push(g);
+                    }
+                });
+                if (a.length > 0) {
+                    datasets.push(a);
+                }
+            }
+            else if (GTSLib.isGts(d)) {
+                datasets.push(d);
+            }
+        });
+        console.log("dataset", datasets);
+    }
+    componentWillLoad() {
+        this.dataParser();
+    }
     xSliderInit() {
         this._slider.x.width = this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().width;
     }
-    ySliderInit() {
+    /*
+      ySliderInit() {
         this._slider.y.height = this.el.shadowRoot.querySelector("#myChart").getBoundingClientRect().height;
-    }
+      }
+    */
     componentDidLoad() {
         this.xSliderInit();
-        this.ySliderInit();
+        //this.ySliderInit();
         this.wc.forceUpdate();
         const chart = this.el.shadowRoot.querySelector("#myChart");
         this.png = chart.toBase64Image();
@@ -89,48 +120,59 @@ export class QuantumChartZoom {
         let cursorSize = diff / (this._chart.xMax - this._chart.xMin);
         let cursorOffset = (this._chart.xMinView - this._chart.xMin) / (this._chart.xMax - this._chart.xMin);
         this._slider.x.cursorSize = JSON.stringify({ cursorSize: cursorSize, cursorOffset: cursorOffset });
-        this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView } });
+        //this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView }});
         this.wc.forceUpdate();
     }
-    yZoomListener(event) {
+    /*
+      @Listen("yZoom")
+      yZoomListener(event: CustomEvent) {
         let yMin = this._chart.yMinView;
         let yMax = this._chart.yMaxView;
         let diff = yMax - yMin;
+    
         if (event.detail.zoomValue.zoomType > 0) {
-            yMin = yMin + 0.1 * diff * (1 - event.detail.zoomValue.coef);
-            yMax = yMax - 0.1 * diff * event.detail.zoomValue.coef;
-        }
-        else {
-            yMin = yMin - 0.15 * diff * (1 - event.detail.zoomValue.coef);
-            yMax = yMax + 0.15 * diff * event.detail.zoomValue.coef;
+          yMin = yMin + 0.1 * diff * (1 - event.detail.zoomValue.coef);
+          yMax = yMax - 0.1 * diff * event.detail.zoomValue.coef;
+    
+        } else {
+          yMin = yMin - 0.15 * diff * (1 - event.detail.zoomValue.coef);
+          yMax = yMax + 0.15 * diff * event.detail.zoomValue.coef;
         }
         yMin = yMin < this._chart.yMin ? this._chart.yMin : yMin;
         yMax = yMax > this._chart.yMax ? this._chart.yMax : yMax;
+    
         this._chart.yMinView = yMin;
         this._chart.yMaxView = yMax;
-        this._yView = JSON.stringify({ min: this._chart.yMinView, max: this._chart.yMaxView });
+    
+        this._yView = JSON.stringify({min: this._chart.yMinView, max: this._chart.yMaxView});
+    
         diff = this._chart.yMaxView - this._chart.yMinView;
         this._slider.y.max = this._chart.yMax - diff;
+    
         let cursorSize = diff / (this._chart.yMax - this._chart.yMin);
         let cursorOffset = (this._chart.yMax - this._chart.yMaxView) / (this._chart.yMax - this._chart.yMin);
         this._slider.y.cursorSize = JSON.stringify({ cursorSize: cursorSize, cursorOffset: cursorOffset });
         this.wc.forceUpdate();
-    }
+      }
+    */
     xSliderListener(event) {
         let offset = event.detail.sliderValue - this._chart.xMinView;
         this._chart.xMinView += offset;
         this._chart.xMaxView += offset;
         this._xView = JSON.stringify({ min: this._chart.xMinView, max: this._chart.xMaxView });
-        this.boundsDidChange.emit({ bounds: { min: this._chart.xMinView, max: this._chart.xMaxView } });
+        //this.boundsDidChange.emit({ bounds: {min: this._chart.xMinView, max: this._chart.xMaxView}});
         this.wc.forceUpdate();
     }
-    ySliderListener(event) {
+    /*
+      @Listen("ySliderValueChanged")
+      ySliderListener(event: CustomEvent) {
         let offset = event.detail.sliderValue - this._chart.yMinView;
         this._chart.yMinView += offset;
         this._chart.yMaxView += offset;
-        this._yView = JSON.stringify({ min: this._chart.yMinView, max: this._chart.yMaxView });
+        this._yView = JSON.stringify({min: this._chart.yMinView, max: this._chart.yMaxView});
         this.wc.forceUpdate();
-    }
+      }
+    */
     zoomReset() {
         this._chart.xMinView = this._chart.xMin;
         this._chart.xMaxView = this._chart.xMax;
@@ -140,12 +182,11 @@ export class QuantumChartZoom {
         this._yView = JSON.stringify({ min: this._chart.yMin, max: this._chart.yMax });
         this._slider.x.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
         this._slider.y.cursorSize = JSON.stringify({ cursorSize: 1, cursorOffset: 0 });
-        this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax } });
+        //this.boundsDidChange.emit({ bounds: { min: this._chart.xMin, max: this._chart.xMax }});
         this.wc.forceUpdate();
     }
     render() {
-        return (h("div", { class: "wrapper" },
-            h("quantum-vertical-zoom-slider", { height: this._slider.y.height, id: "ySlider", "min-value": this._chart.yMin, "max-value": this._slider.y.max, cursorSize: this._slider.y.cursorSize }),
+        return (h("div", { class: "charts-container" },
             h("quantum-chart", { id: "myChart", alone: false, unit: this.unit, type: this.type, chartTitle: this.chartTitle, responsive: this.responsive, "show-legend": this.showLegend, data: this.data, hiddenData: this.hiddenData, options: this._options, width: this.width, height: this.height, timeMin: this.timeMin, timeMax: this.timeMax, xView: this._xView, yView: this._yView }),
             h("button", { id: "reset", type: "button", onClick: () => this.zoomReset() }, "Zoom Reset"),
             h("a", { href: this.png, download: "chart-" + Date.now() },
@@ -153,7 +194,7 @@ export class QuantumChartZoom {
             h("div", { id: "xSliderWrapper" },
                 h("quantum-horizontal-zoom-map", { id: "xSlider", img: this.png, width: this._slider.x.width, "min-value": this._chart.xMin, "max-value": this._slider.x.max, cursorSize: this._slider.x.cursorSize }))));
     }
-    static get is() { return "quantum-chart-zoom"; }
+    static get is() { return "quantum-multi-charts"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "chartTitle": {
@@ -212,13 +253,6 @@ export class QuantumChartZoom {
             "attr": "width"
         }
     }; }
-    static get events() { return [{
-            "name": "boundsDidChange",
-            "method": "boundsDidChange",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get listeners() { return [{
             "name": "chartInfos",
             "method": "chartInfosWatcher"
@@ -226,14 +260,8 @@ export class QuantumChartZoom {
             "name": "xZoom",
             "method": "xZoomListener"
         }, {
-            "name": "yZoom",
-            "method": "yZoomListener"
-        }, {
             "name": "xSliderValueChanged",
             "method": "xSliderListener"
-        }, {
-            "name": "ySliderValueChanged",
-            "method": "ySliderListener"
         }]; }
-    static get style() { return "/**style-placeholder:quantum-chart-zoom:**/"; }
+    static get style() { return "/**style-placeholder:quantum-multi-charts:**/"; }
 }

@@ -469,6 +469,61 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumMultiCharts {
+      'chartTitle': string;
+      'data': string;
+      'height': string;
+      'hiddenData': string;
+      'options': string;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'timeMax': number;
+      'timeMin': number;
+      'type': string;
+      'unit': string;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumMultiChartsElement extends StencilComponents.QuantumMultiCharts, HTMLStencilElement {}
+
+  var HTMLQuantumMultiChartsElement: {
+    prototype: HTMLQuantumMultiChartsElement;
+    new (): HTMLQuantumMultiChartsElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-multi-charts': HTMLQuantumMultiChartsElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-multi-charts': HTMLQuantumMultiChartsElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-multi-charts': JSXElements.QuantumMultiChartsAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumMultiChartsAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
+      'data'?: string;
+      'height'?: string;
+      'hiddenData'?: string;
+      'options'?: string;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'timeMax'?: number;
+      'timeMin'?: number;
+      'type'?: string;
+      'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumPie {
       'chartTitle': string;
       'data': string;

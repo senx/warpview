@@ -356,6 +356,23 @@ export class GTSLib {
     return false;
   }
 
+  static isBooleanGts(gts){
+    if (!GTSLib.isGts(gts) || gts.v.length === 0){
+      return false;
+    }
+    // We look at the first non-null value, if it's a Boolean it's a boolean GTS,
+    // if it's a number it's a GTS to plot
+    for(let i = 0; i < gts.v.length; i++){
+      if(gts.v[i][gts.v[i].length - 1] !== null){
+        if(typeof (gts.v[i][gts.v[i].length - 1]) !== 'boolean'){
+          return true;
+        }
+        break;
+      }
+    }
+    return false;
+  }
+
   static isGtsToAnnotate(gts) {
     if (!GTSLib.isGts(gts) || gts.v.length === 0) {
       return false;

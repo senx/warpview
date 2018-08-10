@@ -1,6 +1,5 @@
 import '../../stencil.core';
-import { EventEmitter } from "../../stencil.core";
-export declare class QuantumChartZoom {
+export declare class QuantumMultiCharts {
     unit: string;
     type: string;
     chartTitle: string;
@@ -15,7 +14,6 @@ export declare class QuantumChartZoom {
     timeMax: number;
     el: HTMLElement;
     wc: HTMLStencilElement;
-    boundsDidChange: EventEmitter;
     private _options;
     private _chart;
     private _xView;
@@ -24,13 +22,12 @@ export declare class QuantumChartZoom {
     private _slider;
     changeScale(newValue: string, oldValue: string): void;
     chartInfosWatcher(event: CustomEvent): void;
+    dataParser(): void;
+    componentWillLoad(): void;
     xSliderInit(): void;
-    ySliderInit(): void;
     componentDidLoad(): void;
     xZoomListener(event: CustomEvent): void;
-    yZoomListener(event: CustomEvent): void;
     xSliderListener(event: CustomEvent): void;
-    ySliderListener(event: CustomEvent): void;
     zoomReset(): void;
     render(): JSX.Element;
 }

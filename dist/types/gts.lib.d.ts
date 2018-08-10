@@ -81,6 +81,7 @@ export declare class GTSLib {
     static equalMetadata(a: any, b: any): boolean;
     static isGts(item: any): boolean;
     static isGtsToPlot(gts: any): boolean;
+    static isBooleanGts(gts: any): boolean;
     static isGtsToAnnotate(gts: any): boolean;
     static gtsSort(gts: any): void;
     static gtsTimeRange(gts: any): any[];

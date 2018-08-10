@@ -287,33 +287,6 @@ export class QuantumMap {
                 }
               }));
             });
-/*
-                point = {
-                  'type': 'Feature',
-                  'properties': {
-                    'style': {
-                      'color': "#000000",
-                      "radius": this._pathStyle.dotsWeight,
-                      "fillOpacity": this._pathStyle.opacity,
-                      "opacity": this._pathStyle.opacity
-                    },
-                    'value': null,
-                    'popupContent': "Junction " + (i+1)
-                  },
-                  'geometry': {
-                    'type': 'Point',
-                    'coordinates': j[1]
-                  }
-                };
-                geoData.push(Leaflet.geoJSON(point, {
-                  pointToLayer: function (feature, latlng) {
-                    return Leaflet.circleMarker(latlng, feature.properties.style);
-                  },
-                  onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.popupContent);
-                  }
-                }));
-*/
           });
 
           if(d.params[i].displayDots === "true"){
@@ -445,4 +418,3 @@ export class QuantumMap {
     );
   }
 }
-//<div id="mymap" style={{'width': '100%', 'height': '800px'}}/>

@@ -779,6 +779,111 @@
       "shadow": true
     },
     {
+      "tag": "quantum-multi-charts",
+      "dependencies": [
+        "quantum-chart",
+        "quantum-horizontal-zoom-map"
+      ],
+      "componentClass": "QuantumMultiCharts",
+      "componentPath": "components/quantum-multi-charts/quantum-multi-charts.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-multi-charts/quantum-multi-charts.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data"
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "timeMax",
+          "type": "Number",
+          "attr": "time-max"
+        },
+        {
+          "name": "timeMin",
+          "type": "Number",
+          "attr": "time-min"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "chartInfos",
+          "method": "chartInfosWatcher",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "xSliderValueChanged",
+          "method": "xSliderListener",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "xZoom",
+          "method": "xZoomListener",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "wc"
+      },
+      "shadow": true
+    },
+    {
       "tag": "quantum-pie",
       "dependencies": [],
       "componentClass": "QuantumPie",
