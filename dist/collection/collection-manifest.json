@@ -1300,14 +1300,6 @@
           "name": "state"
         }
       ],
-      "listeners": [
-        {
-          "event": "timeSwitched",
-          "method": "switchedListener",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "events": [
         {
           "event": "timeSwitched"

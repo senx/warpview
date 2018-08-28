@@ -1,5 +1,5 @@
-import { Component, Prop, EventEmitter, Event, State, Listen} from '@stencil/core';
-import { GTSLib } from "../../gts.lib";
+import {Component, Event, EventEmitter, Prop, State} from '@stencil/core';
+import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: 'quantum-toggle',
@@ -24,27 +24,7 @@ export class QuantumToggle {
 
   componentWillLoad(){
     this._option = GTSLib.mergeDeep(this._option, JSON.parse(this.option));
-  }
-
-  componentDidLoad(){}
-  componentWillUpdate(){}
-  componentDidUpdate(){}
-
-  render() {
-    return (
-      <div class="container">
-        <div class="text">{this.text1}</div>
-          <label class={ 'switch ' + this._option.switchClass } >
-            {this.checked
-              ? <input type="checkbox" class="switch-input" checked onClick={() => this.switched()}/>
-              : <input type="checkbox" class="switch-input" onClick={() => this.switched()}/>
-            }
-            <span class={ 'switch-label ' + this._option.switchLabelClass } />
-            <span class={ 'switch-handle ' + this._option.switchHandleClass } />
-          </label>
-          <div class="text">{this.text2}</div>
-      </div>
-    );
+    this.state = this.checked;
   }
 
   switched(){
@@ -52,7 +32,20 @@ export class QuantumToggle {
     this.timeSwitched.emit({state: this.state});
   }
 
-  @Listen('timeSwitched')
-    switchedListener(event: CustomEvent){
-    }
+  render() {
+    return (
+      <div class="container">
+        <div class="text">{this.text1}</div>
+        <label class={ 'switch ' + this._option.switchClass } >
+          {this.state
+            ? <input type="checkbox" class="switch-input" checked onClick={() => this.switched()}/>
+            : <input type="checkbox" class="switch-input" onClick={() => this.switched()}/>
+          }
+          <span class={ 'switch-label ' + this._option.switchLabelClass } />
+          <span class={ 'switch-handle ' + this._option.switchHandleClass } />
+        </label>
+        <div class="text">{this.text2}</div>
+      </div>
+    );
+  }
 }

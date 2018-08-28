@@ -9,10 +9,6 @@ export declare class QuantumToggle {
     timeSwitched: EventEmitter;
     private _option;
     componentWillLoad(): void;
-    componentDidLoad(): void;
-    componentWillUpdate(): void;
-    componentDidUpdate(): void;
-    render(): JSX.Element;
     switched(): void;
-    switchedListener(event: CustomEvent): void;
+    render(): JSX.Element;
 }

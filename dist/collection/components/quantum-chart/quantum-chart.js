@@ -124,7 +124,7 @@ export class QuantumChart {
         const me = this;
         const graphOpts = {
             animation: false,
-            legend: { display: this.showLegend },
+            legend: { display: /*this.showLegend*/ false },
             tooltips: {
                 mode: "x",
                 position: "nearest",
