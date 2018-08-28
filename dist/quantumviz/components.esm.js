@@ -64,6 +64,19 @@ var QuantumChipComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumDygraphsComponent = /** @class **/ (function() {
+  function QuantumDygraphs() {
+  }
+  QuantumDygraphs.is = 'quantum-dygraphs';
+  QuantumDygraphs.getModule = function(opts) {
+    
+    return import('./quantum-dygraphs.js').then(function(m) {
+        return m.QuantumDygraphs;
+      });
+
+  }
+});
+
 var QuantumGtsTreeComponent = /** @class **/ (function() {
   function QuantumGtsTree() {
   }
@@ -96,11 +109,7 @@ var QuantumHorizontalZoomMapComponent = /** @class **/ (function() {
   QuantumHorizontalZoomMap.is = 'quantum-horizontal-zoom-map';
   QuantumHorizontalZoomMap.getModule = function(opts) {
     
-<<<<<<< HEAD
     return import('./quantum-chart.js').then(function(m) {
-=======
-    return import('./quantum-chart-zoom.js').then(function(m) {
->>>>>>> f4af6fe528abb42130cf2c947228c27a4fbfb215
         return m.QuantumHorizontalZoomMap;
       });
 
@@ -237,6 +246,19 @@ var QuantumTreeViewComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumVegaComponent = /** @class **/ (function() {
+  function QuantumVega() {
+  }
+  QuantumVega.is = 'quantum-vega';
+  QuantumVega.getModule = function(opts) {
+    
+    return import('./quantum-vega.js').then(function(m) {
+        return m.QuantumVega;
+      });
+
+  }
+});
+
 var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
   function QuantumVerticalZoomSlider() {
   }
@@ -257,6 +279,7 @@ export {
   QuantumChart,
   QuantumChartZoom,
   QuantumChip,
+  QuantumDygraphs,
   QuantumGtsTree,
   QuantumHeatmapSliders,
   QuantumHorizontalZoomMap,
@@ -270,6 +293,7 @@ export {
   QuantumTile,
   QuantumToggle,
   QuantumTreeView,
+  QuantumVega,
   QuantumVerticalZoomSlider,
 };
   

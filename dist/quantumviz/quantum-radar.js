@@ -1,9 +1,9 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart } from './chunk-49509f30.js';
+import { a as Chart } from './chunk-892e15e9.js';
 import { a as GTSLib } from './chunk-0b5c2300.js';
-import './chunk-ee323282.js';
+import './chunk-6133ee7c.js';
 
 class QuantumRadar {
     constructor() {

@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as commonjsGlobal, b as createCommonjsModule } from './chunk-ee323282.js';
+import { a as commonjsGlobal, b as unwrapExports, c as createCommonjsModule } from './chunk-6133ee7c.js';
 import { a as GTSLib } from './chunk-0b5c2300.js';
 
 class QuantumHeatmapSliders {

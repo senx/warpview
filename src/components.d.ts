@@ -23,8 +23,6 @@ declare global {
   interface HTMLAttributes {}
 }
 
-import '@code-dimension/stencil-components';
-
 
 declare global {
 
@@ -248,6 +246,46 @@ declare global {
       'width'?: string;
       'xView'?: string;
       'yView'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumDygraphs {
+      'data': string;
+      'hiddenData': string;
+      'options': string;
+      'type': string;
+    }
+  }
+
+  interface HTMLQuantumDygraphsElement extends StencilComponents.QuantumDygraphs, HTMLStencilElement {}
+
+  var HTMLQuantumDygraphsElement: {
+    prototype: HTMLQuantumDygraphsElement;
+    new (): HTMLQuantumDygraphsElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-dygraphs': HTMLQuantumDygraphsElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-dygraphs': HTMLQuantumDygraphsElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-dygraphs': JSXElements.QuantumDygraphsAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumDygraphsAttributes extends HTMLAttributes {
+      'data'?: string;
+      'hiddenData'?: string;
+      'onReceivedData'?: (event: CustomEvent) => void;
+      'options'?: string;
+      'type'?: string;
     }
   }
 }
@@ -796,6 +834,46 @@ declare global {
       'option'?: string;
       'text1'?: string;
       'text2'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumVega {
+      'data': string;
+      'hiddenData': string;
+      'options': string;
+      'type': string;
+    }
+  }
+
+  interface HTMLQuantumVegaElement extends StencilComponents.QuantumVega, HTMLStencilElement {}
+
+  var HTMLQuantumVegaElement: {
+    prototype: HTMLQuantumVegaElement;
+    new (): HTMLQuantumVegaElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-vega': HTMLQuantumVegaElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-vega': HTMLQuantumVegaElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-vega': JSXElements.QuantumVegaAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumVegaAttributes extends HTMLAttributes {
+      'data'?: string;
+      'hiddenData'?: string;
+      'onReceivedData'?: (event: CustomEvent) => void;
+      'options'?: string;
+      'type'?: string;
     }
   }
 }

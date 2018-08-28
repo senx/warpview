@@ -459,6 +459,55 @@
       ]
     },
     {
+      "tag": "quantum-dygraphs",
+      "dependencies": [],
+      "componentClass": "QuantumDygraphs",
+      "componentPath": "components/quantum-dygraphs/quantum-dygraphs.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/dygraphs/dist/dygraph.min.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "receivedData"
+        }
+      ]
+    },
+    {
       "tag": "quantum-gts-tree",
       "dependencies": [
         "quantum-tree-view"
@@ -1300,6 +1349,55 @@
       ]
     },
     {
+      "tag": "quantum-vega",
+      "dependencies": [],
+      "componentClass": "QuantumVega",
+      "componentPath": "components/quantum-vega/quantum-vega.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-vega/quantum-vega.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "changeScale"
+          ]
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "receivedData"
+        }
+      ]
+    },
+    {
       "tag": "quantum-vertical-zoom-slider",
       "dependencies": [],
       "componentClass": "QuantumVerticalZoomSlider",
@@ -1358,18 +1456,7 @@
       "shadow": true
     }
   ],
-  "collections": [
-    {
-      "name": "@code-dimension/stencil-components",
-      "tags": [
-        "stc-chip",
-        "stc-tab-content",
-        "stc-tab-header",
-        "stc-tabs",
-        "stc-tags"
-      ]
-    }
-  ],
+  "collections": [],
   "compiler": {
     "name": "@stencil/core",
     "version": "0.8.2",

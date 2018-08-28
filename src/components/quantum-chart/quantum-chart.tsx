@@ -14,7 +14,7 @@ export class QuantumChart {
   @Prop() type: string = "line";
   @Prop() chartTitle: string = "";
   @Prop() responsive: boolean = false;
-  @Prop() showLegend: boolean = false;
+  @Prop() showLegend: boolean = true;
   @Prop() data: string = "[]";
   @Prop() hiddenData: string = "[]";
   @Prop() options: string = "{}";
@@ -99,8 +99,8 @@ export class QuantumChart {
       } else {
         this._type = 'time'
         this._chart.options.scales.xAxes[0].type = 'time';
-        this._chart.options.scales.xAxes[0].ticks.stepSize = data.time.stepSize;
-        this._chart.options.scales.xAxes[0].ticks.unit = data.time.unit;
+   //     this._chart.options.scales.xAxes[0].ticks.stepSize = data.time.stepSize;
+    //    this._chart.options.scales.xAxes[0].ticks.unit = data.time.unit;
       }
       this._chart.update();
     }
@@ -122,7 +122,8 @@ export class QuantumChart {
 
   @Watch("xView")
   changeXView() {
-    let xView = JSON.parse(this.xView);
+    return;
+  /*  let xView = JSON.parse(this.xView);
     if (this._type === "timestamp") {
       this._chart.options.scales.xAxes[0].ticks.min = xView.min;
       this._chart.options.scales.xAxes[0].ticks.max = xView.max;
@@ -130,15 +131,17 @@ export class QuantumChart {
       this._chart.options.scales.xAxes[0].ticks.min = moment(xView.min, "x");
       this._chart.options.scales.xAxes[0].ticks.max = moment(xView.max, "x");
     }
-    this._chart.update();
+    console.log(xView);
+    this._chart.update();*/
   }
 
   @Watch("yView")
   changeYView() {
-    let yView = JSON.parse(this.yView);
+    return;
+  /*  let yView = JSON.parse(this.yView);
     this._chart.options.scales.yAxes[0].ticks.min = yView.min;
     this._chart.options.scales.yAxes[0].ticks.max = yView.max;
-    this._chart.update();
+    this._chart.update();*/
   }
 
   buildGraph() {
@@ -147,11 +150,12 @@ export class QuantumChart {
     const sortedTicks = gts.ticks.slice().sort(function (a, b) {
       return a - b;
     });
-    console.log('buildGraph', gts, !!this.timeMin ? this.timeMin : sortedTicks[0])
+    console.log('buildGraph', gts, !!this.timeMin ? this.timeMin : sortedTicks[0]);
+    //console.log("sortedTicks", sortedTicks);
     const me = this;
     const graphOpts = {
       animation: false,
-      legend: {display: /*this.showLegend*/ false},
+      legend: {display: this.showLegend},
       tooltips: {
         mode: "x",
         position: "nearest",
@@ -171,16 +175,13 @@ export class QuantumChart {
         xAxes: [
           {
             ticks: {},
-            /* time: {
-               min: moment(!!this.timeMin ? this.timeMin : sortedTicks[0], "x"),
-               max: moment(
-                 !!this.timeMax ? this.timeMax :sortedTicks[gts.ticks.length - 1],
-                 "x"
-               ),
-               unit: "day"
-             },*/
+             time: {
+               //min: moment(!!this.timeMin ? this.timeMin : sortedTicks[0], "x"),
+               //max: moment(!!this.timeMax ? this.timeMax : sortedTicks[gts.ticks.length - 1], "x"),
+               //unit: "day"
+             },
 
-            type: "time"
+            //type: "time"
           }
         ],
         yAxes: [
@@ -199,20 +200,18 @@ export class QuantumChart {
 
     };
     if (this._type === "timestamp") {
-      delete  graphOpts.scales.xAxes[0].type;
+      delete  graphOpts.scales.xAxes[0].time;
+      //graphOpts.scales.xAxes[0].type = "linear";
       graphOpts.scales.xAxes[0].ticks = {
-        min: !!this.timeMin ? this.timeMin : sortedTicks[0],
-        max: !!this.timeMax ? this.timeMax : sortedTicks[gts.ticks.length - 1],
-        beginAtZero: false
+    //    suggestedMin: !!this.timeMin ? this.timeMin : sortedTicks[0],
+     //   suggestedMax: !!this.timeMax ? this.timeMax : sortedTicks[gts.ticks.length - 1],
+    //    beginAtZero: false
       };
     } else {
-      graphOpts.scales.xAxes[0].ticks = {
-        min: moment(!!this.timeMin ? this.timeMin : sortedTicks[0], "x"),
-        max: moment(
-          !!this.timeMax ? this.timeMax : sortedTicks[gts.ticks.length - 1],
-          "x"
-        ),
-        unit: "day"
+      graphOpts.scales.xAxes[0].time = {
+       // suggestedMin: moment(!!this.timeMin ? this.timeMin : sortedTicks[0], "x"),
+      //  suggestedMax: moment(!!this.timeMax ? this.timeMax : sortedTicks[gts.ticks.length - 1], "x"),
+      //  unit: "day"
       }
     }
     if (this.type === "spline") {
@@ -221,6 +220,15 @@ export class QuantumChart {
     if (this.type === "area") {
       graphOpts["elements"] = {line: {fill: "start"}};
     }
+
+    console.log(JSON.stringify({
+      type: this.type === "bar" ? this.type : "line",
+      data: {
+        labels: gts.ticks,
+        datasets: gts.datasets
+      },
+      options: graphOpts
+    }))
     this._chart = new Chart(ctx, {
       type: this.type === "bar" ? this.type : "line",
       data: {
@@ -229,6 +237,7 @@ export class QuantumChart {
       },
       options: graphOpts
     });
+
 
     let maxArray = [];
     let minArray = [];
@@ -247,8 +256,8 @@ export class QuantumChart {
 
     this._ySlider.min = Math.min(...minArray);
     this._ySlider.max = Math.max(...maxArray) * 1.05;
-    this._chart.options.scales.yAxes[0].ticks.min = this._ySlider.min;
-    this._chart.options.scales.yAxes[0].ticks.max = this._ySlider.max;
+   // this._chart.options.scales.yAxes[0].ticks.suggestedMin = this._ySlider.min;
+   // this._chart.options.scales.yAxes[0].ticks.suggestedMax = this._ySlider.max;
     this._chart.update();
     this._xSlider.min = sortedTicks[0];
     this._xSlider.max = sortedTicks[sortedTicks.length - 1];
@@ -294,7 +303,7 @@ export class QuantumChart {
             let data = [];
             if (g.v) {
               g.v.forEach(d => {
-                ticks.push(d[0] / 1000.0);
+                ticks.push(d[0] );
                 data.push(d[d.length - 1]);
               });
               let color = GTSLib.getColor(pos);

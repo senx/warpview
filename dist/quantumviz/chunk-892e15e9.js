@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as commonjsGlobal, b as createCommonjsModule } from './chunk-ee323282.js';
+import { a as commonjsGlobal, b as unwrapExports, c as createCommonjsModule } from './chunk-6133ee7c.js';
 
 /**
  * @namespace Chart.helpers
@@ -18975,4 +18975,4 @@ Chart.canvasHelpers = Chart.helpers.canvas;
  */
 Chart.layoutService = Chart.layouts;
 
-export { chart as a, hooks as b };
+export { chart as a };
