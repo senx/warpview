@@ -45,7 +45,7 @@ export class QuantumDygraphs {
         }
     }
     gtsToData(gts) {
-        let datasets = [];
+        let data = [];
         let ticks = [];
         let pos = 0;
         if (!gts) {
@@ -58,7 +58,6 @@ export class QuantumDygraphs {
                     let i = 0;
                     console.log(d.gts);
                     d.gts.forEach(g => {
-                        let data = [];
                         if (g.v) {
                             GTSLib.gtsSort(g);
                             g.v.forEach(d => {
@@ -98,14 +97,14 @@ export class QuantumDygraphs {
                             else {
                                 ds["lineTension"] = 0;
                             }
-                            datasets.push(ds);
+                            //datasets.push(ds);
                             pos++;
                             i++;
                         }
                     });
                 }
             });
-        return { datasets: datasets, ticks: GTSLib.unique(ticks) };
+        //return {datasets: datasets, ticks: GTSLib.unique(ticks)};
     }
     isStepped() {
         if (this.type.startsWith("step")) {

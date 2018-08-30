@@ -61,12 +61,50 @@
   <quantum-gts-tree data='[]' id="tree"></quantum-gts-tree>
   
   <div id="maincontainer" >
-
+<!--
     <quantum-multi-charts responsive=true unit="" chart-title=""  id="chart" show-legend=false data='[]' hidden-data='[]' options='{}'></quantum-multi-charts>
-    
+-->
+<div id="maincontainer">
+  <quantum-toggle id="timeSwitch" text-1="date" text-2="timestamp" ></quantum-toggle>
+  <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]' options=""></quantum-annotation>
+  <quantum-chart-zoom responsive="true" unit="" chart-title="" height="500" id="chart" show-legend="false" data='[]' hidden-data='[]' options='{}' config='{"cursor": {"class": "mycursor"}, "rail": {"class": "myrail"}}'></quantum-chart-zoom>
+</div>    
   <script language="JavaScript">
-
+   
     $(function () {
+
+      var toHide = [];
+      $('#chart').on('boundsDidChange', function (event) {
+        console.log('boundsDidChange', event.detail)
+        $('#annotation').attr('time-min', event.detail.bounds.min).attr('time-max', event.detail.bounds.max);
+      });
+
+      $('#tree').on("quantumSelectedGTS", function (event) {
+        if(!toHide.find(function (i) { return i === event.detail.label; }) && !event.detail.selected) {
+          toHide.push(event.detail.label);
+        } else {
+          toHide = toHide.filter(function (i) { return i !== event.detail.label; });
+        }
+        $('#chart').attr('hidden-data', JSON.stringify(toHide));
+        $('#annotation').attr('hidden-data', JSON.stringify(toHide));
+      });
+
+      $('#timeSwitch').on("timeSwitched", function (event) {
+        if (event.detail.state) {
+          var object = { "time": { "timeMode": "timestamp", "stepSize": 86400000, "unit": "millisecond", "displayFormats": "x" } };
+          $('quantum-chart-zoom').attr('options', JSON.stringify(object));
+          $('quantum-annotation').attr('options', JSON.stringify(object));
+          $('quantum-vega').attr('options', JSON.stringify(object));
+          $('quantum-dygraphs').attr('options', JSON.stringify(object));
+        }
+        else {
+          var object = { "time": { "timeMode": "", "stepSize": 1, "unit": "day" } };
+          $('quantum-chart-zoom').attr('options', JSON.stringify(object));
+          $('quantum-annotation').attr('options', JSON.stringify(object));
+          $('quantum-dygraphs').attr('options', JSON.stringify(object));
+        }
+      });
+
       var data = [[
         [{
         "c": "warp.store.hbase.puts.committed",

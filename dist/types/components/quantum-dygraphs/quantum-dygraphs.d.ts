@@ -16,10 +16,7 @@ export declare class QuantumDygraphs {
     private _chartColors;
     hideData(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
-    gtsToData(gts: any): {
-        datasets: any[];
-        ticks: any[];
-    };
+    gtsToData(gts: any): void;
     isStepped(): string | false;
     drawChart(): void;
     componentWillLoad(): void;

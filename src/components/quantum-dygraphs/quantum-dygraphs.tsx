@@ -126,7 +126,7 @@ export class QuantumDygraphs {
           });
         }
       });
-    return {datasets: datasets, ticks: GTSLib.unique(ticks)};
+    //return {datasets: datasets, ticks: GTSLib.unique(ticks)};
   }
 
   isStepped() {

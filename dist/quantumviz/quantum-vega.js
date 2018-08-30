@@ -27651,7 +27651,7 @@ function roundNode(node) {
   node.y1 = Math.round(node.y1);
 }
 
-function treemapDice(parent, x0, y0, x1, y1) {
+function dice(parent, x0, y0, x1, y1) {
   var nodes = parent.children,
       node,
       i = -1,
@@ -27684,7 +27684,7 @@ function partition$2() {
   function positionNode(dy, n) {
     return function(node) {
       if (node.children) {
-        treemapDice(node, node.x0, dy * (node.depth + 1) / n, node.x1, dy * (node.depth + 2) / n);
+        dice(node, node.x0, dy * (node.depth + 1) / n, node.x1, dy * (node.depth + 2) / n);
       }
       var x0 = node.x0,
           y0 = node.y0,
@@ -28021,7 +28021,7 @@ function tree() {
   return tree;
 }
 
-function treemapSlice(parent, x0, y0, x1, y1) {
+function slice$6(parent, x0, y0, x1, y1) {
   var nodes = parent.children,
       node,
       i = -1,
@@ -28077,8 +28077,8 @@ function squarifyRatio(ratio, parent, x0, y0, x1, y1) {
 
     // Position and record the row orientation.
     rows.push(row = {value: sumValue, dice: dx < dy, children: nodes.slice(i0, i1)});
-    if (row.dice) treemapDice(row, x0, y0, x1, value ? y0 += dy * sumValue / value : y1);
-    else treemapSlice(row, x0, y0, value ? x0 += dx * sumValue / value : x1, y1);
+    if (row.dice) dice(row, x0, y0, x1, value ? y0 += dy * sumValue / value : y1);
+    else slice$6(row, x0, y0, value ? x0 += dx * sumValue / value : x1, y1);
     value -= sumValue, i0 = i1;
   }
 
@@ -28236,7 +28236,7 @@ function treemapBinary(parent, x0, y0, x1, y1) {
 }
 
 function treemapSliceDice(parent, x0, y0, x1, y1) {
-  (parent.depth & 1 ? treemapSlice : treemapDice)(parent, x0, y0, x1, y1);
+  (parent.depth & 1 ? slice$6 : dice)(parent, x0, y0, x1, y1);
 }
 
 var treemapResquarify = (function custom(ratio) {
@@ -28255,8 +28255,8 @@ var treemapResquarify = (function custom(ratio) {
       while (++j < m) {
         row = rows[j], nodes = row.children;
         for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value;
-        if (row.dice) treemapDice(row, x0, y0, x1, y0 += (y1 - y0) * row.value / value);
-        else treemapSlice(row, x0, y0, x0 += (x1 - x0) * row.value / value, y1);
+        if (row.dice) dice(row, x0, y0, x1, y0 += (y1 - y0) * row.value / value);
+        else slice$6(row, x0, y0, x0 += (x1 - x0) * row.value / value, y1);
         value -= row.value;
       }
     } else {
@@ -28625,8 +28625,8 @@ prototype$78.transform = function(_, pulse) {
 
 var Tiles = {
   binary: treemapBinary,
-  dice: treemapDice,
-  slice: treemapSlice,
+  dice: dice,
+  slice: slice$6,
   slicedice: treemapSliceDice,
   squarify: squarify,
   resquarify: treemapResquarify
