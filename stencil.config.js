@@ -4,9 +4,6 @@ exports.config = {
   plugins: [sass()],
   enableCache: true,
   globalStyle: 'src/globals/style.scss',
-  copy: [
-    { src: 'assets' }
-  ],
   outputTargets: [
     {
       type: "dist"
@@ -14,7 +11,10 @@ exports.config = {
     {
       type: "www"
     }
-  ]
+  ],
+  nodeResolve: {
+    browser: true
+  }
 };
 
 exports.devServer = {

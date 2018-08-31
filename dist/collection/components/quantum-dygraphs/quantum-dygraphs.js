@@ -1,53 +1,46 @@
-import { GTSLib } from "../../gts.lib";
-import Dygraph from "dygraphs";
+import { GTSLib } from '../../gts.lib';
+import Dygraph from 'dygraphs';
+/**
+ * options :
+ *  gridLineColor: 'red | #fff'
+ *  time.timeMode: 'timestamp | date'
+ *  showRangeSelector: boolean
+ *  type : 'line | area | step'
+ *
+ */
 export class QuantumDygraphs {
     constructor() {
-        this.data = "[]";
-        this.type = "line";
-        this.options = "{}";
-        this.hiddenData = "[]";
-        this._mapIndex = {};
-        this._classList = [];
-        this._type = 'timestamp';
-        this._chartMap = {};
-        this._chartColors = [];
+        this.data = '[]';
+        this.options = '{}';
+        this.hiddenData = '[]';
+        this.responsive = false;
+        this._option = {
+            gridLineColor: '#000000',
+            time: { timeMode: 'date' },
+            showRangeSelector: true,
+            type: 'line'
+        };
     }
     hideData(newValue, oldValue) {
         if (oldValue !== newValue) {
-            const hiddenData = GTSLib.cleanArray(JSON.parse(newValue));
-            this._classList.forEach(c => {
-                this._chart.then((result) => {
-                    result.view.remove("dataList", (d) => { return d.c === c; });
-                });
-                this._chart.then((result) => {
-                    result.view.resize().run();
-                });
-            });
-            this._classList.forEach(c => {
-                if (!hiddenData.find((e) => { return e === c; })) {
-                    this._chart.then((result) => {
-                        result.view.insert("dataList", this._data.datasets[this._classList.indexOf(c)].data);
-                    });
-                }
-                ;
-                this._chart.then((result) => {
-                    result.view.resize().run();
-                });
-            });
+            this.drawChart();
         }
-        this._chart.then((result) => {
-            console.log("getState : ", result.view.getDate());
-        });
     }
     changeScale(newValue, oldValue) {
         if (oldValue !== newValue) {
-            console.log("Time changed !");
+            this._option = JSON.parse(newValue);
+            this.drawChart();
         }
     }
     gtsToData(gts) {
-        let data = [];
-        let ticks = [];
+        const datasets = [];
+        const data = {};
         let pos = 0;
+        let i = 0;
+        let labels = [];
+        let colors = [];
+        const hiddenData = JSON.parse(this.hiddenData);
+        console.debug('[QuantumDygraphs] - gtsToData - hiddenData', hiddenData);
         if (!gts) {
             return;
         }
@@ -55,87 +48,125 @@ export class QuantumDygraphs {
             gts.forEach(d => {
                 if (d.gts) {
                     d.gts = GTSLib.flatDeep(d.gts);
-                    let i = 0;
-                    console.log(d.gts);
+                    labels = new Array(d.gts.length);
+                    labels[0] = 'Date';
+                    colors = new Array(d.gts.length);
                     d.gts.forEach(g => {
-                        if (g.v) {
-                            GTSLib.gtsSort(g);
-                            g.v.forEach(d => {
-                                ticks.push(d[0]);
-                                data.push(d[d.length - 1]);
-                            });
-                            let color = GTSLib.getColor(pos);
-                            if (d.params && d.params[i] && d.params[i].color) {
-                                color = d.params[i].color;
-                            }
+                        if (g.v && GTSLib.isGtsToPlot(g)) {
                             let label = GTSLib.serializeGtsMetadata(g);
-                            this._mapIndex[label] = pos;
-                            if (d.params && d.params[i] && d.params[i].key) {
-                                label = d.params[i].key;
-                            }
-                            let ds = {
-                                label: label,
-                                data: data,
-                                pointRadius: 0,
-                                fill: false,
-                                steppedLine: this.isStepped(),
-                                borderColor: color,
-                                borderWidth: 1,
-                                backgroundColor: GTSLib.transparentize(color, 0.5)
-                            };
-                            if (d.params && d.params[i] && d.params[i].interpolate) {
-                                switch (d.params[i].interpolate) {
-                                    case "line":
-                                        ds["lineTension"] = 0;
-                                        break;
-                                    case "spline":
-                                        break;
-                                    case "area":
-                                        ds.fill = true;
+                            if (hiddenData.filter((i) => i === label).length === 0) {
+                                console.debug('[QuantumDygraphs] - gtsToData - drawing', label);
+                                GTSLib.gtsSort(g);
+                                g.v.forEach(value => {
+                                    if (!data[value[0]]) {
+                                        data[value[0]] = new Array(d.gts.length);
+                                        data[value[0]].fill(null);
+                                    }
+                                    data[value[0]][i] = value[value.length - 1];
+                                });
+                                let color = GTSLib.getColor(pos);
+                                if (d.params && d.params[i] && d.params[i].color) {
+                                    color = d.params[i].color;
                                 }
+                                if (d.params && d.params[i] && d.params[i].key) {
+                                    label = d.params[i].key;
+                                }
+                                console.log(i, label, color);
+                                labels[i + 1] = label;
+                                colors[i] = color;
+                                i++;
                             }
-                            else {
-                                ds["lineTension"] = 0;
-                            }
-                            //datasets.push(ds);
-                            pos++;
-                            i++;
                         }
+                        pos++;
                     });
                 }
             });
-        //return {datasets: datasets, ticks: GTSLib.unique(ticks)};
+        labels = labels.filter((i) => !!i);
+        Object.keys(data).forEach(timestamp => {
+            if (this._option.time && this._option.time.timeMode === 'timestamp') {
+                datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
+            }
+            else {
+                datasets.push([new Date(parseInt(timestamp) / 100)].concat(data[timestamp].slice(0, labels.length - 1)));
+            }
+        });
+        datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
+        return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
     }
     isStepped() {
-        if (this.type.startsWith("step")) {
-            return this.type.replace("step-", "");
-        }
-        else {
-            return false;
-        }
+        return this._option.type === 'step';
     }
-    drawChart() {
-        this._chart = new Dygraph(this.el.querySelector("#myChart"), [
-            [1, 50, NaN],
-            [2, 20, NaN],
-            [3, 50, NaN],
-            [1, NaN, 100],
-            [2, NaN, 80],
-            [3, NaN, 60],
-        ], {
-            labels: ["x", "A", "B"],
-            rollPeriod: 7,
-            showRoller: true,
-            colors: ["orange", "red"]
+    isStacked() {
+        return this._option.type === 'area';
+    }
+    legendFormatter(data) {
+        if (data.x == null) {
+            // This happens when there's no selection and {legend: 'always'} is set.
+            return '<br>' + data.series.map(function (series) {
+                return series.dashHTML + ' ' + series.labelHTML;
+            }).join('<br>');
+        }
+        let html = data.xHTML;
+        data.series.forEach(function (series) {
+            if (!series.isVisible || !series.yHTML)
+                return;
+            let labeledData = series.labelHTML + ': ' + series.yHTML;
+            if (series.isHighlighted) {
+                labeledData = '<b>' + labeledData + '</b>';
+            }
+            html += '<br>' + series.dashHTML + ' ' + labeledData;
+        });
+        return html;
+    }
+    highlightCallback(event, x, points, row, seriesName) {
+        console.log(this);
+        this.pointHover.emit({
+            x: event.x,
+            y: event.y
         });
     }
-    componentWillLoad() { }
+    zoomCallback(minDate, maxDate, yRanges) {
+        this.boundsDidChange.emit({
+            bounds: {
+                min: minDate,
+                max: maxDate
+            }
+        });
+    }
+    drawChart() {
+        const data = this.gtsToData(JSON.parse(this.data));
+        console.log(this.el.parentElement.clientWidth, this.responsive);
+        this._chart = new Dygraph(this.el.querySelector('#myChart'), data.datasets, {
+            height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
+            width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
+            labels: data.labels,
+            showRoller: false,
+            showRangeSelector: this._option.showRangeSelector || true,
+            connectSeparatedPoints: true,
+            colors: data.colors,
+            legend: 'follow',
+            stackedGraph: this.isStacked(),
+            strokeBorderWidth: this.isStacked() ? null : 1,
+            stepPlot: this.isStepped(),
+            labelsSeparateLines: true,
+            highlightSeriesOpts: {
+                strokeWidth: 1,
+                strokeBorderWidth: 1,
+                highlightCircleSize: 3,
+            },
+            gridLineColor: this._option.gridLineColor || '#000000',
+            legendFormatter: this.legendFormatter,
+            highlightCallback: this.highlightCallback.bind(this),
+            zoomCallback: this.zoomCallback.bind(this),
+            axisLabelWidth: 94
+        });
+    }
     componentDidLoad() {
-        console.log(this.gtsToData(JSON.parse(this.data)), NaN);
+        this._option = JSON.parse(this.options);
         this.drawChart();
     }
     render() {
-        return (h("div", { id: "myChart" }));
+        return h("div", { id: "myChart" });
     }
     static get is() { return "quantum-dygraphs"; }
     static get properties() { return {
@@ -156,9 +187,9 @@ export class QuantumDygraphs {
             "attr": "options",
             "watchCallbacks": ["changeScale"]
         },
-        "type": {
-            "type": String,
-            "attr": "type"
+        "responsive": {
+            "type": Boolean,
+            "attr": "responsive"
         }
     }; }
     static get events() { return [{
@@ -167,6 +198,20 @@ export class QuantumDygraphs {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }, {
+            "name": "boundsDidChange",
+            "method": "boundsDidChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "pointHover",
+            "method": "pointHover",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
         }]; }
     static get style() { return "/**style-placeholder:quantum-dygraphs:**/"; }
 }
+QuantumDygraphs.DEFAULT_WIDTH = 800;
+QuantumDygraphs.DEFAULT_HEIGHT = 600;

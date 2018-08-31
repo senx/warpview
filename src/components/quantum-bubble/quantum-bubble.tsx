@@ -4,7 +4,7 @@ import {GTSLib} from '../../gts.lib';
 
 @Component({
   tag: 'quantum-bubble',
-  styleUrl: 'quantum-bubble.css',
+  styleUrl: 'quantum-bubble.scss',
   shadow: true
 })
 export class QuantumBubble {

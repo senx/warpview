@@ -12,13 +12,7 @@ export class GTSLib {
   }
 
   static cleanArray(actual: any[]) {
-    var newArray = [];
-    actual.forEach(element => {
-      if(element) {
-        newArray.push(element);
-      }
-    });
-    return newArray;
+    return actual.filter((i) => !!i);
   }
 
   /**

@@ -38,19 +38,6 @@ var QuantumChartComponent = /** @class **/ (function() {
   }
 });
 
-var QuantumChartZoomComponent = /** @class **/ (function() {
-  function QuantumChartZoom() {
-  }
-  QuantumChartZoom.is = 'quantum-chart-zoom';
-  QuantumChartZoom.getModule = function(opts) {
-    
-    return import('./quantum-chart-zoom.js').then(function(m) {
-        return m.QuantumChartZoom;
-      });
-
-  }
-});
-
 var QuantumChipComponent = /** @class **/ (function() {
   function QuantumChip() {
   }
@@ -98,32 +85,6 @@ var QuantumHeatmapSlidersComponent = /** @class **/ (function() {
     
     return import('./quantum-heatmap-sliders.js').then(function(m) {
         return m.QuantumHeatmapSliders;
-      });
-
-  }
-});
-
-var QuantumHorizontalZoomMapComponent = /** @class **/ (function() {
-  function QuantumHorizontalZoomMap() {
-  }
-  QuantumHorizontalZoomMap.is = 'quantum-horizontal-zoom-map';
-  QuantumHorizontalZoomMap.getModule = function(opts) {
-    
-    return import('./quantum-chart.js').then(function(m) {
-        return m.QuantumHorizontalZoomMap;
-      });
-
-  }
-});
-
-var QuantumHorizontalZoomSliderComponent = /** @class **/ (function() {
-  function QuantumHorizontalZoomSlider() {
-  }
-  QuantumHorizontalZoomSlider.is = 'quantum-horizontal-zoom-slider';
-  QuantumHorizontalZoomSlider.getModule = function(opts) {
-    
-    return import('./quantum-horizontal-zoom-slider.js').then(function(m) {
-        return m.QuantumHorizontalZoomSlider;
       });
 
   }
@@ -246,44 +207,15 @@ var QuantumTreeViewComponent = /** @class **/ (function() {
   }
 });
 
-var QuantumVegaComponent = /** @class **/ (function() {
-  function QuantumVega() {
-  }
-  QuantumVega.is = 'quantum-vega';
-  QuantumVega.getModule = function(opts) {
-    
-    return import('./quantum-vega.js').then(function(m) {
-        return m.QuantumVega;
-      });
-
-  }
-});
-
-var QuantumVerticalZoomSliderComponent = /** @class **/ (function() {
-  function QuantumVerticalZoomSlider() {
-  }
-  QuantumVerticalZoomSlider.is = 'quantum-vertical-zoom-slider';
-  QuantumVerticalZoomSlider.getModule = function(opts) {
-    
-    return import('./quantum-chart-zoom.js').then(function(m) {
-        return m.QuantumVerticalZoomSlider;
-      });
-
-  }
-});
-
 export {
   
   QuantumAnnotation,
   QuantumBubble,
   QuantumChart,
-  QuantumChartZoom,
   QuantumChip,
   QuantumDygraphs,
   QuantumGtsTree,
   QuantumHeatmapSliders,
-  QuantumHorizontalZoomMap,
-  QuantumHorizontalZoomSlider,
   QuantumMap,
   QuantumMultiCharts,
   QuantumPie,
@@ -293,7 +225,5 @@ export {
   QuantumTile,
   QuantumToggle,
   QuantumTreeView,
-  QuantumVega,
-  QuantumVerticalZoomSlider,
 };
   

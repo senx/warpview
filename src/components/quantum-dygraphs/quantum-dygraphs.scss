@@ -1,0 +1,22 @@
+quantum-dygraphs {
+
+  div#myChart {
+    width: var(--quantum-chart-width, 100%);
+    height: var(--quantum-chart-height, 100%);
+    margin-right: 200px;
+
+    .dygraph-legend {
+      background-color: var(--quantum-chart-legend-bg, #000000) !important;
+      color: var(--quantum-chart-legend-color, #ffffff) !important;
+      padding: 10px;
+      border: 1px solid grey;
+      border-radius: 5px;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      pointer-events: none;
+    }
+    .dygraph-axis-label {
+      color: var(--quantum-chart-label-color, #000000) !important;
+    }
+  }
+}

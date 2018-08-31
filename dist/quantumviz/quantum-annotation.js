@@ -1,9 +1,9 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart } from './chunk-892e15e9.js';
-import { a as GTSLib } from './chunk-0b5c2300.js';
-import './chunk-6133ee7c.js';
+import { a as Chart } from './chunk-35f9f27a.js';
+import { a as GTSLib } from './chunk-e52051aa.js';
+import './chunk-ee323282.js';
 
 class QuantumAnnotation {
     constructor() {
@@ -107,7 +107,7 @@ class QuantumAnnotation {
                         return;
                     },
                     callbacks: {
-                        title: (tooltipItems, _data) => {
+                        title: (tooltipItems) => {
                             return tooltipItems[0].xLabel || "";
                         },
                         label: (tooltipItem, data) => {

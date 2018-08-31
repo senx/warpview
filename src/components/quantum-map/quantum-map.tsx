@@ -4,16 +4,15 @@ import Leaflet, {GeoJSONOptions, PathOptions} from 'leaflet';
 import 'leaflet.heat';
 import {GTSLib} from "../../gts.lib";
 import 'leaflet.markercluster';
-import {GeoJsonObject, LineString} from 'geojson';
+import {LineString} from 'geojson';
 
 @Component({
   tag: 'quantum-map',
   styleUrls: [
     '../../../node_modules/leaflet/dist/leaflet.css',
-    'quantum-map.scss',
     '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.css',
     '../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css',
-    '../../../node_modules/font-awesome/scss/font-awesome.scss'
+    'quantum-map.scss'
   ],
   shadow: true
 })
@@ -42,7 +41,7 @@ export class QuantumMap {
   private _mapSize = {
     width: this.width,
     height: this.height
-  }
+  };
   
   private _pathStyle = {
     weight: 5,

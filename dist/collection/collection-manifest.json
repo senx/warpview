@@ -98,7 +98,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-bubble/quantum-bubble.css"
+            "components/quantum-bubble/quantum-bubble.scss"
           ]
         }
       },
@@ -297,130 +297,6 @@
       "shadow": true
     },
     {
-      "tag": "quantum-chart-zoom",
-      "dependencies": [
-        "quantum-chart",
-        "quantum-horizontal-zoom-map",
-        "quantum-vertical-zoom-slider"
-      ],
-      "componentClass": "QuantumChartZoom",
-      "componentPath": "components/quantum-chart-zoom/quantum-chart-zoom.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "../node_modules/font-awesome/css/font-awesome.min.css",
-            "components/quantum-chart-zoom/quantum-chart-zoom.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
-          "name": "data",
-          "type": "String",
-          "attr": "data"
-        },
-        {
-          "name": "height",
-          "type": "String",
-          "attr": "height"
-        },
-        {
-          "name": "hiddenData",
-          "type": "String",
-          "attr": "hidden-data"
-        },
-        {
-          "name": "options",
-          "type": "String",
-          "attr": "options",
-          "watch": [
-            "changeScale"
-          ]
-        },
-        {
-          "name": "responsive",
-          "type": "Boolean",
-          "attr": "responsive"
-        },
-        {
-          "name": "showLegend",
-          "type": "Boolean",
-          "attr": "show-legend"
-        },
-        {
-          "name": "timeMax",
-          "type": "Number",
-          "attr": "time-max"
-        },
-        {
-          "name": "timeMin",
-          "type": "Number",
-          "attr": "time-min"
-        },
-        {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
-        },
-        {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
-        },
-        {
-          "name": "width",
-          "type": "String",
-          "attr": "width"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "chartInfos",
-          "method": "chartInfosWatcher",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "xSliderValueChanged",
-          "method": "xSliderListener",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "xZoom",
-          "method": "xZoomListener",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "ySliderValueChanged",
-          "method": "ySliderListener",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "yZoom",
-          "method": "yZoomListener",
-          "passive": false,
-          "capture": false
-        }
-      ],
-      "hostElement": {
-        "name": "wc"
-      },
-      "events": [
-        {
-          "event": "boundsDidChange"
-        }
-      ],
-      "shadow": true
-    },
-    {
       "tag": "quantum-chip",
       "dependencies": [],
       "componentClass": "QuantumChip",
@@ -466,7 +342,8 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "../node_modules/dygraphs/dist/dygraph.min.css"
+            "../node_modules/dygraphs/dist/dygraph.min.css",
+            "components/quantum-dygraphs/quantum-dygraphs.scss"
           ]
         }
       },
@@ -493,15 +370,21 @@
           ]
         },
         {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
         }
       ],
       "hostElement": {
         "name": "el"
       },
       "events": [
+        {
+          "event": "boundsDidChange"
+        },
+        {
+          "event": "pointHover"
+        },
         {
           "event": "receivedData"
         }
@@ -592,127 +475,6 @@
       "shadow": true
     },
     {
-      "tag": "quantum-horizontal-zoom-map",
-      "dependencies": [],
-      "componentClass": "QuantumHorizontalZoomMap",
-      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-map.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-zoom-slider/quantum-horizontal-zoom-map.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "cursorSize",
-          "type": "String",
-          "attr": "cursor-size",
-          "watch": [
-            "changeCursorSize"
-          ]
-        },
-        {
-          "name": "img",
-          "type": "String",
-          "attr": "img"
-        },
-        {
-          "name": "maxValue",
-          "type": "Number",
-          "attr": "max-value"
-        },
-        {
-          "name": "minValue",
-          "type": "Number",
-          "attr": "min-value"
-        },
-        {
-          "name": "width",
-          "type": "Number",
-          "attr": "width",
-          "watch": [
-            "initSize"
-          ]
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "xSliderValueChanged"
-        },
-        {
-          "event": "xZoom"
-        }
-      ],
-      "shadow": true
-    },
-    {
-      "tag": "quantum-horizontal-zoom-slider",
-      "dependencies": [],
-      "componentClass": "QuantumHorizontalZoomSlider",
-      "componentPath": "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-zoom-slider/quantum-horizontal-zoom-slider.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "cursorSize",
-          "type": "String",
-          "attr": "cursor-size",
-          "watch": [
-            "changeCursorSize"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": "Number",
-          "attr": "max-value"
-        },
-        {
-          "name": "minValue",
-          "type": "Number",
-          "attr": "min-value"
-        },
-        {
-          "name": "width",
-          "type": "Number",
-          "attr": "width",
-          "watch": [
-            "initSize"
-          ]
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "xSliderValueChanged"
-        },
-        {
-          "event": "xZoom"
-        }
-      ],
-      "shadow": true
-    },
-    {
       "tag": "quantum-map",
       "dependencies": [
         "quantum-heatmap-sliders"
@@ -722,7 +484,6 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "../node_modules/font-awesome/scss/font-awesome.scss",
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.css",
             "../node_modules/leaflet/dist/leaflet.css",
@@ -830,8 +591,7 @@
     {
       "tag": "quantum-multi-charts",
       "dependencies": [
-        "quantum-chart",
-        "quantum-horizontal-zoom-map"
+        "quantum-chart"
       ],
       "componentClass": "QuantumMultiCharts",
       "componentPath": "components/quantum-multi-charts/quantum-multi-charts.js",
@@ -1339,113 +1099,6 @@
           "event": "selected"
         }
       ]
-    },
-    {
-      "tag": "quantum-vega",
-      "dependencies": [],
-      "componentClass": "QuantumVega",
-      "componentPath": "components/quantum-vega/quantum-vega.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-vega/quantum-vega.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "data",
-          "type": "String",
-          "attr": "data"
-        },
-        {
-          "name": "hiddenData",
-          "type": "String",
-          "attr": "hidden-data",
-          "watch": [
-            "hideData"
-          ]
-        },
-        {
-          "name": "options",
-          "type": "String",
-          "attr": "options",
-          "watch": [
-            "changeScale"
-          ]
-        },
-        {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "receivedData"
-        }
-      ]
-    },
-    {
-      "tag": "quantum-vertical-zoom-slider",
-      "dependencies": [],
-      "componentClass": "QuantumVerticalZoomSlider",
-      "componentPath": "components/quantum-zoom-slider/quantum-vertical-zoom-slider.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-zoom-slider/quantum-vertical-zoom-slider.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "cursorSize",
-          "type": "String",
-          "attr": "cursor-size",
-          "watch": [
-            "changeCursorSize"
-          ]
-        },
-        {
-          "name": "height",
-          "type": "Number",
-          "attr": "height",
-          "watch": [
-            "initSize"
-          ]
-        },
-        {
-          "name": "maxValue",
-          "type": "Number",
-          "attr": "max-value"
-        },
-        {
-          "name": "minValue",
-          "type": "Number",
-          "attr": "min-value"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "ySliderValueChanged"
-        },
-        {
-          "event": "yZoom"
-        }
-      ],
-      "shadow": true
     }
   ],
   "collections": [],

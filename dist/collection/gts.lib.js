@@ -8,13 +8,7 @@ export class GTSLib {
         return GTSLib.color[i % GTSLib.color.length];
     }
     static cleanArray(actual) {
-        var newArray = [];
-        actual.forEach(element => {
-            if (element) {
-                newArray.push(element);
-            }
-        });
-        return newArray;
+        return actual.filter((i) => !!i);
     }
     /**
      * Return a Set

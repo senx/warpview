@@ -1,4 +1,3 @@
-
 import { Component, Prop, EventEmitter, Event, Element} from '@stencil/core';
 
 @Component({

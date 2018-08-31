@@ -1,9 +1,9 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart } from './chunk-892e15e9.js';
-import { a as GTSLib } from './chunk-0b5c2300.js';
-import './chunk-6133ee7c.js';
+import { a as Chart } from './chunk-35f9f27a.js';
+import { a as GTSLib } from './chunk-e52051aa.js';
+import './chunk-ee323282.js';
 
 class QuantumBubble {
     constructor() {
@@ -153,7 +153,7 @@ class QuantumBubble {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ".chart-container[data-quantum-bubble] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative;\n}"; }
+    static get style() { return "quantum-bubble[data-quantum-bubble]   .chart-container[data-quantum-bubble] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
 }
 
 class QuantumPie {

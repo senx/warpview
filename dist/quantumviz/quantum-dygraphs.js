@@ -1,8 +1,233 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as process } from './chunk-94b4dd3a.js';
-import { a as GTSLib } from './chunk-0b5c2300.js';
+import { a as GTSLib } from './chunk-e52051aa.js';
+
+var global$1 = typeof global !== "undefined" ? global :
+            typeof self !== "undefined" ? self :
+            typeof window !== "undefined" ? window : {}
+
+// shim for using process in browser
+// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+var cachedSetTimeout = defaultSetTimout;
+var cachedClearTimeout = defaultClearTimeout;
+if (typeof global$1.setTimeout === 'function') {
+    cachedSetTimeout = setTimeout;
+}
+if (typeof global$1.clearTimeout === 'function') {
+    cachedClearTimeout = clearTimeout;
+}
+
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+function nextTick(fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+}
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+var title = 'browser';
+var platform = 'browser';
+var browser = true;
+var env = {};
+var argv = [];
+var version = ''; // empty string to avoid regexp issues
+var versions = {};
+var release = {};
+var config = {};
+
+function noop() {}
+
+var on = noop;
+var addListener = noop;
+var once = noop;
+var off = noop;
+var removeListener = noop;
+var removeAllListeners = noop;
+var emit = noop;
+
+function binding(name) {
+    throw new Error('process.binding is not supported');
+}
+
+function cwd () { return '/' }
+function chdir (dir) {
+    throw new Error('process.chdir is not supported');
+}function umask() { return 0; }
+
+// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+var performance = global$1.performance || {};
+var performanceNow =
+  performance.now        ||
+  performance.mozNow     ||
+  performance.msNow      ||
+  performance.oNow       ||
+  performance.webkitNow  ||
+  function(){ return (new Date()).getTime() };
+
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
+function hrtime(previousTimestamp){
+  var clocktime = performanceNow.call(performance)*1e-3;
+  var seconds = Math.floor(clocktime);
+  var nanoseconds = Math.floor((clocktime%1)*1e9);
+  if (previousTimestamp) {
+    seconds = seconds - previousTimestamp[0];
+    nanoseconds = nanoseconds - previousTimestamp[1];
+    if (nanoseconds<0) {
+      seconds--;
+      nanoseconds += 1e9;
+    }
+  }
+  return [seconds,nanoseconds]
+}
+
+var startTime = new Date();
+function uptime() {
+  var currentTime = new Date();
+  var dif = currentTime - startTime;
+  return dif / 1000;
+}
+
+var process = {
+  nextTick: nextTick,
+  title: title,
+  browser: browser,
+  env: env,
+  argv: argv,
+  version: version,
+  versions: versions,
+  on: on,
+  addListener: addListener,
+  once: once,
+  off: off,
+  removeListener: removeListener,
+  removeAllListeners: removeAllListeners,
+  emit: emit,
+  binding: binding,
+  cwd: cwd,
+  chdir: chdir,
+  umask: umask,
+  hrtime: hrtime,
+  platform: platform,
+  release: release,
+  config: config,
+  uptime: uptime
+};
 
 /**
  * @license
@@ -11005,53 +11230,47 @@ Dygraph.Granularity = Granularity;
 Dygraph.getDateAxis = getDateAxis;
 Dygraph.floatFormat = floatFormat;
 
+/**
+ * options :
+ *  gridLineColor: 'red | #fff'
+ *  time.timeMode: 'timestamp | date'
+ *  showRangeSelector: boolean
+ *  type : 'line | area | step'
+ *
+ */
 class QuantumDygraphs {
     constructor() {
-        this.data = "[]";
-        this.type = "line";
-        this.options = "{}";
-        this.hiddenData = "[]";
-        this._mapIndex = {};
-        this._classList = [];
-        this._type = 'timestamp';
-        this._chartMap = {};
-        this._chartColors = [];
+        this.data = '[]';
+        this.options = '{}';
+        this.hiddenData = '[]';
+        this.responsive = false;
+        this._option = {
+            gridLineColor: '#000000',
+            time: { timeMode: 'date' },
+            showRangeSelector: true,
+            type: 'line'
+        };
     }
     hideData(newValue, oldValue) {
         if (oldValue !== newValue) {
-            const hiddenData = GTSLib.cleanArray(JSON.parse(newValue));
-            this._classList.forEach(c => {
-                this._chart.then((result) => {
-                    result.view.remove("dataList", (d) => { return d.c === c; });
-                });
-                this._chart.then((result) => {
-                    result.view.resize().run();
-                });
-            });
-            this._classList.forEach(c => {
-                if (!hiddenData.find((e) => { return e === c; })) {
-                    this._chart.then((result) => {
-                        result.view.insert("dataList", this._data.datasets[this._classList.indexOf(c)].data);
-                    });
-                }
-                this._chart.then((result) => {
-                    result.view.resize().run();
-                });
-            });
+            this.drawChart();
         }
-        this._chart.then((result) => {
-            console.log("getState : ", result.view.getDate());
-        });
     }
     changeScale(newValue, oldValue) {
         if (oldValue !== newValue) {
-            console.log("Time changed !");
+            this._option = JSON.parse(newValue);
+            this.drawChart();
         }
     }
     gtsToData(gts) {
-        let data = [];
-        let ticks = [];
+        const datasets = [];
+        const data = {};
         let pos = 0;
+        let i = 0;
+        let labels = [];
+        let colors = [];
+        const hiddenData = JSON.parse(this.hiddenData);
+        console.debug('[QuantumDygraphs] - gtsToData - hiddenData', hiddenData);
         if (!gts) {
             return;
         }
@@ -11059,87 +11278,125 @@ class QuantumDygraphs {
             gts.forEach(d => {
                 if (d.gts) {
                     d.gts = GTSLib.flatDeep(d.gts);
-                    let i = 0;
-                    console.log(d.gts);
+                    labels = new Array(d.gts.length);
+                    labels[0] = 'Date';
+                    colors = new Array(d.gts.length);
                     d.gts.forEach(g => {
-                        if (g.v) {
-                            GTSLib.gtsSort(g);
-                            g.v.forEach(d => {
-                                ticks.push(d[0]);
-                                data.push(d[d.length - 1]);
-                            });
-                            let color = GTSLib.getColor(pos);
-                            if (d.params && d.params[i] && d.params[i].color) {
-                                color = d.params[i].color;
-                            }
+                        if (g.v && GTSLib.isGtsToPlot(g)) {
                             let label = GTSLib.serializeGtsMetadata(g);
-                            this._mapIndex[label] = pos;
-                            if (d.params && d.params[i] && d.params[i].key) {
-                                label = d.params[i].key;
-                            }
-                            let ds = {
-                                label: label,
-                                data: data,
-                                pointRadius: 0,
-                                fill: false,
-                                steppedLine: this.isStepped(),
-                                borderColor: color,
-                                borderWidth: 1,
-                                backgroundColor: GTSLib.transparentize(color, 0.5)
-                            };
-                            if (d.params && d.params[i] && d.params[i].interpolate) {
-                                switch (d.params[i].interpolate) {
-                                    case "line":
-                                        ds["lineTension"] = 0;
-                                        break;
-                                    case "spline":
-                                        break;
-                                    case "area":
-                                        ds.fill = true;
+                            if (hiddenData.filter((i) => i === label).length === 0) {
+                                console.debug('[QuantumDygraphs] - gtsToData - drawing', label);
+                                GTSLib.gtsSort(g);
+                                g.v.forEach(value => {
+                                    if (!data[value[0]]) {
+                                        data[value[0]] = new Array(d.gts.length);
+                                        data[value[0]].fill(null);
+                                    }
+                                    data[value[0]][i] = value[value.length - 1];
+                                });
+                                let color = GTSLib.getColor(pos);
+                                if (d.params && d.params[i] && d.params[i].color) {
+                                    color = d.params[i].color;
                                 }
+                                if (d.params && d.params[i] && d.params[i].key) {
+                                    label = d.params[i].key;
+                                }
+                                console.log(i, label, color);
+                                labels[i + 1] = label;
+                                colors[i] = color;
+                                i++;
                             }
-                            else {
-                                ds["lineTension"] = 0;
-                            }
-                            //datasets.push(ds);
-                            pos++;
-                            i++;
                         }
+                        pos++;
                     });
                 }
             });
-        //return {datasets: datasets, ticks: GTSLib.unique(ticks)};
+        labels = labels.filter((i) => !!i);
+        Object.keys(data).forEach(timestamp => {
+            if (this._option.time && this._option.time.timeMode === 'timestamp') {
+                datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
+            }
+            else {
+                datasets.push([new Date(parseInt(timestamp) / 100)].concat(data[timestamp].slice(0, labels.length - 1)));
+            }
+        });
+        datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
+        return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
     }
     isStepped() {
-        if (this.type.startsWith("step")) {
-            return this.type.replace("step-", "");
-        }
-        else {
-            return false;
-        }
+        return this._option.type === 'step';
     }
-    drawChart() {
-        this._chart = new Dygraph(this.el.querySelector("#myChart"), [
-            [1, 50, NaN],
-            [2, 20, NaN],
-            [3, 50, NaN],
-            [1, NaN, 100],
-            [2, NaN, 80],
-            [3, NaN, 60],
-        ], {
-            labels: ["x", "A", "B"],
-            rollPeriod: 7,
-            showRoller: true,
-            colors: ["orange", "red"]
+    isStacked() {
+        return this._option.type === 'area';
+    }
+    legendFormatter(data) {
+        if (data.x == null) {
+            // This happens when there's no selection and {legend: 'always'} is set.
+            return '<br>' + data.series.map(function (series) {
+                return series.dashHTML + ' ' + series.labelHTML;
+            }).join('<br>');
+        }
+        let html = data.xHTML;
+        data.series.forEach(function (series) {
+            if (!series.isVisible || !series.yHTML)
+                return;
+            let labeledData = series.labelHTML + ': ' + series.yHTML;
+            if (series.isHighlighted) {
+                labeledData = '<b>' + labeledData + '</b>';
+            }
+            html += '<br>' + series.dashHTML + ' ' + labeledData;
+        });
+        return html;
+    }
+    highlightCallback(event, x, points, row, seriesName) {
+        console.log(this);
+        this.pointHover.emit({
+            x: event.x,
+            y: event.y
         });
     }
-    componentWillLoad() { }
+    zoomCallback(minDate, maxDate, yRanges) {
+        this.boundsDidChange.emit({
+            bounds: {
+                min: minDate,
+                max: maxDate
+            }
+        });
+    }
+    drawChart() {
+        const data = this.gtsToData(JSON.parse(this.data));
+        console.log(this.el.parentElement.clientWidth, this.responsive);
+        this._chart = new Dygraph(this.el.querySelector('#myChart'), data.datasets, {
+            height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
+            width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
+            labels: data.labels,
+            showRoller: false,
+            showRangeSelector: this._option.showRangeSelector || true,
+            connectSeparatedPoints: true,
+            colors: data.colors,
+            legend: 'follow',
+            stackedGraph: this.isStacked(),
+            strokeBorderWidth: this.isStacked() ? null : 1,
+            stepPlot: this.isStepped(),
+            labelsSeparateLines: true,
+            highlightSeriesOpts: {
+                strokeWidth: 1,
+                strokeBorderWidth: 1,
+                highlightCircleSize: 3,
+            },
+            gridLineColor: this._option.gridLineColor || '#000000',
+            legendFormatter: this.legendFormatter,
+            highlightCallback: this.highlightCallback.bind(this),
+            zoomCallback: this.zoomCallback.bind(this),
+            axisLabelWidth: 94
+        });
+    }
     componentDidLoad() {
-        console.log(this.gtsToData(JSON.parse(this.data)), NaN);
+        this._option = JSON.parse(this.options);
         this.drawChart();
     }
     render() {
-        return (h("div", { id: "myChart" }));
+        return h("div", { id: "myChart" });
     }
     static get is() { return "quantum-dygraphs"; }
     static get properties() { return {
@@ -11160,9 +11417,9 @@ class QuantumDygraphs {
             "attr": "options",
             "watchCallbacks": ["changeScale"]
         },
-        "type": {
-            "type": String,
-            "attr": "type"
+        "responsive": {
+            "type": Boolean,
+            "attr": "responsive"
         }
     }; }
     static get events() { return [{
@@ -11171,8 +11428,22 @@ class QuantumDygraphs {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }, {
+            "name": "boundsDidChange",
+            "method": "boundsDidChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "pointHover",
+            "method": "pointHover",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
         }]; }
-    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10;text-align:center}.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}"; }
+    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10;text-align:center}.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}\n\nquantum-dygraphs div#myChart {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  margin-right: 200px; }\n  quantum-dygraphs div#myChart .dygraph-legend {\n    background-color: var(--quantum-chart-legend-bg, #000000) !important;\n    color: var(--quantum-chart-legend-color, #ffffff) !important;\n    padding: 10px;\n    border: 1px solid grey;\n    border-radius: 5px;\n    -webkit-box-shadow: none;\n    box-shadow: none;\n    pointer-events: none; }\n  quantum-dygraphs div#myChart .dygraph-axis-label {\n    color: var(--quantum-chart-label-color, #000000) !important; }"; }
 }
+QuantumDygraphs.DEFAULT_WIDTH = 800;
+QuantumDygraphs.DEFAULT_HEIGHT = 600;
 
 export { QuantumDygraphs };

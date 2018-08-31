@@ -127,7 +127,7 @@ export class QuantumAnnotation {
             return;
           },
           callbacks: {
-            title: (tooltipItems, _data) => {
+            title: (tooltipItems) => {
               return tooltipItems[0].xLabel || "";
             },
             label: (tooltipItem, data) => {

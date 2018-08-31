@@ -132,62 +132,6 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumChartZoom {
-      'chartTitle': string;
-      'data': string;
-      'height': string;
-      'hiddenData': string;
-      'options': string;
-      'responsive': boolean;
-      'showLegend': boolean;
-      'timeMax': number;
-      'timeMin': number;
-      'type': string;
-      'unit': string;
-      'width': string;
-    }
-  }
-
-  interface HTMLQuantumChartZoomElement extends StencilComponents.QuantumChartZoom, HTMLStencilElement {}
-
-  var HTMLQuantumChartZoomElement: {
-    prototype: HTMLQuantumChartZoomElement;
-    new (): HTMLQuantumChartZoomElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-chart-zoom': HTMLQuantumChartZoomElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-chart-zoom': HTMLQuantumChartZoomElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-chart-zoom': JSXElements.QuantumChartZoomAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumChartZoomAttributes extends HTMLAttributes {
-      'chartTitle'?: string;
-      'data'?: string;
-      'height'?: string;
-      'hiddenData'?: string;
-      'onBoundsDidChange'?: (event: CustomEvent) => void;
-      'options'?: string;
-      'responsive'?: boolean;
-      'showLegend'?: boolean;
-      'timeMax'?: number;
-      'timeMin'?: number;
-      'type'?: string;
-      'unit'?: string;
-      'width'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
     interface QuantumChart {
       'alone': boolean;
       'chartTitle': string;
@@ -259,7 +203,7 @@ declare global {
       'data': string;
       'hiddenData': string;
       'options': string;
-      'type': string;
+      'responsive': boolean;
     }
   }
 
@@ -284,9 +228,11 @@ declare global {
     export interface QuantumDygraphsAttributes extends HTMLAttributes {
       'data'?: string;
       'hiddenData'?: string;
+      'onBoundsDidChange'?: (event: CustomEvent) => void;
+      'onPointHover'?: (event: CustomEvent) => void;
       'onReceivedData'?: (event: CustomEvent) => void;
       'options'?: string;
-      'type'?: string;
+      'responsive'?: boolean;
     }
   }
 }
@@ -835,177 +781,6 @@ declare global {
       'option'?: string;
       'text1'?: string;
       'text2'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumVega {
-      'data': string;
-      'hiddenData': string;
-      'options': string;
-      'type': string;
-    }
-  }
-
-  interface HTMLQuantumVegaElement extends StencilComponents.QuantumVega, HTMLStencilElement {}
-
-  var HTMLQuantumVegaElement: {
-    prototype: HTMLQuantumVegaElement;
-    new (): HTMLQuantumVegaElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-vega': HTMLQuantumVegaElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-vega': HTMLQuantumVegaElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-vega': JSXElements.QuantumVegaAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumVegaAttributes extends HTMLAttributes {
-      'data'?: string;
-      'hiddenData'?: string;
-      'onReceivedData'?: (event: CustomEvent) => void;
-      'options'?: string;
-      'type'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumHorizontalZoomMap {
-      'config': string;
-      'cursorSize': string;
-      'img': string;
-      'maxValue': number;
-      'minValue': number;
-      'width': number;
-    }
-  }
-
-  interface HTMLQuantumHorizontalZoomMapElement extends StencilComponents.QuantumHorizontalZoomMap, HTMLStencilElement {}
-
-  var HTMLQuantumHorizontalZoomMapElement: {
-    prototype: HTMLQuantumHorizontalZoomMapElement;
-    new (): HTMLQuantumHorizontalZoomMapElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-horizontal-zoom-map': HTMLQuantumHorizontalZoomMapElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-horizontal-zoom-map': HTMLQuantumHorizontalZoomMapElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-horizontal-zoom-map': JSXElements.QuantumHorizontalZoomMapAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumHorizontalZoomMapAttributes extends HTMLAttributes {
-      'config'?: string;
-      'cursorSize'?: string;
-      'img'?: string;
-      'maxValue'?: number;
-      'minValue'?: number;
-      'onXSliderValueChanged'?: (event: CustomEvent) => void;
-      'onXZoom'?: (event: CustomEvent) => void;
-      'width'?: number;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumHorizontalZoomSlider {
-      'config': string;
-      'cursorSize': string;
-      'maxValue': number;
-      'minValue': number;
-      'width': number;
-    }
-  }
-
-  interface HTMLQuantumHorizontalZoomSliderElement extends StencilComponents.QuantumHorizontalZoomSlider, HTMLStencilElement {}
-
-  var HTMLQuantumHorizontalZoomSliderElement: {
-    prototype: HTMLQuantumHorizontalZoomSliderElement;
-    new (): HTMLQuantumHorizontalZoomSliderElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-horizontal-zoom-slider': HTMLQuantumHorizontalZoomSliderElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-horizontal-zoom-slider': HTMLQuantumHorizontalZoomSliderElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-horizontal-zoom-slider': JSXElements.QuantumHorizontalZoomSliderAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumHorizontalZoomSliderAttributes extends HTMLAttributes {
-      'config'?: string;
-      'cursorSize'?: string;
-      'maxValue'?: number;
-      'minValue'?: number;
-      'onXSliderValueChanged'?: (event: CustomEvent) => void;
-      'onXZoom'?: (event: CustomEvent) => void;
-      'width'?: number;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumVerticalZoomSlider {
-      'config': string;
-      'cursorSize': string;
-      'height': number;
-      'maxValue': number;
-      'minValue': number;
-    }
-  }
-
-  interface HTMLQuantumVerticalZoomSliderElement extends StencilComponents.QuantumVerticalZoomSlider, HTMLStencilElement {}
-
-  var HTMLQuantumVerticalZoomSliderElement: {
-    prototype: HTMLQuantumVerticalZoomSliderElement;
-    new (): HTMLQuantumVerticalZoomSliderElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-vertical-zoom-slider': HTMLQuantumVerticalZoomSliderElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-vertical-zoom-slider': HTMLQuantumVerticalZoomSliderElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-vertical-zoom-slider': JSXElements.QuantumVerticalZoomSliderAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumVerticalZoomSliderAttributes extends HTMLAttributes {
-      'config'?: string;
-      'cursorSize'?: string;
-      'height'?: number;
-      'maxValue'?: number;
-      'minValue'?: number;
-      'onYSliderValueChanged'?: (event: CustomEvent) => void;
-      'onYZoom'?: (event: CustomEvent) => void;
     }
   }
 }
