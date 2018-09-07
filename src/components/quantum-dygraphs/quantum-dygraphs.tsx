@@ -173,10 +173,11 @@ export class QuantumDygraphs {
         legend: 'follow',
         stackedGraph: this.isStacked(),
         strokeBorderWidth: this.isStacked() ? null : 1,
+        strokeWidth: 2,
         stepPlot: this.isStepped(),
         labelsSeparateLines: true,
         highlightSeriesOpts: {
-          strokeWidth: 1,
+          strokeWidth: 3,
           strokeBorderWidth: 1,
           highlightCircleSize: 3,
         },
