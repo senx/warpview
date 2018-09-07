@@ -45,13 +45,13 @@
   <button type="button" class="btn btn-primary float-right m-3" id="dark">Dark</button>
   <button type="button" class="btn btn-primary float-right m-3" id="light">Light</button>
 
-  <quantum-gts-tree data='[]' id="tree"></quantum-gts-tree>
+  <quantum-gts-tree data='[]' id="tree" theme="light"></quantum-gts-tree>
   <div id="maincontainer">
     <quantum-toggle id="timeSwitch" text-1="date" text-2="timestamp"></quantum-toggle>
     <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]'
                         options="{}"></quantum-annotation>
     <div style="width: 100%; height: 768px">
-      <quantum-dygraphs id="chart" hidden-data='[]' responsive="true"></quantum-dygraphs>
+      <quantum-dygraphs id="chart" hidden-data='[]' responsive="true" theme="light"></quantum-dygraphs>
     </div>
   </div>
   <script language="JavaScript">
@@ -212,64 +212,19 @@
       }).attr("data", JSON.stringify([formatedData]));
 
       $('#tree').attr("data", JSON.stringify(data));
+      $("#dark").click(function() {
+        $("#chart").attr("theme", "dark");
+        $("#tree").attr("theme", "dark");
+        $("body").css("background-color", "#333");
+      });
+      $("#light").click(function() {
+        $("#chart").attr("theme", "light");
+        $("#tree").attr("theme", "light");
+        $("body").css("background-color", "transparent");
+      });
     });
   </script>
   <div class="row">
-      <quantum-chart responsive="true" unit="°C" chart-title="Temperatures"
-                     type="bar"
-                     data='[{"gts":[[{"c":"warp.store.hbase.puts.committed","l":{"rack":"55c15",".app":"training-dataset-0","host":"178.33.230.209","cell":"prod","hname":"prod-8","dc":"rbx4"},"a":{},"v":[[1513087236090000,0],[1513113398738000,14258653],[1513139561374000,15386168],[1513165723912000,13883531],[1513191946526000,14271493],[1513218109161000,14255364],[1513244271739000,15105577],[1513270434337000,14827170],[1513296656995000,15620573],[1513322819578000,14773715],[1513348982140000,14861065],[1513375204764000,14910119],[1513401367350000,15564175],[1513427529958000,14802316],[1513453692645000,14845754],[1513479915287000,16422992],[1513506077955000,14823922],[1513532240569000,14821375],[1513558402970000,15543604],[1513584626063000,14840095],[1513610788471000,15317575],[1513636950967000,14820904],[1513663173418000,15543461],[1513689336031000,14778853],[1513715498569000,14823394],[1513741661136000,15464434],[1513767883701000,14961319],[1513794046241000,14821624],[1513820208843000,15645169],[15138463
-    <quantum-editor url="https://warp.cityzendata.net/api/v0/exec" theme="dark" id="editor"
-                    show-dataviz="false" horizontal-layout="true"
-                    config='{
-      "execButton": {
-      "class": "btn btn-primary float-right m-3"
-      },
-      "datavizButton": {
-      "class": "btn btn-primary float-right m-3"
-      },
-      "messageClass": "alert alert-primary",
-      "errorClass": "alert alert-danger"
-      }'
-
-      warpscript="42
-      'ggg'
-      [
-      NEWGTS 'testname' RENAME
-      { 'label0' '42' 'label1' 'foo' } RELABEL
-      100 NaN NaN NaN true ADDVALUE
-      200 NaN NaN NaN false ADDVALUE
-      300 NaN NaN NaN true ADDVALUE
-      400 NaN NaN NaN true ADDVALUE
-      500 NaN NaN NaN true ADDVALUE
-      600 NaN NaN NaN true ADDVALUE
-      700 NaN NaN NaN true ADDVALUE
-      800 NaN NaN NaN true ADDVALUE
-
-      NEWGTS
-      'testname' RENAME
-      { 'label0' '42' 'label1' 'foo' } RELABEL
-      100 NaN NaN NaN true ADDVALUE
-      200 NaN NaN NaN true ADDVALUE
-      300 NaN NaN NaN true ADDVALUE
-      400 NaN NaN NaN true ADDVALUE
-      500 NaN NaN NaN true ADDVALUE
-      600 NaN NaN NaN true ADDVALUE
-      700 NaN NaN NaN true ADDVALUE
-      2000 NaN NaN NaN false ADDVALUE
-      ]
-      [ SWAP bucketizer.and 2000 0 6 ] BUCKETIZE">
-      </quantum-chart>
-      <script language="JavaScript">
-        $(function() {
-          $("#dark").click(function() {
-            $("#editor").attr("theme", "dark");
-          });
-          $("#light").click(function() {
-            $("#editor").attr("theme", "light");
-          });
-        });
-      </script>
-
       <div class="row">
         <div class="card col-lg-4 col-md-12">
           <div class="card-body">

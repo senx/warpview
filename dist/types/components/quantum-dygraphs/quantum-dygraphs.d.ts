@@ -12,6 +12,7 @@ export declare class QuantumDygraphs {
     data: string;
     options: string;
     hiddenData: string;
+    theme: string;
     responsive: boolean;
     el: HTMLElement;
     receivedData: EventEmitter;

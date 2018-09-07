@@ -9,6 +9,7 @@ import {Counter} from "./quantum-gts-tree";
 export class QuantumTreeView {
   @Prop() gtsList: any;
   @Prop() branch = false;
+  @Prop() theme: string = "light";
   @Event() selected: EventEmitter;
 
   /**
@@ -36,7 +37,7 @@ export class QuantumTreeView {
    */
   render() {
     return (
-      <div>
+      <div class={this.theme}>
         {this.gtsList && this.gtsList.content ? (
         <ul>
           {this.gtsList.content.map((node, index) => (

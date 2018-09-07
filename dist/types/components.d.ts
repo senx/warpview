@@ -204,6 +204,7 @@ declare global {
       'hiddenData': string;
       'options': string;
       'responsive': boolean;
+      'theme': string;
     }
   }
 
@@ -233,6 +234,7 @@ declare global {
       'onReceivedData'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
+      'theme'?: string;
     }
   }
 }
@@ -281,6 +283,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumGtsTree {
       'data': string;
+      'theme': string;
     }
   }
 
@@ -305,6 +308,7 @@ declare global {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
       'data'?: string;
       'onSelectedGTS'?: (event: CustomEvent) => void;
+      'theme'?: string;
     }
   }
 }
@@ -316,6 +320,7 @@ declare global {
     interface QuantumTreeView {
       'branch': boolean;
       'gtsList': any;
+      'theme': string;
     }
   }
 
@@ -341,6 +346,7 @@ declare global {
       'branch'?: boolean;
       'gtsList'?: any;
       'onSelected'?: (event: CustomEvent) => void;
+      'theme'?: string;
     }
   }
 }

@@ -11243,6 +11243,7 @@ class QuantumDygraphs {
         this.data = '[]';
         this.options = '{}';
         this.hiddenData = '[]';
+        this.theme = 'light';
         this.responsive = false;
         this._option = {
             gridLineColor: '#000000',
@@ -11270,7 +11271,6 @@ class QuantumDygraphs {
         let labels = [];
         let colors = [];
         const hiddenData = JSON.parse(this.hiddenData);
-        console.debug('[QuantumDygraphs] - gtsToData - hiddenData', hiddenData);
         if (!gts) {
             return;
         }
@@ -11285,7 +11285,6 @@ class QuantumDygraphs {
                         if (g.v && GTSLib.isGtsToPlot(g)) {
                             let label = GTSLib.serializeGtsMetadata(g);
                             if (hiddenData.filter((i) => i === label).length === 0) {
-                                console.debug('[QuantumDygraphs] - gtsToData - drawing', label);
                                 GTSLib.gtsSort(g);
                                 g.v.forEach(value => {
                                     if (!data[value[0]]) {
@@ -11301,7 +11300,6 @@ class QuantumDygraphs {
                                 if (d.params && d.params[i] && d.params[i].key) {
                                     label = d.params[i].key;
                                 }
-                                console.log(i, label, color);
                                 labels[i + 1] = label;
                                 colors[i] = color;
                                 i++;
@@ -11348,8 +11346,7 @@ class QuantumDygraphs {
         });
         return html;
     }
-    highlightCallback(event, x, points, row, seriesName) {
-        console.log(this);
+    highlightCallback(event) {
         this.pointHover.emit({
             x: event.x,
             y: event.y
@@ -11365,7 +11362,6 @@ class QuantumDygraphs {
     }
     drawChart() {
         const data = this.gtsToData(JSON.parse(this.data));
-        console.log(this.el.parentElement.clientWidth, this.responsive);
         this._chart = new Dygraph(this.el.querySelector('#myChart'), data.datasets, {
             height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
             width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
@@ -11376,19 +11372,23 @@ class QuantumDygraphs {
             colors: data.colors,
             legend: 'follow',
             stackedGraph: this.isStacked(),
-            strokeBorderWidth: this.isStacked() ? null : 1,
+            strokeBorderWidth: this.isStacked() ? null : 0,
+            strokeWidth: 2,
             stepPlot: this.isStepped(),
             labelsSeparateLines: true,
+            highlightSeriesBackgroundAlpha: 1,
             highlightSeriesOpts: {
-                strokeWidth: 1,
-                strokeBorderWidth: 1,
+                strokeWidth: 3,
+                strokeBorderWidth: 0,
                 highlightCircleSize: 3,
+                showInRangeSelector: true
             },
-            gridLineColor: this._option.gridLineColor || '#000000',
+            gridLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
+            axisLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
             legendFormatter: this.legendFormatter,
             highlightCallback: this.highlightCallback.bind(this),
             zoomCallback: this.zoomCallback.bind(this),
-            axisLabelWidth: 94
+            axisLabelWidth: 94,
         });
     }
     componentDidLoad() {
@@ -11396,7 +11396,7 @@ class QuantumDygraphs {
         this.drawChart();
     }
     render() {
-        return h("div", { id: "myChart" });
+        return h("div", { id: "myChart", class: this.theme });
     }
     static get is() { return "quantum-dygraphs"; }
     static get properties() { return {
@@ -11420,6 +11420,10 @@ class QuantumDygraphs {
         "responsive": {
             "type": Boolean,
             "attr": "responsive"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         }
     }; }
     static get events() { return [{
@@ -11441,7 +11445,7 @@ class QuantumDygraphs {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10;text-align:center}.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}\n\nquantum-dygraphs div#myChart {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  margin-right: 200px; }\n  quantum-dygraphs div#myChart .dygraph-legend {\n    background-color: var(--quantum-chart-legend-bg, #000000) !important;\n    color: var(--quantum-chart-legend-color, #ffffff) !important;\n    padding: 10px;\n    border: 1px solid grey;\n    border-radius: 5px;\n    -webkit-box-shadow: none;\n    box-shadow: none;\n    pointer-events: none; }\n  quantum-dygraphs div#myChart .dygraph-axis-label {\n    color: var(--quantum-chart-label-color, #000000) !important; }"; }
+    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10;text-align:center}.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}\n\nquantum-dygraphs div#myChart {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  margin-right: 200px; }\n  quantum-dygraphs div#myChart .dygraph-legend {\n    background-color: var(--quantum-chart-legend-bg, #000000) !important;\n    color: var(--quantum-chart-legend-color, #ffffff) !important;\n    padding: 10px;\n    border: 1px solid grey;\n    border-radius: 5px;\n    -webkit-box-shadow: none;\n    box-shadow: none;\n    pointer-events: none; }\n  quantum-dygraphs div#myChart .dygraph-axis-label {\n    color: var(--quantum-chart-label-color, #000000) !important; }\n  quantum-dygraphs div#myChart.dark .dygraph-axis-label {\n    color: var(--quantum-chart-label-color, #ffffff) !important; }"; }
 }
 QuantumDygraphs.DEFAULT_WIDTH = 800;
 QuantumDygraphs.DEFAULT_HEIGHT = 600;

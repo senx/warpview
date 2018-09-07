@@ -7,6 +7,7 @@ import {GTSLib} from "../../gts.lib";
 })
 export class QuantumGtsTree {
   @Prop() data: string = "[]";
+  @Prop() theme: string = "light";
   @Event() selectedGTS: EventEmitter;
   gtsList: any;
 
@@ -30,7 +31,7 @@ export class QuantumGtsTree {
   }
 
   render() {
-    return <quantum-tree-view gtsList={this.gtsList} branch={false} />;
+    return <quantum-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} />;
   }
 }
 

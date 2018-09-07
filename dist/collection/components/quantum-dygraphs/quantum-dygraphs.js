@@ -13,6 +13,7 @@ export class QuantumDygraphs {
         this.data = '[]';
         this.options = '{}';
         this.hiddenData = '[]';
+        this.theme = 'light';
         this.responsive = false;
         this._option = {
             gridLineColor: '#000000',
@@ -40,7 +41,6 @@ export class QuantumDygraphs {
         let labels = [];
         let colors = [];
         const hiddenData = JSON.parse(this.hiddenData);
-        console.debug('[QuantumDygraphs] - gtsToData - hiddenData', hiddenData);
         if (!gts) {
             return;
         }
@@ -55,7 +55,6 @@ export class QuantumDygraphs {
                         if (g.v && GTSLib.isGtsToPlot(g)) {
                             let label = GTSLib.serializeGtsMetadata(g);
                             if (hiddenData.filter((i) => i === label).length === 0) {
-                                console.debug('[QuantumDygraphs] - gtsToData - drawing', label);
                                 GTSLib.gtsSort(g);
                                 g.v.forEach(value => {
                                     if (!data[value[0]]) {
@@ -71,7 +70,6 @@ export class QuantumDygraphs {
                                 if (d.params && d.params[i] && d.params[i].key) {
                                     label = d.params[i].key;
                                 }
-                                console.log(i, label, color);
                                 labels[i + 1] = label;
                                 colors[i] = color;
                                 i++;
@@ -118,8 +116,7 @@ export class QuantumDygraphs {
         });
         return html;
     }
-    highlightCallback(event, x, points, row, seriesName) {
-        console.log(this);
+    highlightCallback(event) {
         this.pointHover.emit({
             x: event.x,
             y: event.y
@@ -135,7 +132,6 @@ export class QuantumDygraphs {
     }
     drawChart() {
         const data = this.gtsToData(JSON.parse(this.data));
-        console.log(this.el.parentElement.clientWidth, this.responsive);
         this._chart = new Dygraph(this.el.querySelector('#myChart'), data.datasets, {
             height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
             width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
@@ -146,19 +142,23 @@ export class QuantumDygraphs {
             colors: data.colors,
             legend: 'follow',
             stackedGraph: this.isStacked(),
-            strokeBorderWidth: this.isStacked() ? null : 1,
+            strokeBorderWidth: this.isStacked() ? null : 0,
+            strokeWidth: 2,
             stepPlot: this.isStepped(),
             labelsSeparateLines: true,
+            highlightSeriesBackgroundAlpha: 1,
             highlightSeriesOpts: {
-                strokeWidth: 1,
-                strokeBorderWidth: 1,
+                strokeWidth: 3,
+                strokeBorderWidth: 0,
                 highlightCircleSize: 3,
+                showInRangeSelector: true
             },
-            gridLineColor: this._option.gridLineColor || '#000000',
+            gridLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
+            axisLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
             legendFormatter: this.legendFormatter,
             highlightCallback: this.highlightCallback.bind(this),
             zoomCallback: this.zoomCallback.bind(this),
-            axisLabelWidth: 94
+            axisLabelWidth: 94,
         });
     }
     componentDidLoad() {
@@ -166,7 +166,7 @@ export class QuantumDygraphs {
         this.drawChart();
     }
     render() {
-        return h("div", { id: "myChart" });
+        return h("div", { id: "myChart", class: this.theme });
     }
     static get is() { return "quantum-dygraphs"; }
     static get properties() { return {
@@ -190,6 +190,10 @@ export class QuantumDygraphs {
         "responsive": {
             "type": Boolean,
             "attr": "responsive"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         }
     }; }
     static get events() { return [{

@@ -2,6 +2,7 @@ import { GTSLib } from "../../gts.lib";
 export class QuantumGtsTree {
     constructor() {
         this.data = "[]";
+        this.theme = "light";
     }
     dataChanged(newValue, _oldValue) {
         if (newValue !== _oldValue) {
@@ -17,7 +18,7 @@ export class QuantumGtsTree {
         console.debug("[QuantumGtsTree] - componentWillLoad - gtsList", this.gtsList);
     }
     render() {
-        return h("quantum-tree-view", { gtsList: this.gtsList, branch: false });
+        return h("quantum-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme });
     }
     static get is() { return "quantum-gts-tree"; }
     static get properties() { return {
@@ -25,6 +26,10 @@ export class QuantumGtsTree {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["dataChanged"]
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         }
     }; }
     static get events() { return [{
@@ -43,6 +48,10 @@ export class Counter {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["dataChanged"]
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         }
     }; }
     static get events() { return [{

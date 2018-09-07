@@ -3,6 +3,7 @@ import { Counter } from "./quantum-gts-tree";
 export class QuantumTreeView {
     constructor() {
         this.branch = false;
+        this.theme = "light";
     }
     /**
      *
@@ -26,7 +27,7 @@ export class QuantumTreeView {
      * @returns {any}
      */
     render() {
-        return (h("div", null, this.gtsList && this.gtsList.content ? (h("ul", null, this.gtsList.content.map((node, index) => (h("li", null,
+        return (h("div", { class: this.theme }, this.gtsList && this.gtsList.content ? (h("ul", null, this.gtsList.content.map((node, index) => (h("li", null,
             this.branch ? ("") : (h("div", { class: "stack-level" },
                 "Stack level ",
                 index)),
@@ -49,6 +50,10 @@ export class QuantumTreeView {
         "gtsList": {
             "type": "Any",
             "attr": "gts-list"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         }
     }; }
     static get events() { return [{

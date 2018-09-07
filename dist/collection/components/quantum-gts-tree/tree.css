@@ -25,7 +25,8 @@ quantum-tree-view li .expanded {
 
 quantum-tree-view li .collapsed {
   padding: 1px 10px;
-  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAXUlEQVQ4jWNgGCzgJwMDw38S8U8GBgYGJqgBjGRYSo4e3GAfAwMDP5oYIW/9RFb8n4GB4RQDA4MgktgvAgb8QjfgPwMDwyxyvYDNBSR54SADZhiQ5AWKwTBISAMHAKXXR27jzC2pAAAAAElFTkSuQmCC) no-repeat; }
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVGhD7djRCcAgDEBBF+hHt+wo3auDtWaEKFLRO3j/CSiIBQDYxFE7JytmSntq72TFTGkWGVjTIsvcEQDocdXuyYqZ0ry1Bta0yDJHCwB6+KAb2N5vrWUW8UEHAPyilA9TDlz495u2lwAAAABJRU5ErkJggg==) no-repeat;
+  background-size: cover; }
 
 quantum-tree-view li .gtsInfo {
   white-space: normal;
@@ -62,3 +63,10 @@ quantum-tree-view .gts-separator {
 quantum-tree-view .gts-labelvalue {
   color: #AAAAAA;
   font-style: italic; }
+
+quantum-tree-view .dark {
+  color: #ffffff; }
+  quantum-tree-view .dark .expanded {
+    color: #ffffff;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==) no-repeat;
+    background-size: cover; }

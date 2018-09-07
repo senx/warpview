@@ -18,5 +18,11 @@ quantum-dygraphs {
     .dygraph-axis-label {
       color: var(--quantum-chart-label-color, #000000) !important;
     }
+
+    &.dark {
+      .dygraph-axis-label {
+        color: var(--quantum-chart-label-color, #ffffff) !important;
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class QuantumGtsTree {
     data: string;
+    theme: string;
     selectedGTS: EventEmitter;
     gtsList: any;
     dataChanged(newValue: string, _oldValue: string): void;

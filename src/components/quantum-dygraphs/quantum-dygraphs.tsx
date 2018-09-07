@@ -1,6 +1,7 @@
 import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 import Dygraph from 'dygraphs';
+import Options = dygraphs.Options;
 
 /**
  * options :
@@ -19,6 +20,7 @@ export class QuantumDygraphs {
   @Prop() data: string = '[]';
   @Prop() options: string = '{}';
   @Prop() hiddenData: string = '[]';
+  @Prop() theme: string = 'light';
   @Prop() responsive: boolean = false;
   @Element() el: HTMLElement;
   @Event() receivedData: EventEmitter;
@@ -59,7 +61,6 @@ export class QuantumDygraphs {
     let labels = [];
     let colors = [];
     const hiddenData = JSON.parse(this.hiddenData);
-    console.debug('[QuantumDygraphs] - gtsToData - hiddenData',  hiddenData);
     if (!gts) {
       return;
     } else
@@ -73,7 +74,6 @@ export class QuantumDygraphs {
             if (g.v && GTSLib.isGtsToPlot(g)) {
               let label = GTSLib.serializeGtsMetadata(g);
               if (hiddenData.filter((i) => i === label).length === 0) {
-                console.debug('[QuantumDygraphs] - gtsToData - drawing',  label);
                 GTSLib.gtsSort(g);
                 g.v.forEach(value => {
                   if (!data[value[0]]) {
@@ -89,7 +89,6 @@ export class QuantumDygraphs {
                 if (d.params && d.params[i] && d.params[i].key) {
                   label = d.params[i].key;
                 }
-                console.log(i, label, color);
                 labels[i + 1] = label;
                 colors[i] = color;
                 i++;
@@ -139,8 +138,7 @@ export class QuantumDygraphs {
     return html;
   }
 
-  private highlightCallback(event, x, points, row, seriesName) {
-    console.log(this)
+  private highlightCallback(event) {
     this.pointHover.emit({
       x: event.x,
       y: event.y
@@ -158,7 +156,6 @@ export class QuantumDygraphs {
 
   private drawChart() {
     const data = this.gtsToData(JSON.parse(this.data));
-    console.log(this.el.parentElement.clientWidth, this.responsive)
     this._chart = new Dygraph(
       this.el.querySelector('#myChart') as HTMLElement,
       data.datasets,
@@ -172,20 +169,23 @@ export class QuantumDygraphs {
         colors: data.colors,
         legend: 'follow',
         stackedGraph: this.isStacked(),
-        strokeBorderWidth: this.isStacked() ? null : 1,
+        strokeBorderWidth: this.isStacked() ? null : 0,
         strokeWidth: 2,
         stepPlot: this.isStepped(),
         labelsSeparateLines: true,
+        highlightSeriesBackgroundAlpha: 1,
         highlightSeriesOpts: {
           strokeWidth: 3,
-          strokeBorderWidth: 1,
+          strokeBorderWidth: 0,
           highlightCircleSize: 3,
+          showInRangeSelector:true
         },
-        gridLineColor: this._option.gridLineColor || '#000000',
+        gridLineColor: this._option.gridLineColor || this.theme ==='light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
+        axisLineColor: this._option.gridLineColor || this.theme ==='light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
         legendFormatter: this.legendFormatter,
         highlightCallback: this.highlightCallback.bind(this),
         zoomCallback: this.zoomCallback.bind(this),
-        axisLabelWidth: 94
+        axisLabelWidth: 94,
       }
     );
   }
@@ -196,6 +196,6 @@ export class QuantumDygraphs {
   }
 
   render() {
-    return <div id="myChart"/>;
+    return <div id="myChart" class={this.theme}/>;
   }
 }

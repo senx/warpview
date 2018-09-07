@@ -373,6 +373,11 @@
           "name": "responsive",
           "type": "Boolean",
           "attr": "responsive"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
         }
       ],
       "hostElement": {
@@ -412,6 +417,11 @@
           "watch": [
             "dataChanged"
           ]
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
         }
       ],
       "events": [
@@ -1092,6 +1102,11 @@
           "name": "gtsList",
           "type": "Any",
           "attr": "gts-list"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
         }
       ],
       "events": [
