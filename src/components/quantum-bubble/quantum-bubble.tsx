@@ -14,9 +14,7 @@ export class QuantumBubble {
   @Prop() showLegend: boolean = true;
   @Prop() standalone = true;
   @Prop() data: string = '[]';
-  @Prop() options: {
-    gridLineColor?: string
-  } = {};
+  @Prop() options: any = {};
   @Prop() theme = 'light';
   @Prop() width = '';
   @Prop() height = '';

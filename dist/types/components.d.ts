@@ -84,9 +84,7 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': {
-    gridLineColor?: string
-  };
+      'options': any;
       'responsive': boolean;
       'showLegend': boolean;
       'standalone': boolean;
@@ -121,9 +119,7 @@ declare global {
       'data'?: string;
       'height'?: string;
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: {
-    gridLineColor?: string
-  };
+      'options'?: any;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'standalone'?: boolean;
@@ -533,9 +529,10 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'options': any;
       'responsive': boolean;
       'showLegend': boolean;
+      'theme': string;
       'type': string;
       'unit': string;
       'width': string;
@@ -564,9 +561,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'options'?: object;
+      'options'?: any;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'theme'?: string;
       'type'?: string;
       'unit'?: string;
       'width'?: string;

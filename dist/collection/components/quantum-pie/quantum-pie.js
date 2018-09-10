@@ -9,10 +9,16 @@ export class QuantumPie {
         this.showLegend = true;
         this.data = '[]';
         this.options = {};
+        this.theme = 'light';
         this.width = '';
         this.height = '';
     }
     redraw(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
+    onTheme(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -22,10 +28,17 @@ export class QuantumPie {
      * @param num
      * @returns {any[]}
      */
-    generateColors(num) {
+    static generateColors(num) {
         let color = [];
         for (let i = 0; i < num; i++) {
             color.push(GTSLib.getColor(i));
+        }
+        return color;
+    }
+    static generateTransparentColors(num) {
+        let color = [];
+        for (let i = 0; i < num; i++) {
+            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
         }
         return color;
     }
@@ -44,12 +57,20 @@ export class QuantumPie {
         return { labels: labels, data: _data };
     }
     drawChart() {
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = this.parseData(JSON.parse(this.data));
+        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
         new Chart(ctx, {
             type: (this.type === 'gauge') ? 'doughnut' : this.type,
             data: {
-                datasets: [{ data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle }],
+                datasets: [{
+                        data: data.data,
+                        backgroundColor: QuantumPie.generateTransparentColors(data.data.length),
+                        borderColor: QuantumPie.generateColors(data.data.length),
+                        label: this.chartTitle
+                    }],
                 labels: data.labels
             },
             options: {
@@ -86,11 +107,13 @@ export class QuantumPie {
         this.drawChart();
     }
     render() {
-        return h("div", null,
-            h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height })));
+        return h("div", { class: this.theme },
+            h("h1", null,
+                this.chartTitle,
+                " ",
+                h("small", null, this.unit)),
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height })));
     }
     static get is() { return "quantum-pie"; }
     static get encapsulation() { return "shadow"; }
@@ -122,6 +145,11 @@ export class QuantumPie {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
         },
         "type": {
             "type": String,

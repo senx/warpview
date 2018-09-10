@@ -1,6 +1,5 @@
 import '../../stencil.core';
 import '../../stencil.core';
-import '../../stencil.core';
 export declare class QuantumPie {
     unit: string;
     type: string;
@@ -8,17 +7,20 @@ export declare class QuantumPie {
     responsive: boolean;
     showLegend: boolean;
     data: string;
-    options: object;
+    options: any;
+    theme: string;
     width: string;
     height: string;
     el: HTMLElement;
     redraw(newValue: string, oldValue: string): void;
+    onTheme(newValue: string, oldValue: string): void;
     /**
      *
      * @param num
      * @returns {any[]}
      */
-    generateColors(num: any): any[];
+    static generateColors(num: any): any[];
+    static generateTransparentColors(num: any): any[];
     /**
      *
      * @param data

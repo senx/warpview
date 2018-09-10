@@ -211,10 +211,16 @@ class QuantumPie {
         this.showLegend = true;
         this.data = '[]';
         this.options = {};
+        this.theme = 'light';
         this.width = '';
         this.height = '';
     }
     redraw(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
+    onTheme(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -224,10 +230,17 @@ class QuantumPie {
      * @param num
      * @returns {any[]}
      */
-    generateColors(num) {
+    static generateColors(num) {
         let color = [];
         for (let i = 0; i < num; i++) {
             color.push(GTSLib.getColor(i));
+        }
+        return color;
+    }
+    static generateTransparentColors(num) {
+        let color = [];
+        for (let i = 0; i < num; i++) {
+            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
         }
         return color;
     }
@@ -246,12 +259,20 @@ class QuantumPie {
         return { labels: labels, data: _data };
     }
     drawChart() {
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = this.parseData(JSON.parse(this.data));
+        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
         new Chart(ctx, {
             type: (this.type === 'gauge') ? 'doughnut' : this.type,
             data: {
-                datasets: [{ data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle }],
+                datasets: [{
+                        data: data.data,
+                        backgroundColor: QuantumPie.generateTransparentColors(data.data.length),
+                        borderColor: QuantumPie.generateColors(data.data.length),
+                        label: this.chartTitle
+                    }],
                 labels: data.labels
             },
             options: {
@@ -288,11 +309,13 @@ class QuantumPie {
         this.drawChart();
     }
     render() {
-        return h("div", null,
-            h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height })));
+        return h("div", { class: this.theme },
+            h("h1", null,
+                this.chartTitle,
+                " ",
+                h("small", null, this.unit)),
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height })));
     }
     static get is() { return "quantum-pie"; }
     static get encapsulation() { return "shadow"; }
@@ -325,6 +348,11 @@ class QuantumPie {
             "type": Boolean,
             "attr": "show-legend"
         },
+        "theme": {
+            "type": String,
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
+        },
         "type": {
             "type": String,
             "attr": "type"
@@ -338,7 +366,7 @@ class QuantumPie {
             "attr": "width"
         }
     }; }
-    static get style() { return "host[data-quantum-pie]   .chart-container[data-quantum-pie] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
+    static get style() { return "[data-quantum-pie-host]   div[data-quantum-pie] {\n  height: var(--quantum-chart-height, 100%); }\n\n[data-quantum-pie-host]   .chart-container[data-quantum-pie] {\n  width: var(--quantum-chart-width, 100%);\n  height: calc(var(--quantum-chart-height, 100%) - 30px);\n  position: relative; }\n\n[data-quantum-pie-host]   h1[data-quantum-pie] {\n  font-size: 20px;\n  padding: 5px;\n  margin: 0; }\n  [data-quantum-pie-host]   h1[data-quantum-pie]   small[data-quantum-pie] {\n    font-size: 10px; }\n\n[data-quantum-pie-host]   .dark[data-quantum-pie]   h1[data-quantum-pie] {\n  color: #ffffff; }\n\n[data-quantum-pie-host]   .light[data-quantum-pie]   h1[data-quantum-pie] {\n  color: #000000; }"; }
 }
 
 class QuantumPolar {
@@ -719,7 +747,7 @@ class QuantumTile {
             this.type == 'bubble' ?
                 h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, chartTitle: this.chartTitle }) : '',
             this.graphs['pie'].indexOf(this.type) > -1 ?
-                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
+                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?
                 h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '');
     }

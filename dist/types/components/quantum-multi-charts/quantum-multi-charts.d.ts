@@ -1,6 +1,5 @@
 import '../../stencil.core';
 import '../../stencil.core';
-import '../../stencil.core';
 export declare class QuantumMultiCharts {
     unit: string;
     type: string;

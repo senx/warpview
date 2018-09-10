@@ -1,6 +1,5 @@
 import '../../stencil.core';
 import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 export declare class QuantumBubble {
     unit: string;
@@ -9,9 +8,7 @@ export declare class QuantumBubble {
     showLegend: boolean;
     standalone: boolean;
     data: string;
-    options: {
-        gridLineColor?: string;
-    };
+    options: any;
     theme: string;
     width: string;
     height: string;

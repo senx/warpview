@@ -14,7 +14,8 @@ export class QuantumPie {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: object = {};
+  @Prop() options: any = {};
+  @Prop() theme = 'light';
   @Prop() width = '';
   @Prop() height = '';
 
@@ -27,15 +28,29 @@ export class QuantumPie {
     }
   }
 
+  @Watch('theme')
+  onTheme(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.drawChart();
+    }
+  }
+
   /**
    *
    * @param num
    * @returns {any[]}
    */
-  generateColors(num) {
+  static generateColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
       color.push(GTSLib.getColor(i));
+    }
+    return color;
+  }
+  static generateTransparentColors(num) {
+    let color = [];
+    for (let i = 0; i < num; i++) {
+      color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
     }
     return color;
   }
@@ -56,12 +71,20 @@ export class QuantumPie {
   }
 
   drawChart() {
+    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let data = this.parseData(JSON.parse(this.data));
+    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
     new Chart(ctx, {
       type: (this.type === 'gauge') ? 'doughnut' : this.type,
       data: {
-        datasets: [{data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle}],
+        datasets: [{
+          data: data.data,
+          backgroundColor: QuantumPie.generateTransparentColors(data.data.length),
+          borderColor: QuantumPie.generateColors(data.data.length),
+          label: this.chartTitle
+        }],
         labels: data.labels
       },
       options: {
@@ -100,13 +123,10 @@ export class QuantumPie {
   }
 
   render() {
-    return <div>
-      <h1>{this.chartTitle}</h1>
+    return <div class={this.theme}>
+      <h1>{this.chartTitle} <small>{this.unit}</small></h1>
       <div class="chart-container">
-        {this.responsive
-          ? <canvas id="myChart"/>
-          : <canvas id="myChart" width={this.width} height={this.height}/>
-        }
+       <canvas id="myChart" width={this.width} height={this.height}/>
       </div>
     </div>;
   }

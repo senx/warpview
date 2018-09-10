@@ -96,7 +96,7 @@ export class QuantumTile {
       }
       {this.graphs['pie'].indexOf(this.type) > -1 ?
         <quantum-pie
-          responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+          responsive={this.responsive} unit={this.unit} data={this.data} type={this.type} theme={this.theme}
           showLegend={this.showLegend} chartTitle={this.chartTitle} /> : ''
       }
       {this.graphs['polar'].indexOf(this.type) > -1 ?

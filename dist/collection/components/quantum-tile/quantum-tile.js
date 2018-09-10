@@ -74,7 +74,7 @@ export class QuantumTile {
             this.type == 'bubble' ?
                 h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, chartTitle: this.chartTitle }) : '',
             this.graphs['pie'].indexOf(this.type) > -1 ?
-                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
+                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?
                 h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '');
     }
