@@ -14,15 +14,27 @@ export class QuantumDygraphs {
         this.options = '{}';
         this.hiddenData = '[]';
         this.theme = 'light';
+        this.unit = '';
+        this.chartTitle = '';
         this.responsive = false;
+        this.standalone = true;
         this._option = {
-            gridLineColor: '#000000',
             time: { timeMode: 'date' },
             showRangeSelector: true,
             type: 'line'
         };
     }
     hideData(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
+    onData(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
+    onTheme(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -98,10 +110,16 @@ export class QuantumDygraphs {
         return this._option.type === 'area';
     }
     legendFormatter(data) {
-        if (data.x == null) {
+        if (data.x === null) {
             // This happens when there's no selection and {legend: 'always'} is set.
             return '<br>' + data.series.map(function (series) {
-                return series.dashHTML + ' ' + series.labelHTML;
+                if (!series.isVisible)
+                    return;
+                let labeledData = series.labelHTML + ': ' + series.yHTML;
+                if (series.isHighlighted) {
+                    labeledData = '<b>' + labeledData + '</b>';
+                }
+                return series.dashHTML + ' ' + labeledData;
             }).join('<br>');
         }
         let html = data.xHTML;
@@ -122,7 +140,7 @@ export class QuantumDygraphs {
             y: event.y
         });
     }
-    zoomCallback(minDate, maxDate, yRanges) {
+    zoomCallback(minDate, maxDate) {
         this.boundsDidChange.emit({
             bounds: {
                 min: minDate,
@@ -131,48 +149,64 @@ export class QuantumDygraphs {
         });
     }
     drawChart() {
-        const data = this.gtsToData(JSON.parse(this.data));
-        this._chart = new Dygraph(this.el.querySelector('#myChart'), data.datasets, {
-            height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
-            width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
-            labels: data.labels,
-            showRoller: false,
-            showRangeSelector: this._option.showRangeSelector || true,
-            connectSeparatedPoints: true,
-            colors: data.colors,
-            legend: 'follow',
-            stackedGraph: this.isStacked(),
-            strokeBorderWidth: this.isStacked() ? null : 0,
-            strokeWidth: 2,
-            stepPlot: this.isStepped(),
-            labelsSeparateLines: true,
-            highlightSeriesBackgroundAlpha: 1,
-            highlightSeriesOpts: {
-                strokeWidth: 3,
-                strokeBorderWidth: 0,
-                highlightCircleSize: 3,
-                showInRangeSelector: true
-            },
-            gridLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
-            axisLineColor: this._option.gridLineColor || this.theme === 'light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
-            legendFormatter: this.legendFormatter,
-            highlightCallback: this.highlightCallback.bind(this),
-            zoomCallback: this.zoomCallback.bind(this),
-            axisLabelWidth: 94,
-        });
+        const data = JSON.parse(this.data);
+        this._data = this.gtsToData(data);
+        const chart = this.el.querySelector('#myChart');
+        if (data.length > 0) {
+            const color = this._option.gridLineColor || this.theme === 'light' ? '#000000' : '#ffffff';
+            this._chart = new Dygraph(chart, this._data.datasets, {
+                height: (this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT) - 30,
+                width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
+                labels: this._data.labels,
+                showRoller: false,
+                showRangeSelector: this._option.showRangeSelector || true,
+                connectSeparatedPoints: true,
+                colors: this._data.colors,
+                legend: 'follow',
+                stackedGraph: this.isStacked(),
+                strokeBorderWidth: this.isStacked() ? null : 0,
+                strokeWidth: 2,
+                stepPlot: this.isStepped(),
+                ylabel: this.unit,
+                labelsSeparateLines: true,
+                highlightSeriesBackgroundAlpha: 1,
+                highlightSeriesOpts: {
+                    strokeWidth: 3,
+                    strokeBorderWidth: 0,
+                    highlightCircleSize: 3,
+                    showInRangeSelector: true
+                },
+                hideOverlayOnMouseOut: true,
+                labelsUTC: true,
+                gridLineColor: color,
+                axisLineColor: color,
+                legendFormatter: this.legendFormatter,
+                highlightCallback: this.highlightCallback.bind(this),
+                zoomCallback: this.zoomCallback.bind(this),
+                axisLabelWidth: this.standalone ? 50 : 94,
+                rightGap: this.standalone ? 0 : 20
+            });
+        }
     }
     componentDidLoad() {
         this._option = JSON.parse(this.options);
         this.drawChart();
     }
     render() {
-        return h("div", { id: "myChart", class: this.theme });
+        return h("div", { class: this.theme },
+            h("h1", null, this.chartTitle),
+            h("div", { id: "myChart", class: this.theme }));
     }
     static get is() { return "quantum-dygraphs"; }
     static get properties() { return {
+        "chartTitle": {
+            "type": String,
+            "attr": "chart-title"
+        },
         "data": {
             "type": String,
-            "attr": "data"
+            "attr": "data",
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true
@@ -191,9 +225,18 @@ export class QuantumDygraphs {
             "type": Boolean,
             "attr": "responsive"
         },
+        "standalone": {
+            "type": Boolean,
+            "attr": "standalone"
+        },
         "theme": {
             "type": String,
-            "attr": "theme"
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
+        },
+        "unit": {
+            "type": String,
+            "attr": "unit"
         }
     }; }
     static get events() { return [{

@@ -6,8 +6,10 @@ export class QuantumBubble {
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
+        this.standalone = true;
         this.data = '[]';
         this.options = {};
+        this.theme = 'light';
         this.width = '';
         this.height = '';
     }
@@ -17,11 +19,55 @@ export class QuantumBubble {
         }
     }
     drawChart() {
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = JSON.parse(this.data);
         if (!data)
             return;
         const me = this;
+        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const options = {
+            legend: {
+                display: this.showLegend
+            },
+            borderWidth: 1,
+            animation: {
+                duration: 0,
+            },
+            scales: {
+                xAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        }
+                    }],
+                yAxes: [
+                    {
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        scaleLabel: {
+                            display: this.unit !== '',
+                            labelString: this.unit
+                        }
+                    }
+                ]
+            },
+            responsive: this.responsive
+        };
+        if (!this.standalone) {
+            options.scales.yAxes[0].afterFit = (scaleInstance) => {
+                scaleInstance.width = 100; // sets the width to 100px
+            };
+        }
         new Chart(ctx, {
             type: 'bubble',
             tooltips: {
@@ -37,23 +83,10 @@ export class QuantumBubble {
                     return;
                 }
             },
-            legend: { display: this.showLegend },
             data: {
                 datasets: this.parseData(data)
             },
-            options: {
-                borderWidth: 1,
-                scales: {
-                    yAxes: [
-                        {
-                            afterFit: function (scaleInstance) {
-                                scaleInstance.width = 100; // sets the width to 100px
-                            }
-                        }
-                    ]
-                },
-                responsive: this.responsive
-            }
+            options: options
         });
     }
     parseData(gts) {
@@ -87,11 +120,10 @@ export class QuantumBubble {
         this.drawChart();
     }
     render() {
-        return (h("div", null,
+        return (h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height }))));
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height }))));
     }
     static get is() { return "quantum-bubble"; }
     static get encapsulation() { return "shadow"; }
@@ -123,6 +155,14 @@ export class QuantumBubble {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
+        },
+        "standalone": {
+            "type": Boolean,
+            "attr": "standalone"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         },
         "timeMax": {
             "type": Number,

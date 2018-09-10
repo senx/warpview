@@ -1,7 +1,6 @@
 import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 import Dygraph from 'dygraphs';
-import Options = dygraphs.Options;
 
 /**
  * options :
@@ -21,7 +20,11 @@ export class QuantumDygraphs {
   @Prop() options: string = '{}';
   @Prop() hiddenData: string = '[]';
   @Prop() theme: string = 'light';
+  @Prop() unit: string = '';
+  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
+  @Prop() standalone = true;
+
   @Element() el: HTMLElement;
   @Event() receivedData: EventEmitter;
   @Event() boundsDidChange: EventEmitter;
@@ -31,15 +34,29 @@ export class QuantumDygraphs {
   private static DEFAULT_HEIGHT = 600;
 
   private _chart: any;
-  private _option = {
-    gridLineColor: '#000000',
+  private _option: any = {
     time: {timeMode: 'date'},
     showRangeSelector: true,
     type: 'line'
   };
+  private _data: any;
 
   @Watch('hiddenData')
   hideData(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.drawChart();
+    }
+  }
+
+  @Watch('data')
+  onData(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.drawChart();
+    }
+  }
+
+  @Watch('theme')
+  onTheme(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.drawChart();
     }
@@ -119,10 +136,15 @@ export class QuantumDygraphs {
   }
 
   private legendFormatter(data) {
-    if (data.x == null) {
+    if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
-        return series.dashHTML + ' ' + series.labelHTML
+        if (!series.isVisible) return;
+        let labeledData = series.labelHTML + ': ' + series.yHTML;
+        if (series.isHighlighted) {
+          labeledData = '<b>' + labeledData + '</b>';
+        }
+        return series.dashHTML + ' ' + labeledData;
       }).join('<br>');
     }
 
@@ -145,7 +167,7 @@ export class QuantumDygraphs {
     });
   }
 
-  private zoomCallback(minDate, maxDate, yRanges) {
+  private zoomCallback(minDate, maxDate) {
     this.boundsDidChange.emit({
       bounds: {
         min: minDate,
@@ -155,39 +177,48 @@ export class QuantumDygraphs {
   }
 
   private drawChart() {
-    const data = this.gtsToData(JSON.parse(this.data));
-    this._chart = new Dygraph(
-      this.el.querySelector('#myChart') as HTMLElement,
-      data.datasets,
-      {
-        height: this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT,
-        width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
-        labels: data.labels,
-        showRoller: false,
-        showRangeSelector: this._option.showRangeSelector || true,
-        connectSeparatedPoints: true,
-        colors: data.colors,
-        legend: 'follow',
-        stackedGraph: this.isStacked(),
-        strokeBorderWidth: this.isStacked() ? null : 0,
-        strokeWidth: 2,
-        stepPlot: this.isStepped(),
-        labelsSeparateLines: true,
-        highlightSeriesBackgroundAlpha: 1,
-        highlightSeriesOpts: {
-          strokeWidth: 3,
-          strokeBorderWidth: 0,
-          highlightCircleSize: 3,
-          showInRangeSelector:true
-        },
-        gridLineColor: this._option.gridLineColor || this.theme ==='light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
-        axisLineColor: this._option.gridLineColor || this.theme ==='light' ? 'rgb(128,128,128)' : 'rgb(200,200,200)',
-        legendFormatter: this.legendFormatter,
-        highlightCallback: this.highlightCallback.bind(this),
-        zoomCallback: this.zoomCallback.bind(this),
-        axisLabelWidth: 94,
-      }
-    );
+    const data = JSON.parse(this.data);
+    this._data = this.gtsToData(data);
+    const chart = this.el.querySelector('#myChart') as HTMLElement;
+    if (data.length > 0) {
+      const color = this._option.gridLineColor ||  this.theme === 'light' ? '#000000' : '#ffffff';
+      this._chart = new Dygraph(
+        chart,
+        this._data.datasets,
+        {
+          height: (this.responsive ? this.el.parentElement.clientHeight : QuantumDygraphs.DEFAULT_HEIGHT) - 30,
+          width: this.responsive ? this.el.parentElement.clientWidth : QuantumDygraphs.DEFAULT_WIDTH,
+          labels: this._data.labels,
+          showRoller: false,
+          showRangeSelector: this._option.showRangeSelector || true,
+          connectSeparatedPoints: true,
+          colors: this._data.colors,
+          legend: 'follow',
+          stackedGraph: this.isStacked(),
+          strokeBorderWidth: this.isStacked() ? null : 0,
+          strokeWidth: 2,
+          stepPlot: this.isStepped(),
+          ylabel: this.unit,
+          labelsSeparateLines: true,
+          highlightSeriesBackgroundAlpha: 1,
+          highlightSeriesOpts: {
+            strokeWidth: 3,
+            strokeBorderWidth: 0,
+            highlightCircleSize: 3,
+            showInRangeSelector: true
+          },
+          hideOverlayOnMouseOut: true,
+          labelsUTC: true,
+          gridLineColor: color,
+          axisLineColor: color,
+          legendFormatter: this.legendFormatter,
+          highlightCallback: this.highlightCallback.bind(this),
+          zoomCallback: this.zoomCallback.bind(this),
+          axisLabelWidth: this.standalone ? 50 : 94,
+          rightGap: this.standalone ? 0 : 20
+        }
+      );
+    }
   }
 
   componentDidLoad() {
@@ -196,6 +227,9 @@ export class QuantumDygraphs {
   }
 
   render() {
-    return <div id="myChart" class={this.theme}/>;
+    return <div class={this.theme}>
+      <h1>{this.chartTitle}</h1>
+      <div id="myChart" class={this.theme}/>
+    </div>;
   }
 }

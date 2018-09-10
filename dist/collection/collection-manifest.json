@@ -136,6 +136,16 @@
           "attr": "show-legend"
         },
         {
+          "name": "standalone",
+          "type": "Boolean",
+          "attr": "standalone"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
+        },
+        {
           "name": "timeMax",
           "type": "Number",
           "attr": "time-max"
@@ -349,9 +359,17 @@
       },
       "props": [
         {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
           "name": "data",
           "type": "String",
-          "attr": "data"
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
         },
         {
           "name": "hiddenData",
@@ -375,9 +393,22 @@
           "attr": "responsive"
         },
         {
+          "name": "standalone",
+          "type": "Boolean",
+          "attr": "standalone"
+        },
+        {
           "name": "theme",
           "type": "String",
-          "attr": "theme"
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
         }
       ],
       "hostElement": {
@@ -941,6 +972,16 @@
           "attr": "show-legend"
         },
         {
+          "name": "standalone",
+          "type": "Boolean",
+          "attr": "standalone"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
+        },
+        {
           "name": "timeMax",
           "type": "Number",
           "attr": "time-max"
@@ -975,7 +1016,7 @@
       "tag": "quantum-tile",
       "dependencies": [
         "quantum-bubble",
-        "quantum-chart",
+        "quantum-dygraphs",
         "quantum-pie",
         "quantum-polar",
         "quantum-scatter"
@@ -1004,6 +1045,11 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
         },
         {
           "name": "type",

@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../gts.lib';
 
 @Component({
@@ -12,13 +12,16 @@ export class QuantumBubble {
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
+  @Prop() standalone = true;
   @Prop() data: string = '[]';
-  @Prop() options: object = {};
+  @Prop() options: {
+    gridLineColor?: string
+  } = {};
+  @Prop() theme = 'light';
   @Prop() width = '';
   @Prop() height = '';
   @Prop() timeMin: number;
   @Prop() timeMax: number;
-
   @Event() pointHover: EventEmitter;
 
   @Element() el: HTMLElement;
@@ -31,10 +34,56 @@ export class QuantumBubble {
   }
 
   drawChart() {
+    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let data = JSON.parse(this.data);
     if (!data) return;
     const me = this;
+    const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+    const options: any = {
+      legend: {
+        display: this.showLegend
+      },
+      borderWidth: 1,
+      animation: {
+        duration: 0,
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            color: color,
+            zeroLineColor: color,
+          },
+          ticks: {
+            fontColor: color
+          }
+        }],
+        yAxes: [
+          {
+            gridLines: {
+              color: color,
+              zeroLineColor: color,
+            },
+            ticks: {
+              fontColor: color
+            },
+            scaleLabel: {
+              display: this.unit !== '',
+              labelString: this.unit
+            }
+          }
+        ]
+      },
+      responsive: this.responsive
+    };
+
+    if (!this.standalone) {
+      options.scales.yAxes[0].afterFit = (scaleInstance) => {
+        scaleInstance.width = 100; // sets the width to 100px
+      };
+    }
+
     new Chart(ctx, {
       type: 'bubble',
       tooltips: {
@@ -49,23 +98,10 @@ export class QuantumBubble {
           return;
         }
       },
-      legend: {display: this.showLegend},
       data: {
         datasets: this.parseData(data)
       },
-      options: {
-        borderWidth: 1,
-        scales: {
-          yAxes: [
-            {
-              afterFit: function(scaleInstance) {
-                scaleInstance.width = 100; // sets the width to 100px
-              }
-            }
-          ]
-        },
-        responsive: this.responsive
-      }
+      options: options
     });
   }
 
@@ -103,13 +139,10 @@ export class QuantumBubble {
 
   render() {
     return (
-      <div>
+      <div class={this.theme}>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
-          {this.responsive
-            ? <canvas id="myChart" />
-            : <canvas id="myChart" width={this.width} height={this.height}/>
-          }
+          <canvas id="myChart" width={this.width} height={this.height}/>
         </div>
       </div>
     );

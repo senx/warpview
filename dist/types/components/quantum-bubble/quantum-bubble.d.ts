@@ -5,8 +5,12 @@ export declare class QuantumBubble {
     chartTitle: string;
     responsive: boolean;
     showLegend: boolean;
+    standalone: boolean;
     data: string;
-    options: object;
+    options: {
+        gridLineColor?: string;
+    };
+    theme: string;
     width: string;
     height: string;
     timeMin: number;

@@ -13,7 +13,10 @@ export declare class QuantumDygraphs {
     options: string;
     hiddenData: string;
     theme: string;
+    unit: string;
+    chartTitle: string;
     responsive: boolean;
+    standalone: boolean;
     el: HTMLElement;
     receivedData: EventEmitter;
     boundsDidChange: EventEmitter;
@@ -22,7 +25,10 @@ export declare class QuantumDygraphs {
     private static DEFAULT_HEIGHT;
     private _chart;
     private _option;
+    private _data;
     hideData(newValue: string, oldValue: string): void;
+    onData(newValue: string, oldValue: string): void;
+    onTheme(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     private gtsToData;
     private isStepped;

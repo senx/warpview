@@ -1,2 +1,8 @@
-:host .warpscript {
-  display: none; }
+:host {
+  --quantum-chart-height: 100%; }
+  :host .warpscript {
+    display: none; }
+  :host .wrapper {
+    min-height: var(--quantum-tile-height, 400px);
+    width: var(--quantum-tile-width, 100%);
+    height: var(--quantum-tile-height, 100%); }

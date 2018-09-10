@@ -84,9 +84,13 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'options': {
+    gridLineColor?: string
+  };
       'responsive': boolean;
       'showLegend': boolean;
+      'standalone': boolean;
+      'theme': string;
       'timeMax': number;
       'timeMin': number;
       'unit': string;
@@ -117,9 +121,13 @@ declare global {
       'data'?: string;
       'height'?: string;
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: object;
+      'options'?: {
+    gridLineColor?: string
+  };
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'standalone'?: boolean;
+      'theme'?: string;
       'timeMax'?: number;
       'timeMin'?: number;
       'unit'?: string;
@@ -200,11 +208,14 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumDygraphs {
+      'chartTitle': string;
       'data': string;
       'hiddenData': string;
       'options': string;
       'responsive': boolean;
+      'standalone': boolean;
       'theme': string;
+      'unit': string;
     }
   }
 
@@ -227,6 +238,7 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumDygraphsAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
       'data'?: string;
       'hiddenData'?: string;
       'onBoundsDidChange'?: (event: CustomEvent) => void;
@@ -234,7 +246,9 @@ declare global {
       'onReceivedData'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
+      'standalone'?: boolean;
       'theme'?: string;
+      'unit'?: string;
     }
   }
 }
@@ -664,9 +678,13 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'options': {
+    gridLineColor?: string
+  };
       'responsive': boolean;
       'showLegend': boolean;
+      'standalone': boolean;
+      'theme': string;
       'timeMax': number;
       'timeMin': number;
       'unit': string;
@@ -697,9 +715,13 @@ declare global {
       'data'?: string;
       'height'?: string;
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: object;
+      'options'?: {
+    gridLineColor?: string
+  };
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'standalone'?: boolean;
+      'theme'?: string;
       'timeMax'?: number;
       'timeMin'?: number;
       'unit'?: string;
@@ -716,6 +738,7 @@ declare global {
       'chartTitle': string;
       'responsive': boolean;
       'showLegend': boolean;
+      'theme': string;
       'type': string;
       'unit': string;
       'url': string;
@@ -744,6 +767,7 @@ declare global {
       'chartTitle'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'theme'?: string;
       'type'?: string;
       'unit'?: string;
       'url'?: string;

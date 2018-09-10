@@ -46,15 +46,16 @@ export class QuantumPie {
     drawChart() {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = this.parseData(JSON.parse(this.data));
-        //console.debug('[QuantumPie]', this.data, data);
         new Chart(ctx, {
             type: (this.type === 'gauge') ? 'doughnut' : this.type,
-            legend: { display: this.showLegend },
             data: {
                 datasets: [{ data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle }],
                 labels: data.labels
             },
             options: {
+                legend: {
+                    display: this.showLegend
+                },
                 responsive: this.responsive,
                 tooltips: {
                     mode: 'index',

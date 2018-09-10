@@ -109,7 +109,7 @@ var QuantumMultiChartsComponent = /** @class **/ (function() {
   QuantumMultiCharts.is = 'quantum-multi-charts';
   QuantumMultiCharts.getModule = function(opts) {
     
-    return import('./quantum-multi-charts.js').then(function(m) {
+    return import('./quantum-chart.js').then(function(m) {
         return m.QuantumMultiCharts;
       });
 

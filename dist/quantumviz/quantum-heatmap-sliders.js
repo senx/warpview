@@ -2,7 +2,7 @@
 const { h } = window.quantumviz;
 
 import { a as commonjsGlobal, b as createCommonjsModule } from './chunk-ee323282.js';
-import { a as GTSLib } from './chunk-e52051aa.js';
+import { a as GTSLib } from './chunk-388780c8.js';
 
 class QuantumHeatmapSliders {
     radiusChanged(value) {

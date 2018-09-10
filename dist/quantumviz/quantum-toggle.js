@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as GTSLib } from './chunk-e52051aa.js';
+import { a as GTSLib } from './chunk-388780c8.js';
 
 class QuantumToggle {
     constructor() {

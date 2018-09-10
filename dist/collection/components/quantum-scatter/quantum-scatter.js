@@ -10,6 +10,8 @@ export class QuantumScatter {
         this.options = {};
         this.width = '';
         this.height = '';
+        this.theme = 'light';
+        this.standalone = true;
     }
     redraw(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -19,46 +21,68 @@ export class QuantumScatter {
     drawChart() {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.gtsToScatter(JSON.parse(this.data));
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const me = this;
+        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const options = {
+            legend: {
+                display: this.showLegend
+            },
+            responsive: this.responsive,
+            tooltips: {
+                mode: 'x',
+                position: 'nearest',
+                custom: function (tooltip) {
+                    if (tooltip.opacity > 0) {
+                        me.pointHover.emit({ x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y });
+                    }
+                    else {
+                        me.pointHover.emit({ x: -100, y: this._eventPosition.y });
+                    }
+                    return;
+                },
+            },
+            scales: {
+                xAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        type: 'time',
+                        time: {
+                            min: this.timeMin,
+                            max: this.timeMax,
+                        }
+                    }],
+                yAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        scaleLabel: {
+                            display: this.unit !== '',
+                            labelString: this.unit
+                        }
+                    }]
+            },
+        };
+        if (!this.standalone) {
+            options.scales.yAxes[0].afterFit = (scaleInstance) => {
+                scaleInstance.width = 100; // sets the width to 100px
+            };
+        }
         new Chart.Scatter(ctx, {
             data: {
                 datasets: gts
             },
-            options: {
-                legend: { display: this.showLegend },
-                responsive: this.responsive,
-                tooltips: {
-                    mode: 'x',
-                    position: 'nearest',
-                    custom: function (tooltip) {
-                        if (tooltip.opacity > 0) {
-                            me.pointHover.emit({ x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y });
-                        }
-                        else {
-                            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
-                        }
-                        return;
-                    },
-                },
-                scales: {
-                    xAxes: [{
-                            type: 'time',
-                            time: {
-                                min: this.timeMin,
-                                max: this.timeMax,
-                            }
-                        }],
-                    yAxes: [{
-                            afterFit: function (scaleInstance) {
-                                scaleInstance.width = 100; // sets the width to 100px
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: this.unit
-                            }
-                        }]
-                },
-            }
+            options: options
         });
     }
     gtsToScatter(gts) {
@@ -93,11 +117,10 @@ export class QuantumScatter {
         this.drawChart();
     }
     render() {
-        return h("div", null,
+        return h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height })));
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height })));
     }
     static get is() { return "quantum-scatter"; }
     static get encapsulation() { return "shadow"; }
@@ -129,6 +152,14 @@ export class QuantumScatter {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
+        },
+        "standalone": {
+            "type": Boolean,
+            "attr": "standalone"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         },
         "timeMax": {
             "type": Number,

@@ -2,7 +2,7 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-e52051aa.js';
+import { a as GTSLib } from './chunk-388780c8.js';
 import './chunk-ee323282.js';
 
 class QuantumBubble {
@@ -11,8 +11,10 @@ class QuantumBubble {
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
+        this.standalone = true;
         this.data = '[]';
         this.options = {};
+        this.theme = 'light';
         this.width = '';
         this.height = '';
     }
@@ -22,11 +24,55 @@ class QuantumBubble {
         }
     }
     drawChart() {
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = JSON.parse(this.data);
         if (!data)
             return;
         const me = this;
+        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const options = {
+            legend: {
+                display: this.showLegend
+            },
+            borderWidth: 1,
+            animation: {
+                duration: 0,
+            },
+            scales: {
+                xAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        }
+                    }],
+                yAxes: [
+                    {
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        scaleLabel: {
+                            display: this.unit !== '',
+                            labelString: this.unit
+                        }
+                    }
+                ]
+            },
+            responsive: this.responsive
+        };
+        if (!this.standalone) {
+            options.scales.yAxes[0].afterFit = (scaleInstance) => {
+                scaleInstance.width = 100; // sets the width to 100px
+            };
+        }
         new Chart(ctx, {
             type: 'bubble',
             tooltips: {
@@ -42,23 +88,10 @@ class QuantumBubble {
                     return;
                 }
             },
-            legend: { display: this.showLegend },
             data: {
                 datasets: this.parseData(data)
             },
-            options: {
-                borderWidth: 1,
-                scales: {
-                    yAxes: [
-                        {
-                            afterFit: function (scaleInstance) {
-                                scaleInstance.width = 100; // sets the width to 100px
-                            }
-                        }
-                    ]
-                },
-                responsive: this.responsive
-            }
+            options: options
         });
     }
     parseData(gts) {
@@ -92,11 +125,10 @@ class QuantumBubble {
         this.drawChart();
     }
     render() {
-        return (h("div", null,
+        return (h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height }))));
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height }))));
     }
     static get is() { return "quantum-bubble"; }
     static get encapsulation() { return "shadow"; }
@@ -129,6 +161,14 @@ class QuantumBubble {
             "type": Boolean,
             "attr": "show-legend"
         },
+        "standalone": {
+            "type": Boolean,
+            "attr": "standalone"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
+        },
         "timeMax": {
             "type": Number,
             "attr": "time-max"
@@ -153,7 +193,7 @@ class QuantumBubble {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "quantum-bubble[data-quantum-bubble]   .chart-container[data-quantum-bubble] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
+    static get style() { return "[data-quantum-bubble-host]   div[data-quantum-bubble] {\n  height: var(--quantum-chart-height, 100%); }\n\n[data-quantum-bubble-host]   .chart-container[data-quantum-bubble] {\n  width: var(--quantum-chart-width, 100%);\n  height: calc(var(--quantum-chart-height, 100%) - 30px);\n  position: relative; }\n\n[data-quantum-bubble-host]   h1[data-quantum-bubble] {\n  font-size: 20px;\n  padding: 5px;\n  margin: 0; }\n\n[data-quantum-bubble-host]   .dark[data-quantum-bubble]   h1[data-quantum-bubble] {\n  color: #ffffff; }\n\n[data-quantum-bubble-host]   .light[data-quantum-bubble]   h1[data-quantum-bubble] {\n  color: #000000; }"; }
 }
 
 class QuantumPie {
@@ -202,15 +242,16 @@ class QuantumPie {
     drawChart() {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = this.parseData(JSON.parse(this.data));
-        //console.debug('[QuantumPie]', this.data, data);
         new Chart(ctx, {
             type: (this.type === 'gauge') ? 'doughnut' : this.type,
-            legend: { display: this.showLegend },
             data: {
                 datasets: [{ data: data.data, backgroundColor: this.generateColors(data.data.length), label: this.chartTitle }],
                 labels: data.labels
             },
             options: {
+                legend: {
+                    display: this.showLegend
+                },
                 responsive: this.responsive,
                 tooltips: {
                     mode: 'index',
@@ -413,6 +454,8 @@ class QuantumScatter {
         this.options = {};
         this.width = '';
         this.height = '';
+        this.theme = 'light';
+        this.standalone = true;
     }
     redraw(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -422,46 +465,68 @@ class QuantumScatter {
     drawChart() {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.gtsToScatter(JSON.parse(this.data));
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const me = this;
+        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const options = {
+            legend: {
+                display: this.showLegend
+            },
+            responsive: this.responsive,
+            tooltips: {
+                mode: 'x',
+                position: 'nearest',
+                custom: function (tooltip) {
+                    if (tooltip.opacity > 0) {
+                        me.pointHover.emit({ x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y });
+                    }
+                    else {
+                        me.pointHover.emit({ x: -100, y: this._eventPosition.y });
+                    }
+                    return;
+                },
+            },
+            scales: {
+                xAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        type: 'time',
+                        time: {
+                            min: this.timeMin,
+                            max: this.timeMax,
+                        }
+                    }],
+                yAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        },
+                        scaleLabel: {
+                            display: this.unit !== '',
+                            labelString: this.unit
+                        }
+                    }]
+            },
+        };
+        if (!this.standalone) {
+            options.scales.yAxes[0].afterFit = (scaleInstance) => {
+                scaleInstance.width = 100; // sets the width to 100px
+            };
+        }
         new Chart.Scatter(ctx, {
             data: {
                 datasets: gts
             },
-            options: {
-                legend: { display: this.showLegend },
-                responsive: this.responsive,
-                tooltips: {
-                    mode: 'x',
-                    position: 'nearest',
-                    custom: function (tooltip) {
-                        if (tooltip.opacity > 0) {
-                            me.pointHover.emit({ x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y });
-                        }
-                        else {
-                            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
-                        }
-                        return;
-                    },
-                },
-                scales: {
-                    xAxes: [{
-                            type: 'time',
-                            time: {
-                                min: this.timeMin,
-                                max: this.timeMax,
-                            }
-                        }],
-                    yAxes: [{
-                            afterFit: function (scaleInstance) {
-                                scaleInstance.width = 100; // sets the width to 100px
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: this.unit
-                            }
-                        }]
-                },
-            }
+            options: options
         });
     }
     gtsToScatter(gts) {
@@ -496,11 +561,10 @@ class QuantumScatter {
         this.drawChart();
     }
     render() {
-        return h("div", null,
+        return h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height })));
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height })));
     }
     static get is() { return "quantum-scatter"; }
     static get encapsulation() { return "shadow"; }
@@ -533,6 +597,14 @@ class QuantumScatter {
             "type": Boolean,
             "attr": "show-legend"
         },
+        "standalone": {
+            "type": Boolean,
+            "attr": "standalone"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
+        },
         "timeMax": {
             "type": Number,
             "attr": "time-max"
@@ -557,7 +629,7 @@ class QuantumScatter {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "quantum-scatter[data-quantum-scatter]   .chart-container[data-quantum-scatter] {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
+    static get style() { return "[data-quantum-scatter-host]   div[data-quantum-scatter] {\n  height: var(--quantum-chart-height, 100%); }\n\n[data-quantum-scatter-host]   .chart-container[data-quantum-scatter] {\n  width: var(--quantum-chart-width, 100%);\n  height: calc(var(--quantum-chart-height, 100%) - 30px);\n  position: relative; }\n\n[data-quantum-scatter-host]   h1[data-quantum-scatter] {\n  font-size: 20px;\n  padding: 5px;\n  margin: 0; }\n\n[data-quantum-scatter-host]   .dark[data-quantum-scatter]   h1[data-quantum-scatter] {\n  color: #ffffff; }\n\n[data-quantum-scatter-host]   .light[data-quantum-scatter]   h1[data-quantum-scatter] {\n  color: #000000; }"; }
 }
 
 class QuantumTile {
@@ -565,6 +637,7 @@ class QuantumTile {
         this.warpscript = '';
         this.data = '[]';
         this.unit = '';
+        this.theme = 'light';
         this.type = 'line';
         this.chartTitle = '';
         this.responsive = false;
@@ -572,9 +645,10 @@ class QuantumTile {
         this.url = '';
         this.graphs = {
             'scatter': ['scatter'],
-            'chart': ['line', 'spline', 'step-after', 'step-before', 'area', 'bar'],
+            'chart': ['line', 'spline', 'step', 'area', 'bar'],
             'pie': ['pie', 'doughnut', 'gauge'],
-            'polar': ['polar']
+            'polar': ['polar'],
+            'bar': ['bar']
         };
     }
     componentDidLoad() {
@@ -616,26 +690,26 @@ class QuantumTile {
         let me = this;
         for (let i = 0; i < gtsList.length; i++) {
             let gts = gtsList[i];
-            params.push({ color: GTSLib.getColor(i), key: gts.c, interpolate: me.type });
+            params.push({ color: GTSLib.getColor(i), key: GTSLib.serializeGtsMetadata(gts), interpolate: me.type });
         }
         return params;
     }
     render() {
-        return h("div", { class: "wrapper" },
+        return h("div", { class: "wrapper", id: "wrapper" },
             h("div", { class: "warpscript" },
                 h("slot", null)),
             this.graphs['scatter'].indexOf(this.type) > -1 ?
-                h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, "show-legend": this.showLegend, chartTitle: this.chartTitle })
+                h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, "show-legend": this.showLegend, "chart-title": this.chartTitle })
                 : '',
             this.graphs['chart'].indexOf(this.type) > -1 ?
-                h("quantum-chart", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle })
+                h("quantum-dygraphs", { responsive: this.responsive, unit: this.unit, data: this.data, options: JSON.stringify({ type: this.type }), "show-legend": this.showLegend, chartTitle: this.chartTitle, theme: this.theme })
                 : '',
             this.type == 'bubble' ?
-                h("quantum-bubble", { "show-legend": this.showLegend, responsive: this.responsive, unit: this.unit, data: this.data, chartTitle: this.chartTitle }) : '',
+                h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, chartTitle: this.chartTitle }) : '',
             this.graphs['pie'].indexOf(this.type) > -1 ?
-                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
+                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?
-                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '');
+                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '');
     }
     static get is() { return "quantum-tile"; }
     static get encapsulation() { return "shadow"; }
@@ -655,6 +729,10 @@ class QuantumTile {
             "type": Boolean,
             "attr": "show-legend"
         },
+        "theme": {
+            "type": String,
+            "attr": "theme"
+        },
         "type": {
             "type": String,
             "attr": "type"
@@ -671,7 +749,7 @@ class QuantumTile {
             "elementRef": true
         }
     }; }
-    static get style() { return "[data-quantum-tile-host]   .warpscript[data-quantum-tile] {\n  display: none; }"; }
+    static get style() { return "[data-quantum-tile-host] {\n  --quantum-chart-height: 100%; }\n  [data-quantum-tile-host]   .warpscript[data-quantum-tile] {\n    display: none; }\n  [data-quantum-tile-host]   .wrapper[data-quantum-tile] {\n    min-height: var(--quantum-tile-height, 400px);\n    width: var(--quantum-tile-width, 100%);\n    height: var(--quantum-tile-height, 100%); }"; }
 }
 
 export { QuantumBubble, QuantumPie, QuantumPolar, QuantumScatter, QuantumTile };

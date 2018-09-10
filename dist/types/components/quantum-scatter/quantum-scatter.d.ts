@@ -6,11 +6,15 @@ export declare class QuantumScatter {
     responsive: boolean;
     showLegend: boolean;
     data: string;
-    options: object;
+    options: {
+        gridLineColor?: string;
+    };
     width: string;
     height: string;
     timeMin: number;
     timeMax: number;
+    theme: string;
+    standalone: boolean;
     pointHover: EventEmitter;
     el: HTMLElement;
     redraw(newValue: string, oldValue: string): void;

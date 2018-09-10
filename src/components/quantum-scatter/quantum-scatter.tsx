@@ -13,11 +13,15 @@ export class QuantumScatter {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: object = {};
+  @Prop() options: {
+    gridLineColor?: string
+  } = {};
   @Prop() width = '';
   @Prop() height = '';
   @Prop() timeMin: number;
   @Prop() timeMax: number;
+  @Prop() theme = 'light';
+  @Prop() standalone = true;
 
   @Event() pointHover: EventEmitter;
 
@@ -33,45 +37,67 @@ export class QuantumScatter {
   drawChart() {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
+    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const me = this;
+    const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+    const options: any = {
+      legend: {
+        display: this.showLegend
+      },
+      responsive: this.responsive,
+      tooltips: {
+        mode: 'x',
+        position: 'nearest',
+        custom: function (tooltip) {
+          if (tooltip.opacity > 0) {
+            me.pointHover.emit({x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y});
+          } else {
+            me.pointHover.emit({x: -100, y: this._eventPosition.y});
+          }
+          return;
+        },
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            color: color,
+            zeroLineColor: color,
+          },
+          ticks: {
+            fontColor: color
+          },
+          type: 'time',
+          time: {
+            min: this.timeMin,
+            max: this.timeMax,
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            color: color,
+            zeroLineColor: color,
+          },
+          ticks: {
+            fontColor: color
+          },
+          scaleLabel: {
+            display: this.unit !== '',
+            labelString: this.unit
+          }
+        }]
+      },
+    };
+    if (!this.standalone) {
+      options.scales.yAxes[0].afterFit = (scaleInstance) => {
+        scaleInstance.width = 100; // sets the width to 100px
+      };
+    }
     new Chart.Scatter(ctx, {
       data: {
         datasets: gts
       },
-      options: {
-        legend: {display: this.showLegend},
-        responsive: this.responsive,
-        tooltips: {
-          mode: 'x',
-          position: 'nearest',
-          custom: function( tooltip ) {
-            if( tooltip.opacity > 0 ) {
-              me.pointHover.emit({x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y});
-            } else {
-              me.pointHover.emit({x: -100, y: this._eventPosition.y});
-            }
-            return;
-          },
-        },
-        scales: {
-          xAxes: [{
-            type: 'time',
-            time: {
-              min: this.timeMin,
-              max: this.timeMax,
-            }
-          }],
-          yAxes: [{
-            afterFit: function(scaleInstance) {
-              scaleInstance.width = 100; // sets the width to 100px
-            },
-            scaleLabel: {
-              display: true,
-              labelString: this.unit
-            }
-          }]
-        },
-      }
+      options: options
     });
   }
 
@@ -110,13 +136,10 @@ export class QuantumScatter {
   }
 
   render() {
-    return <div>
+    return <div class={this.theme}>
       <h1>{this.chartTitle}</h1>
       <div class="chart-container">
-        {this.responsive
-          ? <canvas id="myChart" />
-          : <canvas id="myChart" width={this.width} height={this.height}/>
-        }
+        <canvas id="myChart" width={this.width} height={this.height}/>
       </div>
     </div>;
   }

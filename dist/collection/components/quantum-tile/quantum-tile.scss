@@ -1,7 +1,11 @@
 :host {
-
+  --quantum-chart-height: 100%;
   .warpscript {
     display: none;
   }
-
+  .wrapper {
+    min-height: var(--quantum-tile-height, 400px);
+    width: var(--quantum-tile-width, 100%);
+    height: var(--quantum-tile-height, 100%);
+  }
 }

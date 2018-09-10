@@ -3,6 +3,7 @@ export declare class QuantumTile {
     warpscript: string;
     data: string;
     unit: string;
+    theme: string;
     type: string;
     chartTitle: string;
     responsive: boolean;
@@ -14,6 +15,7 @@ export declare class QuantumTile {
         'chart': string[];
         'pie': string[];
         'polar': string[];
+        'bar': string[];
     };
     componentDidLoad(): void;
     getParams(gtsList: any): any[];

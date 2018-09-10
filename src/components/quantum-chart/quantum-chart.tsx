@@ -1,7 +1,6 @@
 import Chart from "chart.js";
 import {Component, Element, Event, EventEmitter, Method, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../gts.lib";
-import moment from "moment";
 
 @Component({
   tag: "quantum-chart",
@@ -220,15 +219,6 @@ export class QuantumChart {
     if (this.type === "area") {
       graphOpts["elements"] = {line: {fill: "start"}};
     }
-
-    console.log(JSON.stringify({
-      type: this.type === "bar" ? this.type : "line",
-      data: {
-        labels: gts.ticks,
-        datasets: gts.datasets
-      },
-      options: graphOpts
-    }))
     this._chart = new Chart(ctx, {
       type: this.type === "bar" ? this.type : "line",
       data: {

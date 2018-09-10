@@ -251,9 +251,7 @@ export class GTSLib {
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];
         Object.keys(gts.l).forEach((key) => {
-            if (typeof gts.l[key] === "string") {
-                serializedLabels.push(key + "=" + gts.l[key]);
-            }
+            serializedLabels.push(key + "=" + gts.l[key]);
         });
         return gts.c + '{' + serializedLabels.join(',') + '}';
     }
@@ -426,4 +424,4 @@ export class GTSLib {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
 }
-GTSLib.color = ['#4D4D4D', '#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0', '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#607D8B'];
+GTSLib.color = ['#5899DA', '#E8743B', '#19A979', '#ED4A7B', '#945ECF', '#13A4B4', '#525DF4', '#BF399E', '#6C8893', '#EE6868', '#2F6497'];

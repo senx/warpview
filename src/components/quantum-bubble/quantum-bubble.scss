@@ -1,7 +1,27 @@
-quantum-bubble {
+:host {
+  div {
+    height: var(--quantum-chart-height, 100%);
+  }
   .chart-container {
     width: var(--quantum-chart-width, 100%);
-    height: var(--quantum-chart-height, 100%);
+    height: calc(var(--quantum-chart-height, 100%) - 30px);
     position: relative;
+  }
+
+  h1 {
+    font-size: 20px;
+    padding: 5px;
+    margin: 0;
+  }
+
+  .dark {
+    h1 {
+      color: #ffffff;
+    }
+  }
+  .light {
+    h1 {
+      color: #000000;
+    }
   }
 }

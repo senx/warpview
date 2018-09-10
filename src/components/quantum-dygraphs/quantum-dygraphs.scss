@@ -1,9 +1,25 @@
 quantum-dygraphs {
+  h1 {
+    font-size: 20px;
+    padding: 5px;
+    margin: 0;
+  }
+
+  .dark {
+    h1 {
+      color: #ffffff;
+    }
+  }
+
+  .light {
+    h1 {
+      color: #000000;
+    }
+  }
 
   div#myChart {
     width: var(--quantum-chart-width, 100%);
-    height: var(--quantum-chart-height, 100%);
-    margin-right: 200px;
+    height: calc(var(--quantum-chart-height, 100%) - 30px);
 
     .dygraph-legend {
       background-color: var(--quantum-chart-legend-bg, #000000) !important;
@@ -15,12 +31,13 @@ quantum-dygraphs {
       box-shadow: none;
       pointer-events: none;
     }
-    .dygraph-axis-label {
+
+    .dygraph-label, .dygraph-label {
       color: var(--quantum-chart-label-color, #000000) !important;
     }
 
     &.dark {
-      .dygraph-axis-label {
+      .dygraph-axis-label, .dygraph-label {
         color: var(--quantum-chart-label-color, #ffffff) !important;
       }
     }
