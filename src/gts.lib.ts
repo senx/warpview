@@ -447,4 +447,7 @@ export class GTSLib {
     return (item && typeof item === 'object' && !Array.isArray(item));
   }
 
+  static getGridColor(theme: string) {
+    return theme === 'light' ? '#8e8e8e' : '#8e8e8e';
+  }
 }

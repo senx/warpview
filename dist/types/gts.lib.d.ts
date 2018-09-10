@@ -98,4 +98,5 @@ export declare class GTSLib {
      */
     static mergeDeep(target: any, ...sources: any[]): any;
     static isObject(item: any): boolean;
+    static getGridColor(theme: string): string;
 }

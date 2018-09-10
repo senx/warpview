@@ -1,4 +1,6 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 export declare class QuantumScatter {
     unit: string;
@@ -18,6 +20,7 @@ export declare class QuantumScatter {
     pointHover: EventEmitter;
     el: HTMLElement;
     redraw(newValue: string, oldValue: string): void;
+    onTheme(newValue: string, oldValue: string): void;
     drawChart(): void;
     gtsToScatter(gts: any): any[];
     componentDidLoad(): void;

@@ -33,6 +33,13 @@ export class QuantumBubble {
     }
   }
 
+  @Watch('theme')
+  onTheme(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.drawChart();
+    }
+  }
+
   drawChart() {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
@@ -40,7 +47,7 @@ export class QuantumBubble {
     let data = JSON.parse(this.data);
     if (!data) return;
     const me = this;
-    const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
     const options: any = {
       legend: {
         display: this.showLegend

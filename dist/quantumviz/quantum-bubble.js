@@ -2,7 +2,7 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-388780c8.js';
+import { a as GTSLib } from './chunk-e737bf72.js';
 import './chunk-ee323282.js';
 
 class QuantumBubble {
@@ -23,6 +23,11 @@ class QuantumBubble {
             this.drawChart();
         }
     }
+    onTheme(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
     drawChart() {
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
@@ -31,7 +36,7 @@ class QuantumBubble {
         if (!data)
             return;
         const me = this;
-        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
         const options = {
             legend: {
                 display: this.showLegend
@@ -167,7 +172,8 @@ class QuantumBubble {
         },
         "theme": {
             "type": String,
-            "attr": "theme"
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
         },
         "timeMax": {
             "type": Number,
@@ -462,13 +468,18 @@ class QuantumScatter {
             this.drawChart();
         }
     }
+    onTheme(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawChart();
+        }
+    }
     drawChart() {
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.gtsToScatter(JSON.parse(this.data));
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const me = this;
-        const color = this.options.gridLineColor || this.theme === 'light' ? '#FFFFFF' : '#000000';
+        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
         const options = {
             legend: {
                 display: this.showLegend
@@ -603,7 +614,8 @@ class QuantumScatter {
         },
         "theme": {
             "type": String,
-            "attr": "theme"
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
         },
         "timeMax": {
             "type": Number,

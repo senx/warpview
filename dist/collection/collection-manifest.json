@@ -143,7 +143,10 @@
         {
           "name": "theme",
           "type": "String",
-          "attr": "theme"
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
         },
         {
           "name": "timeMax",
@@ -979,7 +982,10 @@
         {
           "name": "theme",
           "type": "String",
-          "attr": "theme"
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
         },
         {
           "name": "timeMax",

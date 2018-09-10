@@ -32,13 +32,13 @@ quantum-dygraphs {
       pointer-events: none;
     }
 
-    .dygraph-label, .dygraph-label {
-      color: var(--quantum-chart-label-color, #000000) !important;
+    .dygraph-axis-label, .dygraph-label {
+      color: var(--quantum-chart-label-color, #8e8e8e) !important;
     }
 
     &.dark {
       .dygraph-axis-label, .dygraph-label {
-        color: var(--quantum-chart-label-color, #ffffff) !important;
+        color: var(--quantum-chart-label-color, #8e8e8e) !important;
       }
     }
   }

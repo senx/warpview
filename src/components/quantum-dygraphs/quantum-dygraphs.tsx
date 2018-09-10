@@ -181,7 +181,7 @@ export class QuantumDygraphs {
     this._data = this.gtsToData(data);
     const chart = this.el.querySelector('#myChart') as HTMLElement;
     if (data.length > 0) {
-      const color = this._option.gridLineColor ||  this.theme === 'light' ? '#000000' : '#ffffff';
+      const color = this._option.gridLineColor || GTSLib.getGridColor(this.theme);
       this._chart = new Dygraph(
         chart,
         this._data.datasets,
