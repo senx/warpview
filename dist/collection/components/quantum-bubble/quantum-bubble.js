@@ -1,37 +1,53 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../gts.lib';
+import { GTSLib } from '../../utils/gts.lib';
+import { Logger } from "../../utils/logger";
 export class QuantumBubble {
     constructor() {
         this.unit = '';
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
-        this.standalone = true;
-        this.data = '[]';
-        this.options = {};
+        this.data = '{}';
+        this.options = '{}';
         this.theme = 'light';
         this.width = '';
         this.height = '';
+        this.LOG = new Logger(QuantumBubble);
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
+            this.LOG.debug(['data'], newValue);
+            this.drawChart();
+        }
+    }
+    onOptions(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['options'], newValue);
             this.drawChart();
         }
     }
     onTheme(newValue, oldValue) {
         if (oldValue !== newValue) {
+            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
     drawChart() {
+        this._options = JSON.parse(this.options);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let data = JSON.parse(this.data);
         if (!data)
             return;
-        const me = this;
-        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
+        let dataList;
+        if (data.hasOwnProperty('data')) {
+            dataList = data.data;
+        }
+        else {
+            dataList = data;
+        }
+        const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
         const options = {
             legend: {
                 display: this.showLegend
@@ -68,28 +84,16 @@ export class QuantumBubble {
             },
             responsive: this.responsive
         };
-        if (!this.standalone) {
-            options.scales.yAxes[0].afterFit = (scaleInstance) => {
-                scaleInstance.width = 100; // sets the width to 100px
-            };
-        }
+        const dataSets = this.parseData(dataList);
+        this.LOG.debug(['drawChart'], [options, dataSets]);
         new Chart(ctx, {
             type: 'bubble',
             tooltips: {
                 mode: 'x',
-                position: 'nearest',
-                custom: function (tooltip) {
-                    if (tooltip.opacity > 0) {
-                        me.pointHover.emit({ x: tooltip.dataPoints[0].x + 15, y: this._eventPosition.y });
-                    }
-                    else {
-                        me.pointHover.emit({ x: -100, y: this._eventPosition.y });
-                    }
-                    return;
-                }
+                position: 'nearest'
             },
             data: {
-                datasets: this.parseData(data)
+                datasets: dataSets
             },
             options: options
         });
@@ -140,7 +144,7 @@ export class QuantumBubble {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true
@@ -150,8 +154,9 @@ export class QuantumBubble {
             "attr": "height"
         },
         "options": {
-            "type": "Any",
-            "attr": "options"
+            "type": String,
+            "attr": "options",
+            "watchCallbacks": ["onOptions"]
         },
         "responsive": {
             "type": Boolean,
@@ -161,22 +166,10 @@ export class QuantumBubble {
             "type": Boolean,
             "attr": "show-legend"
         },
-        "standalone": {
-            "type": Boolean,
-            "attr": "standalone"
-        },
         "theme": {
             "type": String,
             "attr": "theme",
             "watchCallbacks": ["onTheme"]
-        },
-        "timeMax": {
-            "type": Number,
-            "attr": "time-max"
-        },
-        "timeMin": {
-            "type": Number,
-            "attr": "time-min"
         },
         "unit": {
             "type": String,
@@ -187,12 +180,5 @@ export class QuantumBubble {
             "attr": "width"
         }
     }; }
-    static get events() { return [{
-            "name": "pointHover",
-            "method": "pointHover",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-bubble:**/"; }
 }

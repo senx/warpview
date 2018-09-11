@@ -1,5 +1,26 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 /**
  * options :
@@ -27,7 +48,7 @@ export declare class QuantumDygraphs {
     private _chart;
     private _option;
     private _data;
-    hideData(newValue: string, oldValue: string): void;
+    onHideData(newValue: string, oldValue: string): void;
     onData(newValue: string, oldValue: string): void;
     onTheme(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;

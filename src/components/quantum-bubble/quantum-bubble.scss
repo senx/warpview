@@ -16,12 +16,12 @@
 
   .dark {
     h1 {
-      color: #ffffff;
+      color: var(--quantum-font-color, #ffffff);
     }
   }
   .light {
     h1 {
-      color: #000000;
+      color: var(--quantum-font-color, #000000);
     }
   }
 }

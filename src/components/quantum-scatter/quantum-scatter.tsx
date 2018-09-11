@@ -1,6 +1,7 @@
 import Chart from 'chart.js';
 import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
-import {GTSLib} from '../../gts.lib';
+import {GTSLib} from '../../utils/gts.lib';
+import {Param} from "../../model/param";
 
 @Component({
   tag: 'quantum-scatter',
@@ -13,9 +14,7 @@ export class QuantumScatter {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: {
-    gridLineColor?: string
-  } = {};
+  @Prop() options: string = '{}';
   @Prop() width = '';
   @Prop() height = '';
   @Prop() timeMin: number;
@@ -27,8 +26,10 @@ export class QuantumScatter {
 
   @Element() el: HTMLElement;
 
+  private _options: Param;
+
   @Watch('data')
-  redraw(newValue: string, oldValue: string) {
+  onData(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.drawChart();
     }
@@ -42,12 +43,13 @@ export class QuantumScatter {
   }
 
   drawChart() {
+    this._options = JSON.parse(this.options);
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToScatter(JSON.parse(this.data));
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const me = this;
-    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
     const options: any = {
       legend: {
         display: this.showLegend
@@ -136,7 +138,6 @@ export class QuantumScatter {
     });
     return datasets;
   }
-
 
   componentDidLoad() {
     this.drawChart()

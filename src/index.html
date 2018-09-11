@@ -42,7 +42,7 @@
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="container-fluid"><!--
   <button type="button" class="btn btn-primary float-right m-3" id="dark">Dark</button>
   <button type="button" class="btn btn-primary float-right m-3" id="light">Light</button>
 
@@ -52,8 +52,8 @@
     <quantum-annotation responsive="true" id="annotation" show-legend="false" data='[]' hidden-data='[]'
                         options="{}"></quantum-annotation>
     <div style="width: 100%; height: 768px">
-      <quantum-dygraphs id="chart" hidden-data='[]' responsive="true" theme="light"
-                        standalone="false"></quantum-dygraphs>
+      <quantum-graph id="chart" hidden-data='[]' responsive="true" theme="light"
+                        standalone="false"></quantum-graph>
     </div>
   </div>
   <script language="JavaScript">
@@ -231,9 +231,17 @@
         $("quantum-tile").attr("theme", "light");
       });
     });
-  </script>
+  </script> -->
   <div class="row">
     <div class="row">
+      <div class="card col-lg-4 col-md-12">
+        <div class="card-body">
+          <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="text"
+                        chart-title="Text">
+           { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
+          </quantum-tile>
+        </div>
+      </div>
       <div class="card col-lg-4 col-md-12">
         <div class="card-body">
           <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bubble"
@@ -246,7 +254,8 @@
             10 LTTB
             <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * $val 10 / ] %> LMAP
             }
-            %> LMAP
+            %> LMAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>

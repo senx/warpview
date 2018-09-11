@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../gts.lib';
+import { GTSLib } from '../../utils/gts.lib';
 export class QuantumPolar {
     constructor() {
         this.unit = '';

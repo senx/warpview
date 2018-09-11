@@ -1,25 +1,22 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
 export declare class QuantumBubble {
     unit: string;
     chartTitle: string;
     responsive: boolean;
     showLegend: boolean;
-    standalone: boolean;
     data: string;
-    options: any;
+    options: string;
     theme: string;
     width: string;
     height: string;
-    timeMin: number;
-    timeMax: number;
-    pointHover: EventEmitter;
     el: HTMLElement;
-    redraw(newValue: string, oldValue: string): void;
-    onTheme(newValue: string, oldValue: string): void;
-    drawChart(): void;
-    parseData(gts: any): any[];
+    private _options;
+    private LOG;
+    private onData;
+    private onOptions;
+    private onTheme;
+    private drawChart;
+    private parseData;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

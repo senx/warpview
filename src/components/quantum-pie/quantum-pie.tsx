@@ -1,6 +1,6 @@
 import Chart from 'chart.js';
 import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
-import {GTSLib} from '../../gts.lib';
+import {GTSLib} from '../../utils/gts.lib';
 
 @Component({
   tag: 'quantum-pie',

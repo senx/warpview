@@ -1,4 +1,4 @@
-import { GTSLib } from "../../gts.lib";
+import { GTSLib } from "../../utils/gts.lib";
 export class QuantumChip {
     constructor() {
         this._node = {

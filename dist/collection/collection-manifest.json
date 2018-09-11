@@ -196,7 +196,7 @@
           "type": "String",
           "attr": "data",
           "watch": [
-            "redraw"
+            "onData"
           ]
         },
         {
@@ -206,8 +206,11 @@
         },
         {
           "name": "options",
-          "type": "Any",
-          "attr": "options"
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
@@ -220,27 +223,12 @@
           "attr": "show-legend"
         },
         {
-          "name": "standalone",
-          "type": "Boolean",
-          "attr": "standalone"
-        },
-        {
           "name": "theme",
           "type": "String",
           "attr": "theme",
           "watch": [
             "onTheme"
           ]
-        },
-        {
-          "name": "timeMax",
-          "type": "Number",
-          "attr": "time-max"
-        },
-        {
-          "name": "timeMin",
-          "type": "Number",
-          "attr": "time-min"
         },
         {
           "name": "unit",
@@ -256,12 +244,94 @@
       "hostElement": {
         "name": "el"
       },
-      "events": [
+      "shadow": true
+    },
+    {
+      "tag": "quantum-chart",
+      "dependencies": [],
+      "componentClass": "QuantumChart",
+      "componentPath": "components/quantum-chart/quantum-chart.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "../node_modules/dygraphs/dist/dygraph.min.css",
+            "components/quantum-chart/quantum-chart.scss"
+          ]
+        }
+      },
+      "props": [
         {
-          "event": "pointHover"
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "standalone",
+          "type": "Boolean",
+          "attr": "standalone"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "attr": "type"
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
         }
       ],
-      "shadow": true
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "boundsDidChange"
+        },
+        {
+          "event": "pointHover"
+        },
+        {
+          "event": "receivedData"
+        }
+      ]
     },
     {
       "tag": "quantum-chip",
@@ -302,24 +372,20 @@
       ]
     },
     {
-      "tag": "quantum-dygraphs",
-      "dependencies": [],
-      "componentClass": "QuantumDygraphs",
-      "componentPath": "components/quantum-dygraphs/quantum-dygraphs.js",
+      "tag": "quantum-display",
+      "dependencies": [
+        "quantum-spinner"
+      ],
+      "componentClass": "QuantumDisplay",
+      "componentPath": "components/quantum-display/quantum-display.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "../node_modules/dygraphs/dist/dygraph.min.css",
-            "components/quantum-dygraphs/quantum-dygraphs.scss"
+            "components/quantum-display/quantum-display.scss"
           ]
         }
       },
       "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
         {
           "name": "data",
           "type": "String",
@@ -329,30 +395,28 @@
           ]
         },
         {
-          "name": "hiddenData",
+          "name": "displayTitle",
           "type": "String",
-          "attr": "hidden-data",
-          "watch": [
-            "hideData"
-          ]
+          "attr": "display-title"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
         },
         {
           "name": "options",
           "type": "String",
           "attr": "options",
           "watch": [
-            "changeScale"
+            "onOptions"
           ]
         },
         {
           "name": "responsive",
           "type": "Boolean",
           "attr": "responsive"
-        },
-        {
-          "name": "standalone",
-          "type": "Boolean",
-          "attr": "standalone"
         },
         {
           "name": "theme",
@@ -366,22 +430,18 @@
           "name": "unit",
           "type": "String",
           "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
         }
       ],
       "hostElement": {
         "name": "el"
       },
-      "events": [
-        {
-          "event": "boundsDidChange"
-        },
-        {
-          "event": "pointHover"
-        },
-        {
-          "event": "receivedData"
-        }
-      ]
+      "shadow": true
     },
     {
       "tag": "quantum-gts-tree",
@@ -588,9 +648,7 @@
     },
     {
       "tag": "quantum-multi-charts",
-      "dependencies": [
-        "quantum-dygraphs"
-      ],
+      "dependencies": [],
       "componentClass": "QuantumMultiCharts",
       "componentPath": "components/quantum-multi-charts/quantum-multi-charts.js",
       "styles": {
@@ -921,7 +979,7 @@
           "type": "String",
           "attr": "data",
           "watch": [
-            "redraw"
+            "onData"
           ]
         },
         {
@@ -931,6 +989,7 @@
         },
         {
           "name": "options",
+          "type": "String",
           "attr": "options"
         },
         {
@@ -988,11 +1047,33 @@
       "shadow": true
     },
     {
+      "tag": "quantum-spinner",
+      "dependencies": [],
+      "componentClass": "QuantumSpinner",
+      "componentPath": "components/quantum-spinner/quantum-spinner.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-spinner/quantum-spinner.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
+        }
+      ],
+      "shadow": true
+    },
+    {
       "tag": "quantum-tile",
       "dependencies": [
         "quantum-bar",
         "quantum-bubble",
-        "quantum-dygraphs",
+        "quantum-chart",
+        "quantum-display",
         "quantum-pie",
         "quantum-polar",
         "quantum-scatter"
@@ -1046,6 +1127,9 @@
       "states": [
         {
           "name": "data"
+        },
+        {
+          "name": "options"
         }
       ],
       "hostElement": {

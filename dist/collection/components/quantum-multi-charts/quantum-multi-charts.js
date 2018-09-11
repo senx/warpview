@@ -1,4 +1,4 @@
-import { GTSLib } from "../../gts.lib";
+import { GTSLib } from "../../utils/gts.lib";
 export class QuantumMultiCharts {
     constructor() {
         this.unit = "";

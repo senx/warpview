@@ -12,7 +12,7 @@
   margin: 0; }
 
 :host .dark h1 {
-  color: #ffffff; }
+  color: var(--quantum-font-color, #ffffff); }
 
 :host .light h1 {
-  color: #000000; }
+  color: var(--quantum-font-color, #000000); }

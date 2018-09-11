@@ -2,7 +2,7 @@ import {Component, Element, Listen, Prop} from '@stencil/core';
 
 import Leaflet, {GeoJSONOptions, PathOptions} from 'leaflet';
 import 'leaflet.heat';
-import {GTSLib} from "../../gts.lib";
+import {GTSLib} from "../../utils/gts.lib";
 import 'leaflet.markercluster';
 import {LineString} from 'geojson';
 

@@ -1,5 +1,5 @@
 import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
-import {GTSLib} from "../../gts.lib";
+import {GTSLib} from "../../utils/gts.lib";
 
 @Component({
   tag: "quantum-multi-charts",

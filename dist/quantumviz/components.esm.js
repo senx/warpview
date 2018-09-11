@@ -38,6 +38,19 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumChartComponent = /** @class **/ (function() {
+  function QuantumChart() {
+  }
+  QuantumChart.is = 'quantum-chart';
+  QuantumChart.getModule = function(opts) {
+    
+    return import('./quantum-chart.js').then(function(m) {
+        return m.QuantumChart;
+      });
+
+  }
+});
+
 var QuantumChipComponent = /** @class **/ (function() {
   function QuantumChip() {
   }
@@ -51,14 +64,14 @@ var QuantumChipComponent = /** @class **/ (function() {
   }
 });
 
-var QuantumDygraphsComponent = /** @class **/ (function() {
-  function QuantumDygraphs() {
+var QuantumDisplayComponent = /** @class **/ (function() {
+  function QuantumDisplay() {
   }
-  QuantumDygraphs.is = 'quantum-dygraphs';
-  QuantumDygraphs.getModule = function(opts) {
+  QuantumDisplay.is = 'quantum-display';
+  QuantumDisplay.getModule = function(opts) {
     
-    return import('./quantum-dygraphs.js').then(function(m) {
-        return m.QuantumDygraphs;
+    return import('./quantum-display.js').then(function(m) {
+        return m.QuantumDisplay;
       });
 
   }
@@ -168,6 +181,19 @@ var QuantumScatterComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumSpinnerComponent = /** @class **/ (function() {
+  function QuantumSpinner() {
+  }
+  QuantumSpinner.is = 'quantum-spinner';
+  QuantumSpinner.getModule = function(opts) {
+    
+    return import('./quantum-display.js').then(function(m) {
+        return m.QuantumSpinner;
+      });
+
+  }
+});
+
 var QuantumTileComponent = /** @class **/ (function() {
   function QuantumTile() {
   }
@@ -212,8 +238,9 @@ export {
   QuantumAnnotation,
   QuantumBar,
   QuantumBubble,
+  QuantumChart,
   QuantumChip,
-  QuantumDygraphs,
+  QuantumDisplay,
   QuantumGtsTree,
   QuantumHeatmapSliders,
   QuantumMap,
@@ -222,6 +249,7 @@ export {
   QuantumPolar,
   QuantumRadar,
   QuantumScatter,
+  QuantumSpinner,
   QuantumTile,
   QuantumToggle,
   QuantumTreeView,

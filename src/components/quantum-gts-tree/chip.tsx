@@ -1,5 +1,5 @@
 import {Component, Element, Event, EventEmitter, Prop} from "@stencil/core";
-import {GTSLib} from "../../gts.lib";
+import {GTSLib} from "../../utils/gts.lib";
 
 @Component({
   tag: 'quantum-chip',

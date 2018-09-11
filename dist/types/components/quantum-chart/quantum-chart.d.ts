@@ -1,70 +1,44 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from '../../stencil.core';
+/**
+ * options :
+ *  gridLineColor: 'red | #fff'
+ *  time.timeMode: 'timestamp | date'
+ *  showRangeSelector: boolean
+ *  type : 'line | area | step'
+ *
+ */
 export declare class QuantumChart {
-    alone: boolean;
+    data: string;
+    options: string;
+    hiddenData: string;
+    theme: string;
     unit: string;
     type: string;
     chartTitle: string;
     responsive: boolean;
-    showLegend: boolean;
-    data: string;
-    hiddenData: string;
-    options: string;
-    width: string;
-    height: string;
-    timeMin: number;
-    timeMax: number;
-    config: string;
-    xView: string;
-    yView: string;
-    pointHover: EventEmitter;
-    boundsDidChange: EventEmitter;
-    chartInfos: EventEmitter;
+    standalone: boolean;
     el: HTMLElement;
+    receivedData: EventEmitter;
+    boundsDidChange: EventEmitter;
+    pointHover: EventEmitter;
+    private LOG;
+    private static DEFAULT_WIDTH;
+    private static DEFAULT_HEIGHT;
     private _chart;
-    private _mapIndex;
-    private _xSlider;
-    private _ySlider;
-    private _config;
+    private _options;
     private _data;
-    private _type;
-    toBase64Image(): any;
-    redraw(newValue: string, oldValue: string): void;
-    changeScale(newValue: string, oldValue: string): void;
-    hideData(newValue: string, oldValue: string): void;
-    changeXView(): void;
-    changeYView(): void;
-    buildGraph(): void;
-    drawChart(): void;
-    gtsToData(gts: any): {
-        datasets: any[];
-        ticks: any[];
-    };
-    isStepped(): string | false;
-    componentWillLoad(): void;
+    private onHideData;
+    private onData;
+    private onTheme;
+    private onOptions;
+    private gtsToData;
+    private isStepped;
+    private isStacked;
+    private legendFormatter;
+    private highlightCallback;
+    private zoomCallback;
+    private drawChart;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

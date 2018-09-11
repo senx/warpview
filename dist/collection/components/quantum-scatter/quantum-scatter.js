@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../gts.lib';
+import { GTSLib } from '../../utils/gts.lib';
 export class QuantumScatter {
     constructor() {
         this.unit = '';
@@ -7,13 +7,13 @@ export class QuantumScatter {
         this.responsive = false;
         this.showLegend = true;
         this.data = '[]';
-        this.options = {};
+        this.options = '{}';
         this.width = '';
         this.height = '';
         this.theme = 'light';
         this.standalone = true;
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -24,12 +24,13 @@ export class QuantumScatter {
         }
     }
     drawChart() {
+        this._options = JSON.parse(this.options);
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.gtsToScatter(JSON.parse(this.data));
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const me = this;
-        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
         const options = {
             legend: {
                 display: this.showLegend
@@ -137,7 +138,7 @@ export class QuantumScatter {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true
@@ -147,7 +148,7 @@ export class QuantumScatter {
             "attr": "height"
         },
         "options": {
-            "type": "Any",
+            "type": String,
             "attr": "options"
         },
         "responsive": {

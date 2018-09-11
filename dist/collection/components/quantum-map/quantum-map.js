@@ -1,6 +1,6 @@
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
-import { GTSLib } from "../../gts.lib";
+import { GTSLib } from "../../utils/gts.lib";
 import 'leaflet.markercluster';
 export class QuantumMap {
     constructor() {

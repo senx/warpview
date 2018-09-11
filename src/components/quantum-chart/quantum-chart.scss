@@ -1,4 +1,4 @@
-quantum-dygraphs {
+quantum-graph {
   h1 {
     font-size: 20px;
     padding: 5px;
@@ -7,13 +7,13 @@ quantum-dygraphs {
 
   .dark {
     h1 {
-      color: #ffffff;
+      color: var(--quantum-font-color, #ffffff);
     }
   }
 
   .light {
     h1 {
-      color: #000000;
+      color: var(--quantum-font-color, #ffffff);
     }
   }
 

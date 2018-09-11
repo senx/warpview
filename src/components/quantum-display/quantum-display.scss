@@ -1,0 +1,52 @@
+:host {
+  div {
+    height: var(--quantum-chart-height, 100%);
+  }
+
+  .chart-container {
+    width: var(--quantum-chart-width, 100%);
+    height: calc(var(--quantum-chart-height, 100%) - 30px);
+    position: relative;
+    div {
+      font-size: 10rem;
+      height: 100%;
+      width: 100%;
+      .value {
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        text-align: center;
+        height: fit-content;
+        small {
+          font-size: 3rem;
+        }
+      }
+    }
+  }
+
+  h1 {
+    font-size: 20px;
+    padding: 5px;
+    margin: 0;
+  }
+
+  .dark {
+    h1 {
+      color: var(--quantum-font-color, #ffffff);
+    }
+    .chart-container {
+      color: var(--quantum-font-color, #ffffff);
+    }
+  }
+
+  .light {
+    h1 {
+      color: var(--quantum-font-color, #000000);
+    }
+    .chart-container {
+      color: var(--quantum-font-color, #000000);
+    }
+  }
+}
