@@ -776,12 +776,8 @@ s=document.querySelector("script[data-namespace='quantumviz']");if(s){resourcesU
       // add a getter to the element reference using
       // the member name the component meta provided
       definePropertyValue(instance, memberName, elm);
-    } else if (true, property.method) {
-      // @Method()
-      // add a property "value" on the host element
-      // which we'll bind to the instance's method
-      definePropertyValue(elm, memberName, instance[memberName].bind(instance));
     } else {
+      false;
       false;
       false;
     }

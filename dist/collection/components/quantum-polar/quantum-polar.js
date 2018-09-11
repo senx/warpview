@@ -9,6 +9,7 @@ export class QuantumPolar {
         this.showLegend = true;
         this.data = '[]';
         this.options = {};
+        this.theme = 'light';
         this.width = '';
         this.height = '';
     }
@@ -17,7 +18,14 @@ export class QuantumPolar {
             this.drawChart();
         }
     }
-    generateColors(num) {
+    static generateColors(num) {
+        let color = [];
+        for (let i = 0; i < num; i++) {
+            color.push(GTSLib.getColor(i));
+        }
+        return color;
+    }
+    static generateTransparentColors(num) {
         let color = [];
         for (let i = 0; i < num; i++) {
             color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
@@ -26,25 +34,53 @@ export class QuantumPolar {
     }
     parseData(gts) {
         let labels = [];
-        let datas = [];
+        let data = [];
         gts.forEach(d => {
-            datas.push(d[1]);
+            data.push(d[1]);
             labels.push(d[0]);
         });
-        return { labels: labels, datas: datas };
+        return { labels: labels, data: data };
     }
     drawChart() {
+        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.parseData(JSON.parse(this.data));
         new Chart.PolarArea(ctx, {
             type: this.type,
-            legend: { display: this.showLegend },
             data: {
-                datasets: [{ data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle }],
+                datasets: [{
+                        data: gts.data,
+                        backgroundColor: QuantumPolar.generateTransparentColors(gts.data.length),
+                        borderColor: QuantumPolar.generateColors(gts.data.length),
+                        label: this.chartTitle
+                    }],
                 labels: gts.labels
             },
             options: {
+                legend: { display: this.showLegend },
                 responsive: this.responsive,
+                xAxes: [{
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        }
+                    }],
+                yAxes: [
+                    {
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color
+                        }
+                    }
+                ],
                 tooltips: {
                     mode: 'index',
                     intersect: true,
@@ -56,11 +92,13 @@ export class QuantumPolar {
         this.drawChart();
     }
     render() {
-        return (h("div", null,
-            h("h1", null, this.chartTitle),
-            h("div", { class: "chart-container" }, this.responsive
-                ? h("canvas", { id: "myChart" })
-                : h("canvas", { id: "myChart", width: this.width, height: this.height }))));
+        return (h("div", { class: this.theme },
+            h("h1", null,
+                this.chartTitle,
+                " ",
+                h("small", null, this.unit)),
+            h("div", { class: "chart-container" },
+                h("canvas", { id: "myChart", width: this.width, height: this.height }))));
     }
     static get is() { return "quantum-polar"; }
     static get encapsulation() { return "shadow"; }
@@ -92,6 +130,10 @@ export class QuantumPolar {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme"
         },
         "type": {
             "type": String,

@@ -91,6 +91,89 @@
       "shadow": true
     },
     {
+      "tag": "quantum-bar",
+      "dependencies": [],
+      "componentClass": "QuantumBar",
+      "componentPath": "components/quantum-bar/quantum-bar.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-bar/quantum-bar.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "redraw"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "attr": "height"
+        },
+        {
+          "name": "hiddenData",
+          "type": "String",
+          "attr": "hidden-data",
+          "watch": [
+            "hideData"
+          ]
+        },
+        {
+          "name": "options",
+          "type": "String",
+          "attr": "options"
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "standalone",
+          "type": "Boolean",
+          "attr": "standalone"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
+        },
+        {
+          "name": "unit",
+          "type": "String",
+          "attr": "unit"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "quantum-bubble",
       "dependencies": [],
       "componentClass": "QuantumBubble",
@@ -174,136 +257,6 @@
         "name": "el"
       },
       "events": [
-        {
-          "event": "pointHover"
-        }
-      ],
-      "shadow": true
-    },
-    {
-      "tag": "quantum-chart",
-      "dependencies": [],
-      "componentClass": "QuantumChart",
-      "componentPath": "components/quantum-chart/quantum-chart.js",
-      "styles": {
-        "$": {
-          "stylePaths": [
-            "components/quantum-chart/quantum-chart.scss"
-          ]
-        }
-      },
-      "props": [
-        {
-          "name": "alone",
-          "type": "Boolean",
-          "attr": "alone"
-        },
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
-          "name": "config",
-          "type": "String",
-          "attr": "config"
-        },
-        {
-          "name": "data",
-          "type": "String",
-          "attr": "data",
-          "watch": [
-            "redraw"
-          ]
-        },
-        {
-          "name": "height",
-          "type": "String",
-          "attr": "height"
-        },
-        {
-          "name": "hiddenData",
-          "type": "String",
-          "attr": "hidden-data",
-          "watch": [
-            "hideData"
-          ]
-        },
-        {
-          "name": "options",
-          "type": "String",
-          "attr": "options",
-          "watch": [
-            "changeScale"
-          ]
-        },
-        {
-          "name": "responsive",
-          "type": "Boolean",
-          "attr": "responsive"
-        },
-        {
-          "name": "showLegend",
-          "type": "Boolean",
-          "attr": "show-legend"
-        },
-        {
-          "name": "timeMax",
-          "type": "Number",
-          "attr": "time-max"
-        },
-        {
-          "name": "timeMin",
-          "type": "Number",
-          "attr": "time-min"
-        },
-        {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
-        },
-        {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
-        },
-        {
-          "name": "width",
-          "type": "String",
-          "attr": "width"
-        },
-        {
-          "name": "xView",
-          "type": "String",
-          "attr": "x-view",
-          "watch": [
-            "changeXView"
-          ]
-        },
-        {
-          "name": "yView",
-          "type": "String",
-          "attr": "y-view",
-          "watch": [
-            "changeYView"
-          ]
-        }
-      ],
-      "methods": [
-        {
-          "name": "toBase64Image"
-        }
-      ],
-      "hostElement": {
-        "name": "el"
-      },
-      "events": [
-        {
-          "event": "boundsDidChange"
-        },
-        {
-          "event": "chartInfos"
-        },
         {
           "event": "pointHover"
         }
@@ -636,7 +589,7 @@
     {
       "tag": "quantum-multi-charts",
       "dependencies": [
-        "quantum-chart"
+        "quantum-dygraphs"
       ],
       "componentClass": "QuantumMultiCharts",
       "componentPath": "components/quantum-multi-charts/quantum-multi-charts.js",
@@ -820,7 +773,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-polar/quantum-polar.css"
+            "components/quantum-polar/quantum-polar.scss"
           ]
         }
       },
@@ -845,6 +798,7 @@
         },
         {
           "name": "options",
+          "type": "Any",
           "attr": "options"
         },
         {
@@ -856,6 +810,11 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
+        },
+        {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme"
         },
         {
           "name": "type",
@@ -1031,6 +990,7 @@
     {
       "tag": "quantum-tile",
       "dependencies": [
+        "quantum-bar",
         "quantum-bubble",
         "quantum-dygraphs",
         "quantum-pie",

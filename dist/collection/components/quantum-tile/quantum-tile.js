@@ -12,7 +12,7 @@ export class QuantumTile {
         this.url = '';
         this.graphs = {
             'scatter': ['scatter'],
-            'chart': ['line', 'spline', 'step', 'area', 'bar'],
+            'chart': ['line', 'spline', 'step', 'area'],
             'pie': ['pie', 'doughnut', 'gauge'],
             'polar': ['polar'],
             'bar': ['bar']
@@ -76,7 +76,9 @@ export class QuantumTile {
             this.graphs['pie'].indexOf(this.type) > -1 ?
                 h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?
-                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '');
+                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, type: this.type, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
+            this.graphs['bar'].indexOf(this.type) > -1 ?
+                h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '');
     }
     static get is() { return "quantum-tile"; }
     static get encapsulation() { return "shadow"; }

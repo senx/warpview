@@ -80,6 +80,59 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface QuantumBar {
+      'chartTitle': string;
+      'data': string;
+      'height': string;
+      'hiddenData': string;
+      'options': string;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'standalone': boolean;
+      'theme': string;
+      'unit': string;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumBarElement extends StencilComponents.QuantumBar, HTMLStencilElement {}
+
+  var HTMLQuantumBarElement: {
+    prototype: HTMLQuantumBarElement;
+    new (): HTMLQuantumBarElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-bar': HTMLQuantumBarElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-bar': HTMLQuantumBarElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-bar': JSXElements.QuantumBarAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumBarAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
+      'data'?: string;
+      'height'?: string;
+      'hiddenData'?: string;
+      'options'?: string;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'standalone'?: boolean;
+      'theme'?: string;
+      'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface QuantumBubble {
       'chartTitle': string;
       'data': string;
@@ -128,73 +181,6 @@ declare global {
       'timeMin'?: number;
       'unit'?: string;
       'width'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface QuantumChart {
-      'alone': boolean;
-      'chartTitle': string;
-      'config': string;
-      'data': string;
-      'height': string;
-      'hiddenData': string;
-      'options': string;
-      'responsive': boolean;
-      'showLegend': boolean;
-      'timeMax': number;
-      'timeMin': number;
-      'toBase64Image': () => any;
-      'type': string;
-      'unit': string;
-      'width': string;
-      'xView': string;
-      'yView': string;
-    }
-  }
-
-  interface HTMLQuantumChartElement extends StencilComponents.QuantumChart, HTMLStencilElement {}
-
-  var HTMLQuantumChartElement: {
-    prototype: HTMLQuantumChartElement;
-    new (): HTMLQuantumChartElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-chart': HTMLQuantumChartElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-chart': HTMLQuantumChartElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-chart': JSXElements.QuantumChartAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumChartAttributes extends HTMLAttributes {
-      'alone'?: boolean;
-      'chartTitle'?: string;
-      'config'?: string;
-      'data'?: string;
-      'height'?: string;
-      'hiddenData'?: string;
-      'onBoundsDidChange'?: (event: CustomEvent) => void;
-      'onChartInfos'?: (event: CustomEvent) => void;
-      'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: string;
-      'responsive'?: boolean;
-      'showLegend'?: boolean;
-      'timeMax'?: number;
-      'timeMin'?: number;
-      'type'?: string;
-      'unit'?: string;
-      'width'?: string;
-      'xView'?: string;
-      'yView'?: string;
     }
   }
 }
@@ -580,9 +566,10 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'options': any;
       'responsive': boolean;
       'showLegend': boolean;
+      'theme': string;
       'type': string;
       'unit': string;
       'width': string;
@@ -611,9 +598,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'options'?: object;
+      'options'?: any;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'theme'?: string;
       'type'?: string;
       'unit'?: string;
       'width'?: string;

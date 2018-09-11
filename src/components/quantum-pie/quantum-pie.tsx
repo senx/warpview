@@ -47,6 +47,11 @@ export class QuantumPie {
     }
     return color;
   }
+
+  /**
+   *
+   * @param num
+   */
   static generateTransparentColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
@@ -75,7 +80,6 @@ export class QuantumPie {
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let data = this.parseData(JSON.parse(this.data));
-    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
     new Chart(ctx, {
       type: (this.type === 'gauge') ? 'doughnut' : this.type,
       data: {

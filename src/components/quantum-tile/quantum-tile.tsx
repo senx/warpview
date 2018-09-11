@@ -22,7 +22,7 @@ export class QuantumTile {
 
   graphs = {
     'scatter': ['scatter'],
-    'chart': ['line', 'spline', 'step', 'area', 'bar'],
+    'chart': ['line', 'spline', 'step', 'area'],
     'pie': ['pie', 'doughnut', 'gauge'],
     'polar': ['polar'],
     'bar': ['bar']
@@ -102,6 +102,11 @@ export class QuantumTile {
       {this.graphs['polar'].indexOf(this.type) > -1 ?
         <quantum-polar
           responsive={this.responsive} unit={this.unit} data={this.data} type={this.type}
+          showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
+      }
+      {this.graphs['bar'].indexOf(this.type) > -1 ?
+        <quantum-bar
+          responsive={this.responsive} unit={this.unit} data={this.data}
           showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
       }
     </div>

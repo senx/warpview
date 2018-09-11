@@ -20,6 +20,10 @@ export declare class QuantumPie {
      * @returns {any[]}
      */
     static generateColors(num: any): any[];
+    /**
+     *
+     * @param num
+     */
     static generateTransparentColors(num: any): any[];
     /**
      *

@@ -1,5 +1,5 @@
-import {Component, Element, Event, EventEmitter, Watch, Listen, Prop} from "@stencil/core";
-import { GTSLib } from "../../gts.lib";
+import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
+import {GTSLib} from "../../gts.lib";
 
 @Component({
   tag: "quantum-multi-charts",
@@ -221,22 +221,15 @@ export class QuantumMultiCharts{
   render(){
     return(
       <div class="charts-container">
-        <quantum-chart id="myChart"
-          alone={false}
+        <quantum-dygraphs id="myChart"
+          standalone={false}
           unit={this.unit}
-          type={this.type}
           chartTitle={this.chartTitle}
           responsive={this.responsive} 
           show-legend={this.showLegend}
           data={this.data}
           hiddenData={this.hiddenData}
           options={this._options}
-          width={this.width}
-          height={this.height}
-          timeMin={this.timeMin}
-          timeMax={this.timeMax}
-          xView={this._xView}
-          yView={this._yView}
         />
         <button id="reset" type="button" onClick={() => this.zoomReset()}>
             Zoom Reset

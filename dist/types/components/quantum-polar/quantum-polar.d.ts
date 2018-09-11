@@ -7,15 +7,17 @@ export declare class QuantumPolar {
     responsive: boolean;
     showLegend: boolean;
     data: string;
-    options: object;
+    options: any;
+    theme: string;
     width: string;
     height: string;
     el: HTMLElement;
     redraw(newValue: string, oldValue: string): void;
-    generateColors(num: any): any[];
+    static generateColors(num: any): any[];
+    static generateTransparentColors(num: any): any[];
     parseData(gts: any): {
         labels: any[];
-        datas: any[];
+        data: any[];
     };
     drawChart(): void;
     componentDidLoad(): void;

@@ -12,27 +12,27 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   }
 });
 
+var QuantumBarComponent = /** @class **/ (function() {
+  function QuantumBar() {
+  }
+  QuantumBar.is = 'quantum-bar';
+  QuantumBar.getModule = function(opts) {
+    
+    return import('./quantum-bar.js').then(function(m) {
+        return m.QuantumBar;
+      });
+
+  }
+});
+
 var QuantumBubbleComponent = /** @class **/ (function() {
   function QuantumBubble() {
   }
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-    return import('./quantum-bubble.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumBubble;
-      });
-
-  }
-});
-
-var QuantumChartComponent = /** @class **/ (function() {
-  function QuantumChart() {
-  }
-  QuantumChart.is = 'quantum-chart';
-  QuantumChart.getModule = function(opts) {
-    
-    return import('./quantum-chart.js').then(function(m) {
-        return m.QuantumChart;
       });
 
   }
@@ -109,7 +109,7 @@ var QuantumMultiChartsComponent = /** @class **/ (function() {
   QuantumMultiCharts.is = 'quantum-multi-charts';
   QuantumMultiCharts.getModule = function(opts) {
     
-    return import('./quantum-chart.js').then(function(m) {
+    return import('./quantum-multi-charts.js').then(function(m) {
         return m.QuantumMultiCharts;
       });
 
@@ -122,7 +122,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-    return import('./quantum-bubble.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumPie;
       });
 
@@ -135,7 +135,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-    return import('./quantum-bubble.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumPolar;
       });
 
@@ -161,7 +161,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-    return import('./quantum-bubble.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumScatter;
       });
 
@@ -174,7 +174,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-    return import('./quantum-bubble.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumTile;
       });
 
@@ -210,8 +210,8 @@ var QuantumTreeViewComponent = /** @class **/ (function() {
 export {
   
   QuantumAnnotation,
+  QuantumBar,
   QuantumBubble,
-  QuantumChart,
   QuantumChip,
   QuantumDygraphs,
   QuantumGtsTree,

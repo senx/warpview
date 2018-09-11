@@ -4,7 +4,7 @@ import {GTSLib} from '../../gts.lib';
 
 @Component({
   tag: 'quantum-polar',
-  styleUrl: 'quantum-polar.css',
+  styleUrl: 'quantum-polar.scss',
   shadow: true
 })
 export class QuantumPolar {
@@ -14,7 +14,8 @@ export class QuantumPolar {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: object = {};
+  @Prop() options: any = {};
+  @Prop() theme = 'light';
   @Prop() width = '';
   @Prop() height = '';
 
@@ -27,7 +28,15 @@ export class QuantumPolar {
     }
   }
 
-  generateColors(num) {
+  static generateColors(num) {
+    let color = [];
+    for (let i = 0; i < num; i++) {
+      color.push(GTSLib.getColor(i));
+    }
+    return color;
+  }
+
+  static generateTransparentColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
       color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
@@ -37,26 +46,55 @@ export class QuantumPolar {
 
   parseData(gts) {
     let labels = [];
-    let datas = [];
+    let data = [];
     gts.forEach(d => {
-      datas.push(d[1]);
+      data.push(d[1]);
       labels.push(d[0]);
     });
-    return {labels: labels, datas: datas}
+    return {labels: labels, data: data}
   }
 
   drawChart() {
+    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.parseData(JSON.parse(this.data));
     new Chart.PolarArea(ctx, {
       type: this.type,
-      legend: {display: this.showLegend},
       data: {
-        datasets: [{data: gts.datas, backgroundColor: this.generateColors(gts.datas.length), label: this.chartTitle}],
+        datasets: [{
+          data: gts.data,
+          backgroundColor: QuantumPolar.generateTransparentColors(gts.data.length),
+          borderColor: QuantumPolar.generateColors(gts.data.length),
+          label: this.chartTitle
+        }],
         labels: gts.labels
       },
       options: {
+        legend: {display: this.showLegend},
         responsive: this.responsive,
+        xAxes: [{
+          gridLines: {
+            color: color,
+            zeroLineColor: color,
+          },
+          ticks: {
+            fontColor: color
+          }
+        }],
+
+        yAxes: [
+          {
+            gridLines: {
+              color: color,
+              zeroLineColor: color,
+            },
+            ticks: {
+              fontColor: color
+            }
+          }
+        ],
         tooltips: {
           mode: 'index',
           intersect: true,
@@ -71,13 +109,10 @@ export class QuantumPolar {
 
   render() {
     return (
-      <div>
-        <h1>{this.chartTitle}</h1>
+      <div class={this.theme}>
+        <h1>{this.chartTitle} <small>{this.unit}</small></h1>
         <div class="chart-container">
-          {this.responsive
-            ? <canvas id="myChart" />
-            : <canvas id="myChart" width={this.width} height={this.height}/>
-          }
+          <canvas id="myChart" width={this.width} height={this.height}/>
         </div>
       </div>
     );
