@@ -117,10 +117,11 @@ export class QuantumDygraphs {
       });
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
-      if (this._option.time && this._option.time.timeMode === 'timestamp') {
+      if (this._option.time && this._option.time.timeMode === 'timestamp' && data[timestamp]) {
         datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
       } else {
-        datasets.push([new Date(parseInt(timestamp) / 100)].concat(data[timestamp].slice(0, labels.length - 1)));
+        const ts = Math.floor(parseInt(timestamp) / 1000);
+        datasets.push([new Date(ts)].concat(data[timestamp].slice(0, labels.length - 1)));
       }
     });
     datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);

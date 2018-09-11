@@ -154,7 +154,7 @@ export class QuantumBar {
             let data = [];
             if (g.v) {
               g.v.forEach(d => {
-                ticks.push(parseInt((d[0] / 1000)+''));
+                ticks.push(Math.floor(parseInt(d[0]) / 1000));
                 data.push(d[d.length - 1]);
               });
               let color = GTSLib.getColor(pos);
