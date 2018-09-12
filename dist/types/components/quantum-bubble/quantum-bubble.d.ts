@@ -1,5 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumBubble {
     unit: string;
     chartTitle: string;
@@ -13,6 +14,7 @@ export declare class QuantumBubble {
     el: HTMLElement;
     private _options;
     private LOG;
+    private uuid;
     private onData;
     private onOptions;
     private onTheme;

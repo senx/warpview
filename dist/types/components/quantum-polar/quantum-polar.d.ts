@@ -1,5 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumPolar {
     unit: string;
     type: string;
@@ -7,17 +8,19 @@ export declare class QuantumPolar {
     responsive: boolean;
     showLegend: boolean;
     data: string;
-    options: any;
+    options: string;
     theme: string;
     width: string;
     height: string;
     el: HTMLElement;
-    onData(newValue: string, oldValue: string): void;
-    parseData(gts: any): {
-        labels: any[];
-        data: any[];
-    };
-    drawChart(): void;
+    private LOG;
+    private _options;
+    private uuid;
+    private onData;
+    private onOptions;
+    private onTheme;
+    private parseData;
+    private drawChart;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

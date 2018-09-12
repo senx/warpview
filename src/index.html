@@ -232,6 +232,7 @@
       });
     });
   </script> -->
+
 <div class="row">
     <div class="row">
       <div class="card col-lg-4 col-md-12">
@@ -284,7 +285,7 @@
           </quantum-tile>
         </div>
       </div>
-      <div class="card col-lg-4 col-md-12">
+      <!--<div class="card col-lg-4 col-md-12">
         <div class="card-body">
           <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="spline"
                         show-legend="false"
@@ -296,7 +297,7 @@
             { 'data' $values }
           </quantum-tile>
         </div>
-      </div>
+      </div>-->
       <div class="card col-lg-4 col-md-12">
         <div class="card-body">
           <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
@@ -383,6 +384,31 @@
           </quantum-tile>
         </div>
       </div>
+      <div class="card col-lg-4 col-md-12">
+      <div class="card-body">
+        <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="radar"
+                      show-legend="false"
+                      chart-title="Radar">
+          @training/dataset0
+    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
+    'list' STORE
+    $list
+    <%
+    DROP 'gts' STORE
+    $gts LABELS 'rack' GET 'rack' STORE
+
+    {
+    $rack $gts VALUES <%
+    'index' STORE 'val' STORE
+    { $index TOSTRING $val 5 % }
+    %> LMAP
+    }
+    %> LMAP
+    STOP 'values' STORE
+    { 'data' $values }
+        </quantum-tile>
+      </div>
+    </div>
     </div>
   </div>
 </div>

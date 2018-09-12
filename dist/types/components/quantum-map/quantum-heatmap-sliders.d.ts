@@ -1,5 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 export declare class QuantumHeatmapSliders {
     radiusValue: number;

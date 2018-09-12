@@ -1,6 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
-import { EventEmitter } from '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumScatter {
     unit: string;
     chartTitle: string;
@@ -11,7 +11,6 @@ export declare class QuantumScatter {
     width: string;
     height: string;
     theme: string;
-    pointHover: EventEmitter;
     el: HTMLElement;
     private LOG;
     private _options;

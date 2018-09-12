@@ -17,6 +17,7 @@ export class QuantumTile {
             'chart': ['line', 'spline', 'step', 'area'],
             'pie': ['pie', 'doughnut', 'gauge'],
             'polar': ['polar'],
+            'radar': ['radar'],
             'bar': ['bar']
         };
         this.loading = true;
@@ -77,6 +78,8 @@ export class QuantumTile {
                 h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?
                 h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
+            this.graphs['radar'].indexOf(this.type) > -1 ?
+                h("quantum-radar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
             this.graphs['bar'].indexOf(this.type) > -1 ?
                 h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
             this.type == 'text' ?

@@ -1,5 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 export declare class QuantumTile {
     LOG: Logger;

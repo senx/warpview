@@ -113,7 +113,7 @@
           "type": "String",
           "attr": "data",
           "watch": [
-            "redraw"
+            "onData"
           ]
         },
         {
@@ -122,17 +122,12 @@
           "attr": "height"
         },
         {
-          "name": "hiddenData",
-          "type": "String",
-          "attr": "hidden-data",
-          "watch": [
-            "hideData"
-          ]
-        },
-        {
           "name": "options",
           "type": "String",
-          "attr": "options"
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
@@ -143,11 +138,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "standalone",
-          "type": "Boolean",
-          "attr": "standalone"
         },
         {
           "name": "theme",
@@ -859,8 +849,11 @@
         },
         {
           "name": "options",
-          "type": "Any",
-          "attr": "options"
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
@@ -875,7 +868,10 @@
         {
           "name": "theme",
           "type": "String",
-          "attr": "theme"
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
         },
         {
           "name": "type",
@@ -907,7 +903,7 @@
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-radar/quantum-radar.css"
+            "components/quantum-radar/quantum-radar.scss"
           ]
         }
       },
@@ -928,11 +924,16 @@
         {
           "name": "height",
           "type": "String",
+          "mutable": true,
           "attr": "height"
         },
         {
           "name": "options",
-          "attr": "options"
+          "type": "String",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
@@ -945,6 +946,14 @@
           "attr": "show-legend"
         },
         {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
+        },
+        {
           "name": "unit",
           "type": "String",
           "attr": "unit"
@@ -952,6 +961,7 @@
         {
           "name": "width",
           "type": "String",
+          "mutable": true,
           "attr": "width"
         }
       ],
@@ -1033,11 +1043,6 @@
       "hostElement": {
         "name": "el"
       },
-      "events": [
-        {
-          "event": "pointHover"
-        }
-      ],
       "shadow": true
     },
     {
@@ -1070,6 +1075,7 @@
         "quantum-display",
         "quantum-pie",
         "quantum-polar",
+        "quantum-radar",
         "quantum-scatter"
       ],
       "componentClass": "QuantumTile",

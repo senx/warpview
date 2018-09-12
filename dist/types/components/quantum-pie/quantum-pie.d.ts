@@ -1,5 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumPie {
     chartTitle: string;
     showLegend: boolean;

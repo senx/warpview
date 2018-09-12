@@ -30,6 +30,7 @@ export class QuantumTile {
     'chart': ['line', 'spline', 'step', 'area'],
     'pie': ['pie', 'doughnut', 'gauge'],
     'polar': ['polar'],
+    'radar': ['radar'],
     'bar': ['bar']
   };
   private loading = true;
@@ -107,6 +108,11 @@ export class QuantumTile {
             }
             {this.graphs['polar'].indexOf(this.type) > -1 ?
               <quantum-polar
+                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+            }
+            {this.graphs['radar'].indexOf(this.type) > -1 ?
+              <quantum-radar
                 responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
                 showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
             }

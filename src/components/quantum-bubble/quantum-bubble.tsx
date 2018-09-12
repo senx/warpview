@@ -26,6 +26,7 @@ export class QuantumBubble {
 
   private _options: Param = new Param();
   private LOG: Logger = new Logger(QuantumBubble);
+  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
   private onData(newValue: string, oldValue: string) {
@@ -55,7 +56,7 @@ export class QuantumBubble {
     this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    let ctx = this.el.shadowRoot.querySelector("#myChart");
+    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let data = JSON.parse(this.data);
     if (!data) return;
     let dataList: any[];
@@ -69,6 +70,14 @@ export class QuantumBubble {
     const options: any = {
       legend: {
         display: this.showLegend
+      },
+      layout: {
+        padding: {
+          left: 0,
+          right: 50,
+          top: 50,
+          bottom: 50
+        }
       },
       borderWidth: 1,
       animation: {
@@ -158,7 +167,7 @@ export class QuantumBubble {
       <div class={this.theme}>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
-          <canvas id="myChart" width={this.width} height={this.height}/>
+          <canvas id={this.uuid} width={this.width} height={this.height}/>
         </div>
       </div>
     );

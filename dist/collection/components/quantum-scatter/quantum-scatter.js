@@ -38,7 +38,6 @@ export class QuantumScatter {
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
-        this._options = JSON.parse(this.options);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.gtsToScatter(JSON.parse(this.data));
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
@@ -228,12 +227,5 @@ export class QuantumScatter {
             "mutable": true
         }
     }; }
-    static get events() { return [{
-            "name": "pointHover",
-            "method": "pointHover",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-scatter:**/"; }
 }

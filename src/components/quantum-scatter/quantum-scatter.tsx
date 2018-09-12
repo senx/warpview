@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
+import {Component, Element, Prop, Watch} from '@stencil/core';
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
@@ -21,8 +21,6 @@ export class QuantumScatter {
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
   @Prop() theme = 'light';
-
-  @Event() pointHover: EventEmitter;
 
   @Element() el: HTMLElement;
 
@@ -57,7 +55,6 @@ export class QuantumScatter {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
-    this._options = JSON.parse(this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.gtsToScatter(JSON.parse(this.data));
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';

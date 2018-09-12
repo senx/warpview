@@ -161,7 +161,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-    return import('./quantum-radar.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumRadar;
       });
 

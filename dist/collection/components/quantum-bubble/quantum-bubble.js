@@ -17,6 +17,7 @@ export class QuantumBubble {
         this.height = '';
         this._options = new Param();
         this.LOG = new Logger(QuantumBubble);
+        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -40,7 +41,7 @@ export class QuantumBubble {
         this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        let ctx = this.el.shadowRoot.querySelector("#myChart");
+        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let data = JSON.parse(this.data);
         if (!data)
             return;
@@ -55,6 +56,14 @@ export class QuantumBubble {
         const options = {
             legend: {
                 display: this.showLegend
+            },
+            layout: {
+                padding: {
+                    left: 0,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }
             },
             borderWidth: 1,
             animation: {
@@ -137,7 +146,7 @@ export class QuantumBubble {
         return (h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container" },
-                h("canvas", { id: "myChart", width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
     }
     static get is() { return "quantum-bubble"; }
     static get encapsulation() { return "shadow"; }

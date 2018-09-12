@@ -83,11 +83,9 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'hiddenData': string;
       'options': string;
       'responsive': boolean;
       'showLegend': boolean;
-      'standalone': boolean;
       'theme': string;
       'unit': string;
       'width': string;
@@ -116,11 +114,9 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'hiddenData'?: string;
       'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'standalone'?: boolean;
       'theme'?: string;
       'unit'?: string;
       'width'?: string;
@@ -605,7 +601,7 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': any;
+      'options': string;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -637,7 +633,7 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'options'?: any;
+      'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -656,9 +652,10 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': object;
+      'options': string;
       'responsive': boolean;
       'showLegend': boolean;
+      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -686,9 +683,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'options'?: object;
+      'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -734,7 +732,6 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'onPointHover'?: (event: CustomEvent) => void;
       'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
