@@ -1,6 +1,9 @@
+import {Component, Element, Prop, Watch} from '@stencil/core';
+import {Logger} from "../../utils/logger";
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
+import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: 'quantum-pie',
@@ -8,56 +11,45 @@ import {GTSLib} from '../../utils/gts.lib';
   shadow: true
 })
 export class QuantumPie {
-  @Prop() unit: string = '';
-  @Prop() type: string = 'pie';
   @Prop() chartTitle: string = '';
-  @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
-  @Prop() options: any = {};
+  @Prop() options: string = '{}';
   @Prop() theme = 'light';
-  @Prop() width = '';
-  @Prop() height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
+  @Prop() unit: string = '';
+  @Prop() responsive: boolean = false;
 
   @Element() el: HTMLElement;
 
+  private LOG: Logger = new Logger(QuantumPie);
+  private _options: Param = {
+    type: 'pie'
+  };
+
   @Watch('data')
-  redraw(newValue: string, oldValue: string) {
+  private onData(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
+      this.drawChart();
+    }
+  }
+
+  @Watch('options')
+  private onOptions(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('theme')
-  onTheme(newValue: string, oldValue: string) {
+  private onTheme(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
+      this.LOG.debug(['theme'], newValue);
       this.drawChart();
     }
-  }
-
-  /**
-   *
-   * @param num
-   * @returns {any[]}
-   */
-  static generateColors(num) {
-    let color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(GTSLib.getColor(i));
-    }
-    return color;
-  }
-
-  /**
-   *
-   * @param num
-   */
-  static generateTransparentColors(num) {
-    let color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-    }
-    return color;
   }
 
   /**
@@ -65,28 +57,38 @@ export class QuantumPie {
    * @param data
    * @returns {{labels: any[]; data: any[]}}
    */
-  parseData(data) {
+  private parseData(data) {
+    this.LOG.debug(['parseData'], data);
     let labels = [];
     let _data = [];
-    data.forEach(d => {
+    let dataList: any[];
+    if (data.hasOwnProperty('data')) {
+      dataList = data.data
+    } else {
+      dataList = data;
+    }
+    dataList.forEach(d => {
       _data.push(d[1]);
       labels.push(d[0]);
     });
+    this.LOG.debug(['parseData'], [labels, _data]);
     return {labels: labels, data: _data}
   }
 
-  drawChart() {
+  private drawChart() {
+    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let data = this.parseData(JSON.parse(this.data));
+    this.LOG.debug(['drawChart'], [this.data, this._options, data]);
     new Chart(ctx, {
-      type: (this.type === 'gauge') ? 'doughnut' : this.type,
+      type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
       data: {
         datasets: [{
           data: data.data,
-          backgroundColor: QuantumPie.generateTransparentColors(data.data.length),
-          borderColor: QuantumPie.generateColors(data.data.length),
+          backgroundColor: ColorLib.generateTransparentColors(data.data.length),
+          borderColor: ColorLib.generateColors(data.data.length),
           label: this.chartTitle
         }],
         labels: data.labels
@@ -106,16 +108,16 @@ export class QuantumPie {
     })
   }
 
-  getRotation() {
-    if ('gauge' === this.type) {
+  private getRotation() {
+    if ('gauge' === this._options.type) {
       return Math.PI;
     } else {
       return -0.5 * Math.PI;
     }
   }
 
-  getCirc() {
-    if ('gauge' === this.type) {
+  private getCirc() {
+    if ('gauge' === this._options.type) {
       return Math.PI;
     } else {
       return 2 * Math.PI;
@@ -128,9 +130,11 @@ export class QuantumPie {
 
   render() {
     return <div class={this.theme}>
-      <h1>{this.chartTitle} <small>{this.unit}</small></h1>
+      <h1>{this.chartTitle}
+        <small>{this.unit}</small>
+      </h1>
       <div class="chart-container">
-       <canvas id="myChart" width={this.width} height={this.height}/>
+        <canvas id="myChart" width={this.width} height={this.height}/>
       </div>
     </div>;
   }

@@ -1,15 +1,5 @@
 export class GTSLib {
 
-  static color = ['#5899DA', '#E8743B', '#19A979', '#ED4A7B', '#945ECF', '#13A4B4', '#525DF4', '#BF399E', '#6C8893', '#EE6868', '#2F6497'];
-
-  /**
-   * Get a color from index
-   * @param i
-   * @returns {string}
-   */
-  static getColor(i) {
-    return GTSLib.color[i % GTSLib.color.length]
-  }
 
   static cleanArray(actual: any[]) {
     return actual.filter((i) => !!i);
@@ -29,30 +19,6 @@ export class GTSLib {
       }
     }
     return a;
-  }
-
-  /**
-   * Convert hex to RGB
-   * @param hex
-   * @returns {number[]}
-   */
-  static hexToRgb(hex) {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-      parseInt(result[1], 16),
-      parseInt(result[2], 16),
-      parseInt(result[3], 16)
-    ] : null;
-  }
-
-  /**
-   * Add an alpha channel
-   * @param color
-   * @param {number} alpha
-   * @returns {string}
-   */
-  static transparentize(color, alpha: number): string {
-    return 'rgba(' + GTSLib.hexToRgb(color).concat(alpha).join(',') + ')';
   }
 
   /**
@@ -401,53 +367,5 @@ export class GTSLib {
       return null;
     }
     return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
-  }
-
-  /**
-   * Generate a guid
-   * @returns {string}
-   */
-  static guid() {
-    let uuid = '', i, random;
-    for (i = 0; i < 32; i++) {
-      random = Math.random() * 16 | 0;
-      if (i == 8 || i == 12 || i == 16 || i == 20) {
-        uuid += "-"
-      }
-      uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
-    }
-    return uuid;
-  }
-
-  /**
-   *
-   * @param target
-   * @param sources
-   * @returns {any}
-   */
-  static mergeDeep(target, ...sources) {
-    if (!sources.length) return target;
-    const source = sources.shift();
-
-    if (GTSLib.isObject(target) && GTSLib.isObject(source)) {
-      for (const key in source) {
-        if (GTSLib.isObject(source[key])) {
-          if (!target[key]) Object.assign(target, {[key]: {}});
-          GTSLib.mergeDeep(target[key], source[key]);
-        } else {
-          Object.assign(target, {[key]: source[key]});
-        }
-      }
-    }
-
-    return GTSLib.mergeDeep(target, ...sources);
-  }
-
-  static isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-  }
-
-  static getGridColor(theme: string) {
-    return theme === 'light' ? '#8e8e8e' : '#8e8e8e';
   }
 }

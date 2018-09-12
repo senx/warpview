@@ -1,19 +1,19 @@
-import { GTSLib } from "../../utils/gts.lib";
+import { ChartLib } from "../../utils/chart-lib";
 export class QuantumToggle {
     constructor() {
-        this.option = '{}';
+        this.options = '{}';
         this.checked = false;
         this.state = false;
         this.text1 = "";
         this.text2 = "";
-        this._option = {
+        this._options = {
             switchClass: '',
             switchLabelClass: '',
             switchHandleClass: ''
         };
     }
     componentWillLoad() {
-        this._option = GTSLib.mergeDeep(this._option, JSON.parse(this.option));
+        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
         this.state = this.checked;
     }
     switched() {
@@ -23,12 +23,12 @@ export class QuantumToggle {
     render() {
         return (h("div", { class: "container" },
             h("div", { class: "text" }, this.text1),
-            h("label", { class: 'switch ' + this._option.switchClass },
+            h("label", { class: 'switch ' + this._options.switchClass },
                 this.state
                     ? h("input", { type: "checkbox", class: "switch-input", checked: true, onClick: () => this.switched() })
                     : h("input", { type: "checkbox", class: "switch-input", onClick: () => this.switched() }),
-                h("span", { class: 'switch-label ' + this._option.switchLabelClass }),
-                h("span", { class: 'switch-handle ' + this._option.switchHandleClass })),
+                h("span", { class: 'switch-label ' + this._options.switchLabelClass }),
+                h("span", { class: 'switch-handle ' + this._options.switchHandleClass })),
             h("div", { class: "text" }, this.text2)));
     }
     static get is() { return "quantum-toggle"; }
@@ -38,9 +38,9 @@ export class QuantumToggle {
             "type": Boolean,
             "attr": "checked"
         },
-        "option": {
+        "options": {
             "type": String,
-            "attr": "option"
+            "attr": "options"
         },
         "state": {
             "state": true

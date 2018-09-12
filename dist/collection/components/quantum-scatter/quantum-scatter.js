@@ -1,5 +1,6 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../utils/gts.lib';
+import { ChartLib } from "../../utils/chart-lib";
+import { ColorLib } from "../../utils/color-lib";
 export class QuantumScatter {
     constructor() {
         this.unit = '';
@@ -30,7 +31,7 @@ export class QuantumScatter {
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const me = this;
-        const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
         const options = {
             legend: {
                 display: this.showLegend
@@ -100,7 +101,7 @@ export class QuantumScatter {
                 g.v.forEach(d => {
                     data.push({ x: d[0] / 1000, y: d[d.length - 1] });
                 });
-                let color = GTSLib.getColor(i);
+                let color = ColorLib.getColor(i);
                 if (d.params && d.params[i] && d.params[i].color) {
                     color = d.params[i].color;
                 }
@@ -113,7 +114,7 @@ export class QuantumScatter {
                     data: data,
                     pointRadius: 2,
                     borderColor: color,
-                    backgroundColor: GTSLib.transparentize(color, 0.5)
+                    backgroundColor: ColorLib.transparentize(color, 0.5)
                 });
             }
         });
@@ -145,7 +146,8 @@ export class QuantumScatter {
         },
         "height": {
             "type": String,
-            "attr": "height"
+            "attr": "height",
+            "mutable": true
         },
         "options": {
             "type": String,
@@ -182,7 +184,8 @@ export class QuantumScatter {
         },
         "width": {
             "type": String,
-            "attr": "width"
+            "attr": "width",
+            "mutable": true
         }
     }; }
     static get events() { return [{

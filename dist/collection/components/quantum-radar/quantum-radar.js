@@ -1,5 +1,4 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../utils/gts.lib';
 export class QuantumRadar {
     constructor() {
         this.unit = '';
@@ -11,17 +10,10 @@ export class QuantumRadar {
         this.width = '';
         this.height = '';
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
-    }
-    generateColors(num) {
-        let color = [];
-        for (let i = 0; i < num; i++) {
-            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-        }
-        return color;
     }
     parseData(gts) {
         let labels = [];
@@ -82,7 +74,7 @@ export class QuantumRadar {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true

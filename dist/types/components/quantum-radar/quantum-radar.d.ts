@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumRadar {
     unit: string;
     chartTitle: string;
@@ -9,8 +10,7 @@ export declare class QuantumRadar {
     width: string;
     height: string;
     el: HTMLElement;
-    redraw(newValue: string, oldValue: string): void;
-    generateColors(num: any): any[];
+    onData(newValue: string, oldValue: string): void;
     parseData(gts: any): {
         labels: any[];
         datas: any[];

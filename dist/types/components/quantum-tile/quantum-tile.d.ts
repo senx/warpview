@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 export declare class QuantumTile {
     LOG: Logger;
@@ -12,14 +13,10 @@ export declare class QuantumTile {
     showLegend: boolean;
     url: string;
     wsElement: HTMLElement;
-    warpscript: string;
-    graphs: {
-        'scatter': string[];
-        'chart': string[];
-        'pie': string[];
-        'polar': string[];
-        'bar': string[];
-    };
+    private warpscript;
+    private graphs;
+    private loading;
     componentDidLoad(): void;
+    private execute;
     render(): JSX.Element;
 }

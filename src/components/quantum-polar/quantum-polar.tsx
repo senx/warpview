@@ -1,6 +1,7 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
+import {Component, Element, Prop, Watch} from '@stencil/core';
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: 'quantum-polar',
@@ -16,32 +17,16 @@ export class QuantumPolar {
   @Prop() data: string = '[]';
   @Prop() options: any = {};
   @Prop() theme = 'light';
-  @Prop() width = '';
-  @Prop() height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
   @Watch('data')
-  redraw(newValue: string, oldValue: string) {
+  onData(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.drawChart();
     }
-  }
-
-  static generateColors(num) {
-    let color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(GTSLib.getColor(i));
-    }
-    return color;
-  }
-
-  static generateTransparentColors(num) {
-    let color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-    }
-    return color;
   }
 
   parseData(gts) {
@@ -57,7 +42,7 @@ export class QuantumPolar {
   drawChart() {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
+    const color = this.options.gridLineColor || ChartLib.getGridColor(this.theme);
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.parseData(JSON.parse(this.data));
     new Chart.PolarArea(ctx, {
@@ -65,8 +50,8 @@ export class QuantumPolar {
       data: {
         datasets: [{
           data: gts.data,
-          backgroundColor: QuantumPolar.generateTransparentColors(gts.data.length),
-          borderColor: QuantumPolar.generateColors(gts.data.length),
+          backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
+          borderColor: ColorLib.generateColors(gts.data.length),
           label: this.chartTitle
         }],
         labels: gts.labels

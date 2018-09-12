@@ -19,11 +19,15 @@ export class QuantumTile {
             'polar': ['polar'],
             'bar': ['bar']
         };
+        this.loading = true;
     }
     componentDidLoad() {
+        this.execute();
+    }
+    execute() {
+        this.loading = true;
         this.warpscript = this.wsElement.textContent;
         this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
-        let me = this;
         fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
             response.text().then(gtsStr => {
                 this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
@@ -33,46 +37,53 @@ export class QuantumTile {
                     const dataLine = gtsList[0];
                     if (dataLine.hasOwnProperty('data')) {
                         data.data = dataLine.data;
-                        data.globalParams = dataLine.globalParams;
-                        this.options = JSON.stringify(data.globalParams);
+                        data.globalParams = dataLine.globalParams || {};
+                        data.globalParams.type = data.globalParams.type || this.type;
                         data.params = dataLine.params;
                     }
                     else {
                         data.data = dataLine;
+                        data.globalParams = { type: this.type };
                     }
                 }
                 else {
                     data.data = gtsList;
+                    data.globalParams = { type: this.type };
                 }
-                me.data = JSON.stringify(data);
-                this.LOG.debug(['componentDidLoad', 'data'], [me.type, data]);
+                this.LOG.debug(['componentDidLoad', 'data'], data);
+                this.data = JSON.stringify(data);
+                this.options = JSON.stringify(data.globalParams);
+                this.loading = false;
             }, err => {
-                console.error(err);
+                this.LOG.error(['componentDidLoad'], err);
+                this.loading = false;
             });
         }, err => {
-            console.error(err);
+            this.LOG.error(['componentDidLoad'], err);
+            this.loading = false;
         });
     }
     render() {
         return h("div", { class: "wrapper", id: "wrapper" },
             h("div", { class: "warpscript" },
                 h("slot", null)),
-            this.graphs['scatter'].indexOf(this.type) > -1 ?
-                h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle })
-                : '',
-            this.graphs['chart'].indexOf(this.type) > -1 ?
-                h("quantum-chart", { type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle, theme: this.theme })
-                : '',
-            this.type == 'bubble' ?
-                h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, options: this.options, chartTitle: this.chartTitle }) : '',
-            this.graphs['pie'].indexOf(this.type) > -1 ?
-                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
-            this.graphs['polar'].indexOf(this.type) > -1 ?
-                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
-            this.graphs['bar'].indexOf(this.type) > -1 ?
-                h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
-            this.type == 'text' ?
-                h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, displayTitle: this.chartTitle, options: this.options }) : '');
+            this.loading
+                ? h("quantum-spinner", { theme: this.theme })
+                : h("span", null,
+                    this.graphs['scatter'].indexOf(this.type) > -1 ?
+                        h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
+                    this.graphs['chart'].indexOf(this.type) > -1 ?
+                        h("quantum-chart", { type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle, theme: this.theme }) : '',
+                    this.type == 'bubble' ?
+                        h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, options: this.options, chartTitle: this.chartTitle }) : '',
+                    this.graphs['pie'].indexOf(this.type) > -1 ?
+                        h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
+                    this.graphs['polar'].indexOf(this.type) > -1 ?
+                        h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
+                    this.graphs['bar'].indexOf(this.type) > -1 ?
+                        h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
+                    this.type == 'text' ?
+                        h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, displayTitle: this.chartTitle, options: this.options }) : ''));
     }
     static get is() { return "quantum-tile"; }
     static get encapsulation() { return "shadow"; }

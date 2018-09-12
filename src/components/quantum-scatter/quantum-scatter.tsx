@@ -1,7 +1,8 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
+import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: 'quantum-scatter',
@@ -15,8 +16,8 @@ export class QuantumScatter {
   @Prop() showLegend: boolean = true;
   @Prop() data: string = '[]';
   @Prop() options: string = '{}';
-  @Prop() width = '';
-  @Prop() height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
   @Prop() timeMin: number;
   @Prop() timeMax: number;
   @Prop() theme = 'light';
@@ -49,7 +50,7 @@ export class QuantumScatter {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const me = this;
-    const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
     const options: any = {
       legend: {
         display: this.showLegend
@@ -119,7 +120,7 @@ export class QuantumScatter {
         g.v.forEach(d => {
           data.push({x: d[0] / 1000, y: d[d.length - 1]})
         });
-        let color = GTSLib.getColor(i);
+        let color = ColorLib.getColor(i);
         if (d.params && d.params[i] && d.params[i].color) {
           color = d.params[i].color
         }
@@ -132,7 +133,7 @@ export class QuantumScatter {
           data: data,
           pointRadius: 2,
           borderColor: color,
-          backgroundColor: GTSLib.transparentize(color, 0.5)
+          backgroundColor: ColorLib.transparentize(color, 0.5)
         })
       }
     });

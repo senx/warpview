@@ -1,5 +1,6 @@
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
+import { ColorLib } from "../../utils/color-lib";
 export class QuantumAnnotation {
     constructor() {
         this.chartTitle = "";
@@ -13,7 +14,7 @@ export class QuantumAnnotation {
         this.legendOffset = 70;
         this._mapIndex = {};
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -181,7 +182,7 @@ export class QuantumAnnotation {
                 d.gts.forEach((g, i) => {
                     if (GTSLib.isGtsToAnnotate(g)) {
                         let data = [];
-                        let color = GTSLib.getColor(i);
+                        let color = ColorLib.getColor(i);
                         const myImage = this.buildImage(1, 30, color);
                         g.v.forEach(d => {
                             data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
@@ -202,7 +203,7 @@ export class QuantumAnnotation {
                             pointHitRadius: 5,
                             pointStyle: myImage,
                             borderColor: color,
-                            backgroundColor: GTSLib.transparentize(color, 0.5)
+                            backgroundColor: ColorLib.transparentize(color, 0.5)
                         });
                         pos++;
                     }
@@ -233,7 +234,7 @@ export class QuantumAnnotation {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true

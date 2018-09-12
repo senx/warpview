@@ -1,5 +1,6 @@
 import {Component, Element, Event, EventEmitter, Prop} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: 'quantum-chip',
@@ -29,7 +30,7 @@ export class QuantumChip {
    */
   gtsColor(state: boolean): string {
     if (state) {
-      return GTSLib.getColor(this.index);
+      return ColorLib.getColor(this.index);
     } else {
       return '#bbbbbb';
     }

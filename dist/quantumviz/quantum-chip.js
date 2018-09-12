@@ -1,7 +1,8 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as GTSLib } from './chunk-e737bf72.js';
+import { a as GTSLib } from './chunk-7f4b1b2f.js';
+import { a as ColorLib } from './chunk-b534d406.js';
 
 class QuantumChip {
     constructor() {
@@ -19,7 +20,7 @@ class QuantumChip {
      */
     gtsColor(state) {
         if (state) {
-            return GTSLib.getColor(this.index);
+            return ColorLib.getColor(this.index);
         }
         else {
             return '#bbbbbb';

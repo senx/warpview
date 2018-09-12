@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 export declare class QuantumAnnotation {
     chartTitle: string;
@@ -16,7 +17,7 @@ export declare class QuantumAnnotation {
     private legendOffset;
     private _chart;
     private _mapIndex;
-    redraw(newValue: string, oldValue: string): void;
+    onData(newValue: string, oldValue: string): void;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: string, oldValue: string): void;
     minBoundChange(newValue: number, oldValue: number): void;

@@ -1,7 +1,7 @@
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
-import { GTSLib } from "../../utils/gts.lib";
 import 'leaflet.markercluster';
+import { ColorLib } from "../../utils/color-lib";
 export class QuantumMap {
     constructor() {
         this.mapTitle = "";
@@ -103,13 +103,13 @@ export class QuantumMap {
                             }
                         };
                         if (!!p[3]) {
-                            point.properties.style.fillColor = GTSLib.getColor(p[3]);
+                            point.properties.style.fillColor = ColorLib.getColor(p[3]);
                         }
                         else if (!!d.params[i].fillColor) {
                             point.properties.style.fillColor = d.params[i].fillColor;
                         }
                         else {
-                            point.properties.style.fillColor = GTSLib.getColor(i);
+                            point.properties.style.fillColor = ColorLib.getColor(i);
                         }
                         point.properties.style.radius = !!p[2]
                             ? p[2]
@@ -148,7 +148,7 @@ export class QuantumMap {
                         let style = {
                             color: !!d.params[i].color
                                 ? d.params[i].color
-                                : GTSLib.getColor(i),
+                                : ColorLib.getColor(i),
                             weight: this._pathStyle.weight,
                             opacity: this._pathStyle.opacity,
                         };
@@ -245,7 +245,7 @@ export class QuantumMap {
                                         'style': {
                                             'color': !!d.params[i].color
                                                 ? d.params[i].color
-                                                : GTSLib.getColor(i),
+                                                : ColorLib.getColor(i),
                                             "radius": this._pathStyle.dotsWeight,
                                             "fillOpacity": this._pathStyle.opacity,
                                             "opacity": this._pathStyle.opacity
@@ -284,7 +284,7 @@ export class QuantumMap {
                                     'style': {
                                         'color': !!d.params[i].color
                                             ? d.params[i].color
-                                            : GTSLib.getColor(i),
+                                            : ColorLib.getColor(i),
                                     },
                                     'value': p[p.length - 1],
                                     'popupContent': 'timestamp : ' + p[0] + '<br/>date : ' + new Date(p[0]) + '<br/>lat : ' + p[1] + '<br/>long : ' + p[2]
@@ -309,7 +309,7 @@ export class QuantumMap {
                                     : this._dotStyle.fillOpacity;
                                 point.properties.style.fillColor = !!d.params[i].fillColor
                                     ? d.params[i].fillColor
-                                    : GTSLib.getColor(i);
+                                    : ColorLib.getColor(i);
                             }
                             else {
                                 point.properties.icon = this.icon(point.properties.style.color, d.params[i].marker);

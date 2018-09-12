@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumBubble {
     unit: string;
     chartTitle: string;

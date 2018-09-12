@@ -1,5 +1,6 @@
 import Chart from 'chart.js';
-import { GTSLib } from '../../utils/gts.lib';
+import { ChartLib } from "../../utils/chart-lib";
+import { ColorLib } from "../../utils/color-lib";
 export class QuantumPolar {
     constructor() {
         this.unit = '';
@@ -13,24 +14,10 @@ export class QuantumPolar {
         this.width = '';
         this.height = '';
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
-    }
-    static generateColors(num) {
-        let color = [];
-        for (let i = 0; i < num; i++) {
-            color.push(GTSLib.getColor(i));
-        }
-        return color;
-    }
-    static generateTransparentColors(num) {
-        let color = [];
-        for (let i = 0; i < num; i++) {
-            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-        }
-        return color;
     }
     parseData(gts) {
         let labels = [];
@@ -44,7 +31,7 @@ export class QuantumPolar {
     drawChart() {
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        const color = this.options.gridLineColor || GTSLib.getGridColor(this.theme);
+        const color = this.options.gridLineColor || ChartLib.getGridColor(this.theme);
         let ctx = this.el.shadowRoot.querySelector("#myChart");
         let gts = this.parseData(JSON.parse(this.data));
         new Chart.PolarArea(ctx, {
@@ -52,8 +39,8 @@ export class QuantumPolar {
             data: {
                 datasets: [{
                         data: gts.data,
-                        backgroundColor: QuantumPolar.generateTransparentColors(gts.data.length),
-                        borderColor: QuantumPolar.generateColors(gts.data.length),
+                        backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
+                        borderColor: ColorLib.generateColors(gts.data.length),
                         label: this.chartTitle
                     }],
                 labels: gts.labels
@@ -110,14 +97,15 @@ export class QuantumPolar {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true
         },
         "height": {
             "type": String,
-            "attr": "height"
+            "attr": "height",
+            "mutable": true
         },
         "options": {
             "type": "Any",
@@ -145,7 +133,8 @@ export class QuantumPolar {
         },
         "width": {
             "type": String,
-            "attr": "width"
+            "attr": "width",
+            "mutable": true
         }
     }; }
     static get style() { return "/**style-placeholder:quantum-polar:**/"; }

@@ -1,4 +1,5 @@
 import { GTSLib } from "../../utils/gts.lib";
+import { ColorLib } from "../../utils/color-lib";
 export class QuantumChip {
     constructor() {
         this._node = {
@@ -15,7 +16,7 @@ export class QuantumChip {
      */
     gtsColor(state) {
         if (state) {
-            return GTSLib.getColor(this.index);
+            return ColorLib.getColor(this.index);
         }
         else {
             return '#bbbbbb';

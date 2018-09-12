@@ -11,10 +11,11 @@
   padding: 5px;
   margin: 0; }
   :host h1 small {
-    font-size: 10px; }
+    font-size: 10px;
+    margin-left: 10px; }
 
 :host .dark h1 {
-  color: #ffffff; }
+  color: var(--quantum-font-color, #ffffff); }
 
 :host .light h1 {
-  color: #000000; }
+  color: var(--quantum-font-color, #000000); }

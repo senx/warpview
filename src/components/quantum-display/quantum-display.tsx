@@ -86,7 +86,7 @@ export class QuantumDisplay {
   render() {
     return <div class={this.theme}>
       <h1>{this.displayTitle}</h1>
-      {this.toDisplay ?
+      {this.toDisplay && this.toDisplay !== '' ?
         <div class="chart-container" id="#wrapper">
           <div style={this.getStyle()}>
             <div class="value">

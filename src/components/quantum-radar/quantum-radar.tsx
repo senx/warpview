@@ -1,6 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
+import {Component, Element, Prop, Watch} from '@stencil/core';
 
 @Component({
   tag: 'quantum-radar',
@@ -20,18 +19,10 @@ export class QuantumRadar {
   @Element() el: HTMLElement;
 
   @Watch('data')
-  redraw(newValue: string, oldValue: string) {
+  onData(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.drawChart();
     }
-  }
-
-  generateColors(num) {
-    let color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-    }
-    return color;
   }
 
   parseData(gts) {

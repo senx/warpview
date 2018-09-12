@@ -2,7 +2,6 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-e737bf72.js';
 import './chunk-ee323282.js';
 
 class QuantumRadar {
@@ -16,17 +15,10 @@ class QuantumRadar {
         this.width = '';
         this.height = '';
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
-    }
-    generateColors(num) {
-        let color = [];
-        for (let i = 0; i < num; i++) {
-            color.push(GTSLib.transparentize(GTSLib.getColor(i), 0.5));
-        }
-        return color;
     }
     parseData(gts) {
         let labels = [];
@@ -87,7 +79,7 @@ class QuantumRadar {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true

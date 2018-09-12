@@ -2,6 +2,8 @@ import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/cor
 import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 /**
  * options :
@@ -106,7 +108,7 @@ export class QuantumChart {
               }
               data[value[0]][i] = value[value.length - 1];
             });
-            let color = GTSLib.getColor(pos);
+            let color = ColorLib.getColor(pos);
             labels[i + 1] = label;
             colors[i] = color;
             i++;
@@ -179,7 +181,7 @@ export class QuantumChart {
   }
 
   private drawChart() {
-    this._options = GTSLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
     const data = JSON.parse(this.data);
     if (data.hasOwnProperty('data')) {
       this._data = this.gtsToData(data.data)
@@ -190,7 +192,7 @@ export class QuantumChart {
     this.LOG.debug(['drawChart'], [this._data]);
     const chart = this.el.querySelector('#myChart') as HTMLElement;
     if ( this._data.datasets.length > 0) {
-      const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
+      const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
       this._chart = new Dygraph(
         chart,
         this._data.datasets,

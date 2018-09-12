@@ -3,6 +3,8 @@ import {Component, Element, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: 'quantum-bubble',
@@ -17,12 +19,12 @@ export class QuantumBubble {
   @Prop() data: string = '{}';
   @Prop() options: string = '{}';
   @Prop() theme = 'light';
-  @Prop() width = '';
-  @Prop() height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
-  private _options: Param;
+  private _options: Param = new Param();
   private LOG: Logger = new Logger(QuantumBubble);
 
   @Watch('data')
@@ -50,7 +52,7 @@ export class QuantumBubble {
   }
 
   private drawChart() {
-    this._options = JSON.parse(this.options);
+    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector("#myChart");
@@ -63,7 +65,7 @@ export class QuantumBubble {
       dataList = data;
     }
 
-    const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
     const options: any = {
       legend: {
         display: this.showLegend
@@ -138,8 +140,8 @@ export class QuantumBubble {
       datasets.push({
         data: data,
         label: label,
-        backgroundColor: GTSLib.transparentize(GTSLib.getColor(i), 0.5),
-        borderColor: GTSLib.getColor(i),
+        backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5),
+        borderColor: ColorLib.getColor(i),
         borderWidth: 1
       });
     }

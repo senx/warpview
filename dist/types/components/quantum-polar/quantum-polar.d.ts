@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumPolar {
     unit: string;
     type: string;
@@ -11,9 +12,7 @@ export declare class QuantumPolar {
     width: string;
     height: string;
     el: HTMLElement;
-    redraw(newValue: string, oldValue: string): void;
-    static generateColors(num: any): any[];
-    static generateTransparentColors(num: any): any[];
+    onData(newValue: string, oldValue: string): void;
     parseData(gts: any): {
         labels: any[];
         data: any[];

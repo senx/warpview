@@ -2,7 +2,8 @@
 const { h } = window.quantumviz;
 
 import { a as Chart } from './chunk-35f9f27a.js';
-import { a as GTSLib } from './chunk-e737bf72.js';
+import { a as GTSLib } from './chunk-7f4b1b2f.js';
+import { a as ColorLib } from './chunk-b534d406.js';
 import './chunk-ee323282.js';
 
 class QuantumAnnotation {
@@ -18,7 +19,7 @@ class QuantumAnnotation {
         this.legendOffset = 70;
         this._mapIndex = {};
     }
-    redraw(newValue, oldValue) {
+    onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.drawChart();
         }
@@ -186,7 +187,7 @@ class QuantumAnnotation {
                 d.gts.forEach((g, i) => {
                     if (GTSLib.isGtsToAnnotate(g)) {
                         let data = [];
-                        let color = GTSLib.getColor(i);
+                        let color = ColorLib.getColor(i);
                         const myImage = this.buildImage(1, 30, color);
                         g.v.forEach(d => {
                             data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
@@ -207,7 +208,7 @@ class QuantumAnnotation {
                             pointHitRadius: 5,
                             pointStyle: myImage,
                             borderColor: color,
-                            backgroundColor: GTSLib.transparentize(color, 0.5)
+                            backgroundColor: ColorLib.transparentize(color, 0.5)
                         });
                         pos++;
                     }
@@ -238,7 +239,7 @@ class QuantumAnnotation {
         "data": {
             "type": String,
             "attr": "data",
-            "watchCallbacks": ["redraw"]
+            "watchCallbacks": ["onData"]
         },
         "el": {
             "elementRef": true

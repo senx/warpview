@@ -70,7 +70,7 @@ var QuantumDisplayComponent = /** @class **/ (function() {
   QuantumDisplay.is = 'quantum-display';
   QuantumDisplay.getModule = function(opts) {
     
-    return import('./quantum-display.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumDisplay;
       });
 
@@ -187,7 +187,7 @@ var QuantumSpinnerComponent = /** @class **/ (function() {
   QuantumSpinner.is = 'quantum-spinner';
   QuantumSpinner.getModule = function(opts) {
     
-    return import('./quantum-display.js').then(function(m) {
+    return import('./quantum-spinner.js').then(function(m) {
         return m.QuantumSpinner;
       });
 

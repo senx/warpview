@@ -279,7 +279,8 @@
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
             false RESETS
-            [ SWAP mapper.delta 1 0 0 ] MAP
+            [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -291,7 +292,8 @@
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
             false RESETS
-            [ SWAP mapper.delta 1 0 0 ] MAP
+            [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -303,7 +305,8 @@
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
             false RESETS
-            [ SWAP mapper.delta 1 0 0 ] MAP
+            [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -315,7 +318,8 @@
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
             false RESETS
-            [ SWAP mapper.delta 1 0 0 ] MAP
+            [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -328,7 +332,8 @@
   [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
   false RESETS
   [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
-  [ SWAP mapper.delta 1 0 0 ] MAP
+  [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -339,7 +344,8 @@
                         chart-title="gauge">
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-            <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+            <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>
@@ -350,7 +356,8 @@
                         chart-title="pie">
             @training/dataset0
             [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-            <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+            <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+            { 'data' $values }
           </quantum-tile>
         </div>
       </div>

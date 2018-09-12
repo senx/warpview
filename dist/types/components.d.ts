@@ -557,11 +557,10 @@ declare global {
       'chartTitle': string;
       'data': string;
       'height': string;
-      'options': any;
+      'options': string;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
-      'type': string;
       'unit': string;
       'width': string;
     }
@@ -589,11 +588,10 @@ declare global {
       'chartTitle'?: string;
       'data'?: string;
       'height'?: string;
-      'options'?: any;
+      'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
-      'type'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -838,7 +836,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumToggle {
       'checked': boolean;
-      'option': string;
+      'options': string;
       'text1': string;
       'text2': string;
     }
@@ -865,7 +863,7 @@ declare global {
     export interface QuantumToggleAttributes extends HTMLAttributes {
       'checked'?: boolean;
       'onTimeSwitched'?: (event: CustomEvent) => void;
-      'option'?: string;
+      'options'?: string;
       'text1'?: string;
       'text2'?: string;
     }

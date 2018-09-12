@@ -1,6 +1,8 @@
 import Chart from "chart.js";
-import {Component, Element, Event, EventEmitter, Method, Prop, Watch} from "@stencil/core";
+import {Component, Element, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 @Component({
   tag: "quantum-bar",
@@ -61,7 +63,7 @@ export class QuantumBar {
     let ctx = this.el.shadowRoot.querySelector("#myChart");
     let gts = this.gtsToData(this._data);
     console.log(gts);
-    const color = this._options.gridLineColor || GTSLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
     const graphOpts: any = {
       legend: {
         display: this.showLegend
@@ -157,7 +159,7 @@ export class QuantumBar {
                 ticks.push(Math.floor(parseInt(d[0]) / 1000));
                 data.push(d[d.length - 1]);
               });
-              let color = GTSLib.getColor(pos);
+              let color = ColorLib.getColor(pos);
               if (d.params && d.params[i] && d.params[i].color) {
                 color = d.params[i].color;
               }
@@ -171,7 +173,7 @@ export class QuantumBar {
                 data: data,
                 borderColor: color,
                 borderWidth: 1,
-                backgroundColor: GTSLib.transparentize(color, 0.5)
+                backgroundColor: ColorLib.transparentize(color, 0.5)
               };
               datasets.push(ds);
               pos++;
@@ -184,7 +186,7 @@ export class QuantumBar {
   }
 
   componentWillLoad() {
-    this._options = GTSLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
   }
 
   componentDidLoad() {

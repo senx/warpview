@@ -1,41 +1,30 @@
 import '../../stencil.core';
+import '../../stencil.core';
 export declare class QuantumPie {
-    unit: string;
-    type: string;
     chartTitle: string;
-    responsive: boolean;
     showLegend: boolean;
     data: string;
-    options: any;
+    options: string;
     theme: string;
     width: string;
     height: string;
+    unit: string;
+    responsive: boolean;
     el: HTMLElement;
-    redraw(newValue: string, oldValue: string): void;
-    onTheme(newValue: string, oldValue: string): void;
-    /**
-     *
-     * @param num
-     * @returns {any[]}
-     */
-    static generateColors(num: any): any[];
-    /**
-     *
-     * @param num
-     */
-    static generateTransparentColors(num: any): any[];
+    private LOG;
+    private _options;
+    private onData;
+    private onOptions;
+    private onTheme;
     /**
      *
      * @param data
      * @returns {{labels: any[]; data: any[]}}
      */
-    parseData(data: any): {
-        labels: any[];
-        data: any[];
-    };
-    drawChart(): void;
-    getRotation(): number;
-    getCirc(): number;
+    private parseData;
+    private drawChart;
+    private getRotation;
+    private getCirc;
     componentDidLoad(): void;
     render(): JSX.Element;
 }
