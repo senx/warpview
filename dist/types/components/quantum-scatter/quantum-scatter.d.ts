@@ -1,6 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 export declare class QuantumScatter {
     unit: string;
     chartTitle: string;

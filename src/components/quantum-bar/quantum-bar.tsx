@@ -19,8 +19,8 @@ export class QuantumBar {
   @Prop() data: string = '[]';
   @Prop() options: string = '{}';
   @Prop() theme = 'light';
-  @Prop() width = '';
-  @Prop() height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
@@ -118,6 +118,9 @@ export class QuantumBar {
   }
 
   private drawChart() {
+    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     this._data = JSON.parse(this.data);
     if (!this._data) return;
     this.buildGraph();

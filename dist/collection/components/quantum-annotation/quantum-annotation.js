@@ -1,6 +1,8 @@
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
+import { Logger } from "../../utils/logger";
+import { ChartLib } from "../../utils/chart-lib";
 export class QuantumAnnotation {
     constructor() {
         this.chartTitle = "";
@@ -8,19 +10,31 @@ export class QuantumAnnotation {
         this.showLegend = true;
         this.data = "[]";
         this.hiddenData = "[]";
-        this.options = "";
+        this.options = "{}";
+        this.theme = "light";
         this.width = "";
         this.height = "";
         this.legendOffset = 70;
         this._mapIndex = {};
+        this.LOG = new Logger(QuantumAnnotation);
+        this._options = {};
+        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
+            this.LOG.debug(['data'], newValue);
+            this.drawChart();
+        }
+    }
+    onTheme(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
     changeScale(newValue, oldValue) {
         if (oldValue !== newValue) {
+            this.LOG.debug(['options'], newValue);
             const data = JSON.parse(newValue);
             if (data.time.timeMode === "timestamp") {
                 this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
@@ -51,7 +65,7 @@ export class QuantumAnnotation {
             this._chart.options.scales.xAxes[0].time.min = newValue;
             this._chart.update();
         }
-        //console.log(this._chart.options.scales.xAxes[0].time.min);
+        this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
     }
     maxBoundChange(newValue, oldValue) {
         this._chart.options.animation.duration = 0;
@@ -59,14 +73,15 @@ export class QuantumAnnotation {
             this._chart.options.scales.xAxes[0].time.max = newValue;
             this._chart.update();
         }
-        //console.log(this._chart.options.scales.xAxes[0].time.max);
+        this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
     }
     /**
      *
      */
     drawChart() {
-        let ctx = this.el.shadowRoot.querySelector("#myChart");
-        let gts = this.gtsToScatter(JSON.parse(this.data));
+        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
+        let gts = this.parseData(JSON.parse(this.data));
         let calculatedHeight = 30 * gts.length + this.legendOffset;
         let height = this.height || this.height !== ""
             ? Math.max(calculatedHeight, parseInt(this.height))
@@ -74,6 +89,7 @@ export class QuantumAnnotation {
         this.height = height + "";
         ctx.parentElement.style.height = height + "px";
         ctx.parentElement.style.width = "100%";
+        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
         const me = this;
         this._chart = new Chart.Scatter(ctx, {
             data: {
@@ -123,7 +139,12 @@ export class QuantumAnnotation {
                                 unit: "day"
                             },
                             gridLines: {
+                                zeroLineColor: color,
+                                color: color,
                                 display: false
+                            },
+                            ticks: {
+                                fontColor: color
                             }
                         }
                     ],
@@ -137,7 +158,12 @@ export class QuantumAnnotation {
                             afterFit: function (scaleInstance) {
                                 scaleInstance.width = 100; // sets the width to 100px
                             },
+                            gridLines: {
+                                color: color,
+                                zeroLineColor: color,
+                            },
                             ticks: {
+                                fontColor: color,
                                 min: 0,
                                 max: 1,
                                 beginAtZero: true,
@@ -151,26 +177,10 @@ export class QuantumAnnotation {
     }
     /**
      *
-     * @param {number} w
-     * @param {number} h
-     * @param {string} color
-     * @returns {HTMLImageElement}
-     */
-    buildImage(w, h, color) {
-        const img = new Image(w, h);
-        const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">
-<rect width="${w}" height="${h}" style="fill:${color};" />
-</svg>`;
-        // 	myImage.src = "ripple.svg"
-        img.src = "data:image/svg+xml;base64," + btoa(svg);
-        return img;
-    }
-    /**
-     *
      * @param gts
      * @returns {any[]}
      */
-    gtsToScatter(gts) {
+    parseData(gts) {
         let datasets = [];
         let pos = 0;
         if (!gts) {
@@ -183,18 +193,12 @@ export class QuantumAnnotation {
                     if (GTSLib.isGtsToAnnotate(g)) {
                         let data = [];
                         let color = ColorLib.getColor(i);
-                        const myImage = this.buildImage(1, 30, color);
+                        const myImage = ChartLib.buildImage(1, 30, color);
                         g.v.forEach(d => {
                             data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
                         });
-                        if (d.params && d.params[i] && d.params[i].color) {
-                            color = d.params[i].color;
-                        }
                         let label = GTSLib.serializeGtsMetadata(g);
                         this._mapIndex[label] = pos;
-                        if (d.params && d.params[i] && d.params[i].key) {
-                            label = d.params[i].key;
-                        }
                         datasets.push({
                             label: label,
                             data: data,
@@ -215,14 +219,14 @@ export class QuantumAnnotation {
         this.drawChart();
     }
     render() {
-        return (h("div", null,
+        return (h("div", { class: this.theme },
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container", style: {
                     position: "relative",
                     width: this.width,
                     height: this.height
                 } },
-                h("canvas", { id: "myChart", width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
     }
     static get is() { return "quantum-annotation"; }
     static get encapsulation() { return "shadow"; }
@@ -261,6 +265,11 @@ export class QuantumAnnotation {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
+        },
+        "theme": {
+            "type": String,
+            "attr": "theme",
+            "watchCallbacks": ["onTheme"]
         },
         "timeMax": {
             "type": Number,

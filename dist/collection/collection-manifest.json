@@ -59,6 +59,14 @@
           "attr": "show-legend"
         },
         {
+          "name": "theme",
+          "type": "String",
+          "attr": "theme",
+          "watch": [
+            "onTheme"
+          ]
+        },
+        {
           "name": "timeMax",
           "type": "Number",
           "attr": "time-max",
@@ -119,6 +127,7 @@
         {
           "name": "height",
           "type": "String",
+          "mutable": true,
           "attr": "height"
         },
         {
@@ -155,6 +164,7 @@
         {
           "name": "width",
           "type": "String",
+          "mutable": true,
           "attr": "width"
         }
       ],

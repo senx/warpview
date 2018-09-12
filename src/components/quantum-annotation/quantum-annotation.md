@@ -1,4 +1,6 @@
-# Annotation chart component
+# Bubble chart component
+
+Displays a bubble chart
 
 ## CSS vars
 
@@ -12,10 +14,12 @@
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
 | theme | `string` | 'light' | Possible values are: 'light', 'dark' |
-| unit | `string` | '' | Unit used |
+| timeMin | `number` | | Minimum in the time range |
+| timeMax | `number` | | Maximum in the time range |
 | chartTitle | `string` | '' | Main title |
 | showLegend | `boolean` | true | Shows a legend |
 | responsive | `boolean` | false | Fit the parent space |
+| hiddenData | `string[]` | List of concatenated class names and labels to hide. (ie: `com.class.name{label=a,label=b}` |
 | width | `string` | '' | Fixed width |
 | height | `string` | '' | Fixed height |
 | options | `string` | '{}' | Serialized JSON representation of display options |

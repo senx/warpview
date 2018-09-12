@@ -36,6 +36,7 @@ declare global {
       'options': string;
       'responsive': boolean;
       'showLegend': boolean;
+      'theme': string;
       'timeMax': number;
       'timeMin': number;
       'width': string;
@@ -69,6 +70,7 @@ declare global {
       'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'theme'?: string;
       'timeMax'?: number;
       'timeMin'?: number;
       'width'?: string;

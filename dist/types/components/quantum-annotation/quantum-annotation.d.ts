@@ -1,6 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 export declare class QuantumAnnotation {
     chartTitle: string;
@@ -11,6 +9,7 @@ export declare class QuantumAnnotation {
     options: string;
     timeMin: number;
     timeMax: number;
+    theme: string;
     width: string;
     height: string;
     pointHover: EventEmitter;
@@ -18,7 +17,11 @@ export declare class QuantumAnnotation {
     private legendOffset;
     private _chart;
     private _mapIndex;
-    onData(newValue: string, oldValue: string): void;
+    private LOG;
+    private _options;
+    private uuid;
+    private onData;
+    private onTheme;
     changeScale(newValue: string, oldValue: string): void;
     hideData(newValue: string, oldValue: string): void;
     minBoundChange(newValue: number, oldValue: number): void;
@@ -26,21 +29,13 @@ export declare class QuantumAnnotation {
     /**
      *
      */
-    drawChart(): void;
-    /**
-     *
-     * @param {number} w
-     * @param {number} h
-     * @param {string} color
-     * @returns {HTMLImageElement}
-     */
-    buildImage(w: number, h: number, color: string): HTMLImageElement;
+    private drawChart;
     /**
      *
      * @param gts
      * @returns {any[]}
      */
-    gtsToScatter(gts: any): any[];
+    private parseData;
     componentDidLoad(): void;
     render(): JSX.Element;
 }
