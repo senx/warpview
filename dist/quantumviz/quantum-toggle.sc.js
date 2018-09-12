@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as ChartLib } from './chunk-916ccef3.js';
+import { a as ChartLib } from './chunk-4e936ee9.js';
 
 class QuantumToggle {
     constructor() {

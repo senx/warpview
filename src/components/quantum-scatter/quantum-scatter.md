@@ -1,4 +1,4 @@
-# Pie, doughnut an gauge chart
+# Scatter chart
 
 
 ## CSS vars
@@ -27,17 +27,22 @@
 
 ```json
 {
-  "data": [["key", 54], ["key 2", 45]]
+  "data": [{
+    "c": "class.name", 
+    "l": { "label1": "label value"},  
+    "a": { "attribute1": "attribute value"},
+    "v" : [[0,0,0,4], [0,2]]
+   }]
 }
 ```
-- **data**: data to be displayed as tuples.
+- **data**: data to be displayed as a GTS list.
 
 ## Option format
 
 ```json
 {
-  "type": "pie"
-}
+  "gridLineColor": "#ffee77"
+  }
 ```
 
-- **type**: chart type, possible values are 'pie', 'gauge' and 'doughnut'
+- **gridLineColor**: Grid line color and axis labels color. Default: #8e8e8e

@@ -10,17 +10,19 @@ export declare class QuantumScatter {
     options: string;
     width: string;
     height: string;
-    timeMin: number;
-    timeMax: number;
     theme: string;
-    standalone: boolean;
     pointHover: EventEmitter;
     el: HTMLElement;
+    private LOG;
     private _options;
-    onData(newValue: string, oldValue: string): void;
-    onTheme(newValue: string, oldValue: string): void;
-    drawChart(): void;
-    gtsToScatter(gts: any): any[];
+    private chart;
+    private uuid;
+    private onData;
+    private onOptions;
+    private onTheme;
+    private drawChart;
+    private gtsToScatter;
+    customTooltips(tooltip: any): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

@@ -94,7 +94,8 @@ export class QuantumBubble {
             type: 'bubble',
             tooltips: {
                 mode: 'x',
-                position: 'nearest'
+                position: 'nearest',
+                callbacks: ChartLib.getTooltipCallbacks()
             },
             data: {
                 datasets: dataSets

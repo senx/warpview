@@ -56,4 +56,20 @@ export class ChartLib {
   static getGridColor(theme: string) {
     return theme === 'light' ? '#8e8e8e' : '#8e8e8e';
   }
+
+  static getTooltipCallbacks() {
+    return {
+      title: (tooltipItem) => {
+        return tooltipItem[0].xLabel
+      },
+      label: (tooltipItem, data)  => {
+        let label = data.datasets[tooltipItem.datasetIndex].label || '';
+        if (label) {
+          label += ': ';
+        }
+        label += tooltipItem.yLabel;
+        return label;
+      }
+    };
+  }
 }

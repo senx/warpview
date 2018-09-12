@@ -67,23 +67,20 @@ export class QuantumTile {
         return h("div", { class: "wrapper", id: "wrapper" },
             h("div", { class: "warpscript" },
                 h("slot", null)),
-            this.loading
-                ? h("quantum-spinner", { theme: this.theme })
-                : h("span", null,
-                    this.graphs['scatter'].indexOf(this.type) > -1 ?
-                        h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
-                    this.graphs['chart'].indexOf(this.type) > -1 ?
-                        h("quantum-chart", { type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle, theme: this.theme }) : '',
-                    this.type == 'bubble' ?
-                        h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, options: this.options, chartTitle: this.chartTitle }) : '',
-                    this.graphs['pie'].indexOf(this.type) > -1 ?
-                        h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
-                    this.graphs['polar'].indexOf(this.type) > -1 ?
-                        h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
-                    this.graphs['bar'].indexOf(this.type) > -1 ?
-                        h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
-                    this.type == 'text' ?
-                        h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, displayTitle: this.chartTitle, options: this.options }) : ''));
+            this.graphs['scatter'].indexOf(this.type) > -1 ?
+                h("quantum-scatter", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
+            this.graphs['chart'].indexOf(this.type) > -1 ?
+                h("quantum-chart", { type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle, theme: this.theme }) : '',
+            this.type == 'bubble' ?
+                h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, theme: this.theme, options: this.options, chartTitle: this.chartTitle }) : '',
+            this.graphs['pie'].indexOf(this.type) > -1 ?
+                h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
+            this.graphs['polar'].indexOf(this.type) > -1 ?
+                h("quantum-polar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
+            this.graphs['bar'].indexOf(this.type) > -1 ?
+                h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, showLegend: this.showLegend, chartTitle: this.chartTitle, options: this.options }) : '',
+            this.type == 'text' ?
+                h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, theme: this.theme, displayTitle: this.chartTitle, options: this.options }) : '');
     }
     static get is() { return "quantum-tile"; }
     static get encapsulation() { return "shadow"; }

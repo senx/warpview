@@ -706,10 +706,7 @@ declare global {
       'options': string;
       'responsive': boolean;
       'showLegend': boolean;
-      'standalone': boolean;
       'theme': string;
-      'timeMax': number;
-      'timeMin': number;
       'unit': string;
       'width': string;
     }
@@ -741,10 +738,7 @@ declare global {
       'options'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'standalone'?: boolean;
       'theme'?: string;
-      'timeMax'?: number;
-      'timeMin'?: number;
       'unit'?: string;
       'width'?: string;
     }

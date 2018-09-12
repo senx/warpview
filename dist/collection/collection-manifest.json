@@ -995,7 +995,10 @@
         {
           "name": "options",
           "type": "String",
-          "attr": "options"
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
@@ -1008,27 +1011,12 @@
           "attr": "show-legend"
         },
         {
-          "name": "standalone",
-          "type": "Boolean",
-          "attr": "standalone"
-        },
-        {
           "name": "theme",
           "type": "String",
           "attr": "theme",
           "watch": [
             "onTheme"
           ]
-        },
-        {
-          "name": "timeMax",
-          "type": "Number",
-          "attr": "time-max"
-        },
-        {
-          "name": "timeMin",
-          "type": "Number",
-          "attr": "time-min"
         },
         {
           "name": "unit",
@@ -1082,8 +1070,7 @@
         "quantum-display",
         "quantum-pie",
         "quantum-polar",
-        "quantum-scatter",
-        "quantum-spinner"
+        "quantum-scatter"
       ],
       "componentClass": "QuantumTile",
       "componentPath": "components/quantum-tile/quantum-tile.js",

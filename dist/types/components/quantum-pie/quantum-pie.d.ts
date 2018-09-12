@@ -13,6 +13,7 @@ export declare class QuantumPie {
     el: HTMLElement;
     private LOG;
     private _options;
+    private uuid;
     private onData;
     private onOptions;
     private onTheme;

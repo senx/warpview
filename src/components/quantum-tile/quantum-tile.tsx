@@ -81,10 +81,10 @@ export class QuantumTile {
       <div class="warpscript">
         <slot/>
       </div>
-      {
+     {/* {
         this.loading
           ? <quantum-spinner theme={this.theme}/>
-          : <span>
+          : <span>*/}
         {this.graphs['scatter'].indexOf(this.type) > -1 ?
           <quantum-scatter
             responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
@@ -119,8 +119,8 @@ export class QuantumTile {
               <quantum-display
                 responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
                 displayTitle={this.chartTitle} options={this.options}/> : ''}
-          </span>
-      }
+        {/*  </span>
+      }*/}
     </div>
   }
 }

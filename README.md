@@ -24,6 +24,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 - [Line chart](src/components/quantum-chart/quantum-chart.md)
 - [Bubble chart](src/components/quantum-bubble/quantum-bubble.md)
 - [Pie, gauge and doughnut](src/components/quantum-pie/quantum-pie.md)
+- [Scatter chart](src/components/quantum-scatter/quantum-scatter.md)
 - [Spinner](src/components/quantum-spinner/quantum-spinner.md)
 - [Display](src/components/quantum-display/quantum-display.md)
 

@@ -17,6 +17,7 @@ export class QuantumPie {
         this._options = {
             type: 'pie'
         };
+        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -63,7 +64,7 @@ export class QuantumPie {
         this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        let ctx = this.el.shadowRoot.querySelector("#myChart");
+        let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
         let data = this.parseData(JSON.parse(this.data));
         this.LOG.debug(['drawChart'], [this.data, this._options, data]);
         new Chart(ctx, {
@@ -116,7 +117,7 @@ export class QuantumPie {
                 this.chartTitle,
                 h("small", null, this.unit)),
             h("div", { class: "chart-container" },
-                h("canvas", { id: "myChart", width: this.width, height: this.height })));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-pie"; }
     static get encapsulation() { return "shadow"; }
