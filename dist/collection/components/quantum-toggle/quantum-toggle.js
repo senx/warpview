@@ -1,24 +1,19 @@
-import { ChartLib } from "../../utils/chart-lib";
-import { Param } from "../../model/param";
 export class QuantumToggle {
     constructor() {
-        this.options = new Param();
         this.checked = false;
         this.text1 = "";
         this.text2 = "";
         this.state = false;
-        this._options = new Param();
     }
     componentWillLoad() {
-        this._options = ChartLib.mergeDeep(this._options, this.options);
         this.state = this.checked;
     }
     switched() {
         this.state = !this.state;
-        this.timeSwitched.emit({ state: this.state });
+        this.stateChange.emit({ state: this.state });
     }
     render() {
-        return (h("div", { class: "container" },
+        return h("div", { class: "container" },
             h("div", { class: "text" }, this.text1),
             h("label", { class: "switch" },
                 this.state
@@ -26,7 +21,7 @@ export class QuantumToggle {
                     : h("input", { type: "checkbox", class: "switch-input", onClick: () => this.switched() }),
                 h("span", { class: "switch-label" }),
                 h("span", { class: "switch-handle" })),
-            h("div", { class: "text" }, this.text2)));
+            h("div", { class: "text" }, this.text2));
     }
     static get is() { return "quantum-toggle"; }
     static get encapsulation() { return "shadow"; }
@@ -34,10 +29,6 @@ export class QuantumToggle {
         "checked": {
             "type": Boolean,
             "attr": "checked"
-        },
-        "options": {
-            "type": "Any",
-            "attr": "options"
         },
         "state": {
             "state": true
@@ -52,8 +43,8 @@ export class QuantumToggle {
         }
     }; }
     static get events() { return [{
-            "name": "timeSwitched",
-            "method": "timeSwitched",
+            "name": "stateChange",
+            "method": "stateChange",
             "bubbles": true,
             "cancelable": true,
             "composed": true

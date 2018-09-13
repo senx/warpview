@@ -1,10 +1,10 @@
 :host .switch {
   position: relative;
   display: block;
-  width: 100px;
-  height: 30px;
+  width: var(--quantum-switch-width, 100px);
+  height: var(--quantum-switch-height, 30px);
   padding: 3px;
-  border-radius: 18px;
+  border-radius: var(--quantum-switch-radius, 18px);
   cursor: pointer; }
 
 :host .switch-input {
@@ -15,12 +15,12 @@
   display: block;
   height: inherit;
   text-transform: uppercase;
-  background: #eceeef;
+  background: var(--quantum-switch-inset-color, #eceeef);
   border-radius: inherit;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15); }
 
 :host .switch-input:checked ~ .switch-label {
-  background: #00cd00;
+  background: var(--quantum-switch-inset-checked-color, #00cd00);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2); }
 
 :host .switch-handle {
@@ -29,13 +29,13 @@
   left: 4px;
   width: 28px;
   height: 28px;
-  background: radial-gradient(#FFFFFF 15%, #f0f0f0 100%);
+  background: var(--quantum-switch-handle-color, radial-gradient(#FFFFFF 15%, #f0f0f0 100%));
   border-radius: 100%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }
 
 :host .switch-input:checked ~ .switch-handle {
   left: 74px;
-  background: radial-gradient(#ffffff 15%, #00cd00 100%);
+  background: var(--quantum-switch-handle-checked-color, radial-gradient(#ffffff 15%, #00cd00 100%));
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2); }
 
 :host .switch-label, :host .switch-handle {

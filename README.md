@@ -21,6 +21,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 
 ## Components
 
+- [WarpScript Tile](src/components/quantum-tile/quantum-tile.md)
 - [Line chart](src/components/quantum-chart/quantum-chart.md)
 - [Bar chart](src/components/quantum-bar/quantum-bar.md)
 - [Bubble chart](src/components/quantum-bubble/quantum-bubble.md)
@@ -32,6 +33,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 - [Display](src/components/quantum-display/quantum-display.md)
 - [GTS Tree view](src/components/quantum-gts-tree/quantum-gts-tree.md)
 - [Spinner](src/components/quantum-spinner/quantum-spinner.md)
+- [Toggle](src/components/quantum-toggle/quantum-toggle.md)
 
 
 ## Integrations
