@@ -52,8 +52,8 @@ export class QuantumTile {
                     data.globalParams = { type: this.type };
                 }
                 this.LOG.debug(['componentDidLoad', 'data'], data);
-                this.data = JSON.stringify(data);
-                this.options = JSON.stringify(data.globalParams);
+                this.data = data;
+                this.options = data.globalParams;
                 this.loading = false;
             }, err => {
                 this.LOG.error(['componentDidLoad'], err);

@@ -1,13 +1,14 @@
 import { GTSLib } from "../../utils/gts.lib";
 import { ColorLib } from "../../utils/color-lib";
+import { GTS } from "../../model/GTS";
+import { Logger } from "../../utils/logger";
 export class QuantumChip {
     constructor() {
         this._node = {
             selected: true,
-            gts: {
-                c: '', l: {}, a: {}, v: []
-            }
+            gts: GTS
         };
+        this.LOG = new Logger(QuantumChip);
     }
     /**
      *
@@ -41,8 +42,8 @@ export class QuantumChip {
      * @returns {boolean}
      * @private
      */
-    _lastIndex(index, obj) {
-        let array = this._toArray(obj);
+    lastIndex(index, obj) {
+        let array = this.toArray(obj);
         return (index === array.length - 1);
     }
     /**
@@ -51,7 +52,7 @@ export class QuantumChip {
      * @returns {any}
      * @private
      */
-    _toArray(obj) {
+    toArray(obj) {
         if (obj === undefined) {
             return [];
         }
@@ -67,8 +68,8 @@ export class QuantumChip {
      * @param {UIEvent} event
      */
     switchPlotState(event) {
-        this._node = Object.assign({}, this._node, { selected: !this._node.selected, label: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a }) });
-        console.debug('[QuantumChip] - switchPlotState', this._node);
+        this._node = Object.assign({}, this._node, { selected: !this._node.selected, label: GTSLib.serializeGtsMetadata(this._node.gts) });
+        this.LOG.debug(['switchPlotState'], [this._node]);
         this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected));
         this.quantumSelectedGTS.emit(this._node);
     }
@@ -79,11 +80,11 @@ export class QuantumChip {
                 h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
                     h("span", { class: 'gts-classname' }, this._node.gts.c),
                     h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
-                    this._toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
+                    this.toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
                         h("span", { class: 'gts-labelname' }, label.name),
                         h("span", { class: 'gts-separator' }, "="),
                         h("span", { class: 'gts-labelvalue' }, label.value),
-                        h("span", { hidden: this._lastIndex(labelIndex, this._node.gts.l) }, ", "))),
+                        h("span", { hidden: this.lastIndex(labelIndex, this._node.gts.l) }, ", "))),
                     h("span", { class: 'gts-separator', innerHTML: ' &rcub;' })))
             : ''));
     }

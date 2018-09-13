@@ -4,6 +4,7 @@ import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
+import {DataModel} from "../../model/dataModel";
 
 @Component({
   tag: 'quantum-radar',
@@ -15,8 +16,8 @@ export class QuantumRadar {
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = true;
   @Prop() showLegend: boolean = true;
-  @Prop() data: string = '[]';
-  @Prop() options: string = '{}';
+  @Prop() data: DataModel | any[];
+  @Prop() options: Param = {};
   @Prop() theme = 'light';
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -28,7 +29,7 @@ export class QuantumRadar {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -36,7 +37,7 @@ export class QuantumRadar {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -55,20 +56,13 @@ export class QuantumRadar {
     this.LOG.debug(['gtsToData'], gts);
     let datasets = [];
     let labels = {};
-    let dataList: any[];
-    if (gts.hasOwnProperty('data')) {
-      dataList = gts.data
-    } else {
-      dataList = gts;
-    }
-    if (!dataList || dataList.length === 0) {
+
+    if (!gts || gts.length === 0) {
       return;
     } else {
       let i = 0;
-      dataList.forEach(g => {
-        let data = [];
+      gts.forEach(g => {
         Object.keys(g).forEach(label => {
-          const values = g[label];
           const dataSet = {
             label: label,
             data: [],
@@ -90,18 +84,18 @@ export class QuantumRadar {
   }
 
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
-    const data = JSON.parse(this.data);
+    const data = this.data;
     if (!data) return;
     let dataList: any[];
-    if (data.hasOwnProperty('data')) {
-      dataList = data.data
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data;
     } else {
-      dataList = data;
+      dataList = this.data;
     }
     let gts = this.parseData(dataList);
     if (!gts) {

@@ -4,6 +4,7 @@ import Chart from 'chart.js';
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
+import {DataModel} from "../../model/dataModel";
 
 @Component({
   tag: 'quantum-pie',
@@ -13,8 +14,8 @@ import {ColorLib} from "../../utils/color-lib";
 export class QuantumPie {
   @Prop() chartTitle: string = '';
   @Prop() showLegend: boolean = true;
-  @Prop() data: string = '[]';
-  @Prop() options: string = '{}';
+  @Prop() data: DataModel | any[];
+  @Prop() options: Param = {};
   @Prop() theme = 'light';
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -30,7 +31,7 @@ export class QuantumPie {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -38,7 +39,7 @@ export class QuantumPie {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -60,13 +61,16 @@ export class QuantumPie {
    */
   private parseData(data) {
     this.LOG.debug(['parseData'], data);
+    if(!data) {
+      return;
+    }
     let labels = [];
     let _data = [];
     let dataList: any[];
-    if (data.hasOwnProperty('data')) {
-      dataList = data.data
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data;
     } else {
-      dataList = data;
+      dataList = this.data;
     }
     dataList.forEach(d => {
       _data.push(d[1]);
@@ -77,11 +81,14 @@ export class QuantumPie {
   }
 
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
+    let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
+    let data = this.parseData(this.data);
+    if(!data) {
+      return;
+    }
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
-    let data = this.parseData(JSON.parse(this.data));
     this.LOG.debug(['drawChart'], [this.data, this._options, data]);
     new Chart(ctx, {
       type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
@@ -106,7 +113,7 @@ export class QuantumPie {
         circumference: this.getCirc(),
         rotation: this.getRotation(),
       }
-    })
+    });
   }
 
   private getRotation() {

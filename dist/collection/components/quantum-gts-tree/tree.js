@@ -1,5 +1,6 @@
 import { GTSLib } from "../../utils/gts.lib";
 import { Counter } from "./quantum-gts-tree";
+import { Logger } from "../../utils/logger";
 export class QuantumTreeView {
     constructor() {
         this.branch = false;
@@ -10,17 +11,17 @@ export class QuantumTreeView {
      * @param node
      * @returns {number}
      */
-    getIndex(node) {
+    static getIndex(node) {
         Counter.item++;
         node.index = Counter.item;
-        console.debug("[QuantumTreeView] - getIndex", Counter.item, node);
+        this.LOG.debug(['getIndex'], [Counter.item, node]);
         return Counter.item;
     }
     /**
      *
      */
     componentWillLoad() {
-        console.debug("[QuantumTreeView] - componentWillLoad", Counter.item);
+        QuantumTreeView.LOG.debug(['componentWillLoad'], Counter.item);
     }
     /**
      *
@@ -31,7 +32,7 @@ export class QuantumTreeView {
             this.branch ? ("") : (h("div", { class: "stack-level" },
                 "Stack level ",
                 index)),
-            GTSLib.isGts(node.gts) ? (h("quantum-chip", { node: node, index: this.getIndex(node), name: node.gts.c })) : (h("span", null, node.content ? (h("div", null,
+            GTSLib.isGts(node.gts) ? (h("quantum-chip", { node: node, index: QuantumTreeView.getIndex(node), name: node.gts.c })) : (h("span", null, node.content ? (h("div", null,
                 h("span", { class: "expanded" }),
                 "List of ",
                 node.content.length,
@@ -65,3 +66,4 @@ export class QuantumTreeView {
         }]; }
     static get style() { return "/**style-placeholder:quantum-tree-view:**/"; }
 }
+QuantumTreeView.LOG = new Logger(QuantumTreeView);

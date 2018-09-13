@@ -4,14 +4,14 @@ import { Param } from "../../model/param";
 import { Logger } from "../../utils/logger";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
+import { DataModel } from "../../model/dataModel";
 export class QuantumBubble {
     constructor() {
         this.unit = '';
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
-        this.data = '{}';
-        this.options = '{}';
+        this.options = {};
         this.theme = 'light';
         this.width = '';
         this.height = '';
@@ -38,19 +38,18 @@ export class QuantumBubble {
         }
     }
     drawChart() {
-        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        let data = JSON.parse(this.data);
-        if (!data)
+        if (!this.data)
             return;
         let dataList;
-        if (data.hasOwnProperty('data')) {
-            dataList = data.data;
+        if (this.data instanceof DataModel) {
+            dataList = this.data.data;
         }
         else {
-            dataList = data;
+            dataList = this.data;
         }
         const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
         const options = {
@@ -156,7 +155,7 @@ export class QuantumBubble {
             "attr": "chart-title"
         },
         "data": {
-            "type": String,
+            "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
@@ -169,7 +168,7 @@ export class QuantumBubble {
             "mutable": true
         },
         "options": {
-            "type": String,
+            "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
         },

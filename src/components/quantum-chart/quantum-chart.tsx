@@ -5,6 +5,8 @@ import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
 import {Param} from "../../model/param";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 
 /**
  * options :
@@ -20,9 +22,9 @@ import {Param} from "../../model/param";
   shadow: false
 })
 export class QuantumChart {
-  @Prop() data: string = '[]';
-  @Prop() options: string = '{}';
-  @Prop() hiddenData: string = '[]';
+  @Prop() data: DataModel | GTS[];
+  @Prop() options: Param = {};
+  @Prop() hiddenData: string[] = [];
   @Prop() theme: string = 'light';
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
@@ -45,19 +47,18 @@ export class QuantumChart {
     showRangeSelector: true,
     gridLineColor: '#8e8e8e'
   };
-  private _data: any;
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('hiddenData')
-  private onHideData(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
+  private onHideData(newValue: string[], oldValue: string[]) {
+    if (oldValue.length !== newValue.length) {
       this.LOG.debug(['hiddenData'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -73,7 +74,7 @@ export class QuantumChart {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -88,7 +89,6 @@ export class QuantumChart {
     let i = 0;
     let labels = [];
     let colors = [];
-    const hiddenData = JSON.parse(this.hiddenData);
     if (!gts) {
       return;
     } else {
@@ -101,7 +101,7 @@ export class QuantumChart {
         if (g.v && GTSLib.isGtsToPlot(g)) {
           let label = GTSLib.serializeGtsMetadata(g);
           this.LOG.debug(['gtsToData', 'label'], label);
-          if (hiddenData.filter((i) => i === label).length === 0) {
+          if (this.hiddenData.filter((i) => i === label).length === 0) {
             GTSLib.gtsSort(g);
             g.v.forEach(value => {
               if (!data[value[0]]) {
@@ -183,29 +183,30 @@ export class QuantumChart {
   }
 
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
-    const data = JSON.parse(this.data);
-    if (data.hasOwnProperty('data')) {
-      this._data = this.gtsToData(data.data)
+    this._options = ChartLib.mergeDeep(this._options, this.options);
+    let dataList: any[];
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data
     } else {
-      this._data = this.gtsToData(data);
+      dataList = this.data;
     }
+    const dataToplot = this.gtsToData(dataList);
 
-    this.LOG.debug(['drawChart'], [this._data]);
+    this.LOG.debug(['drawChart'], [dataToplot]);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
-    if ( this._data.datasets.length > 0) {
+    if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {
       const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
       this._chart = new Dygraph(
         chart,
-        this._data.datasets,
+        dataToplot.datasets,
         {
           height: (this.responsive ? this.el.parentElement.clientHeight : QuantumChart.DEFAULT_HEIGHT) - 30,
           width: this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH,
-          labels: this._data.labels,
+          labels: dataToplot.labels,
           showRoller: false,
           showRangeSelector: this._options.showRangeSelector || true,
           connectSeparatedPoints: true,
-          colors: this._data.colors,
+          colors: dataToplot.colors,
           legend: 'follow',
           stackedGraph: this.isStacked(),
           strokeBorderWidth: this.isStacked() ? null : 0,

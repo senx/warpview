@@ -18,8 +18,8 @@ Displays alphanumeric value
 | responsive | `boolean` | false | Fit the parent space |
 | width | `string` | '' | Fixed width |
 | height | `string` | '' | Fixed height |
-| options | `string` | '{}' | Serialized JSON representation of display options |
-| data | `string` | '{}' | Serialized JSON representation of data to display |
+| options | `object` | | Serialized JSON representation of display options |
+| data | `object` | | Serialized JSON representation of data to display |
 
 ## Data format
 

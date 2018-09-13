@@ -2,6 +2,8 @@ import {Component, Element, Prop, Watch} from "@stencil/core";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
+import {DataModel} from "../../model/dataModel";
+import {ChartLib} from "../../utils/chart-lib";
 /**
  * Display component
  */
@@ -15,8 +17,8 @@ export class QuantumDisplay {
   @Prop() unit: string = '';
   @Prop() displayTitle: string = '';
   @Prop() responsive: boolean = false;
-  @Prop() data: string = '{}';
-  @Prop() options: string = '{}';
+  @Prop() data: DataModel | any[] | string | number;
+  @Prop() options: Param;
   @Prop() theme = 'light';
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -28,7 +30,7 @@ export class QuantumDisplay {
   private _options: Param;
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
     if (oldValue !== newValue) {
       this.LOG.debug(['onData'], newValue);
       this.drawChart();
@@ -36,7 +38,7 @@ export class QuantumDisplay {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -52,14 +54,14 @@ export class QuantumDisplay {
   }
 
   private drawChart() {
-    this._options = JSON.parse(this.options);
+    this.LOG.debug(['drawChart'], [this.options, this._options]);
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
-    const data = JSON.parse(this.data);
-    if (data.hasOwnProperty('data')) {
-      this.toDisplay = GTSLib.isArray(data.data) ? data.data[0] : data.data;
+    if (this.data instanceof DataModel) {
+      this.toDisplay = GTSLib.isArray(this.data.data)? this.data.data[0]: this.data.data;
     } else {
-      this.toDisplay = GTSLib.isArray(data) ? data[0] : data;
+      this.toDisplay = GTSLib.isArray(this.data)? this.data[0]: this.data;
     }
     this.LOG.debug(['drawChart'], [this.data, this.toDisplay]);
   }

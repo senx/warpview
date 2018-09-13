@@ -1,6 +1,8 @@
 import {Component, Element, Event, EventEmitter, Prop} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {ColorLib} from "../../utils/color-lib";
+import {GTS} from "../../model/GTS";
+import {Logger} from "../../utils/logger";
 
 @Component({
   tag: 'quantum-chip',
@@ -14,21 +16,21 @@ export class QuantumChip {
   @Prop() node: any;
   _node: any = {
     selected: true,
-    gts: {
-      c: '', l: {}, a: {}, v: []
-    }
+    gts: GTS
   };
 
   @Event() quantumSelectedGTS: EventEmitter;
 
   @Element() el: HTMLElement;
 
+  private LOG: Logger = new Logger(QuantumChip);
+
   /**
    *
    * @param {boolean} state
    * @returns {string}
    */
-  gtsColor(state: boolean): string {
+  private gtsColor(state: boolean): string {
     if (state) {
       return ColorLib.getColor(this.index);
     } else {
@@ -57,8 +59,8 @@ export class QuantumChip {
    * @returns {boolean}
    * @private
    */
-  _lastIndex(index, obj) {
-    let array = this._toArray(obj);
+  private lastIndex(index, obj) {
+    let array = this.toArray(obj);
     return (index === array.length - 1);
   }
 
@@ -68,7 +70,7 @@ export class QuantumChip {
    * @returns {any}
    * @private
    */
-  _toArray(obj) {
+  private toArray(obj) {
     if (obj === undefined) {
       return [];
     }
@@ -85,8 +87,12 @@ export class QuantumChip {
    * @param {UIEvent} event
    */
   switchPlotState(event: UIEvent) {
-    this._node = { ...this._node, selected: !this._node.selected, label: GTSLib.serializeGtsMetadata({ c: this._node.gts.c, l: this._node.gts.l, a: this._node.gts.a})};
-    console.debug('[QuantumChip] - switchPlotState', this._node);
+    this._node = {
+      ...this._node,
+      selected: !this._node.selected,
+      label: GTSLib.serializeGtsMetadata(this._node.gts)
+    };
+    this.LOG.debug(['switchPlotState'], [this._node]);
     (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected));
     this.quantumSelectedGTS.emit(this._node);
   }
@@ -94,20 +100,20 @@ export class QuantumChip {
   render() {
     return (
       <div>
-        {this._node && this._node.gts && this._node.gts.l?
+        {this._node && this._node.gts && this._node.gts.l ?
           <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>{this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
-            {this._toArray(this._node.gts.l).map((label, labelIndex) =>
-                <span>
+              {this.toArray(this._node.gts.l).map((label, labelIndex) =>
+                  <span>
               <span class='gts-labelname'>{label.name}</span>
               <span class='gts-separator'>=</span>
               <span class='gts-labelvalue'>{label.value}</span>
-              <span hidden={this._lastIndex(labelIndex, this._node.gts.l)}>, </span>
+              <span hidden={this.lastIndex(labelIndex, this._node.gts.l)}>, </span>
             </span>
-            )}
-            <span class='gts-separator' innerHTML={' &rcub;'}/>
+              )}
+              <span class='gts-separator' innerHTML={' &rcub;'}/>
           </span>
           </span>
           : ''

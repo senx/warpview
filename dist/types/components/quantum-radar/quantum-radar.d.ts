@@ -1,11 +1,13 @@
 import '../../stencil.core';
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
 export declare class QuantumRadar {
     unit: string;
     chartTitle: string;
     responsive: boolean;
     showLegend: boolean;
-    data: string;
-    options: string;
+    data: DataModel | any[];
+    options: Param;
     theme: string;
     width: string;
     height: string;

@@ -6,6 +6,7 @@ import { a as GTSLib } from './chunk-7f4b1b2f.js';
 import { a as ColorLib } from './chunk-b534d406.js';
 import { a as Logger } from './chunk-c6b875fd.js';
 import { a as ChartLib } from './chunk-f29847bd.js';
+import { a as DataModel } from './chunk-9b3c1d73.js';
 import './chunk-ee323282.js';
 
 class QuantumAnnotation {
@@ -13,9 +14,8 @@ class QuantumAnnotation {
         this.chartTitle = "";
         this.responsive = false;
         this.showLegend = true;
-        this.data = "[]";
-        this.hiddenData = "[]";
-        this.options = "{}";
+        this.options = {};
+        this.hiddenData = [];
         this.theme = "light";
         this.width = "";
         this.height = "";
@@ -40,12 +40,11 @@ class QuantumAnnotation {
     changeScale(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            const data = JSON.parse(newValue);
+            const data = newValue;
             if (data.time.timeMode === "timestamp") {
                 this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
                 this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
-                this._chart.options.scales.xAxes[0].time.displayFormats.millisecond =
-                    data.time.displayFormats;
+                this._chart.options.scales.xAxes[0].time.displayFormats.millisecond = data.time.displayFormats;
                 this._chart.update();
             }
             else {
@@ -56,8 +55,8 @@ class QuantumAnnotation {
         }
     }
     hideData(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            const hiddenData = GTSLib.cleanArray(JSON.parse(newValue));
+        if (oldValue.length !== newValue.length) {
+            const hiddenData = GTSLib.cleanArray(newValue);
             Object.keys(this._mapIndex).forEach(key => {
                 this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
             });
@@ -84,9 +83,9 @@ class QuantumAnnotation {
      *
      */
     drawChart() {
-        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        let gts = this.parseData(JSON.parse(this.data));
+        let gts = this.parseData(this.data);
         let calculatedHeight = 30 * gts.length + this.legendOffset;
         let height = this.height || this.height !== ""
             ? Math.max(calculatedHeight, parseInt(this.height))
@@ -187,44 +186,51 @@ class QuantumAnnotation {
      */
     parseData(gts) {
         let dataList;
-        if (gts.hasOwnProperty('data')) {
+        this.LOG.debug(['parseData'], gts);
+        if (this.data instanceof DataModel) {
             dataList = gts.data;
         }
         else {
             dataList = gts;
         }
-        let datasets = [];
-        let pos = 0;
-        if (!gts) {
+        this.LOG.debug(['parseData', 'dataList'], dataList);
+        if (!dataList || dataList.length === 0) {
             return;
         }
         else {
-            dataList = GTSLib.flatDeep(dataList);
-            dataList.forEach((g, i) => {
-                if (GTSLib.isGtsToAnnotate(g)) {
-                    let data = [];
-                    let color = ColorLib.getColor(i);
-                    const myImage = ChartLib.buildImage(1, 30, color);
-                    g.v.forEach(d => {
-                        data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
-                    });
-                    let label = GTSLib.serializeGtsMetadata(g);
-                    this._mapIndex[label] = pos;
-                    datasets.push({
-                        label: label,
-                        data: data,
-                        pointRadius: 5,
-                        pointHoverRadius: 5,
-                        pointHitRadius: 5,
-                        pointStyle: myImage,
-                        borderColor: color,
-                        backgroundColor: ColorLib.transparentize(color, 0.5)
-                    });
-                    pos++;
-                }
-            });
+            let datasets = [];
+            let pos = 0;
+            if (!dataList) {
+                return;
+            }
+            else {
+                dataList = GTSLib.flatDeep(dataList);
+                dataList.forEach((g, i) => {
+                    if (GTSLib.isGtsToAnnotate(g)) {
+                        let data = [];
+                        let color = ColorLib.getColor(i);
+                        const myImage = ChartLib.buildImage(1, 30, color);
+                        g.v.forEach(d => {
+                            data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
+                        });
+                        let label = GTSLib.serializeGtsMetadata(g);
+                        this._mapIndex[label] = pos;
+                        datasets.push({
+                            label: label,
+                            data: data,
+                            pointRadius: 5,
+                            pointHoverRadius: 5,
+                            pointHitRadius: 5,
+                            pointStyle: myImage,
+                            borderColor: color,
+                            backgroundColor: ColorLib.transparentize(color, 0.5)
+                        });
+                        pos++;
+                    }
+                });
+            }
+            return datasets;
         }
-        return datasets;
     }
     componentDidLoad() {
         this.drawChart();
@@ -247,7 +253,7 @@ class QuantumAnnotation {
             "attr": "chart-title"
         },
         "data": {
-            "type": String,
+            "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
@@ -260,12 +266,12 @@ class QuantumAnnotation {
             "mutable": true
         },
         "hiddenData": {
-            "type": String,
+            "type": "Any",
             "attr": "hidden-data",
             "watchCallbacks": ["hideData"]
         },
         "options": {
-            "type": String,
+            "type": "Any",
             "attr": "options",
             "watchCallbacks": ["changeScale"]
         },

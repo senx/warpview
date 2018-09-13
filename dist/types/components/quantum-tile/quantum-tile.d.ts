@@ -1,9 +1,10 @@
 import '../../stencil.core';
 import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
 export declare class QuantumTile {
     LOG: Logger;
-    data: string;
-    options: string;
+    data: any;
+    options: Param;
     unit: string;
     theme: string;
     type: string;

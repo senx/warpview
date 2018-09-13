@@ -13,8 +13,8 @@ export class QuantumTile {
 
   LOG: Logger = new Logger(QuantumTile);
 
-  @State() data: string;
-  @State() options: string;
+  @State() data: any;
+  @State() options: Param;
   @Prop() unit: string = '';
   @Prop() theme: string = 'light';
   @Prop() type: string = 'line';
@@ -64,8 +64,8 @@ export class QuantumTile {
           data.globalParams = {type: this.type} as Param;
         }
         this.LOG.debug(['componentDidLoad', 'data'], data);
-        this.data = JSON.stringify(data);
-        this.options = JSON.stringify(data.globalParams);
+        this.data = data;
+        this.options = data.globalParams;
         this.loading = false;
       }, err => {
         this.LOG.error(['componentDidLoad'], err);

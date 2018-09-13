@@ -5,6 +5,8 @@ import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 
 @Component({
   tag: 'quantum-bubble',
@@ -16,8 +18,8 @@ export class QuantumBubble {
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: string = '{}';
-  @Prop() options: string = '{}';
+  @Prop() data: DataModel | GTS[];
+  @Prop() options: Param = {};
   @Prop() theme = 'light';
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -29,7 +31,7 @@ export class QuantumBubble {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -37,7 +39,7 @@ export class QuantumBubble {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -53,17 +55,16 @@ export class QuantumBubble {
   }
 
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-    let data = JSON.parse(this.data);
-    if (!data) return;
+    if (!this.data) return;
     let dataList: any[];
-    if (data.hasOwnProperty('data')) {
-      dataList = data.data
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data;
     } else {
-      dataList = data;
+      dataList = this.data;
     }
 
     const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);

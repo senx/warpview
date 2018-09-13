@@ -23,16 +23,25 @@ declare global {
   interface HTMLAttributes {}
 }
 
+import {
+  DataModel,
+} from './model/dataModel';
+import {
+  GTS,
+} from './model/GTS';
+import {
+  Param,
+} from './model/param';
 
 declare global {
 
   namespace StencilComponents {
     interface QuantumAnnotation {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | GTS[];
       'height': string;
-      'hiddenData': string;
-      'options': string;
+      'hiddenData': string[];
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -62,11 +71,11 @@ declare global {
   namespace JSXElements {
     export interface QuantumAnnotationAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | GTS[];
       'height'?: string;
-      'hiddenData'?: string;
+      'hiddenData'?: string[];
       'onPointHover'?: (event: CustomEvent) => void;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -83,9 +92,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumBar {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | GTS[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -114,9 +123,9 @@ declare global {
   namespace JSXElements {
     export interface QuantumBarAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | GTS[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -132,9 +141,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumBubble {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | GTS[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -163,9 +172,9 @@ declare global {
   namespace JSXElements {
     export interface QuantumBubbleAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | GTS[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -181,9 +190,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumChart {
       'chartTitle': string;
-      'data': string;
-      'hiddenData': string;
-      'options': string;
+      'data': DataModel | GTS[];
+      'hiddenData': string[];
+      'options': Param;
       'responsive': boolean;
       'standalone': boolean;
       'theme': string;
@@ -212,12 +221,12 @@ declare global {
   namespace JSXElements {
     export interface QuantumChartAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
-      'hiddenData'?: string;
+      'data'?: DataModel | GTS[];
+      'hiddenData'?: string[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
       'onReceivedData'?: (event: CustomEvent) => void;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'standalone'?: boolean;
       'theme'?: string;
@@ -232,10 +241,10 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumDisplay {
-      'data': string;
+      'data': DataModel | any[] | string | number;
       'displayTitle': string;
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'theme': string;
       'unit': string;
@@ -262,10 +271,10 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumDisplayAttributes extends HTMLAttributes {
-      'data'?: string;
+      'data'?: DataModel | any[] | string | number;
       'displayTitle'?: string;
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'theme'?: string;
       'unit'?: string;
@@ -317,7 +326,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumGtsTree {
-      'data': string;
+      'data': DataModel | GTS[];
       'theme': string;
     }
   }
@@ -341,7 +350,7 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
-      'data'?: string;
+      'data'?: DataModel | GTS[];
       'onSelectedGTS'?: (event: CustomEvent) => void;
       'theme'?: string;
     }
@@ -552,9 +561,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumPie {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | any[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -583,9 +592,9 @@ declare global {
   namespace JSXElements {
     export interface QuantumPieAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | any[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -601,13 +610,12 @@ declare global {
   namespace StencilComponents {
     interface QuantumPolar {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | any[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
-      'type': string;
       'unit': string;
       'width': string;
     }
@@ -633,13 +641,12 @@ declare global {
   namespace JSXElements {
     export interface QuantumPolarAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | any[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
-      'type'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -652,9 +659,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumRadar {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | any[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -683,9 +690,9 @@ declare global {
   namespace JSXElements {
     export interface QuantumRadarAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | any[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;
@@ -701,9 +708,9 @@ declare global {
   namespace StencilComponents {
     interface QuantumScatter {
       'chartTitle': string;
-      'data': string;
+      'data': DataModel | GTS[];
       'height': string;
-      'options': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'theme': string;
@@ -732,9 +739,9 @@ declare global {
   namespace JSXElements {
     export interface QuantumScatterAttributes extends HTMLAttributes {
       'chartTitle'?: string;
-      'data'?: string;
+      'data'?: DataModel | GTS[];
       'height'?: string;
-      'options'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'theme'?: string;

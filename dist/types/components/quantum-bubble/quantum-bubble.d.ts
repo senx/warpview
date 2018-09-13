@@ -1,11 +1,14 @@
 import '../../stencil.core';
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 export declare class QuantumBubble {
     unit: string;
     chartTitle: string;
     responsive: boolean;
     showLegend: boolean;
-    data: string;
-    options: string;
+    data: DataModel | GTS[];
+    options: Param;
     theme: string;
     width: string;
     height: string;

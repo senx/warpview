@@ -22,8 +22,8 @@ Displays a bubble chart
 | hiddenData | `string[]` | List of concatenated class names and labels to hide. (ie: `com.class.name{label=a,label=b}` |
 | width | `string` | '' | Fixed width |
 | height | `string` | '' | Fixed height |
-| options | `string` | '{}' | Serialized JSON representation of display options |
-| data | `string` | '{}' | Serialized JSON representation of data to display |
+| options | `object` | | Serialized JSON representation of display options |
+| data | `object` | | Serialized JSON representation of data to display |
 
 ## Data format
 

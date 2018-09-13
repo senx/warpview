@@ -1,10 +1,12 @@
 import Chart from 'chart.js';
-import {Component, Prop, Element, Watch, EventEmitter, Event} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import {ColorLib} from "../../utils/color-lib";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 
 @Component({
   tag: "quantum-annotation",
@@ -15,9 +17,9 @@ export class QuantumAnnotation {
   @Prop() chartTitle: string = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: string = "[]";
-  @Prop() hiddenData: string = "[]";
-  @Prop() options: string = "{}";
+  @Prop() data: DataModel | GTS[];
+  @Prop() options: Param = {};
+  @Prop() hiddenData: string[] = [];
   @Prop() timeMin: number;
   @Prop() timeMax: number;
   @Prop() theme = "light";
@@ -35,7 +37,7 @@ export class QuantumAnnotation {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -51,15 +53,14 @@ export class QuantumAnnotation {
   }
 
   @Watch("options")
-  changeScale(newValue: string, oldValue: string) {
+  changeScale(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-      const data = JSON.parse(newValue);
+      const data: Param = newValue;
       if (data.time.timeMode === "timestamp") {
         this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
         this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
-        this._chart.options.scales.xAxes[0].time.displayFormats.millisecond =
-          data.time.displayFormats;
+        this._chart.options.scales.xAxes[0].time.displayFormats.millisecond = data.time.displayFormats;
         this._chart.update();
       } else {
         this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
@@ -70,9 +71,9 @@ export class QuantumAnnotation {
   }
 
   @Watch("hiddenData")
-  hideData(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      const hiddenData = GTSLib.cleanArray(JSON.parse(newValue));
+  hideData(newValue: string[], oldValue: string[]) {
+    if (oldValue.length !== newValue.length) {
+      const hiddenData = GTSLib.cleanArray(newValue);
       Object.keys(this._mapIndex).forEach(key => {
         this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
       });
@@ -104,9 +105,9 @@ export class QuantumAnnotation {
    *
    */
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-    let gts = this.parseData(JSON.parse(this.data));
+    let gts = this.parseData(this.data);
     let calculatedHeight = 30 * gts.length + this.legendOffset;
     let height =
       this.height || this.height !== ""
@@ -210,42 +211,48 @@ export class QuantumAnnotation {
    */
   private parseData(gts) {
     let dataList: any[];
-    if (gts.hasOwnProperty('data')) {
+    this.LOG.debug(['parseData'], gts);
+    if (this.data instanceof DataModel) {
       dataList = gts.data
     } else {
       dataList = gts;
     }
-    let datasets = [];
-    let pos = 0;
-    if (!gts) {
+    this.LOG.debug(['parseData', 'dataList'], dataList);
+    if (!dataList || dataList.length === 0) {
       return;
     } else {
-      dataList = GTSLib.flatDeep(dataList);
-      dataList.forEach((g, i) => {
-        if (GTSLib.isGtsToAnnotate(g)) {
-          let data = [];
-          let color = ColorLib.getColor(i);
-          const myImage = ChartLib.buildImage(1, 30, color);
-          g.v.forEach(d => {
-            data.push({x: d[0] / 1000, y: 0.5, val: d[d.length - 1]});
-          });
-          let label = GTSLib.serializeGtsMetadata(g);
-          this._mapIndex[label] = pos;
-          datasets.push({
-            label: label,
-            data: data,
-            pointRadius: 5,
-            pointHoverRadius: 5,
-            pointHitRadius: 5,
-            pointStyle: myImage,
-            borderColor: color,
-            backgroundColor: ColorLib.transparentize(color, 0.5)
-          });
-          pos++;
-        }
-      });
+      let datasets = [];
+      let pos = 0;
+      if (!dataList) {
+        return;
+      } else {
+        dataList = GTSLib.flatDeep(dataList);
+        dataList.forEach((g, i) => {
+          if (GTSLib.isGtsToAnnotate(g)) {
+            let data = [];
+            let color = ColorLib.getColor(i);
+            const myImage = ChartLib.buildImage(1, 30, color);
+            g.v.forEach(d => {
+              data.push({x: d[0] / 1000, y: 0.5, val: d[d.length - 1]});
+            });
+            let label = GTSLib.serializeGtsMetadata(g);
+            this._mapIndex[label] = pos;
+            datasets.push({
+              label: label,
+              data: data,
+              pointRadius: 5,
+              pointHoverRadius: 5,
+              pointHitRadius: 5,
+              pointStyle: myImage,
+              borderColor: color,
+              backgroundColor: ColorLib.transparentize(color, 0.5)
+            });
+            pos++;
+          }
+        });
+      }
+      return datasets;
     }
-    return datasets;
   }
 
   componentDidLoad() {

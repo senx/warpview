@@ -1,11 +1,14 @@
 import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 export declare class QuantumGtsTree {
-    data: string;
+    data: DataModel | GTS[];
     theme: string;
     selectedGTS: EventEmitter;
-    gtsList: any;
-    dataChanged(newValue: string, _oldValue: string): void;
+    private gtsList;
+    private LOG;
+    onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]): void;
     /**
      *
      */

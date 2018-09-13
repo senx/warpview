@@ -1,12 +1,15 @@
 import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 export declare class QuantumAnnotation {
     chartTitle: string;
     responsive: boolean;
     showLegend: boolean;
-    data: string;
-    hiddenData: string;
-    options: string;
+    data: DataModel | GTS[];
+    options: Param;
+    hiddenData: string[];
     timeMin: number;
     timeMax: number;
     theme: string;
@@ -22,8 +25,8 @@ export declare class QuantumAnnotation {
     private uuid;
     private onData;
     private onTheme;
-    changeScale(newValue: string, oldValue: string): void;
-    hideData(newValue: string, oldValue: string): void;
+    changeScale(newValue: Param, oldValue: Param): void;
+    hideData(newValue: string[], oldValue: string[]): void;
     minBoundChange(newValue: number, oldValue: number): void;
     maxBoundChange(newValue: number, oldValue: number): void;
     /**

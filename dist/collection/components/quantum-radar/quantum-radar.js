@@ -2,14 +2,14 @@ import Chart from 'chart.js';
 import { Logger } from "../../utils/logger";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
+import { DataModel } from "../../model/dataModel";
 export class QuantumRadar {
     constructor() {
         this.unit = '';
         this.chartTitle = '';
         this.responsive = true;
         this.showLegend = true;
-        this.data = '[]';
-        this.options = '{}';
+        this.options = {};
         this.theme = 'light';
         this.width = '';
         this.height = '';
@@ -39,22 +39,13 @@ export class QuantumRadar {
         this.LOG.debug(['gtsToData'], gts);
         let datasets = [];
         let labels = {};
-        let dataList;
-        if (gts.hasOwnProperty('data')) {
-            dataList = gts.data;
-        }
-        else {
-            dataList = gts;
-        }
-        if (!dataList || dataList.length === 0) {
+        if (!gts || gts.length === 0) {
             return;
         }
         else {
             let i = 0;
-            dataList.forEach(g => {
-                let data = [];
+            gts.forEach(g => {
                 Object.keys(g).forEach(label => {
-                    const values = g[label];
                     const dataSet = {
                         label: label,
                         data: [],
@@ -75,20 +66,20 @@ export class QuantumRadar {
         return { datasets: datasets, labels: Object.keys(labels) };
     }
     drawChart() {
-        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
         const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
-        const data = JSON.parse(this.data);
+        const data = this.data;
         if (!data)
             return;
         let dataList;
-        if (data.hasOwnProperty('data')) {
-            dataList = data.data;
+        if (this.data instanceof DataModel) {
+            dataList = this.data.data;
         }
         else {
-            dataList = data;
+            dataList = this.data;
         }
         let gts = this.parseData(dataList);
         if (!gts) {
@@ -159,7 +150,7 @@ export class QuantumRadar {
             "attr": "chart-title"
         },
         "data": {
-            "type": String,
+            "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
@@ -172,7 +163,7 @@ export class QuantumRadar {
             "mutable": true
         },
         "options": {
-            "type": String,
+            "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
         },

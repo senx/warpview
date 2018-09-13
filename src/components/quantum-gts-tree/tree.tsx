@@ -1,6 +1,8 @@
 import {Component, Event, EventEmitter, Prop} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {Counter} from "./quantum-gts-tree";
+import {GTS} from "../../model/GTS";
+import {Logger} from "../../utils/logger";
 
 @Component({
   tag: "quantum-tree-view",
@@ -10,17 +12,19 @@ export class QuantumTreeView {
   @Prop() gtsList: any;
   @Prop() branch = false;
   @Prop() theme: string = "light";
+
   @Event() selected: EventEmitter;
 
+  private static LOG: Logger = new Logger(QuantumTreeView);
   /**
    *
    * @param node
    * @returns {number}
    */
-  getIndex(node: any): number {
+  private static getIndex(node: any): number {
     Counter.item++;
     node.index = Counter.item;
-    console.debug("[QuantumTreeView] - getIndex", Counter.item, node);
+    this.LOG.debug(['getIndex'], [Counter.item, node]);
     return Counter.item;
   }
 
@@ -28,7 +32,7 @@ export class QuantumTreeView {
    *
    */
   componentWillLoad() {
-    console.debug("[QuantumTreeView] - componentWillLoad", Counter.item);
+    QuantumTreeView.LOG.debug(['componentWillLoad'], Counter.item);
   }
 
   /**
@@ -50,7 +54,7 @@ export class QuantumTreeView {
               {GTSLib.isGts(node.gts) ? (
                 <quantum-chip
                   node={node}
-                  index={this.getIndex(node)}
+                  index={QuantumTreeView.getIndex(node)}
                   name={node.gts.c}
                 />
               ) : (

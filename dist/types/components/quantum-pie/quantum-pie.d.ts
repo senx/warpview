@@ -1,9 +1,11 @@
 import '../../stencil.core';
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
 export declare class QuantumPie {
     chartTitle: string;
     showLegend: boolean;
-    data: string;
-    options: string;
+    data: DataModel | any[];
+    options: Param;
     theme: string;
     width: string;
     height: string;

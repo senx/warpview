@@ -1,5 +1,8 @@
 import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 /**
  * options :
  *  gridLineColor: 'red | #fff'
@@ -9,9 +12,9 @@ import { EventEmitter } from '../../stencil.core';
  *
  */
 export declare class QuantumChart {
-    data: string;
-    options: string;
-    hiddenData: string;
+    data: DataModel | GTS[];
+    options: Param;
+    hiddenData: string[];
     theme: string;
     unit: string;
     type: string;
@@ -27,7 +30,6 @@ export declare class QuantumChart {
     private static DEFAULT_HEIGHT;
     private _chart;
     private _options;
-    private _data;
     private uuid;
     private onHideData;
     private onData;

@@ -20,7 +20,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -34,7 +33,6 @@
         },
         {
           "name": "hiddenData",
-          "type": "String",
           "attr": "hidden-data",
           "watch": [
             "hideData"
@@ -42,7 +40,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "changeScale"
@@ -119,7 +116,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -133,7 +129,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -194,7 +189,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -208,7 +202,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -270,7 +263,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -278,7 +270,6 @@
         },
         {
           "name": "hiddenData",
-          "type": "String",
           "attr": "hidden-data",
           "watch": [
             "onHideData"
@@ -286,7 +277,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -391,7 +381,7 @@
       "props": [
         {
           "name": "data",
-          "type": "String",
+          "type": "Any",
           "attr": "data",
           "watch": [
             "onData"
@@ -410,7 +400,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -463,10 +452,9 @@
       "props": [
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
-            "dataChanged"
+            "onData"
           ]
         },
         {
@@ -771,7 +759,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -785,7 +772,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -846,7 +832,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -860,7 +845,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -883,11 +867,6 @@
           "watch": [
             "onTheme"
           ]
-        },
-        {
-          "name": "type",
-          "type": "String",
-          "attr": "type"
         },
         {
           "name": "unit",
@@ -926,7 +905,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -940,7 +918,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"
@@ -1001,7 +978,6 @@
         },
         {
           "name": "data",
-          "type": "String",
           "attr": "data",
           "watch": [
             "onData"
@@ -1015,7 +991,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options",
           "watch": [
             "onOptions"

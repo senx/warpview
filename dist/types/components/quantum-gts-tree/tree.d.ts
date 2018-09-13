@@ -5,12 +5,13 @@ export declare class QuantumTreeView {
     branch: boolean;
     theme: string;
     selected: EventEmitter;
+    private static LOG;
     /**
      *
      * @param node
      * @returns {number}
      */
-    getIndex(node: any): number;
+    private static getIndex;
     /**
      *
      */

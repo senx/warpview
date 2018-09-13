@@ -2,12 +2,12 @@ import { Logger } from "../../utils/logger";
 import Chart from 'chart.js';
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
+import { DataModel } from "../../model/dataModel";
 export class QuantumPie {
     constructor() {
         this.chartTitle = '';
         this.showLegend = true;
-        this.data = '[]';
-        this.options = '{}';
+        this.options = {};
         this.theme = 'light';
         this.width = '';
         this.height = '';
@@ -44,14 +44,17 @@ export class QuantumPie {
      */
     parseData(data) {
         this.LOG.debug(['parseData'], data);
+        if (!data) {
+            return;
+        }
         let labels = [];
         let _data = [];
         let dataList;
-        if (data.hasOwnProperty('data')) {
-            dataList = data.data;
+        if (this.data instanceof DataModel) {
+            dataList = this.data.data;
         }
         else {
-            dataList = data;
+            dataList = this.data;
         }
         dataList.forEach(d => {
             _data.push(d[1]);
@@ -61,11 +64,14 @@ export class QuantumPie {
         return { labels: labels, data: _data };
     }
     drawChart() {
-        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        this._options = ChartLib.mergeDeep(this._options, this.options);
+        let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
+        let data = this.parseData(this.data);
+        if (!data) {
+            return;
+        }
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
-        let data = this.parseData(JSON.parse(this.data));
         this.LOG.debug(['drawChart'], [this.data, this._options, data]);
         new Chart(ctx, {
             type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
@@ -127,7 +133,7 @@ export class QuantumPie {
             "attr": "chart-title"
         },
         "data": {
-            "type": String,
+            "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
@@ -140,7 +146,7 @@ export class QuantumPie {
             "mutable": true
         },
         "options": {
-            "type": String,
+            "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
         },

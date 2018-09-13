@@ -7,12 +7,13 @@ export declare class QuantumChip {
     _node: any;
     quantumSelectedGTS: EventEmitter;
     el: HTMLElement;
+    private LOG;
     /**
      *
      * @param {boolean} state
      * @returns {string}
      */
-    gtsColor(state: boolean): string;
+    private gtsColor;
     /**
      *
      */
@@ -28,17 +29,14 @@ export declare class QuantumChip {
      * @returns {boolean}
      * @private
      */
-    _lastIndex(index: any, obj: any): boolean;
+    private lastIndex;
     /**
      *
      * @param obj
      * @returns {any}
      * @private
      */
-    _toArray(obj: any): {
-        name: string;
-        value: any;
-    }[];
+    private toArray;
     /**
      *
      * @param {UIEvent} event

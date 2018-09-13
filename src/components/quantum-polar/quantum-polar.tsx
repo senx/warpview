@@ -4,6 +4,7 @@ import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
+import {DataModel} from "../../model/dataModel";
 
 @Component({
   tag: 'quantum-polar',
@@ -12,12 +13,11 @@ import {Param} from "../../model/param";
 })
 export class QuantumPolar {
   @Prop() unit: string = '';
-  @Prop() type: string = 'polar';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: string = '[]';
-  @Prop() options: string = '{}';
+  @Prop() data: DataModel | any[];
+  @Prop() options: Param = {};
   @Prop() theme = 'light';
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -29,7 +29,7 @@ export class QuantumPolar {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
-  private onData(newValue: string, oldValue: string) {
+  private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -37,7 +37,7 @@ export class QuantumPolar {
   }
 
   @Watch('options')
-  private onOptions(newValue: string, oldValue: string) {
+  private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
@@ -63,22 +63,21 @@ export class QuantumPolar {
   }
 
   private drawChart() {
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
-    const data = JSON.parse(this.data);
-    if (!data) return;
+    if (!this.data) return;
     let dataList: any[];
-    if (data.hasOwnProperty('data')) {
-      dataList = data.data
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data;
     } else {
-      dataList = data;
+      dataList = this.data;
     }
     let gts = this.parseData(dataList);
     new Chart.PolarArea(ctx, {
-      type: this.type,
+      type: 'polar',
       data: {
         datasets: [{
           data: gts.data,

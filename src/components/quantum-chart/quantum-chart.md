@@ -24,8 +24,8 @@ Displays a line chart
 | standalone | `boolean` | false | If used with [quantum-annotation](../quantum-annotation/quantum-annotation.md) |
 | responsive | `boolean` | false | Fit the parent space |
 | hiddenData | `string[]` | List of concatenated class names and labels to hide. (ie: `com.class.name{label=a,label=b}` |
-| options | `string` | '{}' | Serialized JSON representation of display options |
-| data | `string` | '{}' | Serialized JSON representation of data to display |
+| options | `object` | | Serialized JSON representation of display options |
+| data | `object` | | Serialized JSON representation of data to display |
 
 ## Data format
 
