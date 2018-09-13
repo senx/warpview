@@ -13,8 +13,6 @@ export class QuantumTreeView {
   @Prop() branch = false;
   @Prop() theme: string = "light";
 
-  @Event() selected: EventEmitter;
-
   private static LOG: Logger = new Logger(QuantumTreeView);
   /**
    *

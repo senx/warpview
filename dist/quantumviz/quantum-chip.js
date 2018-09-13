@@ -119,7 +119,7 @@ class QuantumChip {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "quantum-chip .normal {\n  border-radius: 50%;\n  background-color: #bbbbbb;\n  display: inline-block;\n  width: 120px;\n  height: 12px; }"; }
+    static get style() { return ":host .normal {\n  border-radius: 50%;\n  background-color: #bbbbbb;\n  display: inline-block;\n  width: 120px;\n  height: 12px; }"; }
 }
 
 class QuantumGtsTree {
@@ -154,13 +154,6 @@ class QuantumGtsTree {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selectedGTS",
-            "method": "selectedGTS",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return ""; }
 }
 class Counter {
@@ -176,13 +169,6 @@ class Counter {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selectedGTS",
-            "method": "selectedGTS",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-gts-tree:**/"; }
 }
 Counter.item = -1;
@@ -243,14 +229,7 @@ class QuantumTreeView {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selected",
-            "method": "selected",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
-    static get style() { return "quantum-tree-view ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  border: none;\n  overflow: hidden; }\n\nquantum-tree-view li {\n  position: relative;\n  padding: 0 0 0 20px;\n  line-height: 20px; }\n\nquantum-tree-view li .stack-level {\n  font-size: 1.25em;\n  font-weight: bold;\n  padding-top: 25px;\n  padding-bottom: 10px; }\n\nquantum-tree-view li .stack-level + div {\n  padding-left: 25px; }\n\nquantum-tree-view li .expanded {\n  padding: 1px 10px;\n  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAKElEQVQ4jWNgGFbgFQMDw38i8UuYJiYkA5hJsIwUtXQEo2EwGgZkAwBP/yN0kY5JiwAAAABJRU5ErkJggg==) no-repeat; }\n\nquantum-tree-view li .collapsed {\n  padding: 1px 10px;\n  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVGhD7djRCcAgDEBBF+hHt+wo3auDtWaEKFLRO3j/CSiIBQDYxFE7JytmSntq72TFTGkWGVjTIsvcEQDocdXuyYqZ0ry1Bta0yDJHCwB6+KAb2N5vrWUW8UEHAPyilA9TDlz495u2lwAAAABJRU5ErkJggg==) no-repeat;\n  background-size: cover; }\n\nquantum-tree-view li .gtsInfo {\n  white-space: normal;\n  word-wrap: break-word; }\n\nquantum-tree-view li .gtsInfo[disabled] {\n  color: #aaaaaa;\n  cursor: not-allowed; }\n\nquantum-tree-view li .normal {\n  border-radius: 50%;\n  background-color: #bbbbbb;\n  display: inline-block;\n  width: 12px;\n  height: 12px; }\n\nquantum-tree-view li i, quantum-tree-view li span {\n  cursor: pointer; }\n\nquantum-tree-view li .selected {\n  background-color: #aaddff;\n  font-weight: bold;\n  padding: 1px 5px; }\n\nquantum-tree-view .gts-classname {\n  color: #0074D9; }\n\nquantum-tree-view .gts-labelname {\n  color: #3d9970; }\n\nquantum-tree-view .gts-separator {\n  color: #bbbbbb; }\n\nquantum-tree-view .gts-labelvalue {\n  color: #AAAAAA;\n  font-style: italic; }\n\nquantum-tree-view .dark {\n  color: #ffffff; }\n  quantum-tree-view .dark .expanded {\n    color: #ffffff;\n    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==) no-repeat;\n    background-size: cover; }"; }
+    static get style() { return "quantum-tree-view ul {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  border: none;\n  overflow: hidden; }\n\nquantum-tree-view li {\n  position: relative;\n  padding: 0 0 0 20px;\n  line-height: 20px; }\n\nquantum-tree-view li .stack-level {\n  font-size: 1.25em;\n  font-weight: bold;\n  padding-top: 25px;\n  padding-bottom: 10px; }\n\nquantum-tree-view li .stack-level + div {\n  padding-left: 25px; }\n\nquantum-tree-view li .expanded {\n  padding: 1px 10px;\n  background: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAKElEQVQ4jWNgGFbgFQMDw38i8UuYJiYkA5hJsIwUtXQEo2EwGgZkAwBP/yN0kY5JiwAAAABJRU5ErkJggg==) no-repeat; }\n\nquantum-tree-view li .collapsed {\n  padding: 1px 10px;\n  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVGhD7djRCcAgDEBBF+hHt+wo3auDtWaEKFLRO3j/CSiIBQDYxFE7JytmSntq72TFTGkWGVjTIsvcEQDocdXuyYqZ0ry1Bta0yDJHCwB6+KAb2N5vrWUW8UEHAPyilA9TDlz495u2lwAAAABJRU5ErkJggg==) no-repeat;\n  background-size: cover; }\n\nquantum-tree-view li .gtsInfo {\n  white-space: normal;\n  word-wrap: break-word; }\n\nquantum-tree-view li .gtsInfo[disabled] {\n  color: #aaaaaa;\n  cursor: not-allowed; }\n\nquantum-tree-view li .normal {\n  border-radius: 50%;\n  background-color: #bbbbbb;\n  display: inline-block;\n  width: 12px;\n  height: 12px; }\n\nquantum-tree-view li i, quantum-tree-view li span {\n  cursor: pointer; }\n\nquantum-tree-view li .selected {\n  background-color: #aaddff;\n  font-weight: bold;\n  padding: 1px 5px; }\n\nquantum-tree-view .gts-classname {\n  color: var(--gts-classname-font-color, #0074D9); }\n\nquantum-tree-view .gts-labelname {\n  color: var(--gts-labelname-font-color, #3d9970); }\n\nquantum-tree-view .gts-separator {\n  color: var(--gts-separator-font-color, #bbbbbb); }\n\nquantum-tree-view .gts-labelvalue {\n  color: var(--gts-labelvalue-font-color, #AAAAAA);\n  font-style: italic; }\n\nquantum-tree-view .dark {\n  color: #ffffff; }\n  quantum-tree-view .dark .expanded {\n    color: #ffffff;\n    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==) no-repeat;\n    background-size: cover; }"; }
 }
 QuantumTreeView.LOG = new Logger(QuantumTreeView);
 

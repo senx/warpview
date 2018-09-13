@@ -11,7 +11,6 @@ import {Logger} from "../../utils/logger";
 export class QuantumGtsTree {
   @Prop() data: DataModel | GTS[];
   @Prop() theme: string = "light";
-  @Event() selectedGTS: EventEmitter;
 
   private gtsList: any;
   private LOG: Logger = new Logger(QuantumGtsTree);

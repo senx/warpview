@@ -1,4 +1,4 @@
-quantum-chip .normal {
+:host .normal {
   border-radius: 50%;
   background-color: #bbbbbb;
   display: inline-block;

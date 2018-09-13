@@ -67,19 +67,19 @@ quantum-tree-view {
   }
 
   .gts-classname {
-    color: #0074D9;
+    color: var(--gts-classname-font-color, #0074D9);
   }
 
   .gts-labelname {
-    color: #3d9970;
+    color: var(--gts-labelname-font-color, #3d9970);
   }
 
   .gts-separator {
-    color: #bbbbbb;
+    color: var(--gts-separator-font-color, #bbbbbb);
   }
 
   .gts-labelvalue {
-    color: #AAAAAA;
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
     font-style: italic;
   }
 

@@ -52,16 +52,16 @@ quantum-tree-view li .selected {
   padding: 1px 5px; }
 
 quantum-tree-view .gts-classname {
-  color: #0074D9; }
+  color: var(--gts-classname-font-color, #0074D9); }
 
 quantum-tree-view .gts-labelname {
-  color: #3d9970; }
+  color: var(--gts-labelname-font-color, #3d9970); }
 
 quantum-tree-view .gts-separator {
-  color: #bbbbbb; }
+  color: var(--gts-separator-font-color, #bbbbbb); }
 
 quantum-tree-view .gts-labelvalue {
-  color: #AAAAAA;
+  color: var(--gts-labelvalue-font-color, #AAAAAA);
   font-style: italic; }
 
 quantum-tree-view .dark {
