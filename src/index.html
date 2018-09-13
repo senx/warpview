@@ -135,7 +135,7 @@
         document.querySelector('#chart')['options'] = {...defOpts};
         document.querySelector('#annotation')['options'] = {...defOpts};
         document.querySelector('#tree')['options'] = {...defOpts};
-        document.querySelector('quantum-tile')['options'] = {...defOpts};
+        document.querySelectorAll('quantum-tile').forEach(el => {el.options= {...defOpts};});
       });
       $("#light").click(function () {
         $("body").removeClass('bg-dark');
@@ -146,7 +146,7 @@
         document.querySelector('#chart')['options'] = {...defOpts};
         document.querySelector('#annotation')['options'] = {...defOpts};
         document.querySelector('#tree')['options'] = {...defOpts};
-        document.querySelector('quantum-tile')['options'] = {...defOpts};
+        document.querySelectorAll('quantum-tile').forEach(el => {el.options= {...defOpts};});
       });
     });
   </script>

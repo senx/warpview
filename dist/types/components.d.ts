@@ -770,6 +770,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumTile {
       'chartTitle': string;
+      'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;
@@ -798,6 +799,7 @@ declare global {
   namespace JSXElements {
     export interface QuantumTileAttributes extends HTMLAttributes {
       'chartTitle'?: string;
+      'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'type'?: string;

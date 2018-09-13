@@ -1,4 +1,8 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 export declare class QuantumTile {
@@ -6,7 +10,6 @@ export declare class QuantumTile {
     data: any;
     options: Param;
     unit: string;
-    theme: string;
     type: string;
     chartTitle: string;
     responsive: boolean;
@@ -16,7 +19,10 @@ export declare class QuantumTile {
     private warpscript;
     private graphs;
     private loading;
+    private gtsList;
+    private onOptions;
     componentDidLoad(): void;
+    private parseGTS;
     private execute;
     render(): JSX.Element;
 }

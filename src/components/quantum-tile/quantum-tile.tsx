@@ -1,8 +1,10 @@
-import {Component, Element, Prop, State} from '@stencil/core';
+import {Component, Element, Prop, State, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from "../../model/dataModel";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
+import {GraphData} from "@stencil/core/dist/declarations";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: 'quantum-tile',
@@ -14,7 +16,7 @@ export class QuantumTile {
   LOG: Logger = new Logger(QuantumTile);
 
   @State() data: any;
-  @State() options: Param;
+  @Prop() options: Param;
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
@@ -34,9 +36,43 @@ export class QuantumTile {
     'bar': ['bar']
   };
   private loading = true;
+  private gtsList: any;
+
+  @Watch('options')
+  private onOptions(newValue: Param, oldValue: Param) {
+    this.LOG.debug(['options'], newValue);
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options', 'changed'], newValue);
+      this.parseGTS();
+    }
+  }
 
   componentDidLoad() {
     this.execute();
+  }
+
+  private parseGTS() {
+    let data: DataModel = new DataModel();
+    if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
+      const dataLine = this.gtsList[0];
+      if (dataLine.hasOwnProperty('data')) {
+        data.data = dataLine.data;
+        data.globalParams = dataLine.globalParams || {} as Param;
+        data.globalParams.type = data.globalParams.type || this.type;
+        data.params = dataLine.params;
+      } else {
+        data.data = dataLine;
+        data.globalParams = {type: this.type} as Param;
+      }
+    } else {
+      data.data = this.gtsList;
+      data.globalParams = {type: this.type} as Param;
+    }
+    this.LOG.debug(['parseGTS', 'data'], data);
+    this.data = data;
+    this.options = ChartLib.mergeDeep(this.options, data.globalParams);
+    this.LOG.debug(['parseGTS', 'options'], this.options);
+    this.loading = false;
   }
 
   private execute() {
@@ -45,28 +81,9 @@ export class QuantumTile {
     this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
     fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
       response.text().then(gtsStr => {
-        this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
-        let gtsList = JSON.parse(gtsStr);
-        let data: DataModel = new DataModel();
-        if (GTSLib.isArray(gtsList) && gtsList.length === 1) {
-          const dataLine = gtsList[0];
-          if (dataLine.hasOwnProperty('data')) {
-            data.data = dataLine.data;
-            data.globalParams = dataLine.globalParams || {} as Param;
-            data.globalParams.type = data.globalParams.type || this.type;
-            data.params = dataLine.params;
-          } else {
-            data.data = dataLine;
-            data.globalParams = {type: this.type} as Param;
-          }
-        } else {
-          data.data = gtsList;
-          data.globalParams = {type: this.type} as Param;
-        }
-        this.LOG.debug(['componentDidLoad', 'data'], data);
-        this.data = data;
-        this.options = data.globalParams;
-        this.loading = false;
+       // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
+        this.gtsList = JSON.parse(gtsStr);
+        this.parseGTS();
       }, err => {
         this.LOG.error(['componentDidLoad'], err);
         this.loading = false;

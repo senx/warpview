@@ -1,6 +1,7 @@
 import { GTSLib } from '../../utils/gts.lib';
 import { DataModel } from "../../model/dataModel";
 import { Logger } from "../../utils/logger";
+import { ChartLib } from "../../utils/chart-lib";
 export class QuantumTile {
     constructor() {
         this.LOG = new Logger(QuantumTile);
@@ -21,8 +22,40 @@ export class QuantumTile {
         };
         this.loading = true;
     }
+    onOptions(newValue, oldValue) {
+        this.LOG.debug(['options'], newValue);
+        if (oldValue !== newValue) {
+            this.LOG.debug(['options', 'changed'], newValue);
+            this.parseGTS();
+        }
+    }
     componentDidLoad() {
         this.execute();
+    }
+    parseGTS() {
+        let data = new DataModel();
+        if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
+            const dataLine = this.gtsList[0];
+            if (dataLine.hasOwnProperty('data')) {
+                data.data = dataLine.data;
+                data.globalParams = dataLine.globalParams || {};
+                data.globalParams.type = data.globalParams.type || this.type;
+                data.params = dataLine.params;
+            }
+            else {
+                data.data = dataLine;
+                data.globalParams = { type: this.type };
+            }
+        }
+        else {
+            data.data = this.gtsList;
+            data.globalParams = { type: this.type };
+        }
+        this.LOG.debug(['parseGTS', 'data'], data);
+        this.data = data;
+        this.options = ChartLib.mergeDeep(this.options, data.globalParams);
+        this.LOG.debug(['parseGTS', 'options'], this.options);
+        this.loading = false;
     }
     execute() {
         this.loading = true;
@@ -30,30 +63,9 @@ export class QuantumTile {
         this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
         fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
             response.text().then(gtsStr => {
-                this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
-                let gtsList = JSON.parse(gtsStr);
-                let data = new DataModel();
-                if (GTSLib.isArray(gtsList) && gtsList.length === 1) {
-                    const dataLine = gtsList[0];
-                    if (dataLine.hasOwnProperty('data')) {
-                        data.data = dataLine.data;
-                        data.globalParams = dataLine.globalParams || {};
-                        data.globalParams.type = data.globalParams.type || this.type;
-                        data.params = dataLine.params;
-                    }
-                    else {
-                        data.data = dataLine;
-                        data.globalParams = { type: this.type };
-                    }
-                }
-                else {
-                    data.data = gtsList;
-                    data.globalParams = { type: this.type };
-                }
-                this.LOG.debug(['componentDidLoad', 'data'], data);
-                this.data = data;
-                this.options = data.globalParams;
-                this.loading = false;
+                // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
+                this.gtsList = JSON.parse(gtsStr);
+                this.parseGTS();
             }, err => {
                 this.LOG.error(['componentDidLoad'], err);
                 this.loading = false;
@@ -95,7 +107,9 @@ export class QuantumTile {
             "state": true
         },
         "options": {
-            "state": true
+            "type": "Any",
+            "attr": "options",
+            "watchCallbacks": ["onOptions"]
         },
         "responsive": {
             "type": Boolean,

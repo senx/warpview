@@ -1,4 +1,8 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
 export declare class QuantumGtsTree {

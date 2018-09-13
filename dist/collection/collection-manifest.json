@@ -1000,6 +1000,13 @@
           "attr": "chart-title"
         },
         {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
           "name": "responsive",
           "type": "Boolean",
           "attr": "responsive"
@@ -1028,9 +1035,6 @@
       "states": [
         {
           "name": "data"
-        },
-        {
-          "name": "options"
         }
       ],
       "hostElement": {
