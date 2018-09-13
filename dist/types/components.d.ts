@@ -434,11 +434,11 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumMap {
-      'data': string;
+      'data': any[];
       'dotsLimit': number;
       'heatBlur': number;
       'heatControls': boolean;
-      'heatData': string;
+      'heatData': any[];
       'heatOpacity': number;
       'heatRadius': number;
       'height': string;
@@ -470,11 +470,11 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumMapAttributes extends HTMLAttributes {
-      'data'?: string;
+      'data'?: any[];
       'dotsLimit'?: number;
       'heatBlur'?: number;
       'heatControls'?: boolean;
-      'heatData'?: string;
+      'heatData'?: any[];
       'heatOpacity'?: number;
       'heatRadius'?: number;
       'height'?: string;
@@ -815,7 +815,6 @@ declare global {
   namespace StencilComponents {
     interface QuantumToggle {
       'checked': boolean;
-      'options': Param;
       'text1': string;
       'text2': string;
     }
@@ -841,8 +840,7 @@ declare global {
   namespace JSXElements {
     export interface QuantumToggleAttributes extends HTMLAttributes {
       'checked'?: boolean;
-      'onTimeSwitched'?: (event: CustomEvent) => void;
-      'options'?: Param;
+      'onStateChange'?: (event: CustomEvent) => void;
       'text1'?: string;
       'text2'?: string;
     }

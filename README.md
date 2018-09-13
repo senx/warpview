@@ -22,6 +22,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 ## Components
 
 - [WarpScript Tile](src/components/quantum-tile/quantum-tile.md)
+- [Map](src/components/quantum-map/quantum-map.md)
 - [Line chart](src/components/quantum-chart/quantum-chart.md)
 - [Bar chart](src/components/quantum-bar/quantum-bar.md)
 - [Bubble chart](src/components/quantum-bubble/quantum-bubble.md)

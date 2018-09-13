@@ -3,6 +3,8 @@ const { h } = window.quantumviz;
 
 import { a as commonjsGlobal, b as createCommonjsModule } from './chunk-ee323282.js';
 import { a as ColorLib } from './chunk-b534d406.js';
+import { a as ChartLib } from './chunk-f29847bd.js';
+import { a as Logger } from './chunk-c6b875fd.js';
 
 class QuantumHeatmapSliders {
     radiusChanged(value) {
@@ -16646,17 +16648,15 @@ class QuantumMap {
     constructor() {
         this.mapTitle = "";
         this.responsive = false;
-        this.data = "[]";
+        this.data = [];
         this.startLat = 90;
         this.startLong = 90;
         this.startZoom = 2;
         this.dotsLimit = 1000;
-        this.heatData = "[]";
+        this.heatData = [];
         this.heatControls = false;
-        this._mapSize = {
-            width: this.width,
-            height: this.height
-        };
+        this.uuid = 'map-' + ChartLib.guid().split('-').join('');
+        this.LOG = new Logger(QuantumMap);
         this._pathStyle = {
             weight: 5,
             opacity: 0.65,
@@ -16672,25 +16672,30 @@ class QuantumMap {
         this._iconAnchor = [20, 52];
         this._popupAnchor = [0, -50];
     }
-    radiuschange(event) {
+    heatRadiusDidChange(event) {
         this._heatLayer.setOptions({ radius: event.detail.valueAsNumber });
+        this.LOG.debug(['heatRadiusDidChange'], event.detail.valueAsNumber);
     }
-    blurChange(event) {
+    heatBlurDidChange(event) {
         this._heatLayer.setOptions({ blur: event.detail.valueAsNumber });
-        console.log(event.detail.valueAsNumber);
+        this.LOG.debug(['heatBlurDidChange'], event.detail.valueAsNumber);
     }
-    opacityChange(event) {
+    heatOpacityDidChange(event) {
         let minOpacity = event.detail.valueAsNumber / 100;
         this._heatLayer.setOptions({ minOpacity: minOpacity });
-        console.log(minOpacity);
+        this.LOG.debug(['heatOpacityDidChange'], event.detail.valueAsNumber);
     }
     drawMap() {
-        let ctx = this.el.shadowRoot.querySelector('#mymap');
+        this.LOG.debug(['drawMap'], this.data);
+        if (!this.data) {
+            return;
+        }
+        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         this._map = leafletSrc.map(ctx).setView([this.startLat, this.startLong], this.startZoom);
         leafletSrc.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this._map);
-        let geoData = this.gtsToGeoJSON(JSON.parse(this.data));
+        let geoData = this.gtsToGeoJSON(this.data);
         if (geoData.length > this.dotsLimit) {
             let cluster = leafletSrc.markerClusterGroup();
             geoData.forEach(d => {
@@ -16703,21 +16708,19 @@ class QuantumMap {
                 d.addTo(this._map);
             });
         }
-        this._heatLayer = leafletSrc.heatLayer(JSON.parse(this.heatData), {
+        this._heatLayer = leafletSrc.heatLayer(this.heatData, {
             radius: this.heatRadius,
             blur: this.heatBlur,
             minOpacity: this.heatOpacity
         });
         this._heatLayer.addTo(this._map);
-        this._map.on('move', function (e) {
-            //console.log(this._map.getCenter());
+        this._map.on('move', e => {
+            this.LOG.debug(['drawMap', 'move'], [this._map.getCenter(), e]);
         });
     }
-    icon(color, marker = "") {
+    icon(color, marker = '') {
         let c = "+" + color.slice(1);
-        let m = marker !== ""
-            ? "-" + marker
-            : "";
+        let m = marker !== '' ? '-' + marker : '';
         return leafletSrc.icon({
             iconUrl: 'https://api.mapbox.com/v3/marker/pin-s' + m + c + '@2x.png',
             iconAnchor: this._iconAnchor,
@@ -16726,264 +16729,209 @@ class QuantumMap {
     }
     gtsToGeoJSON(data) {
         let geoData = [];
-        data.forEach(d => {
-            d.gts.forEach((g, i) => {
-                if (!!g.positions) {
-                    let point = {};
-                    g.positions.forEach(p => {
-                        point = {
-                            'type': 'Feature',
-                            'properties': {
-                                'style': {},
-                                'popupContent': 'lat : ' + p[0] + '<br/>long : ' + p[1]
-                            },
-                            'geometry': {
-                                'type': 'Point',
-                                'coordinates': [p[1], p[0]]
-                            }
-                        };
-                        if (!!p[3]) {
-                            point.properties.style.fillColor = ColorLib.getColor(p[3]);
-                        }
-                        else if (!!d.params[i].fillColor) {
-                            point.properties.style.fillColor = d.params[i].fillColor;
-                        }
-                        else {
-                            point.properties.style.fillColor = ColorLib.getColor(i);
-                        }
-                        point.properties.style.radius = !!p[2]
-                            ? p[2]
-                            : this._dotStyle.radius;
-                        point.properties.style.color = !!d.params[i].edgeColor
-                            ? d.params[i].edgeColor
-                            : this._dotStyle.edgeColor;
-                        point.properties.style.weight = !!d.params[i].weight
-                            ? d.params[i].weight
-                            : this._dotStyle.weight;
-                        point.properties.style.opacity = !!d.params[i].edgeOpacity
-                            ? d.params[i].edgeOpacity
-                            : this._dotStyle.edgeOpacity;
-                        point.properties.style.fillOpacity = !!d.params[i].fillOpacity
-                            ? d.params[i].fillOpacity
-                            : this._dotStyle.fillOpacity;
-                        if (p.length === 4) {
-                            point.properties.popupContent += "<br/>value 1 : " + p[2] + "<br/>value 2 : " + p[3] + !!d.params[i].legend ? "<br/>legend : " + d.params[i].legend : "";
-                        }
-                        else if (p.length === 3) {
-                            point.properties.popupContent += "<br/>value : " + p[2] + !!d.params[i].legend ? "<br/>legend : " + d.params[i].legend : "";
-                        }
-                        geoData.push(leafletSrc.geoJSON(point, {
-                            pointToLayer: function (feature, latlng) {
-                                return leafletSrc.circleMarker(latlng, feature.properties.style);
-                            },
-                            onEachFeature: function (feature, layer) {
-                                layer.bindPopup(feature.properties.popupContent);
-                            }
-                        }));
-                    });
-                }
-                else {
-                    let key = d.params[i].key.toLowerCase();
-                    if (key === "path") {
-                        let style = {
-                            color: !!d.params[i].color
-                                ? d.params[i].color
-                                : ColorLib.getColor(i),
-                            weight: this._pathStyle.weight,
-                            opacity: this._pathStyle.opacity,
-                        };
-                        let path = {
-                            type: 'LineString',
-                            coordinates: []
-                        };
-                        let previous = null;
-                        let junctionPoints = [];
-                        g.v.forEach(p => {
-                            if (!!previous) {
-                                if (p[2] >= -180 && p[2] < -90 && previous[2] > 90 && previous[2] <= 180) {
-                                    let diff1 = 180 + p[2];
-                                    let diff2 = 180 - previous[2];
-                                    let pProj = p[2] * -1 + diff1 + diff2;
-                                    let a = (p[1] - previous[1]) / (pProj - previous[2]);
-                                    let b = previous[1] - previous[2] * a;
-                                    let borderY = a * (previous[2] + diff2) + b;
-                                    path.coordinates.push([(previous[2] + diff2), borderY]);
-                                    geoData.push(leafletSrc.geoJSON(path, {
-                                        style: style,
-                                        onEachFeature: function (feature, layer) {
-                                            layer.bindPopup(!!d.params[i].legend ? "legend : " + d.params[i].legend : "");
-                                        }
-                                    }));
-                                    path.coordinates = [];
-                                    path.coordinates.push([(previous[2] + diff2) * -1, borderY]);
-                                    junctionPoints.push([[(previous[2] + diff2), borderY], [(previous[2] + diff2) * -1, borderY]]);
-                                }
-                                else if (p[2] > 90 && p[2] <= 180 && previous[2] >= -180 && previous[2] < -90) {
-                                    let diff1 = 180 - p[2];
-                                    let diff2 = 180 + previous[2];
-                                    let pProj = (previous[2] + diff1 + diff2) * -1;
-                                    let a = (p[1] - previous[1]) / (p[2] - pProj);
-                                    let b = p[1] - a * p[2];
-                                    let borderY = a * (p[2] - diff1) + b;
-                                    path.coordinates.push([(previous[2] - diff2), borderY]);
-                                    geoData.push(leafletSrc.geoJSON(path, {
-                                        style: style,
-                                        onEachFeature: function (feature, layer) {
-                                            layer.bindPopup(!!d.params[i].legend ? "legend : " + d.params[i].legend : "");
-                                        }
-                                    }));
-                                    path.coordinates = [];
-                                    path.coordinates.push([(previous[2] - diff2) * -1, borderY]);
-                                    junctionPoints.push([[(previous[2] - diff2), borderY], [(previous[2] - diff2) * -1, borderY]]);
-                                }
-                            }
-                            previous = p;
-                            path.coordinates.push([p[2], p[1]]);
-                        });
-                        geoData.push(leafletSrc.geoJSON(path, {
-                            style: style,
-                            onEachFeature: function (feature, layer) {
-                                layer.bindPopup(!!d.params[i].legend ? "legend : " + d.params[i].legend : "");
-                            }
-                        }));
-                        let point = {};
-                        junctionPoints.forEach((j, i) => {
-                            j.forEach((p, n) => {
-                                point = {
-                                    'type': 'Feature',
-                                    'properties': {
-                                        'style': {
-                                            'color': "#645858",
-                                            "radius": this._pathStyle.dotsWeight,
-                                            "fillOpacity": this._pathStyle.opacity,
-                                            "opacity": this._pathStyle.opacity
-                                        },
-                                        'value': null,
-                                        'popupContent': "Junction " + (i) + (n == 0 ? " IN" : " OUT")
-                                    },
-                                    'geometry': {
-                                        'type': 'Point',
-                                        'coordinates': p
-                                    }
-                                };
-                                geoData.push(leafletSrc.geoJSON(point, {
-                                    pointToLayer: function (feature, latlng) {
-                                        return leafletSrc.circleMarker(latlng, feature.properties.style);
-                                    },
-                                    onEachFeature: function (feature, layer) {
-                                        layer.bindPopup(feature.properties.popupContent);
-                                    }
-                                }));
-                            });
-                        });
-                        if (d.params[i].displayDots === "true") {
-                            let point = {};
-                            g.v.forEach(p => {
-                                point = {
-                                    'type': 'Feature',
-                                    'properties': {
-                                        'style': {
-                                            'color': !!d.params[i].color
-                                                ? d.params[i].color
-                                                : ColorLib.getColor(i),
-                                            "radius": this._pathStyle.dotsWeight,
-                                            "fillOpacity": this._pathStyle.opacity,
-                                            "opacity": this._pathStyle.opacity
-                                        },
-                                        'value': p[p.length - 1],
-                                        'popupContent': 'timestamp : ' + p[0] + '<br/>date : ' + new Date(p[0]) + '<br/>lat : ' + p[1] + '<br/>long : ' + p[2]
-                                    },
-                                    'geometry': {
-                                        'type': 'Point',
-                                        'coordinates': [p[2], p[1]]
-                                    }
-                                };
-                                if (p.length === 5) {
-                                    point.properties.popupContent += "<br/>alt : " + p[3] + "<br/>value : " + p[4];
-                                }
-                                else if (p.length === 4) {
-                                    point.properties.popupContent += "<br/>value : " + p[3];
-                                }
-                                geoData.push(leafletSrc.geoJSON(point, {
-                                    pointToLayer: function (feature, latlng) {
-                                        return leafletSrc.circleMarker(latlng, feature.properties.style);
-                                    },
-                                    onEachFeature: function (feature, layer) {
-                                        layer.bindPopup(feature.properties.popupContent);
-                                    }
-                                }));
-                            });
-                        }
+        data.data.forEach((g, i) => {
+            const param = data.params[i];
+            if (g.positions) {
+                let point = {};
+                g.positions.forEach(p => {
+                    point = {
+                        type: 'Feature',
+                        properties: { style: {}, popupContent: `lat : ${p[0]}<br/>long : ${p[1]}` },
+                        geometry: { type: 'Point', coordinates: [p[1], p[0]] }
+                    };
+                    point.properties.style.fillColor = p[3] ? ColorLib.getColor(p[3]) : param.fillColor || ColorLib.getColor(i);
+                    point.properties.style.radius = p[2] || this._dotStyle.radius;
+                    point.properties.style.color = param.edgeColor || this._dotStyle.edgeColor;
+                    point.properties.style.weight = param.weight || this._dotStyle.weight;
+                    point.properties.style.opacity = param.edgeOpacity || this._dotStyle.edgeOpacity;
+                    point.properties.style.fillOpacity = param.fillOpacity || this._dotStyle.fillOpacity;
+                    if (p.length === 4) {
+                        point.properties.popupContent += `<br/>value 1 : ${p[2]}<br/>value 2 : ${p[3]}${!!param.legend}` ? "<br/>legend : " + param.legend : '';
                     }
-                    else {
+                    else if (p.length === 3) {
+                        point.properties.popupContent += `<br/>value : ${p[2]}${!!param.legend}` ? "<br/>legend : " + param.legend : '';
+                    }
+                    geoData.push(leafletSrc.geoJSON(point, {
+                        pointToLayer: function (feature, latlng) {
+                            return leafletSrc.circleMarker(latlng, feature.properties.style);
+                        },
+                        onEachFeature: function (feature, layer) {
+                            layer.bindPopup(feature.properties.popupContent);
+                        }
+                    }));
+                });
+            }
+            else {
+                let key = param.key.toLowerCase();
+                if (key === "path") {
+                    let style = {
+                        color: param.color || ColorLib.getColor(i),
+                        weight: this._pathStyle.weight,
+                        opacity: this._pathStyle.opacity,
+                    };
+                    let path = { type: 'LineString', coordinates: [] };
+                    let previous = null;
+                    let junctionPoints = [];
+                    g.v.forEach(p => {
+                        if (!!previous) {
+                            if (p[2] >= -180 && p[2] < -90 && previous[2] > 90 && previous[2] <= 180) {
+                                let diff1 = 180 + p[2];
+                                let diff2 = 180 - previous[2];
+                                let pProj = p[2] * -1 + diff1 + diff2;
+                                let a = (p[1] - previous[1]) / (pProj - previous[2]);
+                                let b = previous[1] - previous[2] * a;
+                                let borderY = a * (previous[2] + diff2) + b;
+                                path.coordinates.push([(previous[2] + diff2), borderY]);
+                                geoData.push(leafletSrc.geoJSON(path, {
+                                    style: style,
+                                    onEachFeature: function (feature, layer) {
+                                        layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
+                                    }
+                                }));
+                                path.coordinates = [];
+                                path.coordinates.push([(previous[2] + diff2) * -1, borderY]);
+                                junctionPoints.push([[(previous[2] + diff2), borderY], [(previous[2] + diff2) * -1, borderY]]);
+                            }
+                            else if (p[2] > 90 && p[2] <= 180 && previous[2] >= -180 && previous[2] < -90) {
+                                let diff1 = 180 - p[2];
+                                let diff2 = 180 + previous[2];
+                                let pProj = (previous[2] + diff1 + diff2) * -1;
+                                let a = (p[1] - previous[1]) / (p[2] - pProj);
+                                let b = p[1] - a * p[2];
+                                let borderY = a * (p[2] - diff1) + b;
+                                path.coordinates.push([(previous[2] - diff2), borderY]);
+                                geoData.push(leafletSrc.geoJSON(path, {
+                                    style: style,
+                                    onEachFeature: function (feature, layer) {
+                                        layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
+                                    }
+                                }));
+                                path.coordinates = [];
+                                path.coordinates.push([(previous[2] - diff2) * -1, borderY]);
+                                junctionPoints.push([[(previous[2] - diff2), borderY], [(previous[2] - diff2) * -1, borderY]]);
+                            }
+                        }
+                        previous = p;
+                        path.coordinates.push([p[2], p[1]]);
+                    });
+                    geoData.push(leafletSrc.geoJSON(path, {
+                        style: style,
+                        onEachFeature: function (feature, layer) {
+                            layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
+                        }
+                    }));
+                    let point = {};
+                    junctionPoints.forEach((j, i) => {
+                        j.forEach((p, n) => {
+                            point = {
+                                type: 'Feature',
+                                properties: {
+                                    style: {
+                                        color: '#645858',
+                                        radius: this._pathStyle.dotsWeight,
+                                        fillOpacity: this._pathStyle.opacity,
+                                        opacity: this._pathStyle.opacity
+                                    },
+                                    value: null,
+                                    popupContent: `Junction ${i}${n == 0 ? ' IN' : ' OUT'}`
+                                },
+                                geometry: { type: 'Point', coordinates: p }
+                            };
+                            geoData.push(leafletSrc.geoJSON(point, {
+                                pointToLayer: function (feature, latlng) {
+                                    return leafletSrc.circleMarker(latlng, feature.properties.style);
+                                },
+                                onEachFeature: function (feature, layer) {
+                                    layer.bindPopup(feature.properties.popupContent);
+                                }
+                            }));
+                        });
+                    });
+                    if (param.displayDots === 'true') {
                         let point = {};
                         g.v.forEach(p => {
                             point = {
-                                'type': 'Feature',
-                                'properties': {
-                                    'style': {
-                                        'color': !!d.params[i].color
-                                            ? d.params[i].color
-                                            : ColorLib.getColor(i),
+                                type: 'Feature',
+                                properties: {
+                                    style: {
+                                        color: param.color || ColorLib.getColor(i),
+                                        radius: this._pathStyle.dotsWeight,
+                                        fillOpacity: this._pathStyle.opacity,
+                                        opacity: this._pathStyle.opacity
                                     },
-                                    'value': p[p.length - 1],
-                                    'popupContent': 'timestamp : ' + p[0] + '<br/>date : ' + new Date(p[0]) + '<br/>lat : ' + p[1] + '<br/>long : ' + p[2]
+                                    value: p[p.length - 1],
+                                    popupContent: `timestamp : ${p[0]}<br/>date : ${new Date(p[0])}<br/>lat : ${p[1]}<br/>long : ${p[2]}`
                                 },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [p[2], p[1]]
-                                }
+                                geometry: { type: 'Point', coordinates: [p[2], p[1]] }
                             };
-                            if (d.params[i].render === 'dot') {
-                                point.properties.style.radius = !!d.params[i].radius
-                                    ? d.params[i].radius
-                                    : this._dotStyle.radius;
-                                point.properties.style.weight = !!d.params[i].weight
-                                    ? d.params[i].weight
-                                    : this._dotStyle.weight;
-                                point.properties.style.opacity = !!d.params[i].edgeOpacity
-                                    ? d.params[i].opacity
-                                    : this._dotStyle.edgeOpacity;
-                                point.properties.style.fillOpacity = !!d.params[i].fillOpacity
-                                    ? d.params[i].fillOpacity
-                                    : this._dotStyle.fillOpacity;
-                                point.properties.style.fillColor = !!d.params[i].fillColor
-                                    ? d.params[i].fillColor
-                                    : ColorLib.getColor(i);
-                            }
-                            else {
-                                point.properties.icon = this.icon(point.properties.style.color, d.params[i].marker);
-                            }
                             if (p.length === 5) {
-                                point.properties.popupContent += "<br/>alt : " + p[3] + "<br/>value : " + p[4];
+                                point.properties.popupContent += `<br/>alt : ${p[3]}<br/>value : ${p[4]}`;
                             }
                             else if (p.length === 4) {
-                                point.properties.popupContent += "<br/>value : " + p[3];
+                                point.properties.popupContent += `<br/>value : ${p[3]}`;
                             }
-                            if (d.params[i].render === 'dot') {
-                                geoData.push(leafletSrc.geoJSON(point, {
-                                    pointToLayer: function (feature, latlng) {
-                                        return leafletSrc.circleMarker(latlng, feature.properties.style);
-                                    },
-                                    onEachFeature: function (feature, layer) {
-                                        layer.bindPopup(feature.properties.popupContent);
-                                    }
-                                }));
-                            }
-                            else {
-                                geoData.push(leafletSrc.geoJSON(point, {
-                                    pointToLayer: function (feature, latlng) {
-                                        return leafletSrc.marker(latlng, { icon: feature.properties.icon });
-                                    },
-                                    onEachFeature: function (feature, layer) {
-                                        layer.bindPopup(feature.properties.popupContent);
-                                    }
-                                }));
-                            }
+                            geoData.push(leafletSrc.geoJSON(point, {
+                                pointToLayer: function (feature, latlng) {
+                                    return leafletSrc.circleMarker(latlng, feature.properties.style);
+                                },
+                                onEachFeature: function (feature, layer) {
+                                    layer.bindPopup(feature.properties.popupContent);
+                                }
+                            }));
                         });
                     }
                 }
-            });
+                else {
+                    let point = {};
+                    g.v.forEach(p => {
+                        point = {
+                            type: 'Feature',
+                            properties: {
+                                style: { color: param.color || ColorLib.getColor(i) },
+                                value: p[p.length - 1],
+                                popupContent: `timestamp : ${p[0]}<br/>date : ${new Date(p[0])}<br/>lat : ${p[1]}<br/>long : ${p[2]}`
+                            },
+                            geometry: { type: 'Point', coordinates: [p[2], p[1]] }
+                        };
+                        if (param.render === 'dot') {
+                            point.properties.style.radius = param.radius || this._dotStyle.radius;
+                            point.properties.style.weight = param.weight || this._dotStyle.weight;
+                            point.properties.style.opacity = param.edgeOpacity || this._dotStyle.edgeOpacity;
+                            point.properties.style.fillOpacity = param.fillOpacity || this._dotStyle.fillOpacity;
+                            point.properties.style.fillColor = param.fillColor || ColorLib.getColor(i);
+                        }
+                        else {
+                            point.properties.icon = this.icon(point.properties.style.color, param.marker);
+                        }
+                        if (p.length === 5) {
+                            point.properties.popupContent += `<br/>alt : ${p[3]}<br/>value : ${p[4]}`;
+                        }
+                        else if (p.length === 4) {
+                            point.properties.popupContent += `<br/>value : ${p[3]}`;
+                        }
+                        if (param.render === 'dot') {
+                            geoData.push(leafletSrc.geoJSON(point, {
+                                pointToLayer: function (feature, latlng) {
+                                    return leafletSrc.circleMarker(latlng, feature.properties.style);
+                                },
+                                onEachFeature: function (feature, layer) {
+                                    layer.bindPopup(feature.properties.popupContent);
+                                }
+                            }));
+                        }
+                        else {
+                            geoData.push(leafletSrc.geoJSON(point, {
+                                pointToLayer: function (feature, latlng) {
+                                    return leafletSrc.marker(latlng, { icon: feature.properties.icon });
+                                },
+                                onEachFeature: function (feature, layer) {
+                                    layer.bindPopup(feature.properties.popupContent);
+                                }
+                            }));
+                        }
+                    });
+                }
+            }
         });
         return geoData;
     }
@@ -16994,7 +16942,7 @@ class QuantumMap {
         return (h("div", null,
             h("h1", null, this.mapTitle),
             h("div", { class: "map-container" },
-                h("div", { id: "mymap", style: { "width": this.width, "height": this.height } })),
+                h("div", { id: this.uuid, style: { width: this.width, height: this.height } })),
             this.heatControls == true
                 ? h("quantum-heatmap-sliders", null)
                 : ""));
@@ -17003,7 +16951,7 @@ class QuantumMap {
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "data": {
-            "type": String,
+            "type": "Any",
             "attr": "data"
         },
         "dotsLimit": {
@@ -17022,7 +16970,7 @@ class QuantumMap {
             "attr": "heat-controls"
         },
         "heatData": {
-            "type": String,
+            "type": "Any",
             "attr": "heat-data"
         },
         "heatOpacity": {
@@ -17064,13 +17012,13 @@ class QuantumMap {
     }; }
     static get listeners() { return [{
             "name": "heatRadiusDidChange",
-            "method": "radiuschange"
+            "method": "heatRadiusDidChange"
         }, {
             "name": "heatBlurDidChange",
-            "method": "blurChange"
+            "method": "heatBlurDidChange"
         }, {
             "name": "heatOpacityDidChange",
-            "method": "opacityChange"
+            "method": "heatOpacityDidChange"
         }]; }
     static get style() { return "/* required styles */\n\n.leaflet-pane,\n.leaflet-tile,\n.leaflet-marker-icon,\n.leaflet-marker-shadow,\n.leaflet-tile-container,\n.leaflet-pane > svg,\n.leaflet-pane > canvas,\n.leaflet-zoom-box,\n.leaflet-image-layer,\n.leaflet-layer {\n	position: absolute;\n	left: 0;\n	top: 0;\n	}\n.leaflet-container {\n	overflow: hidden;\n	}\n.leaflet-tile,\n.leaflet-marker-icon,\n.leaflet-marker-shadow {\n	-webkit-user-select: none;\n	   -moz-user-select: none;\n	        -ms-user-select: none;\n	        user-select: none;\n	  -webkit-user-drag: none;\n	}\n/* Safari renders non-retina tile on retina better with this, but Chrome is worse */\n.leaflet-safari .leaflet-tile {\n	image-rendering: -webkit-optimize-contrast;\n	}\n/* hack that prevents hw layers \"stretching\" when loading new tiles */\n.leaflet-safari .leaflet-tile-container {\n	width: 1600px;\n	height: 1600px;\n	-webkit-transform-origin: 0 0;\n	}\n.leaflet-marker-icon,\n.leaflet-marker-shadow {\n	display: block;\n	}\n/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */\n/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */\n.leaflet-container .leaflet-overlay-pane svg,\n.leaflet-container .leaflet-marker-pane img,\n.leaflet-container .leaflet-shadow-pane img,\n.leaflet-container .leaflet-tile-pane img,\n.leaflet-container img.leaflet-image-layer {\n	max-width: none !important;\n	max-height: none !important;\n	}\n\n.leaflet-container.leaflet-touch-zoom {\n	-ms-touch-action: pan-x pan-y;\n	touch-action: pan-x pan-y;\n	}\n.leaflet-container.leaflet-touch-drag {\n	-ms-touch-action: pinch-zoom;\n	/* Fallback for FF which doesn't support pinch-zoom */\n	touch-action: none;\n	touch-action: pinch-zoom;\n}\n.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {\n	-ms-touch-action: none;\n	touch-action: none;\n}\n.leaflet-container {\n	-webkit-tap-highlight-color: transparent;\n}\n.leaflet-container a {\n	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);\n}\n.leaflet-tile {\n	-webkit-filter: inherit;\n	filter: inherit;\n	visibility: hidden;\n	}\n.leaflet-tile-loaded {\n	visibility: inherit;\n	}\n.leaflet-zoom-box {\n	width: 0;\n	height: 0;\n	-moz-box-sizing: border-box;\n	     -webkit-box-sizing: border-box;\n	     box-sizing: border-box;\n	z-index: 800;\n	}\n/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */\n.leaflet-overlay-pane svg {\n	-moz-user-select: none;\n	}\n\n.leaflet-pane         { z-index: 400; }\n\n.leaflet-tile-pane    { z-index: 200; }\n.leaflet-overlay-pane { z-index: 400; }\n.leaflet-shadow-pane  { z-index: 500; }\n.leaflet-marker-pane  { z-index: 600; }\n.leaflet-tooltip-pane   { z-index: 650; }\n.leaflet-popup-pane   { z-index: 700; }\n\n.leaflet-map-pane canvas { z-index: 100; }\n.leaflet-map-pane svg    { z-index: 200; }\n\n.leaflet-vml-shape {\n	width: 1px;\n	height: 1px;\n	}\n.lvml {\n	behavior: url(#default#VML);\n	display: inline-block;\n	position: absolute;\n	}\n\n\n/* control positioning */\n\n.leaflet-control {\n	position: relative;\n	z-index: 800;\n	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */\n	pointer-events: auto;\n	}\n.leaflet-top,\n.leaflet-bottom {\n	position: absolute;\n	z-index: 1000;\n	pointer-events: none;\n	}\n.leaflet-top {\n	top: 0;\n	}\n.leaflet-right {\n	right: 0;\n	}\n.leaflet-bottom {\n	bottom: 0;\n	}\n.leaflet-left {\n	left: 0;\n	}\n.leaflet-control {\n	float: left;\n	clear: both;\n	}\n.leaflet-right .leaflet-control {\n	float: right;\n	}\n.leaflet-top .leaflet-control {\n	margin-top: 10px;\n	}\n.leaflet-bottom .leaflet-control {\n	margin-bottom: 10px;\n	}\n.leaflet-left .leaflet-control {\n	margin-left: 10px;\n	}\n.leaflet-right .leaflet-control {\n	margin-right: 10px;\n	}\n\n\n/* zoom and fade animations */\n\n.leaflet-fade-anim .leaflet-tile {\n	will-change: opacity;\n	}\n.leaflet-fade-anim .leaflet-popup {\n	opacity: 0;\n	-webkit-transition: opacity 0.2s linear;\n	   -moz-transition: opacity 0.2s linear;\n	     -o-transition: opacity 0.2s linear;\n	        transition: opacity 0.2s linear;\n	}\n.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {\n	opacity: 1;\n	}\n.leaflet-zoom-animated {\n	-webkit-transform-origin: 0 0;\n	    -ms-transform-origin: 0 0;\n	        transform-origin: 0 0;\n	}\n.leaflet-zoom-anim .leaflet-zoom-animated {\n	will-change: transform;\n	}\n.leaflet-zoom-anim .leaflet-zoom-animated {\n	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);\n	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);\n	     -o-transition:      -o-transform 0.25s cubic-bezier(0,0,0.25,1);\n	        transition:         -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);\n	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);\n	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1), -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);\n	}\n.leaflet-zoom-anim .leaflet-tile,\n.leaflet-pan-anim .leaflet-tile {\n	-webkit-transition: none;\n	   -moz-transition: none;\n	     -o-transition: none;\n	        transition: none;\n	}\n\n.leaflet-zoom-anim .leaflet-zoom-hide {\n	visibility: hidden;\n	}\n\n\n/* cursors */\n\n.leaflet-interactive {\n	cursor: pointer;\n	}\n.leaflet-grab {\n	cursor: -webkit-grab;\n	cursor:    -moz-grab;\n	}\n.leaflet-crosshair,\n.leaflet-crosshair .leaflet-interactive {\n	cursor: crosshair;\n	}\n.leaflet-popup-pane,\n.leaflet-control {\n	cursor: auto;\n	}\n.leaflet-dragging .leaflet-grab,\n.leaflet-dragging .leaflet-grab .leaflet-interactive,\n.leaflet-dragging .leaflet-marker-draggable {\n	cursor: move;\n	cursor: -webkit-grabbing;\n	cursor:    -moz-grabbing;\n	}\n\n/* marker & overlays interactivity */\n.leaflet-marker-icon,\n.leaflet-marker-shadow,\n.leaflet-image-layer,\n.leaflet-pane > svg path,\n.leaflet-tile-container {\n	pointer-events: none;\n	}\n\n.leaflet-marker-icon.leaflet-interactive,\n.leaflet-image-layer.leaflet-interactive,\n.leaflet-pane > svg path.leaflet-interactive {\n	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */\n	pointer-events: auto;\n	}\n\n/* visual tweaks */\n\n.leaflet-container {\n	background: #ddd;\n	outline: 0;\n	}\n.leaflet-container a {\n	color: #0078A8;\n	}\n.leaflet-container a.leaflet-active {\n	outline: 2px solid orange;\n	}\n.leaflet-zoom-box {\n	border: 2px dotted #38f;\n	background: rgba(255,255,255,0.5);\n	}\n\n\n/* general typography */\n.leaflet-container {\n	font: 12px/1.5 \"Helvetica Neue\", Arial, Helvetica, sans-serif;\n	}\n\n\n/* general toolbar styles */\n\n.leaflet-bar {\n	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.65);\n	box-shadow: 0 1px 5px rgba(0,0,0,0.65);\n	border-radius: 4px;\n	}\n.leaflet-bar a,\n.leaflet-bar a:hover {\n	background-color: #fff;\n	border-bottom: 1px solid #ccc;\n	width: 26px;\n	height: 26px;\n	line-height: 26px;\n	display: block;\n	text-align: center;\n	text-decoration: none;\n	color: black;\n	}\n.leaflet-bar a,\n.leaflet-control-layers-toggle {\n	background-position: 50% 50%;\n	background-repeat: no-repeat;\n	display: block;\n	}\n.leaflet-bar a:hover {\n	background-color: #f4f4f4;\n	}\n.leaflet-bar a:first-child {\n	border-top-left-radius: 4px;\n	border-top-right-radius: 4px;\n	}\n.leaflet-bar a:last-child {\n	border-bottom-left-radius: 4px;\n	border-bottom-right-radius: 4px;\n	border-bottom: none;\n	}\n.leaflet-bar a.leaflet-disabled {\n	cursor: default;\n	background-color: #f4f4f4;\n	color: #bbb;\n	}\n\n.leaflet-touch .leaflet-bar a {\n	width: 30px;\n	height: 30px;\n	line-height: 30px;\n	}\n.leaflet-touch .leaflet-bar a:first-child {\n	border-top-left-radius: 2px;\n	border-top-right-radius: 2px;\n	}\n.leaflet-touch .leaflet-bar a:last-child {\n	border-bottom-left-radius: 2px;\n	border-bottom-right-radius: 2px;\n	}\n\n/* zoom control */\n\n.leaflet-control-zoom-in,\n.leaflet-control-zoom-out {\n	font: bold 18px 'Lucida Console', Monaco, monospace;\n	text-indent: 1px;\n	}\n\n.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {\n	font-size: 22px;\n	}\n\n\n/* layers control */\n\n.leaflet-control-layers {\n	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.4);\n	box-shadow: 0 1px 5px rgba(0,0,0,0.4);\n	background: #fff;\n	border-radius: 5px;\n	}\n.leaflet-control-layers-toggle {\n	background-image: url(images/layers.png);\n	width: 36px;\n	height: 36px;\n	}\n.leaflet-retina .leaflet-control-layers-toggle {\n	background-image: url(images/layers-2x.png);\n	background-size: 26px 26px;\n	}\n.leaflet-touch .leaflet-control-layers-toggle {\n	width: 44px;\n	height: 44px;\n	}\n.leaflet-control-layers .leaflet-control-layers-list,\n.leaflet-control-layers-expanded .leaflet-control-layers-toggle {\n	display: none;\n	}\n.leaflet-control-layers-expanded .leaflet-control-layers-list {\n	display: block;\n	position: relative;\n	}\n.leaflet-control-layers-expanded {\n	padding: 6px 10px 6px 6px;\n	color: #333;\n	background: #fff;\n	}\n.leaflet-control-layers-scrollbar {\n	overflow-y: scroll;\n	overflow-x: hidden;\n	padding-right: 5px;\n	}\n.leaflet-control-layers-selector {\n	margin-top: 2px;\n	position: relative;\n	top: 1px;\n	}\n.leaflet-control-layers label {\n	display: block;\n	}\n.leaflet-control-layers-separator {\n	height: 0;\n	border-top: 1px solid #ddd;\n	margin: 5px -10px 5px -6px;\n	}\n\n/* Default icon URLs */\n.leaflet-default-icon-path {\n	background-image: url(images/marker-icon.png);\n	}\n\n\n/* attribution and scale controls */\n\n.leaflet-container .leaflet-control-attribution {\n	background: #fff;\n	background: rgba(255, 255, 255, 0.7);\n	margin: 0;\n	}\n.leaflet-control-attribution,\n.leaflet-control-scale-line {\n	padding: 0 5px;\n	color: #333;\n	}\n.leaflet-control-attribution a {\n	text-decoration: none;\n	}\n.leaflet-control-attribution a:hover {\n	text-decoration: underline;\n	}\n.leaflet-container .leaflet-control-attribution,\n.leaflet-container .leaflet-control-scale {\n	font-size: 11px;\n	}\n.leaflet-left .leaflet-control-scale {\n	margin-left: 5px;\n	}\n.leaflet-bottom .leaflet-control-scale {\n	margin-bottom: 5px;\n	}\n.leaflet-control-scale-line {\n	border: 2px solid #777;\n	border-top: none;\n	line-height: 1.1;\n	padding: 2px 5px 1px;\n	font-size: 11px;\n	white-space: nowrap;\n	overflow: hidden;\n	-moz-box-sizing: border-box;\n	     -webkit-box-sizing: border-box;\n	     box-sizing: border-box;\n\n	background: #fff;\n	background: rgba(255, 255, 255, 0.5);\n	}\n.leaflet-control-scale-line:not(:first-child) {\n	border-top: 2px solid #777;\n	border-bottom: none;\n	margin-top: -2px;\n	}\n.leaflet-control-scale-line:not(:first-child):not(:last-child) {\n	border-bottom: 2px solid #777;\n	}\n\n.leaflet-touch .leaflet-control-attribution,\n.leaflet-touch .leaflet-control-layers,\n.leaflet-touch .leaflet-bar {\n	-webkit-box-shadow: none;\n	box-shadow: none;\n	}\n.leaflet-touch .leaflet-control-layers,\n.leaflet-touch .leaflet-bar {\n	border: 2px solid rgba(0,0,0,0.2);\n	background-clip: padding-box;\n	}\n\n\n/* popup */\n\n.leaflet-popup {\n	position: absolute;\n	text-align: center;\n	margin-bottom: 20px;\n	}\n.leaflet-popup-content-wrapper {\n	padding: 1px;\n	text-align: left;\n	border-radius: 12px;\n	}\n.leaflet-popup-content {\n	margin: 13px 19px;\n	line-height: 1.4;\n	}\n.leaflet-popup-content p {\n	margin: 18px 0;\n	}\n.leaflet-popup-tip-container {\n	width: 40px;\n	height: 20px;\n	position: absolute;\n	left: 50%;\n	margin-left: -20px;\n	overflow: hidden;\n	pointer-events: none;\n	}\n.leaflet-popup-tip {\n	width: 17px;\n	height: 17px;\n	padding: 1px;\n\n	margin: -10px auto 0;\n\n	-webkit-transform: rotate(45deg);\n	   -moz-transform: rotate(45deg);\n	    -ms-transform: rotate(45deg);\n	     -o-transform: rotate(45deg);\n	        transform: rotate(45deg);\n	}\n.leaflet-popup-content-wrapper,\n.leaflet-popup-tip {\n	background: white;\n	color: #333;\n	-webkit-box-shadow: 0 3px 14px rgba(0,0,0,0.4);\n	box-shadow: 0 3px 14px rgba(0,0,0,0.4);\n	}\n.leaflet-container a.leaflet-popup-close-button {\n	position: absolute;\n	top: 0;\n	right: 0;\n	padding: 4px 4px 0 0;\n	border: none;\n	text-align: center;\n	width: 18px;\n	height: 14px;\n	font: 16px/14px Tahoma, Verdana, sans-serif;\n	color: #c3c3c3;\n	text-decoration: none;\n	font-weight: bold;\n	background: transparent;\n	}\n.leaflet-container a.leaflet-popup-close-button:hover {\n	color: #999;\n	}\n.leaflet-popup-scrolled {\n	overflow: auto;\n	border-bottom: 1px solid #ddd;\n	border-top: 1px solid #ddd;\n	}\n\n.leaflet-oldie .leaflet-popup-content-wrapper {\n	zoom: 1;\n	}\n.leaflet-oldie .leaflet-popup-tip {\n	width: 24px;\n	margin: 0 auto;\n\n	-ms-filter: \"progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)\";\n	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);\n	}\n.leaflet-oldie .leaflet-popup-tip-container {\n	margin-top: -1px;\n	}\n\n.leaflet-oldie .leaflet-control-zoom,\n.leaflet-oldie .leaflet-control-layers,\n.leaflet-oldie .leaflet-popup-content-wrapper,\n.leaflet-oldie .leaflet-popup-tip {\n	border: 1px solid #999;\n	}\n\n\n/* div icon */\n\n.leaflet-div-icon {\n	background: #fff;\n	border: 1px solid #666;\n	}\n\n\n/* Tooltip */\n/* Base styles for the element that has a tooltip */\n.leaflet-tooltip {\n	position: absolute;\n	padding: 6px;\n	background-color: #fff;\n	border: 1px solid #fff;\n	border-radius: 3px;\n	color: #222;\n	white-space: nowrap;\n	-webkit-user-select: none;\n	-moz-user-select: none;\n	-ms-user-select: none;\n	user-select: none;\n	pointer-events: none;\n	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.4);\n	box-shadow: 0 1px 3px rgba(0,0,0,0.4);\n	}\n.leaflet-tooltip.leaflet-clickable {\n	cursor: pointer;\n	pointer-events: auto;\n	}\n.leaflet-tooltip-top:before,\n.leaflet-tooltip-bottom:before,\n.leaflet-tooltip-left:before,\n.leaflet-tooltip-right:before {\n	position: absolute;\n	pointer-events: none;\n	border: 6px solid transparent;\n	background: transparent;\n	content: \"\";\n	}\n\n/* Directions */\n\n.leaflet-tooltip-bottom {\n	margin-top: 6px;\n}\n.leaflet-tooltip-top {\n	margin-top: -6px;\n}\n.leaflet-tooltip-bottom:before,\n.leaflet-tooltip-top:before {\n	left: 50%;\n	margin-left: -6px;\n	}\n.leaflet-tooltip-top:before {\n	bottom: 0;\n	margin-bottom: -12px;\n	border-top-color: #fff;\n	}\n.leaflet-tooltip-bottom:before {\n	top: 0;\n	margin-top: -12px;\n	margin-left: -6px;\n	border-bottom-color: #fff;\n	}\n.leaflet-tooltip-left {\n	margin-left: -6px;\n}\n.leaflet-tooltip-right {\n	margin-left: 6px;\n}\n.leaflet-tooltip-left:before,\n.leaflet-tooltip-right:before {\n	top: 50%;\n	margin-top: -6px;\n	}\n.leaflet-tooltip-left:before {\n	right: 0;\n	margin-right: -12px;\n	border-left-color: #fff;\n	}\n.leaflet-tooltip-right:before {\n	left: 0;\n	margin-left: -12px;\n	border-right-color: #fff;\n	}\n\n\n.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {\n	-webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;\n	-moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;\n	-o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;\n	-webkit-transition: opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;\n	transition: opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;\n	transition: transform 0.3s ease-out, opacity 0.3s ease-in;\n	transition: transform 0.3s ease-out, opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;\n}\n\n.leaflet-cluster-spider-leg {\n	/* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */\n	-webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out, -webkit-stroke-opacity 0.3s ease-in;\n	-moz-transition: -moz-stroke-dashoffset 0.3s ease-out, -moz-stroke-opacity 0.3s ease-in;\n	-o-transition: -o-stroke-dashoffset 0.3s ease-out, -o-stroke-opacity 0.3s ease-in;\n	-webkit-transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;\n	transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;\n}\n\n\n.marker-cluster-small {\n	background-color: rgba(181, 226, 140, 0.6);\n	}\n.marker-cluster-small div {\n	background-color: rgba(110, 204, 57, 0.6);\n	}\n\n.marker-cluster-medium {\n	background-color: rgba(241, 211, 87, 0.6);\n	}\n.marker-cluster-medium div {\n	background-color: rgba(240, 194, 12, 0.6);\n	}\n\n.marker-cluster-large {\n	background-color: rgba(253, 156, 115, 0.6);\n	}\n.marker-cluster-large div {\n	background-color: rgba(241, 128, 23, 0.6);\n	}\n\n	/* IE 6-8 fallback colors */\n.leaflet-oldie .marker-cluster-small {\n	background-color: rgb(181, 226, 140);\n	}\n.leaflet-oldie .marker-cluster-small div {\n	background-color: rgb(110, 204, 57);\n	}\n\n.leaflet-oldie .marker-cluster-medium {\n	background-color: rgb(241, 211, 87);\n	}\n.leaflet-oldie .marker-cluster-medium div {\n	background-color: rgb(240, 194, 12);\n	}\n\n.leaflet-oldie .marker-cluster-large {\n	background-color: rgb(253, 156, 115);\n	}\n.leaflet-oldie .marker-cluster-large div {\n	background-color: rgb(241, 128, 23);\n}\n\n.marker-cluster {\n	background-clip: padding-box;\n	border-radius: 20px;\n	}\n.marker-cluster div {\n	width: 30px;\n	height: 30px;\n	margin-left: 5px;\n	margin-top: 5px;\n\n	text-align: center;\n	border-radius: 15px;\n	font: 12px \"Helvetica Neue\", Arial, Helvetica, sans-serif;\n	}\n.marker-cluster span {\n	line-height: 30px;\n	}\n\nquantum-map .map-container > div {\n  height: 600px;\n  width: 100%; }"; }
 }

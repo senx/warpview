@@ -1,6 +1,6 @@
 # quantum-map
 
-Quantum-map is a [StencilJs](https://stenciljs.com/) web-composant based on [Leaflet](https://leafletjs.com/).
+Quantum-map is a [StencilJs](https://stenciljs.com/) web-component based on [Leaflet](https://leafletjs.com/).
 Map pins are from [MapBox](https://www.mapbox.com/maki-icons/) and heatmap plugin module is [Leaflet.heat](https://github.com/Vivien-/types-leaflet-heat).
 
 ## Attributs :
@@ -12,7 +12,7 @@ Map pins are from [MapBox](https://www.mapbox.com/maki-icons/) and heatmap plugi
 - `start-long` *number* (optional) : starting longitude, default *0*
 - `start-zoom` *number* (optional) : starting zoom, default *3*
 - `dots-limit` *number* (optional) : limit at which points are clustered for performance reasons, default *1000*
-- `data` *string* (optional) : data to display, see syntax below
+- `data` *object* (optional) : data to display, see syntax below
 
 - `heat-radius` *number* (optional) : radius of heat-point, default *25*
 - `heat-blur` *number* (optional) : amount of blur, default *15*
@@ -23,13 +23,13 @@ Map pins are from [MapBox](https://www.mapbox.com/maki-icons/) and heatmap plugi
 ## Data syntax :
 
 Data is map composed of two properties :
-- `gts`: a list of GTS or positions to plot
+- `data`: a list of GTS or positions to plot
 - `params`: a list of visualisation parameters for each GTS or positions to plot
 
-Each item in `gts` array corespond to an item in `params` array.
+Each item in `data` array matches to an item in `params` array.
 
 
-### `gts` :
+### `data` :
 
 - GTS have standard GTS JSON syntax as following : `{"c":"","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745]]}`.\
 Each datapoint of a GTS need to have at least a date, latitude and longitude.

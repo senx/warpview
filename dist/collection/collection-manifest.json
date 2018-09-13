@@ -495,7 +495,6 @@
       "props": [
         {
           "name": "data",
-          "type": "String",
           "attr": "data"
         },
         {
@@ -515,7 +514,6 @@
         },
         {
           "name": "heatData",
-          "type": "String",
           "attr": "heat-data"
         },
         {
@@ -567,19 +565,19 @@
       "listeners": [
         {
           "event": "heatBlurDidChange",
-          "method": "blurChange",
+          "method": "heatBlurDidChange",
           "passive": false,
           "capture": false
         },
         {
           "event": "heatOpacityDidChange",
-          "method": "opacityChange",
+          "method": "heatOpacityDidChange",
           "passive": false,
           "capture": false
         },
         {
           "event": "heatRadiusDidChange",
-          "method": "radiuschange",
+          "method": "heatRadiusDidChange",
           "passive": false,
           "capture": false
         }
@@ -1061,10 +1059,6 @@
           "attr": "checked"
         },
         {
-          "name": "options",
-          "attr": "options"
-        },
-        {
           "name": "text1",
           "type": "String",
           "attr": "text-1"
@@ -1082,7 +1076,7 @@
       ],
       "events": [
         {
-          "event": "timeSwitched"
+          "event": "stateChange"
         }
       ],
       "shadow": true
