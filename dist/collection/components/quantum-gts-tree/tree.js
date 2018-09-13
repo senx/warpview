@@ -57,13 +57,6 @@ export class QuantumTreeView {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selected",
-            "method": "selected",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-tree-view:**/"; }
 }
 QuantumTreeView.LOG = new Logger(QuantumTreeView);

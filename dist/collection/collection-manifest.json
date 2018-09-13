@@ -462,11 +462,6 @@
           "type": "String",
           "attr": "theme"
         }
-      ],
-      "events": [
-        {
-          "event": "selectedGTS"
-        }
       ]
     },
     {
@@ -1199,11 +1194,6 @@
           "name": "theme",
           "type": "String",
           "attr": "theme"
-        }
-      ],
-      "events": [
-        {
-          "event": "selected"
         }
       ]
     }

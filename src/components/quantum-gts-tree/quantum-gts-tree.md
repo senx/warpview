@@ -33,6 +33,8 @@
 
 ### quantumSelectedGTS
 
+Emit selected GTS.
+
 ```json
 {
   "selected": true,

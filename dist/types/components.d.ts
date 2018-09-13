@@ -352,7 +352,6 @@ declare global {
   namespace JSXElements {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
-      'onSelectedGTS'?: (event: CustomEvent) => void;
       'theme'?: string;
     }
   }
@@ -390,7 +389,6 @@ declare global {
     export interface QuantumTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsList'?: any;
-      'onSelected'?: (event: CustomEvent) => void;
       'theme'?: string;
     }
   }

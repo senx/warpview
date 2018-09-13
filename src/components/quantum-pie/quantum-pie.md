@@ -1,12 +1,10 @@
 # Pie, doughnut an gauge chart
 
-
 ## CSS vars
 
 - --quantum-chart-width : Width
 - --quantum-chart-height : Height
 - --quantum-font-color : Title font color
-
 
 ## Attributes
 
@@ -24,12 +22,12 @@
 
 ## Data format
 
-
 ```json
 {
   "data": [["key", 54], ["key 2", 45]]
 }
 ```
+
 - **data**: data to be displayed as tuples.
 
 ## Option format

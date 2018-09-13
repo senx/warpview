@@ -22,6 +22,7 @@ export class QuantumTile {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() url: string = '';
+
   @Element() wsElement: HTMLElement;
 
   private warpscript: string = '';

@@ -32,13 +32,6 @@ export class QuantumGtsTree {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selectedGTS",
-            "method": "selectedGTS",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-gts-tree:**/"; }
 }
 export class Counter {
@@ -54,13 +47,6 @@ export class Counter {
             "attr": "theme"
         }
     }; }
-    static get events() { return [{
-            "name": "selectedGTS",
-            "method": "selectedGTS",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true
-        }]; }
     static get style() { return "/**style-placeholder:quantum-gts-tree:**/"; }
 }
 Counter.item = -1;

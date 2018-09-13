@@ -49,3 +49,16 @@ Displays a bubble chart
 ```
 
 - **gridLineColor**: Grid line color and axis labels color. Default: #8e8e8e
+
+## Events
+
+### pointHover
+
+Emit mouse position
+
+```json
+{
+  "x": 123,
+  "y": 456
+}
+```
