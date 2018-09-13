@@ -85,6 +85,7 @@
         {
           "name": "width",
           "type": "String",
+          "mutable": true,
           "attr": "width"
         }
       ],

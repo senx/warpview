@@ -34,7 +34,7 @@ Displays a bubble chart
     "c": "class.name", 
     "l": { "label1": "label value"},  
     "a": { "attribute1": "attribute value"},
-    "v" : [[0,0,0,4], [0,2]]
+    "v" : [[0,0,0,true], [0,"a"]]
    }]
 }
 ```

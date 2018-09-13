@@ -186,38 +186,44 @@ class QuantumAnnotation {
      * @returns {any[]}
      */
     parseData(gts) {
+        let dataList;
+        if (gts.hasOwnProperty('data')) {
+            dataList = gts.data;
+        }
+        else {
+            dataList = gts;
+        }
         let datasets = [];
         let pos = 0;
         if (!gts) {
             return;
         }
-        else
-            gts.forEach(d => {
-                d.gts = GTSLib.flatDeep(d.gts);
-                d.gts.forEach((g, i) => {
-                    if (GTSLib.isGtsToAnnotate(g)) {
-                        let data = [];
-                        let color = ColorLib.getColor(i);
-                        const myImage = ChartLib.buildImage(1, 30, color);
-                        g.v.forEach(d => {
-                            data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
-                        });
-                        let label = GTSLib.serializeGtsMetadata(g);
-                        this._mapIndex[label] = pos;
-                        datasets.push({
-                            label: label,
-                            data: data,
-                            pointRadius: 5,
-                            pointHoverRadius: 5,
-                            pointHitRadius: 5,
-                            pointStyle: myImage,
-                            borderColor: color,
-                            backgroundColor: ColorLib.transparentize(color, 0.5)
-                        });
-                        pos++;
-                    }
-                });
+        else {
+            dataList = GTSLib.flatDeep(dataList);
+            dataList.forEach((g, i) => {
+                if (GTSLib.isGtsToAnnotate(g)) {
+                    let data = [];
+                    let color = ColorLib.getColor(i);
+                    const myImage = ChartLib.buildImage(1, 30, color);
+                    g.v.forEach(d => {
+                        data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
+                    });
+                    let label = GTSLib.serializeGtsMetadata(g);
+                    this._mapIndex[label] = pos;
+                    datasets.push({
+                        label: label,
+                        data: data,
+                        pointRadius: 5,
+                        pointHoverRadius: 5,
+                        pointHitRadius: 5,
+                        pointStyle: myImage,
+                        borderColor: color,
+                        backgroundColor: ColorLib.transparentize(color, 0.5)
+                    });
+                    pos++;
+                }
             });
+        }
         return datasets;
     }
     componentDidLoad() {
@@ -288,7 +294,8 @@ class QuantumAnnotation {
         },
         "width": {
             "type": String,
-            "attr": "width"
+            "attr": "width",
+            "mutable": true
         }
     }; }
     static get events() { return [{

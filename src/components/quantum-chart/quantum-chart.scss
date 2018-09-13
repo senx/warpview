@@ -17,7 +17,7 @@ quantum-chart {
     }
   }
 
-  div#myChart {
+  div.chart {
     width: var(--quantum-chart-width, 100%);
     height: calc(var(--quantum-chart-height, 100%) - 30px);
 

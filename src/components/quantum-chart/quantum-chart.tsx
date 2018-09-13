@@ -4,6 +4,7 @@ import Dygraph from 'dygraphs';
 import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
+import {Param} from "../../model/param";
 
 /**
  * options :
@@ -45,6 +46,7 @@ export class QuantumChart {
     gridLineColor: '#8e8e8e'
   };
   private _data: any;
+  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('hiddenData')
   private onHideData(newValue: string, oldValue: string) {
@@ -190,7 +192,7 @@ export class QuantumChart {
     }
 
     this.LOG.debug(['drawChart'], [this._data]);
-    const chart = this.el.querySelector('#myChart') as HTMLElement;
+    const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
     if ( this._data.datasets.length > 0) {
       const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
       this._chart = new Dygraph(
@@ -239,7 +241,7 @@ export class QuantumChart {
   render() {
     return <div class={this.theme}>
       <h1>{this.chartTitle}</h1>
-      <div id="myChart" class={this.theme}/>
+      <div id={this.uuid} class={'chart ' + this.theme}/>
     </div>;
   }
 }

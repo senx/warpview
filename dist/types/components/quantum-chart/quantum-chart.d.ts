@@ -28,6 +28,7 @@ export declare class QuantumChart {
     private _chart;
     private _options;
     private _data;
+    private uuid;
     private onHideData;
     private onData;
     private onTheme;
