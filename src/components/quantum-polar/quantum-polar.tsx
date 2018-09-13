@@ -61,6 +61,7 @@ export class QuantumPolar {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor;
+    this.LOG.debug(['color'], color);
     if (!this.data) return;
     let dataList: any[];
     if (this.data instanceof DataModel) {
@@ -69,8 +70,8 @@ export class QuantumPolar {
       dataList = this.data;
     }
     let gts = this.parseData(dataList);
-    new Chart.PolarArea(ctx, {
-      type: 'polar',
+    new Chart(ctx, {
+      type: 'polarArea',
       data: {
         datasets: [{
           data: gts.data,
@@ -94,27 +95,19 @@ export class QuantumPolar {
         },
         legend: {display: this.showLegend},
         responsive: this.responsive,
-        xAxes: [{
+        scale: {
           gridLines: {
             color: color,
-            zeroLineColor: color,
+            zeroLineColor: color
+          },
+          pointLabels: {
+            fontColor: color,
           },
           ticks: {
-            fontColor: color
+            fontColor: color,
+            backdropColor: 'transparent'
           }
-        }],
-
-        yAxes: [
-          {
-            gridLines: {
-              color: color,
-              zeroLineColor: color,
-            },
-            ticks: {
-              fontColor: color
-            }
-          }
-        ],
+        },
         tooltips: {
           mode: 'index',
           intersect: true,

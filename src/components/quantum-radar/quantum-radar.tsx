@@ -115,27 +115,19 @@ export class QuantumRadar {
         },
         legend: {display: this.showLegend},
         responsive: this.responsive,
-        xAxes: [{
+        scale: {
           gridLines: {
             color: color,
-            zeroLineColor: color,
+            zeroLineColor: color
+          },
+          pointLabels: {
+            fontColor: color,
           },
           ticks: {
-            fontColor: color
+            fontColor: color,
+            backdropColor: 'transparent'
           }
-        }],
-
-        yAxes: [
-          {
-            gridLines: {
-              color: color,
-              zeroLineColor: color,
-            },
-            ticks: {
-              fontColor: color
-            }
-          }
-        ],
+        },
         tooltips: {
           mode: 'index',
           intersect: true,

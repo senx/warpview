@@ -39,7 +39,7 @@ export class QuantumTreeView {
    */
   render() {
     return (
-      <div class={this.theme}>
+      <div class="list">
         {this.gtsList && this.gtsList.content ? (
         <ul>
           {this.gtsList.content.map((node, index) => (

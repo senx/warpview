@@ -6,6 +6,9 @@
 - --gts-labelname-font-color : Font color for label name
 - --gts-separator-font-color : Font color for label separator
 - --gts-labelvalue-font-color : Font color for label value
+- --gts-stack-font-color : Font color for the stack level label
+- --gts-tree-expanded-icon : Icon for the expanded state of the stack level
+- --gts-tree-collapsed-icon : Icon for the collapsed state of the stack level (not implemented)
 
 ## Attributes
 
