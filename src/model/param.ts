@@ -9,10 +9,5 @@ export class Param {
   interpolate?: string;
   type?: string;
   showRangeSelector?: boolean;
-  time?: {
-    timeMode?: string;
-    displayFormats?: string;
-    stepSize?: number;
-    unit?: string;
-  };
+  timeMode?: string;
 }

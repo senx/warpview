@@ -105,6 +105,9 @@ export class QuantumPie {
         legend: {
           display: this.showLegend
         },
+        animation: {
+          duration: 0,
+        },
         responsive: this.responsive,
         tooltips: {
           mode: 'index',

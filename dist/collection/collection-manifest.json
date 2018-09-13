@@ -320,9 +320,6 @@
         },
         {
           "event": "pointHover"
-        },
-        {
-          "event": "receivedData"
         }
       ]
     },

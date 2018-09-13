@@ -46,7 +46,7 @@ Displays a line chart
 
 ```json
 {
-  "time": "timestamp",
+  "timeMode": "timestamp",
   "gridLineColor": "#001155",
   "showRangeSelector": false
 }
@@ -55,3 +55,29 @@ Displays a line chart
 - **time**: Scale either 'timestamp' or 'date', default is 'date' 
 - **gridLineColor**: Grid line color and axis labels color. Default: #8e8e8e
 - **showRangeSelector**: Show the range selector on the bottom of the chart, default is true
+
+## Events
+
+### pointHover
+
+Emit mouse position
+
+```json
+{
+  "x": 123,
+  "y": 456
+}
+```
+
+### boundsDidChange
+
+Emit the selected time range  
+
+```json
+{
+  "bounds": {
+    "min": 1234567898,
+    "max": 1234569000
+  }
+}     
+```

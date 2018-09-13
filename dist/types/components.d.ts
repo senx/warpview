@@ -226,7 +226,6 @@ declare global {
       'hiddenData'?: string[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
-      'onReceivedData'?: (event: CustomEvent) => void;
       'options'?: Param;
       'responsive'?: boolean;
       'standalone'?: boolean;

@@ -44,11 +44,13 @@ Displays a bubble chart
 
 ```json
 {
-  "gridLineColor": "#ffee77"
+  "gridLineColor": "#ffee77",
+  "timeMode" : "date"
 }
 ```
 
 - **gridLineColor**: Grid line color and axis labels color. Default: #8e8e8e
+- **timeMode**: Scale either 'timestamp' or 'date', default is 'date' 
 
 ## Events
 

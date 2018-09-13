@@ -81,22 +81,16 @@
 
       $('#timeSwitch').on("timeSwitched", function (event) {
         if (event.detail.state) {
-          var object = {
-            "time": {
-              "timeMode": "timestamp",
-              "stepSize": 86400000,
-              "unit": "millisecond",
-              "displayFormats": "x"
-            }
+          document.querySelector('#chart')['options'] = {
+            "timeMode": "timestamp"
           };
-
-          document.querySelector('#chart')['options'] = object;
-          document.querySelector('#annotation')['options'] = object;
+          document.querySelector('#annotation')['options'] = {
+            "timeMode": "timestamp"
+          };
         }
         else {
-          var object = {"time": {"timeMode": "", "stepSize": 1, "unit": "date"}};
-          document.querySelector('#chart')['options'] = object;
-          document.querySelector('#annotation')['options'] = object;
+          document.querySelector('#chart')['options'] = {"timeMode": "date"};
+          document.querySelector('#annotation')['options'] = {"timeMode": "date"};
         }
       });
 

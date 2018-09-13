@@ -96,6 +96,9 @@ export class QuantumPolar {
             bottom: 0
           }
         },
+        animation: {
+          duration: 0,
+        },
         legend: {display: this.showLegend},
         responsive: this.responsive,
         xAxes: [{

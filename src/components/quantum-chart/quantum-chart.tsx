@@ -33,7 +33,7 @@ export class QuantumChart {
   @Prop() standalone = true;
 
   @Element() el: HTMLElement;
-  @Event() receivedData: EventEmitter;
+
   @Event() boundsDidChange: EventEmitter;
   @Event() pointHover: EventEmitter;
 
@@ -121,7 +121,7 @@ export class QuantumChart {
     }
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
-      if (this._options.time && this._options.time === 'timestamp') {
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
       } else {
         const ts = Math.floor(parseInt(timestamp) / 1000);

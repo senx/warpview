@@ -2,6 +2,7 @@ import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import { DataModel } from "../../model/dataModel";
 export class QuantumAnnotation {
@@ -9,7 +10,7 @@ export class QuantumAnnotation {
         this.chartTitle = "";
         this.responsive = false;
         this.showLegend = true;
-        this.options = {};
+        this.options = new Param();
         this.hiddenData = [];
         this.theme = "light";
         this.width = "";
@@ -35,18 +36,7 @@ export class QuantumAnnotation {
     changeScale(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            const data = newValue;
-            if (data.time.timeMode === "timestamp") {
-                this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
-                this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
-                this._chart.options.scales.xAxes[0].time.displayFormats.millisecond = data.time.displayFormats;
-                this._chart.update();
-            }
-            else {
-                this._chart.options.scales.xAxes[0].time.stepSize = data.time.stepSize;
-                this._chart.options.scales.xAxes[0].time.unit = data.time.unit;
-                this._chart.update();
-            }
+            this.drawChart();
         }
     }
     hideData(newValue, oldValue) {
@@ -62,116 +52,132 @@ export class QuantumAnnotation {
         this._chart.options.animation.duration = 0;
         if (oldValue !== newValue) {
             this._chart.options.scales.xAxes[0].time.min = newValue;
+            this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
             this._chart.update();
         }
-        this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
     }
     maxBoundChange(newValue, oldValue) {
         this._chart.options.animation.duration = 0;
         if (oldValue !== newValue) {
             this._chart.options.scales.xAxes[0].time.max = newValue;
+            this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
             this._chart.update();
         }
-        this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
     }
     /**
      *
      */
     drawChart() {
+        this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.parseData(this.data);
         let calculatedHeight = 30 * gts.length + this.legendOffset;
-        let height = this.height || this.height !== ""
+        let height = this.height || this.height !== ''
             ? Math.max(calculatedHeight, parseInt(this.height))
             : calculatedHeight;
-        this.height = height + "";
-        ctx.parentElement.style.height = height + "px";
-        ctx.parentElement.style.width = "100%";
+        this.height = height + '';
+        ctx.parentElement.style.height = height + 'px';
+        ctx.parentElement.style.width = '100%';
         const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
         const me = this;
+        const chartOption = {
+            layout: {
+                padding: {
+                    bottom: 30 * gts.length
+                }
+            },
+            legend: { display: this.showLegend },
+            responsive: this.responsive,
+            animation: {
+                duration: 0,
+            },
+            tooltips: {
+                mode: "x",
+                position: "nearest",
+                custom: function (tooltip) {
+                    if (tooltip.opacity > 0) {
+                        me.pointHover.emit({
+                            x: tooltip.dataPoints[0].x + 15,
+                            y: this._eventPosition.y
+                        });
+                    }
+                    else {
+                        me.pointHover.emit({ x: -100, y: this._eventPosition.y });
+                    }
+                    return;
+                },
+                callbacks: {
+                    title: (tooltipItems) => {
+                        return tooltipItems[0].xLabel || "";
+                    },
+                    label: (tooltipItem, data) => {
+                        return `${data.datasets[tooltipItem.datasetIndex].label}: ${data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+                            .val}`;
+                    }
+                }
+            },
+            scales: {
+                xAxes: [
+                    {
+                        drawTicks: false,
+                        type: "linear",
+                        time: {},
+                        gridLines: {
+                            zeroLineColor: color,
+                            color: color,
+                            display: false
+                        },
+                        ticks: {}
+                    }
+                ],
+                yAxes: [
+                    {
+                        display: false,
+                        drawTicks: false,
+                        scaleLabel: {
+                            display: false
+                        },
+                        afterFit: function (scaleInstance) {
+                            scaleInstance.width = 100; // sets the width to 100px
+                        },
+                        gridLines: {
+                            color: color,
+                            zeroLineColor: color,
+                        },
+                        ticks: {
+                            fontColor: color,
+                            min: 0,
+                            max: 1,
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                ]
+            }
+        };
+        this.LOG.debug(['options'], this._options);
+        if (this._options.timeMode === 'timestamp') {
+            chartOption.scales.xAxes[0].time = undefined;
+            chartOption.scales.xAxes[0].type = 'linear';
+            chartOption.scales.xAxes[0].ticks = {
+                fontColor: color,
+                min: this.timeMin,
+                max: this.timeMax,
+            };
+        }
+        else {
+            chartOption.scales.xAxes[0].time = {
+                min: this.timeMin,
+                max: this.timeMax,
+            };
+            chartOption.scales.xAxes[0].type = 'time';
+        }
         this._chart = new Chart.Scatter(ctx, {
             data: {
                 datasets: gts
             },
-            options: {
-                layout: {
-                    padding: {
-                        bottom: 30 * gts.length
-                    }
-                },
-                legend: { display: this.showLegend },
-                responsive: this.responsive,
-                tooltips: {
-                    mode: "x",
-                    position: "nearest",
-                    custom: function (tooltip) {
-                        if (tooltip.opacity > 0) {
-                            me.pointHover.emit({
-                                x: tooltip.dataPoints[0].x + 15,
-                                y: this._eventPosition.y
-                            });
-                        }
-                        else {
-                            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
-                        }
-                        return;
-                    },
-                    callbacks: {
-                        title: (tooltipItems) => {
-                            return tooltipItems[0].xLabel || "";
-                        },
-                        label: (tooltipItem, data) => {
-                            return `${data.datasets[tooltipItem.datasetIndex].label}: ${data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
-                                .val}`;
-                        }
-                    }
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            drawTicks: false,
-                            type: "time",
-                            time: {
-                                min: this.timeMin,
-                                max: this.timeMax,
-                                unit: "day"
-                            },
-                            gridLines: {
-                                zeroLineColor: color,
-                                color: color,
-                                display: false
-                            },
-                            ticks: {
-                                fontColor: color
-                            }
-                        }
-                    ],
-                    yAxes: [
-                        {
-                            display: false,
-                            drawTicks: false,
-                            scaleLabel: {
-                                display: false
-                            },
-                            afterFit: function (scaleInstance) {
-                                scaleInstance.width = 100; // sets the width to 100px
-                            },
-                            gridLines: {
-                                color: color,
-                                zeroLineColor: color,
-                            },
-                            ticks: {
-                                fontColor: color,
-                                min: 0,
-                                max: 1,
-                                beginAtZero: true,
-                                stepSize: 1
-                            }
-                        }
-                    ]
-                }
-            }
+            options: chartOption
         });
     }
     /**

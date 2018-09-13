@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
@@ -22,7 +23,6 @@ export declare class QuantumChart {
     responsive: boolean;
     standalone: boolean;
     el: HTMLElement;
-    receivedData: EventEmitter;
     boundsDidChange: EventEmitter;
     pointHover: EventEmitter;
     private LOG;

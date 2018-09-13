@@ -55,6 +55,9 @@ export class QuantumScatter {
                 display: this.showLegend
             },
             responsive: this.responsive,
+            animation: {
+                duration: 0,
+            },
             tooltips: {
                 mode: 'x',
                 position: 'nearest',
