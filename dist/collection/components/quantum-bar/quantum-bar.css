@@ -1,0 +1,13 @@
+:host div {
+  height: var(--quantum-chart-height, 100%); }
+
+:host .chart-container {
+  width: var(--quantum-chart-width, 100%);
+  height: calc(var(--quantum-chart-height, 100%) - 30px);
+  position: relative; }
+
+:host h1 {
+  font-size: 20px;
+  padding: 5px;
+  margin: 0;
+  color: var(--quantum-font-color, #000000); }

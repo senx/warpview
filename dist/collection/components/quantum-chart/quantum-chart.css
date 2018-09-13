@@ -1,0 +1,20 @@
+quantum-chart h1 {
+  font-size: 20px;
+  padding: 5px;
+  margin: 0;
+  color: var(--quantum-font-color, #000000); }
+
+quantum-chart div.chart {
+  width: var(--quantum-chart-width, 100%);
+  height: calc(var(--quantum-chart-height, 100%) - 30px); }
+  quantum-chart div.chart .dygraph-legend {
+    background-color: var(--quantum-chart-legend-bg, #000000) !important;
+    color: var(--quantum-chart-legend-color, #ffffff) !important;
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    pointer-events: none; }
+  quantum-chart div.chart .dygraph-axis-label, quantum-chart div.chart .dygraph-label {
+    color: var(--quantum-chart-label-color, #8e8e8e) !important; }
