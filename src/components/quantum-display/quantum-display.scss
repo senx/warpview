@@ -30,21 +30,7 @@
     font-size: 20px;
     padding: 5px;
     margin: 0;
-  }
-
-  .dark {
-    h1 {
-      color: var(--quantum-font-color, #ffffff);
-    }
-    .chart-container {
-      color: var(--quantum-font-color, #ffffff);
-    }
-  }
-
-  .light {
-    h1 {
-      color: var(--quantum-font-color, #000000);
-    }
+    color: var(--quantum-font-color, #000000);
     .chart-container {
       color: var(--quantum-font-color, #000000);
     }

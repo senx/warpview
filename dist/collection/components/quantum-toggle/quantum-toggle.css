@@ -48,4 +48,5 @@
   display: flex; }
 
 :host .text {
+  color: var(--quantum-font-color, #000000);
   padding: 7px; }

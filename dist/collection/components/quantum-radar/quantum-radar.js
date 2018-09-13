@@ -1,5 +1,6 @@
 import Chart from 'chart.js';
 import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
@@ -9,12 +10,13 @@ export class QuantumRadar {
         this.chartTitle = '';
         this.responsive = true;
         this.showLegend = true;
-        this.options = {};
-        this.theme = 'light';
+        this.options = new Param();
         this.width = '';
         this.height = '';
         this.LOG = new Logger(QuantumRadar);
-        this._options = {};
+        this._options = {
+            gridLineColor: '#8e8e8e'
+        };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
@@ -26,12 +28,6 @@ export class QuantumRadar {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -70,7 +66,7 @@ export class QuantumRadar {
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor;
         const data = this.data;
         if (!data)
             return;
@@ -137,13 +133,12 @@ export class QuantumRadar {
         this.drawChart();
     }
     render() {
-        return (h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null,
                 this.chartTitle,
-                " ",
                 h("small", null, this.unit)),
             h("div", { class: "chart-container" },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-radar"; }
     static get encapsulation() { return "shadow"; }
@@ -177,11 +172,6 @@ export class QuantumRadar {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
         },
         "unit": {
             "type": String,

@@ -19,15 +19,16 @@ export class QuantumScatter {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
-  @Prop() options: Param = {};
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
-  @Prop() theme = 'light';
 
   @Element() el: HTMLElement;
 
   private LOG: Logger = new Logger(QuantumScatter);
-  private _options: Param = {};
+  private _options: Param = {
+    gridLineColor: '#8e8e8e'
+  };
   private chart: any;
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
@@ -47,14 +48,6 @@ export class QuantumScatter {
     }
   }
 
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
-      this.drawChart();
-    }
-  }
-
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
@@ -67,7 +60,7 @@ export class QuantumScatter {
     let gts = this.gtsToScatter(dataList);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor;
     const options: any = {
       legend: {
         display: this.showLegend
@@ -140,7 +133,7 @@ export class QuantumScatter {
   }
 
   render() {
-    return <div class={this.theme}>
+    return <div>
       <h1>{this.chartTitle}</h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>

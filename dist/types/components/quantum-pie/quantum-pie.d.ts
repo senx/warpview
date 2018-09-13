@@ -6,7 +6,6 @@ export declare class QuantumPie {
     showLegend: boolean;
     data: DataModel | any[];
     options: Param;
-    theme: string;
     width: string;
     height: string;
     unit: string;
@@ -17,7 +16,6 @@ export declare class QuantumPie {
     private uuid;
     private onData;
     private onOptions;
-    private onTheme;
     /**
      *
      * @param data

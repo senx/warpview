@@ -3,18 +3,7 @@ quantum-chart {
     font-size: 20px;
     padding: 5px;
     margin: 0;
-  }
-
-  .dark {
-    h1 {
-      color: var(--quantum-font-color, #ffffff);
-    }
-  }
-
-  .light {
-    h1 {
-      color: var(--quantum-font-color, #000000);
-    }
+    color: var(--quantum-font-color, #000000);
   }
 
   div.chart {
@@ -34,12 +23,6 @@ quantum-chart {
 
     .dygraph-axis-label, .dygraph-label {
       color: var(--quantum-chart-label-color, #8e8e8e) !important;
-    }
-
-    &.dark {
-      .dygraph-axis-label, .dygraph-label {
-        color: var(--quantum-chart-label-color, #8e8e8e) !important;
-      }
     }
   }
 }

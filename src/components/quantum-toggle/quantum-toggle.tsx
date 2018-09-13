@@ -1,5 +1,6 @@
 import {Component, Event, EventEmitter, Prop, State} from '@stencil/core';
 import {ChartLib} from "../../utils/chart-lib";
+import {Param} from "../../model/param";
 
 @Component({
   tag: 'quantum-toggle',
@@ -8,22 +9,19 @@ import {ChartLib} from "../../utils/chart-lib";
 })
 export class QuantumToggle {
 
-  @Prop() options: string = '{}';
+  @Prop() options: Param = new Param();
   @Prop() checked: boolean = false;
-  @State() state: boolean = false;
   @Prop() text1: string = "";
   @Prop() text2: string = "";
 
+  @State() state: boolean = false;
+
   @Event() timeSwitched: EventEmitter;
 
-  private _options = {
-    switchClass: '',
-    switchLabelClass: '',
-    switchHandleClass: ''
-  };
+  private _options: Param = new Param();
 
   componentWillLoad(){
-    this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     this.state = this.checked;
   }
 
@@ -36,13 +34,13 @@ export class QuantumToggle {
     return (
       <div class="container">
         <div class="text">{this.text1}</div>
-        <label class={ 'switch ' + this._options.switchClass } >
+        <label class="switch" >
           {this.state
             ? <input type="checkbox" class="switch-input" checked onClick={() => this.switched()}/>
             : <input type="checkbox" class="switch-input" onClick={() => this.switched()}/>
           }
-          <span class={ 'switch-label ' + this._options.switchLabelClass } />
-          <span class={ 'switch-handle ' + this._options.switchHandleClass } />
+          <span class="switch-label" />
+          <span class="switch-handle" />
         </label>
         <div class="text">{this.text2}</div>
       </div>

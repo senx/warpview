@@ -19,15 +19,16 @@ export class QuantumBar {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
-  @Prop() options: Param = {};
-  @Prop() theme = 'light';
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
   private LOG: Logger = new Logger(QuantumBar);
-  private _options: Param = {};
+  private _options: Param = {
+    gridLineColor: '#8e8e8e'
+  };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart;
   private _mapIndex = {};
@@ -48,14 +49,6 @@ export class QuantumBar {
     }
   }
 
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
-      this.drawChart();
-    }
-  }
-
   private buildGraph() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
@@ -63,12 +56,11 @@ export class QuantumBar {
     if (!gts) {
       return;
     }
-    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor;
     const graphOpts: any = {
       legend: {
         display: this.showLegend
       },
-      //   borderWidth: 1,
       animation: {
         duration: 0,
       },
@@ -175,13 +167,11 @@ export class QuantumBar {
   }
 
   render() {
-    return (
-      <div class={this.theme}>
+    return <div>
         <h1>{this.chartTitle}</h1>
         <div class="chart-container">
           <canvas id={this.uuid} width={this.width} height={this.height}/>
         </div>
-      </div>
-    );
+      </div>;
   }
 }

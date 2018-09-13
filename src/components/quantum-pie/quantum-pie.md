@@ -10,7 +10,6 @@
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| theme | `string` | 'light' | Possible values are: 'light', 'dark' |
 | unit | `string` | '' | Unit used |
 | chartTitle | `string` | '' | Main title |
 | showLegend | `boolean` | true | Shows a legend |

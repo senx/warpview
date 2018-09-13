@@ -1,11 +1,12 @@
 import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
+import { Param } from "../../model/param";
 export declare class QuantumToggle {
-    options: string;
+    options: Param;
     checked: boolean;
-    state: boolean;
     text1: string;
     text2: string;
+    state: boolean;
     timeSwitched: EventEmitter;
     private _options;
     componentWillLoad(): void;

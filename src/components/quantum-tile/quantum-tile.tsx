@@ -16,7 +16,6 @@ export class QuantumTile {
   @State() data: any;
   @State() options: Param;
   @Prop() unit: string = '';
-  @Prop() theme: string = 'light';
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
@@ -85,46 +84,46 @@ export class QuantumTile {
       </div>
      {/* {
         this.loading
-          ? <quantum-spinner theme={this.theme}/>
+          ? <quantum-spinner />
           : <span>*/}
         {this.graphs['scatter'].indexOf(this.type) > -1 ?
           <quantum-scatter
-            responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+            responsive={this.responsive} unit={this.unit} data={this.data} 
             options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
           /> : ''}
             {this.graphs['chart'].indexOf(this.type) > -1 ?
               <quantum-chart type={this.type}
                              responsive={this.responsive} unit={this.unit} data={this.data}
                              options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
-                             theme={this.theme}/> : ''}
+                             /> : ''}
             {this.type == 'bubble' ?
               <quantum-bubble
-                showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data} theme={this.theme}
+                showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data} 
                 options={this.options} chartTitle={this.chartTitle}/> : ''
             }
             {this.graphs['pie'].indexOf(this.type) > -1 ?
               <quantum-pie
-                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                responsive={this.responsive} unit={this.unit} data={this.data} 
                 options={this.options} showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
             }
             {this.graphs['polar'].indexOf(this.type) > -1 ?
               <quantum-polar
-                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                responsive={this.responsive} unit={this.unit} data={this.data} 
                 showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
             }
             {this.graphs['radar'].indexOf(this.type) > -1 ?
               <quantum-radar
-                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                responsive={this.responsive} unit={this.unit} data={this.data} 
                 showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
             }
             {this.graphs['bar'].indexOf(this.type) > -1 ?
               <quantum-bar
-                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                responsive={this.responsive} unit={this.unit} data={this.data} 
                 showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
             }
             {this.type == 'text' ?
               <quantum-display
-                responsive={this.responsive} unit={this.unit} data={this.data} theme={this.theme}
+                responsive={this.responsive} unit={this.unit} data={this.data} 
                 displayTitle={this.chartTitle} options={this.options}/> : ''}
         {/*  </span>
       }*/}

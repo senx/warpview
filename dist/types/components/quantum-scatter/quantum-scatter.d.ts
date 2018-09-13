@@ -11,7 +11,6 @@ export declare class QuantumScatter {
     options: Param;
     width: string;
     height: string;
-    theme: string;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -19,7 +18,6 @@ export declare class QuantumScatter {
     private uuid;
     private onData;
     private onOptions;
-    private onTheme;
     private drawChart;
     private gtsToScatter;
     componentDidLoad(): void;

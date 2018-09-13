@@ -23,9 +23,8 @@ import {GTS} from "../../model/GTS";
 })
 export class QuantumChart {
   @Prop() data: DataModel | GTS[];
-  @Prop() options: Param = {};
+  @Prop() options: Param = new Param();
   @Prop() hiddenData: string[] = [];
-  @Prop() theme: string = 'light';
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
@@ -61,14 +60,6 @@ export class QuantumChart {
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
-  }
-
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
       this.drawChart();
     }
   }
@@ -195,7 +186,7 @@ export class QuantumChart {
     this.LOG.debug(['drawChart'], [dataToplot]);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
     if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {
-      const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+      const color = this._options.gridLineColor;
       this._chart = new Dygraph(
         chart,
         dataToplot.datasets,
@@ -240,9 +231,9 @@ export class QuantumChart {
   }
 
   render() {
-    return <div class={this.theme}>
+    return <div>
       <h1>{this.chartTitle}</h1>
-      <div id={this.uuid} class={'chart ' + this.theme}/>
+      <div id={this.uuid} class="chart"/>
     </div>;
   }
 }

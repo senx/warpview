@@ -17,15 +17,16 @@ export class QuantumRadar {
   @Prop() responsive: boolean = true;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[];
-  @Prop() options: Param = {};
-  @Prop() theme = 'light';
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
   private LOG: Logger = new Logger(QuantumRadar);
-  private _options: Param = {};
+  private _options: Param = {
+    gridLineColor: '#8e8e8e'
+  };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
@@ -40,14 +41,6 @@ export class QuantumRadar {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-      this.drawChart();
-    }
-  }
-
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
       this.drawChart();
     }
   }
@@ -88,7 +81,7 @@ export class QuantumRadar {
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor;
     const data = this.data;
     if (!data) return;
     let dataList: any[];
@@ -156,13 +149,13 @@ export class QuantumRadar {
   }
 
   render() {
-    return (
-      <div class={this.theme}>
-        <h1>{this.chartTitle} <small>{this.unit}</small></h1>
-        <div class="chart-container">
-          <canvas id={this.uuid} width={this.width} height={this.height}/>
-        </div>
+    return <div>
+      <h1>{this.chartTitle}
+        <small>{this.unit}</small>
+      </h1>
+      <div class="chart-container">
+        <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>
-    );
+    </div>;
   }
 }

@@ -18,8 +18,7 @@ export class QuantumDisplay {
   @Prop() displayTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() data: DataModel | any[] | string | number;
-  @Prop() options: Param;
-  @Prop() theme = 'light';
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
 
@@ -27,7 +26,7 @@ export class QuantumDisplay {
 
   private LOG: Logger = new Logger(QuantumDisplay);
   private toDisplay: string;
-  private _options: Param;
+  private _options: Param = new Param();
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
@@ -41,14 +40,6 @@ export class QuantumDisplay {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-      this.drawChart();
-    }
-  }
-
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['onTheme'], newValue);
       this.drawChart();
     }
   }
@@ -86,7 +77,7 @@ export class QuantumDisplay {
   }
 
   render() {
-    return <div class={this.theme}>
+    return <div>
       <h1>{this.displayTitle}</h1>
       {this.toDisplay && this.toDisplay !== '' ?
         <div class="chart-container" id="#wrapper">
@@ -98,7 +89,7 @@ export class QuantumDisplay {
           </div>
         </div>
         :
-        <quantum-spinner theme={this.theme}/>
+        <quantum-spinner />
       }
     </div>;
   }

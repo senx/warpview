@@ -56,14 +56,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
-        },
-        {
           "name": "timeMax",
           "type": "Number",
           "attr": "time-max",
@@ -145,14 +137,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
-        },
-        {
           "name": "unit",
           "type": "String",
           "attr": "unit"
@@ -216,14 +200,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
         },
         {
           "name": "unit",
@@ -291,14 +267,6 @@
           "name": "standalone",
           "type": "Boolean",
           "attr": "standalone"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
         },
         {
           "name": "type",
@@ -406,14 +374,6 @@
           "name": "responsive",
           "type": "Boolean",
           "attr": "responsive"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
         },
         {
           "name": "unit",
@@ -780,14 +740,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
-        },
-        {
           "name": "unit",
           "type": "String",
           "attr": "unit"
@@ -851,14 +803,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
         },
         {
           "name": "unit",
@@ -926,14 +870,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
-        },
-        {
           "name": "unit",
           "type": "String",
           "attr": "unit"
@@ -997,14 +933,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme",
-          "watch": [
-            "onTheme"
-          ]
         },
         {
           "name": "unit",
@@ -1082,11 +1010,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme"
-        },
-        {
           "name": "type",
           "type": "String",
           "attr": "type"
@@ -1135,7 +1058,6 @@
         },
         {
           "name": "options",
-          "type": "String",
           "attr": "options"
         },
         {

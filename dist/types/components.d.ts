@@ -45,7 +45,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'timeMax': number;
       'timeMin': number;
       'width': string;
@@ -79,7 +78,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'timeMax'?: number;
       'timeMin'?: number;
       'width'?: string;
@@ -98,7 +96,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -129,7 +126,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -147,7 +143,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -178,7 +173,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -196,7 +190,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'standalone': boolean;
-      'theme': string;
       'type': string;
       'unit': string;
     }
@@ -229,7 +222,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'standalone'?: boolean;
-      'theme'?: string;
       'type'?: string;
       'unit'?: string;
     }
@@ -246,7 +238,6 @@ declare global {
       'height': string;
       'options': Param;
       'responsive': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -276,7 +267,6 @@ declare global {
       'height'?: string;
       'options'?: Param;
       'responsive'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -564,7 +554,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -595,7 +584,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -613,7 +601,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -644,7 +631,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -662,7 +648,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -693,7 +678,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -711,7 +695,6 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'unit': string;
       'width': string;
     }
@@ -742,7 +725,6 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'unit'?: string;
       'width'?: string;
     }
@@ -790,7 +772,6 @@ declare global {
       'chartTitle': string;
       'responsive': boolean;
       'showLegend': boolean;
-      'theme': string;
       'type': string;
       'unit': string;
       'url': string;
@@ -819,7 +800,6 @@ declare global {
       'chartTitle'?: string;
       'responsive'?: boolean;
       'showLegend'?: boolean;
-      'theme'?: string;
       'type'?: string;
       'unit'?: string;
       'url'?: string;
@@ -833,7 +813,7 @@ declare global {
   namespace StencilComponents {
     interface QuantumToggle {
       'checked': boolean;
-      'options': string;
+      'options': Param;
       'text1': string;
       'text2': string;
     }
@@ -860,7 +840,7 @@ declare global {
     export interface QuantumToggleAttributes extends HTMLAttributes {
       'checked'?: boolean;
       'onTimeSwitched'?: (event: CustomEvent) => void;
-      'options'?: string;
+      'options'?: Param;
       'text1'?: string;
       'text2'?: string;
     }

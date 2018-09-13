@@ -1,5 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
@@ -16,7 +15,6 @@ export declare class QuantumChart {
     data: DataModel | GTS[];
     options: Param;
     hiddenData: string[];
-    theme: string;
     unit: string;
     type: string;
     chartTitle: string;
@@ -33,7 +31,6 @@ export declare class QuantumChart {
     private uuid;
     private onHideData;
     private onData;
-    private onTheme;
     private onOptions;
     private gtsToData;
     private isStepped;

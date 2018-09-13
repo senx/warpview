@@ -24,7 +24,6 @@ Example :
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| theme | `string` | 'light' | Possible values are: 'light', 'dark' |
 | data | `object` | | Serialized JSON representation of data to display, according to the chart type |
 | options | `object` | | Serialized JSON representation of display options |
 | unit | `string` | '' | Unit used |

@@ -11,11 +11,12 @@ export class QuantumBubble {
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
-        this.options = {};
-        this.theme = 'light';
+        this.options = new Param();
         this.width = '';
         this.height = '';
-        this._options = new Param();
+        this._options = {
+            gridLineColor: '#8e8e8e'
+        };
         this.LOG = new Logger(QuantumBubble);
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
@@ -28,12 +29,6 @@ export class QuantumBubble {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -51,7 +46,7 @@ export class QuantumBubble {
         else {
             dataList = this.data;
         }
-        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor;
         const options = {
             legend: {
                 display: this.showLegend
@@ -142,10 +137,10 @@ export class QuantumBubble {
         this.drawChart();
     }
     render() {
-        return (h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container" },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-bubble"; }
     static get encapsulation() { return "shadow"; }
@@ -179,11 +174,6 @@ export class QuantumBubble {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
         },
         "unit": {
             "type": String,

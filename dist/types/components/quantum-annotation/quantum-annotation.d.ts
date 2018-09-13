@@ -12,7 +12,6 @@ export declare class QuantumAnnotation {
     hiddenData: string[];
     timeMin: number;
     timeMax: number;
-    theme: string;
     width: string;
     height: string;
     pointHover: EventEmitter;
@@ -24,7 +23,6 @@ export declare class QuantumAnnotation {
     private _options;
     private uuid;
     private onData;
-    private onTheme;
     changeScale(newValue: Param, oldValue: Param): void;
     hideData(newValue: string[], oldValue: string[]): void;
     minBoundChange(newValue: number, oldValue: number): void;

@@ -13,7 +13,6 @@ Displays a bubble chart
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| theme | `string` | 'light' | Possible values are: 'light', 'dark' |
 | timeMin | `number` | | Minimum in the time range |
 | timeMax | `number` | | Maximum in the time range |
 | chartTitle | `string` | '' | Main title |

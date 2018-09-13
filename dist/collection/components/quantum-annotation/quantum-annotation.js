@@ -12,24 +12,20 @@ export class QuantumAnnotation {
         this.showLegend = true;
         this.options = new Param();
         this.hiddenData = [];
-        this.theme = "light";
         this.width = "";
         this.height = "";
         this.legendOffset = 70;
         this._mapIndex = {};
         this.LOG = new Logger(QuantumAnnotation);
-        this._options = {};
+        this._options = {
+            gridLineColor: '#ffee77',
+            timeMode: 'date'
+        };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -79,7 +75,7 @@ export class QuantumAnnotation {
         this.height = height + '';
         ctx.parentElement.style.height = height + 'px';
         ctx.parentElement.style.width = '100%';
-        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor;
         const me = this;
         const chartOption = {
             layout: {
@@ -171,6 +167,9 @@ export class QuantumAnnotation {
                 min: this.timeMin,
                 max: this.timeMax,
             };
+            chartOption.scales.xAxes[0].ticks = {
+                fontColor: color
+            };
             chartOption.scales.xAxes[0].type = 'time';
         }
         this._chart = new Chart.Scatter(ctx, {
@@ -237,14 +236,14 @@ export class QuantumAnnotation {
         this.drawChart();
     }
     render() {
-        return (h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container", style: {
                     position: "relative",
                     width: this.width,
                     height: this.height
                 } },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-annotation"; }
     static get encapsulation() { return "shadow"; }
@@ -283,11 +282,6 @@ export class QuantumAnnotation {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
         },
         "timeMax": {
             "type": Number,

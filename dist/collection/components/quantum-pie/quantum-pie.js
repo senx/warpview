@@ -1,5 +1,6 @@
 import { Logger } from "../../utils/logger";
 import Chart from 'chart.js';
+import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
@@ -7,8 +8,7 @@ export class QuantumPie {
     constructor() {
         this.chartTitle = '';
         this.showLegend = true;
-        this.options = {};
-        this.theme = 'light';
+        this.options = new Param();
         this.width = '';
         this.height = '';
         this.unit = '';
@@ -28,12 +28,6 @@ export class QuantumPie {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -121,7 +115,7 @@ export class QuantumPie {
         this.drawChart();
     }
     render() {
-        return h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null,
                 this.chartTitle,
                 h("small", null, this.unit)),
@@ -160,11 +154,6 @@ export class QuantumPie {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
         },
         "unit": {
             "type": String,

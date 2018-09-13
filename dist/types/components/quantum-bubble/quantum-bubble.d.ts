@@ -9,7 +9,6 @@ export declare class QuantumBubble {
     showLegend: boolean;
     data: DataModel | GTS[];
     options: Param;
-    theme: string;
     width: string;
     height: string;
     el: HTMLElement;
@@ -18,7 +17,6 @@ export declare class QuantumBubble {
     private uuid;
     private onData;
     private onOptions;
-    private onTheme;
     private drawChart;
     private parseData;
     componentDidLoad(): void;

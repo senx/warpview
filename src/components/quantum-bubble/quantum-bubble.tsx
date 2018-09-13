@@ -19,14 +19,15 @@ export class QuantumBubble {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
-  @Prop() options: Param = {};
-  @Prop() theme = 'light';
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
-  private _options: Param = new Param();
+  private _options: Param = {
+    gridLineColor: '#8e8e8e'
+  };
   private LOG: Logger = new Logger(QuantumBubble);
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
@@ -46,14 +47,6 @@ export class QuantumBubble {
     }
   }
 
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
-      this.drawChart();
-    }
-  }
-
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
@@ -67,7 +60,7 @@ export class QuantumBubble {
       dataList = this.data;
     }
 
-    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor;
     const options: any = {
       legend: {
         display: this.showLegend
@@ -164,13 +157,11 @@ export class QuantumBubble {
   }
 
   render() {
-    return (
-      <div class={this.theme}>
-        <h1>{this.chartTitle}</h1>
-        <div class="chart-container">
-          <canvas id={this.uuid} width={this.width} height={this.height}/>
-        </div>
+    return <div>
+      <h1>{this.chartTitle}</h1>
+      <div class="chart-container">
+        <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>
-    );
+    </div>;
   }
 }

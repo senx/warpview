@@ -16,7 +16,6 @@ Displays a line chart
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| theme | `string` | 'light' | Possible values are: 'light', 'dark' |
 | type | `string` | 'line' | Possible values are: 'line', 'area', 'step' |
 | unit | `string` | '' | Unit used |
 | chartTitle | `string` | '' | Main title |

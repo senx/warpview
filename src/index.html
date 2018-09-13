@@ -38,6 +38,16 @@
       --quantum-chart-legend-bg: #000;
     }
 
+    body.dark {
+      --quantum-font-color: #ffffff;
+      --quantum-chart-label-color: #ffffff;
+    }
+
+    body.light {
+      --quantum-font-color: #000000;
+      --quantum-chart-label-color: #000000;
+    }
+
   </style>
 </head>
 
@@ -55,7 +65,9 @@
     </div>
   </div>
   <script language="JavaScript">
-
+    var defOpts = {
+      gridLineColor: '#000000'
+    };
     $(function () {
       var chart = $('#chart');
       var tree = $('#tree');
@@ -81,16 +93,12 @@
 
       $('#timeSwitch').on("timeSwitched", function (event) {
         if (event.detail.state) {
-          document.querySelector('#chart')['options'] = {
-            "timeMode": "timestamp"
-          };
-          document.querySelector('#annotation')['options'] = {
-            "timeMode": "timestamp"
-          };
+          document.querySelector('#chart')['options'] = {...defOpts, ...{ timeMode: "timestamp"}};
+          document.querySelector('#annotation')['options'] = {...defOpts, ...{ timeMode: "timestamp"}};
         }
         else {
-          document.querySelector('#chart')['options'] = {"timeMode": "date"};
-          document.querySelector('#annotation')['options'] = {"timeMode": "date"};
+          document.querySelector('#chart')['options'] = {...defOpts, ...{ timeMode: "date"}};
+          document.querySelector('#annotation')['options'] = {...defOpts, ...{ timeMode: "date"}};
         }
       });
 
@@ -112,19 +120,33 @@
       document.querySelector('#chart')['data'] = data;
       document.querySelector('#annotation')['data'] = data;
       document.querySelector('#tree')['data'] = data;
+
+      document.querySelector('#chart')['options'] = {...defOpts};
+      document.querySelector('#annotation')['options'] = {...defOpts};
+      document.querySelector('#tree')['options'] = {...defOpts};
+      document.querySelector('quantum-tile')['options'] = {...defOpts};
+
       $("#dark").click(function () {
-        chart.attr("theme", "dark");
-        tree.attr("theme", "dark");
         $("body").addClass('bg-dark');
+        $("body").addClass('dark');
+        $("body").removeClass('light');
         $(".card").addClass('bg-dark');
-        $("quantum-tile").attr("theme", "dark");
+        defOpts.gridLineColor = '#ffffff';
+        document.querySelector('#chart')['options'] = {...defOpts};
+        document.querySelector('#annotation')['options'] = {...defOpts};
+        document.querySelector('#tree')['options'] = {...defOpts};
+        document.querySelector('quantum-tile')['options'] = {...defOpts};
       });
       $("#light").click(function () {
-        chart.attr("theme", "light");
-        tree.attr("theme", "light");
         $("body").removeClass('bg-dark');
+        $("body").removeClass('dark');
+        $("body").addClass('light');
         $(".card").removeClass('bg-dark');
-        $("quantum-tile").attr("theme", "light");
+        defOpts.gridLineColor = '#000000';
+        document.querySelector('#chart')['options'] = {...defOpts};
+        document.querySelector('#annotation')['options'] = {...defOpts};
+        document.querySelector('#tree')['options'] = {...defOpts};
+        document.querySelector('quantum-tile')['options'] = {...defOpts};
       });
     });
   </script>

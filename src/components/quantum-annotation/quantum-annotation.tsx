@@ -22,7 +22,6 @@ export class QuantumAnnotation {
   @Prop() hiddenData: string[] = [];
   @Prop() timeMin: number;
   @Prop() timeMax: number;
-  @Prop() theme = "light";
   @Prop({mutable: true}) width = "";
   @Prop({mutable: true}) height = "";
 
@@ -34,21 +33,16 @@ export class QuantumAnnotation {
   private _chart;
   private _mapIndex = {};
   private LOG: Logger = new Logger(QuantumAnnotation);
-  private _options: Param = {};
+  private _options: Param = {
+    gridLineColor: '#ffee77',
+    timeMode: 'date'
+  };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
-  }
-
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
       this.drawChart();
     }
   }
@@ -108,7 +102,7 @@ export class QuantumAnnotation {
     this.height = height + '';
     (ctx as HTMLElement).parentElement.style.height = height + 'px';
     (ctx as HTMLElement).parentElement.style.width = '100%';
-    const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+    const color = this._options.gridLineColor;
     const me = this;
     const chartOption = {
       layout: {
@@ -200,7 +194,9 @@ export class QuantumAnnotation {
       chartOption.scales.xAxes[0].time = {
         min: this.timeMin,
         max: this.timeMax,
-        //  unit: 'millisecond'
+      };
+      chartOption.scales.xAxes[0].ticks = {
+        fontColor: color
       };
       chartOption.scales.xAxes[0].type = 'time';
     }
@@ -270,20 +266,18 @@ export class QuantumAnnotation {
   }
 
   render() {
-    return (
-      <div class={this.theme}>
-        <h1>{this.chartTitle}</h1>
-        <div
-          class="chart-container"
-          style={{
-            position: "relative",
-            width: this.width,
-            height: this.height
-          }}
-        >
-          <canvas id={this.uuid} width={this.width} height={this.height}/>
-        </div>
+    return <div>
+      <h1>{this.chartTitle}</h1>
+      <div
+        class="chart-container"
+        style={{
+          position: "relative",
+          width: this.width,
+          height: this.height
+        }}
+      >
+        <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>
-    );
+    </div>;
   }
 }

@@ -15,8 +15,7 @@ export class QuantumPie {
   @Prop() chartTitle: string = '';
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[];
-  @Prop() options: Param = {};
-  @Prop() theme = 'light';
+  @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
   @Prop() unit: string = '';
@@ -42,14 +41,6 @@ export class QuantumPie {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-      this.drawChart();
-    }
-  }
-
-  @Watch('theme')
-  private onTheme(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['theme'], newValue);
       this.drawChart();
     }
   }
@@ -140,7 +131,7 @@ export class QuantumPie {
   }
 
   render() {
-    return <div class={this.theme}>
+    return <div>
       <h1>{this.chartTitle}
         <small>{this.unit}</small>
       </h1>

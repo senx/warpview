@@ -1,11 +1,11 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.quantumviz;
 
-import { a as Chart, b as Param } from './chunk-3d526338.js';
+import { a as Chart } from './chunk-35f9f27a.js';
 import { a as GTSLib } from './chunk-7f4b1b2f.js';
 import { a as ColorLib } from './chunk-b534d406.js';
 import { a as Logger } from './chunk-c6b875fd.js';
-import { a as ChartLib } from './chunk-f29847bd.js';
+import { a as Param, b as ChartLib } from './chunk-b8f30615.js';
 import { a as DataModel } from './chunk-9b3c1d73.js';
 import './chunk-ee323282.js';
 
@@ -16,24 +16,20 @@ class QuantumAnnotation {
         this.showLegend = true;
         this.options = new Param();
         this.hiddenData = [];
-        this.theme = "light";
         this.width = "";
         this.height = "";
         this.legendOffset = 70;
         this._mapIndex = {};
         this.LOG = new Logger(QuantumAnnotation);
-        this._options = {};
+        this._options = {
+            gridLineColor: '#ffee77',
+            timeMode: 'date'
+        };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -83,7 +79,7 @@ class QuantumAnnotation {
         this.height = height + '';
         ctx.parentElement.style.height = height + 'px';
         ctx.parentElement.style.width = '100%';
-        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor;
         const me = this;
         const chartOption = {
             layout: {
@@ -175,6 +171,9 @@ class QuantumAnnotation {
                 min: this.timeMin,
                 max: this.timeMax,
             };
+            chartOption.scales.xAxes[0].ticks = {
+                fontColor: color
+            };
             chartOption.scales.xAxes[0].type = 'time';
         }
         this._chart = new Chart.Scatter(ctx, {
@@ -241,14 +240,14 @@ class QuantumAnnotation {
         this.drawChart();
     }
     render() {
-        return (h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container", style: {
                     position: "relative",
                     width: this.width,
                     height: this.height
                 } },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height }))));
+                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-annotation"; }
     static get encapsulation() { return "shadow"; }
@@ -288,11 +287,6 @@ class QuantumAnnotation {
             "type": Boolean,
             "attr": "show-legend"
         },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
-        },
         "timeMax": {
             "type": Number,
             "attr": "time-max",
@@ -316,7 +310,7 @@ class QuantumAnnotation {
             "cancelable": true,
             "composed": true
         }]; }
-    static get style() { return "quantum-annotation .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
+    static get style() { return ":host .chart-container {\n  width: var(--quantum-chart-width, 100%);\n  height: var(--quantum-chart-height, 100%);\n  position: relative; }"; }
 }
 
 export { QuantumAnnotation };

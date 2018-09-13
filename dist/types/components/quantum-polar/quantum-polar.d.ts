@@ -8,7 +8,6 @@ export declare class QuantumPolar {
     showLegend: boolean;
     data: DataModel | any[];
     options: Param;
-    theme: string;
     width: string;
     height: string;
     el: HTMLElement;
@@ -17,7 +16,6 @@ export declare class QuantumPolar {
     private uuid;
     private onData;
     private onOptions;
-    private onTheme;
     private parseData;
     private drawChart;
     componentDidLoad(): void;

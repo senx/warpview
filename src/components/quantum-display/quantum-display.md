@@ -12,7 +12,6 @@ Displays alphanumeric value
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| theme | `string` | 'light' | Possible values are: 'light', 'dark' |
 | unit | `string` | '' | Unit used |
 | displayTitle | `string` | '' | Main title |
 | responsive | `boolean` | false | Fit the parent space |

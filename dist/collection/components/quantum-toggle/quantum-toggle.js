@@ -1,19 +1,16 @@
 import { ChartLib } from "../../utils/chart-lib";
+import { Param } from "../../model/param";
 export class QuantumToggle {
     constructor() {
-        this.options = '{}';
+        this.options = new Param();
         this.checked = false;
-        this.state = false;
         this.text1 = "";
         this.text2 = "";
-        this._options = {
-            switchClass: '',
-            switchLabelClass: '',
-            switchHandleClass: ''
-        };
+        this.state = false;
+        this._options = new Param();
     }
     componentWillLoad() {
-        this._options = ChartLib.mergeDeep(this._options, JSON.parse(this.options));
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         this.state = this.checked;
     }
     switched() {
@@ -23,12 +20,12 @@ export class QuantumToggle {
     render() {
         return (h("div", { class: "container" },
             h("div", { class: "text" }, this.text1),
-            h("label", { class: 'switch ' + this._options.switchClass },
+            h("label", { class: "switch" },
                 this.state
                     ? h("input", { type: "checkbox", class: "switch-input", checked: true, onClick: () => this.switched() })
                     : h("input", { type: "checkbox", class: "switch-input", onClick: () => this.switched() }),
-                h("span", { class: 'switch-label ' + this._options.switchLabelClass }),
-                h("span", { class: 'switch-handle ' + this._options.switchHandleClass })),
+                h("span", { class: "switch-label" }),
+                h("span", { class: "switch-handle" })),
             h("div", { class: "text" }, this.text2)));
     }
     static get is() { return "quantum-toggle"; }
@@ -39,7 +36,7 @@ export class QuantumToggle {
             "attr": "checked"
         },
         "options": {
-            "type": String,
+            "type": "Any",
             "attr": "options"
         },
         "state": {

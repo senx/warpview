@@ -9,10 +9,5 @@
 :host h1 {
   font-size: 20px;
   padding: 5px;
-  margin: 0; }
-
-:host .dark h1 {
-  color: var(--quantum-font-color, #ffffff); }
-
-:host .light h1 {
+  margin: 0;
   color: var(--quantum-font-color, #000000); }

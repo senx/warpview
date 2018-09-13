@@ -1,4 +1,5 @@
 import Chart from 'chart.js';
+import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
@@ -10,12 +11,13 @@ export class QuantumScatter {
         this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
-        this.options = {};
+        this.options = new Param();
         this.width = '';
         this.height = '';
-        this.theme = 'light';
         this.LOG = new Logger(QuantumScatter);
-        this._options = {};
+        this._options = {
+            gridLineColor: '#8e8e8e'
+        };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
     onData(newValue, oldValue) {
@@ -27,12 +29,6 @@ export class QuantumScatter {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            this.drawChart();
-        }
-    }
-    onTheme(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['theme'], newValue);
             this.drawChart();
         }
     }
@@ -49,7 +45,7 @@ export class QuantumScatter {
         let gts = this.gtsToScatter(dataList);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        const color = this._options.gridLineColor || ChartLib.getGridColor(this.theme);
+        const color = this._options.gridLineColor;
         const options = {
             legend: {
                 display: this.showLegend
@@ -118,7 +114,7 @@ export class QuantumScatter {
         this.drawChart();
     }
     render() {
-        return h("div", { class: this.theme },
+        return h("div", null,
             h("h1", null, this.chartTitle),
             h("div", { class: "chart-container" },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
@@ -155,11 +151,6 @@ export class QuantumScatter {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme",
-            "watchCallbacks": ["onTheme"]
         },
         "unit": {
             "type": String,
