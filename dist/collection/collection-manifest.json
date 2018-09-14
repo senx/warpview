@@ -726,6 +726,12 @@
         },
         {
           "name": "_toHide"
+        },
+        {
+          "name": "showChart"
+        },
+        {
+          "name": "showMap"
         }
       ],
       "listeners": [
@@ -1081,6 +1087,9 @@
           "name": "state"
         }
       ],
+      "hostElement": {
+        "name": "el"
+      },
       "events": [
         {
           "event": "stateChange"

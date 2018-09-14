@@ -26,8 +26,8 @@ export class QuantumMap {
   @Prop() height: string;
   @Prop() responsive: boolean = false;
   @Prop() data: any[] = [];
-  @Prop() startLat: number = 90;
-  @Prop() startLong: number = 90;
+  @Prop() startLat: number;
+  @Prop() startLong: number;
   @Prop() startZoom: number = 2;
   @Prop() dotsLimit: number = 1000;
 
@@ -87,7 +87,7 @@ export class QuantumMap {
       return;
     }
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-    this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat, this.startLong], this.startZoom);
+    this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat || 0, this.startLong || 0], this.startZoom || 5);
     Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this._map);
@@ -130,11 +130,11 @@ export class QuantumMap {
 
   private gtsToGeoJSON(data) {
     let geoData = [];
-    if(!data) {
+    if (!data) {
       return [];
     }
     (data.data || []).forEach((g, i) => {
-      const param = data.params[i];
+      const param = data.params ? data.params[i] : {};
       if (g.positions) {
         let point = {} as any;
         g.positions.forEach(p => {
@@ -167,7 +167,7 @@ export class QuantumMap {
         });
 
       } else {
-        let key = param.key.toLowerCase();
+        let key = (param.key || '').toLowerCase();
         if (key === "path") {
           let style = {
             color: param.color || ColorLib.getColor(i),
@@ -258,7 +258,7 @@ export class QuantumMap {
 
           if (param.displayDots === 'true') {
             let point = {} as any;
-            g.v.forEach(p => {
+            (g.v || []).forEach(p => {
               point = {
                 type: 'Feature',
                 properties: {
@@ -292,7 +292,7 @@ export class QuantumMap {
           }
         } else {
           let point = {} as any;
-          g.v.forEach(p => {
+          (g.v || []).forEach(p => {
             point = {
               type: 'Feature',
               properties: {
@@ -355,7 +355,7 @@ export class QuantumMap {
         <div class="map-container">
           <div id={this.uuid} style={{width: this.width, height: this.height}}/>
         </div>
-        {this.heatControls == true
+        {!!this.heatControls
           ? <quantum-heatmap-sliders/>
           : ""}
       </div>

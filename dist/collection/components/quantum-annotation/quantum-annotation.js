@@ -47,7 +47,7 @@ export class QuantumAnnotation {
     }
     minBoundChange(newValue, oldValue) {
         this._chart.options.animation.duration = 0;
-        if (oldValue !== newValue) {
+        if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
             this._chart.options.scales.xAxes[0].time.min = newValue;
             this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
             this._chart.update();
@@ -55,7 +55,7 @@ export class QuantumAnnotation {
     }
     maxBoundChange(newValue, oldValue) {
         this._chart.options.animation.duration = 0;
-        if (oldValue !== newValue) {
+        if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
             this._chart.options.scales.xAxes[0].time.max = newValue;
             this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
             this._chart.update();

@@ -27,6 +27,8 @@ export class QuantumPlot {
   @State() private _toHide: string[] = [];
   @State() private _timeMin;
   @State() private _timeMax;
+  @State() showChart = true;
+  @State() showMap = false;
 
   private LOG: Logger = new Logger(QuantumPlot);
   private line: HTMLElement;
@@ -61,13 +63,23 @@ export class QuantumPlot {
   @Listen('stateChange')
   stateChange(event: CustomEvent) {
     this.LOG.debug(['stateChange'], event.detail);
-    if (event.detail.state) {
-      this._options = ChartLib.mergeDeep(this._options, {timeMode: "timestamp"});
+    switch (event.detail.id) {
+      case 'timeSwitch' :
+        if (event.detail.state) {
+          this._options = ChartLib.mergeDeep(this._options, {timeMode: "timestamp"});
+        }
+        else {
+          this._options = ChartLib.mergeDeep(this._options, {timeMode: "date"});
+        }
+        this.drawCharts();
+        break;
+      case 'chartSwitch' :
+        this.showChart = event.detail.state;
+        break;
+      case 'mapSwitch' :
+        this.showMap = event.detail.state;
+        break;
     }
-    else {
-      this._options = ChartLib.mergeDeep(this._options, {timeMode: "date"});
-    }
-    this.drawCharts();
   }
 
   @Listen('boundsDidChange')
@@ -113,10 +125,14 @@ export class QuantumPlot {
 
   render() {
     return <div>
-      <quantum-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></quantum-toggle>
-
+      <div class="inline">
+        <quantum-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></quantum-toggle>
+        <quantum-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
+                        checked={this.showChart}></quantum-toggle>
+        <quantum-toggle id="mapSwitch" text-1="Hide map" text-2="Display map" checked={this.showMap}></quantum-toggle>
+      </div>
       <quantum-gts-tree data={this._data} id="tree"></quantum-gts-tree>
-      <div class="maincontainer">
+      {this.showChart ? <div class="maincontainer">
         <div class="bar"></div>
         <quantum-annotation data={this._data} responsive={this.responsive} id="annotation" show-legend={this.showLegend}
                             timeMin={this._timeMin} timeMax={this._timeMax}
@@ -126,10 +142,11 @@ export class QuantumPlot {
                          hiddenData={this._toHide}
                          options={this._options}></quantum-chart>
         </div>
-      </div>
-      <quantum-map width="100%" height="800px" startLat={51.5} startLong={-0.5} startZoom={10}
-                   id="map" data={this._data as any} heatRadius={25} heatBlur={15} heatOpacity={0.5} heatControls={true}
-      ></quantum-map>
+      </div> : ''}
+      {this.showMap ? <quantum-map width="100%" height="800px" startZoom={10}
+                                   id="map" data={this._data as any} heatRadius={25} heatBlur={15} heatOpacity={0.5}
+                                   heatControls={false}
+      ></quantum-map> : ''}
     </div>;
   }
 }

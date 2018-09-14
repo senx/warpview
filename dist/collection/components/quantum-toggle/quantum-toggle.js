@@ -10,7 +10,7 @@ export class QuantumToggle {
     }
     switched() {
         this.state = !this.state;
-        this.stateChange.emit({ state: this.state });
+        this.stateChange.emit({ state: this.state, id: this.el.id });
     }
     render() {
         return h("div", { class: "container" },
@@ -29,6 +29,9 @@ export class QuantumToggle {
         "checked": {
             "type": Boolean,
             "attr": "checked"
+        },
+        "el": {
+            "elementRef": true
         },
         "state": {
             "state": true

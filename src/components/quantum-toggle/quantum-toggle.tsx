@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, Prop, State} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Prop, State} from '@stencil/core';
 
 @Component({
   tag: 'quantum-toggle',
@@ -10,6 +10,8 @@ export class QuantumToggle {
   @Prop() text1: string = "";
   @Prop() text2: string = "";
 
+  @Element() el: HTMLElement;
+
   @State() state: boolean = false;
 
   @Event() stateChange: EventEmitter;
@@ -20,7 +22,7 @@ export class QuantumToggle {
 
   switched() {
     this.state = !this.state;
-    this.stateChange.emit({state: this.state});
+    this.stateChange.emit({state: this.state, id: this.el.id});
   }
 
   render() {

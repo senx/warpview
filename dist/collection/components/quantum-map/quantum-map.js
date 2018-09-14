@@ -9,8 +9,6 @@ export class QuantumMap {
         this.chartTitle = "";
         this.responsive = false;
         this.data = [];
-        this.startLat = 90;
-        this.startLong = 90;
         this.startZoom = 2;
         this.dotsLimit = 1000;
         this.heatData = [];
@@ -51,7 +49,7 @@ export class QuantumMap {
             return;
         }
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        this._map = Leaflet.map(ctx).setView([this.startLat, this.startLong], this.startZoom);
+        this._map = Leaflet.map(ctx).setView([this.startLat || 0, this.startLong || 0], this.startZoom || 5);
         Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this._map);
@@ -93,7 +91,7 @@ export class QuantumMap {
             return [];
         }
         (data.data || []).forEach((g, i) => {
-            const param = data.params[i];
+            const param = data.params ? data.params[i] : {};
             if (g.positions) {
                 let point = {};
                 g.positions.forEach(p => {
@@ -125,7 +123,7 @@ export class QuantumMap {
                 });
             }
             else {
-                let key = param.key.toLowerCase();
+                let key = (param.key || '').toLowerCase();
                 if (key === "path") {
                     let style = {
                         color: param.color || ColorLib.getColor(i),
@@ -212,7 +210,7 @@ export class QuantumMap {
                     });
                     if (param.displayDots === 'true') {
                         let point = {};
-                        g.v.forEach(p => {
+                        (g.v || []).forEach(p => {
                             point = {
                                 type: 'Feature',
                                 properties: {
@@ -246,7 +244,7 @@ export class QuantumMap {
                 }
                 else {
                     let point = {};
-                    g.v.forEach(p => {
+                    (g.v || []).forEach(p => {
                         point = {
                             type: 'Feature',
                             properties: {
@@ -306,7 +304,7 @@ export class QuantumMap {
             h("h1", null, this.chartTitle),
             h("div", { class: "map-container" },
                 h("div", { id: this.uuid, style: { width: this.width, height: this.height } })),
-            this.heatControls == true
+            !!this.heatControls
                 ? h("quantum-heatmap-sliders", null)
                 : ""));
     }
