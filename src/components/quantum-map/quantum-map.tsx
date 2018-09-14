@@ -21,7 +21,7 @@ import {Logger} from "../../utils/logger";
 
 export class QuantumMap {
 
-  @Prop() mapTitle: string = "";
+  @Prop() chartTitle: string = "";
   @Prop() width: string;
   @Prop() height: string;
   @Prop() responsive: boolean = false;
@@ -351,7 +351,7 @@ export class QuantumMap {
   render() {
     return (
       <div>
-        <h1>{this.mapTitle}</h1>
+        <h1>{this.chartTitle}</h1>
         <div class="map-container">
           <div id={this.uuid} style={{width: this.width, height: this.height}}/>
         </div>

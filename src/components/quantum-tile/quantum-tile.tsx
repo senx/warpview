@@ -81,7 +81,7 @@ export class QuantumTile {
     this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
     fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
       response.text().then(gtsStr => {
-       // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
+        // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
         this.gtsList = JSON.parse(gtsStr);
         this.parseGTS();
       }, err => {
@@ -99,50 +99,59 @@ export class QuantumTile {
       <div class="warpscript">
         <slot/>
       </div>
-     {/* {
+      {/* {
         this.loading
           ? <quantum-spinner />
           : <span>*/}
-        {this.graphs['scatter'].indexOf(this.type) > -1 ?
-          <quantum-scatter
-            responsive={this.responsive} unit={this.unit} data={this.data} 
-            options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
-          /> : ''}
-            {this.graphs['chart'].indexOf(this.type) > -1 ?
-              <quantum-chart type={this.type}
-                             responsive={this.responsive} unit={this.unit} data={this.data}
-                             options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
-                             /> : ''}
-            {this.type == 'bubble' ?
-              <quantum-bubble
-                showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data} 
-                options={this.options} chartTitle={this.chartTitle}/> : ''
-            }
-            {this.graphs['pie'].indexOf(this.type) > -1 ?
-              <quantum-pie
-                responsive={this.responsive} unit={this.unit} data={this.data} 
-                options={this.options} showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
-            }
-            {this.graphs['polar'].indexOf(this.type) > -1 ?
-              <quantum-polar
-                responsive={this.responsive} unit={this.unit} data={this.data} 
-                showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
-            }
-            {this.graphs['radar'].indexOf(this.type) > -1 ?
-              <quantum-radar
-                responsive={this.responsive} unit={this.unit} data={this.data} 
-                showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
-            }
-            {this.graphs['bar'].indexOf(this.type) > -1 ?
-              <quantum-bar
-                responsive={this.responsive} unit={this.unit} data={this.data} 
-                showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
-            }
-            {this.type == 'text' ?
-              <quantum-display
-                responsive={this.responsive} unit={this.unit} data={this.data} 
-                displayTitle={this.chartTitle} options={this.options}/> : ''}
-        {/*  </span>
+      {this.graphs['scatter'].indexOf(this.type) > -1 ?
+        <quantum-scatter
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
+        /> : ''}
+      {this.graphs['chart'].indexOf(this.type) > -1 ?
+        <quantum-chart type={this.type}
+                       responsive={this.responsive} unit={this.unit} data={this.data}
+                       options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
+        /> : ''}
+      {this.type == 'bubble' ?
+        <quantum-bubble
+          showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
+          options={this.options} chartTitle={this.chartTitle}/> : ''
+      }
+      {this.type == 'map' ?
+        <quantum-map
+          responsive={true} data={this.data} chartTitle={this.chartTitle}/> : ''
+      }
+      {this.type == 'plot' ?
+        <quantum-plot
+          responsive={true} showLegend={this.showLegend} data={this.data} options={this.options}
+          chartTitle={this.chartTitle}/> : ''
+      }
+      {this.graphs['pie'].indexOf(this.type) > -1 ?
+        <quantum-pie
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          options={this.options} showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
+      }
+      {this.graphs['polar'].indexOf(this.type) > -1 ?
+        <quantum-polar
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+      }
+      {this.graphs['radar'].indexOf(this.type) > -1 ?
+        <quantum-radar
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+      }
+      {this.graphs['bar'].indexOf(this.type) > -1 ?
+        <quantum-bar
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+      }
+      {this.type == 'text' ?
+        <quantum-display
+          responsive={this.responsive} unit={this.unit} data={this.data}
+          displayTitle={this.chartTitle} options={this.options}/> : ''}
+      {/*  </span>
       }*/}
     </div>
   }
