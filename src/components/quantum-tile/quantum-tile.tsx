@@ -124,8 +124,7 @@ export class QuantumTile {
       }
       {this.type == 'plot' ?
         <quantum-plot
-          responsive={true} showLegend={this.showLegend} data={this.data} options={this.options}
-          chartTitle={this.chartTitle}/> : ''
+          responsive={true} showLegend={this.showLegend} data={this.data} options={this.options} /> : ''
       }
       {this.graphs['pie'].indexOf(this.type) > -1 ?
         <quantum-pie

@@ -85,6 +85,10 @@ export class QuantumTile {
                 h("quantum-chart", { type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, "show-legend": this.showLegend, chartTitle: this.chartTitle }) : '',
             this.type == 'bubble' ?
                 h("quantum-bubble", { showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, options: this.options, chartTitle: this.chartTitle }) : '',
+            this.type == 'map' ?
+                h("quantum-map", { responsive: true, data: this.data, chartTitle: this.chartTitle }) : '',
+            this.type == 'plot' ?
+                h("quantum-plot", { responsive: true, showLegend: this.showLegend, data: this.data, options: this.options }) : '',
             this.graphs['pie'].indexOf(this.type) > -1 ?
                 h("quantum-pie", { responsive: this.responsive, unit: this.unit, data: this.data, options: this.options, showLegend: this.showLegend, chartTitle: this.chartTitle }) : '',
             this.graphs['polar'].indexOf(this.type) > -1 ?

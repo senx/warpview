@@ -433,6 +433,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumMap {
+      'chartTitle': string;
       'data': any[];
       'dotsLimit': number;
       'heatBlur': number;
@@ -441,7 +442,6 @@ declare global {
       'heatOpacity': number;
       'heatRadius': number;
       'height': string;
-      'mapTitle': string;
       'responsive': boolean;
       'startLat': number;
       'startLong': number;
@@ -469,6 +469,7 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumMapAttributes extends HTMLAttributes {
+      'chartTitle'?: string;
       'data'?: any[];
       'dotsLimit'?: number;
       'heatBlur'?: number;
@@ -477,7 +478,6 @@ declare global {
       'heatOpacity'?: number;
       'heatRadius'?: number;
       'height'?: string;
-      'mapTitle'?: string;
       'responsive'?: boolean;
       'startLat'?: number;
       'startLong'?: number;

@@ -2,7 +2,7 @@ import '../../stencil.core';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
 export declare class QuantumMap {
-    mapTitle: string;
+    chartTitle: string;
     width: string;
     height: string;
     responsive: boolean;

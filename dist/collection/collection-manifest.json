@@ -495,6 +495,11 @@
       },
       "props": [
         {
+          "name": "chartTitle",
+          "type": "String",
+          "attr": "chart-title"
+        },
+        {
           "name": "data",
           "attr": "data"
         },
@@ -531,11 +536,6 @@
           "name": "height",
           "type": "String",
           "attr": "height"
-        },
-        {
-          "name": "mapTitle",
-          "type": "String",
-          "attr": "map-title"
         },
         {
           "name": "responsive",
@@ -982,7 +982,9 @@
         "quantum-bubble",
         "quantum-chart",
         "quantum-display",
+        "quantum-map",
         "quantum-pie",
+        "quantum-plot",
         "quantum-polar",
         "quantum-radar",
         "quantum-scatter"
