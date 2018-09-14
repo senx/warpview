@@ -15,6 +15,7 @@ export declare class QuantumBubble {
     private _options;
     private LOG;
     private uuid;
+    private _chart;
     private onData;
     private onOptions;
     private drawChart;

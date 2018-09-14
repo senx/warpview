@@ -1,2 +1,123 @@
 /*! Built with http://stenciljs.com */
-!function(t,e,a,i,n,s,r,h,u,o,l,d,m,c,p){for((l=t.quantumviz=t.quantumviz||{}).components=u,(m=u.filter(function(t){return t[2]}).map(function(t){return t[0]})).length&&((d=e.createElement("style")).innerHTML=m.join()+"{visibility:hidden}.hydrated{visibility:inherit}",d.setAttribute("data-styles",""),e.head.insertBefore(d,e.head.firstChild)),l.$r=[],p=o.componentOnReady,o.componentOnReady=function(e){const a=this;function i(t){l.$r?l.$r.push([a,t]):l.componentOnReady(a,t)}return p&&p.call(a),e?i(e):t.Promise?new Promise(i):{then:i}},d=(m=e.querySelectorAll("script")).length-1;d>=0&&!(c=m[d]).src&&!c.hasAttribute("data-resources-url");d--);(m=c.getAttribute("data-resources-url"))&&(n=m),!n&&c.src&&(n=(m=c.src.split("/").slice(0,-1)).join("/")+(m.length?"/":"")+"quantumviz/"),d=e.createElement("script"),function(t,e,a,i){return!(e.search.indexOf("core=esm")>0)&&(!(!(e.search.indexOf("core=es5")>0||"file:"===e.protocol)&&t.customElements&&t.customElements.define&&t.fetch&&t.CSS&&t.CSS.supports&&t.CSS.supports("color","var(--c)")&&"noModule"in a)||function(t){try{return new Function('import("")'),!1}catch(t){}return!0}())}(t,t.location,d)?d.src=n+"quantumviz.wobbl7h8.js":(d.src=n+"quantumviz.zqu4rqmz.js",d.setAttribute("type","module"),d.setAttribute("crossorigin",!0)),d.setAttribute("data-resources-url",n),d.setAttribute("data-namespace","quantumviz"),e.head.appendChild(d)}(window,document,0,0,0,0,0,0,[["quantum-annotation","8qfritj1",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["hiddenData",1],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["timeMax",1,0,"time-max",4],["timeMin",1,0,"time-min",4],["width",2,0,1,2]],1],["quantum-bar","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-bubble","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-chart","cdya2p1u",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["hiddenData",1],["options",1],["responsive",1,0,1,3],["standalone",1,0,1,3],["type",1,0,1,2],["unit",1,0,1,2]]],["quantum-chip","4p2mm4cw",1,[["el",7],["index",1,0,1,4],["name",1,0,1,2],["node",1,0,1,1]]],["quantum-display","sy612jdg",1,[["data",1,0,1,1],["displayTitle",1,0,"display-title",2],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-gts-tree","4p2mm4cw",1,[["data",1],["theme",1,0,1,2]]],["quantum-heatmap-sliders","qhvuk8v8",0,[["blurValue",1,0,"blur-value",4],["el",7],["maxBlurValue",1,0,"max-blur-value",4],["maxRadiusValue",1,0,"max-radius-value",4],["minBlurValue",1,0,"min-blur-value",4],["minRadiusValue",1,0,"min-radius-value",4],["radiusValue",1,0,"radius-value",4]],1],["quantum-map","qhvuk8v8",1,[["data",1],["dotsLimit",1,0,"dots-limit",4],["el",7],["heatBlur",1,0,"heat-blur",4],["heatControls",1,0,"heat-controls",3],["heatData",1],["heatOpacity",1,0,"heat-opacity",4],["heatRadius",1,0,"heat-radius",4],["height",1,0,1,2],["mapTitle",1,0,"map-title",2],["responsive",1,0,1,3],["startLat",1,0,"start-lat",4],["startLong",1,0,"start-long",4],["startZoom",1,0,"start-zoom",4],["width",1,0,1,2]],1,[["heatRadiusDidChange","heatRadiusDidChange"],["heatBlurDidChange","heatBlurDidChange"],["heatOpacityDidChange","heatOpacityDidChange"]]],["quantum-multi-charts","d2elcrfm",1,[["chartTitle",1,0,"chart-title",2],["data",1,0,1,2],["el",7],["height",1,0,1,2],["hiddenData",1,0,"hidden-data",2],["options",1,0,1,2],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["timeMax",1,0,"time-max",4],["timeMin",1,0,"time-min",4],["type",1,0,1,2],["unit",1,0,1,2],["wc",7],["width",1,0,1,2]],1,[["chartInfos","chartInfosWatcher"],["xZoom","xZoomListener"],["xSliderValueChanged","xSliderListener"]]],["quantum-pie","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-polar","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-radar","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-scatter","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-spinner","sy612jdg",1,[["theme",1,0,1,2]],1],["quantum-tile","mva14fhn",1,[["chartTitle",1,0,"chart-title",2],["data",5],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["type",1,0,1,2],["unit",1,0,1,2],["url",1,0,1,2],["wsElement",7]],1],["quantum-toggle","ztujbfvo",1,[["checked",1,0,1,3],["state",5],["text1",1,0,"text-1",2],["text2",1,0,"text-2",2]],1],["quantum-tree-view","4p2mm4cw",1,[["branch",1,0,1,3],["gtsList",1,0,"gts-list",1],["theme",1,0,1,2]]]],HTMLElement.prototype);
+(function(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCoreSsr, appCorePolyfilled, hydratedCssClass, components) {
+
+    function init(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCorePolyfilled, hydratedCssClass, components, HTMLElementPrototype, App, x, y, scriptElm, orgComponentOnReady) {
+    // create global namespace if it doesn't already exist
+    App = win[namespace] = win[namespace] || {};
+    App.components = components;
+    y = components.filter(function (c) { return c[2]; }).map(function (c) { return c[0]; });
+    if (y.length) {
+        // auto hide components until they been fully hydrated
+        // reusing the "x" and "i" variables from the args for funzies
+        x = doc.createElement('style');
+        x.innerHTML = y.join() + '{visibility:hidden}.' + hydratedCssClass + '{visibility:inherit}';
+        x.setAttribute('data-styles', '');
+        doc.head.insertBefore(x, doc.head.firstChild);
+    }
+    // create a temporary array to store the resolves
+    // before the core file has fully loaded
+    App.$r = [];
+    // add componentOnReady to HTMLElement.prototype
+    orgComponentOnReady = HTMLElementPrototype.componentOnReady;
+    HTMLElementPrototype.componentOnReady = function componentOnReady(cb) {
+        const elm = this;
+        // there may be more than one app on the window so
+        // call original HTMLElement.prototype.componentOnReady
+        // if one exists already
+        orgComponentOnReady && orgComponentOnReady.call(elm);
+        function executor(resolve) {
+            if (App.$r) {
+                // core file hasn't loaded yet
+                // so let's throw it in this temporary queue
+                // and when the core does load it'll handle these
+                App.$r.push([elm, resolve]);
+            }
+            else {
+                // core has finished loading because there's no temporary queue
+                // call the core's logic to handle this
+                App.componentOnReady(elm, resolve);
+            }
+        }
+        if (cb) {
+            // just a callback
+            return executor(cb);
+        }
+        // callback wasn't provided, let's return a promise
+        if (win.Promise) {
+            // use native/polyfilled promise
+            return new Promise(executor);
+        }
+        // promise may not have been polyfilled yet
+        return { then: executor };
+    };
+    // figure out the script element for this current script
+    y = doc.querySelectorAll('script');
+    for (x = y.length - 1; x >= 0; x--) {
+        scriptElm = y[x];
+        if (scriptElm.src || scriptElm.hasAttribute('data-resources-url')) {
+            break;
+        }
+    }
+    // get the resource path attribute on this script element
+    y = scriptElm.getAttribute('data-resources-url');
+    if (y) {
+        // the script element has a data-resources-url attribute, always use that
+        resourcesUrl = y;
+    }
+    if (!resourcesUrl && scriptElm.src) {
+        // we don't have an exact resourcesUrl, so let's
+        // figure it out relative to this script's src and app's filesystem namespace
+        y = scriptElm.src.split('/').slice(0, -1);
+        resourcesUrl = (y.join('/')) + (y.length ? '/' : '') + fsNamespace + '/';
+    }
+    // request the core this browser needs
+    // test for native support of custom elements and fetch
+    // if either of those are not supported, then use the core w/ polyfills
+    // also check if the page was build with ssr or not
+    x = doc.createElement('script');
+    if (usePolyfills(win, win.location, x, 'import("")')) {
+        // requires the es5/polyfilled core
+        x.src = resourcesUrl + appCorePolyfilled;
+    }
+    else {
+        // let's do this!
+        x.src = resourcesUrl + appCore;
+        x.setAttribute('type', 'module');
+        x.setAttribute('crossorigin', true);
+    }
+    x.setAttribute('data-resources-url', resourcesUrl);
+    x.setAttribute('data-namespace', fsNamespace);
+    doc.head.appendChild(x);
+}
+function usePolyfills(win, location, scriptElm, dynamicImportTest) {
+    // fyi, dev mode has verbose if/return statements
+    // but it minifies to a nice 'lil one-liner ;)
+    if (location.search.indexOf('core=esm') > 0) {
+        // force esm build
+        return false;
+    }
+    if ((location.search.indexOf('core=es5') > 0) ||
+        (location.protocol === 'file:') ||
+        (!(win.customElements && win.customElements.define)) ||
+        (!win.fetch) ||
+        (!(win.CSS && win.CSS.supports && win.CSS.supports('color', 'var(--c)'))) ||
+        (!('noModule' in scriptElm))) {
+        // es5 build w/ polyfills
+        return true;
+    }
+    // final test to see if this browser support dynamic imports
+    return doesNotSupportsDynamicImports(dynamicImportTest);
+}
+function doesNotSupportsDynamicImports(dynamicImportTest) {
+    try {
+        new Function(dynamicImportTest);
+        return false;
+    }
+    catch (e) { }
+    return true;
+}
+
+
+    init(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCoreSsr, appCorePolyfilled, hydratedCssClass, components);
+
+    })(window, document, "quantumviz","quantumviz",0,"quantumviz.core.js","es5-build-disabled.js","hydrated",[["quantum-annotation","quantum-annotation",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["hiddenData",1],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["timeMax",1,0,"time-max",4],["timeMin",1,0,"time-min",4],["width",2,0,1,2]],1],["quantum-bar","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-bubble","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-chart","quantum-chart",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["hiddenData",1],["options",1],["responsive",1,0,1,3],["standalone",1,0,1,3],["type",1,0,1,2],["unit",1,0,1,2]]],["quantum-chip","quantum-chip",1,[["el",7],["index",1,0,1,4],["name",1,0,1,2],["node",1,0,1,1]]],["quantum-display","quantum-display",1,[["data",1,0,1,1],["displayTitle",1,0,"display-title",2],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-gts-tree","quantum-chip",1,[["data",1,0,1,2],["theme",1,0,1,2]]],["quantum-heatmap-sliders","quantum-heatmap-sliders",0,[["blurValue",1,0,"blur-value",4],["el",7],["maxBlurValue",1,0,"max-blur-value",4],["maxRadiusValue",1,0,"max-radius-value",4],["minBlurValue",1,0,"min-blur-value",4],["minRadiusValue",1,0,"min-radius-value",4],["radiusValue",1,0,"radius-value",4]],1],["quantum-map","quantum-heatmap-sliders",1,[["data",1],["dotsLimit",1,0,"dots-limit",4],["el",7],["heatBlur",1,0,"heat-blur",4],["heatControls",1,0,"heat-controls",3],["heatData",1],["heatOpacity",1,0,"heat-opacity",4],["heatRadius",1,0,"heat-radius",4],["height",1,0,1,2],["mapTitle",1,0,"map-title",2],["responsive",1,0,1,3],["startLat",1,0,"start-lat",4],["startLong",1,0,"start-long",4],["startZoom",1,0,"start-zoom",4],["width",1,0,1,2]],1,[["heatRadiusDidChange","heatRadiusDidChange"],["heatBlurDidChange","heatBlurDidChange"],["heatOpacityDidChange","heatOpacityDidChange"]]],["quantum-pie","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-plot","quantum-annotation",1,[["_data",5],["_options",5],["_timeMax",5],["_timeMin",5],["_toHide",5],["data",1,0,1,2],["el",7],["height",2,0,1,2],["options",1,0,1,2],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["stateChange","stateChange"],["boundsDidChange","boundsDidChange"],["pointHover","pointHover"],["quantumSelectedGTS","quantumSelectedGTS"]]],["quantum-polar","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-radar","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-scatter","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1],["quantum-spinner","quantum-display",1,[["theme",1,0,1,2]],1],["quantum-tile","quantum-bar",1,[["chartTitle",1,0,"chart-title",2],["data",5],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["type",1,0,1,2],["unit",1,0,1,2],["url",1,0,1,2],["wsElement",7]],1],["quantum-toggle","quantum-annotation",1,[["checked",1,0,1,3],["state",5],["text1",1,0,"text-1",2],["text2",1,0,"text-2",2]],1],["quantum-tree-view","quantum-chip",1,[["branch",1,0,1,3],["gtsList",1,0,"gts-list",1],["theme",1,0,1,2]]]],HTMLElement.prototype);

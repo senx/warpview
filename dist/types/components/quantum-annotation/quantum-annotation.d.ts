@@ -24,7 +24,7 @@ export declare class QuantumAnnotation {
     private uuid;
     private onData;
     changeScale(newValue: Param, oldValue: Param): void;
-    hideData(newValue: string[], oldValue: string[]): void;
+    hideData(newValue: any, oldValue: any): void;
     minBoundChange(newValue: number, oldValue: number): void;
     maxBoundChange(newValue: number, oldValue: number): void;
     /**

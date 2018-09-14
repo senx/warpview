@@ -29,7 +29,7 @@ export class QuantumScatter {
   private _options: Param = {
     gridLineColor: '#8e8e8e'
   };
-  private chart: any;
+  private _chart: Chart;
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
 
   @Watch('data')
@@ -99,8 +99,10 @@ export class QuantumScatter {
         }]
       },
     };
-
-    this.chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: options});
+    if(this._chart) {
+      this._chart.destroy();
+    }
+    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: options});
     this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
   }
 

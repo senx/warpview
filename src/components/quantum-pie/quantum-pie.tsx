@@ -28,6 +28,7 @@ export class QuantumPie {
     type: 'pie'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private _chart: Chart;
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
@@ -81,7 +82,10 @@ export class QuantumPie {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     this.LOG.debug(['drawChart'], [this.data, this._options, data]);
-    new Chart(ctx, {
+    if(this._chart) {
+      this._chart.destroy();
+    }
+    this._chart = new Chart(ctx, {
       type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
       data: {
         datasets: [{

@@ -316,7 +316,7 @@ declare global {
 
   namespace StencilComponents {
     interface QuantumGtsTree {
-      'data': DataModel | GTS[];
+      'data': DataModel | GTS[] | string;
       'theme': string;
     }
   }
@@ -340,7 +340,7 @@ declare global {
   }
   namespace JSXElements {
     export interface QuantumGtsTreeAttributes extends HTMLAttributes {
-      'data'?: DataModel | GTS[];
+      'data'?: DataModel | GTS[] | string;
       'theme'?: string;
     }
   }
@@ -492,61 +492,6 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumMultiCharts {
-      'chartTitle': string;
-      'data': string;
-      'height': string;
-      'hiddenData': string;
-      'options': string;
-      'responsive': boolean;
-      'showLegend': boolean;
-      'timeMax': number;
-      'timeMin': number;
-      'type': string;
-      'unit': string;
-      'width': string;
-    }
-  }
-
-  interface HTMLQuantumMultiChartsElement extends StencilComponents.QuantumMultiCharts, HTMLStencilElement {}
-
-  var HTMLQuantumMultiChartsElement: {
-    prototype: HTMLQuantumMultiChartsElement;
-    new (): HTMLQuantumMultiChartsElement;
-  };
-  interface HTMLElementTagNameMap {
-    'quantum-multi-charts': HTMLQuantumMultiChartsElement;
-  }
-  interface ElementTagNameMap {
-    'quantum-multi-charts': HTMLQuantumMultiChartsElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'quantum-multi-charts': JSXElements.QuantumMultiChartsAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface QuantumMultiChartsAttributes extends HTMLAttributes {
-      'chartTitle'?: string;
-      'data'?: string;
-      'height'?: string;
-      'hiddenData'?: string;
-      'options'?: string;
-      'responsive'?: boolean;
-      'showLegend'?: boolean;
-      'timeMax'?: number;
-      'timeMin'?: number;
-      'type'?: string;
-      'unit'?: string;
-      'width'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
     interface QuantumPie {
       'chartTitle': string;
       'data': DataModel | any[];
@@ -585,6 +530,49 @@ declare global {
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface QuantumPlot {
+      'data': string | GTS[] | DataModel;
+      'height': string;
+      'options': string | Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLQuantumPlotElement extends StencilComponents.QuantumPlot, HTMLStencilElement {}
+
+  var HTMLQuantumPlotElement: {
+    prototype: HTMLQuantumPlotElement;
+    new (): HTMLQuantumPlotElement;
+  };
+  interface HTMLElementTagNameMap {
+    'quantum-plot': HTMLQuantumPlotElement;
+  }
+  interface ElementTagNameMap {
+    'quantum-plot': HTMLQuantumPlotElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'quantum-plot': JSXElements.QuantumPlotAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface QuantumPlotAttributes extends HTMLAttributes {
+      'data'?: string | GTS[] | DataModel;
+      'height'?: string;
+      'options'?: string | Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
       'width'?: string;
     }
   }

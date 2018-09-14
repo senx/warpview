@@ -1,2 +1,86 @@
 /*! Built with http://stenciljs.com */
-const{h:o}=window.quantumviz;class s{constructor(o){this.className=o.name}log(o,s,e){const c=`[${this.className}] ${s.join(" - ")}`;switch(o){case a.DEBUG:break;case a.ERROR:console.error(c,e);break;case a.INFO:console.log(c,e);break;case a.WARN:console.warn(c,e);break;default:console.log(c,e)}}debug(o,s){this.log(a.DEBUG,o,s)}error(o,s){this.log(a.ERROR,o,s)}warn(o,s){this.log(a.WARN,o,s)}info(o,s){this.log(a.INFO,o,s)}}var a;!function(o){o[o.DEBUG=0]="DEBUG",o[o.ERROR=1]="ERROR",o[o.WARN=2]="WARN",o[o.INFO=3]="INFO"}(a||(a={}));export{s as a};
+const { h } = window.quantumviz;
+
+class Logger {
+    /**
+     *
+     * @param className
+     */
+    constructor(className) {
+        this.className = className.name;
+    }
+    /**
+     *
+     * @param {string[]} message message
+     * @param {LEVEL} level level
+     * @param {string[]} methods methods
+     */
+    log(level, methods, message) {
+        const display = `[${this.className}] ${methods.join(' - ')}`;
+        switch (level) {
+            case LEVEL.DEBUG: {
+                console.debug(display, message);
+                break;
+            }
+            case LEVEL.ERROR: {
+                console.error(display, message);
+                break;
+            }
+            case LEVEL.INFO: {
+                console.log(display, message);
+                break;
+            }
+            case LEVEL.WARN: {
+                console.warn(display, message);
+                break;
+            }
+            default: {
+                console.log(display, message);
+            }
+        }
+    }
+    /**
+     *
+     * @param message
+     * @param methods
+     */
+    debug(methods, message) {
+        this.log(LEVEL.DEBUG, methods, message);
+    }
+    /**
+     *
+     * @param message
+     * @param methods
+     */
+    error(methods, message) {
+        this.log(LEVEL.ERROR, methods, message);
+    }
+    /**
+     *
+     * @param message
+     * @param methods
+     */
+    warn(methods, message) {
+        this.log(LEVEL.WARN, methods, message);
+    }
+    /**
+     *
+     * @param message
+     * @param methods
+     */
+    info(methods, message) {
+        this.log(LEVEL.INFO, methods, message);
+    }
+}
+/**
+ *
+ */
+var LEVEL;
+(function (LEVEL) {
+    LEVEL[LEVEL["DEBUG"] = 0] = "DEBUG";
+    LEVEL[LEVEL["ERROR"] = 1] = "ERROR";
+    LEVEL[LEVEL["WARN"] = 2] = "WARN";
+    LEVEL[LEVEL["INFO"] = 3] = "INFO";
+})(LEVEL || (LEVEL = {}));
+
+export { Logger as a };

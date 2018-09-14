@@ -1,4 +1,6 @@
+import { DataModel } from "../model/dataModel";
 export declare class GTSLib {
+    private static LOG;
     static cleanArray(actual: any[]): any[];
     /**
      * Return a Set
@@ -48,7 +50,7 @@ export declare class GTSLib {
      * @param arr1
      * @returns {any}
      */
-    static flatDeep(arr1: any): any;
+    static flatDeep(arr1: any[]): any;
     /**
      *
      * @param a
@@ -65,4 +67,9 @@ export declare class GTSLib {
     static isGtsToAnnotate(gts: any): boolean;
     static gtsSort(gts: any): void;
     static gtsTimeRange(gts: any): any[];
+    /**
+     *
+     * @param data
+     */
+    static getData(data: any): DataModel;
 }

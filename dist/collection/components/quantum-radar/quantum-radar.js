@@ -81,7 +81,10 @@ export class QuantumRadar {
         if (!gts) {
             return;
         }
-        new Chart(ctx, {
+        if (this._chart) {
+            this._chart.destroy();
+        }
+        this._chart = new Chart(ctx, {
             type: 'radar',
             legend: { display: this.showLegend },
             data: {

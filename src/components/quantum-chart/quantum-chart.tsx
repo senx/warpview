@@ -7,6 +7,7 @@ import {ColorLib} from "../../utils/color-lib";
 import {Param} from "../../model/param";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
+import moment from "moment";
 
 /**
  * options :
@@ -47,6 +48,7 @@ export class QuantumChart {
     gridLineColor: '#8e8e8e'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private ticks = [];
 
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
@@ -74,6 +76,7 @@ export class QuantumChart {
 
   private gtsToData(gts) {
     this.LOG.debug(['gtsToData'], gts);
+    this.ticks= [];
     const datasets = [];
     const data = {};
     let pos = 0;
@@ -114,9 +117,11 @@ export class QuantumChart {
     Object.keys(data).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
+        this.ticks.push(parseInt(timestamp));
       } else {
         const ts = Math.floor(parseInt(timestamp) / 1000);
-        datasets.push([new Date(ts)].concat(data[timestamp].slice(0, labels.length - 1)));
+        datasets.push([moment(ts).utc(true).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
+        this.ticks.push(ts);
       }
     });
     datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
@@ -164,23 +169,9 @@ export class QuantumChart {
     });
   }
 
-  private zoomCallback(minDate, maxDate) {
-    this.boundsDidChange.emit({
-      bounds: {
-        min: minDate,
-        max: maxDate
-      }
-    })
-  }
-
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data
-    } else {
-      dataList = this.data;
-    }
+    let dataList = GTSLib.getData(this.data).data;
     const dataToplot = this.gtsToData(dataList);
 
     this.LOG.debug(['drawChart'], [dataToplot]);
@@ -192,7 +183,7 @@ export class QuantumChart {
         dataToplot.datasets,
         {
           height: (this.responsive ? this.el.parentElement.clientHeight : QuantumChart.DEFAULT_HEIGHT) - 30,
-          width: this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH,
+          width: (this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH) - 5,
           labels: dataToplot.labels,
           showRoller: false,
           showRangeSelector: this._options.showRangeSelector || true,
@@ -218,7 +209,24 @@ export class QuantumChart {
           axisLineColor: color,
           legendFormatter: this.legendFormatter,
           highlightCallback: this.highlightCallback.bind(this),
-          zoomCallback: this.zoomCallback.bind(this),
+          drawCallback: ((dygraph, is_initial) => {
+            this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+            if(dygraph.dateWindow_) {
+              this.boundsDidChange.emit({
+                bounds: {
+                  min: dygraph.dateWindow_[0],
+                  max: dygraph.dateWindow_[1]
+                }
+              });
+            } else {
+              this.boundsDidChange.emit({
+                bounds: {
+                  min: Math.min.apply(null, this.ticks),
+                  max: Math.max.apply(null, this.ticks)
+                }
+              });
+            }
+          }).bind(this),
           axisLabelWidth: this.standalone ? 50 : 94,
           rightGap: this.standalone ? 0 : 20
         }

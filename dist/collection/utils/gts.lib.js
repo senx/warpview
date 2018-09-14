@@ -1,3 +1,5 @@
+import { DataModel } from "../model/dataModel";
+import { Logger } from "./logger";
 export class GTSLib {
     static cleanArray(actual) {
         return actual.filter((i) => !!i);
@@ -148,7 +150,7 @@ export class GTSLib {
     static gtsFromJSONList(jsonList, prefixId) {
         let gtsList = [];
         let id;
-        jsonList.forEach((item, i) => {
+        (jsonList || []).forEach((item, i) => {
             let gts = item;
             if (item.gts) {
                 gts = item.gts;
@@ -181,7 +183,7 @@ export class GTSLib {
             }
         });
         return {
-            content: gtsList,
+            content: gtsList || [],
         };
     }
     /**
@@ -351,4 +353,21 @@ export class GTSLib {
         }
         return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
     }
+    /**
+     *
+     * @param data
+     */
+    static getData(data) {
+        if (typeof data === 'string') {
+            return { data: JSON.parse(data) };
+        }
+        else if (data.hasOwnProperty('data')) {
+            return data;
+        }
+        else if (GTSLib.isArray(data)) {
+            return { data: data };
+        }
+        return new DataModel();
+    }
 }
+GTSLib.LOG = new Logger(GTSLib);

@@ -1,0 +1,14 @@
+:host {
+  .maincontainer {
+    position: relative;
+  }
+  .bar {
+    width: 1px;
+    left: -100px;
+    position: absolute;
+    background-color: red;
+    top: 0;
+    bottom: 15px;
+    overflow: hidden;
+  }
+}

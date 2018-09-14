@@ -28,6 +28,7 @@ export class QuantumRadar {
     gridLineColor: '#8e8e8e'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private _chart: Chart;
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
@@ -94,7 +95,10 @@ export class QuantumRadar {
     if (!gts) {
       return;
     }
-    new Chart(ctx, {
+    if(this._chart) {
+      this._chart.destroy();
+    }
+    this._chart = new Chart(ctx, {
       type: 'radar',
       legend: {display: this.showLegend},
       data: {

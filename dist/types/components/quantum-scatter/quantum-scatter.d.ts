@@ -14,7 +14,7 @@ export declare class QuantumScatter {
     el: HTMLElement;
     private LOG;
     private _options;
-    private chart;
+    private _chart;
     private uuid;
     private onData;
     private onOptions;

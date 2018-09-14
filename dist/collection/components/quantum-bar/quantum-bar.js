@@ -81,6 +81,9 @@ export class QuantumBar {
             },
             responsive: this.responsive
         };
+        if (this._chart) {
+            this._chart.destroy();
+        }
         this._chart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -89,7 +92,6 @@ export class QuantumBar {
             },
             options: graphOpts
         });
-        this._chart.update();
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);

@@ -84,7 +84,10 @@ export class QuantumScatter {
                     }]
             },
         };
-        this.chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: options });
+        if (this._chart) {
+            this._chart.destroy();
+        }
+        this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: options });
         this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
     }
     gtsToScatter(gts) {

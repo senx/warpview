@@ -30,7 +30,7 @@ export class QuantumBar {
     gridLineColor: '#8e8e8e'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
-  private _chart;
+  private _chart : any;
   private _mapIndex = {};
 
   @Watch('data')
@@ -97,7 +97,9 @@ export class QuantumBar {
       },
       responsive: this.responsive
     };
-
+    if(this._chart) {
+      this._chart.destroy();
+    }
     this._chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -106,8 +108,6 @@ export class QuantumBar {
       },
       options: graphOpts
     });
-
-    this._chart.update();
   }
 
   private drawChart() {

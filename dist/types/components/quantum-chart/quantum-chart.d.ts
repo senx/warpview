@@ -29,6 +29,7 @@ export declare class QuantumChart {
     private _chart;
     private _options;
     private uuid;
+    private ticks;
     private onHideData;
     private onData;
     private onOptions;
@@ -37,7 +38,6 @@ export declare class QuantumChart {
     private isStacked;
     private legendFormatter;
     private highlightCallback;
-    private zoomCallback;
     private drawChart;
     componentDidLoad(): void;
     render(): JSX.Element;

@@ -9,16 +9,18 @@ import {Logger} from "../../utils/logger";
   styleUrls: ["quantum-gts-tree.scss"]
 })
 export class QuantumGtsTree {
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() theme: string = "light";
 
-  private gtsList: any;
+  private gtsList: {
+    content: any[],
+  } = {content: []};
   private LOG: Logger = new Logger(QuantumGtsTree);
 
   @Watch("data")
-  onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  onData(newValue, oldValue) {
     if (newValue !== oldValue) {
-      this.gtsList = newValue;
+      this.doRender();
     }
   }
 
@@ -26,12 +28,20 @@ export class QuantumGtsTree {
    *
    */
   componentWillLoad() {
-    this.gtsList = GTSLib.gtsFromJSONList(this.data, '');
-    this.LOG.debug(['componentWillLoad', 'gtsList'], this.gtsList);
+    this.LOG.debug(['componentWillLoad', 'data'], this.data);
+    if (this.data) {
+      this.doRender();
+    }
+  }
+
+  private doRender() {
+    let dataList = GTSLib.getData(this.data).data;
+    this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
+    this.LOG.debug(['doRender', 'gtsList'], this.data);
   }
 
   render() {
-    return <quantum-tree-view gtsList={this.gtsList} branch={false} theme={this.theme}/>;
+    return (this.gtsList ? <quantum-tree-view gtsList={this.gtsList} branch={false} theme={this.theme}/> : '');
   }
 }
 

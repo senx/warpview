@@ -4,7 +4,7 @@ import { Logger } from "../../utils/logger";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { Param } from "../../model/param";
-import { DataModel } from "../../model/dataModel";
+import moment from "moment";
 /**
  * options :
  *  gridLineColor: 'red | #fff'
@@ -29,6 +29,7 @@ export class QuantumChart {
             gridLineColor: '#8e8e8e'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
+        this.ticks = [];
     }
     onHideData(newValue, oldValue) {
         if (oldValue.length !== newValue.length) {
@@ -50,6 +51,7 @@ export class QuantumChart {
     }
     gtsToData(gts) {
         this.LOG.debug(['gtsToData'], gts);
+        this.ticks = [];
         const datasets = [];
         const data = {};
         let pos = 0;
@@ -91,10 +93,12 @@ export class QuantumChart {
         Object.keys(data).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
+                this.ticks.push(parseInt(timestamp));
             }
             else {
                 const ts = Math.floor(parseInt(timestamp) / 1000);
-                datasets.push([new Date(ts)].concat(data[timestamp].slice(0, labels.length - 1)));
+                datasets.push([moment(ts).utc(true).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
+                this.ticks.push(ts);
             }
         });
         datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
@@ -138,23 +142,9 @@ export class QuantumChart {
             y: event.y
         });
     }
-    zoomCallback(minDate, maxDate) {
-        this.boundsDidChange.emit({
-            bounds: {
-                min: minDate,
-                max: maxDate
-            }
-        });
-    }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        let dataList;
-        if (this.data instanceof DataModel) {
-            dataList = this.data.data;
-        }
-        else {
-            dataList = this.data;
-        }
+        let dataList = GTSLib.getData(this.data).data;
         const dataToplot = this.gtsToData(dataList);
         this.LOG.debug(['drawChart'], [dataToplot]);
         const chart = this.el.querySelector('#' + this.uuid);
@@ -162,7 +152,7 @@ export class QuantumChart {
             const color = this._options.gridLineColor;
             this._chart = new Dygraph(chart, dataToplot.datasets, {
                 height: (this.responsive ? this.el.parentElement.clientHeight : QuantumChart.DEFAULT_HEIGHT) - 30,
-                width: this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH,
+                width: (this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH) - 5,
                 labels: dataToplot.labels,
                 showRoller: false,
                 showRangeSelector: this._options.showRangeSelector || true,
@@ -188,7 +178,25 @@ export class QuantumChart {
                 axisLineColor: color,
                 legendFormatter: this.legendFormatter,
                 highlightCallback: this.highlightCallback.bind(this),
-                zoomCallback: this.zoomCallback.bind(this),
+                drawCallback: ((dygraph, is_initial) => {
+                    this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+                    if (dygraph.dateWindow_) {
+                        this.boundsDidChange.emit({
+                            bounds: {
+                                min: dygraph.dateWindow_[0],
+                                max: dygraph.dateWindow_[1]
+                            }
+                        });
+                    }
+                    else {
+                        this.boundsDidChange.emit({
+                            bounds: {
+                                min: Math.min.apply(null, this.ticks),
+                                max: Math.max.apply(null, this.ticks)
+                            }
+                        });
+                    }
+                }).bind(this),
                 axisLabelWidth: this.standalone ? 50 : 94,
                 rightGap: this.standalone ? 0 : 20
             });

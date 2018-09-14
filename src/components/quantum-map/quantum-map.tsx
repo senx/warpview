@@ -130,7 +130,10 @@ export class QuantumMap {
 
   private gtsToGeoJSON(data) {
     let geoData = [];
-    data.data.forEach((g, i) => {
+    if(!data) {
+      return [];
+    }
+    (data.data || []).forEach((g, i) => {
       const param = data.params[i];
       if (g.positions) {
         let point = {} as any;

@@ -30,6 +30,7 @@ export class QuantumBubble {
   };
   private LOG: Logger = new Logger(QuantumBubble);
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private _chart: Chart;
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
@@ -109,8 +110,10 @@ export class QuantumBubble {
     const dataSets = this.parseData(dataList);
 
     this.LOG.debug(['drawChart'], [options, dataSets]);
-
-    new Chart(ctx, {
+    if(this._chart) {
+      this._chart.destroy();
+    }
+    this._chart = new Chart(ctx, {
       type: 'bubble',
       tooltips: {
         mode: 'x',

@@ -57,7 +57,10 @@ export class QuantumPolar {
             dataList = this.data;
         }
         let gts = this.parseData(dataList);
-        new Chart(ctx, {
+        if (this._chart) {
+            this._chart.destroy();
+        }
+        this._chart = new Chart(ctx, {
             type: 'polarArea',
             data: {
                 datasets: [{

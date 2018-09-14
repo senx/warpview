@@ -14,6 +14,7 @@ export declare class QuantumPie {
     private LOG;
     private _options;
     private uuid;
+    private _chart;
     private onData;
     private onOptions;
     /**

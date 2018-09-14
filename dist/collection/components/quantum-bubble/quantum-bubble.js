@@ -93,7 +93,10 @@ export class QuantumBubble {
         };
         const dataSets = this.parseData(dataList);
         this.LOG.debug(['drawChart'], [options, dataSets]);
-        new Chart(ctx, {
+        if (this._chart) {
+            this._chart.destroy();
+        }
+        this._chart = new Chart(ctx, {
             type: 'bubble',
             tooltips: {
                 mode: 'x',

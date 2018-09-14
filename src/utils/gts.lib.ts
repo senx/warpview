@@ -1,6 +1,11 @@
+import {DataModel} from "../model/dataModel";
+import {GTS} from "../model/GTS";
+import {Logger} from "./logger";
+
 export class GTSLib {
 
 
+  private static LOG: Logger = new Logger(GTSLib);
   static cleanArray(actual: any[]) {
     return actual.filter((i) => !!i);
   }
@@ -160,7 +165,7 @@ export class GTSLib {
   static gtsFromJSONList(jsonList, prefixId) {
     let gtsList = [];
     let id;
-    jsonList.forEach((item, i) => {
+    (jsonList || []).forEach((item, i) => {
       let gts = item;
       if(item.gts) {
         gts = item.gts;
@@ -192,7 +197,7 @@ export class GTSLib {
       }
     });
     return {
-      content: gtsList,
+      content: gtsList || [],
     };
   }
 
@@ -201,7 +206,7 @@ export class GTSLib {
    * @param arr1
    * @returns {any}
    */
-  static flatDeep(arr1) {
+  static flatDeep(arr1: any[]) {
     return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
   };
 
@@ -367,5 +372,20 @@ export class GTSLib {
       return null;
     }
     return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
+  }
+
+  /**
+   *
+   * @param data
+   */
+  static getData(data: any) : DataModel {
+    if (typeof data === 'string') {
+      return {data: JSON.parse(data as string)};
+    } else if (data.hasOwnProperty('data')) {
+      return data as DataModel;
+    } else if(GTSLib.isArray(data)){
+      return {data: data as GTS[]} as DataModel;
+    }
+    return new DataModel();
   }
 }

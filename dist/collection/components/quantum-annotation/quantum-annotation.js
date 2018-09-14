@@ -4,7 +4,7 @@ import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
-import { DataModel } from "../../model/dataModel";
+import moment from "moment";
 export class QuantumAnnotation {
     constructor() {
         this.chartTitle = "";
@@ -36,7 +36,8 @@ export class QuantumAnnotation {
         }
     }
     hideData(newValue, oldValue) {
-        if (oldValue.length !== newValue.length) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['hiddenData'], newValue);
             const hiddenData = GTSLib.cleanArray(newValue);
             Object.keys(this._mapIndex).forEach(key => {
                 this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
@@ -66,13 +67,14 @@ export class QuantumAnnotation {
     drawChart() {
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
+        this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.parseData(this.data);
         let calculatedHeight = 30 * gts.length + this.legendOffset;
         let height = this.height || this.height !== ''
             ? Math.max(calculatedHeight, parseInt(this.height))
             : calculatedHeight;
-        this.height = height + '';
+        this.height = height.toString();
         ctx.parentElement.style.height = height + 'px';
         ctx.parentElement.style.width = '100%';
         const color = this._options.gridLineColor;
@@ -166,11 +168,21 @@ export class QuantumAnnotation {
             chartOption.scales.xAxes[0].time = {
                 min: this.timeMin,
                 max: this.timeMax,
+                displayFormats: {
+                    millisecond: 'HH:mm:ss.SSS',
+                    second: 'HH:mm:ss',
+                    minute: 'HH:mm',
+                    hour: 'HH'
+                }
             };
             chartOption.scales.xAxes[0].ticks = {
                 fontColor: color
             };
             chartOption.scales.xAxes[0].type = 'time';
+        }
+        this.LOG.debug(['drawChart'], [height, gts]);
+        if (this._chart) {
+            this._chart.destroy();
         }
         this._chart = new Chart.Scatter(ctx, {
             data: {
@@ -178,6 +190,10 @@ export class QuantumAnnotation {
             },
             options: chartOption
         });
+        Object.keys(this._mapIndex).forEach(key => {
+            this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item === key);
+        });
+        this._chart.update();
     }
     /**
      *
@@ -185,50 +201,44 @@ export class QuantumAnnotation {
      * @returns {any[]}
      */
     parseData(gts) {
-        let dataList;
         this.LOG.debug(['parseData'], gts);
-        if (this.data instanceof DataModel) {
-            dataList = gts.data;
-        }
-        else {
-            dataList = gts;
-        }
+        let dataList = GTSLib.getData(gts).data;
         this.LOG.debug(['parseData', 'dataList'], dataList);
         if (!dataList || dataList.length === 0) {
-            return;
+            return [];
         }
         else {
             let datasets = [];
             let pos = 0;
-            if (!dataList) {
-                return;
-            }
-            else {
-                dataList = GTSLib.flatDeep(dataList);
-                dataList.forEach((g, i) => {
-                    if (GTSLib.isGtsToAnnotate(g)) {
-                        let data = [];
-                        let color = ColorLib.getColor(i);
-                        const myImage = ChartLib.buildImage(1, 30, color);
-                        g.v.forEach(d => {
-                            data.push({ x: d[0] / 1000, y: 0.5, val: d[d.length - 1] });
-                        });
-                        let label = GTSLib.serializeGtsMetadata(g);
-                        this._mapIndex[label] = pos;
-                        datasets.push({
-                            label: label,
-                            data: data,
-                            pointRadius: 5,
-                            pointHoverRadius: 5,
-                            pointHitRadius: 5,
-                            pointStyle: myImage,
-                            borderColor: color,
-                            backgroundColor: ColorLib.transparentize(color, 0.5)
-                        });
-                        pos++;
-                    }
-                });
-            }
+            dataList = GTSLib.flatDeep(dataList);
+            dataList.forEach((g, i) => {
+                if (GTSLib.isGtsToAnnotate(g)) {
+                    let data = [];
+                    let color = ColorLib.getColor(i);
+                    const myImage = ChartLib.buildImage(1, 30, color);
+                    g.v.forEach(d => {
+                        let time = d[0];
+                        if (this._options.timeMode !== 'timestamp') {
+                            time = moment(time / 1000).utc(true).valueOf();
+                            this.LOG.debug(['moment'], time);
+                        }
+                        data.push({ x: time, y: 0.5, val: d[d.length - 1] });
+                    });
+                    let label = GTSLib.serializeGtsMetadata(g);
+                    this._mapIndex[label] = pos;
+                    datasets.push({
+                        label: label,
+                        data: data,
+                        pointRadius: 5,
+                        pointHoverRadius: 5,
+                        pointHitRadius: 5,
+                        pointStyle: myImage,
+                        borderColor: color,
+                        backgroundColor: ColorLib.transparentize(color, 0.5)
+                    });
+                    pos++;
+                }
+            });
             return datasets;
         }
     }

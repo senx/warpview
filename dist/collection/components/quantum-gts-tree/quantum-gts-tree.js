@@ -3,27 +3,35 @@ import { Logger } from "../../utils/logger";
 export class QuantumGtsTree {
     constructor() {
         this.theme = "light";
+        this.gtsList = { content: [] };
         this.LOG = new Logger(QuantumGtsTree);
     }
     onData(newValue, oldValue) {
         if (newValue !== oldValue) {
-            this.gtsList = newValue;
+            this.doRender();
         }
     }
     /**
      *
      */
     componentWillLoad() {
-        this.gtsList = GTSLib.gtsFromJSONList(this.data, '');
-        this.LOG.debug(['componentWillLoad', 'gtsList'], this.gtsList);
+        this.LOG.debug(['componentWillLoad', 'data'], this.data);
+        if (this.data) {
+            this.doRender();
+        }
+    }
+    doRender() {
+        let dataList = GTSLib.getData(this.data).data;
+        this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
+        this.LOG.debug(['doRender', 'gtsList'], this.data);
     }
     render() {
-        return h("quantum-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme });
+        return (this.gtsList ? h("quantum-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme }) : '');
     }
     static get is() { return "quantum-gts-tree"; }
     static get properties() { return {
         "data": {
-            "type": "Any",
+            "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
@@ -38,7 +46,7 @@ export class Counter {
     static get is() { return "quantum-gts-tree"; }
     static get properties() { return {
         "data": {
-            "type": "Any",
+            "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
