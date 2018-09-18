@@ -17,7 +17,7 @@ export class QuantumAnnotation {
         this._mapIndex = {};
         this.LOG = new Logger(QuantumAnnotation);
         this._options = {
-            gridLineColor: '#ffee77',
+            gridLineColor: '#000000',
             timeMode: 'date'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');

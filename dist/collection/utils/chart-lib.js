@@ -16,28 +16,36 @@ export class ChartLib {
     }
     /**
      *
-     * @param target
      * @param sources
      * @returns {any}
      */
-    static mergeDeep(target, ...sources) {
-        if (!sources.length)
-            return target;
-        const source = sources.shift();
-        if (ChartLib.isObject(target) && ChartLib.isObject(source)) {
-            for (const key in source) {
-                if (ChartLib.isObject(source[key])) {
-                    if (!target[key])
-                        Object.assign(target, { [key]: {} });
-                    ChartLib.mergeDeep(target[key], source[key]);
+    static mergeDeep(...sources) {
+        // Variables
+        let extended = {};
+        let deep = true;
+        let i = 0;
+        // Merge the object into the extended object
+        // Loop through each object and conduct a merge
+        for (; i < arguments.length; i++) {
+            const obj = arguments[i];
+            ChartLib.merge(obj, extended, deep);
+        }
+        return extended;
+    }
+    static merge(obj, extended, deep) {
+        for (const prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                // If property is an object, merge properties
+                if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+                    extended[prop] = ChartLib.mergeDeep(extended[prop], obj[prop]);
                 }
                 else {
-                    Object.assign(target, { [key]: source[key] });
+                    extended[prop] = obj[prop];
                 }
             }
         }
-        return ChartLib.mergeDeep(target, ...sources);
     }
+    ;
     /**
      *
      * @param item

@@ -34,7 +34,7 @@ export class QuantumAnnotation {
   private _mapIndex = {};
   private LOG: Logger = new Logger(QuantumAnnotation);
   private _options: Param = {
-    gridLineColor: '#ffee77',
+    gridLineColor: '#000000',
     timeMode: 'date'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');

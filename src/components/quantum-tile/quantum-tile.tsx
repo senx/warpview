@@ -179,7 +179,7 @@ export class QuantumTile {
           </h1>
           <div class="tile">
             <quantum-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                           options={this.options}/>
+                           options={this._options}/>
           </div>
         </div>
         : ''
@@ -189,7 +189,7 @@ export class QuantumTile {
           <h1>{this.chartTitle}</h1>
           <div class="tile">
             <quantum-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
-                         options={this.options}/>
+                         options={this._options}/>
           </div>
         </div>
         : ''
@@ -198,7 +198,7 @@ export class QuantumTile {
         <div>
           <h1>{this.chartTitle}</h1>
           <div class="tile">
-            <quantum-display responsive={this.responsive} unit={this.unit} data={this.data} options={this.options}/>
+            <quantum-display responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}/>
           </div>
         </div>
         : ''
@@ -209,7 +209,7 @@ export class QuantumTile {
             <small>{this.unit}</small>
           </h1>
           <div class="tile">
-            <quantum-image responsive={this.responsive} data={this.data} options={this.options}/>
+            <quantum-image responsive={this.responsive} data={this.data} options={this._options}/>
           </div>
         </div>
         : ''
@@ -221,7 +221,7 @@ export class QuantumTile {
           </h1>
           <div class="tile">
             <quantum-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                          options={this.options}/>
+                          options={this._options}/>
           </div>
         </div>
         : ''

@@ -6,11 +6,11 @@ export declare class ChartLib {
     static guid(): string;
     /**
      *
-     * @param target
      * @param sources
      * @returns {any}
      */
-    static mergeDeep(target: any, ...sources: any[]): any;
+    static mergeDeep(...sources: any[]): {};
+    static merge(obj: any, extended: any, deep: any): void;
     /**
      *
      * @param item

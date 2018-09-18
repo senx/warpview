@@ -17,7 +17,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       margin: 60px 0 0;
-      padding: 10px; }
+      padding-bottom: 10px; }
     :host .wrapper h1 {
       font-size: 20px;
       padding: 5px;
