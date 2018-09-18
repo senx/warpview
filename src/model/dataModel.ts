@@ -1,7 +1,7 @@
 import {Param} from "./param";
 
 export class DataModel {
-  data: any[];
+  data: any[] | string;
   params? : Param[];
   globalParams?: Param;
 }

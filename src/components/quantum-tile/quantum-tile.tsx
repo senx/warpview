@@ -3,7 +3,6 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from "../../model/dataModel";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
-import {GraphData} from "@stencil/core/dist/declarations";
 import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
@@ -37,6 +36,7 @@ export class QuantumTile {
   };
   private loading = true;
   private gtsList: any;
+  private _options: Param;
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
@@ -70,8 +70,8 @@ export class QuantumTile {
     }
     this.LOG.debug(['parseGTS', 'data'], data);
     this.data = data;
-    this.options = ChartLib.mergeDeep(this.options, data.globalParams);
-    this.LOG.debug(['parseGTS', 'options'], this.options);
+    this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
+    this.LOG.debug(['parseGTS', 'options'], this._options);
     this.loading = false;
   }
 
@@ -104,54 +104,131 @@ export class QuantumTile {
           ? <quantum-spinner />
           : <span>*/}
       {this.graphs['scatter'].indexOf(this.type) > -1 ?
-        <quantum-scatter
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
-        /> : ''}
+        <div>
+          <h1>{this.chartTitle}</h1>
+          <div class="tile">
+            <quantum-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
+                             show-legend={this.showLegend}/>
+          </div>
+        </div>
+        :
+        ''
+      }
       {this.graphs['chart'].indexOf(this.type) > -1 ?
-        <quantum-chart type={this.type}
-                       responsive={this.responsive} unit={this.unit} data={this.data}
-                       options={this.options} show-legend={this.showLegend} chartTitle={this.chartTitle}
-        /> : ''}
+        <div>
+          <h1>{this.chartTitle}</h1>
+          <div class="tile">
+            <quantum-chart type={this.type} responsive={this.responsive} unit={this.unit} data={this.data}
+                           options={this._options} show-legend={this.showLegend}/>
+          </div>
+        </div>
+        :
+        ''
+      }
       {this.type == 'bubble' ?
-        <quantum-bubble
-          showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
-          options={this.options} chartTitle={this.chartTitle}/> : ''
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-bubble showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
+                            options={this._options}/>
+          </div>
+        </div>
+        : ''
       }
       {this.type == 'map' ?
-        <quantum-map
-          responsive={true} data={this.data} chartTitle={this.chartTitle}/> : ''
-      }
-      {this.type == 'plot' ?
-        <quantum-plot
-          responsive={true} showLegend={this.showLegend} data={this.data} options={this.options} /> : ''
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-map responsive={true} data={this.data} />
+          </div>
+        </div>
+        : ''
       }
       {this.graphs['pie'].indexOf(this.type) > -1 ?
-        <quantum-pie
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          options={this.options} showLegend={this.showLegend} chartTitle={this.chartTitle}/> : ''
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-pie responsive={this.responsive} data={this.data} options={this._options}
+                         showLegend={this.showLegend}/>
+          </div>
+        </div>
+        : ''
       }
       {this.graphs['polar'].indexOf(this.type) > -1 ?
-        <quantum-polar
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-polar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                           options={this._options}/>
+          </div>
+        </div>
+        : ''
       }
       {this.graphs['radar'].indexOf(this.type) > -1 ?
-        <quantum-radar
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                           options={this.options}/>
+          </div>
+        </div>
+        : ''
       }
       {this.graphs['bar'].indexOf(this.type) > -1 ?
-        <quantum-bar
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          showLegend={this.showLegend} chartTitle={this.chartTitle} options={this.options}/> : ''
+        <div>
+          <h1>{this.chartTitle}</h1>
+          <div class="tile">
+            <quantum-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
+                         options={this.options}/>
+          </div>
+        </div>
+        : ''
       }
       {this.type == 'text' ?
-        <quantum-display
-          responsive={this.responsive} unit={this.unit} data={this.data}
-          displayTitle={this.chartTitle} options={this.options}/> : ''}
-      {/*  </span>
-      }*/}
+        <div>
+          <h1>{this.chartTitle}</h1>
+          <div class="tile">
+            <quantum-display responsive={this.responsive} unit={this.unit} data={this.data} options={this.options}/>
+          </div>
+        </div>
+        : ''
+      }
+      {this.type == 'image' ?
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-image responsive={this.responsive} data={this.data} options={this.options}/>
+          </div>
+        </div>
+        : ''
+      }
+      {this.type == 'plot' ?
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <quantum-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                          options={this.options}/>
+          </div>
+        </div>
+        : ''
+      }
+      {
+        /*  </span>
+        }*/}
     </div>
   }
 }

@@ -12,8 +12,6 @@ import {DataModel} from "../../model/dataModel";
   shadow: true
 })
 export class QuantumPolar {
-  @Prop() unit: string = '';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[];
@@ -66,7 +64,7 @@ export class QuantumPolar {
     if (!this.data) return;
     let dataList: any[];
     if (this.data instanceof DataModel) {
-      dataList = this.data.data;
+      dataList = this.data.data as any[];
     } else {
       dataList = this.data;
     }
@@ -80,8 +78,7 @@ export class QuantumPolar {
         datasets: [{
           data: gts.data,
           backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
-          borderColor: ColorLib.generateColors(gts.data.length),
-          label: this.chartTitle
+          borderColor: ColorLib.generateColors(gts.data.length)
         }],
         labels: gts.labels
       },
@@ -126,9 +123,6 @@ export class QuantumPolar {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}
-        <small>{this.unit}</small>
-      </h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>

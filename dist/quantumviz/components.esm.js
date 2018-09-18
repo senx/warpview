@@ -70,7 +70,7 @@ var QuantumDisplayComponent = /** @class **/ (function() {
   QuantumDisplay.is = 'quantum-display';
   QuantumDisplay.getModule = function(opts) {
     
-    return import('./quantum-display.js').then(function(m) {
+    return import('./quantum-bar.js').then(function(m) {
         return m.QuantumDisplay;
       });
 
@@ -98,6 +98,19 @@ var QuantumHeatmapSlidersComponent = /** @class **/ (function() {
     
     return import('./quantum-heatmap-sliders.js').then(function(m) {
         return m.QuantumHeatmapSliders;
+      });
+
+  }
+});
+
+var QuantumImageComponent = /** @class **/ (function() {
+  function QuantumImage() {
+  }
+  QuantumImage.is = 'quantum-image';
+  QuantumImage.getModule = function(opts) {
+    
+    return import('./quantum-bar.js').then(function(m) {
+        return m.QuantumImage;
       });
 
   }
@@ -187,7 +200,7 @@ var QuantumSpinnerComponent = /** @class **/ (function() {
   QuantumSpinner.is = 'quantum-spinner';
   QuantumSpinner.getModule = function(opts) {
     
-    return import('./quantum-display.js').then(function(m) {
+    return import('./quantum-spinner.js').then(function(m) {
         return m.QuantumSpinner;
       });
 
@@ -243,6 +256,7 @@ export {
   QuantumDisplay,
   QuantumGtsTree,
   QuantumHeatmapSliders,
+  QuantumImage,
   QuantumMap,
   QuantumPie,
   QuantumPlot,

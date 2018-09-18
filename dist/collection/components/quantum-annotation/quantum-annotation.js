@@ -7,7 +7,6 @@ import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment";
 export class QuantumAnnotation {
     constructor() {
-        this.chartTitle = "";
         this.responsive = false;
         this.showLegend = true;
         this.options = new Param();
@@ -247,7 +246,6 @@ export class QuantumAnnotation {
     }
     render() {
         return h("div", null,
-            h("h1", null, this.chartTitle),
             h("div", { class: "chart-container", style: {
                     position: "relative",
                     width: this.width,
@@ -258,10 +256,6 @@ export class QuantumAnnotation {
     static get is() { return "quantum-annotation"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",

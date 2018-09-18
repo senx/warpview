@@ -6,8 +6,6 @@ import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
 export class QuantumRadar {
     constructor() {
-        this.unit = '';
-        this.chartTitle = '';
         this.responsive = true;
         this.showLegend = true;
         this.options = new Param();
@@ -130,19 +128,12 @@ export class QuantumRadar {
     }
     render() {
         return h("div", null,
-            h("h1", null,
-                this.chartTitle,
-                h("small", null, this.unit)),
             h("div", { class: "chart-container" },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-radar"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",
@@ -168,10 +159,6 @@ export class QuantumRadar {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "unit": {
-            "type": String,
-            "attr": "unit"
         },
         "width": {
             "type": String,

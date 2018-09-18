@@ -15,7 +15,6 @@ import moment from "moment";
   shadow: true
 })
 export class QuantumAnnotation {
-  @Prop() chartTitle: string = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
@@ -240,7 +239,7 @@ export class QuantumAnnotation {
     } else {
       let datasets = [];
       let pos = 0;
-      dataList = GTSLib.flatDeep(dataList);
+      dataList = GTSLib.flatDeep(dataList as any[]) as any[];
       dataList.forEach((g, i) => {
         if (GTSLib.isGtsToAnnotate(g)) {
           let data = [];
@@ -280,7 +279,6 @@ export class QuantumAnnotation {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}</h1>
       <div
         class="chart-container"
         style={{

@@ -12,8 +12,6 @@
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| unit | `string` | '' | Unit used |
-| chartTitle | `string` | '' | Main title |
 | showLegend | `boolean` | true | Shows a legend |
 | responsive | `boolean` | false | Fit the parent space |
 | width | `string` | '' | Fixed width |

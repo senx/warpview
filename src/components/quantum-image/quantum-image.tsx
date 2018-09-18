@@ -8,24 +8,23 @@ import {ChartLib} from "../../utils/chart-lib";
  * Display component
  */
 @Component({
-  tag: 'quantum-display',
-  styleUrl: 'quantum-display.scss',
+  tag: 'quantum-image',
+  styleUrl: 'quantum-image.scss',
   shadow: true
 })
-export class QuantumDisplay {
-
-  @Prop() unit: string = '';
+export class QuantumImage {
+  @Prop() imageTitle: string = '';
   @Prop() responsive: boolean = false;
-  @Prop() data: DataModel | any[] | string | number;
+  @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(QuantumDisplay);
-  private toDisplay: string;
+  private LOG: Logger = new Logger(QuantumImage);
   private _options: Param = new Param();
+  private toDisplay: string[];
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
@@ -48,10 +47,21 @@ export class QuantumDisplay {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
+    this.toDisplay = [];
     if (this.data instanceof DataModel) {
-      this.toDisplay = GTSLib.isArray(this.data.data)? this.data.data[0]: this.data.data;
+      if(this.data.data && this.data.data.length > 0 && GTSLib.isEmbeddedImage(this.data.data[0])) {
+        this.toDisplay.push(this.data.data[0]);
+      } else if(this.data.data && GTSLib.isEmbeddedImage(this.data.data)) {
+        this.toDisplay.push(this.data.data as string);
+      }
     } else {
-      this.toDisplay = GTSLib.isArray(this.data)? this.data[0]: this.data;
+      if(GTSLib.isArray(this.data)) {
+        (this.data as string[]).forEach(d => {
+          if(GTSLib.isEmbeddedImage(d)) {
+            this.toDisplay.push(d)
+          }
+        })
+      }
     }
     this.LOG.debug(['drawChart'], [this.data, this.toDisplay]);
   }
@@ -77,14 +87,13 @@ export class QuantumDisplay {
 
   render() {
     return <div>
-      {this.toDisplay && this.toDisplay !== '' ?
+      {this.toDisplay ?
         <div class="chart-container" id="#wrapper">
-          <div style={this.getStyle()}>
-            <div class="value">
-              {this.toDisplay}
-              <small>{this.unit}</small>
-            </div>
-          </div>
+          {this.toDisplay.map((img) =>
+              <div style={this.getStyle()}>
+                <img src={img} class="responsive"/>
+              </div>
+          )}
         </div>
         :
         <quantum-spinner />

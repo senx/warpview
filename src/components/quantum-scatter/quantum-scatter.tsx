@@ -15,7 +15,6 @@ import {GTS} from "../../model/GTS";
 })
 export class QuantumScatter {
   @Prop() unit: string = '';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
@@ -53,7 +52,7 @@ export class QuantumScatter {
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let dataList: any[];
     if (this.data instanceof DataModel) {
-      dataList = this.data.data;
+      dataList = this.data.data as any[];
     } else {
       dataList = this.data;
     }
@@ -136,7 +135,6 @@ export class QuantumScatter {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}</h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>

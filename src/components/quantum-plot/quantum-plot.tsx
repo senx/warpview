@@ -143,7 +143,7 @@ export class QuantumPlot {
                          options={this._options}></quantum-chart>
         </div>
       </div> : ''}
-      {this.showMap ? <quantum-map width="100%" height="800px" startZoom={10}
+      {this.showMap ? <quantum-map width="100%" startZoom={10}
                                    id="map" data={this._data as any} heatRadius={25} heatBlur={15} heatOpacity={0.5}
                                    heatControls={false}
       ></quantum-map> : ''}

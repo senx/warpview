@@ -361,7 +361,7 @@ export class GTSLib {
         if (typeof data === 'string') {
             return { data: JSON.parse(data) };
         }
-        else if (data.hasOwnProperty('data')) {
+        else if (data && data.hasOwnProperty('data')) {
             return data;
         }
         else if (GTSLib.isArray(data)) {

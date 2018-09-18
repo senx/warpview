@@ -9,7 +9,6 @@ import { ChartLib } from "../../utils/chart-lib";
 export class QuantumDisplay {
     constructor() {
         this.unit = '';
-        this.displayTitle = '';
         this.responsive = false;
         this.options = new Param();
         this.width = '';
@@ -61,16 +60,14 @@ export class QuantumDisplay {
         this.drawChart();
     }
     render() {
-        return h("div", null,
-            h("h1", null, this.displayTitle),
-            this.toDisplay && this.toDisplay !== '' ?
-                h("div", { class: "chart-container", id: "#wrapper" },
-                    h("div", { style: this.getStyle() },
-                        h("div", { class: "value" },
-                            this.toDisplay,
-                            h("small", null, this.unit))))
-                :
-                    h("quantum-spinner", null));
+        return h("div", null, this.toDisplay && this.toDisplay !== '' ?
+            h("div", { class: "chart-container", id: "#wrapper" },
+                h("div", { style: this.getStyle() },
+                    h("div", { class: "value" },
+                        this.toDisplay,
+                        h("small", null, this.unit))))
+            :
+                h("quantum-spinner", null));
     }
     static get is() { return "quantum-display"; }
     static get encapsulation() { return "shadow"; }
@@ -79,10 +76,6 @@ export class QuantumDisplay {
             "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
-        },
-        "displayTitle": {
-            "type": String,
-            "attr": "display-title"
         },
         "el": {
             "elementRef": true

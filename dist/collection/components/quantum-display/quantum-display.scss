@@ -5,8 +5,9 @@
 
   .chart-container {
     width: var(--quantum-chart-width, 100%);
-    height: calc(var(--quantum-chart-height, 100%) - 30px);
+    height: var(--quantum-chart-height, 100%);
     position: relative;
+    color: var(--quantum-font-color, #000000);
     div {
       font-size: 10rem;
       height: 100%;
@@ -23,16 +24,6 @@
           font-size: 3rem;
         }
       }
-    }
-  }
-
-  h1 {
-    font-size: 20px;
-    padding: 5px;
-    margin: 0;
-    color: var(--quantum-font-color, #000000);
-    .chart-container {
-      color: var(--quantum-font-color, #000000);
     }
   }
 }

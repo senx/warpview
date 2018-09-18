@@ -27,7 +27,7 @@ Example :
 | data | `object` | | Serialized JSON representation of data to display, according to the chart type |
 | options | `object` | | Serialized JSON representation of display options |
 | unit | `string` | '' | Unit used |
-| unit | `type` | 'line' | Chart type, possible value are are: 'line', 'scatter', 'step', 'area', 'bubble', 'pie', 'gauge', 'doughnut', 'polar', 'radar', 'bar', 'text'  |
+| unit | `type` | 'line' | Chart type, possible value are are: 'line', 'scatter', 'step', 'area', 'bubble', 'pie', 'gauge', 'doughnut', 'polar', 'radar', 'bar', 'text', 'image', 'plot'  |
 | chartTitle | `string` | '' | Main title |
 | showLegend | `boolean` | true | Shows a legend |
 | responsive | `boolean` | false | Fit the parent space |

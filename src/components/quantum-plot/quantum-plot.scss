@@ -11,4 +11,12 @@
     bottom: 15px;
     overflow: hidden;
   }
+  .inline {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items:stretch;
+    width: 100%
+  }
 }

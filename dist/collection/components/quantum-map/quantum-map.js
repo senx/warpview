@@ -6,7 +6,6 @@ import { ChartLib } from "../../utils/chart-lib";
 import { Logger } from "../../utils/logger";
 export class QuantumMap {
     constructor() {
-        this.chartTitle = "";
         this.responsive = false;
         this.data = [];
         this.startZoom = 2;
@@ -301,7 +300,6 @@ export class QuantumMap {
     }
     render() {
         return (h("div", null,
-            h("h1", null, this.chartTitle),
             h("div", { class: "map-container" },
                 h("div", { id: this.uuid, style: { width: this.width, height: this.height } })),
             !!this.heatControls
@@ -311,10 +309,6 @@ export class QuantumMap {
     static get is() { return "quantum-map"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data"

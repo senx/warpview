@@ -8,7 +8,6 @@ import { DataModel } from "../../model/dataModel";
 export class QuantumBubble {
     constructor() {
         this.unit = '';
-        this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
         this.options = new Param();
@@ -141,17 +140,12 @@ export class QuantumBubble {
     }
     render() {
         return h("div", null,
-            h("h1", null, this.chartTitle),
             h("div", { class: "chart-container" },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-bubble"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",

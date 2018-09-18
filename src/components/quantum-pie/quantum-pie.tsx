@@ -12,13 +12,11 @@ import {DataModel} from "../../model/dataModel";
   shadow: true
 })
 export class QuantumPie {
-  @Prop() chartTitle: string = '';
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[];
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
-  @Prop() unit: string = '';
   @Prop() responsive: boolean = false;
 
   @Element() el: HTMLElement;
@@ -60,7 +58,7 @@ export class QuantumPie {
     let _data = [];
     let dataList: any[];
     if (this.data instanceof DataModel) {
-      dataList = this.data.data;
+      dataList = this.data.data as any[];
     } else {
       dataList = this.data;
     }
@@ -85,14 +83,14 @@ export class QuantumPie {
     if(this._chart) {
       this._chart.destroy();
     }
+    this._options.type = this.options.type || this._options.type;
     this._chart = new Chart(ctx, {
-      type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
+      type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
       data: {
         datasets: [{
           data: data.data,
           backgroundColor: ColorLib.generateTransparentColors(data.data.length),
-          borderColor: ColorLib.generateColors(data.data.length),
-          label: this.chartTitle
+          borderColor: ColorLib.generateColors(data.data.length)
         }],
         labels: data.labels
       },
@@ -136,9 +134,6 @@ export class QuantumPie {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}
-        <small>{this.unit}</small>
-      </h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>

@@ -19,7 +19,6 @@ export class QuantumChart {
         this.hiddenData = [];
         this.unit = '';
         this.type = 'line';
-        this.chartTitle = '';
         this.responsive = false;
         this.standalone = true;
         this.LOG = new Logger(QuantumChart);
@@ -207,15 +206,10 @@ export class QuantumChart {
     }
     render() {
         return h("div", null,
-            h("h1", null, this.chartTitle),
             h("div", { id: this.uuid, class: "chart" }));
     }
     static get is() { return "quantum-chart"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",

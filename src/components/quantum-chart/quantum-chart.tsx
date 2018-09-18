@@ -28,7 +28,6 @@ export class QuantumChart {
   @Prop() hiddenData: string[] = [];
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() standalone = true;
 
@@ -240,7 +239,6 @@ export class QuantumChart {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}</h1>
       <div id={this.uuid} class="chart"/>
     </div>;
   }

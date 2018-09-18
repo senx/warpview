@@ -18,7 +18,6 @@ Displays a line chart
 |------|------|---------|-------------|
 | type | `string` | 'line' | Possible values are: 'line', 'area', 'step' |
 | unit | `string` | '' | Unit used |
-| chartTitle | `string` | '' | Main title |
 | showLegend | `boolean` | true | Shows a legend |
 | standalone | `boolean` | false | If used with [quantum-annotation](../quantum-annotation/quantum-annotation.md) |
 | responsive | `boolean` | false | Fit the parent space |

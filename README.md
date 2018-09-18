@@ -32,6 +32,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 - [Scatter chart](src/components/quantum-scatter/quantum-scatter.md)
 - [Annotation chart](src/components/quantum-annotation/quantum-annotation.md)
 - [Display](src/components/quantum-display/quantum-display.md)
+- [Image](src/components/quantum-image/quantum-image.md)
 - [GTS Tree view](src/components/quantum-gts-tree/quantum-gts-tree.md)
 - [Spinner](src/components/quantum-spinner/quantum-spinner.md)
 - [Toggle](src/components/quantum-toggle/quantum-toggle.md)

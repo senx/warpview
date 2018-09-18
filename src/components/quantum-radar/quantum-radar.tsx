@@ -12,8 +12,6 @@ import {DataModel} from "../../model/dataModel";
   shadow: true
 })
 export class QuantumRadar {
-  @Prop() unit: string = '';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = true;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[];
@@ -87,7 +85,7 @@ export class QuantumRadar {
     if (!data) return;
     let dataList: any[];
     if (this.data instanceof DataModel) {
-      dataList = this.data.data;
+      dataList = this.data.data as any[];
     } else {
       dataList = this.data;
     }
@@ -146,9 +144,6 @@ export class QuantumRadar {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}
-        <small>{this.unit}</small>
-      </h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>

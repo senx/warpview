@@ -14,11 +14,6 @@
       },
       "props": [
         {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
           "name": "data",
           "attr": "data",
           "watch": [
@@ -102,11 +97,6 @@
       },
       "props": [
         {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
           "name": "data",
           "attr": "data",
           "watch": [
@@ -166,11 +156,6 @@
         }
       },
       "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
         {
           "name": "data",
           "attr": "data",
@@ -232,11 +217,6 @@
         }
       },
       "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
         {
           "name": "data",
           "attr": "data",
@@ -351,11 +331,6 @@
           "watch": [
             "onData"
           ]
-        },
-        {
-          "name": "displayTitle",
-          "type": "String",
-          "attr": "display-title"
         },
         {
           "name": "height",
@@ -477,6 +452,64 @@
       "shadow": true
     },
     {
+      "tag": "quantum-image",
+      "dependencies": [
+        "quantum-spinner"
+      ],
+      "componentClass": "QuantumImage",
+      "componentPath": "components/quantum-image/quantum-image.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/quantum-image/quantum-image.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "imageTitle",
+          "type": "String",
+          "attr": "image-title"
+        },
+        {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "quantum-map",
       "dependencies": [
         "quantum-heatmap-sliders"
@@ -494,11 +527,6 @@
         }
       },
       "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
         {
           "name": "data",
           "attr": "data"
@@ -602,11 +630,6 @@
       },
       "props": [
         {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
           "name": "data",
           "attr": "data",
           "watch": [
@@ -635,11 +658,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
         },
         {
           "name": "width",
@@ -779,11 +797,6 @@
       },
       "props": [
         {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
           "name": "data",
           "attr": "data",
           "watch": [
@@ -812,11 +825,6 @@
           "name": "showLegend",
           "type": "Boolean",
           "attr": "show-legend"
-        },
-        {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
         },
         {
           "name": "width",
@@ -844,11 +852,6 @@
       },
       "props": [
         {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
-        {
           "name": "data",
           "attr": "data",
           "watch": [
@@ -879,11 +882,6 @@
           "attr": "show-legend"
         },
         {
-          "name": "unit",
-          "type": "String",
-          "attr": "unit"
-        },
-        {
           "name": "width",
           "type": "String",
           "mutable": true,
@@ -908,11 +906,6 @@
         }
       },
       "props": [
-        {
-          "name": "chartTitle",
-          "type": "String",
-          "attr": "chart-title"
-        },
         {
           "name": "data",
           "attr": "data",
@@ -988,6 +981,7 @@
         "quantum-bubble",
         "quantum-chart",
         "quantum-display",
+        "quantum-image",
         "quantum-map",
         "quantum-pie",
         "quantum-plot",

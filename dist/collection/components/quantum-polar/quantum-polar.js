@@ -6,8 +6,6 @@ import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 export class QuantumPolar {
     constructor() {
-        this.unit = '';
-        this.chartTitle = '';
         this.responsive = false;
         this.showLegend = true;
         this.options = new Param();
@@ -66,8 +64,7 @@ export class QuantumPolar {
                 datasets: [{
                         data: gts.data,
                         backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
-                        borderColor: ColorLib.generateColors(gts.data.length),
-                        label: this.chartTitle
+                        borderColor: ColorLib.generateColors(gts.data.length)
                     }],
                 labels: gts.labels
             },
@@ -110,19 +107,12 @@ export class QuantumPolar {
     }
     render() {
         return h("div", null,
-            h("h1", null,
-                this.chartTitle,
-                h("small", null, this.unit)),
             h("div", { class: "chart-container" },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-polar"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",
@@ -148,10 +138,6 @@ export class QuantumPolar {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "unit": {
-            "type": String,
-            "attr": "unit"
         },
         "width": {
             "type": String,

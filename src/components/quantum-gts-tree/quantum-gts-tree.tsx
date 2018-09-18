@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, Prop, Watch} from "@stencil/core";
+import {Component, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";

@@ -6,12 +6,10 @@ import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
 export class QuantumPie {
     constructor() {
-        this.chartTitle = '';
         this.showLegend = true;
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.unit = '';
         this.responsive = false;
         this.LOG = new Logger(QuantumPie);
         this._options = {
@@ -70,14 +68,14 @@ export class QuantumPie {
         if (this._chart) {
             this._chart.destroy();
         }
+        this._options.type = this.options.type || this._options.type;
         this._chart = new Chart(ctx, {
-            type: (this._options.type === 'gauge') ? 'doughnut' : this._options.type,
+            type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
             data: {
                 datasets: [{
                         data: data.data,
                         backgroundColor: ColorLib.generateTransparentColors(data.data.length),
-                        borderColor: ColorLib.generateColors(data.data.length),
-                        label: this.chartTitle
+                        borderColor: ColorLib.generateColors(data.data.length)
                     }],
                 labels: data.labels
             },
@@ -119,19 +117,12 @@ export class QuantumPie {
     }
     render() {
         return h("div", null,
-            h("h1", null,
-                this.chartTitle,
-                h("small", null, this.unit)),
             h("div", { class: "chart-container" },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "quantum-pie"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "chartTitle": {
-            "type": String,
-            "attr": "chart-title"
-        },
         "data": {
             "type": "Any",
             "attr": "data",
@@ -157,10 +148,6 @@ export class QuantumPie {
         "showLegend": {
             "type": Boolean,
             "attr": "show-legend"
-        },
-        "unit": {
-            "type": String,
-            "attr": "unit"
         },
         "width": {
             "type": String,

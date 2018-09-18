@@ -381,7 +381,7 @@ export class GTSLib {
   static getData(data: any) : DataModel {
     if (typeof data === 'string') {
       return {data: JSON.parse(data as string)};
-    } else if (data.hasOwnProperty('data')) {
+    } else if (data && data.hasOwnProperty('data')) {
       return data as DataModel;
     } else if(GTSLib.isArray(data)){
       return {data: data as GTS[]} as DataModel;

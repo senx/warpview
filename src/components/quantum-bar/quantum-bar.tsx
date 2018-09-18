@@ -15,7 +15,6 @@ import {GTS} from "../../model/GTS";
 })
 export class QuantumBar {
   @Prop() unit: string = '';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
@@ -168,7 +167,6 @@ export class QuantumBar {
 
   render() {
     return <div>
-        <h1>{this.chartTitle}</h1>
         <div class="chart-container">
           <canvas id={this.uuid} width={this.width} height={this.height}/>
         </div>

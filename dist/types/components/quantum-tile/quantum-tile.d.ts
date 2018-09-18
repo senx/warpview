@@ -1,4 +1,22 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 export declare class QuantumTile {
@@ -16,6 +34,7 @@ export declare class QuantumTile {
     private graphs;
     private loading;
     private gtsList;
+    private _options;
     private onOptions;
     componentDidLoad(): void;
     private parseGTS;

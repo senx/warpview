@@ -1,7 +1,6 @@
-import {Component, Event, EventEmitter, Prop} from "@stencil/core";
+import {Component, Prop} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {Counter} from "./quantum-gts-tree";
-import {GTS} from "../../model/GTS";
 import {Logger} from "../../utils/logger";
 
 @Component({

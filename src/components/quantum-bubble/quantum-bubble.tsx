@@ -15,7 +15,6 @@ import {GTS} from "../../model/GTS";
 })
 export class QuantumBubble {
   @Prop() unit: string = '';
-  @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[];
@@ -56,7 +55,7 @@ export class QuantumBubble {
     if (!this.data) return;
     let dataList: any[];
     if (this.data instanceof DataModel) {
-      dataList = this.data.data;
+      dataList = this.data.data as any[];
     } else {
       dataList = this.data;
     }
@@ -161,7 +160,6 @@ export class QuantumBubble {
 
   render() {
     return <div>
-      <h1>{this.chartTitle}</h1>
       <div class="chart-container">
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>

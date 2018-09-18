@@ -13,7 +13,6 @@ Displays alphanumeric value
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
 | unit | `string` | '' | Unit used |
-| displayTitle | `string` | '' | Main title |
 | responsive | `boolean` | false | Fit the parent space |
 | width | `string` | '' | Fixed width |
 | height | `string` | '' | Fixed height |
@@ -39,6 +38,4 @@ Displays alphanumeric value
 ```
 
 - **bgColor**: Background color (Default: transparent) 
-- **fontColor**: Font color for title, unit and value Default: 
-  - dark theme: #ffffff
-  - light theme: #000000
+- **fontColor**: Font color for title, unit and value

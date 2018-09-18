@@ -1,4 +1,22 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 /**
@@ -6,7 +24,6 @@ import { DataModel } from "../../model/dataModel";
  */
 export declare class QuantumDisplay {
     unit: string;
-    displayTitle: string;
     responsive: boolean;
     data: DataModel | any[] | string | number;
     options: Param;

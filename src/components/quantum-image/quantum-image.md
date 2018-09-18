@@ -1,16 +1,17 @@
-# Pie, doughnut an gauge chart
+# Image component
+
+Displays BAs 64 image
 
 ## CSS vars
-
+ 
 - --quantum-chart-width : Width
 - --quantum-chart-height : Height
-- --quantum-font-color : Title font color
+- --quantum-font-color : Font color (title and value)
 
 ## Attributes
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| showLegend | `boolean` | true | Shows a legend |
 | responsive | `boolean` | false | Fit the parent space |
 | width | `string` | '' | Fixed width |
 | height | `string` | '' | Fixed height |
@@ -21,18 +22,19 @@
 
 ```json
 {
-  "data": [["key", 54], ["key 2", 45]]
+  "data": "data:image/png;base64,iVBOR[...]ky1P3"
 }
 ```
-
-- **data**: data to be displayed as tuples.
+- **data**: Base 64 image to be displayed (could be array of) 
 
 ## Option format
 
 ```json
 {
-  "type": "pie"
+  "bgColor": "#ffee77",
+  "fontColor": "#994477"
 }
 ```
 
-- **type**: chart type, possible values are 'pie', 'gauge' and 'doughnut'
+- **bgColor**: Background color (Default: transparent) 
+- **fontColor**: Font color for title, unit and value
