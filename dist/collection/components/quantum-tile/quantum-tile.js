@@ -131,19 +131,19 @@ export class QuantumTile {
                         this.chartTitle,
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
-                        h("quantum-radar", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this.options })))
+                        h("quantum-radar", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                 : '',
             this.graphs['bar'].indexOf(this.type) > -1 ?
                 h("div", null,
                     h("h1", null, this.chartTitle),
                     h("div", { class: "tile" },
-                        h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, showLegend: this.showLegend, options: this.options })))
+                        h("quantum-bar", { responsive: this.responsive, unit: this.unit, data: this.data, showLegend: this.showLegend, options: this._options })))
                 : '',
             this.type == 'text' ?
                 h("div", null,
                     h("h1", null, this.chartTitle),
                     h("div", { class: "tile" },
-                        h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, options: this.options })))
+                        h("quantum-display", { responsive: this.responsive, unit: this.unit, data: this.data, options: this._options })))
                 : '',
             this.type == 'image' ?
                 h("div", null,
@@ -151,7 +151,7 @@ export class QuantumTile {
                         this.chartTitle,
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
-                        h("quantum-image", { responsive: this.responsive, data: this.data, options: this.options })))
+                        h("quantum-image", { responsive: this.responsive, data: this.data, options: this._options })))
                 : '',
             this.type == 'plot' ?
                 h("div", null,
@@ -159,7 +159,7 @@ export class QuantumTile {
                         this.chartTitle,
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
-                        h("quantum-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this.options })))
+                        h("quantum-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                 : '');
     }
     static get is() { return "quantum-tile"; }

@@ -1,0 +1,14 @@
+:host div {
+  height: var(--quantum-chart-height, 100%); }
+
+:host .chart-container {
+  width: var(--quantum-chart-width, 100%);
+  height: var(--quantum-chart-height, 100%);
+  position: relative; }
+  :host .chart-container div {
+    font-size: 10rem;
+    height: 100%;
+    width: 100%; }
+    :host .chart-container div .responsive {
+      width: calc(100% - 10px);
+      height: auto; }
