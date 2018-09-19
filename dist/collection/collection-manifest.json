@@ -259,6 +259,13 @@
           "attr": "unit"
         }
       ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },

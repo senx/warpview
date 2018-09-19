@@ -25,6 +25,7 @@ export declare class QuantumChart {
     private LOG;
     private static DEFAULT_WIDTH;
     private static DEFAULT_HEIGHT;
+    private resizeTimer;
     private _chart;
     private _options;
     private uuid;
@@ -32,6 +33,7 @@ export declare class QuantumChart {
     private onHideData;
     private onData;
     private onOptions;
+    onResize(): void;
     private gtsToData;
     private isStepped;
     private isStacked;

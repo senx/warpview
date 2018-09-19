@@ -48,6 +48,16 @@ export class QuantumChart {
             this.drawChart();
         }
     }
+    onResize() {
+        clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+            //  this.drawChart();
+            const height = (this.responsive ? this.el.parentElement.clientHeight : QuantumChart.DEFAULT_HEIGHT) - 30;
+            const width = (this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH) - 5;
+            this._chart.resize(width, height);
+        }, 250);
+    }
     gtsToData(gts) {
         this.LOG.debug(['gtsToData'], gts);
         this.ticks = [];
@@ -257,6 +267,11 @@ export class QuantumChart {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "window:resize",
+            "method": "onResize",
+            "passive": true
         }]; }
     static get style() { return "/**style-placeholder:quantum-chart:**/"; }
 }

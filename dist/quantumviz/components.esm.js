@@ -44,7 +44,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-    return import('./vksqihpj.js').then(function(m) {
+    return import('./ovt7skq1.js').then(function(m) {
         return m.QuantumChart;
       });
 
