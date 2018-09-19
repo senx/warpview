@@ -16,6 +16,8 @@ export declare class QuantumBar {
     private uuid;
     private _chart;
     private _mapIndex;
+    private resizeTimer;
+    onResize(): void;
     private onData;
     private onOptions;
     private buildGraph;

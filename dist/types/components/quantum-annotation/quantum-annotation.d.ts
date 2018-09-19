@@ -21,6 +21,8 @@ export declare class QuantumAnnotation {
     private LOG;
     private _options;
     private uuid;
+    private resizeTimer;
+    onResize(): void;
     private onData;
     changeScale(newValue: Param, oldValue: Param): void;
     hideData(newValue: any, oldValue: any): void;

@@ -29,6 +29,13 @@ export class QuantumMap {
         this._iconAnchor = [20, 52];
         this._popupAnchor = [0, -50];
     }
+    onResize() {
+        clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+            this.drawMap();
+        }, 250);
+    }
     heatRadiusDidChange(event) {
         this._heatLayer.setOptions({ radius: event.detail.valueAsNumber });
         this.LOG.debug(['heatRadiusDidChange'], event.detail.valueAsNumber);
@@ -366,6 +373,10 @@ export class QuantumMap {
         }
     }; }
     static get listeners() { return [{
+            "name": "window:resize",
+            "method": "onResize",
+            "passive": true
+        }, {
             "name": "heatRadiusDidChange",
             "method": "heatRadiusDidChange"
         }, {

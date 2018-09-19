@@ -24,6 +24,8 @@ export declare class QuantumMap {
     private _iconAnchor;
     private _popupAnchor;
     private _heatLayer;
+    private resizeTimer;
+    onResize(): void;
     heatRadiusDidChange(event: any): void;
     heatBlurDidChange(event: any): void;
     heatOpacityDidChange(event: any): void;

@@ -17,6 +17,13 @@ export class QuantumRadar {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
     }
+    onResize() {
+        clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+            this.drawChart();
+        }, 250);
+    }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
@@ -166,5 +173,10 @@ export class QuantumRadar {
             "mutable": true
         }
     }; }
+    static get listeners() { return [{
+            "name": "window:resize",
+            "method": "onResize",
+            "passive": true
+        }]; }
     static get style() { return "/**style-placeholder:quantum-radar:**/"; }
 }

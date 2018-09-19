@@ -73,6 +73,13 @@
           "attr": "width"
         }
       ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -138,6 +145,13 @@
           "attr": "width"
         }
       ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -196,6 +210,13 @@
           "type": "String",
           "mutable": true,
           "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {
@@ -511,6 +532,13 @@
           "attr": "width"
         }
       ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -616,6 +644,11 @@
           "method": "heatRadiusDidChange",
           "passive": false,
           "capture": false
+        },
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {
@@ -671,6 +704,13 @@
           "type": "String",
           "mutable": true,
           "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {
@@ -840,6 +880,13 @@
           "attr": "width"
         }
       ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -893,6 +940,13 @@
           "type": "String",
           "mutable": true,
           "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {
@@ -953,6 +1007,13 @@
           "type": "String",
           "mutable": true,
           "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {

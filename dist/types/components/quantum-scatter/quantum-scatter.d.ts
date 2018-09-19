@@ -15,6 +15,8 @@ export declare class QuantumScatter {
     private _options;
     private _chart;
     private uuid;
+    private resizeTimer;
+    onResize(): void;
     private onData;
     private onOptions;
     private drawChart;

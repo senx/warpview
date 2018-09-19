@@ -13,6 +13,8 @@ export declare class QuantumRadar {
     private _options;
     private uuid;
     private _chart;
+    private resizeTimer;
+    onResize(): void;
     private onData;
     private onOptions;
     private parseData;

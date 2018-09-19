@@ -15,6 +15,8 @@ export declare class QuantumImage {
     private LOG;
     private _options;
     private toDisplay;
+    private resizeTimer;
+    onResize(): void;
     private onData;
     private onOptions;
     private drawChart;
