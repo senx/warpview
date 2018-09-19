@@ -1,4 +1,4 @@
-# Quantum Viz
+# Warp View
 
 This a collection of charting [web components](https://fr.wikipedia.org/wiki/Composants_web) dedicated to [Warp 10™](https://www.warp10.io)
 
