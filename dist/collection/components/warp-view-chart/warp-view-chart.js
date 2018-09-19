@@ -66,13 +66,15 @@ export class WarpViewChart {
         }
     }
     onResize() {
-        clearTimeout(this.resizeTimer);
-        this.resizeTimer = setTimeout(() => {
-            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-            const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-            const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-            this._chart.resize(width, height);
-        }, 250);
+        if (this._chart) {
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(() => {
+                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+                const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+                this._chart.resize(width, height);
+            }, 250);
+        }
     }
     gtsToData(gts) {
         this.LOG.debug(['gtsToData'], gts);
@@ -171,6 +173,7 @@ export class WarpViewChart {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let dataList = GTSLib.getData(this.data).data;
         const dataToplot = this.gtsToData(dataList);
+        this.onResize();
         this.LOG.debug(['drawChart'], [dataToplot]);
         const chart = this.el.querySelector('#' + this.uuid);
         if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {

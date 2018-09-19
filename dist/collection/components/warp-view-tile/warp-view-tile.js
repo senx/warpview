@@ -46,6 +46,9 @@ export class WarpViewTile {
             this.parseGTS();
         }
     }
+    resize() {
+        this.execute();
+    }
     componentDidLoad() {
         this.execute();
     }
@@ -80,9 +83,10 @@ export class WarpViewTile {
         this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
         fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
             response.text().then(gtsStr => {
-                // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
+                this.LOG.debug(['execute', 'response'], gtsStr);
                 this.gtsList = JSON.parse(gtsStr);
                 this.parseGTS();
+                this.loading = false;
             }, err => {
                 this.LOG.error(['componentDidLoad'], err);
                 this.loading = false;
@@ -124,7 +128,7 @@ export class WarpViewTile {
                         this.chartTitle,
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
-                        h("warp-view-map", { responsive: true, data: this.data })))
+                        h("warp-view-map", { responsive: true, data: this.data, options: this._options })))
                 : '',
             this.graphs['pie'].indexOf(this.type) > -1 ?
                 h("div", null,
@@ -177,7 +181,8 @@ export class WarpViewTile {
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
                         h("warp-view-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
-                : '');
+                : '',
+            this.loading ? h("warp-view-spinner", null) : '');
     }
     static get is() { return "warp-view-tile"; }
     static get encapsulation() { return "shadow"; }
@@ -193,6 +198,9 @@ export class WarpViewTile {
             "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
+        },
+        "resize": {
+            "method": true
         },
         "responsive": {
             "type": Boolean,

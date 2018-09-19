@@ -161,9 +161,7 @@ export class WarpViewPlot {
                          options={this._options}></warp-view-chart>
         </div>
       </div> : ''}
-      {this.showMap ? <warp-view-map width="100%" startZoom={10}
-                                   id="map" data={this._data as any} heatRadius={25} heatBlur={15} heatOpacity={0.5}
-                                   heatControls={false}
+      {this.showMap ? <warp-view-map width="100%" options={this._options} id="map" data={this._data as any}
       ></warp-view-map> : ''}
     </div>;
   }

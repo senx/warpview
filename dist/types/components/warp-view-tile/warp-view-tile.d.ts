@@ -18,6 +18,7 @@ export declare class WarpViewTile {
     private gtsList;
     private _options;
     private onOptions;
+    resize(): void;
     componentDidLoad(): void;
     private parseGTS;
     private execute;

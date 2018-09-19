@@ -29,4 +29,9 @@ export declare class ColorLib {
      * @param num
      */
     static generateTransparentColors(num: any): any[];
+    static hsvGradientFromRgbColors(c1: any, c2: any, steps: any): any[];
+    private static rgb2hsv;
+    private static hsvGradient;
+    private static hsv2rgb;
+    static rgb2hex(r: any, g: any, b: any): string;
 }

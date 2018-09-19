@@ -18,14 +18,26 @@
 :host .wrapper {
   position: relative;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  min-height: 230px; }
+  :host .wrapper h2 {
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    width: 50%;
+    height: 64px;
+    margin: auto;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%); }
   :host .wrapper .lds-ring {
     display: inline-block;
     position: absolute;
     width: 64px;
     height: 64px;
     top: 50%;
-    left: 50%; }
+    left: 50%;
+    transform: translate(-50%, -50%); }
     :host .wrapper .lds-ring div {
       box-sizing: border-box;
       display: block;

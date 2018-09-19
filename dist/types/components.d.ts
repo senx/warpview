@@ -467,18 +467,12 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewMap {
-      'data': any[];
-      'dotsLimit': number;
-      'heatBlur': number;
-      'heatControls': boolean;
+      'data': any;
       'heatData': any[];
-      'heatOpacity': number;
-      'heatRadius': number;
       'height': string;
+      'options': any;
+      'resize': () => void;
       'responsive': boolean;
-      'startLat': number;
-      'startLong': number;
-      'startZoom': number;
       'width': string;
     }
   }
@@ -502,18 +496,11 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewMapAttributes extends HTMLAttributes {
-      'data'?: any[];
-      'dotsLimit'?: number;
-      'heatBlur'?: number;
-      'heatControls'?: boolean;
+      'data'?: any;
       'heatData'?: any[];
-      'heatOpacity'?: number;
-      'heatRadius'?: number;
       'height'?: string;
+      'options'?: any;
       'responsive'?: boolean;
-      'startLat'?: number;
-      'startLong'?: number;
-      'startZoom'?: number;
       'width'?: string;
     }
   }
@@ -741,7 +728,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewSpinner {
-
+      'message': string;
     }
   }
 
@@ -764,7 +751,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewSpinnerAttributes extends HTMLAttributes {
-
+      'message'?: string;
     }
   }
 }
@@ -776,6 +763,7 @@ declare global {
     interface WarpViewTile {
       'chartTitle': string;
       'options': Param;
+      'resize': () => void;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;

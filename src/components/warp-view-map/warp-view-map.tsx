@@ -16,18 +16,17 @@
  *
  */
 
-import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
+import {Component, Element, Listen, Method, Prop, Watch} from '@stencil/core';
 
-import Leaflet, {GeoJSONOptions, PathOptions} from 'leaflet';
+import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
-import {LineString} from 'geojson';
 import {ColorLib} from "../../utils/color-lib";
 import {ChartLib} from "../../utils/chart-lib";
 import {Logger} from "../../utils/logger";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
-import {Param} from "../../model/param";
+import {MapLib} from "../../utils/map-lib";
 
 @Component({
   tag: 'warp-view-map',
@@ -45,43 +44,44 @@ export class WarpViewMap {
   @Prop() width: string;
   @Prop() height: string;
   @Prop() responsive: boolean = false;
-  @Prop() data: any[] = [];
-  @Prop() startLat: number;
-  @Prop() startLong: number;
-  @Prop() startZoom: number = 2;
-  @Prop() dotsLimit: number = 1000;
-
-  @Prop() heatRadius: number;
-  @Prop() heatBlur: number;
-  @Prop() heatOpacity: number;
+  @Prop() data: any;
   @Prop() heatData: any[] = [];
-  @Prop() heatControls: boolean = false;
+  @Prop() options: any = {};
 
   @Element() el: HTMLElement;
 
-  private _map : Leaflet.Map;
+  private _options: any = {
+    startLat: undefined,
+    startLong: undefined,
+    startZoom: 2,
+    dotsLimit: 1000,
+    heatRadius: undefined,
+    heatBlur: undefined,
+    heatOpacity: undefined,
+    heatControls: false
+  };
+
+  private _map: Leaflet.Map;
   private uuid = 'map-' + ChartLib.guid().split('-').join('');
   private LOG: Logger = new Logger(WarpViewMap);
-
-  private _pathStyle = {
-    weight: 5,
-    opacity: 0.65,
-    dotsWeight: 5
-  };
-
-  private _dotStyle = {
-    radius: 8,
-    weight: 1,
-    edgeOpacity: 1,
-    fillOpacity: 0.8,
-    edgeColor: "#000000"
-  };
+  private polylinesBeforeCurrentValue = [];
+  private polylinesAfterCurrentValue = [];
+  private currentValuesMarkers = [];
+  private annotationsMarkers = [];
+  private positionArraysMarkers = [];
 
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
 
-  private _heatLayer : Leaflet.HeatLayer;
+  private _heatLayer: Leaflet.HeatLayer;
   private resizeTimer;
+  private pathData: any[];
+  private annotationsData: any[];
+  private positionData: any[];
+  private tiles: any[];
+  private layerGroup: any;
+  private static DEFAULT_HEIGHT: number = 600;
+  private static DEFAULT_WIDTH: number = 800;
 
   @Listen('window:resize')
   onResize() {
@@ -99,7 +99,7 @@ export class WarpViewMap {
       this.drawMap();
     }
   }
-  
+
   @Listen('heatRadiusDidChange')
   heatRadiusDidChange(event) {
     this._heatLayer.setOptions({radius: event.detail.valueAsNumber});
@@ -121,43 +121,24 @@ export class WarpViewMap {
 
   private drawMap() {
     this.LOG.debug(['drawMap'], this.data);
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     if (!this.data) {
       return;
     }
-    if(this._map) {
-     // this._heatLayer.remove();
-      this._map.remove();
+    if (this._map) {
+      this._map.invalidateSize(true);
     }
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-    this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat || 0, this.startLong || 0], this.startZoom || 5);
-    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this._map);
-
-    let geoData = this.gtsToGeoJSON(this.data);
-
-    if (geoData.length > this.dotsLimit) {
-      let cluster = (Leaflet as any).markerClusterGroup();
-      geoData.forEach(d => {
-        cluster.addLayer(d);
-      });
-      this._map.addLayer(cluster);
+    let dataList: any[];
+    let params: any[];
+    if (this.data instanceof DataModel) {
+      dataList = this.data.data as any[];
+      params = this.data.params
     } else {
-      geoData.forEach(d => {
-        d.addTo(this._map)
-      });
+      dataList = this.data;
+      params = [];
     }
-    if(this.heatData && this.heatData.length > 0) {
-      this._heatLayer = Leaflet.heatLayer(this.heatData, {
-        radius: this.heatRadius,
-        blur: this.heatBlur,
-        minOpacity: this.heatOpacity
-      });
-      this._heatLayer.addTo(this._map);
-    }
-    this._map.on('move', e => {
-      this.LOG.debug(['drawMap', 'move'], [this._map.getCenter(), e]);
-    });
+    this.LOG.debug(['drawMap'], dataList);
+    this.displayMap({gts: dataList, params: params});
   }
 
   private icon(color, marker = '') {
@@ -170,220 +151,229 @@ export class WarpViewMap {
     });
   }
 
-  private gtsToGeoJSON(data) {
-    let geoData = [];
-    if (!data) {
-      return [];
+  private displayMap(data: { gts: any[], params: any[] }) {
+    this.LOG.debug(['drawMap'], this.data);
+    const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+    const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
+    this.pathData = MapLib.toLeafletMapPaths(data);
+    this.annotationsData = MapLib.annotationsToLeafletPositions(data);
+    this.positionData = MapLib.toLeafletMapPositionArray(data);
+
+    if (!this.data) {
+      return;
     }
-    (data.data || []).forEach((g, i) => {
-      const param = data.params ? data.params[i] : {};
-      if (g.positions) {
-        let point = {} as any;
-        g.positions.forEach(p => {
-          point = {
-            type: 'Feature',
-            properties: {style: {}, popupContent: `lat : ${p[0]}<br/>long : ${p[1]}`},
-            geometry: {type: 'Point', coordinates: [p[1], p[0]]}
-          };
+    if (this._map) {
+      this._map.remove();
+    }
+    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid) as HTMLElement;
+    ctx.style.width = width + 'px';
+    ctx.style.height = height + 'px';
 
-          point.properties.style.fillColor = p[3] ? ColorLib.getColor(p[3]) : param.fillColor || ColorLib.getColor(i);
-          point.properties.style.radius = p[2] || this._dotStyle.radius;
-          point.properties.style.color = param.edgeColor || this._dotStyle.edgeColor;
-          point.properties.style.weight = param.weight || this._dotStyle.weight;
-          point.properties.style.opacity = param.edgeOpacity || this._dotStyle.edgeOpacity;
-          point.properties.style.fillOpacity = param.fillOpacity || this._dotStyle.fillOpacity;
+    this._map = Leaflet.map(ctx as HTMLElement).setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 5);
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this._map);
 
-          if (p.length === 4) {
-            point.properties.popupContent += `<br/>value 1 : ${p[2]}<br/>value 2 : ${p[3]}${!!param.legend}` ? "<br/>legend : " + param.legend : '';
-          } else if (p.length === 3) {
-            point.properties.popupContent += `<br/>value : ${p[2]}${!!param.legend}` ? "<br/>legend : " + param.legend : '';
-          }
-          geoData.push(Leaflet.geoJSON(point, {
-            pointToLayer: function (feature, latlng) {
-              return Leaflet.circleMarker(latlng, feature.properties.style);
-            },
-            onEachFeature: function (feature, layer) {
-              layer.bindPopup(feature.properties.popupContent);
-            }
-          }));
-        });
+    this.layerGroup = Leaflet.layerGroup().addTo(this._map);
+    this.pathData.forEach(d => {
+      let plottedGts: any = this.updateGtsPath(d);
+      this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
+      this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+      this.currentValuesMarkers.push(plottedGts.currentValue);
+    }, this);
 
-      } else {
-        let key = (param.key || '').toLowerCase();
-        if (key === "path") {
-          let style = {
-            color: param.color || ColorLib.getColor(i),
-            weight: this._pathStyle.weight,
-            opacity: this._pathStyle.opacity,
-          };
-          let path: LineString = {type: 'LineString', coordinates: []};
-          let previous: any = null;
-          let junctionPoints = [];
-          g.v.forEach(p => {
-            if (!!previous) {
-              if (p[2] >= -180 && p[2] < -90 && previous[2] > 90 && previous[2] <= 180) {
-                let diff1 = 180 + p[2];
-                let diff2 = 180 - previous[2];
-                let pProj = p[2] * -1 + diff1 + diff2;
-                let a = (p[1] - previous[1]) / (pProj - previous[2]);
-                let b = previous[1] - previous[2] * a;
-                let borderY = a * (previous[2] + diff2) + b;
-                path.coordinates.push([(previous[2] + diff2), borderY]);
-                geoData.push(Leaflet.geoJSON(path, {
-                  style: style as PathOptions,
-                  onEachFeature: function (feature, layer) {
-                    layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
-                  }
-                } as GeoJSONOptions));
-                path.coordinates = [];
-                path.coordinates.push([(previous[2] + diff2) * -1, borderY]);
-                junctionPoints.push([[(previous[2] + diff2), borderY], [(previous[2] + diff2) * -1, borderY]]);
-              } else if (p[2] > 90 && p[2] <= 180 && previous[2] >= -180 && previous[2] < -90) {
-                let diff1 = 180 - p[2];
-                let diff2 = 180 + previous[2];
-                let pProj = (previous[2] + diff1 + diff2) * -1;
-                let a = (p[1] - previous[1]) / (p[2] - pProj);
-                let b = p[1] - a * p[2];
-                let borderY = a * (p[2] - diff1) + b;
+    this.annotationsData.forEach(d => {
+      this.annotationsMarkers.push(this.updateAnnotation(d));
+    }, this);
+    // Create the positions arrays
+    this.positionData.forEach(d => {
+      this.positionArraysMarkers.push(this.updatePositionArray(d));
+    }, this);
 
-                path.coordinates.push([(previous[2] - diff2), borderY]);
-                geoData.push(Leaflet.geoJSON(path, {
-                  style: style as PathOptions,
-                  onEachFeature: function (feature, layer) {
-                    layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
-                  }
-                } as GeoJSONOptions));
-                path.coordinates = [];
-                path.coordinates.push([(previous[2] - diff2) * -1, borderY]);
-                junctionPoints.push([[(previous[2] - diff2), borderY], [(previous[2] - diff2) * -1, borderY]]);
+    (this.tiles || []).forEach(function (t) {
+      this.addLayer(Leaflet.tileLayer(t));
+    }, this.layerGroup);
+    this.LOG.debug(['displayMap'], [this.pathData, this.positionData, this.annotationsData]);
+    if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0) {
+      // Fit map to curves
+      let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData);
 
-              }
-            }
-            previous = p;
-            path.coordinates.push([p[2], p[1]]);
-          });
-
-          geoData.push(Leaflet.geoJSON(path, {
-            style: style as PathOptions,
-            onEachFeature: function (feature, layer) {
-              layer.bindPopup(!!param.legend ? `legend : ${param.legend}` : '');
-            }
-          } as GeoJSONOptions));
-
-          let point = {} as any;
-          junctionPoints.forEach((j, i) => {
-            j.forEach((p, n) => {
-              point = {
-                type: 'Feature',
-                properties: {
-                  style: {
-                    color: '#645858',
-                    radius: this._pathStyle.dotsWeight,
-                    fillOpacity: this._pathStyle.opacity,
-                    opacity: this._pathStyle.opacity
-                  },
-                  value: null,
-                  popupContent: `Junction ${i}${n == 0 ? ' IN' : ' OUT'}`
-                },
-                geometry: {type: 'Point', coordinates: p}
-              };
-              geoData.push(Leaflet.geoJSON(point, {
-                pointToLayer: function (feature, latlng) {
-                  return Leaflet.circleMarker(latlng, feature.properties.style);
-                },
-                onEachFeature: function (feature, layer) {
-                  layer.bindPopup(feature.properties.popupContent);
-                }
-              }));
-            });
-          });
-
-          if (param.displayDots === 'true') {
-            let point = {} as any;
-            (g.v || []).forEach(p => {
-              point = {
-                type: 'Feature',
-                properties: {
-                  style: {
-                    color: param.color || ColorLib.getColor(i),
-                    radius: this._pathStyle.dotsWeight,
-                    fillOpacity: this._pathStyle.opacity,
-                    opacity: this._pathStyle.opacity
-                  },
-                  value: p[p.length - 1],
-                  popupContent: `timestamp : ${p[0]}<br/>date : ${new Date(p[0])}<br/>lat : ${p[1]}<br/>long : ${p[2]}`
-                },
-                geometry: {type: 'Point', coordinates: [p[2], p[1]]}
-              };
-
-              if (p.length === 5) {
-                point.properties.popupContent += `<br/>alt : ${p[3]}<br/>value : ${p[4]}`;
-              } else if (p.length === 4) {
-                point.properties.popupContent += `<br/>value : ${p[3]}`;
-              }
-
-              geoData.push(Leaflet.geoJSON(point, {
-                pointToLayer: function (feature, latlng) {
-                  return Leaflet.circleMarker(latlng, feature.properties.style);
-                },
-                onEachFeature: function (feature, layer) {
-                  layer.bindPopup(feature.properties.popupContent);
-                }
-              }));
-            });
+      window.setTimeout(() => {
+        // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
+        this._map.invalidateSize();
+        this.resize();
+        if (bounds.length > 1) {
+          this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1])); //, {padding: [20, 20]}));
+          if (this._map.getZoom() === 0 || this._options.startZoom > this._map.getZoom()) {
+            this._map.setZoom(this._options.startZoom);
           }
         } else {
-          let point = {} as any;
-          (g.v || []).forEach(p => {
-            point = {
-              type: 'Feature',
-              properties: {
-                style: {color: param.color || ColorLib.getColor(i)},
-                value: p[p.length - 1],
-                popupContent: `timestamp : ${p[0]}<br/>date : ${new Date(p[0])}<br/>lat : ${p[1]}<br/>long : ${p[2]}`
-              },
-              geometry: {type: 'Point', coordinates: [p[2], p[1]]}
-            };
-
-            if (param.render === 'dot') {
-              point.properties.style.radius = param.radius || this._dotStyle.radius;
-              point.properties.style.weight = param.weight || this._dotStyle.weight;
-              point.properties.style.opacity = param.edgeOpacity || this._dotStyle.edgeOpacity;
-              point.properties.style.fillOpacity = param.fillOpacity || this._dotStyle.fillOpacity;
-              point.properties.style.fillColor = param.fillColor || ColorLib.getColor(i);
-            } else {
-              point.properties.icon = this.icon(point.properties.style.color, param.marker);
-            }
-
-            if (p.length === 5) {
-              point.properties.popupContent += `<br/>alt : ${p[3]}<br/>value : ${p[4]}`;
-            } else if (p.length === 4) {
-              point.properties.popupContent += `<br/>value : ${p[3]}`;
-            }
-            if (param.render === 'dot') {
-              geoData.push(Leaflet.geoJSON(point, {
-                pointToLayer: function (feature, latlng) {
-                  return Leaflet.circleMarker(latlng, feature.properties.style);
-                },
-                onEachFeature: function (feature, layer) {
-                  layer.bindPopup(feature.properties.popupContent);
-                }
-              }));
-            } else {
-              geoData.push(Leaflet.geoJSON(point, {
-                pointToLayer: function (feature, latlng) {
-                  return Leaflet.marker(latlng, {icon: feature.properties.icon});
-                },
-                onEachFeature: function (feature, layer) {
-                  layer.bindPopup(feature.properties.popupContent);
-                }
-              }));
-            }
-          });
+          this._map.setView(bounds[0], this._options.startZoom);
         }
-      }
-    });
-    return geoData;
+      }, 1000);
+    } else {
+      window.setTimeout(() => {
+        this._map.invalidateSize();
+        this.configure();
+      }, 1000);
+    }
+    if (this.heatData && this.heatData.length > 0) {
+      this._heatLayer = Leaflet.heatLayer(this.heatData, {
+        radius: this._options.heatRadius,
+        blur: this._options.heatBlur,
+        minOpacity: this._options.heatOpacity
+      });
+      this._heatLayer.addTo(this._map);
+    }
+  }
+
+  private updateGtsPath(gts: any) {
+    let beforeCurrentValue = Leaflet.polyline(
+      MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
+        color: gts.color,
+        opacity: 1,
+      });
+    this.layerGroup.addLayer(beforeCurrentValue);
+    let afterCurrentValue = Leaflet.polyline(
+      MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
+        color: gts.color,
+        opacity: 0.5,
+      });
+    this.layerGroup.addLayer(afterCurrentValue);
+    let currentValue;
+    // Let's verify we have a path... No path, no marker
+    this.LOG.debug(['updateGtsPath'], gts);
+    if (gts.path[0] !== undefined) {
+      currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon],
+        {radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1})
+        .bindPopup(gts.key);
+    } else {
+      currentValue = Leaflet.circleMarker([0, 0]);
+    }
+    this.layerGroup.addLayer(currentValue);
+    return {
+      beforeCurrentValue: beforeCurrentValue,
+      afterCurrentValue: afterCurrentValue,
+      currentValue: currentValue,
+    };
+  }
+
+  private updateAnnotation(gts) {
+    let positions = [];
+    let icon;
+    switch (gts.render) {
+      case 'marker':
+        icon = this.icon(gts.color, gts.marker);
+        for (let j = 0; j < gts.path.length; j++) {
+          let marker = Leaflet.marker(gts.path[j], {icon: icon, opacity: 1});
+          marker.bindPopup(gts.path[j].val.toString());
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+      case 'dots':
+      default:
+        for (let j = 0; j < gts.path.length; j++) {
+          let marker = Leaflet.circleMarker(
+            gts.path[j], {
+              radius: gts.baseRadius,
+              color: gts.color,
+              fillColor: gts.color,
+              fillOpacity: 1
+            }
+          );
+          marker.bindPopup(`<b>${gts.path[j].ts}</b><p>${gts.path[j].val.toString()}</p>`);
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+    }
+    return positions;
+
+  }
+
+  private updatePositionArray(positionData: any) {
+    let positions = [];
+    let polyline;
+    let icon;
+    let result;
+    let inStep;
+    this.LOG.debug(['updatePositionArray'], positionData.render);
+    switch (positionData.render) {
+      case 'path':
+        polyline = Leaflet.polyline(positionData.positions, {color: positionData.color, opacity: 1});
+        this.layerGroup.addLayer(polyline);
+        positions.push(polyline);
+        break;
+      case 'marker':
+        icon = this.icon(positionData.color, positionData.key);
+        for (let j = 0; j < positionData.positions.length; j++) {
+          let marker = Leaflet.marker({lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+            icon: icon,
+            opacity: 1,
+          });
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+      case 'coloredWeightedDots':
+        result = [];
+        inStep = [];
+        for (let j = 0; j < positionData.numColorSteps; j++) {
+          result[j] = 0;
+          inStep[j] = 0;
+        }
+        for (let j = 0; j < positionData.positions.length; j++) {
+          let marker = Leaflet.circleMarker(
+            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+              radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+              color: positionData.borderColor,
+              fillColor: ColorLib.rgb2hex(
+                positionData.colorGradient[positionData.positions[j][5]].r,
+                positionData.colorGradient[positionData.positions[j][5]].g,
+                positionData.colorGradient[positionData.positions[j][5]].b),
+              fillOpacity: 1,
+            });
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+      case 'weightedDots':
+        for (let j = 0; j < positionData.positions.length; j++) {
+          let marker = Leaflet.circleMarker(
+            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+              radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+              color: positionData.borderColor,
+              fillColor: positionData.color, fillOpacity: 1,
+            });
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+      case 'dots':
+      default:
+        for (let j = 0; j < positionData.positions.length; j++) {
+          let marker = Leaflet.circleMarker(
+            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+              radius: positionData.baseRadius,
+              color: positionData.borderColor,
+              fillColor: positionData.color,
+              fillOpacity: 1,
+            });
+          this.layerGroup.addLayer(marker);
+          positions.push(marker);
+        }
+        break;
+    }
+    return positions;
+  }
+
+  @Method()
+  resize() {
+  }
+
+  private configure() {
+    this.resize();
   }
 
   componentDidLoad() {
@@ -392,13 +382,11 @@ export class WarpViewMap {
 
   render() {
     return (
-      <div>
+      <div class="wrapper">
         <div class="map-container">
           <div id={this.uuid} style={{width: this.width, height: this.height}}/>
         </div>
-        {!!this.heatControls
-          ? <warp-view-heatmap-sliders/>
-          : ""}
+        {!!this._options.heatControls ? <warp-view-heatmap-sliders/> : ""}
       </div>
     );
   }

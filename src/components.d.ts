@@ -466,18 +466,12 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewMap {
-      'data': any[];
-      'dotsLimit': number;
-      'heatBlur': number;
-      'heatControls': boolean;
+      'data': any;
       'heatData': any[];
-      'heatOpacity': number;
-      'heatRadius': number;
       'height': string;
+      'options': any;
+      'resize': () => void;
       'responsive': boolean;
-      'startLat': number;
-      'startLong': number;
-      'startZoom': number;
       'width': string;
     }
   }
@@ -501,18 +495,11 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewMapAttributes extends HTMLAttributes {
-      'data'?: any[];
-      'dotsLimit'?: number;
-      'heatBlur'?: number;
-      'heatControls'?: boolean;
+      'data'?: any;
       'heatData'?: any[];
-      'heatOpacity'?: number;
-      'heatRadius'?: number;
       'height'?: string;
+      'options'?: any;
       'responsive'?: boolean;
-      'startLat'?: number;
-      'startLong'?: number;
-      'startZoom'?: number;
       'width'?: string;
     }
   }

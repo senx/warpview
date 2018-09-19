@@ -93,13 +93,15 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    clearTimeout(this.resizeTimer);
-    this.resizeTimer = setTimeout(() => {
-      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-      const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-      const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-      this._chart.resize(width, height);
-    }, 250);
+    if(this._chart) {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+        this._chart.resize(width, height);
+      }, 250);
+    }
   }
 
   private gtsToData(gts) {
