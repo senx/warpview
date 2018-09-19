@@ -4,6 +4,15 @@
   "version": "0.0.1",
   "description": "Quantumviz Elements",
   "main": "dist/quantumviz.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org:cityzendata/quantum-viz.git"
+  },
+  "author": "Cityzen Data",
+  "bugs": {
+    "url": "https://bitbucket.org/cityzendata/quantum-viz/addon/trello/trello-board"
+  },
+  "homepage": "https://bitbucket.org/cityzendata/quantum-viz",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
@@ -47,16 +56,6 @@
     "@types/prismjs": "^1.9.0",
     "jest": "^22.4.3"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org:cityzendata/quantum-viz.git"
-  },
-  "author": "Cityzen Data",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://bitbucket.org/cityzendata/quantum-viz/addon/trello/trello-board"
-  },
-  "homepage": "https://bitbucket.org/cityzendata/quantum-viz",
   "jest": {
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"

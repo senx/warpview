@@ -5,7 +5,7 @@ var QuantumAnnotationComponent = /** @class **/ (function() {
   QuantumAnnotation.is = 'quantum-annotation';
   QuantumAnnotation.getModule = function(opts) {
     
-    return import('./vbiwfneg.js').then(function(m) {
+    return import('./nsmpxe84.js').then(function(m) {
         return m.QuantumAnnotation;
       });
 
@@ -18,7 +18,7 @@ var QuantumBarComponent = /** @class **/ (function() {
   QuantumBar.is = 'quantum-bar';
   QuantumBar.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumBar;
       });
 
@@ -31,7 +31,7 @@ var QuantumBubbleComponent = /** @class **/ (function() {
   QuantumBubble.is = 'quantum-bubble';
   QuantumBubble.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumBubble;
       });
 
@@ -44,7 +44,7 @@ var QuantumChartComponent = /** @class **/ (function() {
   QuantumChart.is = 'quantum-chart';
   QuantumChart.getModule = function(opts) {
     
-    return import('./ovt7skq1.js').then(function(m) {
+    return import('./wlozipby.js').then(function(m) {
         return m.QuantumChart;
       });
 
@@ -57,7 +57,7 @@ var QuantumChipComponent = /** @class **/ (function() {
   QuantumChip.is = 'quantum-chip';
   QuantumChip.getModule = function(opts) {
     
-    return import('./3jngxgcb.js').then(function(m) {
+    return import('./fkcpir1r.js').then(function(m) {
         return m.QuantumChip;
       });
 
@@ -70,7 +70,7 @@ var QuantumDisplayComponent = /** @class **/ (function() {
   QuantumDisplay.is = 'quantum-display';
   QuantumDisplay.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumDisplay;
       });
 
@@ -83,7 +83,7 @@ var QuantumGtsTreeComponent = /** @class **/ (function() {
   QuantumGtsTree.is = 'quantum-gts-tree';
   QuantumGtsTree.getModule = function(opts) {
     
-    return import('./3jngxgcb.js').then(function(m) {
+    return import('./fkcpir1r.js').then(function(m) {
         return m.QuantumGtsTree;
       });
 
@@ -96,7 +96,7 @@ var QuantumHeatmapSlidersComponent = /** @class **/ (function() {
   QuantumHeatmapSliders.is = 'quantum-heatmap-sliders';
   QuantumHeatmapSliders.getModule = function(opts) {
     
-    return import('./j30ea4fn.js').then(function(m) {
+    return import('./ybcrxdub.js').then(function(m) {
         return m.QuantumHeatmapSliders;
       });
 
@@ -109,7 +109,7 @@ var QuantumImageComponent = /** @class **/ (function() {
   QuantumImage.is = 'quantum-image';
   QuantumImage.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumImage;
       });
 
@@ -122,7 +122,7 @@ var QuantumMapComponent = /** @class **/ (function() {
   QuantumMap.is = 'quantum-map';
   QuantumMap.getModule = function(opts) {
     
-    return import('./j30ea4fn.js').then(function(m) {
+    return import('./ybcrxdub.js').then(function(m) {
         return m.QuantumMap;
       });
 
@@ -135,7 +135,7 @@ var QuantumPieComponent = /** @class **/ (function() {
   QuantumPie.is = 'quantum-pie';
   QuantumPie.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumPie;
       });
 
@@ -148,7 +148,7 @@ var QuantumPlotComponent = /** @class **/ (function() {
   QuantumPlot.is = 'quantum-plot';
   QuantumPlot.getModule = function(opts) {
     
-    return import('./vbiwfneg.js').then(function(m) {
+    return import('./nsmpxe84.js').then(function(m) {
         return m.QuantumPlot;
       });
 
@@ -161,7 +161,7 @@ var QuantumPolarComponent = /** @class **/ (function() {
   QuantumPolar.is = 'quantum-polar';
   QuantumPolar.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumPolar;
       });
 
@@ -174,7 +174,7 @@ var QuantumRadarComponent = /** @class **/ (function() {
   QuantumRadar.is = 'quantum-radar';
   QuantumRadar.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumRadar;
       });
 
@@ -187,7 +187,7 @@ var QuantumScatterComponent = /** @class **/ (function() {
   QuantumScatter.is = 'quantum-scatter';
   QuantumScatter.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumScatter;
       });
 
@@ -200,7 +200,7 @@ var QuantumSpinnerComponent = /** @class **/ (function() {
   QuantumSpinner.is = 'quantum-spinner';
   QuantumSpinner.getModule = function(opts) {
     
-    return import('./axima4c3.js').then(function(m) {
+    return import('./xjqde7lo.js').then(function(m) {
         return m.QuantumSpinner;
       });
 
@@ -213,7 +213,7 @@ var QuantumTileComponent = /** @class **/ (function() {
   QuantumTile.is = 'quantum-tile';
   QuantumTile.getModule = function(opts) {
     
-    return import('./lzsgvvqu.js').then(function(m) {
+    return import('./psysnezv.js').then(function(m) {
         return m.QuantumTile;
       });
 
@@ -226,7 +226,7 @@ var QuantumToggleComponent = /** @class **/ (function() {
   QuantumToggle.is = 'quantum-toggle';
   QuantumToggle.getModule = function(opts) {
     
-    return import('./vbiwfneg.js').then(function(m) {
+    return import('./nsmpxe84.js').then(function(m) {
         return m.QuantumToggle;
       });
 
@@ -239,7 +239,7 @@ var QuantumTreeViewComponent = /** @class **/ (function() {
   QuantumTreeView.is = 'quantum-tree-view';
   QuantumTreeView.getModule = function(opts) {
     
-    return import('./3jngxgcb.js').then(function(m) {
+    return import('./fkcpir1r.js').then(function(m) {
         return m.QuantumTreeView;
       });
 
