@@ -1,4 +1,4 @@
-import {Component, Element, Event, EventEmitter, Prop, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import {Logger} from "../../utils/logger";
@@ -39,8 +39,8 @@ export class QuantumChart {
   private LOG: Logger = new Logger(QuantumChart);
   private static DEFAULT_WIDTH = 800;
   private static DEFAULT_HEIGHT = 600;
-
-  private _chart: any;
+  private resizeTimer;
+  private _chart: Dygraph;
   private _options: any = {
     time: 'date',
     showRangeSelector: true,
@@ -73,9 +73,21 @@ export class QuantumChart {
     }
   }
 
+  @Listen('window:resize')
+  onResize() {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+      //  this.drawChart();
+      const height = (this.responsive ? this.el.parentElement.clientHeight : QuantumChart.DEFAULT_HEIGHT) - 30;
+      const width = (this.responsive ? this.el.parentElement.clientWidth : QuantumChart.DEFAULT_WIDTH) - 5;
+      this._chart.resize(width, height);
+    }, 250);
+  }
+
   private gtsToData(gts) {
     this.LOG.debug(['gtsToData'], gts);
-    this.ticks= [];
+    this.ticks = [];
     const datasets = [];
     const data = {};
     let pos = 0;
@@ -210,7 +222,7 @@ export class QuantumChart {
           highlightCallback: this.highlightCallback.bind(this),
           drawCallback: ((dygraph, is_initial) => {
             this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
-            if(dygraph.dateWindow_) {
+            if (dygraph.dateWindow_) {
               this.boundsDidChange.emit({
                 bounds: {
                   min: dygraph.dateWindow_[0],
