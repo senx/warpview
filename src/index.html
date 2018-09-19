@@ -49,11 +49,6 @@
       --jumbotron-padding-y: 3rem;
     }
 
-    .album {
-      padding-left: 10%;
-      padding-right: 10%;
-    }
-
     .card {
       padding: 0;
     }
@@ -159,7 +154,7 @@
 
   <section class="jumbotron text-center">
     <div class="container">
-      <h1 class="jumbotron-heading">Quantum Viz examples</h1>
+      <h1 class="jumbotron-heading">Warp View samples</h1>
       <p class="lead text-muted">Choose a main theme</p>
       <p>
         <button type="button" class="btn btn-dark my-2" id="dark">Dark</button>
@@ -171,28 +166,99 @@
   <div class="album py-5">
     <div class="container-fluid">
       <div class="row">
-        <div class="card col-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="plot"
-                            chart-title="Plot">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH
-              false RESETS
-              'gts' STORE
-              [ $gts mapper.delta 1 0 0 ] MAP
-              1000 LTTB
-              [ SWAP ]
-            </warp-view-tile>
+        <div class="col-3">
+          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-main" role="tab"
+               aria-controls="v-pills-home" aria-selected="true">Getting Started</a>
+            <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-plot" role="tab"
+               aria-controls="v-pills-profile" aria-selected="false">Plot</a>
+            <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-default" role="tab"
+               aria-controls="v-pills-profile" aria-selected="false">Default</a>
+            <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-map" role="tab"
+               aria-controls="v-pills-messages" aria-selected="false">Map</a>
+            <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-text" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Text</a>
+            <a class="nav-link" id="v-pills-5-tab" data-toggle="pill" href="#v-pills-bubble" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Bubble</a>
+            <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-step" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Step</a>
+            <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-area" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Area</a>
+            <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-scatter" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Scatter</a>
+            <a class="nav-link" id="v-pills-10-tab" data-toggle="pill" href="#v-pills-bar" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Bar</a>
+            <a class="nav-link" id="v-pills-11-tab" data-toggle="pill" href="#v-pills-gauge" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Gauge</a>
+            <a class="nav-link" id="v-pills-12-tab" data-toggle="pill" href="#v-pills-pie" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Pie</a>
+            <a class="nav-link" id="v-pills-13-tab" data-toggle="pill" href="#v-pills-doughnut" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Doughnut</a>
+            <a class="nav-link" id="v-pills-14-tab" data-toggle="pill" href="#v-pills-polar" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Polar</a>
+            <a class="nav-link" id="v-pills-15-tab" data-toggle="pill" href="#v-pills-radar" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Radar</a>
+            <a class="nav-link" id="v-pills-16-tab" data-toggle="pill" href="#v-pills-image" role="tab"
+               aria-controls="v-pills-settings" aria-selected="false">Image</a>
           </div>
         </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="text"
-                            chart-title="Text">
-              { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
-            </warp-view-tile>
-          </div>
-          <div class="card-footer text-muted">
+        <div class="col-9">
+          <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-main" role="tabpanel" aria-labelledby="v-pills-1-tab">
+              <warp-view-spinner message="custom message"></warp-view-spinner>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="plot"
+                                  chart-title="Plot">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH
+                    false RESETS
+                    'gts' STORE
+                    [ $gts mapper.delta 1 0 0 ] MAP
+                    1000 LTTB
+                    [ SWAP ]
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-map" role="tabpanel" aria-labelledby="v-pills-3-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <!-- <warp-view-tile url="http://192.168.1.138:8888/api/v0/exec" responsive="true" type="map"
+                                   chart-title="Map">
+                     [
+                     'HWr4ypJSe.1h3_YVBhqzYcbGFW0hiECLXeiQMW.O0H6S3qm4PUkyEsv4x.Lr1Za8AFzrKYjZt0NXEOJZoSIfaV.SW58bFdWTKZdAQPiQqXivAvVA56TqY.'
+                     'org.noaa.hurricane.wind'
+                     {}
+                     '2018-09-17T00:00:00.000z'
+                     '1700-01-01T00:00:00.000z'
+                     ] FETCH
+                   </warp-view-tile>-->
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-text" role="tabpanel" aria-labelledby="v-pills-4-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="text"
+                                  chart-title="Text">
+                    { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
               <pre><code class="language-markup">
 &lt;warp-view-tile
   url="https://warp.cityzendata.net/api/v0/exec"
@@ -203,226 +269,323 @@
   }
 &lt;/warp-view-tile>
               </code></pre>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bubble"
-                            show-legend="false"
-                            chart-title="Bubbles">
-              'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-              'readToken' STORE
-              [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' {
-              'serial' 'cityzendata' } NOW -30 ] FETCH
-              10 LTTB
-              <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * $val 10 / ] %>
-              LMAP
-              }
-              %> LMAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
-                            show-legend="false"
-                            chart-title="Default">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-              false RESETS
-              [ SWAP mapper.delta 1 0 0 ] MAP
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step"
-                            show-legend="false"
-                            chart-title="step">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-              false RESETS
-              [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
+                </div>
+              </div>
+            </div>
 
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
-                            show-legend="false"
-                            chart-title="Area">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-              false RESETS
-              [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
-                            show-legend="false"
-                            chart-title="Scatter">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-              false RESETS
-              [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
-                            show-legend="false"
-                            chart-title="Bar">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-              false RESETS
-              [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
-              [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
-                            show-legend="false"
-                            chart-title="gauge">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-              <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
-                            show-legend="false"
-                            chart-title="pie">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-              <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
-                            show-legend="false"
-                            chart-title="doughnut">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-              <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
-                            show-legend="false"
-                            chart-title="polar">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-              <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="radar"
-                            show-legend="false"
-                            chart-title="Radar">
-              @training/dataset0
-              [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
-              'list' STORE
-              $list
-              <%
-              DROP 'gts' STORE
-              $gts LABELS 'rack' GET 'rack' STORE
+            <div class="tab-pane fade" id="v-pills-bubble" role="tabpanel" aria-labelledby="v-pills-5-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="bubble"
+                                  show-legend="false"
+                                  chart-title="Bubbles">
+                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
+                    'readToken' STORE
+                    [ $readToken
+                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'
+                    {
+                    'serial' 'cityzendata' } NOW -30 ] FETCH
+                    10 LTTB
+                    <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * $val 10 / ]
+                    %>
+                    LMAP
+                    }
+                    %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
 
-              {
-              $rack $gts VALUES <%
-              'index' STORE 'val' STORE
-              { $index TOSTRING $val 5 % }
-              %> LMAP
-              }
-              %> LMAP
-              STOP 'values' STORE
-              { 'data' $values }
-            </warp-view-tile>
-          </div>
-        </div>
-        <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
-          <div class="card-body">
-            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="image"
-                            show-legend="false"
-                            chart-title="Image">
-              //draw tangents along the curve
-              300 200 '2D3' PGraphics
-              255 Pbackground
-              16 PtextSize
+            <div class="tab-pane fade" id="v-pills-default" role="tabpanel" aria-labelledby="v-pills-6-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  show-legend="false"
+                                  chart-title="Default">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
 
-              50 'x1' STORE
-              50 'y1' STORE
-              200 'x2' STORE
-              130 'y2' STORE
+            <div class="tab-pane fade" id="v-pills-step" role="tabpanel" aria-labelledby="v-pills-7-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step"
+                                  show-legend="false"
+                                  chart-title="Step">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
 
-              100 'cx1' STORE
-              40 'cy1' STORE
+            <div class="tab-pane fade" id="v-pills-area" role="tabpanel" aria-labelledby="v-pills-8-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
+                                  show-legend="false"
+                                  chart-title="Area">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
 
-              110 'cx2' STORE
-              140 'cy2' STORE
+            <div class="tab-pane fade" id="v-pills-scatter" role="tabpanel" aria-labelledby="v-pills-9-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="scatter"
+                                  show-legend="false"
+                                  chart-title="Scatter">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-bar" role="tabpanel" aria-labelledby="v-pills-10-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
+                                  show-legend="false"
+                                  chart-title="Bar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-gauge" role="tabpanel" aria-labelledby="v-pills-11-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="gauge"
+                                  show-legend="false"
+                                  chart-title="gauge">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-pie" role="tabpanel" aria-labelledby="v-pills-12-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
+                                  show-legend="false"
+                                  chart-title="pie">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-doughnut" role="tabpanel" aria-labelledby="v-pills-13-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="doughnut"
+                                  show-legend="false"
+                                  chart-title="doughnut">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-polar" role="tabpanel" aria-labelledby="v-pills-14-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="polar"
+                                  show-legend="false"
+                                  chart-title="polar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-radar" role="tabpanel" aria-labelledby="v-pills-15-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                                  type="radar"
+                                  show-legend="false"
+                                  chart-title="Radar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
+                    'list' STORE
+                    $list
+                    <%
+                    DROP 'gts' STORE
+                    $gts LABELS 'rack' GET 'rack' STORE
+
+                    {
+                    $rack $gts VALUES <%
+                    'index' STORE 'val' STORE
+                    { $index TOSTRING $val 5 % }
+                    %> LMAP
+                    }
+                    %> LMAP
+                    STOP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-image" role="tabpanel" aria-labelledby="v-pills-16-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="image"
+                                  show-legend="false"
+                                  chart-title="Image">
+                    //draw tangents along the curve
+                    300 200 '2D3' PGraphics
+                    255 Pbackground
+                    16 PtextSize
+
+                    50 'x1' STORE
+                    50 'y1' STORE
+                    200 'x2' STORE
+                    130 'y2' STORE
+
+                    100 'cx1' STORE
+                    40 'cy1' STORE
+
+                    110 'cx2' STORE
+                    140 'cy2' STORE
 
 
-              4 PstrokeWeight
-              $x1 $y1 Ppoint //first anchor
-              $x2 $y2 Ppoint //second anchor
+                    4 PstrokeWeight
+                    $x1 $y1 Ppoint //first anchor
+                    $x2 $y2 Ppoint //second anchor
 
-              2 PstrokeWeight
-              $x1 $y1 $cx1 $cy1 Pline
-              $x2 $y2 $cx2 $cy2 Pline
+                    2 PstrokeWeight
+                    $x1 $y1 $cx1 $cy1 Pline
+                    $x2 $y2 $cx2 $cy2 Pline
 
-              2 PstrokeWeight
-              0xffff0000 Pstroke
-              $x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier
+                    2 PstrokeWeight
+                    0xffff0000 Pstroke
+                    $x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier
 
-              0 10
-              <%
-              10.0 / 't' STORE
+                    0 10
+                    <%
+                    10.0 / 't' STORE
 
-              $x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE
-              $y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE
-              $x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE
-              $y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE
-              $ty $tx ATAN2 PI 2.0 / - 'angle' STORE
-              0xff009f00 Pstroke
-              $x
-              $y
-              $x $angle COS 12 * +
-              $y $angle SIN 12 * +
-              Pline
+                    $x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE
+                    $y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE
+                    $x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE
+                    $y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE
+                    $ty $tx ATAN2 PI 2.0 / - 'angle' STORE
+                    0xff009f00 Pstroke
+                    $x
+                    $y
+                    $x $angle COS 12 * +
+                    $y $angle SIN 12 * +
+                    Pline
 
-              0x9f009f00 Pfill
-              PnoStroke
-              'CENTER' PellipseMode
-              $x $y 5 5 Pellipse
+                    0x9f009f00 Pfill
+                    PnoStroke
+                    'CENTER' PellipseMode
+                    $x $y 5 5 Pellipse
 
-              %> FOR
+                    %> FOR
 
 
-              Pencode
-            </warp-view-tile>
+                    Pencode
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </main>
@@ -458,6 +621,10 @@
         el.options = {...defOpts};
       });
       document.querySelector('#plot')['options'] = {...defOpts};
+    });
+
+    $('a[role="tab"]').on('shown.bs.tab', function (e) {
+      $(e.target.href.replace(document.location, '')).find('warp-view-tile')[0].options = {...defOpts};
     });
   });
 </script>

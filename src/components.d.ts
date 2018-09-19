@@ -740,7 +740,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewSpinner {
-
+      'message': string;
     }
   }
 
@@ -763,7 +763,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewSpinnerAttributes extends HTMLAttributes {
-
+      'message'?: string;
     }
   }
 }
@@ -775,6 +775,7 @@ declare global {
     interface WarpViewTile {
       'chartTitle': string;
       'options': Param;
+      'resize': () => void;
       'responsive': boolean;
       'showLegend': boolean;
       'type': string;

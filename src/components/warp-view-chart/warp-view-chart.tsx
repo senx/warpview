@@ -201,7 +201,7 @@ export class WarpViewChart {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let dataList = GTSLib.getData(this.data).data;
     const dataToplot = this.gtsToData(dataList);
-
+    this.onResize();
     this.LOG.debug(['drawChart'], [dataToplot]);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
     if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {

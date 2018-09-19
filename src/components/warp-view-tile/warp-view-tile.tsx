@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Element, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, Method, Prop, State, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from "../../model/dataModel";
 import {Logger} from "../../utils/logger";
@@ -65,6 +65,12 @@ export class WarpViewTile {
     }
   }
 
+  @Method()
+  resize() {
+    this.execute();
+  }
+
+
   componentDidLoad() {
     this.execute();
   }
@@ -99,9 +105,9 @@ export class WarpViewTile {
     this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
     fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
       response.text().then(gtsStr => {
-        // this.LOG.debug(['componentDidLoad', 'response'], gtsStr);
         this.gtsList = JSON.parse(gtsStr);
         this.parseGTS();
+        this.loading = false;
       }, err => {
         this.LOG.error(['componentDidLoad'], err);
         this.loading = false;
@@ -117,10 +123,7 @@ export class WarpViewTile {
       <div class="warpscript">
         <slot/>
       </div>
-      {/* {
-        this.loading
-          ? <warp-view-spinner />
-          : <span>*/}
+
       {this.graphs['scatter'].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}</h1>
@@ -244,9 +247,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {
-        /*  </span>
-        }*/}
+      {this.loading? <warp-view-spinner ></warp-view-spinner>: ''}
     </div>
   }
 }

@@ -28,6 +28,8 @@ import {Component, Prop} from "@stencil/core";
 })
 export class WarpViewSpinner {
 
+  @Prop() message: string ='Loading and parsing data...';
+
   render() {
     return <div class="wrapper">
       <div class=" lds-ring">
@@ -36,6 +38,7 @@ export class WarpViewSpinner {
         <div></div>
         <div></div>
       </div>
+      <h2>{this.message}</h2>
     </div>;
   }
 }

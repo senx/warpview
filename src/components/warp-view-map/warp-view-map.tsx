@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Element, Listen, Prop} from '@stencil/core';
+import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
 
 import Leaflet, {GeoJSONOptions, PathOptions} from 'leaflet';
 import 'leaflet.heat';
@@ -25,6 +25,9 @@ import {LineString} from 'geojson';
 import {ColorLib} from "../../utils/color-lib";
 import {ChartLib} from "../../utils/chart-lib";
 import {Logger} from "../../utils/logger";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
+import {Param} from "../../model/param";
 
 @Component({
   tag: 'warp-view-map',
@@ -56,7 +59,7 @@ export class WarpViewMap {
 
   @Element() el: HTMLElement;
 
-  private _map;
+  private _map : Leaflet.Map;
   private uuid = 'map-' + ChartLib.guid().split('-').join('');
   private LOG: Logger = new Logger(WarpViewMap);
 
@@ -77,7 +80,7 @@ export class WarpViewMap {
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
 
-  private _heatLayer;
+  private _heatLayer : Leaflet.HeatLayer;
   private resizeTimer;
 
   @Listen('window:resize')
@@ -89,6 +92,14 @@ export class WarpViewMap {
     }, 250);
   }
 
+  @Watch('data')
+  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
+      this.drawMap();
+    }
+  }
+  
   @Listen('heatRadiusDidChange')
   heatRadiusDidChange(event) {
     this._heatLayer.setOptions({radius: event.detail.valueAsNumber});
@@ -113,6 +124,10 @@ export class WarpViewMap {
     if (!this.data) {
       return;
     }
+    if(this._map) {
+     // this._heatLayer.remove();
+      this._map.remove();
+    }
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     this._map = Leaflet.map(ctx as HTMLElement).setView([this.startLat || 0, this.startLong || 0], this.startZoom || 5);
     Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -132,14 +147,14 @@ export class WarpViewMap {
         d.addTo(this._map)
       });
     }
-
-    this._heatLayer = Leaflet.heatLayer(this.heatData, {
-      radius: this.heatRadius,
-      blur: this.heatBlur,
-      minOpacity: this.heatOpacity
-    });
-    this._heatLayer.addTo(this._map);
-
+    if(this.heatData && this.heatData.length > 0) {
+      this._heatLayer = Leaflet.heatLayer(this.heatData, {
+        radius: this.heatRadius,
+        blur: this.heatBlur,
+        minOpacity: this.heatOpacity
+      });
+      this._heatLayer.addTo(this._map);
+    }
     this._map.on('move', e => {
       this.LOG.debug(['drawMap', 'move'], [this._map.getCenter(), e]);
     });
