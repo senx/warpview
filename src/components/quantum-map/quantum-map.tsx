@@ -60,6 +60,16 @@ export class QuantumMap {
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
 
   private _heatLayer;
+  private resizeTimer;
+
+  @Listen('window:resize')
+  onResize() {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+      this.drawMap();
+    }, 250);
+  }
 
   @Listen('heatRadiusDidChange')
   heatRadiusDidChange(event) {

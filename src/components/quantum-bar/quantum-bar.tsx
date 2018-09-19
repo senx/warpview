@@ -1,5 +1,5 @@
 import Chart from "chart.js";
-import {Component, Element, Prop, Watch} from "@stencil/core";
+import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
 import {Logger} from "../../utils/logger";
@@ -31,6 +31,16 @@ export class QuantumBar {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart : any;
   private _mapIndex = {};
+  private resizeTimer;
+
+  @Listen('window:resize')
+  onResize() {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+      this.drawChart();
+    }, 250);
+  }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {

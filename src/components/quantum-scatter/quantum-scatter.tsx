@@ -1,5 +1,5 @@
 import Chart from 'chart.js';
-import {Component, Element, Prop, Watch} from '@stencil/core';
+import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
 import {ColorLib} from "../../utils/color-lib";
@@ -30,6 +30,16 @@ export class QuantumScatter {
   };
   private _chart: Chart;
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private resizeTimer;
+
+  @Listen('window:resize')
+  onResize() {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+      this.drawChart();
+    }, 250);
+  }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {

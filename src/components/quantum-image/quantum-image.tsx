@@ -1,4 +1,4 @@
-import {Component, Element, Prop, Watch} from "@stencil/core";
+import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
@@ -25,6 +25,16 @@ export class QuantumImage {
   private LOG: Logger = new Logger(QuantumImage);
   private _options: Param = new Param();
   private toDisplay: string[];
+  private resizeTimer;
+
+  @Listen('window:resize')
+  onResize() {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+      this.drawChart();
+    }, 250);
+  }
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
