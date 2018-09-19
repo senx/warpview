@@ -22,7 +22,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Quantumviz</title>
+  <title>Warp View</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
         integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
@@ -41,7 +41,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup.min.js"></script>
-  <script src="/build/quantumviz.js"></script>
+  <script src="/build/warpview.js"></script>
 
   <style>
 
@@ -57,11 +57,11 @@
     .card {
       padding: 0;
     }
+
     .jumbotron {
       padding-top: var(--jumbotron-padding-y);
       padding-bottom: var(--jumbotron-padding-y);
       margin-bottom: 0;
-//      background-color: #fff;
     }
 
     @media (min-width: 768px) {
@@ -103,19 +103,19 @@
     }
 
     body {
-      --quantum-tile-height: 500px;
-      --quantum-chart-legend-bg: #000;
+      --warp-view-tile-height: 500px;
+      --warp-view-chart-legend-bg: #000;
     }
 
     body.dark {
-      --quantum-font-color: #ffffff;
-      --quantum-chart-label-color: #ffffff;
+      --warp-view-font-color: #ffffff;
+      --warp-view-chart-label-color: #ffffff;
       --gts-tree-expanded-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==');
       --gts-stack-font-color: #ffffff;
-      --quantum-switch-inset-color: #000000;
-      --quantum-switch-inset-checked-color: darkgreen;
-      --quantum-switch-handle-color: #8e8e8e;
-      --quantum-switch-handle-checked-color: lime;
+      --warp-view-switch-inset-color: #000000;
+      --warp-view-switch-inset-checked-color: darkgreen;
+      --warp-view-switch-handle-color: #8e8e8e;
+      --warp-view-switch-handle-checked-color: lime;
     }
 
   </style>
@@ -162,8 +162,8 @@
       <h1 class="jumbotron-heading">Quantum Viz examples</h1>
       <p class="lead text-muted">Choose a main theme</p>
       <p>
-        <button type="button" class="btn btn-dark my-2" id="dark" >Dark</button>
-        <button type="button" class="btn btn-light my-2" id="light" >Light</button>
+        <button type="button" class="btn btn-dark my-2" id="dark">Dark</button>
+        <button type="button" class="btn btn-light my-2" id="light">Light</button>
       </p>
     </div>
   </section>
@@ -173,8 +173,8 @@
       <div class="row">
         <div class="card col-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="plot"
-                          chart-title="Plot">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="plot"
+                            chart-title="Plot">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH
               false RESETS
@@ -182,34 +182,34 @@
               [ $gts mapper.delta 1 0 0 ] MAP
               1000 LTTB
               [ SWAP ]
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="text"
-                          chart-title="Text">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="text"
+                            chart-title="Text">
               { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
           <div class="card-footer text-muted">
               <pre><code class="language-markup">
-&lt;quantum-tile
+&lt;warp-view-tile
   url="https://warp.cityzendata.net/api/v0/exec"
   responsive="true" unit="°C" type="text"
   chart-title="Text">
   { 'data' 42
     'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' }
   }
-&lt;/quantum-tile>
+&lt;/warp-view-tile>
               </code></pre>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bubble"
-                          show-legend="false"
-                          chart-title="Bubbles">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bubble"
+                            show-legend="false"
+                            chart-title="Bubbles">
               'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
               'readToken' STORE
               [ $readToken '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)' {
@@ -220,126 +220,126 @@
               }
               %> LMAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
-                          show-legend="false"
-                          chart-title="Default">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C"
+                            show-legend="false"
+                            chart-title="Default">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
               false RESETS
               [ SWAP mapper.delta 1 0 0 ] MAP
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step"
-                          show-legend="false"
-                          chart-title="step">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="step"
+                            show-legend="false"
+                            chart-title="step">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
               false RESETS
               [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
 
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
-                          show-legend="false"
-                          chart-title="Area">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="area"
+                            show-legend="false"
+                            chart-title="Area">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
               false RESETS
               [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
-                          show-legend="false"
-                          chart-title="Scatter">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="scatter"
+                            show-legend="false"
+                            chart-title="Scatter">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
               false RESETS
               [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
-                          show-legend="false"
-                          chart-title="Bar">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="bar"
+                            show-legend="false"
+                            chart-title="Bar">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
               false RESETS
               [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
               [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
-                          show-legend="false"
-                          chart-title="gauge">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="gauge"
+                            show-legend="false"
+                            chart-title="gauge">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
               <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
-                          show-legend="false"
-                          chart-title="pie">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="pie"
+                            show-legend="false"
+                            chart-title="pie">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
               <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
-                          show-legend="false"
-                          chart-title="doughnut">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="doughnut"
+                            show-legend="false"
+                            chart-title="doughnut">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
               <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
-                          show-legend="false"
-                          chart-title="polar">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="polar"
+                            show-legend="false"
+                            chart-title="polar">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
               <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="radar"
-                          show-legend="false"
-                          chart-title="Radar">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" unit="°C" type="radar"
+                            show-legend="false"
+                            chart-title="Radar">
               @training/dataset0
               [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
               'list' STORE
@@ -357,14 +357,14 @@
               %> LMAP
               STOP 'values' STORE
               { 'data' $values }
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
         <div class="card col-lg-4 col-md-12 mb-4 shadow-sm">
           <div class="card-body">
-            <quantum-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="image"
-                          show-legend="false"
-                          chart-title="Image">
+            <warp-view-tile url="https://warp.cityzendata.net/api/v0/exec" responsive="true" type="image"
+                            show-legend="false"
+                            chart-title="Image">
               //draw tangents along the curve
               300 200 '2D3' PGraphics
               255 Pbackground
@@ -419,7 +419,7 @@
 
 
               Pencode
-            </quantum-tile>
+            </warp-view-tile>
           </div>
         </div>
       </div>
@@ -432,9 +432,6 @@
     <p class="float-right">
       <a href="#">Back to top</a>
     </p>
-    <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-    <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting
-      started guide</a>.</p>
   </div>
 </footer>
 <script language="JavaScript">
@@ -448,7 +445,7 @@
       body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light');
       $(".card").addClass('bg-dark');
       defOpts.gridLineColor = '#ffffff';
-      document.querySelectorAll('quantum-tile').forEach(el => {
+      document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
       });
       document.querySelector('#plot')['options'] = {...defOpts};
@@ -457,7 +454,7 @@
       body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light');
       $(".card").removeClass('bg-dark');
       defOpts.gridLineColor = '#000000';
-      document.querySelectorAll('quantum-tile').forEach(el => {
+      document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
       });
       document.querySelector('#plot')['options'] = {...defOpts};

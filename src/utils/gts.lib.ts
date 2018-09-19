@@ -22,8 +22,10 @@ import {Logger} from "./logger";
 
 export class GTSLib {
 
-
-  private static LOG: Logger = new Logger(GTSLib);
+  /**
+   *
+   * @param actual
+   */
   static cleanArray(actual: any[]) {
     return actual.filter((i) => !!i);
   }

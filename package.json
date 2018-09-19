@@ -1,18 +1,18 @@
 {
-  "name": "quantumviz",
+  "name": "warpview",
   "module": "dist/esm/index.js",
   "version": "0.0.1",
-  "description": "Quantumviz Elements",
-  "main": "dist/quantumviz.js",
+  "description": "WarpView Elements",
+  "main": "dist/warpview.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org:cityzendata/quantum-viz.git"
+    "url": "git+ssh://git@bitbucket.org:cityzendata/warpview.git"
   },
   "author": "Cityzen Data",
   "bugs": {
-    "url": "https://bitbucket.org/cityzendata/quantum-viz/addon/trello/trello-board"
+    "url": "https://bitbucket.org/cityzendata/warpview/addon/trello/trello-board"
   },
-  "homepage": "https://bitbucket.org/cityzendata/quantum-viz",
+  "homepage": "https://bitbucket.org/cityzendata/warpview",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [

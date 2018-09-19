@@ -1,0 +1,79 @@
+/*!
+ *
+ *    Copyright 2016  Cityzen Data
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ */
+warp-view-tree-view {
+  /* .dark {
+    color: #ffffff;
+    .expanded {
+      color: #ffffff;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==) no-repeat;
+      background-size: cover;
+    }
+  }*/ }
+  warp-view-tree-view ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    overflow: hidden; }
+  warp-view-tree-view li {
+    color: var(--gts-stack-font-color, #000000);
+    position: relative;
+    padding: 0 0 0 20px;
+    line-height: 20px; }
+  warp-view-tree-view li .stack-level {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-top: 25px;
+    padding-bottom: 10px; }
+  warp-view-tree-view li .stack-level + div {
+    padding-left: 25px; }
+  warp-view-tree-view li .expanded {
+    padding: 1px 10px;
+    background: var(--gts-tree-expanded-icon, url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAKElEQVQ4jWNgGFbgFQMDw38i8UuYJiYkA5hJsIwUtXQEo2EwGgZkAwBP/yN0kY5JiwAAAABJRU5ErkJggg==));
+    background-size: cover; }
+  warp-view-tree-view li .collapsed {
+    padding: 1px 10px;
+    background: var(--gts-tree-collapsed-icon, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVGhD7djRCcAgDEBBF+hHt+wo3auDtWaEKFLRO3j/CSiIBQDYxFE7JytmSntq72TFTGkWGVjTIsvcEQDocdXuyYqZ0ry1Bta0yDJHCwB6+KAb2N5vrWUW8UEHAPyilA9TDlz495u2lwAAAABJRU5ErkJggg==));
+    background-size: cover; }
+  warp-view-tree-view li .gtsInfo {
+    white-space: normal;
+    word-wrap: break-word; }
+  warp-view-tree-view li .gtsInfo[disabled] {
+    color: #aaaaaa;
+    cursor: not-allowed; }
+  warp-view-tree-view li .normal {
+    border-radius: 50%;
+    background-color: #bbbbbb;
+    display: inline-block;
+    width: 12px;
+    height: 12px; }
+  warp-view-tree-view li i, warp-view-tree-view li span {
+    cursor: pointer; }
+  warp-view-tree-view li .selected {
+    background-color: #aaddff;
+    font-weight: bold;
+    padding: 1px 5px; }
+  warp-view-tree-view .gts-classname {
+    color: var(--gts-classname-font-color, #0074D9); }
+  warp-view-tree-view .gts-labelname {
+    color: var(--gts-labelname-font-color, #3d9970); }
+  warp-view-tree-view .gts-separator {
+    color: var(--gts-separator-font-color, #bbbbbb); }
+  warp-view-tree-view .gts-labelvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic; }

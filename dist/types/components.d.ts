@@ -37,7 +37,7 @@ import {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumAnnotation {
+    interface WarpViewAnnotation {
       'data': DataModel | GTS[];
       'height': string;
       'hiddenData': string[];
@@ -50,25 +50,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumAnnotationElement extends StencilComponents.QuantumAnnotation, HTMLStencilElement {}
+  interface HTMLWarpViewAnnotationElement extends StencilComponents.WarpViewAnnotation, HTMLStencilElement {}
 
-  var HTMLQuantumAnnotationElement: {
-    prototype: HTMLQuantumAnnotationElement;
-    new (): HTMLQuantumAnnotationElement;
+  var HTMLWarpViewAnnotationElement: {
+    prototype: HTMLWarpViewAnnotationElement;
+    new (): HTMLWarpViewAnnotationElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-annotation': HTMLQuantumAnnotationElement;
+    'warp-view-annotation': HTMLWarpViewAnnotationElement;
   }
   interface ElementTagNameMap {
-    'quantum-annotation': HTMLQuantumAnnotationElement;
+    'warp-view-annotation': HTMLWarpViewAnnotationElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-annotation': JSXElements.QuantumAnnotationAttributes;
+      'warp-view-annotation': JSXElements.WarpViewAnnotationAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumAnnotationAttributes extends HTMLAttributes {
+    export interface WarpViewAnnotationAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
       'height'?: string;
       'hiddenData'?: string[];
@@ -87,7 +87,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumBar {
+    interface WarpViewBar {
       'data': DataModel | GTS[];
       'height': string;
       'options': Param;
@@ -98,25 +98,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumBarElement extends StencilComponents.QuantumBar, HTMLStencilElement {}
+  interface HTMLWarpViewBarElement extends StencilComponents.WarpViewBar, HTMLStencilElement {}
 
-  var HTMLQuantumBarElement: {
-    prototype: HTMLQuantumBarElement;
-    new (): HTMLQuantumBarElement;
+  var HTMLWarpViewBarElement: {
+    prototype: HTMLWarpViewBarElement;
+    new (): HTMLWarpViewBarElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-bar': HTMLQuantumBarElement;
+    'warp-view-bar': HTMLWarpViewBarElement;
   }
   interface ElementTagNameMap {
-    'quantum-bar': HTMLQuantumBarElement;
+    'warp-view-bar': HTMLWarpViewBarElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-bar': JSXElements.QuantumBarAttributes;
+      'warp-view-bar': JSXElements.WarpViewBarAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumBarAttributes extends HTMLAttributes {
+    export interface WarpViewBarAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
       'height'?: string;
       'options'?: Param;
@@ -132,7 +132,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumBubble {
+    interface WarpViewBubble {
       'data': DataModel | GTS[];
       'height': string;
       'options': Param;
@@ -143,25 +143,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumBubbleElement extends StencilComponents.QuantumBubble, HTMLStencilElement {}
+  interface HTMLWarpViewBubbleElement extends StencilComponents.WarpViewBubble, HTMLStencilElement {}
 
-  var HTMLQuantumBubbleElement: {
-    prototype: HTMLQuantumBubbleElement;
-    new (): HTMLQuantumBubbleElement;
+  var HTMLWarpViewBubbleElement: {
+    prototype: HTMLWarpViewBubbleElement;
+    new (): HTMLWarpViewBubbleElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-bubble': HTMLQuantumBubbleElement;
+    'warp-view-bubble': HTMLWarpViewBubbleElement;
   }
   interface ElementTagNameMap {
-    'quantum-bubble': HTMLQuantumBubbleElement;
+    'warp-view-bubble': HTMLWarpViewBubbleElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-bubble': JSXElements.QuantumBubbleAttributes;
+      'warp-view-bubble': JSXElements.WarpViewBubbleAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumBubbleAttributes extends HTMLAttributes {
+    export interface WarpViewBubbleAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
       'height'?: string;
       'options'?: Param;
@@ -177,7 +177,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumChart {
+    interface WarpViewChart {
       'data': DataModel | GTS[];
       'hiddenData': string[];
       'options': Param;
@@ -188,25 +188,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumChartElement extends StencilComponents.QuantumChart, HTMLStencilElement {}
+  interface HTMLWarpViewChartElement extends StencilComponents.WarpViewChart, HTMLStencilElement {}
 
-  var HTMLQuantumChartElement: {
-    prototype: HTMLQuantumChartElement;
-    new (): HTMLQuantumChartElement;
+  var HTMLWarpViewChartElement: {
+    prototype: HTMLWarpViewChartElement;
+    new (): HTMLWarpViewChartElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-chart': HTMLQuantumChartElement;
+    'warp-view-chart': HTMLWarpViewChartElement;
   }
   interface ElementTagNameMap {
-    'quantum-chart': HTMLQuantumChartElement;
+    'warp-view-chart': HTMLWarpViewChartElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-chart': JSXElements.QuantumChartAttributes;
+      'warp-view-chart': JSXElements.WarpViewChartAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumChartAttributes extends HTMLAttributes {
+    export interface WarpViewChartAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
       'hiddenData'?: string[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
@@ -224,7 +224,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumDisplay {
+    interface WarpViewDisplay {
       'data': DataModel | any[] | string | number;
       'height': string;
       'options': Param;
@@ -234,25 +234,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumDisplayElement extends StencilComponents.QuantumDisplay, HTMLStencilElement {}
+  interface HTMLWarpViewDisplayElement extends StencilComponents.WarpViewDisplay, HTMLStencilElement {}
 
-  var HTMLQuantumDisplayElement: {
-    prototype: HTMLQuantumDisplayElement;
-    new (): HTMLQuantumDisplayElement;
+  var HTMLWarpViewDisplayElement: {
+    prototype: HTMLWarpViewDisplayElement;
+    new (): HTMLWarpViewDisplayElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-display': HTMLQuantumDisplayElement;
+    'warp-view-display': HTMLWarpViewDisplayElement;
   }
   interface ElementTagNameMap {
-    'quantum-display': HTMLQuantumDisplayElement;
+    'warp-view-display': HTMLWarpViewDisplayElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-display': JSXElements.QuantumDisplayAttributes;
+      'warp-view-display': JSXElements.WarpViewDisplayAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumDisplayAttributes extends HTMLAttributes {
+    export interface WarpViewDisplayAttributes extends HTMLAttributes {
       'data'?: DataModel | any[] | string | number;
       'height'?: string;
       'options'?: Param;
@@ -267,36 +267,36 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumChip {
+    interface WarpViewChip {
       'index': number;
       'name': string;
       'node': any;
     }
   }
 
-  interface HTMLQuantumChipElement extends StencilComponents.QuantumChip, HTMLStencilElement {}
+  interface HTMLWarpViewChipElement extends StencilComponents.WarpViewChip, HTMLStencilElement {}
 
-  var HTMLQuantumChipElement: {
-    prototype: HTMLQuantumChipElement;
-    new (): HTMLQuantumChipElement;
+  var HTMLWarpViewChipElement: {
+    prototype: HTMLWarpViewChipElement;
+    new (): HTMLWarpViewChipElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-chip': HTMLQuantumChipElement;
+    'warp-view-chip': HTMLWarpViewChipElement;
   }
   interface ElementTagNameMap {
-    'quantum-chip': HTMLQuantumChipElement;
+    'warp-view-chip': HTMLWarpViewChipElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-chip': JSXElements.QuantumChipAttributes;
+      'warp-view-chip': JSXElements.WarpViewChipAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumChipAttributes extends HTMLAttributes {
+    export interface WarpViewChipAttributes extends HTMLAttributes {
       'index'?: number;
       'name'?: string;
       'node'?: any;
-      'onQuantumSelectedGTS'?: (event: CustomEvent) => void;
+      'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
     }
   }
 }
@@ -305,31 +305,31 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumGtsTree {
+    interface WarpViewGtsTree {
       'data': DataModel | GTS[] | string;
       'theme': string;
     }
   }
 
-  interface HTMLQuantumGtsTreeElement extends StencilComponents.QuantumGtsTree, HTMLStencilElement {}
+  interface HTMLWarpViewGtsTreeElement extends StencilComponents.WarpViewGtsTree, HTMLStencilElement {}
 
-  var HTMLQuantumGtsTreeElement: {
-    prototype: HTMLQuantumGtsTreeElement;
-    new (): HTMLQuantumGtsTreeElement;
+  var HTMLWarpViewGtsTreeElement: {
+    prototype: HTMLWarpViewGtsTreeElement;
+    new (): HTMLWarpViewGtsTreeElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-gts-tree': HTMLQuantumGtsTreeElement;
+    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement;
   }
   interface ElementTagNameMap {
-    'quantum-gts-tree': HTMLQuantumGtsTreeElement;
+    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-gts-tree': JSXElements.QuantumGtsTreeAttributes;
+      'warp-view-gts-tree': JSXElements.WarpViewGtsTreeAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumGtsTreeAttributes extends HTMLAttributes {
+    export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[] | string;
       'theme'?: string;
     }
@@ -340,32 +340,32 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumTreeView {
+    interface WarpViewTreeView {
       'branch': boolean;
       'gtsList': any;
       'theme': string;
     }
   }
 
-  interface HTMLQuantumTreeViewElement extends StencilComponents.QuantumTreeView, HTMLStencilElement {}
+  interface HTMLWarpViewTreeViewElement extends StencilComponents.WarpViewTreeView, HTMLStencilElement {}
 
-  var HTMLQuantumTreeViewElement: {
-    prototype: HTMLQuantumTreeViewElement;
-    new (): HTMLQuantumTreeViewElement;
+  var HTMLWarpViewTreeViewElement: {
+    prototype: HTMLWarpViewTreeViewElement;
+    new (): HTMLWarpViewTreeViewElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-tree-view': HTMLQuantumTreeViewElement;
+    'warp-view-tree-view': HTMLWarpViewTreeViewElement;
   }
   interface ElementTagNameMap {
-    'quantum-tree-view': HTMLQuantumTreeViewElement;
+    'warp-view-tree-view': HTMLWarpViewTreeViewElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-tree-view': JSXElements.QuantumTreeViewAttributes;
+      'warp-view-tree-view': JSXElements.WarpViewTreeViewAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumTreeViewAttributes extends HTMLAttributes {
+    export interface WarpViewTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsList'?: any;
       'theme'?: string;
@@ -377,7 +377,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumImage {
+    interface WarpViewImage {
       'data': DataModel | any[] | string;
       'height': string;
       'imageTitle': string;
@@ -387,25 +387,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumImageElement extends StencilComponents.QuantumImage, HTMLStencilElement {}
+  interface HTMLWarpViewImageElement extends StencilComponents.WarpViewImage, HTMLStencilElement {}
 
-  var HTMLQuantumImageElement: {
-    prototype: HTMLQuantumImageElement;
-    new (): HTMLQuantumImageElement;
+  var HTMLWarpViewImageElement: {
+    prototype: HTMLWarpViewImageElement;
+    new (): HTMLWarpViewImageElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-image': HTMLQuantumImageElement;
+    'warp-view-image': HTMLWarpViewImageElement;
   }
   interface ElementTagNameMap {
-    'quantum-image': HTMLQuantumImageElement;
+    'warp-view-image': HTMLWarpViewImageElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-image': JSXElements.QuantumImageAttributes;
+      'warp-view-image': JSXElements.WarpViewImageAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumImageAttributes extends HTMLAttributes {
+    export interface WarpViewImageAttributes extends HTMLAttributes {
       'data'?: DataModel | any[] | string;
       'height'?: string;
       'imageTitle'?: string;
@@ -420,7 +420,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumHeatmapSliders {
+    interface WarpViewHeatmapSliders {
       'blurValue': number;
       'maxBlurValue': number;
       'maxRadiusValue': number;
@@ -430,25 +430,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumHeatmapSlidersElement extends StencilComponents.QuantumHeatmapSliders, HTMLStencilElement {}
+  interface HTMLWarpViewHeatmapSlidersElement extends StencilComponents.WarpViewHeatmapSliders, HTMLStencilElement {}
 
-  var HTMLQuantumHeatmapSlidersElement: {
-    prototype: HTMLQuantumHeatmapSlidersElement;
-    new (): HTMLQuantumHeatmapSlidersElement;
+  var HTMLWarpViewHeatmapSlidersElement: {
+    prototype: HTMLWarpViewHeatmapSlidersElement;
+    new (): HTMLWarpViewHeatmapSlidersElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-heatmap-sliders': HTMLQuantumHeatmapSlidersElement;
+    'warp-view-heatmap-sliders': HTMLWarpViewHeatmapSlidersElement;
   }
   interface ElementTagNameMap {
-    'quantum-heatmap-sliders': HTMLQuantumHeatmapSlidersElement;
+    'warp-view-heatmap-sliders': HTMLWarpViewHeatmapSlidersElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-heatmap-sliders': JSXElements.QuantumHeatmapSlidersAttributes;
+      'warp-view-heatmap-sliders': JSXElements.WarpViewHeatmapSlidersAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumHeatmapSlidersAttributes extends HTMLAttributes {
+    export interface WarpViewHeatmapSlidersAttributes extends HTMLAttributes {
       'blurValue'?: number;
       'maxBlurValue'?: number;
       'maxRadiusValue'?: number;
@@ -466,7 +466,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumMap {
+    interface WarpViewMap {
       'data': any[];
       'dotsLimit': number;
       'heatBlur': number;
@@ -483,25 +483,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumMapElement extends StencilComponents.QuantumMap, HTMLStencilElement {}
+  interface HTMLWarpViewMapElement extends StencilComponents.WarpViewMap, HTMLStencilElement {}
 
-  var HTMLQuantumMapElement: {
-    prototype: HTMLQuantumMapElement;
-    new (): HTMLQuantumMapElement;
+  var HTMLWarpViewMapElement: {
+    prototype: HTMLWarpViewMapElement;
+    new (): HTMLWarpViewMapElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-map': HTMLQuantumMapElement;
+    'warp-view-map': HTMLWarpViewMapElement;
   }
   interface ElementTagNameMap {
-    'quantum-map': HTMLQuantumMapElement;
+    'warp-view-map': HTMLWarpViewMapElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-map': JSXElements.QuantumMapAttributes;
+      'warp-view-map': JSXElements.WarpViewMapAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumMapAttributes extends HTMLAttributes {
+    export interface WarpViewMapAttributes extends HTMLAttributes {
       'data'?: any[];
       'dotsLimit'?: number;
       'heatBlur'?: number;
@@ -523,7 +523,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumPie {
+    interface WarpViewPie {
       'data': DataModel | any[];
       'height': string;
       'options': Param;
@@ -533,25 +533,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumPieElement extends StencilComponents.QuantumPie, HTMLStencilElement {}
+  interface HTMLWarpViewPieElement extends StencilComponents.WarpViewPie, HTMLStencilElement {}
 
-  var HTMLQuantumPieElement: {
-    prototype: HTMLQuantumPieElement;
-    new (): HTMLQuantumPieElement;
+  var HTMLWarpViewPieElement: {
+    prototype: HTMLWarpViewPieElement;
+    new (): HTMLWarpViewPieElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-pie': HTMLQuantumPieElement;
+    'warp-view-pie': HTMLWarpViewPieElement;
   }
   interface ElementTagNameMap {
-    'quantum-pie': HTMLQuantumPieElement;
+    'warp-view-pie': HTMLWarpViewPieElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-pie': JSXElements.QuantumPieAttributes;
+      'warp-view-pie': JSXElements.WarpViewPieAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumPieAttributes extends HTMLAttributes {
+    export interface WarpViewPieAttributes extends HTMLAttributes {
       'data'?: DataModel | any[];
       'height'?: string;
       'options'?: Param;
@@ -566,7 +566,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumPlot {
+    interface WarpViewPlot {
       'data': string | GTS[] | DataModel;
       'height': string;
       'options': string | Param;
@@ -576,25 +576,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumPlotElement extends StencilComponents.QuantumPlot, HTMLStencilElement {}
+  interface HTMLWarpViewPlotElement extends StencilComponents.WarpViewPlot, HTMLStencilElement {}
 
-  var HTMLQuantumPlotElement: {
-    prototype: HTMLQuantumPlotElement;
-    new (): HTMLQuantumPlotElement;
+  var HTMLWarpViewPlotElement: {
+    prototype: HTMLWarpViewPlotElement;
+    new (): HTMLWarpViewPlotElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-plot': HTMLQuantumPlotElement;
+    'warp-view-plot': HTMLWarpViewPlotElement;
   }
   interface ElementTagNameMap {
-    'quantum-plot': HTMLQuantumPlotElement;
+    'warp-view-plot': HTMLWarpViewPlotElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-plot': JSXElements.QuantumPlotAttributes;
+      'warp-view-plot': JSXElements.WarpViewPlotAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumPlotAttributes extends HTMLAttributes {
+    export interface WarpViewPlotAttributes extends HTMLAttributes {
       'data'?: string | GTS[] | DataModel;
       'height'?: string;
       'options'?: string | Param;
@@ -609,7 +609,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumPolar {
+    interface WarpViewPolar {
       'data': DataModel | any[];
       'height': string;
       'options': Param;
@@ -619,25 +619,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumPolarElement extends StencilComponents.QuantumPolar, HTMLStencilElement {}
+  interface HTMLWarpViewPolarElement extends StencilComponents.WarpViewPolar, HTMLStencilElement {}
 
-  var HTMLQuantumPolarElement: {
-    prototype: HTMLQuantumPolarElement;
-    new (): HTMLQuantumPolarElement;
+  var HTMLWarpViewPolarElement: {
+    prototype: HTMLWarpViewPolarElement;
+    new (): HTMLWarpViewPolarElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-polar': HTMLQuantumPolarElement;
+    'warp-view-polar': HTMLWarpViewPolarElement;
   }
   interface ElementTagNameMap {
-    'quantum-polar': HTMLQuantumPolarElement;
+    'warp-view-polar': HTMLWarpViewPolarElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-polar': JSXElements.QuantumPolarAttributes;
+      'warp-view-polar': JSXElements.WarpViewPolarAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumPolarAttributes extends HTMLAttributes {
+    export interface WarpViewPolarAttributes extends HTMLAttributes {
       'data'?: DataModel | any[];
       'height'?: string;
       'options'?: Param;
@@ -652,7 +652,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumRadar {
+    interface WarpViewRadar {
       'data': DataModel | any[];
       'height': string;
       'options': Param;
@@ -662,25 +662,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumRadarElement extends StencilComponents.QuantumRadar, HTMLStencilElement {}
+  interface HTMLWarpViewRadarElement extends StencilComponents.WarpViewRadar, HTMLStencilElement {}
 
-  var HTMLQuantumRadarElement: {
-    prototype: HTMLQuantumRadarElement;
-    new (): HTMLQuantumRadarElement;
+  var HTMLWarpViewRadarElement: {
+    prototype: HTMLWarpViewRadarElement;
+    new (): HTMLWarpViewRadarElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-radar': HTMLQuantumRadarElement;
+    'warp-view-radar': HTMLWarpViewRadarElement;
   }
   interface ElementTagNameMap {
-    'quantum-radar': HTMLQuantumRadarElement;
+    'warp-view-radar': HTMLWarpViewRadarElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-radar': JSXElements.QuantumRadarAttributes;
+      'warp-view-radar': JSXElements.WarpViewRadarAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumRadarAttributes extends HTMLAttributes {
+    export interface WarpViewRadarAttributes extends HTMLAttributes {
       'data'?: DataModel | any[];
       'height'?: string;
       'options'?: Param;
@@ -695,7 +695,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumScatter {
+    interface WarpViewScatter {
       'data': DataModel | GTS[];
       'height': string;
       'options': Param;
@@ -706,25 +706,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumScatterElement extends StencilComponents.QuantumScatter, HTMLStencilElement {}
+  interface HTMLWarpViewScatterElement extends StencilComponents.WarpViewScatter, HTMLStencilElement {}
 
-  var HTMLQuantumScatterElement: {
-    prototype: HTMLQuantumScatterElement;
-    new (): HTMLQuantumScatterElement;
+  var HTMLWarpViewScatterElement: {
+    prototype: HTMLWarpViewScatterElement;
+    new (): HTMLWarpViewScatterElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-scatter': HTMLQuantumScatterElement;
+    'warp-view-scatter': HTMLWarpViewScatterElement;
   }
   interface ElementTagNameMap {
-    'quantum-scatter': HTMLQuantumScatterElement;
+    'warp-view-scatter': HTMLWarpViewScatterElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-scatter': JSXElements.QuantumScatterAttributes;
+      'warp-view-scatter': JSXElements.WarpViewScatterAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumScatterAttributes extends HTMLAttributes {
+    export interface WarpViewScatterAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[];
       'height'?: string;
       'options'?: Param;
@@ -740,31 +740,31 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumSpinner {
-      'theme': string;
+    interface WarpViewSpinner {
+
     }
   }
 
-  interface HTMLQuantumSpinnerElement extends StencilComponents.QuantumSpinner, HTMLStencilElement {}
+  interface HTMLWarpViewSpinnerElement extends StencilComponents.WarpViewSpinner, HTMLStencilElement {}
 
-  var HTMLQuantumSpinnerElement: {
-    prototype: HTMLQuantumSpinnerElement;
-    new (): HTMLQuantumSpinnerElement;
+  var HTMLWarpViewSpinnerElement: {
+    prototype: HTMLWarpViewSpinnerElement;
+    new (): HTMLWarpViewSpinnerElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-spinner': HTMLQuantumSpinnerElement;
+    'warp-view-spinner': HTMLWarpViewSpinnerElement;
   }
   interface ElementTagNameMap {
-    'quantum-spinner': HTMLQuantumSpinnerElement;
+    'warp-view-spinner': HTMLWarpViewSpinnerElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-spinner': JSXElements.QuantumSpinnerAttributes;
+      'warp-view-spinner': JSXElements.WarpViewSpinnerAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumSpinnerAttributes extends HTMLAttributes {
-      'theme'?: string;
+    export interface WarpViewSpinnerAttributes extends HTMLAttributes {
+
     }
   }
 }
@@ -773,7 +773,7 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumTile {
+    interface WarpViewTile {
       'chartTitle': string;
       'options': Param;
       'responsive': boolean;
@@ -784,25 +784,25 @@ declare global {
     }
   }
 
-  interface HTMLQuantumTileElement extends StencilComponents.QuantumTile, HTMLStencilElement {}
+  interface HTMLWarpViewTileElement extends StencilComponents.WarpViewTile, HTMLStencilElement {}
 
-  var HTMLQuantumTileElement: {
-    prototype: HTMLQuantumTileElement;
-    new (): HTMLQuantumTileElement;
+  var HTMLWarpViewTileElement: {
+    prototype: HTMLWarpViewTileElement;
+    new (): HTMLWarpViewTileElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-tile': HTMLQuantumTileElement;
+    'warp-view-tile': HTMLWarpViewTileElement;
   }
   interface ElementTagNameMap {
-    'quantum-tile': HTMLQuantumTileElement;
+    'warp-view-tile': HTMLWarpViewTileElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-tile': JSXElements.QuantumTileAttributes;
+      'warp-view-tile': JSXElements.WarpViewTileAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumTileAttributes extends HTMLAttributes {
+    export interface WarpViewTileAttributes extends HTMLAttributes {
       'chartTitle'?: string;
       'options'?: Param;
       'responsive'?: boolean;
@@ -818,32 +818,32 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface QuantumToggle {
+    interface WarpViewToggle {
       'checked': boolean;
       'text1': string;
       'text2': string;
     }
   }
 
-  interface HTMLQuantumToggleElement extends StencilComponents.QuantumToggle, HTMLStencilElement {}
+  interface HTMLWarpViewToggleElement extends StencilComponents.WarpViewToggle, HTMLStencilElement {}
 
-  var HTMLQuantumToggleElement: {
-    prototype: HTMLQuantumToggleElement;
-    new (): HTMLQuantumToggleElement;
+  var HTMLWarpViewToggleElement: {
+    prototype: HTMLWarpViewToggleElement;
+    new (): HTMLWarpViewToggleElement;
   };
   interface HTMLElementTagNameMap {
-    'quantum-toggle': HTMLQuantumToggleElement;
+    'warp-view-toggle': HTMLWarpViewToggleElement;
   }
   interface ElementTagNameMap {
-    'quantum-toggle': HTMLQuantumToggleElement;
+    'warp-view-toggle': HTMLWarpViewToggleElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'quantum-toggle': JSXElements.QuantumToggleAttributes;
+      'warp-view-toggle': JSXElements.WarpViewToggleAttributes;
     }
   }
   namespace JSXElements {
-    export interface QuantumToggleAttributes extends HTMLAttributes {
+    export interface WarpViewToggleAttributes extends HTMLAttributes {
       'checked'?: boolean;
       'onStateChange'?: (event: CustomEvent) => void;
       'text1'?: string;

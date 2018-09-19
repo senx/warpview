@@ -16,8 +16,11 @@
  *
  */
 import { DataModel } from "../model/dataModel";
-import { Logger } from "./logger";
 export class GTSLib {
+    /**
+     *
+     * @param actual
+     */
     static cleanArray(actual) {
         return actual.filter((i) => !!i);
     }
@@ -387,4 +390,3 @@ export class GTSLib {
         return new DataModel();
     }
 }
-GTSLib.LOG = new Logger(GTSLib);

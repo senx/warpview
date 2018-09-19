@@ -1,0 +1,34 @@
+import '../../stencil.core';
+import { DataModel } from "../../model/dataModel";
+import { Param } from "../../model/param";
+import { GTS } from "../../model/GTS";
+export declare class WarpViewPlot {
+    data: string | GTS[] | DataModel;
+    options: string | Param;
+    width: string;
+    height: string;
+    responsive: boolean;
+    showLegend: boolean;
+    el: HTMLElement;
+    private _options;
+    private _data;
+    private _toHide;
+    private _timeMin;
+    private _timeMax;
+    showChart: boolean;
+    showMap: boolean;
+    private LOG;
+    private line;
+    private main;
+    private chart;
+    private annotation;
+    componentDidLoad(): void;
+    private onData;
+    private onOptions;
+    stateChange(event: CustomEvent): void;
+    boundsDidChange(event: CustomEvent): void;
+    pointHover(event: CustomEvent): void;
+    warpViewSelectedGTS(event: CustomEvent): void;
+    private drawCharts;
+    render(): JSX.Element;
+}

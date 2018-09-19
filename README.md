@@ -11,31 +11,31 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 <html>
 <head>
   <title>Test</title>
-  <script src="quantumviz.js"></script>
+  <script src="warpview.js"></script>
 </head>
 <body>
-  <quantum-spinner />
+  <warp-view-spinner />
 </body>
 </html>
 ```
 
 ## Components
 
-- [WarpScript Tile](src/components/quantum-tile/quantum-tile.md)
-- [Map](src/components/quantum-map/quantum-map.md)
-- [Line chart](src/components/quantum-chart/quantum-chart.md)
-- [Bar chart](src/components/quantum-bar/quantum-bar.md)
-- [Bubble chart](src/components/quantum-bubble/quantum-bubble.md)
-- [Polar chart](src/components/quantum-polar/quantum-polar.md)
-- [Radar chart](src/components/quantum-radar/quantum-radar.md)
-- [Pie, gauge and doughnut](src/components/quantum-pie/quantum-pie.md)
-- [Scatter chart](src/components/quantum-scatter/quantum-scatter.md)
-- [Annotation chart](src/components/quantum-annotation/quantum-annotation.md)
-- [Display](src/components/quantum-display/quantum-display.md)
-- [Image](src/components/quantum-image/quantum-image.md)
-- [GTS Tree view](src/components/quantum-gts-tree/quantum-gts-tree.md)
-- [Spinner](src/components/quantum-spinner/quantum-spinner.md)
-- [Toggle](src/components/quantum-toggle/quantum-toggle.md)
+- [WarpScript Tile](src/components/warp-view-tile/warp-view-tile.md)
+- [Map](src/components/warp-view-map/warp-view-map.md)
+- [Line chart](src/components/warp-view-chart/warp-view-chart.md)
+- [Bar chart](src/components/warp-view-bar/warp-view-bar.md)
+- [Bubble chart](src/components/warp-view-bubble/warp-view-bubble.md)
+- [Polar chart](src/components/warp-view-polar/warp-view-polar.md)
+- [Radar chart](src/components/warp-view-radar/warp-view-radar.md)
+- [Pie, gauge and doughnut](src/components/warp-view-pie/warp-view-pie.md)
+- [Scatter chart](src/components/warp-view-scatter/warp-view-scatter.md)
+- [Annotation chart](src/components/warp-view-annotation/warp-view-annotation.md)
+- [Display](src/components/warp-view-display/warp-view-display.md)
+- [Image](src/components/warp-view-image/warp-view-image.md)
+- [GTS Tree view](src/components/warp-view-gts-tree/warp-view-gts-tree.md)
+- [Spinner](src/components/warp-view-spinner/warp-view-spinner.md)
+- [Toggle](src/components/warp-view-toggle/warp-view-toggle.md)
 
 
 ## Integrations

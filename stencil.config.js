@@ -1,6 +1,6 @@
 const sass = require("@stencil/sass");
 exports.config = {
-  namespace: "quantumviz",
+  namespace: "warpview",
   plugins: [sass()],
   enableCache: true,
   globalStyle: 'src/globals/style.scss',

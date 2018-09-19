@@ -1,14 +1,14 @@
 {
   "components": [
     {
-      "tag": "quantum-annotation",
+      "tag": "warp-view-annotation",
       "dependencies": [],
-      "componentClass": "QuantumAnnotation",
-      "componentPath": "components/quantum-annotation/quantum-annotation.js",
+      "componentClass": "WarpViewAnnotation",
+      "componentPath": "components/warp-view-annotation/warp-view-annotation.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-annotation/quantum-annotation.scss"
+            "components/warp-view-annotation/warp-view-annotation.scss"
           ]
         }
       },
@@ -91,14 +91,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-bar",
+      "tag": "warp-view-bar",
       "dependencies": [],
-      "componentClass": "QuantumBar",
-      "componentPath": "components/quantum-bar/quantum-bar.js",
+      "componentClass": "WarpViewBar",
+      "componentPath": "components/warp-view-bar/warp-view-bar.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-bar/quantum-bar.scss"
+            "components/warp-view-bar/warp-view-bar.scss"
           ]
         }
       },
@@ -158,14 +158,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-bubble",
+      "tag": "warp-view-bubble",
       "dependencies": [],
-      "componentClass": "QuantumBubble",
-      "componentPath": "components/quantum-bubble/quantum-bubble.js",
+      "componentClass": "WarpViewBubble",
+      "componentPath": "components/warp-view-bubble/warp-view-bubble.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-bubble/quantum-bubble.scss"
+            "components/warp-view-bubble/warp-view-bubble.scss"
           ]
         }
       },
@@ -225,15 +225,15 @@
       "shadow": true
     },
     {
-      "tag": "quantum-chart",
+      "tag": "warp-view-chart",
       "dependencies": [],
-      "componentClass": "QuantumChart",
-      "componentPath": "components/quantum-chart/quantum-chart.js",
+      "componentClass": "WarpViewChart",
+      "componentPath": "components/warp-view-chart/warp-view-chart.js",
       "styles": {
         "$": {
           "stylePaths": [
             "../node_modules/dygraphs/dist/dygraph.min.css",
-            "components/quantum-chart/quantum-chart.scss"
+            "components/warp-view-chart/warp-view-chart.scss"
           ]
         }
       },
@@ -300,14 +300,14 @@
       ]
     },
     {
-      "tag": "quantum-chip",
+      "tag": "warp-view-chip",
       "dependencies": [],
-      "componentClass": "QuantumChip",
-      "componentPath": "components/quantum-gts-tree/chip.js",
+      "componentClass": "WarpViewChip",
+      "componentPath": "components/warp-view-gts-tree/warp-view-chip.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-gts-tree/chip.scss"
+            "components/warp-view-gts-tree/warp-view-chip.scss"
           ]
         }
       },
@@ -333,21 +333,21 @@
       },
       "events": [
         {
-          "event": "quantumSelectedGTS"
+          "event": "warpViewSelectedGTS"
         }
       ]
     },
     {
-      "tag": "quantum-display",
+      "tag": "warp-view-display",
       "dependencies": [
-        "quantum-spinner"
+        "warp-view-spinner"
       ],
-      "componentClass": "QuantumDisplay",
-      "componentPath": "components/quantum-display/quantum-display.js",
+      "componentClass": "WarpViewDisplay",
+      "componentPath": "components/warp-view-display/warp-view-display.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-display/quantum-display.scss"
+            "components/warp-view-display/warp-view-display.scss"
           ]
         }
       },
@@ -396,16 +396,16 @@
       "shadow": true
     },
     {
-      "tag": "quantum-gts-tree",
+      "tag": "warp-view-gts-tree",
       "dependencies": [
-        "quantum-tree-view"
+        "warp-view-tree-view"
       ],
-      "componentClass": "QuantumGtsTree",
-      "componentPath": "components/quantum-gts-tree/quantum-gts-tree.js",
+      "componentClass": "WarpViewGtsTree",
+      "componentPath": "components/warp-view-gts-tree/warp-view-gts-tree.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-gts-tree/quantum-gts-tree.scss"
+            "components/warp-view-gts-tree/warp-view-gts-tree.scss"
           ]
         }
       },
@@ -426,10 +426,10 @@
       ]
     },
     {
-      "tag": "quantum-heatmap-sliders",
+      "tag": "warp-view-heatmap-sliders",
       "dependencies": [],
-      "componentClass": "QuantumHeatmapSliders",
-      "componentPath": "components/quantum-map/quantum-heatmap-sliders.js",
+      "componentClass": "WarpViewHeatmapSliders",
+      "componentPath": "components/warp-view-map/warp-view-heatmap-sliders.js",
       "styles": {},
       "props": [
         {
@@ -480,16 +480,16 @@
       "shadow": true
     },
     {
-      "tag": "quantum-image",
+      "tag": "warp-view-image",
       "dependencies": [
-        "quantum-spinner"
+        "warp-view-spinner"
       ],
-      "componentClass": "QuantumImage",
-      "componentPath": "components/quantum-image/quantum-image.js",
+      "componentClass": "WarpViewImage",
+      "componentPath": "components/warp-view-image/warp-view-image.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-image/quantum-image.scss"
+            "components/warp-view-image/warp-view-image.scss"
           ]
         }
       },
@@ -545,19 +545,19 @@
       "shadow": true
     },
     {
-      "tag": "quantum-map",
+      "tag": "warp-view-map",
       "dependencies": [
-        "quantum-heatmap-sliders"
+        "warp-view-heatmap-sliders"
       ],
-      "componentClass": "QuantumMap",
-      "componentPath": "components/quantum-map/quantum-map.js",
+      "componentClass": "WarpViewMap",
+      "componentPath": "components/warp-view-map/warp-view-map.js",
       "styles": {
         "$": {
           "stylePaths": [
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
             "../node_modules/leaflet.markercluster/dist/MarkerCluster.css",
             "../node_modules/leaflet/dist/leaflet.css",
-            "components/quantum-map/quantum-map.scss"
+            "components/warp-view-map/warp-view-map.scss"
           ]
         }
       },
@@ -657,14 +657,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-pie",
+      "tag": "warp-view-pie",
       "dependencies": [],
-      "componentClass": "QuantumPie",
-      "componentPath": "components/quantum-pie/quantum-pie.js",
+      "componentClass": "WarpViewPie",
+      "componentPath": "components/warp-view-pie/warp-view-pie.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-pie/quantum-pie.scss"
+            "components/warp-view-pie/warp-view-pie.scss"
           ]
         }
       },
@@ -719,20 +719,20 @@
       "shadow": true
     },
     {
-      "tag": "quantum-plot",
+      "tag": "warp-view-plot",
       "dependencies": [
-        "quantum-annotation",
-        "quantum-chart",
-        "quantum-gts-tree",
-        "quantum-map",
-        "quantum-toggle"
+        "warp-view-annotation",
+        "warp-view-chart",
+        "warp-view-gts-tree",
+        "warp-view-map",
+        "warp-view-toggle"
       ],
-      "componentClass": "QuantumPlot",
-      "componentPath": "components/quantum-plot/quantum-plot.js",
+      "componentClass": "WarpViewPlot",
+      "componentPath": "components/warp-view-plot/warp-view-plot.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-plot/quantum-plot.scss"
+            "components/warp-view-plot/warp-view-plot.scss"
           ]
         }
       },
@@ -813,16 +813,16 @@
           "capture": false
         },
         {
-          "event": "quantumSelectedGTS",
-          "method": "quantumSelectedGTS",
-          "passive": false,
-          "capture": false
-        },
-        {
           "event": "stateChange",
           "method": "stateChange",
           "passive": false,
           "capture": false
+        },
+        {
+          "event": "warpViewSelectedGTS",
+          "method": "warpViewSelectedGTS",
+          "passive": false,
+          "capture": false
         }
       ],
       "hostElement": {
@@ -831,14 +831,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-polar",
+      "tag": "warp-view-polar",
       "dependencies": [],
-      "componentClass": "QuantumPolar",
-      "componentPath": "components/quantum-polar/quantum-polar.js",
+      "componentClass": "WarpViewPolar",
+      "componentPath": "components/warp-view-polar/warp-view-polar.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-polar/quantum-polar.scss"
+            "components/warp-view-polar/warp-view-polar.scss"
           ]
         }
       },
@@ -893,14 +893,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-radar",
+      "tag": "warp-view-radar",
       "dependencies": [],
-      "componentClass": "QuantumRadar",
-      "componentPath": "components/quantum-radar/quantum-radar.js",
+      "componentClass": "WarpViewRadar",
+      "componentPath": "components/warp-view-radar/warp-view-radar.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-radar/quantum-radar.scss"
+            "components/warp-view-radar/warp-view-radar.scss"
           ]
         }
       },
@@ -955,14 +955,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-scatter",
+      "tag": "warp-view-scatter",
       "dependencies": [],
-      "componentClass": "QuantumScatter",
-      "componentPath": "components/quantum-scatter/quantum-scatter.js",
+      "componentClass": "WarpViewScatter",
+      "componentPath": "components/warp-view-scatter/warp-view-scatter.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-scatter/quantum-scatter.scss"
+            "components/warp-view-scatter/warp-view-scatter.scss"
           ]
         }
       },
@@ -1022,47 +1022,40 @@
       "shadow": true
     },
     {
-      "tag": "quantum-spinner",
+      "tag": "warp-view-spinner",
       "dependencies": [],
-      "componentClass": "QuantumSpinner",
-      "componentPath": "components/quantum-spinner/quantum-spinner.js",
+      "componentClass": "WarpViewSpinner",
+      "componentPath": "components/warp-view-spinner/warp-view-spinner.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-spinner/quantum-spinner.scss"
+            "components/warp-view-spinner/warp-view-spinner.scss"
           ]
         }
       },
-      "props": [
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme"
-        }
-      ],
       "shadow": true
     },
     {
-      "tag": "quantum-tile",
+      "tag": "warp-view-tile",
       "dependencies": [
-        "quantum-bar",
-        "quantum-bubble",
-        "quantum-chart",
-        "quantum-display",
-        "quantum-image",
-        "quantum-map",
-        "quantum-pie",
-        "quantum-plot",
-        "quantum-polar",
-        "quantum-radar",
-        "quantum-scatter"
+        "warp-view-bar",
+        "warp-view-bubble",
+        "warp-view-chart",
+        "warp-view-display",
+        "warp-view-image",
+        "warp-view-map",
+        "warp-view-pie",
+        "warp-view-plot",
+        "warp-view-polar",
+        "warp-view-radar",
+        "warp-view-scatter"
       ],
-      "componentClass": "QuantumTile",
-      "componentPath": "components/quantum-tile/quantum-tile.js",
+      "componentClass": "WarpViewTile",
+      "componentPath": "components/warp-view-tile/warp-view-tile.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-tile/quantum-tile.scss"
+            "components/warp-view-tile/warp-view-tile.scss"
           ]
         }
       },
@@ -1116,14 +1109,14 @@
       "shadow": true
     },
     {
-      "tag": "quantum-toggle",
+      "tag": "warp-view-toggle",
       "dependencies": [],
-      "componentClass": "QuantumToggle",
-      "componentPath": "components/quantum-toggle/quantum-toggle.js",
+      "componentClass": "WarpViewToggle",
+      "componentPath": "components/warp-view-toggle/warp-view-toggle.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-toggle/quantum-toggle.scss"
+            "components/warp-view-toggle/warp-view-toggle.scss"
           ]
         }
       },
@@ -1160,17 +1153,17 @@
       "shadow": true
     },
     {
-      "tag": "quantum-tree-view",
+      "tag": "warp-view-tree-view",
       "dependencies": [
-        "quantum-chip",
-        "quantum-tree-view"
+        "warp-view-chip",
+        "warp-view-tree-view"
       ],
-      "componentClass": "QuantumTreeView",
-      "componentPath": "components/quantum-gts-tree/tree.js",
+      "componentClass": "WarpViewTreeView",
+      "componentPath": "components/warp-view-gts-tree/warp-view-tree.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/quantum-gts-tree/tree.scss"
+            "components/warp-view-gts-tree/warp-view-tree.scss"
           ]
         }
       },

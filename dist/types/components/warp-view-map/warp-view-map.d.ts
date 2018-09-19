@@ -1,0 +1,37 @@
+import '../../stencil.core';
+import 'leaflet.heat';
+import 'leaflet.markercluster';
+export declare class WarpViewMap {
+    width: string;
+    height: string;
+    responsive: boolean;
+    data: any[];
+    startLat: number;
+    startLong: number;
+    startZoom: number;
+    dotsLimit: number;
+    heatRadius: number;
+    heatBlur: number;
+    heatOpacity: number;
+    heatData: any[];
+    heatControls: boolean;
+    el: HTMLElement;
+    private _map;
+    private uuid;
+    private LOG;
+    private _pathStyle;
+    private _dotStyle;
+    private _iconAnchor;
+    private _popupAnchor;
+    private _heatLayer;
+    private resizeTimer;
+    onResize(): void;
+    heatRadiusDidChange(event: any): void;
+    heatBlurDidChange(event: any): void;
+    heatOpacityDidChange(event: any): void;
+    private drawMap;
+    private icon;
+    private gtsToGeoJSON;
+    componentDidLoad(): void;
+    render(): JSX.Element;
+}
