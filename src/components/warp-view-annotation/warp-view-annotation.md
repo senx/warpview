@@ -1,6 +1,4 @@
-# Bubble chart component
-
-Displays a bubble chart
+# Annotation chart component
 
 ## CSS vars
 
