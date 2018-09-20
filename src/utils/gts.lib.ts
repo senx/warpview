@@ -187,13 +187,13 @@ export class GTSLib {
     let id;
     (jsonList || []).forEach((item, i) => {
       let gts = item;
-      if(item.gts) {
+      if (item.gts) {
         gts = item.gts;
       }
       if ((prefixId !== undefined) && (prefixId !== '')) {
         id = prefixId + '-' + i;
       } else {
-        id =  i;
+        id = i;
       }
       if (GTSLib.isArray(gts)) {
         gtsList.push(GTSLib.gtsFromJSONList(gts, id));
@@ -258,9 +258,13 @@ export class GTSLib {
   static serializeGtsMetadata(gts) {
     let serializedLabels = [];
     Object.keys(gts.l).forEach((key) => {
-        serializedLabels.push(key + "=" + gts.l[key]);
+      serializedLabels.push(key + "=" + gts.l[key]);
     });
-    return gts.c + '{' + serializedLabels.join(',') + '}';
+    let serializedAttributes = [];
+    Object.keys(gts.a).forEach((key) => {
+      serializedAttributes.push(key + "=" + gts.a[key]);
+    });
+    return gts.c + '{' + serializedLabels.join(',') + serializedAttributes.join(',') + '}';
   }
 
   static gtsToPath(gts) {
@@ -339,15 +343,15 @@ export class GTSLib {
     return false;
   }
 
-  static isBooleanGts(gts){
-    if (!GTSLib.isGts(gts) || gts.v.length === 0){
+  static isBooleanGts(gts) {
+    if (!GTSLib.isGts(gts) || gts.v.length === 0) {
       return false;
     }
     // We look at the first non-null value, if it's a Boolean it's a boolean GTS,
     // if it's a number it's a GTS to plot
-    for(let i = 0; i < gts.v.length; i++){
-      if(gts.v[i][gts.v[i].length - 1] !== null){
-        if(typeof (gts.v[i][gts.v[i].length - 1]) !== 'boolean'){
+    for (let i = 0; i < gts.v.length; i++) {
+      if (gts.v[i][gts.v[i].length - 1] !== null) {
+        if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'boolean') {
           return true;
         }
         break;
@@ -398,12 +402,12 @@ export class GTSLib {
    *
    * @param data
    */
-  static getData(data: any) : DataModel {
+  static getData(data: any): DataModel {
     if (typeof data === 'string') {
       return {data: JSON.parse(data as string)};
     } else if (data && data.hasOwnProperty('data')) {
       return data as DataModel;
-    } else if(GTSLib.isArray(data)){
+    } else if (GTSLib.isArray(data)) {
       return {data: data as GTS[]} as DataModel;
     }
     return new DataModel();
