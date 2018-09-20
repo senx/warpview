@@ -23,13 +23,13 @@ import { ChartLib } from "../../utils/chart-lib";
 import { Logger } from "../../utils/logger";
 import { DataModel } from "../../model/dataModel";
 import { MapLib } from "../../utils/map-lib";
+import { GTSLib } from "../../utils/gts.lib";
 export class WarpViewMap {
     constructor() {
         this.responsive = false;
         this.heatData = [];
         this.options = {};
         this._options = {
-            startZoom: 2,
             dotsLimit: 1000,
             heatControls: false,
             mapType: 'DEFAULT'
@@ -105,6 +105,7 @@ export class WarpViewMap {
             dataList = this.data;
             params = [];
         }
+        dataList = GTSLib.flatDeep(dataList);
         this.LOG.debug(['drawMap'], dataList);
         this.displayMap({ gts: dataList, params: params });
     }
@@ -119,8 +120,6 @@ export class WarpViewMap {
     }
     displayMap(data) {
         this.LOG.debug(['drawMap'], [this.data, this._options]);
-        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
         this.pathData = MapLib.toLeafletMapPaths(data);
         this.annotationsData = MapLib.annotationsToLeafletPositions(data);
         this.positionData = MapLib.toLeafletMapPositionArray(data);
@@ -131,9 +130,11 @@ export class WarpViewMap {
             this._map.remove();
         }
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
+        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
         ctx.style.width = width + 'px';
         ctx.style.height = height + 'px';
-        this._map = Leaflet.map(ctx).setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 5);
+        this._map = Leaflet.map(ctx).setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 2);
         Leaflet.tileLayer(this.mapTypes[this._options.mapType || 'DEFAULT'], {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this._map);
@@ -159,17 +160,26 @@ export class WarpViewMap {
             // Fit map to curves
             let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData);
             window.setTimeout(() => {
+                this._options.startZoom = this._options.startZoom || 2;
                 // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
-                //    this._map.invalidateSize();
+                this._map.invalidateSize();
                 //   this.resize();
                 if (bounds.length > 1) {
-                    this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1])); //, {padding: [20, 20]}));
-                    if (this._map.getZoom() === 0 || this._options.startZoom > this._map.getZoom()) {
-                        this._map.setZoom(this._options.startZoom);
-                    }
+                    this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1]), {
+                        padding: [20, 20],
+                        animate: false,
+                        duration: 0
+                    });
+                    this.LOG.debug(['displayMap'], [this._map.getZoom(), this._options.startZoom]);
+                    this._map.setZoom(Math.max(this._options.startZoom, this._map.getZoom()), { animate: false,
+                        duration: 0 });
                 }
                 else {
-                    this._map.setView(bounds[0], this._options.startZoom);
+                    this.LOG.debug(['displayMap', 'no bounds'], [this._map.getZoom(), this._options.startZoom]);
+                    this._map.setView({
+                        lat: this._options.startLat || 0,
+                        lng: this._options.startLong || 0
+                    }, this._options.startZoom);
                 }
             }, 1000);
         }
@@ -201,7 +211,6 @@ export class WarpViewMap {
         this.layerGroup.addLayer(afterCurrentValue);
         let currentValue;
         // Let's verify we have a path... No path, no marker
-        this.LOG.debug(['updateGtsPath'], gts);
         if (gts.path[0] !== undefined) {
             currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon], { radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1 })
                 .bindPopup(`<b>${gts.path[0].ts} : ${gts.key}</b><p>${gts.path[0].val.toString()}</p>`);
@@ -319,9 +328,11 @@ export class WarpViewMap {
         return positions;
     }
     resize() {
-    }
-    configure() {
-        this.resize();
+        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
+        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
+        ctx.style.width = width + 'px';
+        ctx.style.height = height + 'px';
     }
     componentDidLoad() {
         this.drawMap();

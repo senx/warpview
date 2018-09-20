@@ -66,9 +66,17 @@ export class WarpViewPlot {
                 break;
             case 'chartSwitch':
                 this.showChart = event.detail.state;
+                if (this.showChart) {
+                    this.chart.resize();
+                }
                 break;
             case 'mapSwitch':
                 this.showMap = event.detail.state;
+                if (this.showMap) {
+                    window.setTimeout(() => {
+                        this.el.shadowRoot.querySelector('#map').resize();
+                    }, 500);
+                }
                 break;
         }
     }
@@ -120,7 +128,8 @@ export class WarpViewPlot {
                 h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options }),
                 h("div", { style: { width: '100%', height: '768px' } },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, options: this._options }))) : '',
-            this.showMap ? h("warp-view-map", { width: "100%", options: this._options, id: "map", data: this._data }) : '');
+            this.showMap ? h("div", { style: { width: '100%', height: '768px' } },
+                h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive })) : '');
     }
     static get is() { return "warp-view-plot"; }
     static get encapsulation() { return "shadow"; }

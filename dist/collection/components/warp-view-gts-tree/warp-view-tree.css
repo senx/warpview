@@ -71,9 +71,14 @@ warp-view-tree-view {
   warp-view-tree-view .gts-classname {
     color: var(--gts-classname-font-color, #0074D9); }
   warp-view-tree-view .gts-labelname {
-    color: var(--gts-labelname-font-color, #3d9970); }
+    color: var(--gts-labelname-font-color, #19A979); }
+  warp-view-tree-view .gts-attrname {
+    color: var(--gts-labelname-font-color, #ED4A7B); }
   warp-view-tree-view .gts-separator {
     color: var(--gts-separator-font-color, #bbbbbb); }
   warp-view-tree-view .gts-labelvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic; }
+  warp-view-tree-view .gts-attrvalue {
     color: var(--gts-labelvalue-font-color, #AAAAAA);
     font-style: italic; }

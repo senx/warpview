@@ -31,7 +31,6 @@ export class WarpViewTreeView {
     static getIndex(node) {
         Counter.item++;
         node.index = Counter.item;
-        this.LOG.debug(['getIndex'], [Counter.item, node]);
         return Counter.item;
     }
     /**

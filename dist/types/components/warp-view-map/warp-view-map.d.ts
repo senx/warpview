@@ -43,7 +43,6 @@ export declare class WarpViewMap {
     private updateAnnotation;
     private updatePositionArray;
     resize(): void;
-    private configure;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

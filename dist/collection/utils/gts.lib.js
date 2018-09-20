@@ -245,7 +245,11 @@ export class GTSLib {
         Object.keys(gts.l).forEach((key) => {
             serializedLabels.push(key + "=" + gts.l[key]);
         });
-        return gts.c + '{' + serializedLabels.join(',') + '}';
+        let serializedAttributes = [];
+        Object.keys(gts.a).forEach((key) => {
+            serializedAttributes.push(key + "=" + gts.a[key]);
+        });
+        return gts.c + '{' + serializedLabels.join(',') + serializedAttributes.join(',') + '}';
     }
     static gtsToPath(gts) {
         let path = [];
