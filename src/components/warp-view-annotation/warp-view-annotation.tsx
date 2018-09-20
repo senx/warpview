@@ -85,7 +85,7 @@ export class WarpViewAnnotation {
 
   @Watch("hiddenData")
   hideData(newValue, oldValue) {
-    if (oldValue !== newValue) {
+    if (oldValue !== newValue && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
       const hiddenData = GTSLib.cleanArray(newValue);
       Object.keys(this._mapIndex).forEach(key => {
@@ -97,21 +97,25 @@ export class WarpViewAnnotation {
 
   @Watch("timeMin")
   minBoundChange(newValue: number, oldValue: number) {
-    this._chart.options.animation.duration = 0;
-    if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-      this._chart.options.scales.xAxes[0].time.min = newValue;
-      this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
-      this._chart.update();
+    if (this._chart) {
+      this._chart.options.animation.duration = 0;
+      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
+        this._chart.options.scales.xAxes[0].time.min = newValue;
+        this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
+        this._chart.update();
+      }
     }
   }
 
   @Watch("timeMax")
   maxBoundChange(newValue: number, oldValue: number) {
-    this._chart.options.animation.duration = 0;
-    if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-      this._chart.options.scales.xAxes[0].time.max = newValue;
-      this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
-      this._chart.update();
+    if (this._chart) {
+      this._chart.options.animation.duration = 0;
+      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
+        this._chart.options.scales.xAxes[0].time.max = newValue;
+        this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
+        this._chart.update();
+      }
     }
   }
 
@@ -119,6 +123,9 @@ export class WarpViewAnnotation {
    *
    */
   private drawChart() {
+    if (!this.data) {
+      return;
+    }
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
@@ -239,6 +246,9 @@ export class WarpViewAnnotation {
     this.LOG.debug(['drawChart'], [height, gts]);
     if (this._chart) {
       this._chart.destroy();
+    }
+    if (!gts || gts.length === 0) {
+      return;
     }
     this._chart = new Chart.Scatter(ctx, {
         data: {

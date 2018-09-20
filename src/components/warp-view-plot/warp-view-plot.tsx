@@ -93,9 +93,17 @@ export class WarpViewPlot {
         break;
       case 'chartSwitch' :
         this.showChart = event.detail.state;
+        if (this.showChart) {
+          (this.chart as any).resize();
+        }
         break;
       case 'mapSwitch' :
         this.showMap = event.detail.state;
+        if (this.showMap) {
+          window.setTimeout(() => {
+            (this.el.shadowRoot.querySelector('#map') as any).resize();
+          }, 500);
+        }
         break;
     }
   }
@@ -146,23 +154,28 @@ export class WarpViewPlot {
       <div class="inline">
         <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
         <warp-view-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
-                        checked={this.showChart}></warp-view-toggle>
-        <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map" checked={this.showMap}></warp-view-toggle>
+                          checked={this.showChart}></warp-view-toggle>
+        <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
+                          checked={this.showMap}></warp-view-toggle>
       </div>
       <warp-view-gts-tree data={this._data} id="tree"></warp-view-gts-tree>
       {this.showChart ? <div class="maincontainer">
         <div class="bar"></div>
-        <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation" show-legend={this.showLegend}
-                            timeMin={this._timeMin} timeMax={this._timeMax}
-                            hiddenData={this._toHide} options={this._options}></warp-view-annotation>
+        <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
+                              show-legend={this.showLegend}
+                              timeMin={this._timeMin} timeMax={this._timeMax}
+                              hiddenData={this._toHide} options={this._options}></warp-view-annotation>
         <div style={{width: '100%', height: '768px'}}>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
-                         hiddenData={this._toHide}
-                         options={this._options}></warp-view-chart>
+                           hiddenData={this._toHide}
+                           options={this._options}></warp-view-chart>
         </div>
       </div> : ''}
-      {this.showMap ? <warp-view-map width="100%" options={this._options} id="map" data={this._data as any}
-      ></warp-view-map> : ''}
+      {this.showMap ? <div style={{width: '100%', height: '768px'}}>
+        <warp-view-map options={this._options} id="map" data={this._data as any}
+                       responsive={this.responsive}
+        ></warp-view-map>
+      </div> : ''}
     </div>;
   }
 }

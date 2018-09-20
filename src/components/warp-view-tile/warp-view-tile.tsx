@@ -102,7 +102,7 @@ export class WarpViewTile {
   private execute() {
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
-    this.LOG.debug(['componentDidLoad', 'warpscript'], this.warpscript);
+    this.LOG.debug(['execute', 'warpscript'], this.warpscript);
     fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
       response.text().then(gtsStr => {
         this.LOG.debug(['execute', 'response'], gtsStr);
@@ -110,11 +110,11 @@ export class WarpViewTile {
         this.parseGTS();
         this.loading = false;
       }, err => {
-        this.LOG.error(['componentDidLoad'], err);
+        this.LOG.error(['execute'], [err, this.url, this.warpscript]);
         this.loading = false;
       });
     }, err => {
-      this.LOG.error(['componentDidLoad'], err);
+      this.LOG.error(['execute'], [err, this.url, this.warpscript]);
       this.loading = false;
     })
   }
@@ -165,7 +165,7 @@ export class WarpViewTile {
             <small>{this.unit}</small>
           </h1>
           <div class="tile">
-            <warp-view-map responsive={true} data={this.data} options={this._options} />
+            <warp-view-map responsive={true} data={this.data} options={this._options}  />
           </div>
         </div>
         : ''

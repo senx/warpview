@@ -91,7 +91,10 @@ warp-view-tree-view {
   }
 
   .gts-labelname {
-    color: var(--gts-labelname-font-color, #3d9970);
+    color: var(--gts-labelname-font-color, #19A979);
+  }
+  .gts-attrname {
+    color: var(--gts-labelname-font-color, #ED4A7B);
   }
 
   .gts-separator {
@@ -99,6 +102,10 @@ warp-view-tree-view {
   }
 
   .gts-labelvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic;
+  }
+  .gts-attrvalue {
     color: var(--gts-labelvalue-font-color, #AAAAAA);
     font-style: italic;
   }

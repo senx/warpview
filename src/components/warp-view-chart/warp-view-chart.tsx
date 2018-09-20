@@ -104,27 +104,26 @@ export class WarpViewChart {
     }
   }
 
-  private gtsToData(gts) {
-    this.LOG.debug(['gtsToData'], gts);
+  private gtsToData(gtsList) {
+    this.LOG.debug(['gtsToData'], gtsList);
     this.ticks = [];
     const datasets = [];
     const data = {};
     let pos = 0;
-    let i = 0;
     let labels = [];
     let colors = [];
-    if (!gts) {
+    if (!gtsList) {
       return;
     } else {
-      const gtsList = GTSLib.flatDeep(gts);
+      gtsList = GTSLib.flatDeep(gtsList);
+
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels = new Array(gtsList.length);
       labels[0] = 'Date';
       colors = new Array(gtsList.length);
-      gtsList.forEach(g => {
+      gtsList.forEach((g,i) => {
         if (g.v && GTSLib.isGtsToPlot(g)) {
           let label = GTSLib.serializeGtsMetadata(g);
-          this.LOG.debug(['gtsToData', 'label'], label);
           if (this.hiddenData.filter((i) => i === label).length === 0) {
             GTSLib.gtsSort(g);
             g.v.forEach(value => {
@@ -132,12 +131,11 @@ export class WarpViewChart {
                 data[value[0]] = new Array(gtsList.length);
                 data[value[0]].fill(null);
               }
-              data[value[0]][i] = value[value.length - 1];
+              data[value[0]][i] = value[value.length - 1] || -1;
             });
             let color = ColorLib.getColor(pos);
             labels[i + 1] = label;
             colors[i] = color;
-            i++;
           }
         }
         pos++;
@@ -200,11 +198,12 @@ export class WarpViewChart {
   }
 
   private drawChart() {
+    this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let dataList = GTSLib.getData(this.data).data;
+
     const dataToplot = this.gtsToData(dataList);
-    this.onResize();
-    this.LOG.debug(['drawChart'], [dataToplot]);
+    this.LOG.debug(['drawChart', 'dataToplot'], [dataToplot]);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
     if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {
       const color = this._options.gridLineColor;
@@ -261,6 +260,7 @@ export class WarpViewChart {
           rightGap: this.standalone ? 0 : 20
         }
       );
+      this.onResize();
     }
   }
 
