@@ -208,6 +208,7 @@ export class WarpViewMap {
     (this.tiles || []).forEach(function (t) {
       this.addLayer(Leaflet.tileLayer(t));
     }, this.layerGroup);
+
     this.LOG.debug(['displayMap'], [this.pathData, this.positionData, this.annotationsData]);
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0) {
       // Fit map to curves
@@ -215,8 +216,8 @@ export class WarpViewMap {
 
       window.setTimeout(() => {
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
-        this._map.invalidateSize();
-        this.resize();
+    //    this._map.invalidateSize();
+     //   this.resize();
         if (bounds.length > 1) {
           this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1])); //, {padding: [20, 20]}));
           if (this._map.getZoom() === 0 || this._options.startZoom > this._map.getZoom()) {
@@ -228,8 +229,8 @@ export class WarpViewMap {
       }, 1000);
     } else {
       window.setTimeout(() => {
-        this._map.invalidateSize();
-        this.configure();
+      //  this._map.invalidateSize();
+      //  this.configure();
       }, 1000);
     }
     if (this.heatData && this.heatData.length > 0) {
@@ -261,7 +262,7 @@ export class WarpViewMap {
     if (gts.path[0] !== undefined) {
       currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon],
         {radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1})
-        .bindPopup(gts.key);
+        .bindPopup(`<b>${gts.path[0].ts} : ${gts.key}</b><p>${gts.path[0].val.toString()}</p>`);
     } else {
       currentValue = Leaflet.circleMarker([0, 0]);
     }
@@ -276,12 +277,13 @@ export class WarpViewMap {
   private updateAnnotation(gts) {
     let positions = [];
     let icon;
+    this.LOG.debug(['updateAnnotation'], gts);
     switch (gts.render) {
       case 'marker':
         icon = this.icon(gts.color, gts.marker);
         for (let j = 0; j < gts.path.length; j++) {
           let marker = Leaflet.marker(gts.path[j], {icon: icon, opacity: 1});
-          marker.bindPopup(gts.path[j].val.toString());
+          marker.bindPopup(`<b>${gts.path[j].ts} : ${gts.key}</b><p>${gts.path[j].val.toString()}</p>`);
           this.layerGroup.addLayer(marker);
           positions.push(marker);
         }
@@ -297,7 +299,7 @@ export class WarpViewMap {
               fillOpacity: 1
             }
           );
-          marker.bindPopup(`<b>${gts.path[j].ts}</b><p>${gts.path[j].val.toString()}</p>`);
+          marker.bindPopup(`<b>${gts.path[j].ts} : ${gts.key}</b><p>${gts.path[j].val.toString()}</p>`);
           this.layerGroup.addLayer(marker);
           positions.push(marker);
         }
@@ -313,7 +315,7 @@ export class WarpViewMap {
     let icon;
     let result;
     let inStep;
-    this.LOG.debug(['updatePositionArray'], positionData.render);
+    this.LOG.debug(['updatePositionArray'], positionData);
     switch (positionData.render) {
       case 'path':
         polyline = Leaflet.polyline(positionData.positions, {color: positionData.color, opacity: 1});
@@ -332,6 +334,7 @@ export class WarpViewMap {
         }
         break;
       case 'coloredWeightedDots':
+        this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
         result = [];
         inStep = [];
         for (let j = 0; j < positionData.numColorSteps; j++) {
@@ -339,6 +342,7 @@ export class WarpViewMap {
           inStep[j] = 0;
         }
         for (let j = 0; j < positionData.positions.length; j++) {
+
           let marker = Leaflet.circleMarker(
             {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
               radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
@@ -350,6 +354,7 @@ export class WarpViewMap {
               fillOpacity: 1,
             });
           this.layerGroup.addLayer(marker);
+          this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
           positions.push(marker);
         }
         break;

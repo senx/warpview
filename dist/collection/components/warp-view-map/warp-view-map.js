@@ -29,14 +29,20 @@ export class WarpViewMap {
         this.heatData = [];
         this.options = {};
         this._options = {
-            startLat: undefined,
-            startLong: undefined,
             startZoom: 2,
             dotsLimit: 1000,
-            heatRadius: undefined,
-            heatBlur: undefined,
-            heatOpacity: undefined,
-            heatControls: false
+            heatControls: false,
+            mapType: 'DEFAULT'
+        };
+        this.mapTypes = {
+            DEFAULT: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            TOPO: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+            ESRI: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+            SATELLITE: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            OCEANS: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+            GRAY: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            GRAYSCALE: 'https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}',
+            WATERCOLOR: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png'
         };
         this.uuid = 'map-' + ChartLib.guid().split('-').join('');
         this.LOG = new Logger(WarpViewMap);
@@ -58,6 +64,12 @@ export class WarpViewMap {
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
+            this.drawMap();
+        }
+    }
+    onOptions(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['options'], newValue);
             this.drawMap();
         }
     }
@@ -106,7 +118,7 @@ export class WarpViewMap {
         });
     }
     displayMap(data) {
-        this.LOG.debug(['drawMap'], this.data);
+        this.LOG.debug(['drawMap'], [this.data, this._options]);
         const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
         const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
         this.pathData = MapLib.toLeafletMapPaths(data);
@@ -122,7 +134,7 @@ export class WarpViewMap {
         ctx.style.width = width + 'px';
         ctx.style.height = height + 'px';
         this._map = Leaflet.map(ctx).setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 5);
-        Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        Leaflet.tileLayer(this.mapTypes[this._options.mapType || 'DEFAULT'], {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this._map);
         this.layerGroup = Leaflet.layerGroup().addTo(this._map);
@@ -148,8 +160,8 @@ export class WarpViewMap {
             let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData);
             window.setTimeout(() => {
                 // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
-                this._map.invalidateSize();
-                this.resize();
+                //    this._map.invalidateSize();
+                //   this.resize();
                 if (bounds.length > 1) {
                     this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1])); //, {padding: [20, 20]}));
                     if (this._map.getZoom() === 0 || this._options.startZoom > this._map.getZoom()) {
@@ -163,8 +175,8 @@ export class WarpViewMap {
         }
         else {
             window.setTimeout(() => {
-                this._map.invalidateSize();
-                this.configure();
+                //  this._map.invalidateSize();
+                //  this.configure();
             }, 1000);
         }
         if (this.heatData && this.heatData.length > 0) {
@@ -192,7 +204,7 @@ export class WarpViewMap {
         this.LOG.debug(['updateGtsPath'], gts);
         if (gts.path[0] !== undefined) {
             currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon], { radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1 })
-                .bindPopup(gts.key);
+                .bindPopup(`<b>${gts.path[0].ts} : ${gts.key}</b><p>${gts.path[0].val.toString()}</p>`);
         }
         else {
             currentValue = Leaflet.circleMarker([0, 0]);
@@ -207,12 +219,13 @@ export class WarpViewMap {
     updateAnnotation(gts) {
         let positions = [];
         let icon;
+        this.LOG.debug(['updateAnnotation'], gts);
         switch (gts.render) {
             case 'marker':
                 icon = this.icon(gts.color, gts.marker);
                 for (let j = 0; j < gts.path.length; j++) {
                     let marker = Leaflet.marker(gts.path[j], { icon: icon, opacity: 1 });
-                    marker.bindPopup(gts.path[j].val.toString());
+                    marker.bindPopup(`<b>${gts.path[j].ts} : ${gts.key}</b><p>${gts.path[j].val.toString()}</p>`);
                     this.layerGroup.addLayer(marker);
                     positions.push(marker);
                 }
@@ -226,7 +239,7 @@ export class WarpViewMap {
                         fillColor: gts.color,
                         fillOpacity: 1
                     });
-                    marker.bindPopup(`<b>${gts.path[j].ts}</b><p>${gts.path[j].val.toString()}</p>`);
+                    marker.bindPopup(`<b>${gts.path[j].ts} : ${gts.key}</b><p>${gts.path[j].val.toString()}</p>`);
                     this.layerGroup.addLayer(marker);
                     positions.push(marker);
                 }
@@ -240,7 +253,7 @@ export class WarpViewMap {
         let icon;
         let result;
         let inStep;
-        this.LOG.debug(['updatePositionArray'], positionData.render);
+        this.LOG.debug(['updatePositionArray'], positionData);
         switch (positionData.render) {
             case 'path':
                 polyline = Leaflet.polyline(positionData.positions, { color: positionData.color, opacity: 1 });
@@ -259,6 +272,7 @@ export class WarpViewMap {
                 }
                 break;
             case 'coloredWeightedDots':
+                this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
                 result = [];
                 inStep = [];
                 for (let j = 0; j < positionData.numColorSteps; j++) {
@@ -273,6 +287,7 @@ export class WarpViewMap {
                         fillOpacity: 1,
                     });
                     this.layerGroup.addLayer(marker);
+                    this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
                     positions.push(marker);
                 }
                 break;
@@ -338,7 +353,8 @@ export class WarpViewMap {
         },
         "options": {
             "type": "Any",
-            "attr": "options"
+            "attr": "options",
+            "watchCallbacks": ["onOptions"]
         },
         "resize": {
             "method": true

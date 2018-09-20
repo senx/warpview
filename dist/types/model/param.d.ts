@@ -10,4 +10,13 @@ export declare class Param {
     type?: string;
     showRangeSelector?: boolean;
     timeMode?: string;
+    startLat?: number;
+    startLong?: number;
+    startZoom?: number;
+    dotsLimit?: number;
+    heatRadius?: number;
+    heatBlur?: number;
+    heatOpacity?: number;
+    heatControls?: boolean;
+    mapType?: string;
 }

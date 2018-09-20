@@ -120,7 +120,7 @@ export class WarpViewPlot {
                 h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options }),
                 h("div", { style: { width: '100%', height: '768px' } },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, options: this._options }))) : '',
-            this.showMap ? h("warp-view-map", { width: "100%", startZoom: 10, id: "map", data: this._data, heatRadius: 25, heatBlur: 15, heatOpacity: 0.5, heatControls: false }) : '');
+            this.showMap ? h("warp-view-map", { width: "100%", options: this._options, id: "map", data: this._data }) : '');
     }
     static get is() { return "warp-view-plot"; }
     static get encapsulation() { return "shadow"; }

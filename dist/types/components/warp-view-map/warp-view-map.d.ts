@@ -10,6 +10,7 @@ export declare class WarpViewMap {
     options: any;
     el: HTMLElement;
     private _options;
+    private mapTypes;
     private _map;
     private uuid;
     private LOG;
@@ -31,6 +32,7 @@ export declare class WarpViewMap {
     private static DEFAULT_WIDTH;
     onResize(): void;
     private onData;
+    private onOptions;
     heatRadiusDidChange(event: any): void;
     heatBlurDidChange(event: any): void;
     heatOpacityDidChange(event: any): void;

@@ -582,7 +582,10 @@
         {
           "name": "options",
           "type": "Any",
-          "attr": "options"
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
         },
         {
           "name": "responsive",
