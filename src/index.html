@@ -657,7 +657,7 @@
     });
 
     $('a[role="tab"]').on('shown.bs.tab', function (e) {
-      var id = e.target.href.replace(document.location, '#');
+      var id = e.target.href.replace(document.location, '');
       var divs = $(id).find('warp-view-tile');
       for(var i =0; i < divs.length; i++){
         divs[i].options = {...defOpts};
