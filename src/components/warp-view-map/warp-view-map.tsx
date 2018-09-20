@@ -27,6 +27,7 @@ import {Logger} from "../../utils/logger";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import {MapLib} from "../../utils/map-lib";
+import {Param} from "../../model/param";
 
 @Component({
   tag: 'warp-view-map',
@@ -38,7 +39,6 @@ import {MapLib} from "../../utils/map-lib";
   ],
   shadow: true
 })
-
 export class WarpViewMap {
 
   @Prop() width: string;
@@ -50,15 +50,22 @@ export class WarpViewMap {
 
   @Element() el: HTMLElement;
 
-  private _options: any = {
-    startLat: undefined,
-    startLong: undefined,
+  private _options: Param = {
     startZoom: 2,
     dotsLimit: 1000,
-    heatRadius: undefined,
-    heatBlur: undefined,
-    heatOpacity: undefined,
-    heatControls: false
+    heatControls: false,
+    mapType: 'DEFAULT'
+  };
+
+  private mapTypes: any = {
+    DEFAULT: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    TOPO: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    ESRI: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    SATELLITE: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    OCEANS: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+    GRAY: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    GRAYSCALE: 'https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}',
+    WATERCOLOR : 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png'
   };
 
   private _map: Leaflet.Map;
@@ -96,6 +103,14 @@ export class WarpViewMap {
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
+      this.drawMap();
+    }
+  }
+
+  @Watch('options')
+  private onOptions(newValue: Param, oldValue: Param) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options'], newValue);
       this.drawMap();
     }
   }
@@ -152,7 +167,7 @@ export class WarpViewMap {
   }
 
   private displayMap(data: { gts: any[], params: any[] }) {
-    this.LOG.debug(['drawMap'], this.data);
+    this.LOG.debug(['drawMap'], [this.data, this._options]);
     const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
     const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
     this.pathData = MapLib.toLeafletMapPaths(data);
@@ -170,7 +185,7 @@ export class WarpViewMap {
     ctx.style.height = height + 'px';
 
     this._map = Leaflet.map(ctx as HTMLElement).setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 5);
-    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    Leaflet.tileLayer(this.mapTypes[this._options.mapType || 'DEFAULT'], {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this._map);
 

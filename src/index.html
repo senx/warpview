@@ -111,6 +111,7 @@
       --warp-view-switch-inset-checked-color: darkgreen;
       --warp-view-switch-handle-color: #8e8e8e;
       --warp-view-switch-handle-checked-color: lime;
+      --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%);
     }
 
   </style>
@@ -603,29 +604,32 @@
   </div>
 </footer>
 <script language="JavaScript">
+
   var defOpts = {
     gridLineColor: '#000000',
     fontColor: '#000000',
+    mapType: 'DEFAULT'
   };
   $(function () {
     var body = $("body");
     $("#dark").click(function () {
+      defOpts.mapType = "DEFAULT";
       body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light');
       $(".card").addClass('bg-dark');
       defOpts.gridLineColor = '#ffffff';
+      console.log('drawMap - index', defOpts);
       document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
       });
-      document.querySelector('#plot')['options'] = {...defOpts};
     });
     $("#light").click(function () {
+      defOpts.mapType = "WATERCOLOR";
       body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light');
       $(".card").removeClass('bg-dark');
       defOpts.gridLineColor = '#000000';
       document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
       });
-      document.querySelector('#plot')['options'] = {...defOpts};
     });
 
     $('a[role="tab"]').on('shown.bs.tab', function (e) {
