@@ -45,12 +45,13 @@ export class WarpViewChip {
 
   /**
    *
-   * @param {boolean} state
-   * @returns {string}
+   * @param state
+   * @param index
    */
-  private gtsColor(state: boolean): string {
+  private gtsColor(state: boolean, index: number): string {
+    this.LOG.debug(['gtsColor'], [state, index]);
     if (state) {
-      return ColorLib.getColor(this.index);
+      return ColorLib.getColor(index);
     } else {
       return '#bbbbbb';
     }
@@ -67,7 +68,7 @@ export class WarpViewChip {
    *
    */
   componentDidLoad() {
-    (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected));
+    (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
   }
 
   /**
@@ -110,8 +111,8 @@ export class WarpViewChip {
       selected: !this._node.selected,
       label: GTSLib.serializeGtsMetadata(this._node.gts)
     };
-    this.LOG.debug(['switchPlotState'], [this._node]);
-    (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected));
+    this.LOG.debug(['switchPlotState'], this._node);
+    (this.el.getElementsByClassName('normal')[0] as HTMLElement).style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
     this.warpViewSelectedGTS.emit(this._node);
   }
 
@@ -121,7 +122,7 @@ export class WarpViewChip {
         {this._node && this._node.gts && this._node.gts.l ?
           <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
-          <span class='gts-classname'>{this._node.gts.c}</span>
+          <span class='gts-classname'>{this._node.index} {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
               {this.toArray(this._node.gts.l).map(label =>
             <span>

@@ -165,13 +165,7 @@ export class WarpViewMap {
     if (!dataList) {
       return;
     }
-    let gts = [];
-    GTSLib.flatDeep(dataList).forEach((g) => {
-      if (this.hiddenData.filter((i) => i === GTSLib.serializeGtsMetadata(g)).length === 0) {
-        gts.push(g);
-      }
-    });
-    this.displayMap({gts: gts, params: params});
+    this.displayMap({gts: GTSLib.flatDeep(dataList), params: params});
   }
 
   private icon(color, marker = '') {
@@ -211,9 +205,11 @@ export class WarpViewMap {
 
     this.pathData.forEach(d => {
       let plottedGts: any = this.updateGtsPath(d);
-      this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
-      this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
-      this.currentValuesMarkers.push(plottedGts.currentValue);
+      if (plottedGts) {
+        this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
+        this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+        this.currentValuesMarkers.push(plottedGts.currentValue);
+      }
     });
 
     this.annotationsData.forEach(d => {
@@ -272,78 +268,86 @@ export class WarpViewMap {
   }
 
   private updateGtsPath(gts: any) {
-    let beforeCurrentValue = Leaflet.polyline(
-      MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
-        color: gts.color,
-        opacity: 1,
-      }).addTo(this._map);
-    let afterCurrentValue = Leaflet.polyline(
-      MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
-        color: gts.color,
-        opacity: 0.5,
-      }).addTo(this._map);
-    let currentValue;
-    // Let's verify we have a path... No path, no marker
-    if (gts.path[0] !== undefined) {
-      let date;
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        date = parseInt(gts.path[0].ts);
+
+    if (this.hiddenData.filter((i) => i === gts.key).length === 0) {
+      let beforeCurrentValue = Leaflet.polyline(
+        MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
+          color: gts.color,
+          opacity: 1,
+        }).addTo(this._map);
+      let afterCurrentValue = Leaflet.polyline(
+        MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
+          color: gts.color,
+          opacity: 0.5,
+        }).addTo(this._map);
+      let currentValue;
+      // Let's verify we have a path... No path, no marker
+      if (gts.path[0] !== undefined) {
+        let date;
+        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+          date = parseInt(gts.path[0].ts);
+        } else {
+          date = moment(Math.floor(parseInt(gts.path[0].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+        }
+        currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon],
+          {radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1})
+          .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[0].val.toString()}</p>`).addTo(this._map);
       } else {
-        date = moment(Math.floor(parseInt(gts.path[0].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+        currentValue = Leaflet.circleMarker([0, 0]).addTo(this._map);
       }
-      currentValue = Leaflet.circleMarker([gts.path[0].lat, gts.path[0].lon],
-        {radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1})
-        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[0].val.toString()}</p>`).addTo(this._map);
+      return {
+        beforeCurrentValue: beforeCurrentValue,
+        afterCurrentValue: afterCurrentValue,
+        currentValue: currentValue,
+      }
     } else {
-      currentValue = Leaflet.circleMarker([0, 0]).addTo(this._map);
+      return undefined;
     }
-    return {
-      beforeCurrentValue: beforeCurrentValue,
-      afterCurrentValue: afterCurrentValue,
-      currentValue: currentValue,
-    };
   }
 
   private updateAnnotation(gts) {
     let positions = [];
     let icon;
     this.LOG.debug(['updateAnnotation'], gts);
-    switch (gts.render) {
-      case 'marker':
-        icon = this.icon(gts.color, gts.marker);
-        for (let j = 0; j < gts.path.length; j++) {
-          let date;
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            date = parseInt(gts.path[j].ts);
-          } else {
-            date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
-          }
-          let marker = Leaflet.marker(gts.path[j], {icon: icon, opacity: 1})
-            .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
-          positions.push(marker);
-        }
-        break;
-      case 'dots':
-      default:
-        for (let j = 0; j < gts.path.length; j++) {
-          let marker = Leaflet.circleMarker(
-            gts.path[j], {
-              radius: gts.baseRadius,
-              color: gts.color,
-              fillColor: gts.color,
-              fillOpacity: 1
+
+    if (this.hiddenData.filter((i) => i === gts.key).length === 0) {
+      switch (gts.render) {
+        case 'marker':
+          icon = this.icon(gts.color, gts.marker);
+          for (let j = 0; j < gts.path.length; j++) {
+            let date;
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+              date = parseInt(gts.path[j].ts);
+            } else {
+              date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
             }
-          );
-          let date;
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            date = parseInt(gts.path[j].ts);
-          } else {
-            date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+            let marker = Leaflet.marker(gts.path[j], {icon: icon, opacity: 1})
+              .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
+            positions.push(marker);
           }
-          marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
-          positions.push(marker);
-        }
-        break;
+          break;
+        case 'dots':
+        default:
+          for (let j = 0; j < gts.path.length; j++) {
+            let marker = Leaflet.circleMarker(
+              gts.path[j], {
+                radius: gts.baseRadius,
+                color: gts.color,
+                fillColor: gts.color,
+                fillOpacity: 1
+              }
+            );
+            let date;
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+              date = parseInt(gts.path[j].ts);
+            } else {
+              date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+            }
+            marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
+            positions.push(marker);
+          }
+          break;
+      }
     }
     return positions;
 
@@ -364,12 +368,14 @@ export class WarpViewMap {
       case 'marker':
         icon = this.icon(positionData.color, positionData.key);
         for (let j = 0; j < positionData.positions.length; j++) {
-          let marker = Leaflet.marker({lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
-            icon: icon,
-            opacity: 1,
-          });
-          marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
-          positions.push(marker);
+          if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
+            let marker = Leaflet.marker({lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+              icon: icon,
+              opacity: 1,
+            });
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            positions.push(marker);
+          }
         }
         break;
       case 'coloredWeightedDots':
@@ -381,47 +387,53 @@ export class WarpViewMap {
           inStep[j] = 0;
         }
         for (let j = 0; j < positionData.positions.length; j++) {
-          this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * positionData.positions[j][4]);
-          let marker = Leaflet.circleMarker(
-            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]},
-            {
-              radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
-              color: positionData.borderColor,
-              fillColor: ColorLib.rgb2hex(
-                positionData.colorGradient[positionData.positions[j][5]].r,
-                positionData.colorGradient[positionData.positions[j][5]].g,
-                positionData.colorGradient[positionData.positions[j][5]].b),
-              fillOpacity: 1,
-            });
-          this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
-          marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
-          positions.push(marker);
+          if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
+            this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * positionData.positions[j][4]);
+            let marker = Leaflet.circleMarker(
+              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]},
+              {
+                radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+                color: positionData.borderColor,
+                fillColor: ColorLib.rgb2hex(
+                  positionData.colorGradient[positionData.positions[j][5]].r,
+                  positionData.colorGradient[positionData.positions[j][5]].g,
+                  positionData.colorGradient[positionData.positions[j][5]].b),
+                fillOpacity: 1,
+              });
+            this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            positions.push(marker);
+          }
         }
         break;
       case 'weightedDots':
         for (let j = 0; j < positionData.positions.length; j++) {
-          let marker = Leaflet.circleMarker(
-            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
-              radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
-              color: positionData.borderColor,
-              fillColor: positionData.color, fillOpacity: 1,
-            });
-          marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
-          positions.push(marker);
+          if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
+            let marker = Leaflet.circleMarker(
+              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+                radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+                color: positionData.borderColor,
+                fillColor: positionData.color, fillOpacity: 1,
+              });
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            positions.push(marker);
+          }
         }
         break;
       case 'dots':
       default:
         for (let j = 0; j < positionData.positions.length; j++) {
-          let marker = Leaflet.circleMarker(
-            {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
-              radius: positionData.baseRadius,
-              color: positionData.borderColor,
-              fillColor: positionData.color,
-              fillOpacity: 1,
-            });
-          marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
-          positions.push(marker);
+          if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
+            let marker = Leaflet.circleMarker(
+              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+                radius: positionData.baseRadius,
+                color: positionData.borderColor,
+                fillColor: positionData.color,
+                fillOpacity: 1,
+              });
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            positions.push(marker);
+          }
         }
         break;
     }

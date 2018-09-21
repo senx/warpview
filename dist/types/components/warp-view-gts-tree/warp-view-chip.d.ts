@@ -10,8 +10,8 @@ export declare class WarpViewChip {
     private LOG;
     /**
      *
-     * @param {boolean} state
-     * @returns {string}
+     * @param state
+     * @param index
      */
     private gtsColor;
     /**

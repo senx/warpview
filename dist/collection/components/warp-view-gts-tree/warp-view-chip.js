@@ -29,12 +29,13 @@ export class WarpViewChip {
     }
     /**
      *
-     * @param {boolean} state
-     * @returns {string}
+     * @param state
+     * @param index
      */
-    gtsColor(state) {
+    gtsColor(state, index) {
+        this.LOG.debug(['gtsColor'], [state, index]);
         if (state) {
-            return ColorLib.getColor(this.index);
+            return ColorLib.getColor(index);
         }
         else {
             return '#bbbbbb';
@@ -50,7 +51,7 @@ export class WarpViewChip {
      *
      */
     componentDidLoad() {
-        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected));
+        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
     }
     /**
      *
@@ -86,8 +87,8 @@ export class WarpViewChip {
      */
     switchPlotState(event) {
         this._node = Object.assign({}, this._node, { selected: !this._node.selected, label: GTSLib.serializeGtsMetadata(this._node.gts) });
-        this.LOG.debug(['switchPlotState'], [this._node]);
-        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected));
+        this.LOG.debug(['switchPlotState'], this._node);
+        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
         this.warpViewSelectedGTS.emit(this._node);
     }
     render() {
@@ -95,7 +96,10 @@ export class WarpViewChip {
             h("span", null,
                 h("i", { class: "normal" }),
                 h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
-                    h("span", { class: 'gts-classname' }, this._node.gts.c),
+                    h("span", { class: 'gts-classname' },
+                        this._node.index,
+                        " ",
+                        this._node.gts.c),
                     h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
                     this.toArray(this._node.gts.l).map(label => h("span", null,
                         h("span", { class: 'gts-labelname' }, label.name),
