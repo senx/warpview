@@ -1,10 +1,2 @@
 /*! Built with http://stenciljs.com */
-const { h } = window.warpview;
-
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-export { commonjsGlobal as a, createCommonjsModule as b };
+const{h:e}=window.warpview;var o="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function n(e,o){return e(o={exports:{}},o.exports),o.exports}export{o as a,n as b};
