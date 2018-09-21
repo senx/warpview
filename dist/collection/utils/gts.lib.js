@@ -383,10 +383,13 @@ export class GTSLib {
      */
     static getData(data) {
         if (typeof data === 'string') {
-            return { data: JSON.parse(data) };
+            return GTSLib.getData(JSON.parse(data));
         }
         else if (data && data.hasOwnProperty('data')) {
             return data;
+        }
+        else if (GTSLib.isArray(data) && data.length > 0 && data[0].data) {
+            return data[0];
         }
         else if (GTSLib.isArray(data)) {
             return { data: data };
