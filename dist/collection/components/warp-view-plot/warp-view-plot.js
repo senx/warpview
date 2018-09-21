@@ -57,10 +57,10 @@ export class WarpViewPlot {
         switch (event.detail.id) {
             case 'timeSwitch':
                 if (event.detail.state) {
-                    this._options = ChartLib.mergeDeep(this._options, { timeMode: "timestamp" });
+                    this._options.timeMode = 'timestamp';
                 }
                 else {
-                    this._options = ChartLib.mergeDeep(this._options, { timeMode: "date" });
+                    this._options.timeMode = 'date';
                 }
                 this.drawCharts();
                 break;
@@ -108,12 +108,14 @@ export class WarpViewPlot {
     drawCharts() {
         this.LOG.debug(['drawCharts'], [this.data, this.options]);
         this._data = GTSLib.getData(this.data);
+        let opts = new Param();
         if (typeof this.options === 'string') {
-            this._options = JSON.parse(this.options);
+            opts = JSON.parse(this.options);
         }
         else {
-            this._options = this.options;
+            opts = this.options;
         }
+        this._options = ChartLib.mergeDeep(this._options, opts);
         this.LOG.debug(['drawCharts', 'parsed'], [this._data, this._options]);
     }
     render() {

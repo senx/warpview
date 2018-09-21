@@ -27,7 +27,6 @@ export declare class WarpViewMap {
     private annotationsData;
     private positionData;
     private tiles;
-    private layerGroup;
     private static DEFAULT_HEIGHT;
     private static DEFAULT_WIDTH;
     onResize(): void;
