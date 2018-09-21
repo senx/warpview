@@ -66,9 +66,6 @@ export class WarpViewPlot {
                 break;
             case 'chartSwitch':
                 this.showChart = event.detail.state;
-                if (this.showChart) {
-                    this.chart.resize();
-                }
                 break;
             case 'mapSwitch':
                 this.showMap = event.detail.state;
@@ -131,7 +128,7 @@ export class WarpViewPlot {
                 h("div", { style: { width: '100%', height: '768px' } },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, options: this._options }))) : '',
             this.showMap ? h("div", { style: { width: '100%', height: '768px' } },
-                h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive })) : '');
+                h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive, hiddenData: this._toHide })) : '');
     }
     static get is() { return "warp-view-plot"; }
     static get encapsulation() { return "shadow"; }

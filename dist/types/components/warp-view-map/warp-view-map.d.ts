@@ -8,6 +8,7 @@ export declare class WarpViewMap {
     data: any;
     heatData: any[];
     options: any;
+    hiddenData: string[];
     el: HTMLElement;
     private _options;
     private mapTypes;
@@ -30,6 +31,7 @@ export declare class WarpViewMap {
     private static DEFAULT_HEIGHT;
     private static DEFAULT_WIDTH;
     onResize(): void;
+    private onHideData;
     private onData;
     private onOptions;
     heatRadiusDidChange(event: any): void;

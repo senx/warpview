@@ -123,7 +123,7 @@ export class WarpViewChip {
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>{this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
-              {this.toArray(this._node.gts.l).map((label, labelIndex) =>
+              {this.toArray(this._node.gts.l).map(label =>
             <span>
               <span class='gts-labelname'>{label.name}</span>
               <span class='gts-separator'>=</span>

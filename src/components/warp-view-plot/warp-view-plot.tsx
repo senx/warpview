@@ -93,9 +93,6 @@ export class WarpViewPlot {
         break;
       case 'chartSwitch' :
         this.showChart = event.detail.state;
-        if (this.showChart) {
-          (this.chart as any).resize();
-        }
         break;
       case 'mapSwitch' :
         this.showMap = event.detail.state;
@@ -176,7 +173,7 @@ export class WarpViewPlot {
       </div> : ''}
       {this.showMap ? <div style={{width: '100%', height: '768px'}}>
         <warp-view-map options={this._options} id="map" data={this._data as any}
-                       responsive={this.responsive}
+                       responsive={this.responsive} hiddenData={this._toHide}
         ></warp-view-map>
       </div> : ''}
     </div>;

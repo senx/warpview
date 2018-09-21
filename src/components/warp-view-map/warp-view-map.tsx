@@ -49,6 +49,7 @@ export class WarpViewMap {
   @Prop() data: any;
   @Prop() heatData: any[] = [];
   @Prop() options: any = {};
+  @Prop() hiddenData: string[] = [];
 
   @Element() el: HTMLElement;
 
@@ -97,6 +98,14 @@ export class WarpViewMap {
       this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
       this.drawMap();
     }, 250);
+  }
+
+  @Watch('hiddenData')
+  private onHideData(newValue: string[], oldValue: string[]) {
+    if (oldValue.length !== newValue.length) {
+      this.LOG.debug(['hiddenData'], newValue);
+      this.drawMap();
+    }
   }
 
   @Watch('data')
@@ -156,8 +165,13 @@ export class WarpViewMap {
     if (!dataList) {
       return;
     }
-    dataList = GTSLib.flatDeep(dataList);
-    this.displayMap({gts: dataList, params: params});
+    let gts = [];
+    GTSLib.flatDeep(dataList).forEach((g) => {
+      if (this.hiddenData.filter((i) => i === GTSLib.serializeGtsMetadata(g)).length === 0) {
+        gts.push(g);
+      }
+    });
+    this.displayMap({gts: gts, params: params});
   }
 
   private icon(color, marker = '') {

@@ -29,6 +29,7 @@ export class WarpViewMap {
         this.responsive = false;
         this.heatData = [];
         this.options = {};
+        this.hiddenData = [];
         this._options = {
             dotsLimit: 1000,
             heatControls: false,
@@ -60,6 +61,12 @@ export class WarpViewMap {
             this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
             this.drawMap();
         }, 250);
+    }
+    onHideData(newValue, oldValue) {
+        if (oldValue.length !== newValue.length) {
+            this.LOG.debug(['hiddenData'], newValue);
+            this.drawMap();
+        }
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -109,8 +116,13 @@ export class WarpViewMap {
         if (!dataList) {
             return;
         }
-        dataList = GTSLib.flatDeep(dataList);
-        this.displayMap({ gts: dataList, params: params });
+        let gts = [];
+        GTSLib.flatDeep(dataList).forEach((g) => {
+            if (this.hiddenData.filter((i) => i === GTSLib.serializeGtsMetadata(g)).length === 0) {
+                gts.push(g);
+            }
+        });
+        this.displayMap({ gts: gts, params: params });
     }
     icon(color, marker = '') {
         let c = "+" + color.slice(1);
@@ -379,6 +391,11 @@ export class WarpViewMap {
         "height": {
             "type": String,
             "attr": "height"
+        },
+        "hiddenData": {
+            "type": "Any",
+            "attr": "hidden-data",
+            "watchCallbacks": ["onHideData"]
         },
         "options": {
             "type": "Any",

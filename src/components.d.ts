@@ -469,6 +469,7 @@ declare global {
       'data': any;
       'heatData': any[];
       'height': string;
+      'hiddenData': string[];
       'options': any;
       'resize': () => void;
       'responsive': boolean;
@@ -498,6 +499,7 @@ declare global {
       'data'?: any;
       'heatData'?: any[];
       'height'?: string;
+      'hiddenData'?: string[];
       'options'?: any;
       'responsive'?: boolean;
       'width'?: string;

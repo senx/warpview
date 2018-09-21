@@ -97,7 +97,7 @@ export class WarpViewChip {
                 h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
                     h("span", { class: 'gts-classname' }, this._node.gts.c),
                     h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
-                    this.toArray(this._node.gts.l).map((label, labelIndex) => h("span", null,
+                    this.toArray(this._node.gts.l).map(label => h("span", null,
                         h("span", { class: 'gts-labelname' }, label.name),
                         h("span", { class: 'gts-separator' }, "="),
                         h("span", { class: 'gts-labelvalue' }, label.value),

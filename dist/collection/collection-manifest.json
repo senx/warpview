@@ -580,6 +580,13 @@
           "attr": "height"
         },
         {
+          "name": "hiddenData",
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
+          ]
+        },
+        {
           "name": "options",
           "type": "Any",
           "attr": "options",
