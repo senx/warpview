@@ -21,7 +21,6 @@ import 'leaflet.markercluster';
 import { ColorLib } from "../../utils/color-lib";
 import { ChartLib } from "../../utils/chart-lib";
 import { Logger } from "../../utils/logger";
-import { DataModel } from "../../model/dataModel";
 import { MapLib } from "../../utils/map-lib";
 import { GTSLib } from "../../utils/gts.lib";
 import moment from "moment";
@@ -98,7 +97,7 @@ export class WarpViewMap {
         }
         let dataList;
         let params;
-        if (this.data instanceof DataModel) {
+        if (this.data.data) {
             dataList = this.data.data;
             params = this.data.params;
         }
@@ -106,11 +105,11 @@ export class WarpViewMap {
             dataList = this.data;
             params = [];
         }
+        this.LOG.debug(['drawMap'], dataList);
         if (!dataList) {
             return;
         }
         dataList = GTSLib.flatDeep(dataList);
-        this.LOG.debug(['drawMap'], dataList);
         this.displayMap({ gts: dataList, params: params });
     }
     icon(color, marker = '') {

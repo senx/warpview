@@ -96,7 +96,7 @@ var WarpViewHeatmapSlidersComponent = /** @class **/ (function() {
   WarpViewHeatmapSliders.is = 'warp-view-heatmap-sliders';
   WarpViewHeatmapSliders.getModule = function(opts) {
     
-    return import('./9fy41q7u.js').then(function(m) {
+    return import('./xrhu1whj.js').then(function(m) {
         return m.WarpViewHeatmapSliders;
       });
 
@@ -122,7 +122,7 @@ var WarpViewMapComponent = /** @class **/ (function() {
   WarpViewMap.is = 'warp-view-map';
   WarpViewMap.getModule = function(opts) {
     
-    return import('./9fy41q7u.js').then(function(m) {
+    return import('./xrhu1whj.js').then(function(m) {
         return m.WarpViewMap;
       });
 

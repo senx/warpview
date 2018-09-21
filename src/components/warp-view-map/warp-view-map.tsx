@@ -145,18 +145,18 @@ export class WarpViewMap {
     }
     let dataList: any[];
     let params: any[];
-    if (this.data instanceof DataModel) {
+    if (this.data.data) {
       dataList = this.data.data as any[];
       params = this.data.params
     } else {
       dataList = this.data;
       params = [];
     }
+    this.LOG.debug(['drawMap'], dataList);
     if (!dataList) {
       return;
     }
     dataList = GTSLib.flatDeep(dataList);
-    this.LOG.debug(['drawMap'], dataList);
     this.displayMap({gts: dataList, params: params});
   }
 
