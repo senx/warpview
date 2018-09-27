@@ -16,7 +16,6 @@
  *
  */
 import { DataModel } from "../model/dataModel";
-import Leaflet from 'leaflet';
 export class GTSLib {
     /**
      *
@@ -268,7 +267,7 @@ export class GTSLib {
             }
             if (metric.length === 4) {
                 // timestamp, lat, lon, value
-                path.push({ ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: Leaflet.Util.wrapNum(metric[2], [0, 360], true), val: metric[3] });
+                path.push({ ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: metric[2], val: metric[3] });
             }
             if (metric.length === 5) {
                 // timestamp, lat, lon, elevation, value
