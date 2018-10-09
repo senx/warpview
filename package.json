@@ -6,13 +6,14 @@
   "main": "dist/warpview.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org:cityzendata/warpview.git"
+    "url": "git+ssh://git@gitlab.com:senx/warpview.git"
   },
-  "author": "Cityzen Data",
+  "author": "SenX",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://bitbucket.org/cityzendata/warpview/addon/trello/trello-board"
+    "url": "https://gitlab.com/senx/warpview/issues"
   },
-  "homepage": "https://bitbucket.org/cityzendata/warpview",
+  "homepage": "https://gitlab.com/senx/warpview",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [

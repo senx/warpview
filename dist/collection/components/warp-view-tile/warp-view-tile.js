@@ -84,8 +84,13 @@ export class WarpViewTile {
         fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
             response.text().then(gtsStr => {
                 this.LOG.debug(['execute', 'response'], gtsStr);
-                this.gtsList = JSON.parse(gtsStr);
-                this.parseGTS();
+                try {
+                    this.gtsList = JSON.parse(gtsStr);
+                    this.parseGTS();
+                }
+                catch (e) {
+                    this.LOG.error(['execute'], e);
+                }
                 this.loading = false;
             }, err => {
                 this.LOG.error(['execute'], [err, this.url, this.warpscript]);
