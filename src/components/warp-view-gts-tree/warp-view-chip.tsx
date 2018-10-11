@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Prop} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Listen, Prop} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {ColorLib} from "../../utils/color-lib";
 import {GTS} from "../../model/GTS";
@@ -42,6 +42,17 @@ export class WarpViewChip {
   @Element() el: HTMLElement;
 
   private LOG: Logger = new Logger(WarpViewChip);
+
+
+  @Listen('document:keyup')
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'a') {
+      this.setState(true);
+    }
+    if (ev.key === 'n') {
+      this.setState(false);
+    }
+  }
 
   /**
    *
@@ -106,9 +117,13 @@ export class WarpViewChip {
    * @param {UIEvent} event
    */
   switchPlotState(event: UIEvent) {
+    this.setState(!this._node.selected);
+  }
+
+  private setState(state: boolean) {
     this._node = {
       ...this._node,
-      selected: !this._node.selected,
+      selected: state,
       label: GTSLib.serializeGtsMetadata(this._node.gts)
     };
     this.LOG.debug(['switchPlotState'], this._node);
@@ -122,10 +137,10 @@ export class WarpViewChip {
         {this._node && this._node.gts && this._node.gts.l ?
           <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
-          <span class='gts-classname'>{this._node.index} {this._node.gts.c}</span>
+          <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
               {this.toArray(this._node.gts.l).map(label =>
-            <span>
+                  <span>
               <span class='gts-labelname'>{label.name}</span>
               <span class='gts-separator'>=</span>
               <span class='gts-labelvalue'>{label.value}</span>
