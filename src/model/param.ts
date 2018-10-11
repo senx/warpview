@@ -37,4 +37,5 @@ export class Param {
   heatOpacity?: number;
   heatControls?: boolean;
   mapType?: string;
+  autoRefresh?: number;
 }

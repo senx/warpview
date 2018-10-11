@@ -75,6 +75,15 @@ export class WarpViewTile {
         this.data = data;
         this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
         this.LOG.debug(['parseGTS', 'options'], this._options);
+        if (this._autoRefresh !== this._options.autoRefresh) {
+            this._autoRefresh = this._options.autoRefresh;
+            if (this.timer) {
+                window.clearInterval(this.timer);
+            }
+            if (this._autoRefresh && this._autoRefresh > 0) {
+                this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
+            }
+        }
         this.loading = false;
     }
     execute() {

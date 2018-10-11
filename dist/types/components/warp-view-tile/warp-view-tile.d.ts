@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 export declare class WarpViewTile {
@@ -17,6 +18,8 @@ export declare class WarpViewTile {
     private loading;
     private gtsList;
     private _options;
+    private timer;
+    private _autoRefresh;
     private onOptions;
     resize(): void;
     componentDidLoad(): void;

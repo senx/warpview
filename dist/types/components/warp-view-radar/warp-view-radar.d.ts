@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 export declare class WarpViewRadar {

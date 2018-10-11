@@ -123,7 +123,6 @@
 
     #v-pills-image, #v-pills-plot {
       --warp-view-tile-height: 100vh;
-
     }
   </style>
 </head>
@@ -140,7 +139,18 @@
           <p class="lead text-muted">Choose a main theme</p>
           <p>
             <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off" id="light">Light</button>
-            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off" id="dark">Dark</button>
+            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off" id="dark">Dark</button></p>
+          <p>
+            <label for="autoRefresh" class="text-white">Auto refresh:</label>
+            <select class="form-control col-2" id="autoRefresh">
+              <option value="-1">off</option>
+              <option value="5">5s</option>
+              <option value="10">10s</option>
+              <option value="30">30s</option>
+              <option value="60">1m</option>
+              <option value="300">5m</option>
+              <option value="600">10m</option>
+            </select>
           </p>
         </div>
         <div class="col-sm-4 offset-md-1 py-4">
@@ -651,7 +661,14 @@
         el.options = {...defOpts};
       });
     });
-
+    $('#autoRefresh').change(function () {
+      $("select option:selected").each(function () {
+        defOpts.autoRefresh = parseInt($(this).val());
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = {...defOpts};
+        });
+      });
+    });
     $('a[role="tab"]').on('shown.bs.tab', function (e) {
       var id = e.target.href.replace(document.location, '');
       var divs = $(id).find('warp-view-tile');

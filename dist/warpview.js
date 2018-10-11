@@ -1,2 +1,123 @@
 /*! Built with http://stenciljs.com */
-!function(e,t,i,n,s,a,o,r,w,d,h,p,l,u,c){for((h=e.warpview=e.warpview||{}).components=w,(l=w.filter(function(e){return e[2]}).map(function(e){return e[0]})).length&&((p=t.createElement("style")).innerHTML=l.join()+"{visibility:hidden}.hydrated{visibility:inherit}",p.setAttribute("data-styles",""),t.head.insertBefore(p,t.head.firstChild)),h.$r=[],c=d.componentOnReady,d.componentOnReady=function(t){const i=this;function n(e){h.$r?h.$r.push([i,e]):h.componentOnReady(i,e)}return c&&c.call(i),t?n(t):e.Promise?new Promise(n):{then:n}},p=(l=t.querySelectorAll("script")).length-1;p>=0&&!(u=l[p]).src&&!u.hasAttribute("data-resources-url");p--);(l=u.getAttribute("data-resources-url"))&&(s=l),!s&&u.src&&(s=(l=u.src.split("/").slice(0,-1)).join("/")+(l.length?"/":"")+"warpview/"),p=t.createElement("script"),function(e,t,i,n){return!(t.search.indexOf("core=esm")>0)&&(!(!(t.search.indexOf("core=es5")>0||"file:"===t.protocol)&&e.customElements&&e.customElements.define&&e.fetch&&e.CSS&&e.CSS.supports&&e.CSS.supports("color","var(--c)")&&"noModule"in i)||function(e){try{return new Function('import("")'),!1}catch(e){}return!0}())}(e,e.location,p)?p.src=s+"warpview.ovs2ly2b.js":(p.src=s+"warpview.tgwczdhl.js",p.setAttribute("type","module"),p.setAttribute("crossorigin",!0)),p.setAttribute("data-resources-url",s),p.setAttribute("data-namespace","warpview"),t.head.appendChild(p)}(window,document,0,0,0,0,0,0,[["warp-view-annotation","sqlsfhpm",1,[["data",1],["el",7],["height",2,0,1,2],["hiddenData",1],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["timeMax",1,0,"time-max",4],["timeMin",1,0,"time-min",4],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-bar","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-bubble","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-chart","t5sn7vnq",1,[["data",1],["el",7],["hiddenData",1],["options",1],["responsive",1,0,1,3],["standalone",1,0,1,3],["type",1,0,1,2],["unit",1,0,1,2]],0,[["window:resize","onResize",0,1]]],["warp-view-chip","9o5di4um",1,[["el",7],["index",1,0,1,4],["name",1,0,1,2],["node",1,0,1,1]]],["warp-view-display","yfotw1kp",1,[["data",1,0,1,1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["unit",1,0,1,2],["width",2,0,1,2]],1],["warp-view-gts-tree","9o5di4um",1,[["data",1,0,1,2],["theme",1,0,1,2]]],["warp-view-heatmap-sliders","q7ixzsts",0,[["blurValue",1,0,"blur-value",4],["el",7],["maxBlurValue",1,0,"max-blur-value",4],["maxRadiusValue",1,0,"max-radius-value",4],["minBlurValue",1,0,"min-blur-value",4],["minRadiusValue",1,0,"min-radius-value",4],["radiusValue",1,0,"radius-value",4]],1],["warp-view-image","yfotw1kp",1,[["data",1,0,1,2],["el",7],["height",2,0,1,2],["imageTitle",1,0,"image-title",2],["options",1],["responsive",1,0,1,3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-map","q7ixzsts",1,[["data",1,0,1,1],["el",7],["heatData",1],["height",1,0,1,2],["hiddenData",1],["options",1,0,1,1],["resize",6],["responsive",1,0,1,3],["width",1,0,1,2]],1,[["window:resize","onResize",0,1],["heatRadiusDidChange","heatRadiusDidChange"],["heatBlurDidChange","heatBlurDidChange"],["heatOpacityDidChange","heatOpacityDidChange"]]],["warp-view-pie","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-plot","sqlsfhpm",1,[["_data",5],["_options",5],["_timeMax",5],["_timeMin",5],["_toHide",5],["data",1,0,1,2],["el",7],["height",2,0,1,2],["options",1,0,1,2],["responsive",1,0,1,3],["showChart",5],["showLegend",1,0,"show-legend",3],["showMap",5],["width",2,0,1,2]],1,[["stateChange","stateChange"],["boundsDidChange","boundsDidChange"],["pointHover","pointHover"],["warpViewSelectedGTS","warpViewSelectedGTS"]]],["warp-view-polar","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-radar","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-scatter","yfotw1kp",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-spinner","ga34mmyi",1,[["message",1,0,1,2]],1],["warp-view-tile","yfotw1kp",1,[["chartTitle",1,0,"chart-title",2],["data",5],["options",1],["resize",6],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["type",1,0,1,2],["unit",1,0,1,2],["url",1,0,1,2],["wsElement",7]],1],["warp-view-toggle","sqlsfhpm",1,[["checked",1,0,1,3],["el",7],["state",5],["text1",1,0,"text-1",2],["text2",1,0,"text-2",2]],1],["warp-view-tree-view","9o5di4um",1,[["branch",1,0,1,3],["gtsList",1,0,"gts-list",1],["theme",1,0,1,2]]]],HTMLElement.prototype);
+(function(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCoreSsr, appCorePolyfilled, hydratedCssClass, components) {
+
+    function init(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCorePolyfilled, hydratedCssClass, components, HTMLElementPrototype, App, x, y, scriptElm, orgComponentOnReady) {
+    // create global namespace if it doesn't already exist
+    App = win[namespace] = win[namespace] || {};
+    App.components = components;
+    y = components.filter(function (c) { return c[2]; }).map(function (c) { return c[0]; });
+    if (y.length) {
+        // auto hide components until they been fully hydrated
+        // reusing the "x" and "i" variables from the args for funzies
+        x = doc.createElement('style');
+        x.innerHTML = y.join() + '{visibility:hidden}.' + hydratedCssClass + '{visibility:inherit}';
+        x.setAttribute('data-styles', '');
+        doc.head.insertBefore(x, doc.head.firstChild);
+    }
+    // create a temporary array to store the resolves
+    // before the core file has fully loaded
+    App.$r = [];
+    // add componentOnReady to HTMLElement.prototype
+    orgComponentOnReady = HTMLElementPrototype.componentOnReady;
+    HTMLElementPrototype.componentOnReady = function componentOnReady(cb) {
+        const elm = this;
+        // there may be more than one app on the window so
+        // call original HTMLElement.prototype.componentOnReady
+        // if one exists already
+        orgComponentOnReady && orgComponentOnReady.call(elm);
+        function executor(resolve) {
+            if (App.$r) {
+                // core file hasn't loaded yet
+                // so let's throw it in this temporary queue
+                // and when the core does load it'll handle these
+                App.$r.push([elm, resolve]);
+            }
+            else {
+                // core has finished loading because there's no temporary queue
+                // call the core's logic to handle this
+                App.componentOnReady(elm, resolve);
+            }
+        }
+        if (cb) {
+            // just a callback
+            return executor(cb);
+        }
+        // callback wasn't provided, let's return a promise
+        if (win.Promise) {
+            // use native/polyfilled promise
+            return new Promise(executor);
+        }
+        // promise may not have been polyfilled yet
+        return { then: executor };
+    };
+    // figure out the script element for this current script
+    y = doc.querySelectorAll('script');
+    for (x = y.length - 1; x >= 0; x--) {
+        scriptElm = y[x];
+        if (scriptElm.src || scriptElm.hasAttribute('data-resources-url')) {
+            break;
+        }
+    }
+    // get the resource path attribute on this script element
+    y = scriptElm.getAttribute('data-resources-url');
+    if (y) {
+        // the script element has a data-resources-url attribute, always use that
+        resourcesUrl = y;
+    }
+    if (!resourcesUrl && scriptElm.src) {
+        // we don't have an exact resourcesUrl, so let's
+        // figure it out relative to this script's src and app's filesystem namespace
+        y = scriptElm.src.split('/').slice(0, -1);
+        resourcesUrl = (y.join('/')) + (y.length ? '/' : '') + fsNamespace + '/';
+    }
+    // request the core this browser needs
+    // test for native support of custom elements and fetch
+    // if either of those are not supported, then use the core w/ polyfills
+    // also check if the page was build with ssr or not
+    x = doc.createElement('script');
+    if (usePolyfills(win, win.location, x, 'import("")')) {
+        // requires the es5/polyfilled core
+        x.src = resourcesUrl + appCorePolyfilled;
+    }
+    else {
+        // let's do this!
+        x.src = resourcesUrl + appCore;
+        x.setAttribute('type', 'module');
+        x.setAttribute('crossorigin', true);
+    }
+    x.setAttribute('data-resources-url', resourcesUrl);
+    x.setAttribute('data-namespace', fsNamespace);
+    doc.head.appendChild(x);
+}
+function usePolyfills(win, location, scriptElm, dynamicImportTest) {
+    // fyi, dev mode has verbose if/return statements
+    // but it minifies to a nice 'lil one-liner ;)
+    if (location.search.indexOf('core=esm') > 0) {
+        // force esm build
+        return false;
+    }
+    if ((location.search.indexOf('core=es5') > 0) ||
+        (location.protocol === 'file:') ||
+        (!(win.customElements && win.customElements.define)) ||
+        (!win.fetch) ||
+        (!(win.CSS && win.CSS.supports && win.CSS.supports('color', 'var(--c)'))) ||
+        (!('noModule' in scriptElm))) {
+        // es5 build w/ polyfills
+        return true;
+    }
+    // final test to see if this browser support dynamic imports
+    return doesNotSupportsDynamicImports(dynamicImportTest);
+}
+function doesNotSupportsDynamicImports(dynamicImportTest) {
+    try {
+        new Function(dynamicImportTest);
+        return false;
+    }
+    catch (e) { }
+    return true;
+}
+
+
+    init(win, doc, namespace, fsNamespace, resourcesUrl, appCore, appCoreSsr, appCorePolyfilled, hydratedCssClass, components);
+
+    })(window, document, "warpview","warpview",0,"warpview.core.js","es5-build-disabled.js","hydrated",[["warp-view-annotation","warp-view-annotation",1,[["data",1],["el",7],["height",2,0,1,2],["hiddenData",1],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["timeMax",1,0,"time-max",4],["timeMin",1,0,"time-min",4],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-bar","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-bubble","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-chart","warp-view-chart",1,[["data",1],["el",7],["hiddenData",1],["options",1],["responsive",1,0,1,3],["standalone",1,0,1,3],["type",1,0,1,2],["unit",1,0,1,2]],0,[["window:resize","onResize",0,1]]],["warp-view-chip","warp-view-chip",1,[["el",7],["index",1,0,1,4],["name",1,0,1,2],["node",1,0,1,1]]],["warp-view-display","warp-view-bar",1,[["data",1,0,1,1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["unit",1,0,1,2],["width",2,0,1,2]],1],["warp-view-gts-tree","warp-view-chip",1,[["data",1,0,1,2],["theme",1,0,1,2]]],["warp-view-heatmap-sliders","warp-view-heatmap-sliders",0,[["blurValue",1,0,"blur-value",4],["el",7],["maxBlurValue",1,0,"max-blur-value",4],["maxRadiusValue",1,0,"max-radius-value",4],["minBlurValue",1,0,"min-blur-value",4],["minRadiusValue",1,0,"min-radius-value",4],["radiusValue",1,0,"radius-value",4]],1],["warp-view-image","warp-view-bar",1,[["data",1,0,1,2],["el",7],["height",2,0,1,2],["imageTitle",1,0,"image-title",2],["options",1],["responsive",1,0,1,3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-map","warp-view-heatmap-sliders",1,[["data",1,0,1,1],["el",7],["heatData",1],["height",1,0,1,2],["hiddenData",1],["options",1,0,1,1],["resize",6],["responsive",1,0,1,3],["width",1,0,1,2]],1,[["window:resize","onResize",0,1],["heatRadiusDidChange","heatRadiusDidChange"],["heatBlurDidChange","heatBlurDidChange"],["heatOpacityDidChange","heatOpacityDidChange"]]],["warp-view-pie","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-plot","warp-view-annotation",1,[["_data",5],["_options",5],["_timeMax",5],["_timeMin",5],["_toHide",5],["data",1,0,1,2],["el",7],["height",2,0,1,2],["options",1,0,1,2],["responsive",1,0,1,3],["showChart",5],["showLegend",1,0,"show-legend",3],["showMap",5],["width",2,0,1,2]],1,[["stateChange","stateChange"],["boundsDidChange","boundsDidChange"],["pointHover","pointHover"],["warpViewSelectedGTS","warpViewSelectedGTS"]]],["warp-view-polar","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-radar","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-scatter","warp-view-bar",1,[["data",1],["el",7],["height",2,0,1,2],["options",1],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["unit",1,0,1,2],["width",2,0,1,2]],1,[["window:resize","onResize",0,1]]],["warp-view-spinner","warp-view-spinner",1,[["message",1,0,1,2]],1],["warp-view-tile","warp-view-bar",1,[["chartTitle",1,0,"chart-title",2],["data",5],["options",1],["resize",6],["responsive",1,0,1,3],["showLegend",1,0,"show-legend",3],["type",1,0,1,2],["unit",1,0,1,2],["url",1,0,1,2],["wsElement",7]],1],["warp-view-toggle","warp-view-annotation",1,[["checked",1,0,1,3],["el",7],["state",5],["text1",1,0,"text-1",2],["text2",1,0,"text-2",2]],1],["warp-view-tree-view","warp-view-chip",1,[["branch",1,0,1,3],["gtsList",1,0,"gts-list",1],["theme",1,0,1,2]]]],HTMLElement.prototype);
