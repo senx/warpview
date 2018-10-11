@@ -17,6 +17,8 @@
  */
 :host .switch {
   position: relative;
+  margin-top: auto;
+  margin-bottom: auto;
   display: block;
   width: var(--warp-view-switch-width, 100px);
   height: var(--warp-view-switch-height, 30px);
@@ -44,14 +46,14 @@
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 28px;
-  height: 28px;
+  width: calc(var(--warp-view-switch-height, 30px) - 2px);
+  height: calc(var(--warp-view-switch-height, 30px) - 2px);
   background: var(--warp-view-switch-handle-color, radial-gradient(#FFFFFF 15%, #f0f0f0 100%));
   border-radius: 100%;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }
 
 :host .switch-input:checked ~ .switch-handle {
-  left: 74px;
+  left: calc(var(--warp-view-switch-width, 100px) - var(--warp-view-switch-height, 30px) + 4px);
   background: var(--warp-view-switch-handle-checked-color, radial-gradient(#ffffff 15%, #00cd00 100%));
   box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2); }
 

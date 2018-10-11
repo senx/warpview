@@ -100,6 +100,13 @@
     body {
       --warp-view-tile-height: 500px;
       --warp-view-chart-legend-bg: #000;
+
+    }
+
+    body #welcome {
+      --warp-view-switch-width: 50px;
+      --warp-view-switch-height: 20px;
+      --warp-view-switch-radius: 10px;
     }
 
     body.dark {
@@ -208,6 +215,12 @@
               <h1>Warp View</h1>
               <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io" target="_blank">Warp 10™</a></p>
               <h2>Usage</h2>
+              <div id="welcome">
+              <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
+
+
+
+              <warp-view-spinner ></warp-view-spinner>
               <pre><code class="language-markup">
 &lt;html>
   &lt;head>
@@ -219,7 +232,7 @@
   &lt;/body>
 &lt;/html>
               </code></pre>
-
+            </div>
             </div>
 
             <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">

@@ -5,7 +5,7 @@ var WarpViewAnnotationComponent = /** @class **/ (function() {
   WarpViewAnnotation.is = 'warp-view-annotation';
   WarpViewAnnotation.getModule = function(opts) {
     
-    return import('./55x2x1op.js').then(function(m) {
+    return import('./sqlsfhpm.js').then(function(m) {
         return m.WarpViewAnnotation;
       });
 
@@ -148,7 +148,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./55x2x1op.js').then(function(m) {
+    return import('./sqlsfhpm.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -226,7 +226,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./55x2x1op.js').then(function(m) {
+    return import('./sqlsfhpm.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
