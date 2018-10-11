@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Element, Method, Prop, State, Watch} from '@stencil/core';
+import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from "../../model/dataModel";
 import {Logger} from "../../utils/logger";
@@ -73,6 +73,14 @@ export class WarpViewTile {
   resize() {
     this.execute();
   }
+
+  @Listen('document:keyup')
+  handleKeyDown(ev: KeyboardEvent){
+    if(ev.key === 'r'){
+      this.execute();
+    }
+  }
+
   componentDidLoad() {
     this.execute();
   }

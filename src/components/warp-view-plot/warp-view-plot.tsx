@@ -30,6 +30,8 @@ import {ChartLib} from "../../utils/chart-lib";
   shadow: true
 })
 export class WarpViewPlot {
+  @Element() el: HTMLElement;
+
   @Prop() data: string | GTS[] | DataModel;
   @Prop() options: string | Param;
 
@@ -37,8 +39,6 @@ export class WarpViewPlot {
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
-
-  @Element() el: HTMLElement;
 
   @State() private _options: Param = new Param();
   @State() private _data: DataModel = new DataModel();

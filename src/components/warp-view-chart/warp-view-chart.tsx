@@ -66,6 +66,7 @@ export class WarpViewChart {
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private ticks = [];
+  private datasetLength = -1;
 
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
@@ -93,7 +94,7 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    if(this._chart) {
+    if (this._chart) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
         this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
@@ -121,7 +122,7 @@ export class WarpViewChart {
       labels = new Array(gtsList.length);
       labels[0] = 'Date';
       colors = new Array(gtsList.length);
-      gtsList.forEach((g,i) => {
+      gtsList.forEach((g, i) => {
         if (g.v && GTSLib.isGtsToPlot(g)) {
           let label = GTSLib.serializeGtsMetadata(g);
           if (this.hiddenData.filter((i) => i === label).length === 0) {
@@ -205,62 +206,68 @@ export class WarpViewChart {
     const dataToplot = this.gtsToData(dataList);
     this.LOG.debug(['drawChart', 'dataToplot'], [dataToplot]);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
-    if (dataToplot && dataToplot.datasets && dataToplot.datasets.length > 0) {
+    if (dataToplot) {
+      this.datasetLength = (dataToplot.datasets || []).length;
       const color = this._options.gridLineColor;
-      this._chart = new Dygraph(
-        chart,
-        dataToplot.datasets,
-        {
-          height: (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30,
-          width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
-          labels: dataToplot.labels,
-          showRoller: false,
-          showRangeSelector: this._options.showRangeSelector || true,
-          connectSeparatedPoints: true,
-          colors: dataToplot.colors,
-          legend: 'follow',
-          stackedGraph: this.isStacked(),
-          strokeBorderWidth: this.isStacked() ? null : 0,
-          strokeWidth: 2,
-          stepPlot: this.isStepped(),
-          ylabel: this.unit,
-          labelsSeparateLines: true,
-          highlightSeriesBackgroundAlpha: 1,
-          highlightSeriesOpts: {
-            strokeWidth: 3,
-            strokeBorderWidth: 0,
-            highlightCircleSize: 3,
-            showInRangeSelector: true
-          },
-          hideOverlayOnMouseOut: true,
-          labelsUTC: true,
-          gridLineColor: color,
-          axisLineColor: color,
-          legendFormatter: this.legendFormatter,
-          highlightCallback: this.highlightCallback.bind(this),
-          drawCallback: ((dygraph, is_initial) => {
-            this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
-            if (dygraph.dateWindow_) {
-              this.boundsDidChange.emit({
-                bounds: {
-                  min: dygraph.dateWindow_[0],
-                  max: dygraph.dateWindow_[1]
-                }
-              });
-            } else {
-              this.boundsDidChange.emit({
-                bounds: {
-                  min: Math.min.apply(null, this.ticks),
-                  max: Math.max.apply(null, this.ticks)
-                }
-              });
-            }
-          }).bind(this),
-          axisLabelWidth: this.standalone ? 50 : 94,
-          rightGap: this.standalone ? 0 : 20
-        }
-      );
-      this.onResize();
+      if (this.datasetLength >= 0) {
+        this._chart = new Dygraph(
+          chart,
+          dataToplot.datasets || [],
+          {
+            height: (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30,
+            width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
+            labels: dataToplot.labels,
+            showRoller: false,
+            showRangeSelector: this._options.showRangeSelector || true,
+            connectSeparatedPoints: true,
+            colors: dataToplot.colors,
+            legend: 'follow',
+            stackedGraph: this.isStacked(),
+            strokeBorderWidth: this.isStacked() ? null : 0,
+            strokeWidth: 2,
+            stepPlot: this.isStepped(),
+            ylabel: this.unit,
+            labelsSeparateLines: true,
+            highlightSeriesBackgroundAlpha: 1,
+            highlightSeriesOpts: {
+              strokeWidth: 3,
+              strokeBorderWidth: 0,
+              highlightCircleSize: 3,
+              showInRangeSelector: true
+            },
+            hideOverlayOnMouseOut: true,
+            labelsUTC: true,
+            gridLineColor: color,
+            axisLineColor: color,
+            legendFormatter: this.legendFormatter,
+            highlightCallback: this.highlightCallback.bind(this),
+            drawCallback: ((dygraph, is_initial) => {
+              this.onResize();
+              this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+              if (dygraph.dateWindow_) {
+                this.boundsDidChange.emit({
+                  bounds: {
+                    min: dygraph.dateWindow_[0],
+                    max: dygraph.dateWindow_[1]
+                  }
+                });
+              } else {
+                this.boundsDidChange.emit({
+                  bounds: {
+                    min: Math.min.apply(null, this.ticks),
+                    max: Math.max.apply(null, this.ticks)
+                  }
+                });
+              }
+            }).bind(this),
+            axisLabelWidth: this.standalone ? 50 : 94,
+            rightGap: this.standalone ? 0 : 20
+          }
+        );
+      } else if (this._chart) {
+        this._chart.destroy();
+        delete this._chart;
+      }
     }
   }
 
