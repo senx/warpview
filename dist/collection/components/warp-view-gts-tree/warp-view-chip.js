@@ -35,18 +35,14 @@ export class WarpViewChip {
             this.setState(false);
         }
     }
-    /**
-     *
-     * @param state
-     * @param index
-     */
-    gtsColor(state, index) {
-        this.LOG.debug(['gtsColor'], [state, index]);
-        if (state) {
-            return ColorLib.getColor(index);
+    colorizeChip() {
+        const chip = this.el.getElementsByClassName('normal')[0];
+        if (this._node.selected) {
+            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.index), 0.7));
+            chip.style.setProperty('border-color', ColorLib.getColor(this._node.index));
         }
         else {
-            return '#bbbbbb';
+            chip.style.setProperty('background-color', '#eeeeee');
         }
     }
     /**
@@ -59,7 +55,7 @@ export class WarpViewChip {
      *
      */
     componentDidLoad() {
-        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
+        this.colorizeChip();
     }
     /**
      *
@@ -99,7 +95,7 @@ export class WarpViewChip {
     setState(state) {
         this._node = Object.assign({}, this._node, { selected: state, label: GTSLib.serializeGtsMetadata(this._node.gts) });
         this.LOG.debug(['switchPlotState'], this._node);
-        this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
+        this.colorizeChip();
         this.warpViewSelectedGTS.emit(this._node);
     }
     render() {

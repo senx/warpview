@@ -9,12 +9,7 @@ export declare class WarpViewChip {
     el: HTMLElement;
     private LOG;
     handleKeyDown(ev: KeyboardEvent): void;
-    /**
-     *
-     * @param state
-     * @param index
-     */
-    private gtsColor;
+    private colorizeChip;
     /**
      *
      */
