@@ -123,47 +123,51 @@ export class WarpViewRadar {
     }
     if(this._chart) {
       this._chart.destroy();
+      delete this._chart;
     }
-    this._chart = new Chart(ctx, {
-      type: 'radar',
-      legend: {display: this.showLegend},
-      data: {
-        labels: gts.labels,
-        datasets: gts.datasets
-      },
-      options: {
-        layout: {
-          padding: {
-            left: 0,
-            right: 0,
-            top: 50,
-            bottom: 0
-          }
-        },
-        animation: {
-          duration: 0,
-        },
+    this.LOG.debug(['gts.data'], gts.datasets);
+    if(gts.datasets && gts.datasets.length > 0) {
+      this._chart = new Chart(ctx, {
+        type: 'radar',
         legend: {display: this.showLegend},
-        responsive: this.responsive,
-        scale: {
-          gridLines: {
-            color: color,
-            zeroLineColor: color
-          },
-          pointLabels: {
-            fontColor: color,
-          },
-          ticks: {
-            fontColor: color,
-            backdropColor: 'transparent'
-          }
+        data: {
+          labels: gts.labels,
+          datasets: gts.datasets
         },
-        tooltips: {
-          mode: 'index',
-          intersect: true,
+        options: {
+          layout: {
+            padding: {
+              left: 0,
+              right: 0,
+              top: 50,
+              bottom: 0
+            }
+          },
+          animation: {
+            duration: 0,
+          },
+          legend: {display: this.showLegend},
+          responsive: this.responsive,
+          scale: {
+            gridLines: {
+              color: color,
+              zeroLineColor: color
+            },
+            pointLabels: {
+              fontColor: color,
+            },
+            ticks: {
+              fontColor: color,
+              backdropColor: 'transparent'
+            }
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: true,
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   componentDidLoad() {

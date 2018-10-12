@@ -91,34 +91,38 @@ export class WarpViewPie {
         this.LOG.debug(['drawChart'], [this.data, this._options, data]);
         if (this._chart) {
             this._chart.destroy();
+            delete this._chart;
         }
-        this._options.type = this.options.type || this._options.type;
-        this._chart = new Chart(ctx, {
-            type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
-            data: {
-                datasets: [{
-                        data: data.data,
-                        backgroundColor: ColorLib.generateTransparentColors(data.data.length),
-                        borderColor: ColorLib.generateColors(data.data.length)
-                    }],
-                labels: data.labels
-            },
-            options: {
-                legend: {
-                    display: this.showLegend
+        this.LOG.debug(['data.data'], data.data);
+        if (data.data && data.data.length > 0) {
+            this._options.type = this.options.type || this._options.type;
+            this._chart = new Chart(ctx, {
+                type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
+                data: {
+                    datasets: [{
+                            data: data.data,
+                            backgroundColor: ColorLib.generateTransparentColors(data.data.length),
+                            borderColor: ColorLib.generateColors(data.data.length)
+                        }],
+                    labels: data.labels
                 },
-                animation: {
-                    duration: 0,
-                },
-                responsive: this.responsive,
-                tooltips: {
-                    mode: 'index',
-                    intersect: true,
-                },
-                circumference: this.getCirc(),
-                rotation: this.getRotation(),
-            }
-        });
+                options: {
+                    legend: {
+                        display: this.showLegend
+                    },
+                    animation: {
+                        duration: 0,
+                    },
+                    responsive: this.responsive,
+                    tooltips: {
+                        mode: 'index',
+                        intersect: true,
+                    },
+                    circumference: this.getCirc(),
+                    rotation: this.getRotation(),
+                }
+            });
+        }
     }
     getRotation() {
         if ('gauge' === this._options.type) {

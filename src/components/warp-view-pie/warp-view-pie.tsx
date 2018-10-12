@@ -79,7 +79,7 @@ export class WarpViewPie {
    */
   private parseData(data) {
     this.LOG.debug(['parseData'], data);
-    if(!data) {
+    if (!data) {
       return;
     }
     let labels = [];
@@ -102,42 +102,46 @@ export class WarpViewPie {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector("#" + this.uuid);
     let data = this.parseData(this.data);
-    if(!data) {
+    if (!data) {
       return;
     }
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     this.LOG.debug(['drawChart'], [this.data, this._options, data]);
-    if(this._chart) {
+    if (this._chart) {
       this._chart.destroy();
+      delete this._chart;
     }
-    this._options.type = this.options.type || this._options.type;
-    this._chart = new Chart(ctx, {
-      type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
-      data: {
-        datasets: [{
-          data: data.data,
-          backgroundColor: ColorLib.generateTransparentColors(data.data.length),
-          borderColor: ColorLib.generateColors(data.data.length)
-        }],
-        labels: data.labels
-      },
-      options: {
-        legend: {
-          display: this.showLegend
+    this.LOG.debug(['data.data'], data.data);
+    if (data.data && data.data.length > 0) {
+      this._options.type = this.options.type || this._options.type;
+      this._chart = new Chart(ctx, {
+        type: this._options.type === 'gauge' ? 'doughnut' : this._options.type,
+        data: {
+          datasets: [{
+            data: data.data,
+            backgroundColor: ColorLib.generateTransparentColors(data.data.length),
+            borderColor: ColorLib.generateColors(data.data.length)
+          }],
+          labels: data.labels
         },
-        animation: {
-          duration: 0,
-        },
-        responsive: this.responsive,
-        tooltips: {
-          mode: 'index',
-          intersect: true,
-        },
-        circumference: this.getCirc(),
-        rotation: this.getRotation(),
-      }
-    });
+        options: {
+          legend: {
+            display: this.showLegend
+          },
+          animation: {
+            duration: 0,
+          },
+          responsive: this.responsive,
+          tooltips: {
+            mode: 'index',
+            intersect: true,
+          },
+          circumference: this.getCirc(),
+          rotation: this.getRotation(),
+        }
+      });
+    }
   }
 
   private getRotation() {

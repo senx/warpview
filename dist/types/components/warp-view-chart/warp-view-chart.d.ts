@@ -1,5 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
@@ -31,6 +30,7 @@ export declare class WarpViewChart {
     private _options;
     private uuid;
     private ticks;
+    private datasetLength;
     private onHideData;
     private onData;
     private onOptions;

@@ -328,6 +328,14 @@
           "attr": "node"
         }
       ],
+      "listeners": [
+        {
+          "event": "document:keyup",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -1093,6 +1101,14 @@
       "states": [
         {
           "name": "data"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "document:keyup",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
         }
       ],
       "methods": [

@@ -15,22 +15,23 @@
  *    limitations under the License.
  *
  */
-:host .maincontainer {
+:host {
   position: relative; }
-
-:host .bar {
-  width: 1px;
-  left: -100px;
-  position: absolute;
-  background-color: red;
-  top: 0;
-  bottom: 15px;
-  overflow: hidden; }
-
-:host .inline {
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: stretch;
-  width: 100%; }
+  :host .maincontainer {
+    position: relative; }
+  :host .bar {
+    width: 1px;
+    left: -100px;
+    position: absolute;
+    background-color: red;
+    top: 0;
+    bottom: 15px;
+    overflow: hidden;
+    z-index: 999; }
+  :host .inline {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+    width: 100%; }

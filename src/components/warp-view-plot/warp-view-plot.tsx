@@ -114,8 +114,8 @@ export class WarpViewPlot {
 
   @Listen('pointHover')
   pointHover(event: CustomEvent) {
-    this.LOG.debug(['pointHover'], event.detail.x);
-    this.line.style.left = (event.detail.x - 15) + 'px';
+    this.LOG.debug(['pointHover'], [event.detail, this.el, event]);
+    this.line.style.left = (event.detail.x ) + 'px';
   }
 
   @Listen('warpViewSelectedGTS')

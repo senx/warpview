@@ -192,9 +192,10 @@ export class WarpViewChart {
   }
 
   private highlightCallback(event) {
+    this.LOG.debug(['highlightCallback', 'event'], [this.el,  event]);
     this.pointHover.emit({
-      x: event.x,
-      y: event.y
+      x:  event.offsetX,
+      y: event.offsetY
     });
   }
 
@@ -242,7 +243,6 @@ export class WarpViewChart {
             legendFormatter: this.legendFormatter,
             highlightCallback: this.highlightCallback.bind(this),
             drawCallback: ((dygraph, is_initial) => {
-              this.onResize();
               this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
               if (dygraph.dateWindow_) {
                 this.boundsDidChange.emit({
@@ -264,6 +264,7 @@ export class WarpViewChart {
             rightGap: this.standalone ? 0 : 20
           }
         );
+        this.onResize();
       } else if (this._chart) {
         this._chart.destroy();
         delete this._chart;

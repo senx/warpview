@@ -17,6 +17,7 @@
  */
 
 :host {
+  position: relative;
   .maincontainer {
     position: relative;
   }
@@ -29,6 +30,7 @@
     top: 0;
     bottom: 15px;
     overflow: hidden;
+    z-index: 999;
   }
 
   .inline {

@@ -49,6 +49,11 @@ export class WarpViewTile {
     resize() {
         this.execute();
     }
+    handleKeyDown(ev) {
+        if (ev.key === 'r') {
+            this.execute();
+        }
+    }
     componentDidLoad() {
         this.execute();
     }
@@ -240,5 +245,9 @@ export class WarpViewTile {
             "elementRef": true
         }
     }; }
+    static get listeners() { return [{
+            "name": "document:keyup",
+            "method": "handleKeyDown"
+        }]; }
     static get style() { return "/**style-placeholder:warp-view-tile:**/"; }
 }

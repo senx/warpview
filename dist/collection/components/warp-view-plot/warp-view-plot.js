@@ -83,8 +83,8 @@ export class WarpViewPlot {
         this._timeMax = event.detail.bounds.max;
     }
     pointHover(event) {
-        this.LOG.debug(['pointHover'], event.detail.x);
-        this.line.style.left = (event.detail.x - 15) + 'px';
+        this.LOG.debug(['pointHover'], [event.detail, this.el, event]);
+        this.line.style.left = (event.detail.x) + 'px';
     }
     warpViewSelectedGTS(event) {
         this.LOG.debug(['warpViewSelectedGTS'], event.detail);

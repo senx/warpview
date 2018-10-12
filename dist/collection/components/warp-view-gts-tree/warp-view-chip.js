@@ -27,6 +27,14 @@ export class WarpViewChip {
         };
         this.LOG = new Logger(WarpViewChip);
     }
+    handleKeyDown(ev) {
+        if (ev.key === 'a') {
+            this.setState(true);
+        }
+        if (ev.key === 'n') {
+            this.setState(false);
+        }
+    }
     /**
      *
      * @param state
@@ -86,7 +94,10 @@ export class WarpViewChip {
      * @param {UIEvent} event
      */
     switchPlotState(event) {
-        this._node = Object.assign({}, this._node, { selected: !this._node.selected, label: GTSLib.serializeGtsMetadata(this._node.gts) });
+        this.setState(!this._node.selected);
+    }
+    setState(state) {
+        this._node = Object.assign({}, this._node, { selected: state, label: GTSLib.serializeGtsMetadata(this._node.gts) });
         this.LOG.debug(['switchPlotState'], this._node);
         this.el.getElementsByClassName('normal')[0].style.setProperty('background-color', this.gtsColor(this._node.selected, this._node.index));
         this.warpViewSelectedGTS.emit(this._node);
@@ -97,8 +108,7 @@ export class WarpViewChip {
                 h("i", { class: "normal" }),
                 h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
                     h("span", { class: 'gts-classname' },
-                        this._node.index,
-                        " ",
+                        "\u00A0 ",
                         this._node.gts.c),
                     h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
                     this.toArray(this._node.gts.l).map(label => h("span", null,
@@ -138,6 +148,10 @@ export class WarpViewChip {
             "bubbles": true,
             "cancelable": true,
             "composed": true
+        }]; }
+    static get listeners() { return [{
+            "name": "document:keyup",
+            "method": "handleKeyDown"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-chip:**/"; }
 }

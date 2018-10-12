@@ -1,16 +1,15 @@
 import '../../stencil.core';
-import '../../stencil.core';
 import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { GTS } from "../../model/GTS";
 export declare class WarpViewPlot {
+    el: HTMLElement;
     data: string | GTS[] | DataModel;
     options: string | Param;
     width: string;
     height: string;
     responsive: boolean;
     showLegend: boolean;
-    el: HTMLElement;
     private _options;
     private _data;
     private _toHide;
