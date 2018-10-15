@@ -53,6 +53,7 @@ export class WarpViewPlot {
   private main: HTMLElement;
   private chart: HTMLElement;
   private annotation: HTMLElement;
+  private mouseOutTimer: number;
 
   componentDidLoad() {
     this.line = this.el.shadowRoot.querySelector('div.bar');
@@ -110,14 +111,38 @@ export class WarpViewPlot {
     this.LOG.debug(['boundsDidChange'], event.detail);
     this._timeMin = event.detail.bounds.min;
     this._timeMax = event.detail.bounds.max;
-    this.line.style.left = -100 + 'px';
+    this.line.style.left = '-100px';
   }
 
-  @Listen('pointHover')
-  pointHover(event: CustomEvent) {
-    this.LOG.debug(['pointHover'], event.detail);
-    this.line.style.left = event.detail.x + 'px';
+  private handleMouseMove(evt) {
+    if (this.mouseOutTimer) {
+      window.clearTimeout(this.mouseOutTimer);
+      delete this.mouseOutTimer;
+    }
+    this.LOG.debug(['handleMouseMove'], [evt, this.mouseOutTimer]);
+    if (!this.mouseOutTimer) {
+      this.mouseOutTimer = window.setTimeout(() => {
+        this.line.style.display = 'block';
+        this.line.style.left = evt.offsetX + 'px';
+      }, 1);
+    }
   }
+
+  private handleMouseOut(evt: MouseEvent) {
+    this.LOG.debug(['handleMouseOut'], evt);
+    this.line.style.left = evt.offsetX + 'px';
+    if (this.mouseOutTimer) {
+      window.clearTimeout(this.mouseOutTimer);
+      delete this.mouseOutTimer;
+    }
+    if (!this.mouseOutTimer) {
+      this.mouseOutTimer = window.setTimeout(() => {
+        this.line.style.left = '-100px';
+        this.line.style.display = 'none';
+      }, 500);
+    }
+  }
+
 
   @Listen('warpViewSelectedGTS')
   warpViewSelectedGTS(event: CustomEvent) {
@@ -160,7 +185,8 @@ export class WarpViewPlot {
                           checked={this.showMap}></warp-view-toggle>
       </div>
       <warp-view-gts-tree data={this._data} id="tree"></warp-view-gts-tree>
-      {this.showChart ? <div class="maincontainer">
+      {this.showChart ? <div class="maincontainer" onMouseMove={evt => this.handleMouseMove(evt)}
+                             onMouseLeave={evt => this.handleMouseOut(evt)}>
         <div class="bar"></div>
         <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
                               show-legend={this.showLegend}

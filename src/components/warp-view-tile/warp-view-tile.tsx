@@ -38,7 +38,7 @@ export class WarpViewTile {
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
   @Prop() responsive: boolean = false;
-  @Prop() showLegend: boolean = true;
+  @Prop() showLegend: boolean = false;
   @Prop() url: string = '';
 
   @Element() wsElement: HTMLElement;

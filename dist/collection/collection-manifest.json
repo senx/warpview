@@ -799,12 +799,6 @@
           "capture": false
         },
         {
-          "event": "pointHover",
-          "method": "pointHover",
-          "passive": false,
-          "capture": false
-        },
-        {
           "event": "stateChange",
           "method": "stateChange",
           "passive": false,

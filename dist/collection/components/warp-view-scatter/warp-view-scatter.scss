@@ -18,11 +18,11 @@
 
 :host {
   div {
-    height: var(--quantum-chart-height, 100%);
+    height: var(--warp-view-chart-height, 100%);
   }
   .chart-container {
-    width: var(--quantum-chart-width, 100%);
-    height: var(--quantum-chart-height, 100%);
+    width: var(--warp-view-chart-width, 100%);
+    height: var(--warp-view-chart-height, 100%);
     position: relative;
   }
 }

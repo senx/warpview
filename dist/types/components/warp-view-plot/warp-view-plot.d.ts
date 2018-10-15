@@ -22,12 +22,14 @@ export declare class WarpViewPlot {
     private main;
     private chart;
     private annotation;
+    private mouseOutTimer;
     componentDidLoad(): void;
     private onData;
     private onOptions;
     stateChange(event: CustomEvent): void;
     boundsDidChange(event: CustomEvent): void;
-    pointHover(event: CustomEvent): void;
+    private handleMouseMove;
+    private handleMouseOut;
     warpViewSelectedGTS(event: CustomEvent): void;
     private drawCharts;
     render(): JSX.Element;

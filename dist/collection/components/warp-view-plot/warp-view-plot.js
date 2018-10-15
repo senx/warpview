@@ -81,11 +81,34 @@ export class WarpViewPlot {
         this.LOG.debug(['boundsDidChange'], event.detail);
         this._timeMin = event.detail.bounds.min;
         this._timeMax = event.detail.bounds.max;
-        this.line.style.left = -100 + 'px';
+        this.line.style.left = '-100px';
     }
-    pointHover(event) {
-        this.LOG.debug(['pointHover'], event.detail);
-        this.line.style.left = event.detail.x + 'px';
+    handleMouseMove(evt) {
+        if (this.mouseOutTimer) {
+            window.clearTimeout(this.mouseOutTimer);
+            delete this.mouseOutTimer;
+        }
+        this.LOG.debug(['handleMouseMove'], [evt, this.mouseOutTimer]);
+        if (!this.mouseOutTimer) {
+            this.mouseOutTimer = window.setTimeout(() => {
+                this.line.style.display = 'block';
+                this.line.style.left = evt.offsetX + 'px';
+            }, 1);
+        }
+    }
+    handleMouseOut(evt) {
+        this.LOG.debug(['handleMouseOut'], evt);
+        this.line.style.left = evt.offsetX + 'px';
+        if (this.mouseOutTimer) {
+            window.clearTimeout(this.mouseOutTimer);
+            delete this.mouseOutTimer;
+        }
+        if (!this.mouseOutTimer) {
+            this.mouseOutTimer = window.setTimeout(() => {
+                this.line.style.left = '-100px';
+                this.line.style.display = 'none';
+            }, 500);
+        }
     }
     warpViewSelectedGTS(event) {
         this.LOG.debug(['warpViewSelectedGTS'], event.detail);
@@ -123,7 +146,7 @@ export class WarpViewPlot {
                 h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
                 h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap })),
             h("warp-view-gts-tree", { data: this._data, id: "tree" }),
-            this.showChart ? h("div", { class: "maincontainer" },
+            this.showChart ? h("div", { class: "maincontainer", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
                 h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options }),
                 h("div", { style: { width: '100%', height: '768px' } },
@@ -193,9 +216,6 @@ export class WarpViewPlot {
         }, {
             "name": "boundsDidChange",
             "method": "boundsDidChange"
-        }, {
-            "name": "pointHover",
-            "method": "pointHover"
         }, {
             "name": "warpViewSelectedGTS",
             "method": "warpViewSelectedGTS"

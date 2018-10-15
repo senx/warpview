@@ -26,7 +26,7 @@ export class WarpViewTile {
         this.type = 'line';
         this.chartTitle = '';
         this.responsive = false;
-        this.showLegend = true;
+        this.showLegend = false;
         this.url = '';
         this.warpscript = '';
         this.graphs = {

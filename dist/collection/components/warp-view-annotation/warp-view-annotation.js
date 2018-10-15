@@ -126,7 +126,7 @@ export class WarpViewAnnotation {
                 custom: function (tooltip) {
                     if (tooltip.opacity > 0) {
                         me.pointHover.emit({
-                            x: tooltip.dataPoints[0].x + 15,
+                            x: tooltip.dataPoints[0].x,
                             y: this._eventPosition.y
                         });
                     }
@@ -167,7 +167,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: function (scaleInstance) {
-                            scaleInstance.width = 100; // sets the width to 100px
+                            scaleInstance.width = 94; // sets the width to 100px
                         },
                         gridLines: {
                             color: color,

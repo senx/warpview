@@ -26,10 +26,11 @@
     width: 1px;
     left: -100px;
     position: absolute;
-    background-color: red;
+    background-color: var(--warp-view-bar-color, red);
     top: 0;
-    bottom: 15px;
+    bottom: 55px;
     overflow: hidden;
+    display: none;
     z-index: 999;
   }
 
