@@ -107,16 +107,16 @@ export class WarpViewChip {
                         "\u00A0 ",
                         this._node.gts.c),
                     h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
-                    this.toArray(this._node.gts.l).map(label => h("span", null,
+                    this.toArray(this._node.gts.l).map((label, index) => h("span", null,
                         h("span", { class: 'gts-labelname' }, label.name),
                         h("span", { class: 'gts-separator' }, "="),
                         h("span", { class: 'gts-labelvalue' }, label.value),
-                        h("span", null, ", "))),
-                    this.toArray(this._node.gts.a).map((label, labelIndex) => h("span", null,
+                        h("span", { hidden: this.lastIndex(index, this._node.gts.a) }, ", "))),
+                    this.toArray(this._node.gts.a).map((label, index) => h("span", null,
                         h("span", { class: 'gts-attrname' }, label.name),
                         h("span", { class: 'gts-separator' }, "="),
                         h("span", { class: 'gts-attrvalue' }, label.value),
-                        h("span", { hidden: this.lastIndex(labelIndex, this._node.gts.a) }, ", "))),
+                        h("span", { hidden: this.lastIndex(index, this._node.gts.a) }, ", "))),
                     h("span", { class: 'gts-separator', innerHTML: ' &rcub;' })))
             : ''));
     }

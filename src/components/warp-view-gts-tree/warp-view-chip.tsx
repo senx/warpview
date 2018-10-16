@@ -135,20 +135,20 @@ export class WarpViewChip {
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
-              {this.toArray(this._node.gts.l).map(label =>
+              {this.toArray(this._node.gts.l).map((label, index) =>
                   <span>
               <span class='gts-labelname'>{label.name}</span>
               <span class='gts-separator'>=</span>
               <span class='gts-labelvalue'>{label.value}</span>
-              <span>, </span>
+              <span hidden={this.lastIndex(index, this._node.gts.a)}>, </span>
             </span>
               )}
-              {this.toArray(this._node.gts.a).map((label, labelIndex) =>
+              {this.toArray(this._node.gts.a).map((label, index) =>
                   <span>
               <span class='gts-attrname'>{label.name}</span>
               <span class='gts-separator'>=</span>
               <span class='gts-attrvalue'>{label.value}</span>
-              <span hidden={this.lastIndex(labelIndex, this._node.gts.a)}>, </span>
+              <span hidden={this.lastIndex(index, this._node.gts.a)}>, </span>
             </span>
               )}
               <span class='gts-separator' innerHTML={' &rcub;'}/>
