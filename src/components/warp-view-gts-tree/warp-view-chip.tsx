@@ -143,6 +143,8 @@ export class WarpViewChip {
               <span hidden={this.lastIndex(index, this._node.gts.l)}>, </span>
             </span>
               )}
+              <span class='gts-separator' innerHTML={' &rcub;'}/>
+              <span class='gts-separator' innerHTML={'&lcub; '}/>
               {this.toArray(this._node.gts.a).map((label, index) =>
                   <span>
               <span class='gts-attrname'>{label.name}</span>
