@@ -61,11 +61,7 @@ export class WarpViewTreeView {
           <ul>
             {this.gtsList.content.map((node, index) => (
               <li>
-                {this.branch ? (
-                  ""
-                ) : (
-                  <div class="stack-level">Stack level {index}</div>
-                )}
+
                 {GTSLib.isGts(node.gts) ? (
                   <warp-view-chip
                     node={node}
@@ -76,10 +72,25 @@ export class WarpViewTreeView {
                   <span>
                 {node.content ? (
                   <div>
-                    <span class="expanded"/>
-                    List of {node.content.length} item{node.content.length > 1
-                    ? "s"
-                    : ""}
+                    {this.branch ? (
+                      <div>
+                        <span class="expanded"/>
+                        &nbsp;
+                        <small>List of {node.content.length} item{node.content.length > 1
+                          ? "s"
+                          : ""}</small>
+                      </div>
+                    ) : (
+                      <div class="stack-level">
+                        <span class="expanded"/>
+                        &nbsp; {index === 0 ? '[TOP]' : '[' + (index + 1) + ']'}
+                        &nbsp;
+                        <small>List
+                          of {node.content.length} item{node.content.length > 1
+                            ? "s"
+                            : ""}</small>
+                      </div>
+                    )}
                     <warp-view-tree-view gtsList={node} branch={true}/>
                   </div>
                 ) : (
