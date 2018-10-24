@@ -342,6 +342,7 @@ declare global {
     interface WarpViewTreeView {
       'branch': boolean;
       'gtsList': any;
+      'hidden': boolean;
       'theme': string;
     }
   }
@@ -367,6 +368,7 @@ declare global {
     export interface WarpViewTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsList'?: any;
+      'hidden'?: boolean;
       'theme'?: string;
     }
   }

@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Prop, Watch} from "@stencil/core";
+import {Component, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
@@ -29,6 +29,8 @@ import {Logger} from "../../utils/logger";
 export class WarpViewGtsTree {
   @Prop() data: DataModel | GTS[] | string;
   @Prop() theme: string = "light";
+
+  @State() hide = false;
 
   private gtsList: {
     content: any[],
@@ -58,8 +60,25 @@ export class WarpViewGtsTree {
     this.LOG.debug(['doRender', 'gtsList'], this.data);
   }
 
+  toggleVisibility(event: UIEvent) {
+    console.log('[WarpViewTreeView] - toggleVisibility', event.detail, event.currentTarget);
+    let el = (event.currentTarget as HTMLElement).firstChild as HTMLElement;
+
+    if (el.className === 'expanded') {
+      el.className = 'collapsed';
+      this.hide = true;
+    } else {
+      el.className = 'expanded';
+      this.hide = false;
+    }
+  }
   render() {
-    return (this.gtsList ? <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme}/> : '');
+    return this.gtsList
+      ? <div>
+        <div class="stack-level"  onClick={(event: UIEvent) => this.toggleVisibility(event)}><span class="expanded" /> Stack</div>
+        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide}/>
+      </div>
+      : '';
   }
 }
 

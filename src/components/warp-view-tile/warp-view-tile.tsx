@@ -271,7 +271,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.loading? <warp-view-spinner ></warp-view-spinner>: ''}
+      {this.loading? <warp-view-spinner />: ''}
     </div>
   }
 }

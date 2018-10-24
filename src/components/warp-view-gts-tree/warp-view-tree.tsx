@@ -16,10 +16,11 @@
  *
  */
 
-import {Component, Prop} from "@stencil/core";
+import {Component, Element, Prop, State} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {Counter} from "./warp-view-gts-tree";
 import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-tree-view",
@@ -29,7 +30,13 @@ export class WarpViewTreeView {
   @Prop() gtsList: any;
   @Prop() branch = false;
   @Prop() theme: string = "light";
+  @Prop() hidden = false;
 
+  @State() ref = false;
+
+  @Element() el: HTMLElement;
+
+  hide: any = {};
   private static LOG: Logger = new Logger(WarpViewTreeView);
 
   /**
@@ -52,56 +59,81 @@ export class WarpViewTreeView {
 
   /**
    *
+   * @param {UIEvent} event
+   * @param {number} index
+   */
+  toggleVisibility(event: UIEvent, index: number) {
+    console.log('[WarpViewTreeView] - toggleVisibility', event.detail, event.currentTarget);
+    this.ref = !this.ref;
+    let el: HTMLElement;
+    if ((event.currentTarget as HTMLElement).id) {
+      el = event.currentTarget as HTMLElement;
+    } else {
+      el = (event.currentTarget as HTMLElement).previousElementSibling as HTMLElement;
+      console.log('[WarpViewTreeView] - toggleVisibility - parent', el);
+    }
+    if (el.className === 'expanded') {
+      el.className = 'collapsed';
+      this.hide[index + ''] = true;
+    } else {
+      el.className = 'expanded';
+      this.hide[index + ''] = false;
+    }
+  }
+
+  /**
+   *
+   * @param {number} index
+   * @returns boolean
+   */
+  isHidden(index: number) {
+    if (this.hide.hasOwnProperty(index + '')) {
+      return this.hide[index + ''];
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   *
    * @returns {any}
    */
   render() {
-    return (
-      <div class="list">
-        {this.gtsList && this.gtsList.content ? (
-          <ul>
-            {this.gtsList.content.map((node, index) => (
-              <li>
-
-                {GTSLib.isGts(node.gts) ? (
-                  <warp-view-chip
-                    node={node}
-                    index={WarpViewTreeView.getIndex(node)}
-                    name={node.gts.c}
-                  />
-                ) : (
-                  <span>
-                {node.content ? (
-                  <div>
-                    {this.branch ? (
-                      <div>
-                        <span class="expanded"/>
-                        &nbsp;
-                        <small>List of {node.content.length} item{node.content.length > 1
-                          ? "s"
-                          : ""}</small>
-                      </div>
-                    ) : (
-                      <div class="stack-level">
-                        <span class="expanded"/>
-                        &nbsp; {index === 0 ? '[TOP]' : '[' + (index + 1) + ']'}
-                        &nbsp;
-                        <small>List
-                          of {node.content.length} item{node.content.length > 1
-                            ? "s"
-                            : ""}</small>
-                      </div>
-                    )}
-                    <warp-view-tree-view gtsList={node} branch={true}/>
+    return <div class="list">
+      {this.gtsList && this.gtsList.content ? <ul>
+        {this.gtsList.content.map((node, index) => (
+          <li hidden={this.hidden}>
+            {GTSLib.isGts(node.gts)
+              ? <warp-view-chip node={node} index={WarpViewTreeView.getIndex(node)} name={node.gts.c}/>
+              : <span>{node.content
+                ? <div>{this.branch
+                  ? <div>
+                    <span class="expanded" onClick={(event: UIEvent) => this.toggleVisibility(event, index)}
+                          id={ChartLib.guid()}/>
+                    <span onClick={(event: UIEvent) => this.toggleVisibility(event, index)}>
+                    <small>List
+                      of {node.content.length} item{node.content.length > 1
+                        ? 's'
+                        : ''}</small></span>
                   </div>
-                ) : (
-                  <span/>
-                )}
-              </span>
-                )}
-              </li>
-            ))}
-          </ul>) : ''}
-      </div>
-    );
+                  : <div class="stack-level">
+                    <span class="expanded" onClick={(event: UIEvent) => this.toggleVisibility(event, index)}
+                          id={ChartLib.guid()}/>
+                    <span
+                      onClick={(event: UIEvent) => this.toggleVisibility(event, index)}>{index === 0 ? '[TOP]' : '[' + (index + 1) + ']'}
+                      &nbsp;
+                      <small>List
+                      of {node.content.length} item{node.content.length > 1
+                          ? 's'
+                          : ''}</small></span>
+                  </div>}
+                  <warp-view-tree-view gtsList={node} branch={true} hidden={this.isHidden(index)}/>
+                </div>
+                : ''}
+              </span>}
+          </li>
+        ))}
+      </ul> : ''}
+    </div>;
   }
 }

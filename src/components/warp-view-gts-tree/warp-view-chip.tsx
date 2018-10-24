@@ -128,10 +128,9 @@ export class WarpViewChip {
   }
 
   render() {
-    return (
-      <div>
-        {this._node && this._node.gts && this._node.gts.l ?
-          <span><i class="normal"/>
+    return <div>
+      {this._node && this._node.gts && this._node.gts.l ?
+        <span><i class="normal"/>
             <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
           <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
@@ -144,21 +143,22 @@ export class WarpViewChip {
             </span>
               )}
               <span class='gts-separator' innerHTML={' &rcub;'}/>
-              <span class='gts-separator' innerHTML={'&lcub; '}/>
-              {this.toArray(this._node.gts.a).map((label, index) =>
-                  <span>
+              {this.toArray(this._node.gts.a).length > 0
+                ? <span><span class='gts-separator' innerHTML={'&lcub; '}/>
+                  {this.toArray(this._node.gts.a).map((label, index) =>
+                      <span>
               <span class='gts-attrname'>{label.name}</span>
               <span class='gts-separator'>=</span>
               <span class='gts-attrvalue'>{label.value}</span>
               <span hidden={this.lastIndex(index, this._node.gts.a)}>, </span>
             </span>
-              )}
-              <span class='gts-separator' innerHTML={' &rcub;'}/>
+                  )}
+                  <span class='gts-separator' innerHTML={' &rcub;'}/></span>
+                : ''}
           </span>
           </span>
-          : ''
-        }
-      </div>
-    )
+        : ''
+      }
+    </div>
   }
 }

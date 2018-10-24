@@ -119,7 +119,6 @@ export class WarpViewPlot {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
     }
-    this.LOG.debug(['handleMouseMove'], [evt, this.mouseOutTimer]);
     if (!this.mouseOutTimer) {
       this.mouseOutTimer = window.setTimeout(() => {
         this.line.style.display = 'block';
