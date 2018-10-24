@@ -41,6 +41,7 @@ export declare class WarpViewChart {
     private gtsToData;
     private isStepped;
     private isStacked;
+    private static toFixed;
     private legendFormatter;
     private highlightCallback;
     private drawChart;
