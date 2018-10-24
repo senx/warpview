@@ -23,6 +23,7 @@ export declare class WarpViewPlot {
     private chart;
     private annotation;
     private mouseOutTimer;
+    private graphId;
     componentDidLoad(): void;
     private onData;
     private onOptions;
@@ -30,6 +31,7 @@ export declare class WarpViewPlot {
     boundsDidChange(event: CustomEvent): void;
     private handleMouseMove;
     private handleMouseOut;
+    onResize(event: CustomEvent): void;
     warpViewSelectedGTS(event: CustomEvent): void;
     private drawCharts;
     render(): JSX.Element;

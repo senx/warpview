@@ -46,7 +46,8 @@ export class WarpViewChart {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.ticks = [];
-        this.datasetLength = -1;
+        this.visibility = [];
+        this.showInRangeSelector = [];
     }
     onHideData(newValue, oldValue) {
         if (oldValue.length !== newValue.length) {
@@ -68,18 +69,23 @@ export class WarpViewChart {
     }
     onResize() {
         if (this._chart) {
+            if (!this.initialHeight) {
+                this.initialHeight = this.el.parentElement.clientHeight;
+            }
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
                 this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-                const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+                const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
                 const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-                this._chart.resize(width, height);
+                this._chart.resize(width, this.displayGraph() ? height : 30);
+                this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
             }, 250);
         }
     }
     gtsToData(gtsList) {
         this.LOG.debug(['gtsToData'], gtsList);
         this.ticks = [];
+        this.visibility = [];
         const datasets = [];
         const data = {};
         let pos = 0;
@@ -97,19 +103,19 @@ export class WarpViewChart {
             gtsList.forEach((g, i) => {
                 if (g.v && GTSLib.isGtsToPlot(g)) {
                     let label = GTSLib.serializeGtsMetadata(g);
-                    if (this.hiddenData.filter((i) => i === label).length === 0) {
-                        GTSLib.gtsSort(g);
-                        g.v.forEach(value => {
-                            if (!data[value[0]]) {
-                                data[value[0]] = new Array(gtsList.length);
-                                data[value[0]].fill(null);
-                            }
-                            data[value[0]][i] = value[value.length - 1] || -1;
-                        });
-                        let color = ColorLib.getColor(pos);
-                        labels[i + 1] = label;
-                        colors[i] = color;
-                    }
+                    GTSLib.gtsSort(g);
+                    g.v.forEach(value => {
+                        if (!data[value[0]]) {
+                            data[value[0]] = new Array(gtsList.length);
+                            data[value[0]].fill(null);
+                        }
+                        data[value[0]][i] = value[value.length - 1] || -1;
+                    });
+                    let color = ColorLib.getColor(pos);
+                    labels[i + 1] = label;
+                    colors[i] = color;
+                    this.showInRangeSelector.push(true);
+                    this.visibility.push(this.hiddenData.filter((h) => h === label).length === 0);
                 }
                 pos++;
             });
@@ -173,69 +179,82 @@ export class WarpViewChart {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let dataList = GTSLib.getData(this.data).data;
         const dataToplot = this.gtsToData(dataList);
-        this.LOG.debug(['drawChart', 'dataToplot'], [dataToplot]);
+        this.LOG.debug(['drawChart', 'dataToplot'], dataToplot);
         const chart = this.el.querySelector('#' + this.uuid);
         if (dataToplot) {
-            this.datasetLength = (dataToplot.datasets || []).length;
             const color = this._options.gridLineColor;
-            if (this.datasetLength >= 0) {
-                this._chart = new Dygraph(chart, dataToplot.datasets || [], {
-                    height: (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30,
-                    width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
-                    labels: dataToplot.labels,
-                    showRoller: false,
-                    showRangeSelector: this._options.showRangeSelector || true,
-                    connectSeparatedPoints: true,
-                    colors: dataToplot.colors,
-                    legend: 'follow',
-                    stackedGraph: this.isStacked(),
-                    strokeBorderWidth: this.isStacked() ? null : 0,
-                    strokeWidth: 2,
-                    stepPlot: this.isStepped(),
-                    ylabel: this.unit,
-                    labelsSeparateLines: true,
-                    highlightSeriesBackgroundAlpha: 1,
-                    highlightSeriesOpts: {
-                        strokeWidth: 3,
-                        strokeBorderWidth: 0,
-                        highlightCircleSize: 3,
-                        showInRangeSelector: true
-                    },
-                    hideOverlayOnMouseOut: true,
-                    labelsUTC: true,
-                    gridLineColor: color,
-                    axisLineColor: color,
-                    legendFormatter: this.legendFormatter,
-                    highlightCallback: this.highlightCallback.bind(this),
-                    drawCallback: ((dygraph, is_initial) => {
-                        this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
-                        if (dygraph.dateWindow_) {
-                            this.boundsDidChange.emit({
-                                bounds: {
-                                    min: dygraph.dateWindow_[0],
-                                    max: dygraph.dateWindow_[1]
-                                }
-                            });
-                        }
-                        else {
-                            this.boundsDidChange.emit({
-                                bounds: {
-                                    min: Math.min.apply(null, this.ticks),
-                                    max: Math.max.apply(null, this.ticks)
-                                }
-                            });
-                        }
-                    }).bind(this),
-                    axisLabelWidth: this.standalone ? 50 : 94,
-                    rightGap: this.standalone ? 0 : 20
-                });
-                this.onResize();
+            let options = {
+                height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
+                width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
+                labels: dataToplot.labels,
+                showRoller: false,
+                showRangeSelector: this._options.showRangeSelector || true,
+                showInRangeSelector: true,
+                connectSeparatedPoints: true,
+                colors: dataToplot.colors,
+                legend: 'follow',
+                stackedGraph: this.isStacked(),
+                strokeBorderWidth: this.isStacked() ? null : 0,
+                strokeWidth: 2,
+                stepPlot: this.isStepped(),
+                ylabel: this.unit,
+                labelsSeparateLines: true,
+                highlightSeriesBackgroundAlpha: 1,
+                highlightSeriesOpts: {
+                    strokeWidth: 3,
+                    strokeBorderWidth: 0,
+                    highlightCircleSize: 3,
+                    showInRangeSelector: true
+                },
+                visibility: this.visibility,
+                hideOverlayOnMouseOut: true,
+                labelsUTC: true,
+                gridLineColor: color,
+                axisLineColor: color,
+                axes: {
+                    x: {
+                        drawAxis: this.displayGraph()
+                    }
+                },
+                legendFormatter: this.legendFormatter,
+                highlightCallback: this.highlightCallback.bind(this),
+                drawCallback: ((dygraph, is_initial) => {
+                    this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+                    if (dygraph.dateWindow_) {
+                        this.boundsDidChange.emit({
+                            bounds: {
+                                min: dygraph.dateWindow_[0],
+                                max: dygraph.dateWindow_[1]
+                            }
+                        });
+                    }
+                    else {
+                        this.boundsDidChange.emit({
+                            bounds: {
+                                min: Math.min.apply(null, this.ticks),
+                                max: Math.max.apply(null, this.ticks)
+                            }
+                        });
+                    }
+                }).bind(this),
+                axisLabelWidth: this.standalone ? 50 : 94,
+                rightGap: this.standalone ? 0 : 20
+            };
+            if (!this.displayGraph()) {
+                options.xAxisHeight = 30;
+                options.rangeSelectorHeight = 30;
+                chart.style.height = '30px';
             }
-            else if (this._chart) {
-                this._chart.destroy();
-                delete this._chart;
-            }
+            this._chart = new Dygraph(chart, dataToplot.datasets || [], options);
+            this.onResize();
         }
+    }
+    displayGraph() {
+        let status = false;
+        this.visibility.forEach(s => {
+            status = s || status;
+        });
+        return status;
     }
     componentDidLoad() {
         this.drawChart();
@@ -290,6 +309,12 @@ export class WarpViewChart {
         }, {
             "name": "pointHover",
             "method": "pointHover",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "warpViewChartResize",
+            "method": "warpViewChartResize",
             "bubbles": true,
             "cancelable": true,
             "composed": true

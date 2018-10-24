@@ -211,6 +211,7 @@ declare global {
       'hiddenData'?: string[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
+      'onWarpViewChartResize'?: (event: CustomEvent) => void;
       'options'?: Param;
       'responsive'?: boolean;
       'standalone'?: boolean;
@@ -343,6 +344,7 @@ declare global {
     interface WarpViewTreeView {
       'branch': boolean;
       'gtsList': any;
+      'hidden': boolean;
       'theme': string;
     }
   }
@@ -368,6 +370,7 @@ declare global {
     export interface WarpViewTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsList'?: any;
+      'hidden'?: boolean;
       'theme'?: string;
     }
   }

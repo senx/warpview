@@ -296,6 +296,9 @@
         },
         {
           "event": "pointHover"
+        },
+        {
+          "event": "warpViewChartResize"
         }
       ]
     },
@@ -430,6 +433,11 @@
           "name": "theme",
           "type": "String",
           "attr": "theme"
+        }
+      ],
+      "states": [
+        {
+          "name": "hide"
         }
       ]
     },
@@ -801,6 +809,12 @@
         {
           "event": "stateChange",
           "method": "stateChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "warpViewChartResize",
+          "method": "onResize",
           "passive": false,
           "capture": false
         },
@@ -1186,11 +1200,24 @@
           "attr": "gts-list"
         },
         {
+          "name": "hidden",
+          "type": "Boolean",
+          "attr": "hidden"
+        },
+        {
           "name": "theme",
           "type": "String",
           "attr": "theme"
         }
-      ]
+      ],
+      "states": [
+        {
+          "name": "ref"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      }
     }
   ],
   "collections": [],

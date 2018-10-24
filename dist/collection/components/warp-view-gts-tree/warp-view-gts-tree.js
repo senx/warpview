@@ -20,6 +20,7 @@ import { Logger } from "../../utils/logger";
 export class WarpViewGtsTree {
     constructor() {
         this.theme = "light";
+        this.hide = false;
         this.gtsList = { content: [] };
         this.LOG = new Logger(WarpViewGtsTree);
     }
@@ -42,8 +43,26 @@ export class WarpViewGtsTree {
         this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
         this.LOG.debug(['doRender', 'gtsList'], this.data);
     }
+    toggleVisibility(event) {
+        console.log('[WarpViewTreeView] - toggleVisibility', event.detail, event.currentTarget);
+        let el = event.currentTarget.firstChild;
+        if (el.className === 'expanded') {
+            el.className = 'collapsed';
+            this.hide = true;
+        }
+        else {
+            el.className = 'expanded';
+            this.hide = false;
+        }
+    }
     render() {
-        return (this.gtsList ? h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme }) : '');
+        return this.gtsList
+            ? h("div", null,
+                h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
+                    h("span", { class: "expanded" }),
+                    " Stack"),
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme, hidden: this.hide }))
+            : '';
     }
     static get is() { return "warp-view-gts-tree"; }
     static get properties() { return {
@@ -51,6 +70,9 @@ export class WarpViewGtsTree {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "hide": {
+            "state": true
         },
         "theme": {
             "type": String,
@@ -66,6 +88,9 @@ export class Counter {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "hide": {
+            "state": true
         },
         "theme": {
             "type": String,

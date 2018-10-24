@@ -32,6 +32,7 @@ export class WarpViewPlot {
         this.showChart = true;
         this.showMap = false;
         this.LOG = new Logger(WarpViewPlot);
+        this.graphId = 'container-' + ChartLib.guid();
     }
     componentDidLoad() {
         this.line = this.el.shadowRoot.querySelector('div.bar');
@@ -88,7 +89,6 @@ export class WarpViewPlot {
             window.clearTimeout(this.mouseOutTimer);
             delete this.mouseOutTimer;
         }
-        this.LOG.debug(['handleMouseMove'], [evt, this.mouseOutTimer]);
         if (!this.mouseOutTimer) {
             this.mouseOutTimer = window.setTimeout(() => {
                 this.line.style.display = 'block';
@@ -108,6 +108,13 @@ export class WarpViewPlot {
                 this.line.style.left = '-100px';
                 this.line.style.display = 'none';
             }, 500);
+        }
+    }
+    onResize(event) {
+        const div = this.el.shadowRoot.querySelector('#' + this.graphId);
+        this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
+        if (div) {
+            div.style.height = event.detail.h + 'px';
         }
     }
     warpViewSelectedGTS(event) {
@@ -149,7 +156,7 @@ export class WarpViewPlot {
             this.showChart ? h("div", { class: "maincontainer", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
                 h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options }),
-                h("div", { style: { width: '100%', height: '768px' } },
+                h("div", { style: { width: '100%', height: '768px' }, id: this.graphId },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, options: this._options }))) : '',
             this.showMap ? h("div", { style: { width: '100%', height: '768px' } },
                 h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive, hiddenData: this._toHide })) : '');
@@ -216,6 +223,9 @@ export class WarpViewPlot {
         }, {
             "name": "boundsDidChange",
             "method": "boundsDidChange"
+        }, {
+            "name": "warpViewChartResize",
+            "method": "onResize"
         }, {
             "name": "warpViewSelectedGTS",
             "method": "warpViewSelectedGTS"

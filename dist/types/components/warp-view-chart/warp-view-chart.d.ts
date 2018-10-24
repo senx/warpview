@@ -22,6 +22,7 @@ export declare class WarpViewChart {
     el: HTMLElement;
     boundsDidChange: EventEmitter;
     pointHover: EventEmitter;
+    warpViewChartResize: EventEmitter;
     private LOG;
     private static DEFAULT_WIDTH;
     private static DEFAULT_HEIGHT;
@@ -30,7 +31,9 @@ export declare class WarpViewChart {
     private _options;
     private uuid;
     private ticks;
-    private datasetLength;
+    private visibility;
+    private showInRangeSelector;
+    private initialHeight;
     private onHideData;
     private onData;
     private onOptions;
@@ -41,6 +44,7 @@ export declare class WarpViewChart {
     private legendFormatter;
     private highlightCallback;
     private drawChart;
+    private displayGraph;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

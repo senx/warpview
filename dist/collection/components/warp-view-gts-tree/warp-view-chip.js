@@ -99,7 +99,7 @@ export class WarpViewChip {
         this.warpViewSelectedGTS.emit(this._node);
     }
     render() {
-        return (h("div", null, this._node && this._node.gts && this._node.gts.l ?
+        return h("div", null, this._node && this._node.gts && this._node.gts.l ?
             h("span", null,
                 h("i", { class: "normal" }),
                 h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
@@ -112,13 +112,18 @@ export class WarpViewChip {
                         h("span", { class: 'gts-separator' }, "="),
                         h("span", { class: 'gts-labelvalue' }, label.value),
                         h("span", { hidden: this.lastIndex(index, this._node.gts.l) }, ", "))),
-                    this.toArray(this._node.gts.a).map((label, index) => h("span", null,
-                        h("span", { class: 'gts-attrname' }, label.name),
-                        h("span", { class: 'gts-separator' }, "="),
-                        h("span", { class: 'gts-attrvalue' }, label.value),
-                        h("span", { hidden: this.lastIndex(index, this._node.gts.a) }, ", "))),
-                    h("span", { class: 'gts-separator', innerHTML: ' &rcub;' })))
-            : ''));
+                    h("span", { class: 'gts-separator', innerHTML: ' &rcub;' }),
+                    this.toArray(this._node.gts.a).length > 0
+                        ? h("span", null,
+                            h("span", { class: 'gts-separator', innerHTML: '&lcub; ' }),
+                            this.toArray(this._node.gts.a).map((label, index) => h("span", null,
+                                h("span", { class: 'gts-attrname' }, label.name),
+                                h("span", { class: 'gts-separator' }, "="),
+                                h("span", { class: 'gts-attrvalue' }, label.value),
+                                h("span", { hidden: this.lastIndex(index, this._node.gts.a) }, ", "))),
+                            h("span", { class: 'gts-separator', innerHTML: ' &rcub;' }))
+                        : ''))
+            : '');
     }
     static get is() { return "warp-view-chip"; }
     static get properties() { return {
