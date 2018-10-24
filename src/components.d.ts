@@ -210,6 +210,7 @@ declare global {
       'hiddenData'?: string[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
+      'onWarpViewChartResize'?: (event: CustomEvent) => void;
       'options'?: Param;
       'responsive'?: boolean;
       'standalone'?: boolean;

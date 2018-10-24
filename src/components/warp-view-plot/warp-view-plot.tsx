@@ -34,7 +34,6 @@ export class WarpViewPlot {
 
   @Prop() data: string | GTS[] | DataModel;
   @Prop() options: string | Param;
-
   @Prop({mutable: true}) width = "";
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
@@ -54,6 +53,7 @@ export class WarpViewPlot {
   private chart: HTMLElement;
   private annotation: HTMLElement;
   private mouseOutTimer: number;
+  private graphId = 'container-' + ChartLib.guid();
 
   componentDidLoad() {
     this.line = this.el.shadowRoot.querySelector('div.bar');
@@ -142,6 +142,14 @@ export class WarpViewPlot {
     }
   }
 
+  @Listen('warpViewChartResize')
+  onResize(event: CustomEvent) {
+    const div = this.el.shadowRoot.querySelector('#' + this.graphId) as HTMLElement;
+    this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
+    if(div) {
+      div.style.height = event.detail.h + 'px';
+    }
+  }
 
   @Listen('warpViewSelectedGTS')
   warpViewSelectedGTS(event: CustomEvent) {
@@ -191,7 +199,7 @@ export class WarpViewPlot {
                               show-legend={this.showLegend}
                               timeMin={this._timeMin} timeMax={this._timeMax}
                               hiddenData={this._toHide} options={this._options}></warp-view-annotation>
-        <div style={{width: '100%', height: '768px'}}>
+        <div style={{width: '100%', height: '768px'}} id={this.graphId}>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                            hiddenData={this._toHide}
                            options={this._options}></warp-view-chart>
