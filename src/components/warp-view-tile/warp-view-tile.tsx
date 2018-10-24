@@ -40,6 +40,7 @@ export class WarpViewTile {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
   @Prop() url: string = '';
+  @Prop() gtsFilter: string = '';
 
   @Element() wsElement: HTMLElement;
 
@@ -69,14 +70,21 @@ export class WarpViewTile {
     }
   }
 
+  @Watch('gtsFilter')
+  private onGtsFilter(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.parseGTS();
+    }
+  }
+
   @Method()
   resize() {
     this.execute();
   }
 
   @Listen('document:keyup')
-  handleKeyDown(ev: KeyboardEvent){
-    if(ev.key === 'r'){
+  handleKeyDown(ev: KeyboardEvent) {
+    if (ev.key === 'r') {
       this.execute();
     }
   }
@@ -106,13 +114,13 @@ export class WarpViewTile {
     this.data = data;
     this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
     this.LOG.debug(['parseGTS', 'options'], this._options);
-    if(this._autoRefresh !== this._options.autoRefresh) {
+    if (this._autoRefresh !== this._options.autoRefresh) {
       this._autoRefresh = this._options.autoRefresh;
-      if(this.timer) {
+      if (this.timer) {
         window.clearInterval(this.timer);
       }
-      if(this._autoRefresh && this._autoRefresh > 0) {
-        this.timer = window.setInterval(()=> this.execute(), this._autoRefresh * 1000);
+      if (this._autoRefresh && this._autoRefresh > 0) {
+        this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
       }
     }
     this.loading = false;
@@ -153,7 +161,7 @@ export class WarpViewTile {
           <h1>{this.chartTitle}</h1>
           <div class="tile">
             <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
-                             show-legend={this.showLegend}/>
+                               show-legend={this.showLegend}/>
           </div>
         </div>
         :
@@ -164,7 +172,7 @@ export class WarpViewTile {
           <h1>{this.chartTitle}</h1>
           <div class="tile">
             <warp-view-chart type={this.type} responsive={this.responsive} unit={this.unit} data={this.data}
-                           options={this._options} show-legend={this.showLegend}/>
+                             options={this._options} show-legend={this.showLegend}/>
           </div>
         </div>
         :
@@ -177,7 +185,7 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-bubble showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
-                            options={this._options}/>
+                              options={this._options}/>
           </div>
         </div>
         : ''
@@ -188,7 +196,7 @@ export class WarpViewTile {
             <small>{this.unit}</small>
           </h1>
           <div class="tile">
-            <warp-view-map responsive={true} data={this.data} options={this._options}  />
+            <warp-view-map responsive={true} data={this.data} options={this._options}/>
           </div>
         </div>
         : ''
@@ -200,7 +208,7 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-pie responsive={this.responsive} data={this.data} options={this._options}
-                         showLegend={this.showLegend}/>
+                           showLegend={this.showLegend}/>
           </div>
         </div>
         : ''
@@ -212,7 +220,7 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-polar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                           options={this._options}/>
+                             options={this._options}/>
           </div>
         </div>
         : ''
@@ -224,7 +232,7 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                           options={this._options}/>
+                             options={this._options}/>
           </div>
         </div>
         : ''
@@ -234,7 +242,7 @@ export class WarpViewTile {
           <h1>{this.chartTitle}</h1>
           <div class="tile">
             <warp-view-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
-                         options={this._options}/>
+                           options={this._options}/>
           </div>
         </div>
         : ''
@@ -266,12 +274,12 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                          options={this._options}/>
+                            options={this._options} gtsFilter={this.gtsFilter}/>
           </div>
         </div>
         : ''
       }
-      {this.loading? <warp-view-spinner />: ''}
+      {this.loading ? <warp-view-spinner/> : ''}
     </div>
   }
 }

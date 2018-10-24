@@ -38,6 +38,7 @@ export class WarpViewPlot {
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
+  @Prop() gtsFilter = '';
 
   @State() private _options: Param = new Param();
   @State() private _data: DataModel = new DataModel();
@@ -61,6 +62,13 @@ export class WarpViewPlot {
     this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
     this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
     this.drawCharts();
+  }
+
+  @Watch('gtsFilter')
+  private onGtsFilter(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.drawCharts();
+    }
   }
 
   @Watch('data')
@@ -191,7 +199,7 @@ export class WarpViewPlot {
         <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
                           checked={this.showMap}></warp-view-toggle>
       </div>
-      <warp-view-gts-tree data={this._data} id="tree"></warp-view-gts-tree>
+      <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}></warp-view-gts-tree>
       {this.showChart ? <div class="maincontainer" onMouseMove={evt => this.handleMouseMove(evt)}
                              onMouseLeave={evt => this.handleMouseOut(evt)}>
         <div class="bar"></div>

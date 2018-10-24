@@ -268,6 +268,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewChip {
+      'gtsFilter': string;
       'index': number;
       'name': string;
       'node': any;
@@ -293,6 +294,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewChipAttributes extends HTMLAttributes {
+      'gtsFilter'?: string;
       'index'?: number;
       'name'?: string;
       'node'?: any;
@@ -307,6 +309,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewGtsTree {
       'data': DataModel | GTS[] | string;
+      'gtsFilter': string;
       'theme': string;
     }
   }
@@ -331,6 +334,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[] | string;
+      'gtsFilter'?: string;
       'theme'?: string;
     }
   }
@@ -342,6 +346,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewTreeView {
       'branch': boolean;
+      'gtsFilter': string;
       'gtsList': any;
       'hidden': boolean;
       'theme': string;
@@ -368,6 +373,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
+      'gtsFilter'?: string;
       'gtsList'?: any;
       'hidden'?: boolean;
       'theme'?: string;
@@ -559,6 +565,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewPlot {
       'data': string | GTS[] | DataModel;
+      'gtsFilter': string;
       'height': string;
       'options': string | Param;
       'responsive': boolean;
@@ -587,6 +594,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewPlotAttributes extends HTMLAttributes {
       'data'?: string | GTS[] | DataModel;
+      'gtsFilter'?: string;
       'height'?: string;
       'options'?: string | Param;
       'responsive'?: boolean;
@@ -766,6 +774,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewTile {
       'chartTitle': string;
+      'gtsFilter': string;
       'options': Param;
       'resize': () => void;
       'responsive': boolean;
@@ -796,6 +805,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewTileAttributes extends HTMLAttributes {
       'chartTitle'?: string;
+      'gtsFilter'?: string;
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;

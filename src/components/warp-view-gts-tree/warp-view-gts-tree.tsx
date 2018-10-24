@@ -29,6 +29,7 @@ import {Logger} from "../../utils/logger";
 export class WarpViewGtsTree {
   @Prop() data: DataModel | GTS[] | string;
   @Prop() theme: string = "light";
+  @Prop() gtsFilter = '';
 
   @State() hide = false;
 
@@ -40,6 +41,14 @@ export class WarpViewGtsTree {
   @Watch("data")
   onData(newValue, oldValue) {
     if (newValue !== oldValue) {
+      this.doRender();
+    }
+  }
+
+  @Watch('gtsFilter')
+  private onGtsFilter(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['gtsFilter'], newValue);
       this.doRender();
     }
   }
@@ -61,9 +70,7 @@ export class WarpViewGtsTree {
   }
 
   toggleVisibility(event: UIEvent) {
-    console.log('[WarpViewTreeView] - toggleVisibility', event.detail, event.currentTarget);
     let el = (event.currentTarget as HTMLElement).firstChild as HTMLElement;
-
     if (el.className === 'expanded') {
       el.className = 'collapsed';
       this.hide = true;
@@ -72,11 +79,12 @@ export class WarpViewGtsTree {
       this.hide = false;
     }
   }
+
   render() {
     return this.gtsList
       ? <div>
         <div class="stack-level"  onClick={(event: UIEvent) => this.toggleVisibility(event)}><span class="expanded" /> Stack</div>
-        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide}/>
+        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide} gtsFilter={this.gtsFilter} />
       </div>
       : '';
   }

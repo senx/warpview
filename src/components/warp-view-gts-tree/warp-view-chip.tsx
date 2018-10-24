@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Prop} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {ColorLib} from "../../utils/color-lib";
 import {GTS} from "../../model/GTS";
@@ -32,6 +32,8 @@ export class WarpViewChip {
   @Prop() name: string;
   @Prop() index: number;
   @Prop() node: any;
+  @Prop() gtsFilter = '';
+
   _node: any = {
     selected: true,
     gts: GTS
@@ -43,6 +45,14 @@ export class WarpViewChip {
 
   private LOG: Logger = new Logger(WarpViewChip);
 
+  @Watch('gtsFilter')
+  private onGtsFilter(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      if(this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+        this.setState(false);
+      }
+    }
+  }
 
   @Listen('document:keyup')
   handleKeyDown(ev: KeyboardEvent) {
@@ -75,6 +85,9 @@ export class WarpViewChip {
    *
    */
   componentDidLoad() {
+    if(this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+      this.setState(false);
+    }
     this.colorizeChip();
   }
 
