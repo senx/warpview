@@ -316,6 +316,14 @@
       },
       "props": [
         {
+          "name": "gtsFilter",
+          "type": "String",
+          "attr": "gts-filter",
+          "watch": [
+            "onGtsFilter"
+          ]
+        },
+        {
           "name": "index",
           "type": "Number",
           "attr": "index"
@@ -427,6 +435,14 @@
           "attr": "data",
           "watch": [
             "onData"
+          ]
+        },
+        {
+          "name": "gtsFilter",
+          "type": "String",
+          "attr": "gts-filter",
+          "watch": [
+            "onGtsFilter"
           ]
         },
         {
@@ -743,6 +759,14 @@
           "attr": "data",
           "watch": [
             "onData"
+          ]
+        },
+        {
+          "name": "gtsFilter",
+          "type": "String",
+          "attr": "gts-filter",
+          "watch": [
+            "onGtsFilter"
           ]
         },
         {
@@ -1074,6 +1098,14 @@
           "attr": "chart-title"
         },
         {
+          "name": "gtsFilter",
+          "type": "String",
+          "attr": "gts-filter",
+          "watch": [
+            "onGtsFilter"
+          ]
+        },
+        {
           "name": "options",
           "attr": "options",
           "watch": [
@@ -1193,6 +1225,14 @@
           "name": "branch",
           "type": "Boolean",
           "attr": "branch"
+        },
+        {
+          "name": "gtsFilter",
+          "type": "String",
+          "attr": "gts-filter",
+          "watch": [
+            "onGtsFilter"
+          ]
         },
         {
           "name": "gtsList",

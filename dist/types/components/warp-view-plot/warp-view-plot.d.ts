@@ -10,6 +10,7 @@ export declare class WarpViewPlot {
     height: string;
     responsive: boolean;
     showLegend: boolean;
+    gtsFilter: string;
     private _options;
     private _data;
     private _toHide;
@@ -25,6 +26,7 @@ export declare class WarpViewPlot {
     private mouseOutTimer;
     private graphId;
     componentDidLoad(): void;
+    private onGtsFilter;
     private onData;
     private onOptions;
     stateChange(event: CustomEvent): void;

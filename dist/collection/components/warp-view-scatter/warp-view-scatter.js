@@ -111,6 +111,7 @@ export class WarpViewScatter {
             this._chart.destroy();
         }
         this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: options });
+        this.onResize();
         this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
     }
     gtsToScatter(gts) {

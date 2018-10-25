@@ -4,10 +4,12 @@ export declare class WarpViewChip {
     name: string;
     index: number;
     node: any;
+    gtsFilter: string;
     _node: any;
     warpViewSelectedGTS: EventEmitter;
     el: HTMLElement;
     private LOG;
+    private onGtsFilter;
     handleKeyDown(ev: KeyboardEvent): void;
     private colorizeChip;
     /**

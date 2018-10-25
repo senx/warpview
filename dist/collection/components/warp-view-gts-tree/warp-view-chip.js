@@ -21,11 +21,19 @@ import { GTS } from "../../model/GTS";
 import { Logger } from "../../utils/logger";
 export class WarpViewChip {
     constructor() {
+        this.gtsFilter = '';
         this._node = {
             selected: true,
             gts: GTS
         };
         this.LOG = new Logger(WarpViewChip);
+    }
+    onGtsFilter(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+                this.setState(false);
+            }
+        }
     }
     handleKeyDown(ev) {
         if (ev.key === 'a') {
@@ -55,6 +63,9 @@ export class WarpViewChip {
      *
      */
     componentDidLoad() {
+        if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+            this.setState(false);
+        }
         this.colorizeChip();
     }
     /**
@@ -129,6 +140,11 @@ export class WarpViewChip {
     static get properties() { return {
         "el": {
             "elementRef": true
+        },
+        "gtsFilter": {
+            "type": String,
+            "attr": "gts-filter",
+            "watchCallbacks": ["onGtsFilter"]
         },
         "index": {
             "type": Number,

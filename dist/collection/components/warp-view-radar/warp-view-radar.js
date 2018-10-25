@@ -149,6 +149,7 @@ export class WarpViewRadar {
                     }
                 }
             });
+            this.onResize();
         }
     }
     componentDidLoad() {

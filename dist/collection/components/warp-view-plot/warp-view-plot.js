@@ -26,6 +26,7 @@ export class WarpViewPlot {
         this.height = "";
         this.responsive = false;
         this.showLegend = false;
+        this.gtsFilter = '';
         this._options = new Param();
         this._data = new DataModel();
         this._toHide = [];
@@ -40,6 +41,11 @@ export class WarpViewPlot {
         this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
         this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
         this.drawCharts();
+    }
+    onGtsFilter(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.drawCharts();
+        }
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -67,6 +73,7 @@ export class WarpViewPlot {
                 break;
             case 'chartSwitch':
                 this.showChart = event.detail.state;
+                this.drawCharts();
                 break;
             case 'mapSwitch':
                 this.showMap = event.detail.state;
@@ -85,6 +92,7 @@ export class WarpViewPlot {
         this.line.style.left = '-100px';
     }
     handleMouseMove(evt) {
+        this.line = this.el.shadowRoot.querySelector('div.bar');
         if (this.mouseOutTimer) {
             window.clearTimeout(this.mouseOutTimer);
             delete this.mouseOutTimer;
@@ -92,13 +100,13 @@ export class WarpViewPlot {
         if (!this.mouseOutTimer) {
             this.mouseOutTimer = window.setTimeout(() => {
                 this.line.style.display = 'block';
-                this.line.style.left = evt.offsetX + 'px';
+                this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
             }, 1);
         }
     }
     handleMouseOut(evt) {
         this.LOG.debug(['handleMouseOut'], evt);
-        this.line.style.left = evt.offsetX + 'px';
+        this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
         if (this.mouseOutTimer) {
             window.clearTimeout(this.mouseOutTimer);
             delete this.mouseOutTimer;
@@ -152,10 +160,11 @@ export class WarpViewPlot {
                 h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp" }),
                 h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
                 h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap })),
-            h("warp-view-gts-tree", { data: this._data, id: "tree" }),
+            h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter }),
             this.showChart ? h("div", { class: "maincontainer", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
-                h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options }),
+                h("div", { class: "annotation" },
+                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, hiddenData: this._toHide, options: this._options })),
                 h("div", { style: { width: '100%', height: '768px' }, id: this.graphId },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, options: this._options }))) : '',
             this.showMap ? h("div", { style: { width: '100%', height: '768px' } },
@@ -186,6 +195,11 @@ export class WarpViewPlot {
         },
         "el": {
             "elementRef": true
+        },
+        "gtsFilter": {
+            "type": String,
+            "attr": "gts-filter",
+            "watchCallbacks": ["onGtsFilter"]
         },
         "height": {
             "type": String,

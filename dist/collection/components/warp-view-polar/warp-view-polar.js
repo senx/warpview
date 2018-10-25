@@ -127,6 +127,7 @@ export class WarpViewPolar {
                     }
                 }
             });
+            this.onResize();
         }
     }
     componentDidLoad() {

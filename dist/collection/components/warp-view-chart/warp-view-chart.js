@@ -168,7 +168,6 @@ export class WarpViewChart {
         return html;
     }
     highlightCallback(event) {
-        this.LOG.debug(['highlightCallback', 'event'], [this.el, event]);
         this.pointHover.emit({
             x: event.offsetX,
             y: event.offsetY

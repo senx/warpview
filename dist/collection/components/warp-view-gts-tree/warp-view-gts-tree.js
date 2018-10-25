@@ -20,12 +20,19 @@ import { Logger } from "../../utils/logger";
 export class WarpViewGtsTree {
     constructor() {
         this.theme = "light";
+        this.gtsFilter = '';
         this.hide = false;
         this.gtsList = { content: [] };
         this.LOG = new Logger(WarpViewGtsTree);
     }
     onData(newValue, oldValue) {
         if (newValue !== oldValue) {
+            this.doRender();
+        }
+    }
+    onGtsFilter(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['gtsFilter'], newValue);
             this.doRender();
         }
     }
@@ -44,7 +51,6 @@ export class WarpViewGtsTree {
         this.LOG.debug(['doRender', 'gtsList'], this.data);
     }
     toggleVisibility(event) {
-        console.log('[WarpViewTreeView] - toggleVisibility', event.detail, event.currentTarget);
         let el = event.currentTarget.firstChild;
         if (el.className === 'expanded') {
             el.className = 'collapsed';
@@ -61,7 +67,7 @@ export class WarpViewGtsTree {
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
                     h("span", { class: "expanded" }),
                     " Stack"),
-                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme, hidden: this.hide }))
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme, hidden: this.hide, gtsFilter: this.gtsFilter }))
             : '';
     }
     static get is() { return "warp-view-gts-tree"; }
@@ -70,6 +76,11 @@ export class WarpViewGtsTree {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "gtsFilter": {
+            "type": String,
+            "attr": "gts-filter",
+            "watchCallbacks": ["onGtsFilter"]
         },
         "hide": {
             "state": true
@@ -88,6 +99,11 @@ export class Counter {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "gtsFilter": {
+            "type": String,
+            "attr": "gts-filter",
+            "watchCallbacks": ["onGtsFilter"]
         },
         "hide": {
             "state": true

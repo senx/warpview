@@ -28,6 +28,7 @@ export class WarpViewTile {
         this.responsive = false;
         this.showLegend = false;
         this.url = '';
+        this.gtsFilter = '';
         this.warpscript = '';
         this.graphs = {
             'scatter': ['scatter'],
@@ -43,6 +44,11 @@ export class WarpViewTile {
         this.LOG.debug(['options'], newValue);
         if (oldValue !== newValue) {
             this.LOG.debug(['options', 'changed'], newValue);
+            this.parseGTS();
+        }
+    }
+    onGtsFilter(newValue, oldValue) {
+        if (oldValue !== newValue) {
             this.parseGTS();
         }
     }
@@ -199,7 +205,7 @@ export class WarpViewTile {
                         this.chartTitle,
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
-                        h("warp-view-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
+                        h("warp-view-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options, gtsFilter: this.gtsFilter })))
                 : '',
             this.loading ? h("warp-view-spinner", null) : '');
     }
@@ -212,6 +218,11 @@ export class WarpViewTile {
         },
         "data": {
             "state": true
+        },
+        "gtsFilter": {
+            "type": String,
+            "attr": "gts-filter",
+            "watchCallbacks": ["onGtsFilter"]
         },
         "options": {
             "type": "Any",

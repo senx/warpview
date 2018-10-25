@@ -22,6 +22,7 @@
     font-size: 1em;
     padding-top: 5px;
     cursor: pointer;
+    color: var(--gts-stack-font-color, #000000);
   }
 
   .stack-level + div {

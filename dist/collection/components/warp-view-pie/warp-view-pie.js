@@ -122,6 +122,7 @@ export class WarpViewPie {
                     rotation: this.getRotation(),
                 }
             });
+            this.onResize();
         }
     }
     getRotation() {

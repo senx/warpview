@@ -11,6 +11,7 @@ export declare class WarpViewTile {
     responsive: boolean;
     showLegend: boolean;
     url: string;
+    gtsFilter: string;
     wsElement: HTMLElement;
     private warpscript;
     private graphs;
@@ -20,6 +21,7 @@ export declare class WarpViewTile {
     private timer;
     private _autoRefresh;
     private onOptions;
+    private onGtsFilter;
     resize(): void;
     handleKeyDown(ev: KeyboardEvent): void;
     componentDidLoad(): void;

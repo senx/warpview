@@ -115,6 +115,7 @@ export class WarpViewBar {
             },
             options: graphOpts
         });
+        this.onResize();
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);

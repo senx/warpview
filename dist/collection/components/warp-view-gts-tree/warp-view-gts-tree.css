@@ -18,7 +18,8 @@
 :host .stack-level {
   font-size: 1em;
   padding-top: 5px;
-  cursor: pointer; }
+  cursor: pointer;
+  color: var(--gts-stack-font-color, #000000); }
 
 :host .stack-level + div {
   padding-left: 25px; }

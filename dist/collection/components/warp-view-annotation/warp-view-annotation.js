@@ -112,7 +112,7 @@ export class WarpViewAnnotation {
         const chartOption = {
             layout: {
                 padding: {
-                    bottom: 30 * gts.length
+                    bottom: Math.max(30, 30 * gts.length)
                 }
             },
             legend: { display: this.showLegend },
@@ -167,7 +167,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: function (scaleInstance) {
-                            scaleInstance.width = 94; // sets the width to 100px
+                            scaleInstance.width = 100; // sets the width to 100px
                         },
                         gridLines: {
                             color: color,
@@ -227,6 +227,7 @@ export class WarpViewAnnotation {
             this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item === key);
         });
         this._chart.update();
+        this.onResize();
     }
     /**
      *
@@ -253,7 +254,6 @@ export class WarpViewAnnotation {
                         let time = d[0];
                         if (this._options.timeMode !== 'timestamp') {
                             time = moment(time / 1000).utc(true).valueOf();
-                            this.LOG.debug(['moment'], time);
                         }
                         data.push({ x: time, y: 0.5, val: d[d.length - 1] });
                     });

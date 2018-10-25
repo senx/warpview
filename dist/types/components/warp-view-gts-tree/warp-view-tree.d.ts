@@ -4,6 +4,7 @@ export declare class WarpViewTreeView {
     branch: boolean;
     theme: string;
     hidden: boolean;
+    gtsFilter: string;
     ref: boolean;
     el: HTMLElement;
     hide: any;
@@ -24,6 +25,7 @@ export declare class WarpViewTreeView {
      * @param {number} index
      */
     toggleVisibility(event: UIEvent, index: number): void;
+    private onGtsFilter;
     /**
      *
      * @param {number} index
