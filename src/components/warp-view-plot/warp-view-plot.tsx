@@ -102,6 +102,7 @@ export class WarpViewPlot {
         break;
       case 'chartSwitch' :
         this.showChart = event.detail.state;
+        this.drawCharts();
         break;
       case 'mapSwitch' :
         this.showMap = event.detail.state;
@@ -122,7 +123,8 @@ export class WarpViewPlot {
     this.line.style.left = '-100px';
   }
 
-  private handleMouseMove(evt) {
+  private handleMouseMove(evt: MouseEvent) {
+    this.line = this.el.shadowRoot.querySelector('div.bar');
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
@@ -130,14 +132,14 @@ export class WarpViewPlot {
     if (!this.mouseOutTimer) {
       this.mouseOutTimer = window.setTimeout(() => {
         this.line.style.display = 'block';
-        this.line.style.left = evt.offsetX + 'px';
+        this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
       }, 1);
     }
   }
 
   private handleMouseOut(evt: MouseEvent) {
     this.LOG.debug(['handleMouseOut'], evt);
-    this.line.style.left = evt.offsetX + 'px';
+    this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
@@ -154,7 +156,7 @@ export class WarpViewPlot {
   onResize(event: CustomEvent) {
     const div = this.el.shadowRoot.querySelector('#' + this.graphId) as HTMLElement;
     this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
-    if(div) {
+    if (div) {
       div.style.height = event.detail.h + 'px';
     }
   }
@@ -202,11 +204,13 @@ export class WarpViewPlot {
       <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}></warp-view-gts-tree>
       {this.showChart ? <div class="maincontainer" onMouseMove={evt => this.handleMouseMove(evt)}
                              onMouseLeave={evt => this.handleMouseOut(evt)}>
-        <div class="bar"></div>
-        <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
-                              show-legend={this.showLegend}
-                              timeMin={this._timeMin} timeMax={this._timeMax}
-                              hiddenData={this._toHide} options={this._options}></warp-view-annotation>
+        <div class="bar"/>
+        <div class="annotation">
+          <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
+                                show-legend={this.showLegend}
+                                timeMin={this._timeMin} timeMax={this._timeMax}
+                                hiddenData={this._toHide} options={this._options}></warp-view-annotation>
+        </div>
         <div style={{width: '100%', height: '768px'}} id={this.graphId}>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                            hiddenData={this._toHide}

@@ -135,6 +135,7 @@ export class WarpViewBar {
       },
       options: graphOpts
     });
+    this.onResize();
   }
 
   private drawChart() {

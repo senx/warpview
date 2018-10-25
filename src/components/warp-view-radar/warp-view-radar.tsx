@@ -167,6 +167,7 @@ export class WarpViewRadar {
           }
         }
       });
+      this.onResize();
     }
   }
 

@@ -152,6 +152,7 @@ export class WarpViewBubble {
       },
       options: options
     });
+    this.onResize();
   }
 
   private parseData(gts) {
