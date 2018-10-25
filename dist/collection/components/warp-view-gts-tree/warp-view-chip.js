@@ -30,8 +30,8 @@ export class WarpViewChip {
     }
     onGtsFilter(newValue, oldValue) {
         if (oldValue !== newValue) {
-            if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
-                this.setState(false);
+            if (this.gtsFilter !== '') {
+                this.setState(new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
             }
         }
     }

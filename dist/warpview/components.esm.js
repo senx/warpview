@@ -57,7 +57,7 @@ var WarpViewChipComponent = /** @class **/ (function() {
   WarpViewChip.is = 'warp-view-chip';
   WarpViewChip.getModule = function(opts) {
     
-    return import('./cjzgdv20.js').then(function(m) {
+    return import('./0hbzgmd8.js').then(function(m) {
         return m.WarpViewChip;
       });
 
@@ -83,7 +83,7 @@ var WarpViewGtsTreeComponent = /** @class **/ (function() {
   WarpViewGtsTree.is = 'warp-view-gts-tree';
   WarpViewGtsTree.getModule = function(opts) {
     
-    return import('./cjzgdv20.js').then(function(m) {
+    return import('./0hbzgmd8.js').then(function(m) {
         return m.WarpViewGtsTree;
       });
 
@@ -239,7 +239,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
   WarpViewTreeView.is = 'warp-view-tree-view';
   WarpViewTreeView.getModule = function(opts) {
     
-    return import('./cjzgdv20.js').then(function(m) {
+    return import('./0hbzgmd8.js').then(function(m) {
         return m.WarpViewTreeView;
       });
 
