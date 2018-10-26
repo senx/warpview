@@ -40,7 +40,10 @@ export class WarpViewPlot {
   @Prop() showLegend: boolean = false;
   @Prop() gtsFilter = '';
 
-  @State() private _options: Param = new Param();
+  @State() private _options: Param = {
+    showControls: true,
+    showGTSTree: true
+  };
   @State() private _data: DataModel = new DataModel();
   @State() private _toHide: string[] = [];
   @State() private _timeMin;
@@ -180,6 +183,7 @@ export class WarpViewPlot {
 
   private drawCharts() {
     this.LOG.debug(['drawCharts'], [this.data, this.options]);
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     this._data = GTSLib.getData(this.data);
     let opts = new Param();
     if (typeof this.options === 'string') {
@@ -194,14 +198,18 @@ export class WarpViewPlot {
 
   render() {
     return <div>
-      <div class="inline">
-        <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
-        <warp-view-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
-                          checked={this.showChart}></warp-view-toggle>
-        <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
-                          checked={this.showMap}></warp-view-toggle>
-      </div>
-      <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}></warp-view-gts-tree>
+      { this._options.showControls
+      ? <div class="inline">
+      <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
+      <warp-view-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
+                        checked={this.showChart}></warp-view-toggle>
+      <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
+                        checked={this.showMap}></warp-view-toggle>
+    </div>
+      : ''}
+      {this._options.showGTSTree
+      ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter} options={this._options}></warp-view-gts-tree>
+      : ''}
       {this.showChart ? <div class="maincontainer" onMouseMove={evt => this.handleMouseMove(evt)}
                              onMouseLeave={evt => this.handleMouseOut(evt)}>
         <div class="bar"/>

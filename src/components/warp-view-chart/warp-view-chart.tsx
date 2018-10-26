@@ -61,7 +61,7 @@ export class WarpViewChart {
   private static DEFAULT_HEIGHT = 600;
   private resizeTimer;
   private _chart: Dygraph;
-  private _options: any = {
+  private _options: Param = {
     time: 'date',
     showRangeSelector: true,
     gridLineColor: '#8e8e8e'

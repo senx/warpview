@@ -16,11 +16,13 @@
  *
  */
 
-import {Component, Prop, State, Watch} from "@stencil/core";
+import {Component, Element, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-gts-tree",
@@ -30,12 +32,16 @@ export class WarpViewGtsTree {
   @Prop() data: DataModel | GTS[] | string;
   @Prop() theme: string = "light";
   @Prop() gtsFilter = '';
+  @Prop() options: Param = new Param();
 
   @State() hide = false;
+  @Element() el: HTMLElement;
 
   private gtsList: {
     content: any[],
   } = {content: []};
+  private _options: Param = new Param();
+
   private LOG: Logger = new Logger(WarpViewGtsTree);
 
   @Watch("data")
@@ -45,11 +51,22 @@ export class WarpViewGtsTree {
     }
   }
 
+  @Watch('options')
+  private onOptions(newValue: Param, oldValue: Param) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options'], newValue);
+      this.doRender();
+    }
+  }
+
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.LOG.debug(['gtsFilter'], newValue);
       this.doRender();
+      if(this._options.foldGTSTree) {
+        this.foldAll();
+      }
     }
   }
 
@@ -64,9 +81,26 @@ export class WarpViewGtsTree {
   }
 
   private doRender() {
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     let dataList = GTSLib.getData(this.data).data;
     this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
     this.LOG.debug(['doRender', 'gtsList'], this.data);
+    if(this._options.foldGTSTree) {
+      this.foldAll();
+    }
+
+  }
+
+  private foldAll() {
+    if(!this.el) {
+      window.setTimeout(() => {
+        this.foldAll();
+      }, 100)
+    } else {
+      let el = this.el.querySelector("#root");
+      el.className = 'collapsed';
+      this.hide = true;
+    }
   }
 
   toggleVisibility(event: UIEvent) {
@@ -83,7 +117,7 @@ export class WarpViewGtsTree {
   render() {
     return this.gtsList
       ? <div>
-        <div class="stack-level"  onClick={(event: UIEvent) => this.toggleVisibility(event)}><span class="expanded" /> Stack</div>
+        <div class="stack-level"  onClick={(event: UIEvent) => this.toggleVisibility(event)}><span class="expanded" id="root" /> Stack</div>
         <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide} gtsFilter={this.gtsFilter} />
       </div>
       : '';

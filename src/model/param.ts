@@ -26,7 +26,7 @@ export class Param {
   key?: string;
   interpolate?: string;
   type?: string;
-  showRangeSelector?: boolean;
+  showRangeSelector?: boolean ;
   timeMode?: string;
   startLat?: number;
   startLong?: number;
@@ -38,4 +38,8 @@ export class Param {
   heatControls?: boolean;
   mapType?: string;
   autoRefresh?: number;
+  showControls?: boolean;
+  showGTSTree?: boolean;
+  foldGTSTree?: boolean;
+  time?: string;
 }
