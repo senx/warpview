@@ -311,6 +311,7 @@ declare global {
     interface WarpViewGtsTree {
       'data': DataModel | GTS[] | string;
       'gtsFilter': string;
+      'options': Param;
       'theme': string;
     }
   }
@@ -336,6 +337,7 @@ declare global {
     export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[] | string;
       'gtsFilter'?: string;
+      'options'?: Param;
       'theme'?: string;
     }
   }

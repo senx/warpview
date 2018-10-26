@@ -17,12 +17,16 @@
  */
 import { GTSLib } from "../../utils/gts.lib";
 import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
 export class WarpViewGtsTree {
     constructor() {
         this.theme = "light";
         this.gtsFilter = '';
+        this.options = new Param();
         this.hide = false;
         this.gtsList = { content: [] };
+        this._options = new Param();
         this.LOG = new Logger(WarpViewGtsTree);
     }
     onData(newValue, oldValue) {
@@ -30,10 +34,19 @@ export class WarpViewGtsTree {
             this.doRender();
         }
     }
+    onOptions(newValue, oldValue) {
+        if (oldValue !== newValue) {
+            this.LOG.debug(['options'], newValue);
+            this.doRender();
+        }
+    }
     onGtsFilter(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['gtsFilter'], newValue);
             this.doRender();
+            if (this._options.foldGTSTree) {
+                this.foldAll();
+            }
         }
     }
     /**
@@ -46,9 +59,25 @@ export class WarpViewGtsTree {
         }
     }
     doRender() {
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         let dataList = GTSLib.getData(this.data).data;
         this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
         this.LOG.debug(['doRender', 'gtsList'], this.data);
+        if (this._options.foldGTSTree) {
+            this.foldAll();
+        }
+    }
+    foldAll() {
+        if (!this.el) {
+            window.setTimeout(() => {
+                this.foldAll();
+            }, 100);
+        }
+        else {
+            let el = this.el.querySelector("#root");
+            el.className = 'collapsed';
+            this.hide = true;
+        }
     }
     toggleVisibility(event) {
         let el = event.currentTarget.firstChild;
@@ -65,7 +94,7 @@ export class WarpViewGtsTree {
         return this.gtsList
             ? h("div", null,
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
-                    h("span", { class: "expanded" }),
+                    h("span", { class: "expanded", id: "root" }),
                     " Stack"),
                 h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme, hidden: this.hide, gtsFilter: this.gtsFilter }))
             : '';
@@ -77,6 +106,9 @@ export class WarpViewGtsTree {
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
+        "el": {
+            "elementRef": true
+        },
         "gtsFilter": {
             "type": String,
             "attr": "gts-filter",
@@ -84,6 +116,11 @@ export class WarpViewGtsTree {
         },
         "hide": {
             "state": true
+        },
+        "options": {
+            "type": "Any",
+            "attr": "options",
+            "watchCallbacks": ["onOptions"]
         },
         "theme": {
             "type": String,
@@ -100,6 +137,9 @@ export class Counter {
             "attr": "data",
             "watchCallbacks": ["onData"]
         },
+        "el": {
+            "elementRef": true
+        },
         "gtsFilter": {
             "type": String,
             "attr": "gts-filter",
@@ -107,6 +147,11 @@ export class Counter {
         },
         "hide": {
             "state": true
+        },
+        "options": {
+            "type": "Any",
+            "attr": "options",
+            "watchCallbacks": ["onOptions"]
         },
         "theme": {
             "type": String,

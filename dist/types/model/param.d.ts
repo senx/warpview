@@ -20,4 +20,8 @@ export declare class Param {
     heatControls?: boolean;
     mapType?: string;
     autoRefresh?: number;
+    showControls?: boolean;
+    showGTSTree?: boolean;
+    foldGTSTree?: boolean;
+    time?: string;
 }

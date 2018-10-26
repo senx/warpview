@@ -27,7 +27,10 @@ export class WarpViewPlot {
         this.responsive = false;
         this.showLegend = false;
         this.gtsFilter = '';
-        this._options = new Param();
+        this._options = {
+            showControls: true,
+            showGTSTree: true
+        };
         this._data = new DataModel();
         this._toHide = [];
         this.showChart = true;
@@ -143,6 +146,7 @@ export class WarpViewPlot {
     }
     drawCharts() {
         this.LOG.debug(['drawCharts'], [this.data, this.options]);
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         this._data = GTSLib.getData(this.data);
         let opts = new Param();
         if (typeof this.options === 'string') {
@@ -156,11 +160,15 @@ export class WarpViewPlot {
     }
     render() {
         return h("div", null,
-            h("div", { class: "inline" },
-                h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp" }),
-                h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
-                h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap })),
-            h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter }),
+            this._options.showControls
+                ? h("div", { class: "inline" },
+                    h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp" }),
+                    h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
+                    h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }))
+                : '',
+            this._options.showGTSTree
+                ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, options: this._options })
+                : '',
             this.showChart ? h("div", { class: "maincontainer", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
                 h("div", { class: "annotation" },

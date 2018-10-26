@@ -5,7 +5,7 @@ var WarpViewAnnotationComponent = /** @class **/ (function() {
   WarpViewAnnotation.is = 'warp-view-annotation';
   WarpViewAnnotation.getModule = function(opts) {
     
-    return import('./tpclrt1l.js').then(function(m) {
+    return import('./7ypgiocv.js').then(function(m) {
         return m.WarpViewAnnotation;
       });
 
@@ -57,7 +57,7 @@ var WarpViewChipComponent = /** @class **/ (function() {
   WarpViewChip.is = 'warp-view-chip';
   WarpViewChip.getModule = function(opts) {
     
-    return import('./0hbzgmd8.js').then(function(m) {
+    return import('./ymmeifnz.js').then(function(m) {
         return m.WarpViewChip;
       });
 
@@ -83,7 +83,7 @@ var WarpViewGtsTreeComponent = /** @class **/ (function() {
   WarpViewGtsTree.is = 'warp-view-gts-tree';
   WarpViewGtsTree.getModule = function(opts) {
     
-    return import('./0hbzgmd8.js').then(function(m) {
+    return import('./ymmeifnz.js').then(function(m) {
         return m.WarpViewGtsTree;
       });
 
@@ -148,7 +148,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./tpclrt1l.js').then(function(m) {
+    return import('./7ypgiocv.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -226,7 +226,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./tpclrt1l.js').then(function(m) {
+    return import('./7ypgiocv.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
@@ -239,7 +239,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
   WarpViewTreeView.is = 'warp-view-tree-view';
   WarpViewTreeView.getModule = function(opts) {
     
-    return import('./0hbzgmd8.js').then(function(m) {
+    return import('./ymmeifnz.js').then(function(m) {
         return m.WarpViewTreeView;
       });
 
