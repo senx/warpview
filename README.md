@@ -2,6 +2,8 @@
 
 This a collection of charting [web components](https://fr.wikipedia.org/wiki/Composants_web) dedicated to [Warp 10™](https://www.warp10.io)
 
+![Warp 10](https://blog.senx.io/wp-content/uploads/2018/10/warp10bySenx.png)
+
 - [licence Apache 2](./LICENSE.md)
 - [Contribute](./CONTRIBUTING.md)
 
@@ -41,3 +43,8 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 ## Integrations
 
 [See here](https://stenciljs.com/docs/framework-integration)
+
+## About
+
+- [Warp 10™](https://www.warp10.io)
+- [SenX](https://senx.io)
