@@ -1,0 +1,10 @@
+src
+www
+.idea
+.stencil
+.vscode
+.yarnclean
+stencil.config.js
+tsconfig.json
+yarn.lock
+*.log
