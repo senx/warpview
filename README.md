@@ -7,13 +7,15 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 - [licence Apache 2](./LICENSE.md)
 - [Contribute](./CONTRIBUTING.md)
 
-## Usage
+## Getting started
+
+    npm i senx-warpview
 
 ```html
 <html>
 <head>
   <title>Test</title>
-  <script src="warpview.js"></script>
+  <script src="node_modules/@senx/warpview.js"></script>
 </head>
 <body>
   <warp-view-spinner />
