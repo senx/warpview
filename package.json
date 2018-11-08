@@ -1,7 +1,7 @@
 {
   "name": "warpview",
   "module": "dist/esm/index.js",
-  "version": "0.0.1",
+  "version": "0.0.13",
   "description": "WarpView Elements",
   "main": "dist/warpview.js",
   "repository": {
