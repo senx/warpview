@@ -9,7 +9,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 
 ## Getting started
 
-    npm i senx-warpview
+    npm i @senx/warpview
 
 ```html
 <html>
