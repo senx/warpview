@@ -41,8 +41,8 @@ export class WarpViewGtsTree {
     content: any[],
   } = {content: []};
   private _options: Param = new Param();
-
   private LOG: Logger = new Logger(WarpViewGtsTree);
+  private _isFolded = false;
 
   @Watch("data")
   onData(newValue, oldValue) {
@@ -55,6 +55,7 @@ export class WarpViewGtsTree {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
+      this._isFolded = !!this.options.foldGTSTree;
       this.doRender();
     }
   }
@@ -64,7 +65,7 @@ export class WarpViewGtsTree {
     if (oldValue !== newValue) {
       this.LOG.debug(['gtsFilter'], newValue);
       this.doRender();
-      if(this._options.foldGTSTree) {
+      if (this._options.foldGTSTree && !this._isFolded) {
         this.foldAll();
       }
     }
@@ -84,15 +85,15 @@ export class WarpViewGtsTree {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let dataList = GTSLib.getData(this.data).data;
     this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
-    this.LOG.debug(['doRender', 'gtsList'], this.data);
-    if(this._options.foldGTSTree) {
+    this.LOG.debug(['doRender', 'gtsList'], [this.data, this._options.foldGTSTree, this._isFolded]);
+    if (this._options.foldGTSTree && !this._isFolded) {
       this.foldAll();
     }
 
   }
 
   private foldAll() {
-    if(!this.el) {
+    if (!this.el) {
       window.setTimeout(() => {
         this.foldAll();
       }, 100)
@@ -100,16 +101,19 @@ export class WarpViewGtsTree {
       let el = this.el.querySelector("#root");
       el.className = 'collapsed';
       this.hide = true;
+      this._isFolded = true;
     }
   }
 
   toggleVisibility(event: UIEvent) {
     let el = (event.currentTarget as HTMLElement).firstChild as HTMLElement;
     if (el.className === 'expanded') {
+      this._isFolded = true;
       el.className = 'collapsed';
       this.hide = true;
     } else {
       el.className = 'expanded';
+      this._isFolded = false;
       this.hide = false;
     }
   }
@@ -117,8 +121,11 @@ export class WarpViewGtsTree {
   render() {
     return this.gtsList
       ? <div>
-        <div class="stack-level"  onClick={(event: UIEvent) => this.toggleVisibility(event)}><span class="expanded" id="root" /> Stack</div>
-        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide} gtsFilter={this.gtsFilter} />
+        <div class="stack-level" onClick={(event: UIEvent) => this.toggleVisibility(event)}>
+          <span class="expanded" id="root"/> Stack
+        </div>
+        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide}
+                             gtsFilter={this.gtsFilter}/>
       </div>
       : '';
   }

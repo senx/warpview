@@ -101,7 +101,9 @@ export class WarpViewChip {
      * @param {UIEvent} event
      */
     switchPlotState(event) {
+        event.preventDefault();
         this.setState(!this._node.selected);
+        return false;
     }
     setState(state) {
         this._node = Object.assign({}, this._node, { selected: state, label: GTSLib.serializeGtsMetadata(this._node.gts) });

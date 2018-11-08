@@ -28,6 +28,7 @@ export class WarpViewGtsTree {
         this.gtsList = { content: [] };
         this._options = new Param();
         this.LOG = new Logger(WarpViewGtsTree);
+        this._isFolded = false;
     }
     onData(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -37,6 +38,7 @@ export class WarpViewGtsTree {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
+            this._isFolded = !!this.options.foldGTSTree;
             this.doRender();
         }
     }
@@ -44,7 +46,7 @@ export class WarpViewGtsTree {
         if (oldValue !== newValue) {
             this.LOG.debug(['gtsFilter'], newValue);
             this.doRender();
-            if (this._options.foldGTSTree) {
+            if (this._options.foldGTSTree && !this._isFolded) {
                 this.foldAll();
             }
         }
@@ -62,8 +64,8 @@ export class WarpViewGtsTree {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let dataList = GTSLib.getData(this.data).data;
         this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
-        this.LOG.debug(['doRender', 'gtsList'], this.data);
-        if (this._options.foldGTSTree) {
+        this.LOG.debug(['doRender', 'gtsList'], [this.data, this._options.foldGTSTree, this._isFolded]);
+        if (this._options.foldGTSTree && !this._isFolded) {
             this.foldAll();
         }
     }
@@ -77,16 +79,19 @@ export class WarpViewGtsTree {
             let el = this.el.querySelector("#root");
             el.className = 'collapsed';
             this.hide = true;
+            this._isFolded = true;
         }
     }
     toggleVisibility(event) {
         let el = event.currentTarget.firstChild;
         if (el.className === 'expanded') {
+            this._isFolded = true;
             el.className = 'collapsed';
             this.hide = true;
         }
         else {
             el.className = 'expanded';
+            this._isFolded = false;
             this.hide = false;
         }
     }

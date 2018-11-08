@@ -12,6 +12,7 @@ export declare class WarpViewGtsTree {
     private gtsList;
     private _options;
     private LOG;
+    private _isFolded;
     onData(newValue: any, oldValue: any): void;
     private onOptions;
     private onGtsFilter;
