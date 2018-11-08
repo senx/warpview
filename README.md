@@ -15,7 +15,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 <html>
 <head>
   <title>Test</title>
-  <script src="node_modules/senx-warpview"></script>
+  <script src="node_modules/senx-warpview/dist/warpview.js"></script>
 </head>
 <body>
   <warp-view-spinner />
