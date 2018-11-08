@@ -22,6 +22,7 @@ export declare class WarpViewAnnotation {
     private _options;
     private uuid;
     private resizeTimer;
+    private parentWidth;
     onResize(): void;
     private onData;
     changeScale(newValue: Param, oldValue: Param): void;

@@ -50,14 +50,18 @@ export class WarpViewBar {
   private _chart: any;
   private _mapIndex = {};
   private resizeTimer;
+  private parentWidth = -1;
 
   @Listen('window:resize')
   onResize() {
-    clearTimeout(this.resizeTimer);
-    this.resizeTimer = setTimeout(() => {
-      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-      this.drawChart();
-    }, 250);
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+      this.parentWidth = this.el.parentElement.clientWidth;
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.drawChart();
+      }, 250);
+    }
   }
 
   @Watch('data')

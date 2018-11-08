@@ -30,6 +30,7 @@ export declare class WarpViewMap {
     private tiles;
     private static DEFAULT_HEIGHT;
     private static DEFAULT_WIDTH;
+    private parentWidth;
     onResize(): void;
     private onHideData;
     private onData;

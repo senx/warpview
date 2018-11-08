@@ -16,6 +16,7 @@ export declare class WarpViewScatter {
     private _chart;
     private uuid;
     private resizeTimer;
+    private parentWidth;
     onResize(): void;
     private onData;
     private onOptions;

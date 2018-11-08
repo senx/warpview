@@ -17,6 +17,7 @@ export declare class WarpViewBar {
     private _chart;
     private _mapIndex;
     private resizeTimer;
+    private parentWidth;
     onResize(): void;
     private onData;
     private onOptions;

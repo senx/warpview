@@ -48,6 +48,25 @@ export class WarpViewChart {
         this.ticks = [];
         this.visibility = [];
         this.showInRangeSelector = [];
+        this.parentWidth = -1;
+    }
+    onResize() {
+        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+            this.parentWidth = this.el.parentElement.clientWidth;
+            if (this._chart) {
+                if (!this.initialHeight) {
+                    this.initialHeight = this.el.parentElement.clientHeight;
+                }
+                clearTimeout(this.resizeTimer);
+                this.resizeTimer = setTimeout(() => {
+                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+                    const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+                    this._chart.resize(width, this.displayGraph() ? height : 30);
+                    this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
+                }, 250);
+            }
+        }
     }
     onHideData(newValue, oldValue) {
         if (oldValue.length !== newValue.length) {
@@ -65,21 +84,6 @@ export class WarpViewChart {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
             this.drawChart();
-        }
-    }
-    onResize() {
-        if (this._chart) {
-            if (!this.initialHeight) {
-                this.initialHeight = this.el.parentElement.clientHeight;
-            }
-            clearTimeout(this.resizeTimer);
-            this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-                const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-                const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-                this._chart.resize(width, this.displayGraph() ? height : 30);
-                this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
-            }, 250);
         }
     }
     gtsToData(gtsList) {

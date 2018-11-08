@@ -90,14 +90,18 @@ export class WarpViewMap {
   private tiles: any[];
   private static DEFAULT_HEIGHT: number = 600;
   private static DEFAULT_WIDTH: number = 800;
+  private parentWidth = -1;
 
   @Listen('window:resize')
   onResize() {
-    clearTimeout(this.resizeTimer);
-    this.resizeTimer = setTimeout(() => {
-      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-      this.drawMap();
-    }, 250);
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+      this.parentWidth = this.el.parentElement.clientWidth;
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.drawMap();
+      }, 250);
+    }
   }
 
   @Watch('hiddenData')

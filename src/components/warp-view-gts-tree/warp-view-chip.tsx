@@ -126,7 +126,9 @@ export class WarpViewChip {
    * @param {UIEvent} event
    */
   switchPlotState(event: UIEvent) {
+    event.preventDefault();
     this.setState(!this._node.selected);
+    return false;
   }
 
   private setState(state: boolean) {

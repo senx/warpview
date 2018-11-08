@@ -39,7 +39,7 @@ export declare class WarpViewChip {
      *
      * @param {UIEvent} event
      */
-    switchPlotState(event: UIEvent): void;
+    switchPlotState(event: UIEvent): boolean;
     private setState;
     render(): JSX.Element;
 }

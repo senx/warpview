@@ -14,6 +14,7 @@ export declare class WarpViewPolar {
     private uuid;
     private _chart;
     private resizeTimer;
+    private parentWidth;
     onResize(): void;
     private onData;
     private onOptions;

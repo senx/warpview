@@ -54,13 +54,17 @@ export class WarpViewMap {
         this.positionArraysMarkers = [];
         this._iconAnchor = [20, 52];
         this._popupAnchor = [0, -50];
+        this.parentWidth = -1;
     }
     onResize() {
-        clearTimeout(this.resizeTimer);
-        this.resizeTimer = setTimeout(() => {
-            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-            this.drawMap();
-        }, 250);
+        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+            this.parentWidth = this.el.parentElement.clientWidth;
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(() => {
+                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.drawMap();
+            }, 250);
+        }
     }
     onHideData(newValue, oldValue) {
         if (oldValue.length !== newValue.length) {

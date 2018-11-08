@@ -46,14 +46,18 @@ export class WarpViewPolar {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart: Chart;
   private resizeTimer;
+  private parentWidth = -1;
 
   @Listen('window:resize')
   onResize() {
-    clearTimeout(this.resizeTimer);
-    this.resizeTimer = setTimeout(() => {
-      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-      this.drawChart();
-    }, 250);
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+      this.parentWidth = this.el.parentElement.clientWidth;
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.drawChart();
+      }, 250);
+    }
   }
 
   @Watch('data')

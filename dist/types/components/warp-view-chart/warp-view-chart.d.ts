@@ -34,10 +34,11 @@ export declare class WarpViewChart {
     private visibility;
     private showInRangeSelector;
     private initialHeight;
+    private parentWidth;
+    onResize(): void;
     private onHideData;
     private onData;
     private onOptions;
-    onResize(): void;
     private gtsToData;
     private isStepped;
     private isStacked;

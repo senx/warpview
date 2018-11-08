@@ -33,13 +33,17 @@ export class WarpViewPie {
             type: 'pie'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
+        this.parentWidth = -1;
     }
     onResize() {
-        clearTimeout(this.resizeTimer);
-        this.resizeTimer = setTimeout(() => {
-            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-            this.drawChart();
-        }, 250);
+        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+            this.parentWidth = this.el.parentElement.clientWidth;
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(() => {
+                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.drawChart();
+            }, 250);
+        }
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
