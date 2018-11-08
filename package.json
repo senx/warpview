@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+ssh://git@gitlab.com:senx/warpview.git"
   },
-  "author": "SenX",
+  "author": "SenX <contact@senx.io>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://gitlab.com/senx/warpview/issues"
