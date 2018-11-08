@@ -1,7 +1,7 @@
 {
-  "name": "warpview",
+  "name": "senx-warpview",
   "module": "dist/esm/index.js",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "WarpView Elements",
   "main": "dist/warpview.js",
   "repository": {
@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://gitlab.com/senx/warpview/issues"
   },
-  "homepage": "https://gitlab.com/senx/warpview",
+  "homepage": "https://www.warp10.io",
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
