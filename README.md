@@ -30,21 +30,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 
 ## Components
 
-- [WarpScript Tile](wiki/warp-view-tile)
-- [Map](src/components/warp-view-map/warp-view-map.md)
-- [Line chart](src/components/warp-view-chart/warp-view-chart.md)
-- [Bar chart](src/components/warp-view-bar/warp-view-bar.md)
-- [Bubble chart](src/components/warp-view-bubble/warp-view-bubble.md)
-- [Polar chart](src/components/warp-view-polar/warp-view-polar.md)
-- [Radar chart](src/components/warp-view-radar/warp-view-radar.md)
-- [Pie, gauge and doughnut](src/components/warp-view-pie/warp-view-pie.md)
-- [Scatter chart](src/components/warp-view-scatter/warp-view-scatter.md)
-- [Annotation chart](src/components/warp-view-annotation/warp-view-annotation.md)
-- [Display](src/components/warp-view-display/warp-view-display.md)
-- [Image](src/components/warp-view-image/warp-view-image.md)
-- [GTS Tree view](src/components/warp-view-gts-tree/warp-view-gts-tree.md)
-- [Spinner](src/components/warp-view-spinner/warp-view-spinner.md)
-- [Toggle](src/components/warp-view-toggle/warp-view-toggle.md)
+[See wiki](https://github.com/senx/warpview/wiki/)
 
 
 ## Integrations
