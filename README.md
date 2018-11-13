@@ -30,7 +30,7 @@ This a collection of charting [web components](https://fr.wikipedia.org/wiki/Com
 
 ## Components
 
-- [WarpScript Tile](src/components/warp-view-tile/warp-view-tile.md)
+- [WarpScript Tile](wiki/warp-view-tile)
 - [Map](src/components/warp-view-map/warp-view-map.md)
 - [Line chart](src/components/warp-view-chart/warp-view-chart.md)
 - [Bar chart](src/components/warp-view-bar/warp-view-bar.md)
