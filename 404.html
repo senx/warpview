@@ -1,0 +1,206 @@
+<!--
+  ~  Copyright 2018  SenX S.A.S.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+<base href="https://senx.github.io/warpview/">  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Warp View Demo</title>
+  <style>
+    #ftco-loader {
+      position: fixed;
+      width: 96px;
+      height: 96px;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      -webkit-box-shadow: 0 24px 64px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.24);
+      border-radius: 16px;
+      opacity: 0;
+      visibility: hidden;
+      -webkit-transition: opacity .2s ease-out, visibility 0s linear .2s;
+      -o-transition: opacity .2s ease-out, visibility 0s linear .2s;
+      transition: opacity .2s ease-out, visibility 0s linear .2s;
+      z-index: 1000;
+    }
+
+    #ftco-loader.fullscreen {
+      padding: 0;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-transform: none;
+      -ms-transform: none;
+      transform: none;
+      background-color: #fff;
+      border-radius: 0;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+
+    #ftco-loader.show {
+      -webkit-transition: opacity .4s ease-out, visibility 0s linear 0s;
+      -o-transition: opacity .4s ease-out, visibility 0s linear 0s;
+      transition: opacity .4s ease-out, visibility 0s linear 0s;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #ftco-loader .circular {
+      -webkit-animation: loader-rotate 4s linear infinite;
+      animation: loader-rotate 4s linear infinite;
+      position: absolute;
+      left: calc(50% - 100px);
+      top: calc(50% - 100px);
+      display: block;
+      -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+
+    #ftco-loader img {
+      position: absolute;
+      left: calc(-50%);
+      right: calc(-50%);
+      margin: auto;
+      top: calc(50% - 96px);
+      display: block;
+    }
+
+    #ftco-loader .path {
+      stroke-dashoffset: 0;
+      -webkit-animation: loader-dash 3s ease-in-out infinite;
+      animation: loader-dash 3s ease-in-out infinite;
+      stroke-linecap: round;
+      stroke-dasharray: 20, 600;
+    }
+
+    @-webkit-keyframes loader-rotate {
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes loader-rotate {
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes loader-dash {
+      0% {
+        stroke-dasharray: 20, 600;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 575, 600;
+        stroke-dashoffset: -100px;
+      }
+      100% {
+        stroke-dasharray: 575, 600;
+        stroke-dashoffset: -550px;
+      }
+    }
+
+    @keyframes loader-dash {
+      0% {
+        stroke-dasharray: 20, 600;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 575, 600;
+        stroke-dashoffset: -100px;
+      }
+      100% {
+        stroke-dasharray: 575, 600;
+        stroke-dashoffset: -550px;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="styles.a2bbae673ac8f4e9d303.css"></head>
+
+<body>
+<app-root>
+  <div id="ftco-loader" class="show fullscreen">
+    <img src="/assets/img/w.png" alt="" width="192">
+    <svg class="circular" width="200px" height="200px">
+      <circle class="path" cx="100" cy="100" r="92" fill="none" stroke-width="6" stroke-miterlimit="10"
+              stroke="#ffffff"></circle>
+    </svg>
+  </div>
+</app-root>
+
+<!--
+<script language="JavaScript">
+
+  var defOpts = {
+    gridLineColor: '#000000',
+    fontColor: '#000000',
+    mapType: 'DEFAULT',
+    showControls: false,
+    showGTSTree: true,
+    foldGTSTree: true
+  };
+  $(function () {
+    var body = $('body');
+    $("#dark").click(function () {
+      defOpts.mapType = "DEFAULT";
+      body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light').addClass('text-white');
+      $('.card').addClass('bg-dark');
+      defOpts.gridLineColor = '#ffffff';
+      console.log('drawMap - index', defOpts);
+      document.querySelectorAll('warp-view-tile').forEach(el => {
+        el.options = {...defOpts};
+      });
+    });
+    $("#light").button('toggle').click(function () {
+      defOpts.mapType = "WATERCOLOR";
+      body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light').removeClass('text-white');
+      $('.card').removeClass('bg-dark');
+      defOpts.gridLineColor = '#000000';
+      document.querySelectorAll('warp-view-tile').forEach(el => {
+        el.options = {...defOpts};
+      });
+    });
+    $('#autoRefresh').change(function () {
+      $("select option:selected").each(function () {
+        defOpts.autoRefresh = parseInt($(this).val());
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = {...defOpts};
+        });
+      });
+    });
+    $('a[role="tab"]').on('shown.bs.tab', function (e) {
+      var id = e.target.href.replace(document.location, '');
+      var divs = $(id).find('warp-view-tile');
+      for(var i =0; i < divs.length; i++){
+        divs[i].options = {...defOpts};
+      }
+    });
+  });
+</script>-->
+<script type="text/javascript" src="runtime.618bcded6741c4c27fdf.js"></script><script type="text/javascript" src="polyfills.8cec8602f15d9cb992c7.js"></script><script type="text/javascript" src="main.405e3554ab8a1baa9be7.js"></script></body>
+
+</html>
