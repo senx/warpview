@@ -1,6 +1,6 @@
 # Warp View
 
-This a collection of charting [web components](https://fr.wikipedia.org/wiki/Composants_web) dedicated to [Warp 10™](https://www.warp10.io)
+This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
 
 ![Warp 10](https://blog.senx.io/wp-content/uploads/2018/10/warp10bySenx.png)
 
