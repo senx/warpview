@@ -1,18 +1,28 @@
 {
   "name": "@senx/warpview",
   "module": "dist/esm/index.js",
-  "version": "1.0.1",
-  "keywords": [ "web", "dataviz", "web components", "time series", "warp10" ],
+  "version": "1.0.2",
+  "keywords": [
+    "web",
+    "dataviz",
+    "web components",
+    "time series",
+    "warp10",
+    "Warp 10",
+    "WarpScript",
+    "Geo Times Series",
+    "Times Series"
+  ],
   "description": "WarpView Elements",
   "main": "dist/warpview.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com:senx/warpview.git"
+    "url": "https://github.com/senx/warpview.git"
   },
   "author": "SenX <contact@senx.io>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://gitlab.com/senx/warpview/issues"
+    "url": "https://github.com/senx/warpview/issues"
   },
   "homepage": "https://www.warp10.io",
   "types": "dist/types/index.d.ts",

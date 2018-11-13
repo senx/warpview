@@ -1,0 +1,30 @@
+{
+  "name": "@senx/warpview",
+  "description": "WarpView Elements",
+  "main": "dist/warpview.js",
+  "authors": [
+    "SenX <contact@senx.io>"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "web",
+    "dataviz",
+    "web",
+    "components",
+    "time",
+    "series",
+    "warp10",
+    "Warp 10",
+    "WarpScript",
+    "Geo Times Series",
+    "Times Series"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
