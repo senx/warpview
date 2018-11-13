@@ -1,5 +1,5 @@
 {
-  "name": "@senx/warpview",
+  "name": "senx-warpview",
   "description": "WarpView Elements",
   "main": "dist/warpview.js",
   "authors": [
