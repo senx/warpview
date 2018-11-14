@@ -20,7 +20,7 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 <html>
 <head>
   <title>Test</title>
-  <script src="node_modules/@senx/warpview/dist/warpview.js"></script>
+  <script src="https://unpkg.com/@senx/warpview@x.x.x/dist/warpview.js"></script>
 </head>
 <body>
   <warp-view-spinner />
