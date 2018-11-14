@@ -1,18 +1,17 @@
 /*
+ *  Copyright 2018  SenX S.A.S.
  *
- *    Copyright 2016  Cityzen Data
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 import Leaflet from 'leaflet';
@@ -100,20 +99,30 @@ export class WarpViewMap {
     drawMap() {
         this.LOG.debug(['drawMap'], this.data);
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        if (!this.data) {
+        let gts = this.data;
+        if (!gts) {
             return;
+        }
+        if (typeof gts === 'string') {
+            try {
+                gts = JSON.parse(gts);
+            }
+            catch (error) {
+                // empty
+            }
         }
         if (this._map) {
             this._map.invalidateSize(true);
         }
         let dataList;
         let params;
-        if (this.data.data) {
-            dataList = this.data.data;
-            params = this.data.params;
+        if (gts.data) {
+            dataList = gts.data;
+            this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
+            params = gts.params;
         }
         else {
-            dataList = this.data;
+            dataList = gts;
             params = [];
         }
         this.LOG.debug(['drawMap'], dataList);

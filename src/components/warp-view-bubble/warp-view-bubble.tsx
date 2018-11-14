@@ -34,7 +34,7 @@ export class WarpViewBubble {
   @Prop() unit: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -85,10 +85,15 @@ export class WarpViewBubble {
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     if (!this.data) return;
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data as any[];
+    let gts: any = this.data;
+    if (typeof gts === 'string') {
+      gts = JSON.parse(gts as string);
+    }
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+      dataList = gts.data as any[];
+      this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
     } else {
-      dataList = this.data;
+      dataList = gts;
     }
 
     const color = this._options.gridLineColor;

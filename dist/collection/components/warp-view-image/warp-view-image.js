@@ -1,18 +1,17 @@
 /*
+ *  Copyright 2018  SenX S.A.S.
  *
- *    Copyright 2016  Cityzen Data
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 import { Logger } from "../../utils/logger";
@@ -58,17 +57,27 @@ export class WarpViewImage {
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
         this.toDisplay = [];
-        if (this.data instanceof DataModel) {
-            if (this.data.data && this.data.data.length > 0 && GTSLib.isEmbeddedImage(this.data.data[0])) {
-                this.toDisplay.push(this.data.data[0]);
+        let gts = this.data;
+        if (typeof gts === 'string') {
+            try {
+                gts = JSON.parse(gts);
             }
-            else if (this.data.data && GTSLib.isEmbeddedImage(this.data.data)) {
-                this.toDisplay.push(this.data.data);
+            catch (error) {
+                // empty : it's a base64 string
+            }
+        }
+        if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+            if (gts.data && gts.data.length > 0 && GTSLib.isEmbeddedImage(gts.data[0])) {
+                this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
+                this.toDisplay.push(gts.data[0]);
+            }
+            else if (gts.data && GTSLib.isEmbeddedImage(gts.data)) {
+                this.toDisplay.push(gts.data);
             }
         }
         else {
-            if (GTSLib.isArray(this.data)) {
-                this.data.forEach(d => {
+            if (GTSLib.isArray(gts)) {
+                gts.forEach(d => {
                     if (GTSLib.isEmbeddedImage(d)) {
                         this.toDisplay.push(d);
                     }

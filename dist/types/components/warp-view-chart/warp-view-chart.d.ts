@@ -12,7 +12,7 @@ import { GTS } from "../../model/GTS";
  *
  */
 export declare class WarpViewChart {
-    data: DataModel | GTS[];
+    data: DataModel | GTS[] | string;
     options: Param;
     hiddenData: string[];
     unit: string;

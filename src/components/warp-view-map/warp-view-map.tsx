@@ -149,19 +149,28 @@ export class WarpViewMap {
   private drawMap() {
     this.LOG.debug(['drawMap'], this.data);
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    if (!this.data) {
+    let gts: any = this.data;
+    if (!gts) {
       return;
+    }
+    if (typeof gts === 'string') {
+      try {
+        gts = JSON.parse(gts as string);
+      } catch (error) {
+        // empty
+      }
     }
     if (this._map) {
       this._map.invalidateSize(true);
     }
     let dataList: any[];
     let params: any[];
-    if (this.data.data) {
-      dataList = this.data.data as any[];
-      params = this.data.params
+    if (gts.data) {
+      dataList = gts.data as any[];
+      this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
+      params = gts.params
     } else {
-      dataList = this.data;
+      dataList = gts;
       params = [];
     }
     this.LOG.debug(['drawMap'], dataList);

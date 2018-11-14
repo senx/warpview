@@ -34,7 +34,7 @@ export class WarpViewBar {
   @Prop() unit: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -53,7 +53,7 @@ export class WarpViewBar {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
@@ -155,8 +155,12 @@ export class WarpViewBar {
     let ticks = [];
     let pos = 0;
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = gts.data
+    if (typeof gts === 'string') {
+      gts = JSON.parse(this.data as string);
+    }
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+      dataList = gts.data as any[];
+      this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
     } else {
       dataList = gts;
     }

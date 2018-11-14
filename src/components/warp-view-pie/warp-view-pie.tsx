@@ -30,7 +30,7 @@ import {DataModel} from "../../model/dataModel";
 })
 export class WarpViewPie {
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | any[];
+  @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -88,10 +88,14 @@ export class WarpViewPie {
     let labels = [];
     let _data = [];
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data as any[];
+    if (typeof data === 'string') {
+      data = JSON.parse(data as string);
+    }
+    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+      dataList = data.data as any[];
+      this._options = ChartLib.mergeDeep(this._options, data.globalParams || {});
     } else {
-      dataList = this.data;
+      dataList = data;
     }
     dataList.forEach(d => {
       _data.push(d[1]);

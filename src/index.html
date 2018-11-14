@@ -219,9 +219,6 @@
               <h2>Usage</h2>
               <div id="welcome">
               <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
-
-
-
               <warp-view-spinner ></warp-view-spinner>
               <pre><code class="language-markup">
 &lt;html>
@@ -331,14 +328,12 @@
                                   type="bubble"
                                   show-legend="false"
                                   chart-title="Bubbles">
-                    'P_cYkAU.VwP4MB4NkOzwjv..KAkQD28NCsuL2f3U1TLoT7DRP7I9iCw_Fy7Ap2pvA3OTmWA8Epf.xP0nr2TUF4UhKJUxa_jOpn8GXdIOIFHLf3ENExUFK3bgx3FglaAsw_tPVCe_GDTcw6TK31tTDV'
-                    'readToken' STORE
-                    [ $readToken
-                    '~eu.amzair.input.(temp.discharge|outlet.primary.circ|evd.suct.temp|inlet.primary.circ)'
-                    {
-                    'serial' 'cityzendata' } NOW -30 ] FETCH
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH
+                    false RESETS
+                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
                     10 LTTB
-                    <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * $val 10 / ]
+                    <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * RAND 100 * ]
                     %>
                     LMAP
                     }
@@ -619,10 +614,7 @@
                     PnoStroke
                     'CENTER' PellipseMode
                     $x $y 5 5 Pellipse
-
                     %> FOR
-
-
                     Pencode
                   </warp-view-tile>
                 </div>

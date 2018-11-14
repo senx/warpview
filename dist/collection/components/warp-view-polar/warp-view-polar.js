@@ -1,18 +1,17 @@
 /*
+ *  Copyright 2018  SenX S.A.S.
  *
- *    Copyright 2016  Cityzen Data
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 import Chart from 'chart.js';
@@ -74,12 +73,16 @@ export class WarpViewPolar {
         const color = this._options.gridLineColor;
         if (!this.data)
             return;
+        let data = this.data;
+        if (typeof data === 'string') {
+            data = JSON.parse(data);
+        }
         let dataList;
-        if (this.data instanceof DataModel) {
-            dataList = this.data.data;
+        if (data instanceof DataModel || data.hasOwnProperty('data')) {
+            dataList = data.data;
         }
         else {
-            dataList = this.data;
+            dataList = data;
         }
         let gts = this.parseData(dataList);
         if (this._chart) {
@@ -146,7 +149,7 @@ export class WarpViewPolar {
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
         "data": {
-            "type": "Any",
+            "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
         },

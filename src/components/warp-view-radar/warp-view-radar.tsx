@@ -31,7 +31,7 @@ import {DataModel} from "../../model/dataModel";
 export class WarpViewRadar {
   @Prop() responsive: boolean = true;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | any[];
+  @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -49,7 +49,7 @@ export class WarpViewRadar {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
@@ -112,24 +112,27 @@ export class WarpViewRadar {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor;
-    const data = this.data;
+    let data: any = this.data;
     if (!data) return;
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data as any[];
+    if (typeof data === 'string') {
+      data = JSON.parse(data as string);
+    }
+    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+      dataList = data.data as any[];
     } else {
-      dataList = this.data;
+      dataList = data;
     }
     let gts = this.parseData(dataList);
     if (!gts) {
       return;
     }
-    if(this._chart) {
+    if (this._chart) {
       this._chart.destroy();
       delete this._chart;
     }
     this.LOG.debug(['gts.data'], gts.datasets);
-    if(gts.datasets && gts.datasets.length > 0) {
+    if (gts.datasets && gts.datasets.length > 0) {
       this._chart = new Chart(ctx, {
         type: 'radar',
         legend: {display: this.showLegend},

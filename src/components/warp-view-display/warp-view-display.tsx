@@ -42,7 +42,7 @@ export class WarpViewDisplay {
   @Element() el: HTMLElement;
 
   private LOG: Logger = new Logger(WarpViewDisplay);
-  private toDisplay: string;
+  private toDisplay: string = '';
   private _options: Param = new Param();
 
   @Watch('data')
@@ -66,12 +66,24 @@ export class WarpViewDisplay {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
-    if (this.data instanceof DataModel) {
-      this.toDisplay = GTSLib.isArray(this.data.data) ? this.data.data[0] : this.data.data;
-    } else {
-      this.toDisplay = GTSLib.isArray(this.data) ? this.data[0] : this.data;
+    let gts: any = this.data;
+    if (!gts) {
+      return;
     }
-    this.LOG.debug(['drawChart'], [this.data, this.toDisplay]);
+    if (typeof gts === 'string') {
+      try {
+        gts = JSON.parse(gts as string);
+      } catch (error) {
+        // empty : it's a plain string
+      }
+    }
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+      this.toDisplay = GTSLib.isArray(gts.data) ? gts.data[0] : gts.data;
+      this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
+    } else {
+      this.toDisplay = GTSLib.isArray(gts) ? gts[0] : gts;
+    }
+    this.LOG.debug(['drawChart'], [gts, this.toDisplay]);
   }
 
   private getStyle() {
@@ -99,7 +111,7 @@ export class WarpViewDisplay {
         <div class="chart-container" id="#wrapper">
           <div style={this.getStyle()}>
             <div class="value">
-              {this.toDisplay}
+              {this.toDisplay + ''}
               <small>{this.unit}</small>
             </div>
           </div>

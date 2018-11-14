@@ -4,7 +4,7 @@ import { DataModel } from "../../model/dataModel";
 export declare class WarpViewPolar {
     responsive: boolean;
     showLegend: boolean;
-    data: DataModel | any[];
+    data: DataModel | any[] | string;
     options: Param;
     width: string;
     height: string;

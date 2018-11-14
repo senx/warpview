@@ -34,7 +34,7 @@ import moment from "moment";
 export class WarpViewAnnotation {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop() hiddenData: string[] = [];
   @Prop() timeMin: number;

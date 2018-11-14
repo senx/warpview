@@ -1,18 +1,17 @@
 /*
+ *  Copyright 2018  SenX S.A.S.
  *
- *    Copyright 2016  Cityzen Data
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
  */
 import { Logger } from "../../utils/logger";
@@ -31,6 +30,7 @@ export class WarpViewDisplay {
         this.width = '';
         this.height = '';
         this.LOG = new Logger(WarpViewDisplay);
+        this.toDisplay = '';
         this._options = new Param();
     }
     onData(newValue, oldValue) {
@@ -50,13 +50,26 @@ export class WarpViewDisplay {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
-        if (this.data instanceof DataModel) {
-            this.toDisplay = GTSLib.isArray(this.data.data) ? this.data.data[0] : this.data.data;
+        let gts = this.data;
+        if (!gts) {
+            return;
+        }
+        if (typeof gts === 'string') {
+            try {
+                gts = JSON.parse(gts);
+            }
+            catch (error) {
+                // empty : it's a plain string
+            }
+        }
+        if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+            this.toDisplay = GTSLib.isArray(gts.data) ? gts.data[0] : gts.data;
+            this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
         }
         else {
-            this.toDisplay = GTSLib.isArray(this.data) ? this.data[0] : this.data;
+            this.toDisplay = GTSLib.isArray(gts) ? gts[0] : gts;
         }
-        this.LOG.debug(['drawChart'], [this.data, this.toDisplay]);
+        this.LOG.debug(['drawChart'], [gts, this.toDisplay]);
     }
     getStyle() {
         this.LOG.debug(['getStyle'], this._options);
@@ -81,7 +94,7 @@ export class WarpViewDisplay {
             h("div", { class: "chart-container", id: "#wrapper" },
                 h("div", { style: this.getStyle() },
                     h("div", { class: "value" },
-                        this.toDisplay,
+                        this.toDisplay + '',
                         h("small", null, this.unit))))
             :
                 h("warp-view-spinner", null));

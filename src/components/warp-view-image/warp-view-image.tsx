@@ -75,15 +75,24 @@ export class WarpViewImage {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
     this.toDisplay = [];
-    if (this.data instanceof DataModel) {
-      if(this.data.data && this.data.data.length > 0 && GTSLib.isEmbeddedImage(this.data.data[0])) {
-        this.toDisplay.push(this.data.data[0]);
-      } else if(this.data.data && GTSLib.isEmbeddedImage(this.data.data)) {
-        this.toDisplay.push(this.data.data as string);
+    let gts: any = this.data;
+    if (typeof gts === 'string') {
+      try {
+        gts = JSON.parse(gts as string);
+      } catch(error) {
+      // empty : it's a base64 string
+      }
+    }
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+      if(gts.data && gts.data.length > 0 && GTSLib.isEmbeddedImage(gts.data[0])) {
+        this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
+        this.toDisplay.push(gts.data[0]);
+      } else if(gts.data && GTSLib.isEmbeddedImage(gts.data)) {
+        this.toDisplay.push(gts.data as string);
       }
     } else {
-      if(GTSLib.isArray(this.data)) {
-        (this.data as string[]).forEach(d => {
+      if(GTSLib.isArray(gts)) {
+        (gts as string[]).forEach(d => {
           if(GTSLib.isEmbeddedImage(d)) {
             this.toDisplay.push(d)
           }

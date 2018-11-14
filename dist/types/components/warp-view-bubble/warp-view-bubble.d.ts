@@ -6,7 +6,7 @@ export declare class WarpViewBubble {
     unit: string;
     responsive: boolean;
     showLegend: boolean;
-    data: DataModel | GTS[];
+    data: DataModel | GTS[] | string;
     options: Param;
     width: string;
     height: string;

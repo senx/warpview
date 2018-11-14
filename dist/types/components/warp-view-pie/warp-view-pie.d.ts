@@ -3,7 +3,7 @@ import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 export declare class WarpViewPie {
     showLegend: boolean;
-    data: DataModel | any[];
+    data: DataModel | any[] | string;
     options: Param;
     width: string;
     height: string;

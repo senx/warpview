@@ -6,7 +6,7 @@ import { GTS } from "../../model/GTS";
 export declare class WarpViewAnnotation {
     responsive: boolean;
     showLegend: boolean;
-    data: DataModel | GTS[];
+    data: DataModel | GTS[] | string;
     options: Param;
     hiddenData: string[];
     timeMin: number;

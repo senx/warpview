@@ -34,7 +34,7 @@ export class WarpViewScatter {
   @Prop() unit: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -82,10 +82,15 @@ export class WarpViewScatter {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data as any[];
+    let data: any = this.data;
+    if(!data) return;
+    if (typeof data === 'string') {
+      data = JSON.parse(data as string);
+    }
+    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+      dataList = data.data as any[];
     } else {
-      dataList = this.data;
+      dataList = data;
     }
     let gts = this.gtsToScatter(dataList);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';

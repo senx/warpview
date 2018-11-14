@@ -41,7 +41,7 @@ import Options = dygraphs.Options;
   shadow: false
 })
 export class WarpViewChart {
-  @Prop() data: DataModel | GTS[];
+  @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop() hiddenData: string[] = [];
   @Prop() unit: string = '';

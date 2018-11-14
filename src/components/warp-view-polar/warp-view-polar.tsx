@@ -31,7 +31,7 @@ import {DataModel} from "../../model/dataModel";
 export class WarpViewPolar {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | any[];
+  @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -92,11 +92,17 @@ export class WarpViewPolar {
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor;
     if (!this.data) return;
+
+    let data: any = this.data;
+    if (typeof data === 'string') {
+      data = JSON.parse(data as string);
+    }
+
     let dataList: any[];
-    if (this.data instanceof DataModel) {
-      dataList = this.data.data as any[];
+    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+      dataList = data.data as any[];
     } else {
-      dataList = this.data;
+      dataList = data;
     }
     let gts = this.parseData(dataList);
     if (this._chart) {
