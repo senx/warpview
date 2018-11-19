@@ -75,6 +75,7 @@ export class WarpViewImage {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
     this.toDisplay = [];
+    if (!this.data) return;
     let gts: any = this.data;
     if (typeof gts === 'string') {
       try {

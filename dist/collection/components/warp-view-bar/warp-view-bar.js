@@ -137,6 +137,9 @@ export class WarpViewBar {
         if (typeof gts === 'string') {
             gts = JSON.parse(this.data);
         }
+        if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+            gts = gts[0];
+        }
         if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
             dataList = gts.data;
             this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});

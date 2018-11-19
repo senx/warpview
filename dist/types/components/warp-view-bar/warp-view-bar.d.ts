@@ -6,7 +6,7 @@ export declare class WarpViewBar {
     unit: string;
     responsive: boolean;
     showLegend: boolean;
-    data: DataModel | GTS[] | string;
+    data: DataModel | DataModel[] | GTS[] | string;
     options: Param;
     width: string;
     height: string;

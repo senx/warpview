@@ -28,7 +28,7 @@ import {ChartLib} from "../../utils/chart-lib";
   styleUrls: ["warp-view-gts-tree.scss"]
 })
 export class WarpViewGtsTree {
-  @Prop() data: DataModel | GTS[] | string;
+  @Prop() data: DataModel | DataModel[] | GTS[] | string;
   @Prop() theme: string = "light";
   @Prop() gtsFilter = '';
   @Prop() options: Param = new Param();

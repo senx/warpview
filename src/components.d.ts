@@ -37,7 +37,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewAnnotation {
-      'data': DataModel | GTS[] | string;
+      'data': DataModel | DataModel[] | GTS[] | string;
       'height': string;
       'hiddenData': string[];
       'options': Param;
@@ -68,7 +68,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewAnnotationAttributes extends HTMLAttributes {
-      'data'?: DataModel | GTS[] | string;
+      'data'?: DataModel | DataModel[] | GTS[] | string;
       'height'?: string;
       'hiddenData'?: string[];
       'onPointHover'?: (event: CustomEvent) => void;
@@ -87,7 +87,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewBar {
-      'data': DataModel | GTS[] | string;
+      'data': DataModel | DataModel[] | GTS[] | string;
       'height': string;
       'options': Param;
       'responsive': boolean;
@@ -116,7 +116,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewBarAttributes extends HTMLAttributes {
-      'data'?: DataModel | GTS[] | string;
+      'data'?: DataModel | DataModel[] | GTS[] | string;
       'height'?: string;
       'options'?: Param;
       'responsive'?: boolean;
@@ -132,7 +132,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewBubble {
-      'data': DataModel | GTS[] | string;
+      'data': DataModel | DataModel[] | GTS[] | string;
       'height': string;
       'options': Param;
       'responsive': boolean;
@@ -161,7 +161,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewBubbleAttributes extends HTMLAttributes {
-      'data'?: DataModel | GTS[] | string;
+      'data'?: DataModel | DataModel[] | GTS[] | string;
       'height'?: string;
       'options'?: Param;
       'responsive'?: boolean;
@@ -225,7 +225,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewDisplay {
-      'data': DataModel | any[] | string | number;
+      'data': DataModel | DataModel[] | any[] | string | number;
       'height': string;
       'options': Param;
       'responsive': boolean;
@@ -253,7 +253,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewDisplayAttributes extends HTMLAttributes {
-      'data'?: DataModel | any[] | string | number;
+      'data'?: DataModel | DataModel[] | any[] | string | number;
       'height'?: string;
       'options'?: Param;
       'responsive'?: boolean;
@@ -308,7 +308,7 @@ declare global {
 
   namespace StencilComponents {
     interface WarpViewGtsTree {
-      'data': DataModel | GTS[] | string;
+      'data': DataModel | DataModel[] | GTS[] | string;
       'gtsFilter': string;
       'options': Param;
       'theme': string;
@@ -334,7 +334,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
-      'data'?: DataModel | GTS[] | string;
+      'data'?: DataModel | DataModel[] | GTS[] | string;
       'gtsFilter'?: string;
       'options'?: Param;
       'theme'?: string;

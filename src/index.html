@@ -218,8 +218,10 @@
               <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io" target="_blank">Warp 10™</a></p>
               <h2>Usage</h2>
               <div id="welcome">
-              <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
-              <warp-view-spinner ></warp-view-spinner>
+                <div style="height: 400px;width: 100%">
+                <warp-view-bar responsive="true" unit="°C" data='[{"data":[{"c":"warp.store.hbase.puts.committed","l":{"rack":"55c15",".app":"training-dataset-0","host":"178.33.230.209","cell":"prod","hname":"prod-8","dc":"rbx4"},"a":{},"la":0,"v":[[1515678533763851,0],[1515678593763851,34344],[1515678653763851,33812],[1515678713763851,34086],[1515678773763851,33124],[1515678833763851,34364],[1515678893763851,35852],[1515678953763851,33229],[1515679013763851,33738],[1515679073763851,34802],[1515679133763851,0]]},{"c":"warp.store.hbase.puts.committed","l":{"rack":"55c14",".app":"training-dataset-0","host":"178.33.232.46","cell":"prod","hname":"prod-2","dc":"rbx4"},"a":{},"la":0,"v":[[1515678473763851,0],[1515678533763851,34369],[1515678593763851,34498],[1515678653763851,34058],[1515678713763851,35378],[1515678773763851,35081],[1515678833763851,35294],[1515678893763851,33902],[1515678953763851,36927],[1515679013763851,34745],[1515679073763851,0]]},{"c":"warp.store.hbase.puts.committed","l":{"rack":"45a25",".app":"training-dataset-0","host":"5.39.72.171","cell":"prod","hname":"prod-12","dc":"rbx5"},"a":{},"la":0,"v":[[1515678533763851,0],[1515678593763851,229409],[1515678653763851,214360],[1515678713763851,236297],[1515678773763851,264372],[1515678833763851,224437],[1515678893763851,245184],[1515678953763851,244450],[1515679013763851,243175],[1515679073763851,253690],[1515679133763851,0]]},{"c":"warp.store.hbase.puts.committed","l":{"rack":"46d25",".app":"training-dataset-0","host":"151.80.25.186","cell":"prod","hname":"prod-27","dc":"rbx6"},"a":{},"la":0,"v":[[1515678533763851,0],[1515678593763851,0],[1515678653763851,0],[1515678713763851,0],[1515678773763851,0],[1515678833763851,0],[1515678893763851,0],[1515678953763851,0],[1515679013763851,0],[1515679073763851,0],[1515679133763851,0]]}]}]' options="{}" show-legend="true" ></warp-view-bar></div>
+
+              <warp-view-spinner message="Spinner sample"></warp-view-spinner>
               <pre><code class="language-markup">
 &lt;html>
   &lt;head>
@@ -227,7 +229,7 @@
     &lt;script src="warpview.js">&lt;/script>
   &lt;/head>
   &lt;body>
-    &lt;warp-view-spinner />
+    &lt;warp-view-spinner  message="Spinner sample" />
   &lt;/body>
 &lt;/html>
               </code></pre>

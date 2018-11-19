@@ -160,6 +160,9 @@ export class WarpViewMap {
         // empty
       }
     }
+    if(GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+      gts = gts[0];
+    }
     if (this._map) {
       this._map.invalidateSize(true);
     }

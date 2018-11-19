@@ -10,6 +10,12 @@ export declare class ChartLib {
      * @returns {any}
      */
     static mergeDeep(...sources: any[]): {};
+    /**
+     *
+     * @param obj
+     * @param extended
+     * @param deep
+     */
     static merge(obj: any, extended: any, deep: any): void;
     /**
      *

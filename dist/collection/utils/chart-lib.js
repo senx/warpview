@@ -48,6 +48,12 @@ export class ChartLib {
         }
         return extended;
     }
+    /**
+     *
+     * @param obj
+     * @param extended
+     * @param deep
+     */
     static merge(obj, extended, deep) {
         for (const prop in obj) {
             if (obj.hasOwnProperty(prop)) {

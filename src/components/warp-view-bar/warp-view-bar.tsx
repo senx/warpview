@@ -34,7 +34,7 @@ export class WarpViewBar {
   @Prop() unit: string = '';
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
-  @Prop() data: DataModel | GTS[] | string;
+  @Prop() data: DataModel | DataModel[] | GTS[] | string;
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
@@ -157,6 +157,9 @@ export class WarpViewBar {
     let dataList: any[];
     if (typeof gts === 'string') {
       gts = JSON.parse(this.data as string);
+    }
+    if(GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+      gts = gts[0];
     }
     if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
       dataList = gts.data as any[];
