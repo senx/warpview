@@ -28,7 +28,6 @@ import {ChartLib} from "../../utils/chart-lib";
 export class WarpViewTreeView {
   @Prop() gtsList: any;
   @Prop() branch = false;
-  @Prop() theme: string = "light";
   @Prop() hidden = false;
   @Prop() gtsFilter = '';
 

@@ -29,7 +29,6 @@ import {ChartLib} from "../../utils/chart-lib";
 })
 export class WarpViewGtsTree {
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
-  @Prop() theme: string = "light";
   @Prop() gtsFilter = '';
   @Prop() options: Param = new Param();
 
@@ -123,7 +122,7 @@ export class WarpViewGtsTree {
         <div class="stack-level" onClick={(event: UIEvent) => this.toggleVisibility(event)}>
           <span class="expanded" id="root"/> Stack
         </div>
-        <warp-view-tree-view gtsList={this.gtsList} branch={false} theme={this.theme} hidden={this.hide}
+        <warp-view-tree-view gtsList={this.gtsList} branch={false} hidden={this.hide}
                              gtsFilter={this.gtsFilter}/>
       </div>
       : '';
