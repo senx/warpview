@@ -70,6 +70,9 @@ export class WarpViewBubble {
         if (typeof gts === 'string') {
             gts = JSON.parse(gts);
         }
+        if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+            gts = gts[0];
+        }
         if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
             dataList = gts.data;
             this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});

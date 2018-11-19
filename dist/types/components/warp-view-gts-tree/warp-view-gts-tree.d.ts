@@ -3,7 +3,7 @@ import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
 import { Param } from "../../model/param";
 export declare class WarpViewGtsTree {
-    data: DataModel | GTS[] | string;
+    data: DataModel | DataModel[] | GTS[] | string;
     theme: string;
     gtsFilter: string;
     options: Param;

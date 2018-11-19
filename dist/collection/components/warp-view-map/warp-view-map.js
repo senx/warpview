@@ -20,6 +20,7 @@ import 'leaflet.markercluster';
 import { ColorLib } from "../../utils/color-lib";
 import { ChartLib } from "../../utils/chart-lib";
 import { Logger } from "../../utils/logger";
+import { DataModel } from "../../model/dataModel";
 import { MapLib } from "../../utils/map-lib";
 import { GTSLib } from "../../utils/gts.lib";
 import moment from "moment";
@@ -110,6 +111,9 @@ export class WarpViewMap {
             catch (error) {
                 // empty
             }
+        }
+        if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+            gts = gts[0];
         }
         if (this._map) {
             this._map.invalidateSize(true);

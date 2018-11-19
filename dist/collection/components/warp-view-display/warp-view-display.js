@@ -62,6 +62,9 @@ export class WarpViewDisplay {
                 // empty : it's a plain string
             }
         }
+        if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+            gts = gts[0];
+        }
         if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
             this.toDisplay = GTSLib.isArray(gts.data) ? gts.data[0] : gts.data;
             this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});

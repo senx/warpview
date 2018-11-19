@@ -20,6 +20,7 @@ import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
+import { GTSLib } from "../../utils/gts.lib";
 export class WarpViewPolar {
     constructor() {
         this.responsive = false;
@@ -76,6 +77,9 @@ export class WarpViewPolar {
         let data = this.data;
         if (typeof data === 'string') {
             data = JSON.parse(data);
+        }
+        if (GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
+            data = data[0];
         }
         let dataList;
         if (data instanceof DataModel || data.hasOwnProperty('data')) {

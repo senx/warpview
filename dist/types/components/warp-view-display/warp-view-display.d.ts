@@ -7,7 +7,7 @@ import { DataModel } from "../../model/dataModel";
 export declare class WarpViewDisplay {
     unit: string;
     responsive: boolean;
-    data: DataModel | any[] | string | number;
+    data: DataModel | DataModel[] | any[] | string | number;
     options: Param;
     width: string;
     height: string;
