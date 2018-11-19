@@ -27,9 +27,15 @@
         integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+          integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+          integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+          crossorigin="anonymous"></script>
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
@@ -131,8 +137,13 @@
             visualization components.</p>
           <p class="lead text-muted">Choose a main theme</p>
           <p>
-            <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off" id="light">Light</button>
-            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off" id="dark">Dark</button></p>
+            <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off"
+                    id="light">Light
+            </button>
+            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off"
+                    id="dark">Dark
+            </button>
+          </p>
           <p>
             <label for="autoRefresh" class="text-white">Auto refresh:</label>
             <select class="form-control col-2" id="autoRefresh">
@@ -193,6 +204,8 @@
                aria-controls="v-pills-step" aria-selected="false">Step</a>
             <a class="nav-link" id="v-pills-17-tab" data-toggle="pill" href="#v-pills-annotation" role="tab"
                aria-controls="v-pills-step" aria-selected="false">Annotation</a>
+            <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
+               aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
             <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-area" role="tab"
                aria-controls="v-pills-area" aria-selected="false">Area</a>
             <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-scatter" role="tab"
@@ -217,12 +230,13 @@
           <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-main" role="tabpanel" aria-labelledby="v-pills-1-tab">
               <h1>Warp View</h1>
-              <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io" target="_blank">Warp 10™</a></p>
+              <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
+                                                                              target="_blank">Warp 10™</a></p>
               <h2>Usage</h2>
               <div id="welcome">
 
-              <warp-view-spinner message="Spinner sample"></warp-view-spinner>
-              <pre><code class="language-markup">
+                <warp-view-spinner message="Spinner sample"></warp-view-spinner>
+                <pre><code class="language-markup">
 &lt;html>
   &lt;head>
     &lt;title>Test&lt;/title>
@@ -233,7 +247,7 @@
   &lt;/body>
 &lt;/html>
               </code></pre>
-            </div>
+              </div>
             </div>
 
             <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">
@@ -254,27 +268,27 @@
                     5 false ESDTEST
                     // Convert the ticks identified by ESDTEST into an annotation GTS
                     <%
-                    DROP 		// excude element index
-                    NEWGTS 	// create a new GTS
-                    SWAP 		// get timestamp list
+                    DROP // excude element index
+                    NEWGTS // create a new GTS
+                    SWAP // get timestamp list
                     <% NaN NaN NaN 'anomaly' ADDVALUE %> FOREACH // for each timestamp
                     %> LMAP
                     2 ->LIST // Put our GTS in a list
                     ZIP // merge into a list of GTS
                     // Now rename and relabel the anomaly GTS
                     <%
-                    DROP 				// exclude element index
-                    LIST-> 				// flatten list
-                    DROP  				// exclude number of elements of our list
-                    SWAP  				// put our fetched GTS on the top
-                    DUP  				// duplicate the GTS
-                    NAME 				// get the className of the GTS
-                    ':anomaly' + 'name' STORE  	// suffix the name
-                    DUP LABELS 'labels' STORE 	// duplicate the GTS and get labels
-                    SWAP  				// put the anomaly GTS on the top of the stack
-                    $name RENAME   			// rename the GTS
-                    $labels RELABEL  		// put labels
-                    2 ->LIST   				// put both GTS in a list
+                    DROP // exclude element index
+                    LIST-> // flatten list
+                    DROP // exclude number of elements of our list
+                    SWAP // put our fetched GTS on the top
+                    DUP // duplicate the GTS
+                    NAME // get the className of the GTS
+                    ':anomaly' + 'name' STORE // suffix the name
+                    DUP LABELS 'labels' STORE // duplicate the GTS and get labels
+                    SWAP // put the anomaly GTS on the top of the stack
+                    $name RENAME // rename the GTS
+                    $labels RELABEL // put labels
+                    2 ->LIST // put both GTS in a list
                     %> LMAP
                   </warp-view-tile>
                 </div>
@@ -290,7 +304,8 @@
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="map"
                                   chart-title="Map">
-                    '{"data":[{"c":"","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"color":"#ff1010","key":"Path A"},{"color":"#1010ff","key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"fuel"},{"key":"Annotations (boolean)","baseRadius":5},{"key":"fuel","render":"marker"},{"key":"points","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}' JSON->
+                    '{"data":[{"c":"","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"color":"#ff1010","key":"Path A"},{"color":"#1010ff","key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"fuel"},{"key":"Annotations (boolean)","baseRadius":5},{"key":"fuel","render":"marker"},{"key":"points","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}'
+                    JSON->
                   </warp-view-tile>
                 </div>
                 <div class="card-footer text-muted">
@@ -391,13 +406,28 @@
             <div class="tab-pane fade" id="v-pills-annotation" role="tabpanel" aria-labelledby="v-pills-17-tab">
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true"  type="annotation"
-                                  chart-title="annotation">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="annotation"
+                                  chart-title="Annotation">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
                     [ SWAP mapper.tostring 0 0 0 ] MAP 'values' STORE
                     { 'data' $values }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+              <pre><code class="language-markup">
+              </code></pre>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-gts-list" role="tabpanel" aria-labelledby="v-pills-18-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="gts-tree"
+                                  chart-title="GTS Tree">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                   </warp-view-tile>
                 </div>
                 <div class="card-footer text-muted">
@@ -694,7 +724,7 @@
     $('a[role="tab"]').on('shown.bs.tab', function (e) {
       var id = e.target.href.replace(document.location, '');
       var divs = $(id).find('warp-view-tile');
-      for(var i =0; i < divs.length; i++){
+      for (var i = 0; i < divs.length; i++) {
         divs[i].options = {...defOpts};
       }
     });

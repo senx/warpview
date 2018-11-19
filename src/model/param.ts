@@ -26,7 +26,6 @@ export class Param {
   interpolate?: string;
   type?: string;
   showRangeSelector?: boolean ;
-  timeMode?: string;
   startLat?: number;
   startLong?: number;
   startZoom?: number;
@@ -40,5 +39,5 @@ export class Param {
   showControls?: boolean;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
-  time?: string;
+  timeMode?: string;
 }

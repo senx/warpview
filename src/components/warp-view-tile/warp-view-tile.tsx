@@ -53,6 +53,7 @@ export class WarpViewTile {
     'radar': ['radar'],
     'bar': ['bar'],
     'annotation': ['annotation'],
+    'gts-tree': ['gts-tree'],
   };
   private loading = true;
   private gtsList: any;
@@ -287,6 +288,17 @@ export class WarpViewTile {
           <div class="tile">
             <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
                             options={this._options} />
+          </div>
+        </div>
+        : ''
+      }
+      {this.type == 'gts-tree' ?
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <warp-view-gts-tree  data={this.data} options={this._options} />
           </div>
         </div>
         : ''

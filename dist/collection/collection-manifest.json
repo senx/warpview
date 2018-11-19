@@ -1092,6 +1092,7 @@
         "warp-view-bubble",
         "warp-view-chart",
         "warp-view-display",
+        "warp-view-gts-tree",
         "warp-view-image",
         "warp-view-map",
         "warp-view-pie",

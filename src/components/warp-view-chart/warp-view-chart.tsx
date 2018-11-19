@@ -30,7 +30,7 @@ import Options = dygraphs.Options;
 /**
  * options :
  *  gridLineColor: 'red | #fff'
- *  time.timeMode: 'timestamp | date'
+ *  timeMode.timeMode: 'timestamp | date'
  *  showRangeSelector: boolean
  *  type : 'line | area | step'
  *
@@ -61,7 +61,7 @@ export class WarpViewChart {
   private resizeTimer;
   private _chart: Dygraph;
   private _options: Param = {
-    time: 'date',
+    timeMode: 'date',
     showRangeSelector: true,
     gridLineColor: '#8e8e8e'
   };

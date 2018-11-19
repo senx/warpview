@@ -37,6 +37,7 @@ export class WarpViewTile {
             'radar': ['radar'],
             'bar': ['bar'],
             'annotation': ['annotation'],
+            'gts-tree': ['gts-tree'],
         };
         this.loading = true;
     }
@@ -214,6 +215,14 @@ export class WarpViewTile {
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
                         h("warp-view-annotation", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
+                : '',
+            this.type == 'gts-tree' ?
+                h("div", null,
+                    h("h1", null,
+                        this.chartTitle,
+                        h("small", null, this.unit)),
+                    h("div", { class: "tile" },
+                        h("warp-view-gts-tree", { data: this.data, options: this._options })))
                 : '',
             this.loading ? h("warp-view-spinner", null) : '');
     }

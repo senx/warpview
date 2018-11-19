@@ -1,6 +1,9 @@
 import '../../stencil.core';
 import '../../stencil.core';
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
@@ -8,7 +11,7 @@ import { GTS } from "../../model/GTS";
 /**
  * options :
  *  gridLineColor: 'red | #fff'
- *  time.timeMode: 'timestamp | date'
+ *  timeMode.timeMode: 'timestamp | date'
  *  showRangeSelector: boolean
  *  type : 'line | area | step'
  *
