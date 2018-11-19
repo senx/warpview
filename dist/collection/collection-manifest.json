@@ -1087,6 +1087,7 @@
     {
       "tag": "warp-view-tile",
       "dependencies": [
+        "warp-view-annotation",
         "warp-view-bar",
         "warp-view-bubble",
         "warp-view-chart",

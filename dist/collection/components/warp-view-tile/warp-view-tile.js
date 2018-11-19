@@ -35,7 +35,8 @@ export class WarpViewTile {
             'pie': ['pie', 'doughnut', 'gauge'],
             'polar': ['polar'],
             'radar': ['radar'],
-            'bar': ['bar']
+            'bar': ['bar'],
+            'annotation': ['annotation'],
         };
         this.loading = true;
     }
@@ -205,6 +206,14 @@ export class WarpViewTile {
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
                         h("warp-view-plot", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options, gtsFilter: this.gtsFilter })))
+                : '',
+            this.type == 'annotation' ?
+                h("div", null,
+                    h("h1", null,
+                        this.chartTitle,
+                        h("small", null, this.unit)),
+                    h("div", { class: "tile" },
+                        h("warp-view-annotation", { responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                 : '',
             this.loading ? h("warp-view-spinner", null) : '');
     }

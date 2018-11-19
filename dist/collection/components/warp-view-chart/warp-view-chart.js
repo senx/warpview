@@ -198,7 +198,9 @@ export class WarpViewChart {
     drawChart() {
         this.LOG.debug(['drawChart', 'this.data'], [this.data]);
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        let dataList = GTSLib.getData(this.data).data;
+        let data = GTSLib.getData(this.data);
+        let dataList = data.data;
+        this._options = ChartLib.mergeDeep(this._options, data.globalParams);
         const dataToplot = this.gtsToData(dataList);
         this.LOG.debug(['drawChart', 'dataToplot'], dataToplot);
         const chart = this.el.querySelector('#' + this.uuid);

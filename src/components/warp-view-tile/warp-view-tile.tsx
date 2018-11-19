@@ -51,7 +51,8 @@ export class WarpViewTile {
     'pie': ['pie', 'doughnut', 'gauge'],
     'polar': ['polar'],
     'radar': ['radar'],
-    'bar': ['bar']
+    'bar': ['bar'],
+    'annotation': ['annotation'],
   };
   private loading = true;
   private gtsList: any;
@@ -274,6 +275,18 @@ export class WarpViewTile {
           <div class="tile">
             <warp-view-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
                             options={this._options} gtsFilter={this.gtsFilter}/>
+          </div>
+        </div>
+        : ''
+      }
+      {this.type == 'annotation' ?
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                            options={this._options} />
           </div>
         </div>
         : ''
