@@ -312,7 +312,6 @@ declare global {
       'data': DataModel | DataModel[] | GTS[] | string;
       'gtsFilter': string;
       'options': Param;
-      'theme': string;
     }
   }
 
@@ -338,7 +337,6 @@ declare global {
       'data'?: DataModel | DataModel[] | GTS[] | string;
       'gtsFilter'?: string;
       'options'?: Param;
-      'theme'?: string;
     }
   }
 }
@@ -352,7 +350,6 @@ declare global {
       'gtsFilter': string;
       'gtsList': any;
       'hidden': boolean;
-      'theme': string;
     }
   }
 
@@ -379,7 +376,6 @@ declare global {
       'gtsFilter'?: string;
       'gtsList'?: any;
       'hidden'?: boolean;
-      'theme'?: string;
     }
   }
 }

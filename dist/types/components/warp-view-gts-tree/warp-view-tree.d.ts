@@ -1,13 +1,7 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 export declare class WarpViewTreeView {
     gtsList: any;
     branch: boolean;
-    theme: string;
     hidden: boolean;
     gtsFilter: string;
     ref: boolean;

@@ -21,7 +21,6 @@ import { ChartLib } from "../../utils/chart-lib";
 export class WarpViewTreeView {
     constructor() {
         this.branch = false;
-        this.theme = "light";
         this.hidden = false;
         this.gtsFilter = '';
         this.ref = false;
@@ -143,10 +142,6 @@ export class WarpViewTreeView {
         },
         "ref": {
             "state": true
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme"
         }
     }; }
     static get style() { return "/**style-placeholder:warp-view-tree-view:**/"; }

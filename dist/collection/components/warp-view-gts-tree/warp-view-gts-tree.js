@@ -20,7 +20,6 @@ import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 export class WarpViewGtsTree {
     constructor() {
-        this.theme = "light";
         this.gtsFilter = '';
         this.options = new Param();
         this.hide = false;
@@ -100,7 +99,7 @@ export class WarpViewGtsTree {
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
                     h("span", { class: "expanded", id: "root" }),
                     " Stack"),
-                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, theme: this.theme, hidden: this.hide, gtsFilter: this.gtsFilter }))
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, gtsFilter: this.gtsFilter }))
             : '';
     }
     static get is() { return "warp-view-gts-tree"; }
@@ -125,10 +124,6 @@ export class WarpViewGtsTree {
             "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme"
         }
     }; }
     static get style() { return "/**style-placeholder:warp-view-gts-tree:**/"; }
@@ -156,10 +151,6 @@ export class Counter {
             "type": "Any",
             "attr": "options",
             "watchCallbacks": ["onOptions"]
-        },
-        "theme": {
-            "type": String,
-            "attr": "theme"
         }
     }; }
     static get style() { return "/**style-placeholder:warp-view-gts-tree:**/"; }

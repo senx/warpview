@@ -1,15 +1,9 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
 import { Param } from "../../model/param";
 export declare class WarpViewGtsTree {
     data: DataModel | DataModel[] | GTS[] | string;
-    theme: string;
     gtsFilter: string;
     options: Param;
     hide: boolean;

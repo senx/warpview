@@ -455,11 +455,6 @@
           "watch": [
             "onOptions"
           ]
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme"
         }
       ],
       "states": [
@@ -1263,11 +1258,6 @@
           "name": "hidden",
           "type": "Boolean",
           "attr": "hidden"
-        },
-        {
-          "name": "theme",
-          "type": "String",
-          "attr": "theme"
         }
       ],
       "states": [
