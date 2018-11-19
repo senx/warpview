@@ -1,7 +1,7 @@
 {
   "name": "@senx/warpview",
   "module": "dist/esm/index.js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "keywords": [
     "web",
     "dataviz",
@@ -54,7 +54,6 @@
   },
   "devDependencies": {
     "@stencil/dev-server": "0.0.18",
-    "node-gyp": "^3.8.0",
     "@stencil/sass": "^0.0.5",
     "@stencil/utils": "0.0.4",
     "@types/chartjs": "0.0.31",
@@ -63,7 +62,8 @@
     "@types/leaflet": "^1.2.8",
     "@types/leaflet.heat": "^0.2.0",
     "@types/prismjs": "^1.9.0",
-    "jest": "^22.4.3"
+    "jest": "^22.4.3",
+    "node-gyp": "^3.8.0"
   },
   "jest": {
     "transform": {
