@@ -25,7 +25,8 @@ export class MapLib {
 
   /**
    *
-   * @param data
+   * @param {{gts: any[]; params: any[]}} data
+   * @returns {any[]}
    */
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }) {
     let paths = [];
@@ -51,6 +52,11 @@ export class MapLib {
     return paths;
   }
 
+  /**
+   *
+   * @param {{gts: any[]; params: any[]}} data
+   * @returns {any[]}
+   */
   static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }) {
     let annotations = [];
     for (let i = 0; i < data.gts.length; i++) {
@@ -79,6 +85,12 @@ export class MapLib {
     return annotations;
   }
 
+  /**
+   *
+   * @param obj
+   * @param params
+   * @param index
+   */
   private static extractCommonParameters(obj, params, index) {
     if (params.key !== undefined) {
       obj.key = params.key;
@@ -101,6 +113,12 @@ export class MapLib {
     }
   }
 
+  /**
+   *
+   * @param posArray
+   * @param params
+   * @returns {boolean}
+   */
   private static validateWeightedDotsPositionArray(posArray, params) {
     if (params.minValue === undefined || params.maxValue === undefined) {
       MapLib.LOG.error(['validateWeightedDotsPositionArray'], 'When using \'weightedDots\' or ' +
@@ -152,6 +170,11 @@ export class MapLib {
     return true;
   }
 
+  /**
+   *
+   * @param {{gts: any[]; params: any[]}} data
+   * @returns {any[]}
+   */
   static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }) {
     let positions = [];
 
@@ -176,6 +199,11 @@ export class MapLib {
     return positions;
   }
 
+  /**
+   *
+   * @param posArray
+   * @param params
+   */
   private static validateWeightedColoredDotsPositionArray(posArray: any, params: any) {
     if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
       return;
@@ -276,6 +304,13 @@ export class MapLib {
     });
   }
 
+  /**
+   *
+   * @param paths
+   * @param positionsData
+   * @param annotationsData
+   * @returns {any}
+   */
   static getBoundsArray(paths, positionsData, annotationsData) {
     let pointsArray = [];
     for (let i = 0; i < paths.length; i++) {
@@ -311,6 +346,12 @@ export class MapLib {
 
   }
 
+  /**
+   *
+   * @param pathData
+   * @param options
+   * @returns {any[]}
+   */
   static pathDataToLeaflet(pathData, options) {
     let path = [];
 

@@ -74,16 +74,16 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       if (this._chart) {
-        if(!this.initialHeight) {
+        if (!this.initialHeight) {
           this.initialHeight = this.el.parentElement.clientHeight;
         }
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-          const height = (this.responsive ? this.initialHeight: WarpViewChart.DEFAULT_HEIGHT) - 30;
+          const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
           const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
           this._chart.resize(width, this.displayGraph() ? height : 30);
           this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
@@ -180,20 +180,20 @@ export class WarpViewChart {
     return this.type === 'area';
   }
 
-  private static toFixed(x: any) : string {
+  private static toFixed(x: any): string {
     let e;
     if (Math.abs(x) < 1.0) {
       e = parseInt(x.toString().split('e-')[1]);
       if (e) {
-        x *= Math.pow(10,e-1);
+        x *= Math.pow(10, e - 1);
         x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
       }
     } else {
-      e = parseInt(x.toString().split('+')[ 1 ]);
+      e = parseInt(x.toString().split('+')[1]);
       if (e > 20) {
         e -= 20;
-        x /= Math.pow(10,e);
-        x += (new Array(e+1)).join('0');
+        x /= Math.pow(10, e);
+        x += (new Array(e + 1)).join('0');
       }
     }
     return x;
@@ -234,7 +234,7 @@ export class WarpViewChart {
   private drawChart() {
     this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let data : DataModel = GTSLib.getData(this.data);
+    let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
 
@@ -274,6 +274,11 @@ export class WarpViewChart {
         axes: {
           x: {
             drawAxis: this.displayGraph()
+          },
+          y: {
+            axisLabelFormatter: (x, granularity, opts, dygraph) => {
+              return WarpViewChart.toFixed(x);
+            }
           }
         },
         legendFormatter: this.legendFormatter,
@@ -303,6 +308,11 @@ export class WarpViewChart {
         options.xAxisHeight = 30;
         options.rangeSelectorHeight = 30;
         chart.style.height = '30px';
+      }
+      if (this._options.timeMode === 'timestamp') {
+        options.axes.x.axisLabelFormatter = (x, granularity, opts, dygraph) => {
+          return WarpViewChart.toFixed(x);
+        }
       }
       this._chart = new Dygraph(
         chart,
