@@ -95,6 +95,7 @@ export class WarpViewChart {
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
     if (oldValue.length !== newValue.length) {
+      this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
       this.drawChart();
     }
@@ -153,6 +154,8 @@ export class WarpViewChart {
         pos++;
       });
     }
+    this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
+
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -231,7 +234,7 @@ export class WarpViewChart {
   private drawChart() {
     this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let data : DataModel = GTSLib.getData(this.data)
+    let data : DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
 
@@ -306,6 +309,7 @@ export class WarpViewChart {
         dataToplot.datasets || [],
         options
       );
+      this.LOG.debug(['options.height'], options.height)
       this.onResize();
     }
   }
