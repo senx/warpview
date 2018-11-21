@@ -79,9 +79,13 @@ export class WarpViewAnnotation {
   }
 
   @Watch("options")
-  changeScale(newValue: Param, oldValue: Param) {
+  onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
-      this.LOG.debug(['options'], newValue);
+      this.LOG.debug(['options'], [newValue, this.hiddenData]);
+      const hiddenData = GTSLib.cleanArray(this.hiddenData);
+      Object.keys(this._mapIndex).forEach(key => {
+        this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
+      });
       this.drawChart();
     }
   }
@@ -94,7 +98,7 @@ export class WarpViewAnnotation {
       Object.keys(this._mapIndex).forEach(key => {
         this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
       });
-      this._chart.update();
+      this.drawChart();
     }
   }
 
