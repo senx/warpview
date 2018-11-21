@@ -7,7 +7,7 @@ export declare class ChartLib {
     /**
      *
      * @param sources
-     * @returns {any}
+     * @returns {{}}
      */
     static mergeDeep(...sources: any[]): {};
     /**
@@ -24,12 +24,18 @@ export declare class ChartLib {
     static isObject(item: any): boolean;
     /**
      *
-     * @param theme
+     * @returns {{title: (tooltipItem) => any; label: (tooltipItem, data) => string}}
      */
-    static getGridColor(theme: string): string;
     static getTooltipCallbacks(): {
         title: (tooltipItem: any) => any;
         label: (tooltipItem: any, data: any) => any;
     };
+    /**
+     *
+     * @param {number} w
+     * @param {number} h
+     * @param {string} color
+     * @returns {HTMLImageElement}
+     */
     static buildImage(w: number, h: number, color: string): HTMLImageElement;
 }

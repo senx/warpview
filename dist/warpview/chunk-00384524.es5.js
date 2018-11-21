@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-warpview.loadBundle("chunk-ffddf84d.js", ["exports"], function (t) { window.warpview.h;
+warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warpview.h;
     var e = /** @class */ (function () {
         function e() {
         }
@@ -124,7 +124,6 @@ warpview.loadBundle("chunk-ffddf84d.js", ["exports"], function (t) { window.warp
         s.merge = function (t, e, r) { for (var n_3 in t)
             t.hasOwnProperty(n_3) && (r && "[object Object]" === Object.prototype.toString.call(t[n_3]) ? e[n_3] = s.mergeDeep(e[n_3], t[n_3]) : e[n_3] = t[n_3]); };
         s.isObject = function (t) { return t && "object" == typeof t && !Array.isArray(t); };
-        s.getGridColor = function (t) { return "#8e8e8e"; };
         s.getTooltipCallbacks = function () { return { title: function (t) { return t[0].xLabel; }, label: function (t, e) { var r = e.datasets[t.datasetIndex].label || ""; return r && (r += ": "), r + t.yLabel; } }; };
         s.buildImage = function (t, e, r) { var n = new Image(t, e), s = "<svg width=\"" + t + "px\" height=\"" + e + "px\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + t + " " + e + "\" preserveAspectRatio=\"xMidYMid\">\n<rect width=\"" + t + "\" height=\"" + e + "\" style=\"fill:" + r + ";\" />\n</svg>"; return n.src = "data:image/svg+xml;base64," + btoa(s), n; };
         return s;

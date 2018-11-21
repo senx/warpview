@@ -38,7 +38,7 @@
           "name": "options",
           "attr": "options",
           "watch": [
-            "changeScale"
+            "onOptions"
           ]
         },
         {

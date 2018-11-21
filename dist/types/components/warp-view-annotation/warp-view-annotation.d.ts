@@ -25,7 +25,7 @@ export declare class WarpViewAnnotation {
     private parentWidth;
     onResize(): void;
     private onData;
-    changeScale(newValue: Param, oldValue: Param): void;
+    onOptions(newValue: Param, oldValue: Param): void;
     hideData(newValue: any, oldValue: any): void;
     minBoundChange(newValue: number, oldValue: number): void;
     maxBoundChange(newValue: number, oldValue: number): void;

@@ -33,7 +33,7 @@ export class ChartLib {
     /**
      *
      * @param sources
-     * @returns {any}
+     * @returns {{}}
      */
     static mergeDeep(...sources) {
         // Variables
@@ -77,11 +77,8 @@ export class ChartLib {
     }
     /**
      *
-     * @param theme
+     * @returns {{title: (tooltipItem) => any; label: (tooltipItem, data) => string}}
      */
-    static getGridColor(theme) {
-        return theme === 'light' ? '#8e8e8e' : '#8e8e8e';
-    }
     static getTooltipCallbacks() {
         return {
             title: (tooltipItem) => {
@@ -97,6 +94,13 @@ export class ChartLib {
             }
         };
     }
+    /**
+     *
+     * @param {number} w
+     * @param {number} h
+     * @param {string} color
+     * @returns {HTMLImageElement}
+     */
     static buildImage(w, h, color) {
         const img = new Image(w, h);
         const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">

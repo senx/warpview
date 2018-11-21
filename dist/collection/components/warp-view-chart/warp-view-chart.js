@@ -69,6 +69,7 @@ export class WarpViewChart {
     }
     onHideData(newValue, oldValue) {
         if (oldValue.length !== newValue.length) {
+            this.parentWidth = 0;
             this.LOG.debug(['hiddenData'], newValue);
             this.drawChart();
         }
@@ -123,6 +124,7 @@ export class WarpViewChart {
                 pos++;
             });
         }
+        this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
         labels = labels.filter((i) => !!i);
         Object.keys(data).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -237,6 +239,11 @@ export class WarpViewChart {
                 axes: {
                     x: {
                         drawAxis: this.displayGraph()
+                    },
+                    y: {
+                        axisLabelFormatter: (x, granularity, opts, dygraph) => {
+                            return WarpViewChart.toFixed(x);
+                        }
                     }
                 },
                 legendFormatter: this.legendFormatter,
@@ -268,7 +275,13 @@ export class WarpViewChart {
                 options.rangeSelectorHeight = 30;
                 chart.style.height = '30px';
             }
+            if (this._options.timeMode === 'timestamp') {
+                options.axes.x.axisLabelFormatter = (x, granularity, opts, dygraph) => {
+                    return WarpViewChart.toFixed(x);
+                };
+            }
             this._chart = new Dygraph(chart, dataToplot.datasets || [], options);
+            this.LOG.debug(['options.height'], options.height);
             this.onResize();
         }
     }

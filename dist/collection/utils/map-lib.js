@@ -20,7 +20,8 @@ import { Logger } from "./logger";
 export class MapLib {
     /**
      *
-     * @param data
+     * @param {{gts: any[]; params: any[]}} data
+     * @returns {any[]}
      */
     static toLeafletMapPaths(data) {
         let paths = [];
@@ -45,6 +46,11 @@ export class MapLib {
         }
         return paths;
     }
+    /**
+     *
+     * @param {{gts: any[]; params: any[]}} data
+     * @returns {any[]}
+     */
     static annotationsToLeafletPositions(data) {
         let annotations = [];
         for (let i = 0; i < data.gts.length; i++) {
@@ -72,6 +78,12 @@ export class MapLib {
         }
         return annotations;
     }
+    /**
+     *
+     * @param obj
+     * @param params
+     * @param index
+     */
     static extractCommonParameters(obj, params, index) {
         if (params.key !== undefined) {
             obj.key = params.key;
@@ -95,6 +107,12 @@ export class MapLib {
             obj.baseRadius = params.baseRadius;
         }
     }
+    /**
+     *
+     * @param posArray
+     * @param params
+     * @returns {boolean}
+     */
     static validateWeightedDotsPositionArray(posArray, params) {
         if (params.minValue === undefined || params.maxValue === undefined) {
             MapLib.LOG.error(['validateWeightedDotsPositionArray'], 'When using \'weightedDots\' or ' +
@@ -143,6 +161,11 @@ export class MapLib {
         });
         return true;
     }
+    /**
+     *
+     * @param {{gts: any[]; params: any[]}} data
+     * @returns {any[]}
+     */
     static toLeafletMapPositionArray(data) {
         let positions = [];
         for (let i = 0; i < data.gts.length; i++) {
@@ -164,6 +187,11 @@ export class MapLib {
         }
         return positions;
     }
+    /**
+     *
+     * @param posArray
+     * @param params
+     */
     static validateWeightedColoredDotsPositionArray(posArray, params) {
         if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
             return;
@@ -249,6 +277,13 @@ export class MapLib {
             }
         });
     }
+    /**
+     *
+     * @param paths
+     * @param positionsData
+     * @param annotationsData
+     * @returns {any}
+     */
     static getBoundsArray(paths, positionsData, annotationsData) {
         let pointsArray = [];
         for (let i = 0; i < paths.length; i++) {
@@ -285,6 +320,12 @@ export class MapLib {
         });
         return [[south, west], [north, east]];
     }
+    /**
+     *
+     * @param pathData
+     * @param options
+     * @returns {any[]}
+     */
     static pathDataToLeaflet(pathData, options) {
         let path = [];
         let firstIndex = ((options === undefined) ||

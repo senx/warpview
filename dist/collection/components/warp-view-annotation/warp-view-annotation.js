@@ -55,9 +55,13 @@ export class WarpViewAnnotation {
             this.drawChart();
         }
     }
-    changeScale(newValue, oldValue) {
+    onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
-            this.LOG.debug(['options'], newValue);
+            this.LOG.debug(['options'], [newValue, this.hiddenData]);
+            const hiddenData = GTSLib.cleanArray(this.hiddenData);
+            Object.keys(this._mapIndex).forEach(key => {
+                this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
+            });
             this.drawChart();
         }
     }
@@ -68,7 +72,7 @@ export class WarpViewAnnotation {
             Object.keys(this._mapIndex).forEach(key => {
                 this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
             });
-            this._chart.update();
+            this.drawChart();
         }
     }
     minBoundChange(newValue, oldValue) {
@@ -314,7 +318,7 @@ export class WarpViewAnnotation {
         "options": {
             "type": "Any",
             "attr": "options",
-            "watchCallbacks": ["changeScale"]
+            "watchCallbacks": ["onOptions"]
         },
         "responsive": {
             "type": Boolean,
