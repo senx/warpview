@@ -71,6 +71,7 @@ export class WarpViewChart {
   private showInRangeSelector: boolean[] = [];
   private initialHeight: number;
   private parentWidth = -1;
+  private lastClickedGraph;
 
   @Listen('window:resize')
   onResize() {
@@ -115,6 +116,15 @@ export class WarpViewChart {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
+  }
+
+  private handleMouseOut(evt: MouseEvent) {
+    this.LOG.debug(['handleMouseOut'], evt);
+    const legend = this.el.querySelector('.dygraph-legend') as HTMLElement;
+    this.LOG.debug(['handleMouseOut'], [evt, legend]);
+    window.setTimeout(() => {
+      legend.style.display = 'none';
+    }, 5000)
   }
 
   private gtsToData(gtsList) {
@@ -200,6 +210,7 @@ export class WarpViewChart {
   }
 
   private legendFormatter(data) {
+    // if(!this.showTooltip) return;
     if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
@@ -225,9 +236,94 @@ export class WarpViewChart {
   }
 
   private highlightCallback(event) {
+    const legend = this.el.querySelector('.dygraph-legend') as HTMLElement;
+    legend.style.display = 'block';
     this.pointHover.emit({
       x: event.offsetX,
       y: event.offsetY
+    });
+  }
+
+  private click(event, g, context) {
+    this.LOG.debug(['click'], g);
+    this.lastClickedGraph = g;
+    event.preventDefault();
+  }
+
+  private scroll(event, g, context) {
+    if(!event.altKey) return;
+    this.LOG.debug(['scroll'], g);
+    if (this.lastClickedGraph != g) {
+      return;
+    }
+    const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
+    // For me the normalized value shows 0.075 for one click. If I took
+    // that verbatim, it would be a 7.5%.
+    const percentage = normal / 50;
+
+    if (!(event.offsetX && event.offsetY)) {
+      event.offsetX = event.layerX - event.target.offsetLeft;
+      event.offsetY = event.layerY - event.target.offsetTop;
+    }
+
+    const percentages = this.offsetToPercentage(g, event.offsetX, event.offsetY);
+    const xPct = percentages[0];
+    const yPct = percentages[1];
+
+    this.zoom(g, percentage, xPct, yPct);
+    event.preventDefault();
+  }
+
+  private offsetToPercentage(g, offsetX, offsetY) {
+    // This is calculating the pixel offset of the leftmost date.
+    const xOffset = g.toDomCoords(g.xAxisRange()[0], null)[0];
+    const yar0 = g.yAxisRange(0);
+
+    // This is calculating the pixel of the higest value. (Top pixel)
+    const yOffset = g.toDomCoords(null, yar0[1])[1];
+
+    // x y w and h are relative to the corner of the drawing area,
+    // so that the upper corner of the drawing area is (0, 0).
+    const x = offsetX - xOffset;
+    const y = offsetY - yOffset;
+
+    // This is computing the rightmost pixel, effectively defining the
+    // width.
+    const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset;
+
+    // This is computing the lowest pixel, effectively defining the height.
+    const h = g.toDomCoords(null, yar0[0])[1] - yOffset;
+
+    // Percentage from the left.
+    const xPct = w === 0 ? 0 : (x / w);
+    // Percentage from the top.
+    const yPct = h === 0 ? 0 : (y / h);
+
+    // The (1-) part below changes it from "% distance down from the top"
+    // to "% distance up from the bottom".
+    return [xPct, (1 - yPct)];
+  }
+
+  private zoom(g, zoomInPercentage, xBias, yBias) {
+    xBias = xBias || 0.5;
+    yBias = yBias || 0.5;
+
+    function adjustAxis(axis, zoomInPercentage, bias) {
+      const delta = axis[1] - axis[0];
+      const increment = delta * zoomInPercentage;
+      const foo = [increment * bias, increment * (1 - bias)];
+      return [axis[0] + foo[0], axis[1] - foo[1]];
+    }
+
+    const yAxes = g.yAxisRanges();
+    const newYAxes = [];
+    for (let i = 0; i < yAxes.length; i++) {
+      newYAxes[i] = adjustAxis(yAxes[i], zoomInPercentage, yBias);
+    }
+
+    g.updateOptions({
+      dateWindow: adjustAxis(g.xAxisRange(), zoomInPercentage, xBias),
+      valueRange: newYAxes[0]
     });
   }
 
@@ -243,6 +339,11 @@ export class WarpViewChart {
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
     if (dataToplot) {
       const color = this._options.gridLineColor;
+      let interactionModel = Dygraph.defaultInteractionModel;
+      interactionModel.mousewheel = this.scroll.bind(this);
+      interactionModel.click = this.click.bind(this);
+
+      this.LOG.debug(['drawChart', 'Dygraph.defaultInteractionModel'], Dygraph.defaultInteractionModel);
       let options: Options = {
         height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
         width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
@@ -267,7 +368,6 @@ export class WarpViewChart {
           showInRangeSelector: true
         },
         visibility: this.visibility,
-        hideOverlayOnMouseOut: true,
         labelsUTC: true,
         gridLineColor: color,
         axisLineColor: color,
@@ -302,7 +402,8 @@ export class WarpViewChart {
           }
         }).bind(this),
         axisLabelWidth: this.standalone ? 50 : 94,
-        rightGap: this.standalone ? 0 : 20
+        rightGap: this.standalone ? 0 : 20,
+        interactionModel: interactionModel
       };
       if (!this.displayGraph()) {
         options.xAxisHeight = 30;
@@ -319,6 +420,7 @@ export class WarpViewChart {
         dataToplot.datasets || [],
         options
       );
+
       this.LOG.debug(['options.height'], options.height)
       this.onResize();
     }
@@ -339,6 +441,7 @@ export class WarpViewChart {
   render() {
     return <div>
       <div id={this.uuid} class="chart"/>
+      {/* <div class="tooltip" id={this.uuid + '-tooltip'}></div>*/}
     </div>;
   }
 }
