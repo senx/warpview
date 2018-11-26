@@ -44,7 +44,7 @@ var WarpViewChartComponent = /** @class **/ (function() {
   WarpViewChart.is = 'warp-view-chart';
   WarpViewChart.getModule = function(opts) {
     
-    return import('./qlcacqqb.js').then(function(m) {
+    return import('./y14mive8.js').then(function(m) {
         return m.WarpViewChart;
       });
 
@@ -148,7 +148,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./pdkjcts1.js').then(function(m) {
+    return import('./pfeet1y3.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -226,7 +226,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./pdkjcts1.js').then(function(m) {
+    return import('./pfeet1y3.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
