@@ -49,6 +49,7 @@ export class WarpViewPlot {
   @State() private _timeMax;
   @State() showChart = true;
   @State() showMap = false;
+  @State() chartType = 'line';
 
   private LOG: Logger = new Logger(WarpViewPlot);
   private line: HTMLElement;
@@ -99,6 +100,15 @@ export class WarpViewPlot {
         }
         else {
           this._options.timeMode = 'date';
+        }
+        this.drawCharts();
+        break;
+      case 'typeSwitch' :
+        if (event.detail.state) {
+          this.chartType = 'step';
+        }
+        else {
+          this.chartType = 'line';
         }
         this.drawCharts();
         break;
@@ -200,6 +210,7 @@ export class WarpViewPlot {
       { this._options.showControls
       ? <div class="inline">
       <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"></warp-view-toggle>
+      <warp-view-toggle id="typeSwitch" text-1="Line" text-2="Step"></warp-view-toggle>
       <warp-view-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
                         checked={this.showChart}></warp-view-toggle>
       <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
@@ -220,7 +231,7 @@ export class WarpViewPlot {
         </div>
         <div style={{width: '100%', height: '768px'}} id={this.graphId}>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
-                           hiddenData={this._toHide}
+                           hiddenData={this._toHide} type={this.chartType}
                            options={this._options}></warp-view-chart>
         </div>
       </div> : ''}
