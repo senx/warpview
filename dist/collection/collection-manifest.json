@@ -827,6 +827,9 @@
           "name": "_toHide"
         },
         {
+          "name": "chartType"
+        },
+        {
           "name": "showChart"
         },
         {

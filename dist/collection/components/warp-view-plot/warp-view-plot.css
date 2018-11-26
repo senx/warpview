@@ -27,7 +27,7 @@
     bottom: 55px;
     overflow: hidden;
     display: none;
-    z-index: 999; }
+    z-index: 0; }
   :host .inline {
     display: inline-flex;
     flex-direction: row;

@@ -46,7 +46,6 @@ export class WarpViewChart {
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.ticks = [];
         this.visibility = [];
-        this.showInRangeSelector = [];
         this.parentWidth = -1;
     }
     onResize() {
@@ -86,6 +85,13 @@ export class WarpViewChart {
             this.drawChart();
         }
     }
+    handleMouseOut(evt) {
+        this.LOG.debug(['handleMouseOut'], evt);
+        const legend = this.el.querySelector('.dygraph-legend');
+        window.setTimeout(() => {
+            legend.style.display = 'none';
+        }, 1000);
+    }
     gtsToData(gtsList) {
         this.LOG.debug(['gtsToData'], gtsList);
         this.ticks = [];
@@ -118,7 +124,6 @@ export class WarpViewChart {
                     let color = ColorLib.getColor(pos);
                     labels[i + 1] = label;
                     colors[i] = color;
-                    this.showInRangeSelector.push(true);
                     this.visibility.push(this.hiddenData.filter((h) => h === label).length === 0);
                 }
                 pos++;
@@ -167,6 +172,7 @@ export class WarpViewChart {
         return x;
     }
     legendFormatter(data) {
+        // if(!this.showTooltip) return;
         if (data.x === null) {
             // This happens when there's no selection and {legend: 'always'} is set.
             return '<br>' + data.series.map(function (series) {
@@ -192,10 +198,91 @@ export class WarpViewChart {
         return html;
     }
     highlightCallback(event) {
+        const legend = this.el.querySelector('.dygraph-legend');
+        legend.style.display = 'block';
         this.pointHover.emit({
             x: event.offsetX,
             y: event.offsetY
         });
+    }
+    scroll(event, g) {
+        if (!event.altKey)
+            return;
+        this.LOG.debug(['scroll'], g);
+        const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
+        // For me the normalized value shows 0.075 for one click. If I took
+        // that verbatim, it would be a 7.5%.
+        const percentage = normal / 50;
+        if (!(event.offsetX && event.offsetY)) {
+            event.offsetX = event.layerX - event.target.offsetLeft;
+            event.offsetY = event.layerY - event.target.offsetTop;
+        }
+        const percentages = WarpViewChart.offsetToPercentage(g, event.offsetX, event.offsetY);
+        const xPct = percentages[0];
+        const yPct = percentages[1];
+        WarpViewChart.zoom(g, percentage, xPct, yPct);
+        event.preventDefault();
+    }
+    static offsetToPercentage(g, offsetX, offsetY) {
+        // This is calculating the pixel offset of the leftmost date.
+        const xOffset = g.toDomCoords(g.xAxisRange()[0], null)[0];
+        const yar0 = g.yAxisRange(0);
+        // This is calculating the pixel of the higest value. (Top pixel)
+        const yOffset = g.toDomCoords(null, yar0[1])[1];
+        // x y w and h are relative to the corner of the drawing area,
+        // so that the upper corner of the drawing area is (0, 0).
+        const x = offsetX - xOffset;
+        const y = offsetY - yOffset;
+        // This is computing the rightmost pixel, effectively defining the
+        // width.
+        const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset;
+        // This is computing the lowest pixel, effectively defining the height.
+        const h = g.toDomCoords(null, yar0[0])[1] - yOffset;
+        // Percentage from the left.
+        const xPct = w === 0 ? 0 : (x / w);
+        // Percentage from the top.
+        const yPct = h === 0 ? 0 : (y / h);
+        // The (1-) part below changes it from "% distance down from the top"
+        // to "% distance up from the bottom".
+        return [xPct, (1 - yPct)];
+    }
+    static adjustAxis(axis, zoomInPercentage, bias) {
+        const delta = axis[1] - axis[0];
+        const increment = delta * zoomInPercentage;
+        const foo = [increment * bias, increment * (1 - bias)];
+        return [axis[0] + foo[0], axis[1] - foo[1]];
+    }
+    static zoom(g, zoomInPercentage, xBias, yBias) {
+        xBias = xBias || 0.5;
+        yBias = yBias || 0.5;
+        const yAxes = g.yAxisRanges();
+        const newYAxes = [];
+        for (let i = 0; i < yAxes.length; i++) {
+            newYAxes[i] = WarpViewChart.adjustAxis(yAxes[i], zoomInPercentage, yBias);
+        }
+        g.updateOptions({
+            dateWindow: WarpViewChart.adjustAxis(g.xAxisRange(), zoomInPercentage, xBias),
+            valueRange: newYAxes[0]
+        });
+    }
+    drawCallback(dygraph, is_initial) {
+        this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+        if (dygraph.dateWindow_) {
+            this.boundsDidChange.emit({
+                bounds: {
+                    min: dygraph.dateWindow_[0],
+                    max: dygraph.dateWindow_[1]
+                }
+            });
+        }
+        else {
+            this.boundsDidChange.emit({
+                bounds: {
+                    min: Math.min.apply(null, this.ticks),
+                    max: Math.max.apply(null, this.ticks)
+                }
+            });
+        }
     }
     drawChart() {
         this.LOG.debug(['drawChart', 'this.data'], [this.data]);
@@ -208,6 +295,9 @@ export class WarpViewChart {
         const chart = this.el.querySelector('#' + this.uuid);
         if (dataToplot) {
             const color = this._options.gridLineColor;
+            let interactionModel = Dygraph.defaultInteractionModel;
+            interactionModel.mousewheel = this.scroll.bind(this);
+            interactionModel.mouseout = this.handleMouseOut.bind(this);
             let options = {
                 height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
                 width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
@@ -232,7 +322,6 @@ export class WarpViewChart {
                     showInRangeSelector: true
                 },
                 visibility: this.visibility,
-                hideOverlayOnMouseOut: true,
                 labelsUTC: true,
                 gridLineColor: color,
                 axisLineColor: color,
@@ -241,34 +330,17 @@ export class WarpViewChart {
                         drawAxis: this.displayGraph()
                     },
                     y: {
-                        axisLabelFormatter: (x, granularity, opts, dygraph) => {
+                        axisLabelFormatter: (x) => {
                             return WarpViewChart.toFixed(x);
                         }
                     }
                 },
                 legendFormatter: this.legendFormatter,
                 highlightCallback: this.highlightCallback.bind(this),
-                drawCallback: ((dygraph, is_initial) => {
-                    this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
-                    if (dygraph.dateWindow_) {
-                        this.boundsDidChange.emit({
-                            bounds: {
-                                min: dygraph.dateWindow_[0],
-                                max: dygraph.dateWindow_[1]
-                            }
-                        });
-                    }
-                    else {
-                        this.boundsDidChange.emit({
-                            bounds: {
-                                min: Math.min.apply(null, this.ticks),
-                                max: Math.max.apply(null, this.ticks)
-                            }
-                        });
-                    }
-                }).bind(this),
+                drawCallback: this.drawCallback.bind(this),
                 axisLabelWidth: this.standalone ? 50 : 94,
-                rightGap: this.standalone ? 0 : 20
+                rightGap: this.standalone ? 0 : 20,
+                interactionModel: interactionModel
             };
             if (!this.displayGraph()) {
                 options.xAxisHeight = 30;
@@ -276,7 +348,7 @@ export class WarpViewChart {
                 chart.style.height = '30px';
             }
             if (this._options.timeMode === 'timestamp') {
-                options.axes.x.axisLabelFormatter = (x, granularity, opts, dygraph) => {
+                options.axes.x.axisLabelFormatter = (x) => {
                     return WarpViewChart.toFixed(x);
                 };
             }

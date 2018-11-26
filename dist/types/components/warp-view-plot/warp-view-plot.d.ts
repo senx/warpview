@@ -18,6 +18,7 @@ export declare class WarpViewPlot {
     private _timeMax;
     showChart: boolean;
     showMap: boolean;
+    chartType: string;
     private LOG;
     private line;
     private main;
