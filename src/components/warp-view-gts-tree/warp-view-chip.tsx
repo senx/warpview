@@ -29,7 +29,6 @@ import {Logger} from "../../utils/logger";
 })
 export class WarpViewChip {
   @Prop() name: string;
-  @Prop() index: number;
   @Prop() node: any;
   @Prop() gtsFilter = '';
 
@@ -66,8 +65,8 @@ export class WarpViewChip {
   private colorizeChip() {
     const chip: HTMLElement = this.el.getElementsByClassName('normal')[0] as HTMLElement;
     if (this._node.selected) {
-      chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.index), 0.7));
-      chip.style.setProperty('border-color', ColorLib.getColor(this._node.index));
+      chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id), 0.7));
+      chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
     } else {
       chip.style.setProperty('background-color', '#eeeeee');
     }
@@ -144,8 +143,8 @@ export class WarpViewChip {
   render() {
     return <div>
       {this._node && this._node.gts && this._node.gts.l ?
-        <span><i class="normal"/>
-            <span class="gtsInfo" onClick={(event: UIEvent) => this.switchPlotState(event)}>
+        <span onClick={(event: UIEvent) => this.switchPlotState(event)}><i class="normal"/>
+            <span class="gtsInfo">
           <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
               {this.toArray(this._node.gts.l).map((label, index) =>

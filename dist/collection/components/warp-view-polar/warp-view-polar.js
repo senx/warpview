@@ -94,7 +94,7 @@ export class WarpViewPolar {
             delete this._chart;
         }
         this.LOG.debug(['gts.data'], gts.data);
-        if (gts.data && gts.data.length > 0) {
+        if (gts && gts.data && gts.data.length > 0) {
             this._chart = new Chart(ctx, {
                 type: 'polarArea',
                 data: {

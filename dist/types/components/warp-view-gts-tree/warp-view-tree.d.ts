@@ -1,6 +1,6 @@
 import '../../stencil.core';
 export declare class WarpViewTreeView {
-    gtsList: any;
+    gtsList: any[];
     branch: boolean;
     hidden: boolean;
     gtsFilter: string;
@@ -8,12 +8,6 @@ export declare class WarpViewTreeView {
     el: HTMLElement;
     hide: any;
     private static LOG;
-    /**
-     *
-     * @param node
-     * @returns {number}
-     */
-    private static getIndex;
     /**
      *
      */

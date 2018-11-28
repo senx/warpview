@@ -328,11 +328,6 @@
           ]
         },
         {
-          "name": "index",
-          "type": "Number",
-          "attr": "index"
-        },
-        {
           "name": "name",
           "type": "String",
           "attr": "name"
@@ -1254,7 +1249,6 @@
         },
         {
           "name": "gtsList",
-          "type": "Any",
           "attr": "gts-list"
         },
         {

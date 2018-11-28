@@ -26,7 +26,7 @@ import {ChartLib} from "../../utils/chart-lib";
   styleUrls: ["warp-view-tree.scss"]
 })
 export class WarpViewTreeView {
-  @Prop() gtsList: any;
+  @Prop() gtsList: any[];
   @Prop() branch = false;
   @Prop() hidden = false;
   @Prop() gtsFilter = '';
@@ -37,17 +37,6 @@ export class WarpViewTreeView {
 
   hide: any = {};
   private static LOG: Logger = new Logger(WarpViewTreeView);
-
-  /**
-   *
-   * @param node
-   * @returns {number}
-   */
-  private static getIndex(node: any): number {
-    Counter.item++;
-    node.index = Counter.item;
-    return Counter.item;
-  }
 
   /**
    *
@@ -104,19 +93,19 @@ export class WarpViewTreeView {
    */
   render() {
     return <div class="list">
-      {this.gtsList && this.gtsList.content ? <ul>
-        {this.gtsList.content.map((node, index) => (
+      {this.gtsList? <ul>
+        {this.gtsList.map((node, index) => (
           <li hidden={this.hidden}>
-            {GTSLib.isGts(node.gts)
-              ? <warp-view-chip node={node} index={WarpViewTreeView.getIndex(node)} name={node.gts.c} gtsFilter={this.gtsFilter} />
-              : <span>{node.content
+            {GTSLib.isGts(node)
+              ? <warp-view-chip node={{gts: node}} name={node.c} gtsFilter={this.gtsFilter} />
+              : <span>{node
                 ? <div>{this.branch
                   ? <div>
                     <span class="expanded" onClick={(event: UIEvent) => this.toggleVisibility(event, index)}
                           id={ChartLib.guid()}/>
                     <span onClick={(event: UIEvent) => this.toggleVisibility(event, index)}>
                     <small>List
-                      of {node.content.length} item{node.content.length > 1
+                      of {node.length} item{node.length > 1
                         ? 's'
                         : ''}</small></span>
                   </div>
@@ -127,7 +116,7 @@ export class WarpViewTreeView {
                       onClick={(event: UIEvent) => this.toggleVisibility(event, index)}>{index === 0 ? '[TOP]' : '[' + (index + 1) + ']'}
                       &nbsp;
                       <small>List
-                      of {node.content.length} item{node.content.length > 1
+                      of {node.length} item{node.length > 1
                           ? 's'
                           : ''}</small></span>
                   </div>}

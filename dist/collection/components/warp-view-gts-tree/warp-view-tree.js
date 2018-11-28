@@ -28,16 +28,6 @@ export class WarpViewTreeView {
     }
     /**
      *
-     * @param node
-     * @returns {number}
-     */
-    static getIndex(node) {
-        Counter.item++;
-        node.index = Counter.item;
-        return Counter.item;
-    }
-    /**
-     *
      */
     componentWillLoad() {
         WarpViewTreeView.LOG.debug(['componentWillLoad'], Counter.item);
@@ -88,9 +78,9 @@ export class WarpViewTreeView {
      * @returns {any}
      */
     render() {
-        return h("div", { class: "list" }, this.gtsList && this.gtsList.content ? h("ul", null, this.gtsList.content.map((node, index) => (h("li", { hidden: this.hidden }, GTSLib.isGts(node.gts)
-            ? h("warp-view-chip", { node: node, index: WarpViewTreeView.getIndex(node), name: node.gts.c, gtsFilter: this.gtsFilter })
-            : h("span", null, node.content
+        return h("div", { class: "list" }, this.gtsList ? h("ul", null, this.gtsList.map((node, index) => (h("li", { hidden: this.hidden }, GTSLib.isGts(node)
+            ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter })
+            : h("span", null, node
                 ? h("div", null,
                     this.branch
                         ? h("div", null,
@@ -98,9 +88,9 @@ export class WarpViewTreeView {
                             h("span", { onClick: (event) => this.toggleVisibility(event, index) },
                                 h("small", null,
                                     "List of ",
-                                    node.content.length,
+                                    node.length,
                                     " item",
-                                    node.content.length > 1
+                                    node.length > 1
                                         ? 's'
                                         : '')))
                         : h("div", { class: "stack-level" },
@@ -110,9 +100,9 @@ export class WarpViewTreeView {
                                 "\u00A0",
                                 h("small", null,
                                     "List of ",
-                                    node.content.length,
+                                    node.length,
                                     " item",
-                                    node.content.length > 1
+                                    node.length > 1
                                         ? 's'
                                         : ''))),
                     h("warp-view-tree-view", { gtsList: node, branch: true, hidden: this.isHidden(index), gtsFilter: this.gtsFilter }))

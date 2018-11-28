@@ -45,8 +45,8 @@ export class WarpViewChip {
     colorizeChip() {
         const chip = this.el.getElementsByClassName('normal')[0];
         if (this._node.selected) {
-            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.index), 0.7));
-            chip.style.setProperty('border-color', ColorLib.getColor(this._node.index));
+            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id), 0.7));
+            chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
         }
         else {
             chip.style.setProperty('background-color', '#eeeeee');
@@ -112,9 +112,9 @@ export class WarpViewChip {
     }
     render() {
         return h("div", null, this._node && this._node.gts && this._node.gts.l ?
-            h("span", null,
+            h("span", { onClick: (event) => this.switchPlotState(event) },
                 h("i", { class: "normal" }),
-                h("span", { class: "gtsInfo", onClick: (event) => this.switchPlotState(event) },
+                h("span", { class: "gtsInfo" },
                     h("span", { class: 'gts-classname' },
                         "\u00A0 ",
                         this._node.gts.c),
@@ -146,10 +146,6 @@ export class WarpViewChip {
             "type": String,
             "attr": "gts-filter",
             "watchCallbacks": ["onGtsFilter"]
-        },
-        "index": {
-            "type": Number,
-            "attr": "index"
         },
         "name": {
             "type": String,

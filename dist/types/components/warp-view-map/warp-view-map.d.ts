@@ -8,7 +8,7 @@ export declare class WarpViewMap {
     data: any;
     heatData: any[];
     options: any;
-    hiddenData: string[];
+    hiddenData: number[];
     el: HTMLElement;
     private _options;
     private mapTypes;

@@ -207,37 +207,35 @@ export class GTSLib {
     }
     /**
      *
-     * @param arr1
-     * @returns {any}
+     * @param {any[]} arr1
+     * @returns {any[]}
      */
     static flatDeep(arr1) {
         return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
     }
     ;
     /**
-     *
-     * @param a
-     * @param r
-     * @returns {any}
      */
     static flattenGtsIdArray(a, r) {
-        let elem;
-        let j;
-        if (!r) {
-            r = [];
-        }
-        for (j = 0; j < a.content.length; j++) {
-            elem = a.content[j];
-            if (elem.content) {
-                GTSLib.flattenGtsIdArray(elem, r);
+        const res = [];
+        console.log('flattenGtsIdArray', a, r);
+        a.forEach(d => {
+            console.log('flattenGtsIdArray a.forEach', d, r);
+            if (GTSLib.isArray(d)) {
+                console.log('flattenGtsIdArray d isArray');
+                const walk = GTSLib.flattenGtsIdArray(d, r);
+                res.push(walk.res);
+                r = walk.r;
             }
-            else {
-                if (elem.gts) {
-                    r.push(elem.gts);
-                }
+            else if (d.v) {
+                d.id = r;
+                res.push(d);
+                r++;
             }
-        }
-        return r;
+            console.log('flattenGtsIdArray res r', res, r);
+        });
+        console.log('flattenGtsIdArray res', res);
+        return { res: res, r: r };
     }
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];

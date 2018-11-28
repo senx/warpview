@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warpview.h;
+warpview.loadBundle("chunk-0b0e8ff0.js", ["exports"], function (t) { window.warpview.h;
     var e = /** @class */ (function () {
         function e() {
         }
@@ -9,8 +9,8 @@ warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warp
         function r() {
         }
         r.cleanArray = function (t) { return t.filter(function (t) { return !!t; }); };
-        r.unique = function (t) { var e = {}, r = []; for (var n_1 = 0, s_1 = t.length; n_1 < s_1; ++n_1)
-            e.hasOwnProperty(t[n_1]) || (r.push(t[n_1]), e[t[n_1]] = 1); return r; };
+        r.unique = function (t) { var e = {}, r = []; for (var s_1 = 0, n_1 = t.length; s_1 < n_1; ++s_1)
+            e.hasOwnProperty(t[s_1]) || (r.push(t[s_1]), e[t[s_1]] = 1); return r; };
         r.isArray = function (t) { return t && "object" == typeof t && t instanceof Array && "number" == typeof t.length && "function" == typeof t.splice && !t.propertyIsEnumerable("length"); };
         r.isValidResponse = function (t) { var e; try {
             e = JSON.parse(t);
@@ -58,14 +58,19 @@ warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warp
             case 5: e.lat = t[1], e.lon = t[2], e.alt = t[3], e.value = t[4];
         } return e; };
         r.gtsFromJSON = function (t, e) { return { gts: { c: t.c, l: t.l, a: t.a, v: t.v, id: e } }; };
-        r.gtsFromJSONList = function (t, e) { var n, s = []; return (t || []).forEach(function (t, i) { var o = t; t.gts && (o = t.gts), n = void 0 !== e && "" !== e ? e + "-" + i : i, r.isArray(o) && s.push(r.gtsFromJSONList(o, n)), r.isGts(o) && s.push(r.gtsFromJSON(o, n)), r.isEmbeddedImage(o) && s.push({ image: o, caption: "Image", id: n }), r.isEmbeddedImageObject(o) && s.push({ image: o.image, caption: o.caption, id: n }); }), { content: s || [] }; };
+        r.gtsFromJSONList = function (t, e) { var s, n = []; return (t || []).forEach(function (t, o) { var i = t; t.gts && (i = t.gts), s = void 0 !== e && "" !== e ? e + "-" + o : o, r.isArray(i) && n.push(r.gtsFromJSONList(i, s)), r.isGts(i) && n.push(r.gtsFromJSON(i, s)), r.isEmbeddedImage(i) && n.push({ image: i, caption: "Image", id: s }), r.isEmbeddedImageObject(i) && n.push({ image: i.image, caption: i.caption, id: s }); }), { content: n || [] }; };
         r.flatDeep = function (t) { return t.reduce(function (t, e) { return Array.isArray(e) ? t.concat(r.flatDeep(e)) : t.concat(e); }, []); };
-        r.flattenGtsIdArray = function (t, e) { var n, s; for (e || (e = []), s = 0; s < t.content.length; s++)
-            (n = t.content[s]).content ? r.flattenGtsIdArray(n, e) : n.gts && e.push(n.gts); return e; };
+        r.flattenGtsIdArray = function (t, e) { var s = []; return console.log("flattenGtsIdArray", t, e), t.forEach(function (t) { if (console.log("flattenGtsIdArray a.forEach", t, e), r.isArray(t)) {
+            console.log("flattenGtsIdArray d isArray");
+            var n_2 = r.flattenGtsIdArray(t, e);
+            s.push(n_2.res), e = n_2.r;
+        }
+        else
+            t.v && (t.id = e, s.push(t), e++); console.log("flattenGtsIdArray res r", s, e); }), console.log("flattenGtsIdArray res", s), { res: s, r: e }; };
         r.serializeGtsMetadata = function (t) { var e = []; Object.keys(t.l).forEach(function (r) { e.push(r + "=" + t.l[r]); }); var r = []; return Object.keys(t.a).forEach(function (e) { r.push(e + "=" + t.a[e]); }), t.c + "{" + e.join(",") + (r.length > 0 ? "," : "") + r.join(",") + "}"; };
         r.gtsToPath = function (t) { var e = []; t.v = t.v.sort(function (t, e) { return t[0] - e[0]; }); for (var r_4 = 0; r_4 < t.v.length; r_4++) {
-            var n_2 = t.v[r_4];
-            n_2.length, n_2.length, 4 === n_2.length && e.push({ ts: Math.floor(n_2[0] / 1e3), lat: n_2[1], lon: n_2[2], val: n_2[3] }), 5 === n_2.length && e.push({ ts: Math.floor(n_2[0] / 1e3), lat: n_2[1], lon: n_2[2], elev: n_2[3], val: n_2[4] });
+            var s_2 = t.v[r_4];
+            s_2.length, s_2.length, 4 === s_2.length && e.push({ ts: Math.floor(s_2[0] / 1e3), lat: s_2[1], lon: s_2[2], val: s_2[3] }), 5 === s_2.length && e.push({ ts: Math.floor(s_2[0] / 1e3), lat: s_2[1], lon: s_2[2], elev: s_2[3], val: s_2[4] });
         } return e; };
         r.equalMetadata = function (t, e) { if (!(void 0 !== t.c && void 0 !== e.c && void 0 !== t.l && void 0 !== e.l && t.l instanceof Object && e.l instanceof Object))
             return console.error("[warp10-gts-tools] equalMetadata - Error in GTS, metadata is not well formed"), !1; if (t.c !== e.c)
@@ -103,13 +108,13 @@ warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warp
         r.gtsTimeRange = function (t) { return r.gtsSort(t), 0 === t.v.length ? null : [t.v[0][0], t.v[t.v.length - 1][0]]; };
         r.getData = function (t) { return "string" == typeof t ? r.getData(JSON.parse(t)) : t && t.hasOwnProperty("data") ? t : r.isArray(t) && t.length > 0 && t[0].data ? t[0] : r.isArray(t) ? { data: t } : new e; };
         return r;
-    }());  var n; !function (t) { t[t.DEBUG = 0] = "DEBUG", t[t.ERROR = 1] = "ERROR", t[t.WARN = 2] = "WARN", t[t.INFO = 3] = "INFO"; }(n || (n = {}));
-    var s = /** @class */ (function () {
-        function s() {
+    }());  var s; !function (t) { t[t.DEBUG = 0] = "DEBUG", t[t.ERROR = 1] = "ERROR", t[t.WARN = 2] = "WARN", t[t.INFO = 3] = "INFO"; }(s || (s = {}));
+    var n = /** @class */ (function () {
+        function n() {
         }
-        s.guid = function () { var t, e, r = ""; for (t = 0; t < 32; t++)
+        n.guid = function () { var t, e, r = ""; for (t = 0; t < 32; t++)
             e = 16 * Math.random() | 0, 8 != t && 12 != t && 16 != t && 20 != t || (r += "-"), r += (12 == t ? 4 : 16 == t ? 3 & e | 8 : e).toString(16); return r; };
-        s.mergeDeep = function () {
+        n.mergeDeep = function () {
             var t = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 t[_i] = arguments[_i];
@@ -117,40 +122,40 @@ warpview.loadBundle("chunk-00384524.js", ["exports"], function (t) { window.warp
             var e = {}, r = 0;
             for (; r < arguments.length; r++) {
                 var t_1 = arguments[r];
-                s.merge(t_1, e, !0);
+                n.merge(t_1, e, !0);
             }
             return e;
         };
-        s.merge = function (t, e, r) { for (var n_3 in t)
-            t.hasOwnProperty(n_3) && (r && "[object Object]" === Object.prototype.toString.call(t[n_3]) ? e[n_3] = s.mergeDeep(e[n_3], t[n_3]) : e[n_3] = t[n_3]); };
-        s.isObject = function (t) { return t && "object" == typeof t && !Array.isArray(t); };
-        s.getTooltipCallbacks = function () { return { title: function (t) { return t[0].xLabel; }, label: function (t, e) { var r = e.datasets[t.datasetIndex].label || ""; return r && (r += ": "), r + t.yLabel; } }; };
-        s.buildImage = function (t, e, r) { var n = new Image(t, e), s = "<svg width=\"" + t + "px\" height=\"" + e + "px\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + t + " " + e + "\" preserveAspectRatio=\"xMidYMid\">\n<rect width=\"" + t + "\" height=\"" + e + "\" style=\"fill:" + r + ";\" />\n</svg>"; return n.src = "data:image/svg+xml;base64," + btoa(s), n; };
-        return s;
+        n.merge = function (t, e, r) { for (var s_3 in t)
+            t.hasOwnProperty(s_3) && (r && "[object Object]" === Object.prototype.toString.call(t[s_3]) ? e[s_3] = n.mergeDeep(e[s_3], t[s_3]) : e[s_3] = t[s_3]); };
+        n.isObject = function (t) { return t && "object" == typeof t && !Array.isArray(t); };
+        n.getTooltipCallbacks = function () { return { title: function (t) { return t[0].xLabel; }, label: function (t, e) { var r = e.datasets[t.datasetIndex].label || ""; return r && (r += ": "), r + t.yLabel; } }; };
+        n.buildImage = function (t, e, r) { var s = new Image(t, e), n = "<svg width=\"" + t + "px\" height=\"" + e + "px\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + t + " " + e + "\" preserveAspectRatio=\"xMidYMid\">\n<rect width=\"" + t + "\" height=\"" + e + "\" style=\"fill:" + r + ";\" />\n</svg>"; return s.src = "data:image/svg+xml;base64," + btoa(n), s; };
+        return n;
     }());  t.GTSLib = r, t.Logger = /** @class */ (function () {
     function Logger(t) {
         this.className = t.name;
     }
-    Logger.prototype.log = function (t, e, r) { var s = "[" + this.className + "] " + e.join(" - "); switch (t) {
-        case n.DEBUG: break;
-        case n.ERROR:
-            console.error(s, r);
+    Logger.prototype.log = function (t, e, r) { var n = "[" + this.className + "] " + e.join(" - "); switch (t) {
+        case s.DEBUG: break;
+        case s.ERROR:
+            console.error(n, r);
             break;
-        case n.INFO:
-            console.log(s, r);
+        case s.INFO:
+            console.log(n, r);
             break;
-        case n.WARN:
-            console.warn(s, r);
+        case s.WARN:
+            console.warn(n, r);
             break;
-        default: console.log(s, r);
+        default: console.log(n, r);
     } };
-    Logger.prototype.debug = function (t, e) { this.log(n.DEBUG, t, e); };
-    Logger.prototype.error = function (t, e) { this.log(n.ERROR, t, e); };
-    Logger.prototype.warn = function (t, e) { this.log(n.WARN, t, e); };
-    Logger.prototype.info = function (t, e) { this.log(n.INFO, t, e); };
+    Logger.prototype.debug = function (t, e) { this.log(s.DEBUG, t, e); };
+    Logger.prototype.error = function (t, e) { this.log(s.ERROR, t, e); };
+    Logger.prototype.warn = function (t, e) { this.log(s.WARN, t, e); };
+    Logger.prototype.info = function (t, e) { this.log(s.INFO, t, e); };
     return Logger;
 }()), t.Param = /** @class */ (function () {
     function Param() {
     }
     return Param;
-}()), t.ChartLib = s, t.DataModel = e; });
+}()), t.ChartLib = n, t.DataModel = e; });

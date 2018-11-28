@@ -35,9 +35,7 @@ export class WarpViewGtsTree {
   @State() hide = false;
   @Element() el: HTMLElement;
 
-  private gtsList: {
-    content: any[],
-  } = {content: []};
+  private gtsList:  any[] =  [];
   private _options: Param = new Param();
   private LOG: Logger = new Logger(WarpViewGtsTree);
   private _isFolded = false;
@@ -81,9 +79,17 @@ export class WarpViewGtsTree {
 
   private doRender() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
+    if(!this.data) {
+      return;
+    }
+    this.LOG.debug(['doRender', 'gtsList'], this.data);
     let dataList = GTSLib.getData(this.data).data;
-    this.gtsList = GTSLib.gtsFromJSONList(dataList, '');
-    this.LOG.debug(['doRender', 'gtsList'], [this.data, this._options.foldGTSTree, this._isFolded]);
+    this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);
+    if(!dataList) {
+      return;
+    }
+    this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
+    this.LOG.debug(['doRender', 'gtsList'], [this.gtsList, this._options.foldGTSTree, this._isFolded]);
     if (this._options.foldGTSTree && !this._isFolded) {
       this.foldAll();
     }

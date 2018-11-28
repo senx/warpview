@@ -43,7 +43,7 @@ import Options = dygraphs.Options;
 export class WarpViewChart {
   @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
-  @Prop() hiddenData: string[] = [];
+  @Prop() hiddenData: number[] = [];
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
   @Prop() responsive: boolean = false;
@@ -92,7 +92,7 @@ export class WarpViewChart {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: string[], oldValue: string[]) {
+  private onHideData(newValue: number[], oldValue: number[]) {
     if (oldValue.length !== newValue.length) {
       this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
@@ -130,17 +130,17 @@ export class WarpViewChart {
     this.visibility = [];
     const datasets = [];
     const data = {};
-    let pos = 0;
     let labels = [];
     let colors = [];
     if (!gtsList) {
       return;
     } else {
+      gtsList = GTSLib.flattenGtsIdArray(gtsList, 0).res;
       gtsList = GTSLib.flatDeep(gtsList);
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels = new Array(gtsList.length);
-      labels[0] = 'Date';
-      colors = new Array(gtsList.length);
+      labels.push('Date');
+      colors = [];
       gtsList.forEach((g, i) => {
         if (g.v && GTSLib.isGtsToPlot(g)) {
           let label = GTSLib.serializeGtsMetadata(g);
@@ -152,12 +152,13 @@ export class WarpViewChart {
             }
             data[value[0]][i] = value[value.length - 1] || -1;
           });
-          let color = ColorLib.getColor(pos);
-          labels[i + 1] = label;
-          colors[i] = color;
-          this.visibility.push(this.hiddenData.filter((h) => h === label).length === 0);
+          let color = ColorLib.getColor(g.id);
+          this.LOG.debug(['gtsToData', 'ColorLib'], [color, g.id]);
+
+          labels.push(label);
+          colors.push(color);
+          this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
         }
-        pos++;
       });
     }
     this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);

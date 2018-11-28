@@ -36,7 +36,7 @@ export class WarpViewAnnotation {
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
   @Prop() options: Param = new Param();
-  @Prop() hiddenData: string[] = [];
+  @Prop() hiddenData: number[] = [];
   @Prop() timeMin: number;
   @Prop() timeMax: number;
   @Prop({mutable: true}) width = "";
@@ -60,7 +60,7 @@ export class WarpViewAnnotation {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
@@ -83,10 +83,13 @@ export class WarpViewAnnotation {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], [newValue, this.hiddenData]);
       const hiddenData = GTSLib.cleanArray(this.hiddenData);
-      Object.keys(this._mapIndex).forEach(key => {
-        this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
-      });
-      this.drawChart();
+      if (this._chart) {
+        Object.keys(this._mapIndex).forEach(key => {
+          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+        });
+        this._chart.update();
+        this.drawChart();
+      }
     }
   }
 
@@ -95,10 +98,13 @@ export class WarpViewAnnotation {
     if (oldValue !== newValue && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
       const hiddenData = GTSLib.cleanArray(newValue);
-      Object.keys(this._mapIndex).forEach(key => {
-        this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item === key);
-      });
-      this.drawChart();
+      if (this._chart) {
+        Object.keys(this._mapIndex).forEach(key => {
+          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+        });
+        this._chart.update();
+        this.drawChart();
+      }
     }
   }
 
@@ -265,7 +271,8 @@ export class WarpViewAnnotation {
       }
     );
     Object.keys(this._mapIndex).forEach(key => {
-      this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item === key);
+      this.LOG.debug(['drawChart', 'hide'], [key]);
+      this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
     });
     this._chart.update();
     this.onResize();
@@ -279,17 +286,20 @@ export class WarpViewAnnotation {
   private parseData(gts) {
     this.LOG.debug(['parseData'], gts);
     let dataList = GTSLib.getData(gts).data;
-    this.LOG.debug(['parseData', 'dataList'], dataList);
+    this._mapIndex = {};
     if (!dataList || dataList.length === 0) {
       return [];
     } else {
-      let datasets = [];
-      let pos = 0;
-      dataList = GTSLib.flatDeep(dataList as any[]) as any[];
-      dataList.forEach((g, i) => {
+      let dataSet = [];
+      dataList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
+      dataList = GTSLib.flatDeep(dataList) as any[];
+      this.LOG.debug(['parseData', 'dataList'], dataList);
+      let i = 0;
+      dataList.forEach(g => {
         if (GTSLib.isGtsToAnnotate(g)) {
+          this.LOG.debug(['parseData', 'will draw'], g);
           let data = [];
-          let color = ColorLib.getColor(i);
+          let color = ColorLib.getColor(g.id);
           const myImage = ChartLib.buildImage(1, 30, color);
           g.v.forEach(d => {
             let time = d[0];
@@ -299,8 +309,8 @@ export class WarpViewAnnotation {
             data.push({x: time, y: 0.5, val: d[d.length - 1]});
           });
           let label = GTSLib.serializeGtsMetadata(g);
-          this._mapIndex[label] = pos;
-          datasets.push({
+          this._mapIndex[g.id + ''] = i;
+          dataSet.push({
             label: label,
             data: data,
             pointRadius: 5,
@@ -310,10 +320,10 @@ export class WarpViewAnnotation {
             borderColor: color,
             backgroundColor: ColorLib.transparentize(color, 0.5)
           });
-          pos++;
+          i++;
         }
       });
-      return datasets;
+      return dataSet;
     }
   }
 

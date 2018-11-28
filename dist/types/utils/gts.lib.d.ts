@@ -50,17 +50,16 @@ export declare class GTSLib {
     };
     /**
      *
-     * @param arr1
-     * @returns {any}
+     * @param {any[]} arr1
+     * @returns {any[]}
      */
-    static flatDeep(arr1: any[]): any;
+    static flatDeep(arr1: any[]): any[];
     /**
-     *
-     * @param a
-     * @param r
-     * @returns {any}
      */
-    static flattenGtsIdArray(a: any, r: any): any;
+    static flattenGtsIdArray(a: any[], r: number): {
+        res: any[];
+        r: number;
+    };
     static serializeGtsMetadata(gts: any): string;
     static gtsToPath(gts: any): any[];
     static equalMetadata(a: any, b: any): boolean;

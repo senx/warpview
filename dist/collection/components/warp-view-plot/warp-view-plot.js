@@ -140,13 +140,13 @@ export class WarpViewPlot {
     warpViewSelectedGTS(event) {
         this.LOG.debug(['warpViewSelectedGTS'], event.detail);
         if (!this._toHide.find(i => {
-            return i === event.detail.label;
+            return i === event.detail.gts.id;
         }) && !event.detail.selected) {
-            this._toHide.push(event.detail.label);
+            this._toHide.push(event.detail.gts.id);
         }
         else {
             this._toHide = this._toHide.filter(i => {
-                return i !== event.detail.label;
+                return i !== event.detail.gts.id;
             });
         }
         this.LOG.debug(['warp-viewSelectedGTS'], this._toHide);

@@ -2,7 +2,6 @@ import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class WarpViewChip {
     name: string;
-    index: number;
     node: any;
     gtsFilter: string;
     _node: any;

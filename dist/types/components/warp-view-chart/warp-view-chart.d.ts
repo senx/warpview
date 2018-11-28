@@ -14,7 +14,7 @@ import { GTS } from "../../model/GTS";
 export declare class WarpViewChart {
     data: DataModel | GTS[] | string;
     options: Param;
-    hiddenData: string[];
+    hiddenData: number[];
     unit: string;
     type: string;
     responsive: boolean;

@@ -8,7 +8,7 @@ export declare class WarpViewAnnotation {
     showLegend: boolean;
     data: DataModel | DataModel[] | GTS[] | string;
     options: Param;
-    hiddenData: string[];
+    hiddenData: number[];
     timeMin: number;
     timeMax: number;
     width: string;

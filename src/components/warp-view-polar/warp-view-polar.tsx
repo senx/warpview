@@ -50,7 +50,7 @@ export class WarpViewPolar {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
@@ -99,7 +99,7 @@ export class WarpViewPolar {
       data = JSON.parse(data as string);
     }
 
-    if(GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
+    if (GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
       data = data[0];
     }
     let dataList: any[];
@@ -114,7 +114,7 @@ export class WarpViewPolar {
       delete this._chart;
     }
     this.LOG.debug(['gts.data'], gts.data);
-    if(gts.data && gts.data.length > 0) {
+    if (gts && gts.data && gts.data.length > 0) {
       this._chart = new Chart(ctx, {
         type: 'polarArea',
         data: {

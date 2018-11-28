@@ -40,7 +40,7 @@ declare global {
     interface WarpViewAnnotation {
       'data': DataModel | DataModel[] | GTS[] | string;
       'height': string;
-      'hiddenData': string[];
+      'hiddenData': number[];
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
@@ -71,7 +71,7 @@ declare global {
     export interface WarpViewAnnotationAttributes extends HTMLAttributes {
       'data'?: DataModel | DataModel[] | GTS[] | string;
       'height'?: string;
-      'hiddenData'?: string[];
+      'hiddenData'?: number[];
       'onPointHover'?: (event: CustomEvent) => void;
       'options'?: Param;
       'responsive'?: boolean;
@@ -179,7 +179,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChart {
       'data': DataModel | GTS[] | string;
-      'hiddenData': string[];
+      'hiddenData': number[];
       'options': Param;
       'responsive': boolean;
       'standalone': boolean;
@@ -208,7 +208,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewChartAttributes extends HTMLAttributes {
       'data'?: DataModel | GTS[] | string;
-      'hiddenData'?: string[];
+      'hiddenData'?: number[];
       'onBoundsDidChange'?: (event: CustomEvent) => void;
       'onPointHover'?: (event: CustomEvent) => void;
       'onWarpViewChartResize'?: (event: CustomEvent) => void;
@@ -270,7 +270,6 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChip {
       'gtsFilter': string;
-      'index': number;
       'name': string;
       'node': any;
     }
@@ -296,7 +295,6 @@ declare global {
   namespace JSXElements {
     export interface WarpViewChipAttributes extends HTMLAttributes {
       'gtsFilter'?: string;
-      'index'?: number;
       'name'?: string;
       'node'?: any;
       'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
@@ -348,7 +346,7 @@ declare global {
     interface WarpViewTreeView {
       'branch': boolean;
       'gtsFilter': string;
-      'gtsList': any;
+      'gtsList': any[];
       'hidden': boolean;
     }
   }
@@ -374,7 +372,7 @@ declare global {
     export interface WarpViewTreeViewAttributes extends HTMLAttributes {
       'branch'?: boolean;
       'gtsFilter'?: string;
-      'gtsList'?: any;
+      'gtsList'?: any[];
       'hidden'?: boolean;
     }
   }
@@ -477,7 +475,7 @@ declare global {
       'data': any;
       'heatData': any[];
       'height': string;
-      'hiddenData': string[];
+      'hiddenData': number[];
       'options': any;
       'resize': () => void;
       'responsive': boolean;
@@ -507,7 +505,7 @@ declare global {
       'data'?: any;
       'heatData'?: any[];
       'height'?: string;
-      'hiddenData'?: string[];
+      'hiddenData'?: number[];
       'options'?: any;
       'responsive'?: boolean;
       'width'?: string;

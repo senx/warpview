@@ -133,7 +133,16 @@ export class WarpViewMap {
         if (!dataList) {
             return;
         }
-        this.displayMap({ gts: GTSLib.flatDeep(dataList), params: params });
+        const flattenGTS = GTSLib.flatDeep(dataList);
+        let i = 0;
+        flattenGTS.forEach(item => {
+            if (item.v) {
+                item.i = i;
+                i++;
+            }
+        });
+        this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
+        this.displayMap({ gts: flattenGTS, params: params });
     }
     icon(color, marker = '') {
         let c = "+" + color.slice(1);
@@ -226,7 +235,7 @@ export class WarpViewMap {
         }
     }
     updateGtsPath(gts) {
-        if (this.hiddenData.filter((i) => i === gts.key).length === 0) {
+        if (this.hiddenData.filter((i) => i === gts.id).length === 0) {
             let beforeCurrentValue = Leaflet.polyline(MapLib.pathDataToLeaflet(gts.path, { to: 0 }), {
                 color: gts.color,
                 opacity: 1,
