@@ -170,7 +170,7 @@ export class WarpViewChart {
         this.ticks.push(parseInt(timestamp));
       } else {
         const ts = Math.floor(parseInt(timestamp) / 1000);
-        datasets.push([moment(ts).utc(true).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
+        datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(ts);
       }
     });

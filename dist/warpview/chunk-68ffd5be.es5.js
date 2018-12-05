@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-warpview.loadBundle("chunk-0b0e8ff0.js", ["exports"], function (t) { window.warpview.h;
+warpview.loadBundle("chunk-68ffd5be.js", ["exports"], function (t) { window.warpview.h;
     var e = /** @class */ (function () {
         function e() {
         }
@@ -60,7 +60,7 @@ warpview.loadBundle("chunk-0b0e8ff0.js", ["exports"], function (t) { window.warp
         r.gtsFromJSON = function (t, e) { return { gts: { c: t.c, l: t.l, a: t.a, v: t.v, id: e } }; };
         r.gtsFromJSONList = function (t, e) { var s, n = []; return (t || []).forEach(function (t, o) { var i = t; t.gts && (i = t.gts), s = void 0 !== e && "" !== e ? e + "-" + o : o, r.isArray(i) && n.push(r.gtsFromJSONList(i, s)), r.isGts(i) && n.push(r.gtsFromJSON(i, s)), r.isEmbeddedImage(i) && n.push({ image: i, caption: "Image", id: s }), r.isEmbeddedImageObject(i) && n.push({ image: i.image, caption: i.caption, id: s }); }), { content: n || [] }; };
         r.flatDeep = function (t) { return t.reduce(function (t, e) { return Array.isArray(e) ? t.concat(r.flatDeep(e)) : t.concat(e); }, []); };
-        r.flattenGtsIdArray = function (t, e) { var s = []; return console.log("flattenGtsIdArray", t, e), t.forEach(function (t) { if (console.log("flattenGtsIdArray a.forEach", t, e), r.isArray(t)) {
+        r.flattenGtsIdArray = function (t, e) { var s = []; return console.log("flattenGtsIdArray", t, e), r.isGts(t) && (t = [t]), t.forEach(function (t) { if (console.log("flattenGtsIdArray a.forEach", t, e), r.isArray(t)) {
             console.log("flattenGtsIdArray d isArray");
             var n_2 = r.flattenGtsIdArray(t, e);
             s.push(n_2.res), e = n_2.r;

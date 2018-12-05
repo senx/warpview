@@ -21,6 +21,7 @@ import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
 import { GTSLib } from "../../utils/gts.lib";
 import { DataModel } from "../../model/dataModel";
+import moment from "moment";
 export class WarpViewScatter {
     constructor() {
         this.unit = '';
@@ -119,6 +120,27 @@ export class WarpViewScatter {
                     }]
             },
         };
+        if (this._options.timeMode === 'timestamp') {
+            options.scales.xAxes[0].time = undefined;
+            options.scales.xAxes[0].type = 'linear';
+            options.scales.xAxes[0].ticks = {
+                fontColor: color,
+            };
+        }
+        else {
+            options.scales.xAxes[0].time = {
+                displayFormats: {
+                    millisecond: 'HH:mm:ss.SSS',
+                    second: 'HH:mm:ss',
+                    minute: 'HH:mm',
+                    hour: 'HH'
+                }
+            };
+            options.scales.xAxes[0].ticks = {
+                fontColor: color
+            };
+            options.scales.xAxes[0].type = 'time';
+        }
         if (this._chart) {
             this._chart.destroy();
         }
@@ -136,7 +158,12 @@ export class WarpViewScatter {
             let g = gts[i];
             let data = [];
             g.v.forEach(d => {
-                data.push({ x: d[0] / 1000, y: d[d.length - 1] });
+                if (this._options.timeMode === 'timestamp') {
+                    data.push({ x: d[0], y: d[d.length - 1] });
+                }
+                else {
+                    data.push({ x: moment.utc(d[0] / 1000), y: d[d.length - 1] });
+                }
             });
             datasets.push({
                 label: GTSLib.serializeGtsMetadata(g),

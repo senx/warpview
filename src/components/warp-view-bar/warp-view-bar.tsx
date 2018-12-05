@@ -24,6 +24,7 @@ import {Param} from "../../model/param";
 import {ColorLib} from "../../utils/color-lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
+import moment from "moment";
 
 @Component({
   tag: "warp-view-bar",
@@ -127,6 +128,26 @@ export class WarpViewBar {
       },
       responsive: this.responsive
     };
+    if (this._options.timeMode === 'timestamp') {
+      graphOpts.scales.xAxes[0].time = undefined;
+      graphOpts.scales.xAxes[0].type = 'linear';
+      graphOpts.scales.xAxes[0].ticks = {
+        fontColor: color,
+      };
+    } else {
+      graphOpts.scales.xAxes[0].time = {
+        displayFormats: {
+          millisecond: 'HH:mm:ss.SSS',
+          second: 'HH:mm:ss',
+          minute: 'HH:mm',
+          hour: 'HH'
+        }
+      };
+      graphOpts.scales.xAxes[0].ticks = {
+        fontColor: color
+      };
+      graphOpts.scales.xAxes[0].type = 'time';
+    }
     if (this._chart) {
       this._chart.destroy();
     }
@@ -177,7 +198,11 @@ export class WarpViewBar {
         if (g.v) {
           GTSLib.gtsSort(g);
           g.v.forEach(d => {
-            ticks.push(Math.floor(parseInt(d[0]) / 1000));
+            if (this._options.timeMode === 'timestamp') {
+              ticks.push(d[0]);
+            } else {
+              ticks.push(moment.utc(d[0] / 1000));
+            }
             data.push(d[d.length - 1]);
           });
           let color = ColorLib.getColor(pos);

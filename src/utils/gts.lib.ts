@@ -234,6 +234,9 @@ export class GTSLib {
   static flattenGtsIdArray(a: any[], r: number):{ res: any[], r: number} {
     const res = [];
     console.log('flattenGtsIdArray', a, r);
+    if(GTSLib.isGts(a)) {
+      a = [ a ];
+    }
     a.forEach(d => {
       console.log('flattenGtsIdArray a.forEach', d, r);
       if(GTSLib.isArray(d)) {
