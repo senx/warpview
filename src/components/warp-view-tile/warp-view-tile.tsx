@@ -15,12 +15,13 @@
  *
  */
 
-import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
-import {DataModel} from "../../model/dataModel";
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
+import { Component, Element, Listen, Method, Prop, State, Watch } from '@stencil/core';
+import { GTSLib } from '../../utils/gts.lib';
+import { DataModel } from "../../model/dataModel";
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
+import { WarpViewSpectrumParam } from "../warp-view-spectrum/warp-view-spectrum";
 
 @Component({
   tag: 'warp-view-tile',
@@ -46,34 +47,42 @@ export class WarpViewTile {
 
   private warpscript: string = '';
   private graphs = {
-    'scatter': ['scatter'],
-    'chart': ['line', 'spline', 'step', 'area'],
-    'pie': ['pie', 'doughnut', 'gauge'],
-    'polar': ['polar'],
-    'radar': ['radar'],
-    'bar': ['bar'],
-    'annotation': ['annotation'],
-    'gts-tree': ['gts-tree'],
+    'scatter': [ 'scatter' ],
+    'chart': [ 'line', 'spline', 'step', 'area' ],
+    'pie': [ 'pie', 'doughnut', 'gauge' ],
+    'polar': [ 'polar' ],
+    'radar': [ 'radar' ],
+    'bar': [ 'bar' ],
+    'annotation': [ 'annotation' ],
+    'gts-tree': [ 'gts-tree' ],
+    'spectrum': [ 'spectrum' ],
   };
   private loading = true;
   private gtsList: any;
-  private _options: Param;
+  private _options: Param = {
+    spectrum: {
+      range: 'd',
+      granularity: '10 m',
+      scale: 24,
+      interval: 6
+    }
+  };
   private timer: any;
   private _autoRefresh;
-
+  private wsComplement: string = '';
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    this.LOG.debug(['options'], newValue);
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options', 'changed'], newValue);
+    this.LOG.debug([ 'options' ], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'options', 'changed' ], newValue);
       this.parseGTS();
     }
   }
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
+    if(oldValue !== newValue) {
       this.parseGTS();
     }
   }
@@ -85,7 +94,7 @@ export class WarpViewTile {
 
   @Listen('document:keyup')
   handleKeyDown(ev: KeyboardEvent) {
-    if (ev.key === 'r') {
+    if(ev.key === 'r') {
       this.execute();
     }
   }
@@ -96,31 +105,31 @@ export class WarpViewTile {
 
   private parseGTS() {
     let data: DataModel = new DataModel();
-    if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
-      const dataLine = this.gtsList[0];
-      if (dataLine.hasOwnProperty('data')) {
+    if(GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
+      const dataLine = this.gtsList[ 0 ];
+      if(dataLine.hasOwnProperty('data')) {
         data.data = dataLine.data;
         data.globalParams = dataLine.globalParams || {} as Param;
         data.globalParams.type = data.globalParams.type || this.type;
         data.params = dataLine.params;
       } else {
         data.data = dataLine;
-        data.globalParams = {type: this.type} as Param;
+        data.globalParams = { type: this.type } as Param;
       }
     } else {
       data.data = this.gtsList;
-      data.globalParams = {type: this.type} as Param;
+      data.globalParams = { type: this.type } as Param;
     }
-    this.LOG.debug(['parseGTS', 'data'], data);
+    this.LOG.debug([ 'parseGTS', 'data' ], data);
     this.data = data;
     this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-    this.LOG.debug(['parseGTS', 'options'], this._options);
-    if (this._autoRefresh !== this._options.autoRefresh) {
+    this.LOG.debug([ 'parseGTS', 'options' ], this._options);
+    if(this._autoRefresh !== this._options.autoRefresh) {
       this._autoRefresh = this._options.autoRefresh;
-      if (this.timer) {
+      if(this.timer) {
         window.clearInterval(this.timer);
       }
-      if (this._autoRefresh && this._autoRefresh > 0) {
+      if(this._autoRefresh && this._autoRefresh > 0) {
         this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
       }
     }
@@ -128,25 +137,50 @@ export class WarpViewTile {
   }
 
   private execute() {
+    this._options = ChartLib.mergeDeep(this._options, this.options);
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
-    this.LOG.debug(['execute', 'warpscript'], this.warpscript);
-    fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
+    if(this.type == 'spectrum') {
+      this.LOG.debug([ 'execute' ], this._options.spectrum);
+      this.wsComplement =
+        ' {} \'res\' STORE' +
+        ' 1 ' + this._options.spectrum.range + ' \'unit\' TIMEMODULO 0 GET 0 REMOVE DROP' +
+        ' <%' +
+        ' \'gts\' STORE' +
+        ' $gts LABELS \'unit\' GET TOLONG ' + this._options.spectrum.range + ' \'d\' STORE' +
+        ' { $d TOSTRING $gts VALUES } $res APPEND \'res\' STORE' +
+        ' %> FOREACH' +
+        ' { \'labels\' $res KEYLIST LSORT } \'out\' STORE' +
+        ' $out \'labels\' GET \'keys\' STORE' +
+        ' [] \'data\' STORE' +
+        ' $keys <%' +
+        ' \'k\' STORE' +
+        ' $res $k GET \'values\' STORE' +
+        ' $values \'v\' STORE' +
+        ' $values SIZE ' + (this._options.spectrum.scale * this._options.spectrum.interval - 1) + ' <% DROP $v 0.0 +  \'v\' STORE  %> FOR' +
+        ' $data [ $v ] APPEND \'data\' STORE' +
+        ' %> FOREACH' +
+        ' { \'data\' $data ZIP } $out APPEND'
+    } else {
+      this.wsComplement = '';
+    }
+    this.LOG.debug([ 'execute', 'warpscript' ], this.warpscript);
+    fetch(this.url, { method: 'POST', body: this.warpscript + '\n' + this.wsComplement }).then(response => {
       response.text().then(gtsStr => {
-        this.LOG.debug(['execute', 'response'], gtsStr);
+        this.LOG.debug([ 'execute', 'response' ], gtsStr);
         try {
           this.gtsList = JSON.parse(gtsStr);
           this.parseGTS();
-        } catch (e) {
-          this.LOG.error(['execute'], e);
+        } catch(e) {
+          this.LOG.error([ 'execute' ], e);
         }
         this.loading = false;
       }, err => {
-        this.LOG.error(['execute'], [err, this.url, this.warpscript]);
+        this.LOG.error([ 'execute' ], [ err, this.url, this.warpscript ]);
         this.loading = false;
       });
     }, err => {
-      this.LOG.error(['execute'], [err, this.url, this.warpscript]);
+      this.LOG.error([ 'execute' ], [ err, this.url, this.warpscript ]);
       this.loading = false;
     })
   }
@@ -157,7 +191,7 @@ export class WarpViewTile {
         <slot/>
       </div>
 
-      {this.graphs['scatter'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'scatter' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}</h1>
           <div class="tile">
@@ -168,7 +202,7 @@ export class WarpViewTile {
         :
         ''
       }
-      {this.graphs['chart'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'chart' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}</h1>
           <div class="tile">
@@ -202,7 +236,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.graphs['pie'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'pie' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}
             <small>{this.unit}</small>
@@ -214,7 +248,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.graphs['polar'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'polar' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}
             <small>{this.unit}</small>
@@ -226,7 +260,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.graphs['radar'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'radar' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}
             <small>{this.unit}</small>
@@ -238,7 +272,7 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.graphs['bar'].indexOf(this.type) > -1 ?
+      {this.graphs[ 'bar' ].indexOf(this.type) > -1 ?
         <div>
           <h1>{this.chartTitle}</h1>
           <div class="tile">
@@ -287,7 +321,7 @@ export class WarpViewTile {
           </h1>
           <div class="tile">
             <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                            options={this._options} />
+                                  options={this._options}/>
           </div>
         </div>
         : ''
@@ -298,7 +332,18 @@ export class WarpViewTile {
             <small>{this.unit}</small>
           </h1>
           <div class="tile">
-            <warp-view-gts-tree  data={this.data} options={this._options} />
+            <warp-view-gts-tree data={this.data} options={this._options}/>
+          </div>
+        </div>
+        : ''
+      }
+      {this.type == 'spectrum' ?
+        <div>
+          <h1>{this.chartTitle}
+            <small>{this.unit}</small>
+          </h1>
+          <div class="tile">
+            <warp-view-spectrum data={this.data} options={this._options}/>
           </div>
         </div>
         : ''

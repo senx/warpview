@@ -735,6 +735,49 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewSpectrum {
+      'data': DataModel | any[] | string;
+      'height': string;
+      'options': Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLWarpViewSpectrumElement extends StencilComponents.WarpViewSpectrum, HTMLStencilElement {}
+
+  var HTMLWarpViewSpectrumElement: {
+    prototype: HTMLWarpViewSpectrumElement;
+    new (): HTMLWarpViewSpectrumElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-spectrum': HTMLWarpViewSpectrumElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-spectrum': HTMLWarpViewSpectrumElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-spectrum': JSXElements.WarpViewSpectrumAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewSpectrumAttributes extends HTMLAttributes {
+      'data'?: DataModel | any[] | string;
+      'height'?: string;
+      'options'?: Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewSpinner {
       'message': string;
     }

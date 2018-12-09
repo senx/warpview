@@ -15,6 +15,8 @@
  *
  */
 
+import { WarpViewSpectrumParam } from "../components/warp-view-spectrum/warp-view-spectrum";
+
 export class Param {
   bgColor?: string;
   fontColor?: string;
@@ -40,4 +42,5 @@ export class Param {
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string;
+  spectrum?: WarpViewSpectrumParam = new WarpViewSpectrumParam();
 }

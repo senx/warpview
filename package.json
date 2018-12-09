@@ -50,7 +50,8 @@
     "moment": "^2.22.2",
     "prismjs": "^1.14.0",
     "rebuild": "^0.1.2",
-    "whatwg-fetch": "^2.0.4"
+    "whatwg-fetch": "^2.0.4",
+    "@syncfusion/ej2-heatmap": "latest"
   },
   "devDependencies": {
     "@stencil/dev-server": "0.0.18",

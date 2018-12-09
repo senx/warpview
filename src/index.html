@@ -234,7 +234,13 @@
                                                                               target="_blank">Warp 10™</a></p>
               <h2>Usage</h2>
               <div id="welcome">
-
+                <warp-view-tile url="http://161.106.242.27:8080/api/v0/exec" responsive="true" type="spectrum"
+                                chart-title="Spectrum">
+                  [ 'UVgTJkUI0mrKeU8dCdrCzzOQEgUDkXNndhZJ0RmlTA5_8nXqUBgsRZleGXL5aRhsn3APNaAzPvAtNPvLjGIGUNTnT1Omt0Ak0L11rtx0K4lOU0rWHfR_BoKa4pdlPY6.VZPYICj3OtBtazvp4_fvJL1XxnL6QvyJ' '~pride.*' {} '2018-05-01T22:00:00.000Z' '2018-05-31T22:00:00.000Z' ] FETCH
+                  [ SWAP bucketizer.mean '2018-05-31T22:00:00.000Z' TOTIMESTAMP 10 m 0 ] BUCKETIZE
+                  [ SWAP [] reducer.mean ] REDUCE
+                  [ NaN NaN NaN 0 ] FILLVALUE
+                </warp-view-tile>
                 <warp-view-spinner message="Spinner sample"></warp-view-spinner>
                 <pre><code class="language-markup">
 &lt;html>
