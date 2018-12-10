@@ -186,23 +186,26 @@ export class WarpViewChart {
     return this.type === 'area';
   }
 
-  private static toFixed(x: any): string {
+  private static toFixed(x: number): string {
     let e;
+    let res = '';
     if (Math.abs(x) < 1.0) {
       e = parseInt(x.toString().split('e-')[1]);
       if (e) {
         x *= Math.pow(10, e - 1);
-        x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+        res = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
       }
     } else {
+      res = x.toString();
       e = parseInt(x.toString().split('+')[1]);
       if (e > 20) {
         e -= 20;
         x /= Math.pow(10, e);
-        x += (new Array(e + 1)).join('0');
+        res = x.toString();
+        res += (new Array(e + 1)).join('0');
       }
     }
-    return x;
+    return res;
   }
 
   /**
@@ -253,7 +256,7 @@ export class WarpViewChart {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
         if (!series.isVisible) return;
-        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(series.yHTML as number);
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
         if (series.isHighlighted) {
           labeledData = `<b>${labeledData}</b>`;
         }
@@ -263,12 +266,13 @@ export class WarpViewChart {
 
     let html = `<b>${data.xHTML}</b>`;
     data.series.forEach(function (series) {
-      if (!series.isVisible || !series.yHTML) return;
-      let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(series.yHTML as number);
-      if (series.isHighlighted) {
-        labeledData = `<b>${labeledData}</b>`;
+      if (series.isVisible && series.yHTML) {
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
+        if (series.isHighlighted) {
+          labeledData = `<b>${labeledData}</b>`;
+        }
+        html += `<br>${series.dashHTML} ${labeledData}`;
       }
-      html += `<br>${series.dashHTML} ${labeledData}`;
     });
     return html;
   }
@@ -413,8 +417,8 @@ export class WarpViewChart {
             drawAxis: this.displayGraph()
           },
           y: {
-            axisLabelFormatter: (x) => {
-              return WarpViewChart.toFixed(x);
+            axisLabelFormatter: (y) => {
+              return WarpViewChart.toFixed(y as number);
             }
           }
         },
@@ -432,7 +436,7 @@ export class WarpViewChart {
       }
       if (this._options.timeMode === 'timestamp') {
         options.axes.x.axisLabelFormatter = (x) => {
-          return WarpViewChart.toFixed(x);
+          return WarpViewChart.toFixed(x as number);
         }
       }
       this._chart = new Dygraph(
