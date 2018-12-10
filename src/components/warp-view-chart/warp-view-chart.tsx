@@ -217,26 +217,33 @@ export class WarpViewChart {
     if (serializedGTS.length > 1) {
       display += `<span class='gts-separator'>{</span>`;
       const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
-      labels.forEach((l, i) => {
-        const label = l.split('=');
-        display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
-        if (i !== labels.length - 1) {
-          display += `<span>, </span>`;
-        }
-      });
+      if(labels.length > 0) {
+        labels.forEach((l, i) => {
+          const label = l.split('=');
+          if(l.length > 1) {
+            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
+              display += `<span>, </span>`;
+            }
+          }
+        });
+      }
       display += `<span class='gts-separator'>}</span>`;
     }
     if (serializedGTS.length > 2) {
       display += `<span class='gts-separator'>{</span>`;
-
       const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
-      labels.forEach((l, i) => {
-        const label = l.split('=');
-        display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
-        if (i !== labels.length - 1) {
-          display += `<span>, </span>`;
-        }
-      });
+      if(labels.length > 0) {
+        labels.forEach((l, i) => {
+          const label = l.split('=');
+          if(l.length > 1) {
+            display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
+              display += `<span>, </span>`;
+            }
+          }
+        });
+      }
       display += `<span class='gts-separator'>}</span>`;
     }
     return display;
@@ -247,7 +254,7 @@ export class WarpViewChart {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
         if (!series.isVisible) return;
-        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(series.yHTML as number);
         if (series.isHighlighted) {
           labeledData = `<b>${labeledData}</b>`;
         }
@@ -258,7 +265,7 @@ export class WarpViewChart {
     let html = `<b>${data.xHTML}</b>`;
     data.series.forEach(function (series) {
       if (!series.isVisible || !series.yHTML) return;
-      let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
+      let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(series.yHTML as number);
       if (series.isHighlighted) {
         labeledData = `<b>${labeledData}</b>`;
       }
