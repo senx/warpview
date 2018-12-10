@@ -34,6 +34,7 @@ export class WarpViewSpectrumParam {
   interval: 6
 }
 
+
 @Component({
   tag: 'warp-view-spectrum',
   styleUrl: 'warp-view-spectrum.scss',
@@ -90,6 +91,9 @@ export class WarpViewSpectrum {
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid) as HTMLElement;
+    document.getElementById = (id:string) => {
+      return this.el.shadowRoot.querySelector('#' + id) as HTMLElement;
+    };
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor;
@@ -134,7 +138,9 @@ export class WarpViewSpectrum {
         },
         legendSettings: {
           visible: true,
-          position: 'Bottom'
+          position: 'Bottom',
+          width: '75%',
+          enableSmartLegend: true
         },
         showTooltip: false,
         cellSettings: {

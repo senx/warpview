@@ -20,6 +20,7 @@ export declare class WarpViewTile {
     private _options;
     private timer;
     private _autoRefresh;
+    private wsComplement;
     private onOptions;
     private onGtsFilter;
     resize(): void;

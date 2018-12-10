@@ -14,5 +14,9 @@
  *  limitations under the License.
  *
  */
+import { WarpViewSpectrumParam } from "../components/warp-view-spectrum/warp-view-spectrum";
 export class Param {
+    constructor() {
+        this.spectrum = new WarpViewSpectrumParam();
+    }
 }

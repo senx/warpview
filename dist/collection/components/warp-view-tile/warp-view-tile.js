@@ -38,8 +38,18 @@ export class WarpViewTile {
             'bar': ['bar'],
             'annotation': ['annotation'],
             'gts-tree': ['gts-tree'],
+            'spectrum': ['spectrum'],
         };
         this.loading = true;
+        this._options = {
+            spectrum: {
+                range: 'd',
+                granularity: '10 m',
+                scale: 24,
+                interval: 6
+            }
+        };
+        this.wsComplement = '';
     }
     onOptions(newValue, oldValue) {
         this.LOG.debug(['options'], newValue);
@@ -99,10 +109,36 @@ export class WarpViewTile {
         this.loading = false;
     }
     execute() {
+        this._options = ChartLib.mergeDeep(this._options, this.options);
         this.loading = true;
         this.warpscript = this.wsElement.textContent;
+        if (this.type == 'spectrum') {
+            this.LOG.debug(['execute'], this._options.spectrum);
+            this.wsComplement =
+                ' {} \'res\' STORE' +
+                    ' 1 ' + this._options.spectrum.range + ' \'unit\' TIMEMODULO 0 GET 0 REMOVE DROP' +
+                    ' <%' +
+                    ' \'gts\' STORE' +
+                    ' $gts LABELS \'unit\' GET TOLONG ' + this._options.spectrum.range + ' \'d\' STORE' +
+                    ' { $d TOSTRING $gts VALUES } $res APPEND \'res\' STORE' +
+                    ' %> FOREACH' +
+                    ' { \'labels\' $res KEYLIST LSORT } \'out\' STORE' +
+                    ' $out \'labels\' GET \'keys\' STORE' +
+                    ' [] \'data\' STORE' +
+                    ' $keys <%' +
+                    ' \'k\' STORE' +
+                    ' $res $k GET \'values\' STORE' +
+                    ' $values \'v\' STORE' +
+                    ' $values SIZE ' + (this._options.spectrum.scale * this._options.spectrum.interval - 1) + ' <% DROP $v 0.0 +  \'v\' STORE  %> FOR' +
+                    ' $data [ $v ] APPEND \'data\' STORE' +
+                    ' %> FOREACH' +
+                    ' { \'data\' $data ZIP } $out APPEND';
+        }
+        else {
+            this.wsComplement = '';
+        }
         this.LOG.debug(['execute', 'warpscript'], this.warpscript);
-        fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
+        fetch(this.url, { method: 'POST', body: this.warpscript + '\n' + this.wsComplement }).then(response => {
             response.text().then(gtsStr => {
                 this.LOG.debug(['execute', 'response'], gtsStr);
                 try {
@@ -223,6 +259,14 @@ export class WarpViewTile {
                         h("small", null, this.unit)),
                     h("div", { class: "tile" },
                         h("warp-view-gts-tree", { data: this.data, options: this._options })))
+                : '',
+            this.type == 'spectrum' ?
+                h("div", null,
+                    h("h1", null,
+                        this.chartTitle,
+                        h("small", null, this.unit)),
+                    h("div", { class: "tile" },
+                        h("warp-view-spectrum", { data: this.data, options: this._options })))
                 : '',
             this.loading ? h("warp-view-spinner", null) : '');
     }

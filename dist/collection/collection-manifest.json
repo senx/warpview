@@ -1057,6 +1057,69 @@
       "shadow": true
     },
     {
+      "tag": "warp-view-spectrum",
+      "dependencies": [],
+      "componentClass": "WarpViewSpectrum",
+      "componentPath": "components/warp-view-spectrum/warp-view-spectrum.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-spectrum/warp-view-spectrum.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "warp-view-spinner",
       "dependencies": [],
       "componentClass": "WarpViewSpinner",
@@ -1093,6 +1156,7 @@
         "warp-view-polar",
         "warp-view-radar",
         "warp-view-scatter",
+        "warp-view-spectrum",
         "warp-view-spinner"
       ],
       "componentClass": "WarpViewTile",
