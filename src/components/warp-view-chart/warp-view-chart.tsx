@@ -141,28 +141,27 @@ export class WarpViewChart {
       labels = new Array(gtsList.length);
       labels.push('Date');
       colors = [];
+      gtsList = gtsList.filter(g => {
+        return (g.v && GTSLib.isGtsToPlot(g));
+      });
       gtsList.forEach((g, i) => {
-        if (g.v && GTSLib.isGtsToPlot(g)) {
-          let label = GTSLib.serializeGtsMetadata(g);
-          GTSLib.gtsSort(g);
-          g.v.forEach(value => {
-            if (!data[value[0]]) {
-              data[value[0]] = new Array(gtsList.length);
-              data[value[0]].fill(null);
-            }
-            data[value[0]][i] = value[value.length - 1] || -1;
-          });
-          let color = ColorLib.getColor(g.id);
-          this.LOG.debug(['gtsToData', 'ColorLib'], [color, g.id]);
-
-          labels.push(label);
-          colors.push(color);
-          this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
-        }
+        let label = GTSLib.serializeGtsMetadata(g);
+        GTSLib.gtsSort(g);
+        g.v.forEach(value => {
+          const ts = value[0];
+          if (!data[ts]) {
+            data[ts] = new Array(gtsList.length);
+            data[ts].fill(null);
+          }
+          data[ts][i] = value[value.length - 1] || null;
+        });
+        let color = ColorLib.getColor(g.id);
+        labels.push(label);
+        colors.push(color);
+        this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
       });
     }
     this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
-
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -217,10 +216,10 @@ export class WarpViewChart {
     if (serializedGTS.length > 1) {
       display += `<span class='gts-separator'>{</span>`;
       const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
-      if(labels.length > 0) {
+      if (labels.length > 0) {
         labels.forEach((l, i) => {
           const label = l.split('=');
-          if(l.length > 1) {
+          if (l.length > 1) {
             display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
             if (i !== labels.length - 1) {
               display += `<span>, </span>`;
@@ -233,10 +232,10 @@ export class WarpViewChart {
     if (serializedGTS.length > 2) {
       display += `<span class='gts-separator'>{</span>`;
       const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
-      if(labels.length > 0) {
+      if (labels.length > 0) {
         labels.forEach((l, i) => {
           const label = l.split('=');
-          if(l.length > 1) {
+          if (l.length > 1) {
             display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
             if (i !== labels.length - 1) {
               display += `<span>, </span>`;
