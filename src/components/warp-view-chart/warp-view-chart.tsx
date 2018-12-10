@@ -206,28 +206,63 @@ export class WarpViewChart {
     return x;
   }
 
-  private legendFormatter(data) {
-    // if(!this.showTooltip) return;
+  /**
+   *
+   * @param {string} data
+   * @returns {string}
+   */
+  private static formatLabel(data: string): string {
+    const serializedGTS = data.split('{');
+    let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
+    if (serializedGTS.length > 1) {
+      display += `<span class='gts-separator'>{</span>`;
+      const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
+      labels.forEach((l, i) => {
+        const label = l.split('=');
+        display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+        if (i !== labels.length - 1) {
+          display += `<span>, </span>`;
+        }
+      });
+      display += `<span class='gts-separator'>}</span>`;
+    }
+    if (serializedGTS.length > 2) {
+      display += `<span class='gts-separator'>{</span>`;
+
+      const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
+      labels.forEach((l, i) => {
+        const label = l.split('=');
+        display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+        if (i !== labels.length - 1) {
+          display += `<span>, </span>`;
+        }
+      });
+      display += `<span class='gts-separator'>}</span>`;
+    }
+    return display;
+  }
+
+  private legendFormatter(data): string {
     if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
         if (!series.isVisible) return;
-        let labeledData = series.labelHTML + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
         if (series.isHighlighted) {
-          labeledData = '<b>' + labeledData + '</b>';
+          labeledData = `<b>${labeledData}</b>`;
         }
-        return series.dashHTML + ' ' + labeledData;
+        return WarpViewChart.formatLabel(series.labelHTML) + ' ' + labeledData;
       }).join('<br>');
     }
 
-    let html = data.xHTML;
+    let html = `<b>${data.xHTML}</b>`;
     data.series.forEach(function (series) {
       if (!series.isVisible || !series.yHTML) return;
-      let labeledData = series.labelHTML + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
+      let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
       if (series.isHighlighted) {
-        labeledData = '<b>' + labeledData + '</b>';
+        labeledData = `<b>${labeledData}</b>`;
       }
-      html += '<br>' + series.dashHTML + ' ' + labeledData;
+      html += `<br>${series.dashHTML} ${labeledData}`;
     });
     return html;
   }
@@ -242,7 +277,7 @@ export class WarpViewChart {
   }
 
   private scroll(event, g) {
-    if(!event.altKey) return;
+    if (!event.altKey) return;
     this.LOG.debug(['scroll'], g);
     const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
     // For me the normalized value shows 0.075 for one click. If I took
