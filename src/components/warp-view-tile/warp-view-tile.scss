@@ -21,7 +21,14 @@
   .warpscript {
     display: none;
   }
-
+  .executionErrorText {
+    color:red;
+    padding: 10px;
+    border-color: red;
+    border-width: 2px;
+    border-radius: 3px;
+    border-style: solid;
+  }
   .wrapper {
     min-height: var(--warp-view-tile-height, 400px);
     width: var(--warp-view-tile-width, 100%);
