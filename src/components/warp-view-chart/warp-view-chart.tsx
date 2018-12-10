@@ -153,7 +153,7 @@ export class WarpViewChart {
             data[ts] = new Array(gtsList.length);
             data[ts].fill(null);
           }
-          data[ts][i] = value[value.length - 1] || null;
+          data[ts][i] = value[value.length - 1];
         });
         let color = ColorLib.getColor(g.id);
         labels.push(label);
