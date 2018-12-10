@@ -23,9 +23,24 @@ warp-view-chart .dygraph-legend, warp-view-chart .tooltip {
   -webkit-box-shadow: none;
   box-shadow: none;
   pointer-events: none;
-  min-width: 400px;
-  z-index: 999;
-  font-size: 10px; }
+  font-size: 10px;
+  /*   min-width: 100px;
+     width: auto;
+     z-index: 999;*/ }
+  warp-view-chart .dygraph-legend .gts-classname, warp-view-chart .tooltip .gts-classname {
+    color: var(--gts-classname-font-color, #0074D9); }
+  warp-view-chart .dygraph-legend .gts-labelname, warp-view-chart .tooltip .gts-labelname {
+    color: var(--gts-labelname-font-color, #19A979); }
+  warp-view-chart .dygraph-legend .gts-attrname, warp-view-chart .tooltip .gts-attrname {
+    color: var(--gts-labelname-font-color, #ED4A7B); }
+  warp-view-chart .dygraph-legend .gts-separator, warp-view-chart .tooltip .gts-separator {
+    color: var(--gts-separator-font-color, #bbbbbb); }
+  warp-view-chart .dygraph-legend .gts-labelvalue, warp-view-chart .tooltip .gts-labelvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic; }
+  warp-view-chart .dygraph-legend .gts-attrvalue, warp-view-chart .tooltip .gts-attrvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic; }
 
 warp-view-chart div.chart {
   width: var(--warp-view-chart-width, 100%);

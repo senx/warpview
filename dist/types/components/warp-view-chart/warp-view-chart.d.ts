@@ -43,6 +43,12 @@ export declare class WarpViewChart {
     private isStepped;
     private isStacked;
     private static toFixed;
+    /**
+     *
+     * @param {string} data
+     * @returns {string}
+     */
+    private static formatLabel;
     private legendFormatter;
     private highlightCallback;
     private scroll;

@@ -44,7 +44,7 @@ var WarpViewChartComponent = /** @class **/ (function() {
   WarpViewChart.is = 'warp-view-chart';
   WarpViewChart.getModule = function(opts) {
     
-    return import('./zixidmsy.js').then(function(m) {
+    return import('./8qycktj7.js').then(function(m) {
         return m.WarpViewChart;
       });
 

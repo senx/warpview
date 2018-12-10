@@ -25,9 +25,34 @@ warp-view-chart {
     -webkit-box-shadow: none;
     box-shadow: none;
     pointer-events: none;
-    min-width: 400px;
-    z-index: 999;
     font-size: 10px;
+    /*   min-width: 100px;
+     width: auto;
+     z-index: 999;*/
+
+    .gts-classname {
+      color: var(--gts-classname-font-color, #0074D9);
+    }
+
+    .gts-labelname {
+      color: var(--gts-labelname-font-color, #19A979);
+    }
+    .gts-attrname {
+      color: var(--gts-labelname-font-color, #ED4A7B);
+    }
+
+    .gts-separator {
+      color: var(--gts-separator-font-color, #bbbbbb);
+    }
+
+    .gts-labelvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic;
+    }
+    .gts-attrvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic;
+    }
   }
 
   div.chart {
@@ -38,4 +63,6 @@ warp-view-chart {
       color: var(--warp-view-chart-label-color, #8e8e8e) !important;
     }
   }
+
+
 }
