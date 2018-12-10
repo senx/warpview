@@ -295,6 +295,13 @@ export class WarpViewAnnotation {
       dataList = GTSLib.flatDeep(dataList) as any[];
       this.LOG.debug(['parseData', 'dataList'], dataList);
       let i = 0;
+      let timestampdivider : number = 1000; //default for µs timeunit
+      if (this._options.timeUnit && this._options.timeUnit === 'ms'){
+        timestampdivider = 1;
+      }
+      if (this._options.timeUnit && this._options.timeUnit === 'ns'){
+        timestampdivider = 1000000;
+      }
       dataList.forEach(g => {
         if (GTSLib.isGtsToAnnotate(g)) {
           this.LOG.debug(['parseData', 'will draw'], g);
@@ -304,7 +311,7 @@ export class WarpViewAnnotation {
           g.v.forEach(d => {
             let time = d[0];
             if (this._options.timeMode !== 'timestamp') {
-              time = moment(time / 1000).utc(true).valueOf();
+              time = moment(time / timestampdivider).utc(true).valueOf();
             }
             data.push({x: time, y: 0.5, val: d[d.length - 1]});
           });

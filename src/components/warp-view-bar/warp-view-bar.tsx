@@ -193,6 +193,13 @@ export class WarpViewBar {
     } else {
       dataList = GTSLib.flatDeep(dataList);
       let i = 0;
+      let timestampdivider : number = 1000; //default for µs timeunit
+      if (this._options.timeUnit && this._options.timeUnit === 'ms'){
+        timestampdivider = 1;
+      }
+      if (this._options.timeUnit && this._options.timeUnit === 'ns'){
+        timestampdivider = 1000000;
+      }
       dataList.forEach(g => {
         let data = [];
         if (g.v) {
@@ -201,7 +208,7 @@ export class WarpViewBar {
             if (this._options.timeMode === 'timestamp') {
               ticks.push(d[0]);
             } else {
-              ticks.push(moment.utc(d[0] / 1000));
+              ticks.push(moment.utc(d[0] / timestampdivider));
             }
             data.push(d[d.length - 1]);
           });
