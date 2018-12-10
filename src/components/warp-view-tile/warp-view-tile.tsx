@@ -15,12 +15,12 @@
  *
  */
 
-import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
-import {DataModel} from "../../model/dataModel";
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
+import { Component, Element, Listen, Method, Prop, State, Watch } from '@stencil/core';
+import { GTSLib } from '../../utils/gts.lib';
+import { DataModel } from "../../model/dataModel";
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
 
 @Component({
   tag: 'warp-view-tile',
@@ -56,6 +56,7 @@ export class WarpViewTile {
     'gts-tree': ['gts-tree'],
   };
   private loading = true;
+  private executionErrorText: string = '';
   private gtsList: any;
   private _options: Param;
   private timer: any;
@@ -105,11 +106,11 @@ export class WarpViewTile {
         data.params = dataLine.params;
       } else {
         data.data = dataLine;
-        data.globalParams = {type: this.type} as Param;
+        data.globalParams = { type: this.type } as Param;
       }
     } else {
       data.data = this.gtsList;
-      data.globalParams = {type: this.type} as Param;
+      data.globalParams = { type: this.type } as Param;
     }
     this.LOG.debug(['parseGTS', 'data'], data);
     this.data = data;
@@ -131,179 +132,188 @@ export class WarpViewTile {
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
     this.LOG.debug(['execute', 'warpscript'], this.warpscript);
-    fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
-      response.text().then(gtsStr => {
-        this.LOG.debug(['execute', 'response'], gtsStr);
-        try {
-          this.gtsList = JSON.parse(gtsStr);
-          this.parseGTS();
-        } catch (e) {
-          this.LOG.error(['execute'], e);
-        }
-        this.loading = false;
-      }, err => {
-        this.LOG.error(['execute'], [err, this.url, this.warpscript]);
-        this.loading = false;
-      });
+    fetch(this.url, { method: 'POST', body: this.warpscript }).then(response => {
+      if( response.status == 200) {
+        response.text().then(gtsStr => {
+          this.LOG.debug(['execute', 'response'], gtsStr);
+          try {
+            this.gtsList = JSON.parse(gtsStr);
+            this.parseGTS();
+          } catch (e) {
+            this.LOG.error(['execute'], e);
+          }
+          this.loading = false;
+        }, err => {
+          this.LOG.error(['execute'], [err, this.url, this.warpscript]);
+          this.loading = false;
+        });
+      } else {
+        this.executionErrorText = "Execution Error : #" + response.headers.get('X-Warp10-Error-Line') + ' ' + response.headers.get('X-Warp10-Error-Message');
+      }
     }, err => {
       this.LOG.error(['execute'], [err, this.url, this.warpscript]);
       this.loading = false;
+      this.executionErrorText = "Failed to reach execution endpoint " + this.url;
     })
   }
 
   render() {
-    return <div class="wrapper" id="wrapper">
-      <div class="warpscript">
-        <slot/>
+    if (this.executionErrorText != '') {
+      return <div class="executionErrorText"> {this.executionErrorText} </div>
+    } else {
+      return <div class="wrapper" id="wrapper">
+        <div class="warpscript">
+          <slot />
+        </div>
+        {this.executionErrorText != '' ? <div class="executionErrorText"> {this.executionErrorText} </div> : ''}
+        {this.graphs['scatter'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}</h1>
+            <div class="tile">
+              <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
+                show-legend={this.showLegend} />
+            </div>
+          </div>
+          :
+          ''
+        }
+        {this.graphs['chart'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}</h1>
+            <div class="tile">
+              <warp-view-chart type={this.type} responsive={this.responsive} unit={this.unit} data={this.data}
+                options={this._options} show-legend={this.showLegend} />
+            </div>
+          </div>
+          :
+          ''
+        }
+        {this.type == 'bubble' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-bubble showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
+                options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'map' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-map responsive={true} data={this.data} options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.graphs['pie'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-pie responsive={this.responsive} data={this.data} options={this._options}
+                showLegend={this.showLegend} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.graphs['polar'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-polar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.graphs['radar'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.graphs['bar'].indexOf(this.type) > -1 ?
+          <div>
+            <h1>{this.chartTitle}</h1>
+            <div class="tile">
+              <warp-view-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
+                options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'text' ?
+          <div>
+            <h1>{this.chartTitle}</h1>
+            <div class="tile">
+              <warp-view-display responsive={this.responsive} unit={this.unit} data={this.data} options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'image' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-image responsive={this.responsive} data={this.data} options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'plot' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                options={this._options} gtsFilter={this.gtsFilter} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'annotation' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
+                options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'gts-tree' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-gts-tree data={this.data} options={this._options} />
+            </div>
+          </div>
+          : ''
+        }
+        {this.loading ? <warp-view-spinner /> : ''}
       </div>
-
-      {this.graphs['scatter'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}</h1>
-          <div class="tile">
-            <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
-                               show-legend={this.showLegend}/>
-          </div>
-        </div>
-        :
-        ''
-      }
-      {this.graphs['chart'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}</h1>
-          <div class="tile">
-            <warp-view-chart type={this.type} responsive={this.responsive} unit={this.unit} data={this.data}
-                             options={this._options} show-legend={this.showLegend}/>
-          </div>
-        </div>
-        :
-        ''
-      }
-      {this.type == 'bubble' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-bubble showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
-                              options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'map' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-map responsive={true} data={this.data} options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.graphs['pie'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-pie responsive={this.responsive} data={this.data} options={this._options}
-                           showLegend={this.showLegend}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.graphs['polar'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-polar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                             options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.graphs['radar'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                             options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.graphs['bar'].indexOf(this.type) > -1 ?
-        <div>
-          <h1>{this.chartTitle}</h1>
-          <div class="tile">
-            <warp-view-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
-                           options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'text' ?
-        <div>
-          <h1>{this.chartTitle}</h1>
-          <div class="tile">
-            <warp-view-display responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'image' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-image responsive={this.responsive} data={this.data} options={this._options}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'plot' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                            options={this._options} gtsFilter={this.gtsFilter}/>
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'annotation' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                            options={this._options} />
-          </div>
-        </div>
-        : ''
-      }
-      {this.type == 'gts-tree' ?
-        <div>
-          <h1>{this.chartTitle}
-            <small>{this.unit}</small>
-          </h1>
-          <div class="tile">
-            <warp-view-gts-tree  data={this.data} options={this._options} />
-          </div>
-        </div>
-        : ''
-      }
-      {this.loading ? <warp-view-spinner/> : ''}
-    </div>
+    }
   }
 }
