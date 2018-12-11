@@ -45,7 +45,7 @@ export class WarpViewChip {
     colorizeChip() {
         const chip = this.el.getElementsByClassName('normal')[0];
         if (this._node.selected) {
-            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id), 0.7));
+            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
             chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
         }
         else {

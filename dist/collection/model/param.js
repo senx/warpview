@@ -16,6 +16,7 @@
  */
 export class Param {
     constructor() {
+        this.showDots = true;
         this.timeUnit = 'us';
     }
 }

@@ -370,6 +370,10 @@ export class WarpViewChart {
                 labelsUTC: true,
                 gridLineColor: color,
                 axisLineColor: color,
+                fillAlpha: 0.5,
+                drawGapEdgePoints: this._options.showDots,
+                drawPoints: this._options.showDots,
+                pointSize: 3,
                 axes: {
                     x: {
                         drawAxis: this.displayGraph()

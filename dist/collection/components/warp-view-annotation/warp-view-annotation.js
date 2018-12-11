@@ -303,7 +303,7 @@ export class WarpViewAnnotation {
                         pointHitRadius: 5,
                         pointStyle: myImage,
                         borderColor: color,
-                        backgroundColor: ColorLib.transparentize(color, 0.5)
+                        backgroundColor: ColorLib.transparentize(color)
                     });
                     i++;
                 }

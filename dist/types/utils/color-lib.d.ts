@@ -15,10 +15,9 @@ export declare class ColorLib {
     /**
      * Add an alpha channel
      * @param color
-     * @param {number} alpha
      * @returns {string}
      */
-    static transparentize(color: any, alpha: number): string;
+    static transparentize(color: any): string;
     /**
      *
      * @param num

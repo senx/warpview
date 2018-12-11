@@ -164,7 +164,7 @@ export class WarpViewBubble {
             datasets.push({
                 data: data,
                 label: label,
-                backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5),
+                backgroundColor: ColorLib.transparentize(ColorLib.getColor(i)),
                 borderColor: ColorLib.getColor(i),
                 borderWidth: 1
             });

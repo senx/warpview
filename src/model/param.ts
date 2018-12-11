@@ -40,5 +40,6 @@ export class Param {
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string;
+  showDots?: boolean = true;
   timeUnit?: string = 'us';
 }

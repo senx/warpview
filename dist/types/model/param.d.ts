@@ -23,5 +23,6 @@ export declare class Param {
     showGTSTree?: boolean;
     foldGTSTree?: boolean;
     timeMode?: string;
+    showDots?: boolean;
     timeUnit?: string;
 }

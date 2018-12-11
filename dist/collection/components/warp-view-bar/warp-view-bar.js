@@ -203,7 +203,7 @@ export class WarpViewBar {
                         data: data,
                         borderColor: color,
                         borderWidth: 1,
-                        backgroundColor: ColorLib.transparentize(color, 0.5)
+                        backgroundColor: ColorLib.transparentize(color)
                     };
                     datasets.push(ds);
                     pos++;

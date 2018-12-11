@@ -71,7 +71,7 @@ export class WarpViewRadar {
                     const dataSet = {
                         label: label,
                         data: [],
-                        backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5),
+                        backgroundColor: ColorLib.transparentize(ColorLib.getColor(i)),
                         borderColor: ColorLib.getColor(i)
                     };
                     g[label].forEach(val => {

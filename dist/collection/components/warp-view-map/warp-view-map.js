@@ -331,7 +331,10 @@ export class WarpViewMap {
                 icon = this.icon(positionData.color, positionData.key);
                 for (let j = 0; j < positionData.positions.length; j++) {
                     if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
-                        let marker = Leaflet.marker({ lat: positionData.positions[j][0], lng: positionData.positions[j][1] }, {
+                        let marker = Leaflet.marker({
+                            lat: positionData.positions[j][0],
+                            lng: positionData.positions[j][1]
+                        }, {
                             icon: icon,
                             opacity: 1,
                         });

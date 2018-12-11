@@ -18,17 +18,24 @@
 export class ColorLib {
 
   static color = [
-    '#5899DA',
-    '#E8743B',
-    '#19A979',
-    '#ED4A7B',
-    '#945ECF',
-    '#13A4B4',
-    '#525DF4',
-    '#BF399E',
-    '#6C8893',
-    '#EE6868',
-    '#2F6497'];
+    '#E53935',
+    '#1E88E5',
+    '#7CB342',
+    '#F4511E',
+    '#D81B60',
+    '#039BE5',
+    '#C0CA33',
+    '#6D4C41',
+    '#8E24AA',
+    '#00ACC1',
+    '#FDD835',
+    '#5E35B1',
+    '#00897B',
+    '#FFB300',
+    '#3949AB',
+    '#43A047',
+    '#FB8C00'
+  ];
 
   /**
    * Get a color from index
@@ -56,11 +63,10 @@ export class ColorLib {
   /**
    * Add an alpha channel
    * @param color
-   * @param {number} alpha
    * @returns {string}
    */
-  static transparentize(color, alpha: number): string {
-    return 'rgba(' + ColorLib.hexToRgb(color).concat(alpha).join(',') + ')';
+  static transparentize(color): string {
+    return 'rgba(' + ColorLib.hexToRgb(color).concat(0.7).join(',') + ')';
   }
 
   /**
@@ -82,7 +88,7 @@ export class ColorLib {
   static generateTransparentColors(num) {
     let color = [];
     for (let i = 0; i < num; i++) {
-      color.push(ColorLib.transparentize(ColorLib.getColor(i), 0.5));
+      color.push(ColorLib.transparentize(ColorLib.getColor(i)));
     }
     return color;
   }

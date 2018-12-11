@@ -177,7 +177,7 @@ export class WarpViewScatter {
                 data: data,
                 pointRadius: 2,
                 borderColor: ColorLib.getColor(i),
-                backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5)
+                backgroundColor: ColorLib.transparentize(ColorLib.getColor(i))
             });
         }
         this.LOG.debug(['gtsToScatter', 'datasets'], datasets);
