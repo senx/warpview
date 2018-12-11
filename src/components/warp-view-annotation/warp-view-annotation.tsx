@@ -16,14 +16,14 @@
  */
 
 import Chart from 'chart.js';
-import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
-import {ColorLib} from "../../utils/color-lib";
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
-import {DataModel} from "../../model/dataModel";
-import {GTS} from "../../model/GTS";
+import { Component, Element, Event, EventEmitter, Listen, Prop, Watch } from '@stencil/core';
+import { GTSLib } from '../../utils/gts.lib';
+import { ColorLib } from "../../utils/color-lib";
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 import moment from "moment";
 import "moment-timezone";
 
@@ -40,8 +40,8 @@ export class WarpViewAnnotation {
   @Prop() hiddenData: number[] = [];
   @Prop() timeMin: number;
   @Prop() timeMax: number;
-  @Prop({mutable: true}) width = "";
-  @Prop({mutable: true}) height = "";
+  @Prop({ mutable: true }) width = "";
+  @Prop({ mutable: true }) height = "";
   @Prop() standalone = true;
 
   @Event() pointHover: EventEmitter;
@@ -62,11 +62,11 @@ export class WarpViewAnnotation {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
         this.drawChart();
       }, 250);
     }
@@ -74,20 +74,20 @@ export class WarpViewAnnotation {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['data'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'data' ], newValue);
       this.drawChart();
     }
   }
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options'], [newValue, this.hiddenData]);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'options' ], [ newValue, this.hiddenData ]);
       const hiddenData = GTSLib.cleanArray(this.hiddenData);
-      if (this._chart) {
+      if(this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+          this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!hiddenData.find(item => item + '' === key);
         });
         this._chart.update();
         this.drawChart();
@@ -97,12 +97,12 @@ export class WarpViewAnnotation {
 
   @Watch("hiddenData")
   hideData(newValue, oldValue) {
-    if (oldValue !== newValue && this._chart) {
-      this.LOG.debug(['hiddenData'], newValue);
+    if(oldValue !== newValue && this._chart) {
+      this.LOG.debug([ 'hiddenData' ], newValue);
       const hiddenData = GTSLib.cleanArray(newValue);
-      if (this._chart) {
+      if(this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+          this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!hiddenData.find(item => item + '' === key);
         });
         this._chart.update();
         this.drawChart();
@@ -112,15 +112,15 @@ export class WarpViewAnnotation {
 
   @Watch("timeMin")
   minBoundChange(newValue: number, oldValue: number) {
-    if (this._chart) {
+    if(this._chart) {
       this._chart.options.animation.duration = 0;
-      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        if (this._options.timeMode === 'timestamp') {
-          this._chart.options.scales.xAxes[0].ticks.min = newValue;
+      if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
+        if(this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[ 0 ].ticks.min = newValue;
         } else {
-          this._chart.options.scales.xAxes[0].time.min = newValue;
+          this._chart.options.scales.xAxes[ 0 ].time.min = newValue;
         }
-        this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
+        this.LOG.debug([ 'minBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.min);
         this._chart.update();
       }
     }
@@ -128,15 +128,15 @@ export class WarpViewAnnotation {
 
   @Watch("timeMax")
   maxBoundChange(newValue: number, oldValue: number) {
-    if (this._chart) {
+    if(this._chart) {
       this._chart.options.animation.duration = 0;
-      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        if (this._options.timeMode === 'timestamp') {
-          this._chart.options.scales.xAxes[0].ticks.max = newValue;
+      if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
+        if(this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[ 0 ].ticks.max = newValue;
         } else {
-          this._chart.options.scales.xAxes[0].time.max = newValue;
+          this._chart.options.scales.xAxes[ 0 ].time.max = newValue;
         }
-        this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
+        this.LOG.debug([ 'maxBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.max);
         this._chart.update();
       }
     }
@@ -146,13 +146,13 @@ export class WarpViewAnnotation {
    *
    */
   private drawChart() {
-    if (!this.data) {
+    if(!this.data) {
       return;
     }
     moment.tz.setDefault("UTC");    //force X axis display in UTC  
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
+    this.LOG.debug([ 'drawChart', 'hiddenData' ], this.hiddenData);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.parseData(this.data);
     let calculatedHeight = 30 * gts.length + this.legendOffset;
@@ -172,7 +172,7 @@ export class WarpViewAnnotation {
           right: 26 //fine tuning, depends on chart element
         }
       },
-      legend: {display: this.showLegend},
+      legend: { display: this.showLegend },
       responsive: this.responsive,
       animation: {
         duration: 0,
@@ -180,24 +180,24 @@ export class WarpViewAnnotation {
       tooltips: {
         mode: "x",
         position: "nearest",
-        custom: function (tooltip) {
-          if (tooltip.opacity > 0) {
+        custom: function(tooltip) {
+          if(tooltip.opacity > 0) {
             me.pointHover.emit({
-              x: tooltip.dataPoints[0].x,
+              x: tooltip.dataPoints[ 0 ].x,
               y: this._eventPosition.y
             });
           } else {
-            me.pointHover.emit({x: -100, y: this._eventPosition.y});
+            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
           }
           return;
         },
         callbacks: {
           title: (tooltipItems) => {
-            return tooltipItems[0].xLabel || "";
+            return tooltipItems[ 0 ].xLabel || "";
           },
           label: (tooltipItem, data) => {
-            return `${data.datasets[tooltipItem.datasetIndex].label}: ${
-              data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+            return `${data.datasets[ tooltipItem.datasetIndex ].label}: ${
+              data.datasets[ tooltipItem.datasetIndex ].data[ tooltipItem.index ]
                 .val
               }`;
           }
@@ -225,7 +225,7 @@ export class WarpViewAnnotation {
             scaleLabel: {
               display: false
             },
-            afterFit: function (scaleInstance) {
+            afterFit: function(scaleInstance) {
               scaleInstance.width = 100; // sets the width to 100px
             },
             gridLines: {
@@ -243,20 +243,20 @@ export class WarpViewAnnotation {
         ]
       }
     };
-    this.LOG.debug(['options'], this._options);
+    this.LOG.debug([ 'options' ], this._options);
 
-    if (this._options.timeMode === 'timestamp') {
-      chartOption.scales.xAxes[0].time = {};
-      chartOption.scales.xAxes[0].type = 'linear';
-      chartOption.scales.xAxes[0].ticks = {
+    if(this._options.timeMode === 'timestamp') {
+      chartOption.scales.xAxes[ 0 ].time = {};
+      chartOption.scales.xAxes[ 0 ].type = 'linear';
+      chartOption.scales.xAxes[ 0 ].ticks = {
         fontColor: color,
         min: this.timeMin,
         max: this.timeMax,
-        maxRotation : 0,
-        minRotation : 0
+        maxRotation: 0,
+        minRotation: 0
       };
     } else {
-      chartOption.scales.xAxes[0].time = {
+      chartOption.scales.xAxes[ 0 ].time = {
         min: this.timeMin,
         max: this.timeMax,
         displayFormats: {
@@ -264,20 +264,20 @@ export class WarpViewAnnotation {
           second: 'HH:mm:ss',
           minute: 'HH:mm',
           hour: 'HH',
-          maxRotation : 0,
-          minRotation : 0
+          maxRotation: 0,
+          minRotation: 0
         }
       };
-      chartOption.scales.xAxes[0].ticks = {
+      chartOption.scales.xAxes[ 0 ].ticks = {
         fontColor: color
       };
-      chartOption.scales.xAxes[0].type = 'time';
+      chartOption.scales.xAxes[ 0 ].type = 'time';
     }
-    this.LOG.debug(['drawChart'], [height, gts]);
-    if (this._chart) {
+    this.LOG.debug([ 'drawChart' ], [ height, gts ]);
+    if(this._chart) {
       this._chart.destroy();
     }
-    if (!gts || gts.length === 0) {
+    if(!gts || gts.length === 0) {
       return;
     }
     this._chart = new Chart.Scatter(ctx, {
@@ -288,8 +288,8 @@ export class WarpViewAnnotation {
       }
     );
     Object.keys(this._mapIndex).forEach(key => {
-      this.LOG.debug(['drawChart', 'hide'], [key]);
-      this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
+      this.LOG.debug([ 'drawChart', 'hide' ], [ key ]);
+      this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!this.hiddenData.find(item => item + '' === key);
     });
     this._chart.update();
     this.onResize();
@@ -301,32 +301,32 @@ export class WarpViewAnnotation {
    * @returns {any[]}
    */
   private parseData(gts) {
-    this.LOG.debug(['parseData'], gts);
+    this.LOG.debug([ 'parseData' ], gts);
     let dataList = GTSLib.getData(gts).data;
     this._mapIndex = {};
-    if (!dataList || dataList.length === 0) {
+    if(!dataList || dataList.length === 0) {
       return [];
     } else {
       let dataSet = [];
       dataList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
       dataList = GTSLib.flatDeep(dataList) as any[];
-      this.LOG.debug(['parseData', 'dataList'], dataList);
+      this.LOG.debug([ 'parseData', 'dataList' ], dataList);
       let i = 0;
       dataList.forEach(g => {
-        if (GTSLib.isGtsToAnnotate(g)) {
-          this.LOG.debug(['parseData', 'will draw'], g);
+        if(GTSLib.isGtsToAnnotate(g)) {
+          this.LOG.debug([ 'parseData', 'will draw' ], g);
           let data = [];
           let color = ColorLib.getColor(g.id);
           const myImage = ChartLib.buildImage(1, 30, color);
           g.v.forEach(d => {
-            let time = d[0];
-            if (this._options.timeMode !== 'timestamp') {
+            let time = d[ 0 ];
+            if(this._options.timeMode !== 'timestamp') {
               time = moment(time / GTSLib.getDivider(this._options.timeUnit)).utc(true).valueOf();
             }
-            data.push({x: time, y: 0.5, val: d[d.length - 1]});
+            data.push({ x: time, y: 0.5, val: d[ d.length - 1 ] });
           });
           let label = GTSLib.serializeGtsMetadata(g);
-          this._mapIndex[g.id + ''] = i;
+          this._mapIndex[ g.id + '' ] = i;
           dataSet.push({
             label: label,
             data: data,

@@ -15,11 +15,11 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from "@stencil/core";
-import {GTSLib} from "../../utils/gts.lib";
-import {ColorLib} from "../../utils/color-lib";
-import {GTS} from "../../model/GTS";
-import {Logger} from "../../utils/logger";
+import { Component, Element, Event, EventEmitter, Listen, Prop, Watch } from "@stencil/core";
+import { GTSLib } from "../../utils/gts.lib";
+import { ColorLib } from "../../utils/color-lib";
+import { GTS } from "../../model/GTS";
+import { Logger } from "../../utils/logger";
 
 @Component({
   tag: 'warp-view-chip',
@@ -45,7 +45,7 @@ export class WarpViewChip {
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
+    if(oldValue !== newValue) {
       if(this.gtsFilter !== '') {
         this.setState(new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
       }
@@ -54,17 +54,17 @@ export class WarpViewChip {
 
   @Listen('document:keyup')
   handleKeyDown(ev: KeyboardEvent) {
-    if (ev.key === 'a') {
+    if(ev.key === 'a') {
       this.setState(true);
     }
-    if (ev.key === 'n') {
+    if(ev.key === 'n') {
       this.setState(false);
     }
   }
 
   private colorizeChip() {
-    const chip: HTMLElement = this.el.getElementsByClassName('normal')[0] as HTMLElement;
-    if (this._node.selected) {
+    const chip: HTMLElement = this.el.getElementsByClassName('normal')[ 0 ] as HTMLElement;
+    if(this._node.selected) {
       chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id), 0.7));
       chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
     } else {
@@ -76,7 +76,7 @@ export class WarpViewChip {
    *
    */
   componentWillLoad() {
-    this._node = {...this.node, selected: true};
+    this._node = { ...this.node, selected: true };
   }
 
   /**
@@ -108,13 +108,13 @@ export class WarpViewChip {
    * @private
    */
   private toArray(obj) {
-    if (obj === undefined) {
+    if(obj === undefined) {
       return [];
     }
-    return Object.keys(obj).map(function (key) {
+    return Object.keys(obj).map(function(key) {
       return {
         name: key,
-        value: obj[key],
+        value: obj[ key ],
       };
     });
   }
@@ -135,7 +135,7 @@ export class WarpViewChip {
       selected: state,
       label: GTSLib.serializeGtsMetadata(this._node.gts)
     };
-    this.LOG.debug(['switchPlotState'], this._node);
+    this.LOG.debug([ 'switchPlotState' ], this._node);
     this.colorizeChip();
     this.warpViewSelectedGTS.emit(this._node);
   }

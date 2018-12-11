@@ -16,14 +16,14 @@
  */
 
 import Chart from 'chart.js';
-import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
-import {ColorLib} from "../../utils/color-lib";
-import {Logger} from "../../utils/logger";
-import {GTSLib} from "../../utils/gts.lib";
-import {DataModel} from "../../model/dataModel";
-import {GTS} from "../../model/GTS";
+import { Component, Element, Listen, Prop, Watch } from '@stencil/core';
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
+import { ColorLib } from "../../utils/color-lib";
+import { Logger } from "../../utils/logger";
+import { GTSLib } from "../../utils/gts.lib";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 import moment from "moment";
 
 @Component({
@@ -37,8 +37,8 @@ export class WarpViewScatter {
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | GTS[] | string;
   @Prop() options: Param = new Param();
-  @Prop({mutable: true}) width = '';
-  @Prop({mutable: true}) height = '';
+  @Prop({ mutable: true }) width = '';
+  @Prop({ mutable: true }) height = '';
 
   @Element() el: HTMLElement;
 
@@ -53,11 +53,11 @@ export class WarpViewScatter {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
         this.drawChart();
       }, 250);
     }
@@ -65,16 +65,16 @@ export class WarpViewScatter {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['data'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'data' ], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'options' ], newValue);
       this.drawChart();
     }
   }
@@ -84,14 +84,14 @@ export class WarpViewScatter {
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let dataList: any[];
     let data: any = this.data;
-    if (!data) return;
-    if (typeof data === 'string') {
+    if(!data) return;
+    if(typeof data === 'string') {
       data = JSON.parse(data as string);
     }
-    if (GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
-      data = data[0];
+    if(GTSLib.isArray(data) && data[ 0 ] && (data[ 0 ] instanceof DataModel || data[ 0 ].hasOwnProperty('data'))) {
+      data = data[ 0 ];
     }
-    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+    if(data instanceof DataModel || data.hasOwnProperty('data')) {
       dataList = data.data as any[];
     } else {
       dataList = data;
@@ -114,7 +114,7 @@ export class WarpViewScatter {
         callbacks: ChartLib.getTooltipCallbacks()
       },
       scales: {
-        xAxes: [{
+        xAxes: [ {
           gridLines: {
             color: color,
             zeroLineColor: color,
@@ -122,8 +122,8 @@ export class WarpViewScatter {
           ticks: {
             fontColor: color
           }
-        }],
-        yAxes: [{
+        } ],
+        yAxes: [ {
           gridLines: {
             color: color,
             zeroLineColor: color,
@@ -135,17 +135,17 @@ export class WarpViewScatter {
             display: this.unit !== '',
             labelString: this.unit
           }
-        }]
+        } ]
       },
     };
-    if (this._options.timeMode === 'timestamp') {
-      options.scales.xAxes[0].time = undefined;
-      options.scales.xAxes[0].type = 'linear';
-      options.scales.xAxes[0].ticks = {
+    if(this._options.timeMode === 'timestamp') {
+      options.scales.xAxes[ 0 ].time = undefined;
+      options.scales.xAxes[ 0 ].type = 'linear';
+      options.scales.xAxes[ 0 ].ticks = {
         fontColor: color,
       };
     } else {
-      options.scales.xAxes[0].time = {
+      options.scales.xAxes[ 0 ].time = {
         displayFormats: {
           millisecond: 'HH:mm:ss.SSS',
           second: 'HH:mm:ss',
@@ -153,40 +153,40 @@ export class WarpViewScatter {
           hour: 'HH'
         }
       };
-      options.scales.xAxes[0].ticks = {
+      options.scales.xAxes[ 0 ].ticks = {
         fontColor: color
       };
-      options.scales.xAxes[0].type = 'time';
+      options.scales.xAxes[ 0 ].type = 'time';
     }
-    if (this._chart) {
+    if(this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: options});
+    this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: options });
     this.onResize();
-    this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
+    this.LOG.debug([ 'gtsToScatter', 'chart' ], [ gts, options ]);
   }
 
   private gtsToScatter(gts) {
-    if (!gts) {
+    if(!gts) {
       return;
     }
-    this.LOG.debug(['gtsToScatter'], gts);
+    this.LOG.debug([ 'gtsToScatter' ], gts);
     let datasets = [];
-    let timestampdivider : number = 1000; //default for µs timeunit
-    if (this._options.timeUnit && this._options.timeUnit === 'ms'){
+    let timestampdivider: number = 1000; //default for µs timeunit
+    if(this._options.timeUnit && this._options.timeUnit === 'ms') {
       timestampdivider = 1;
     }
-    if (this._options.timeUnit && this._options.timeUnit === 'ns'){
+    if(this._options.timeUnit && this._options.timeUnit === 'ns') {
       timestampdivider = 1000000;
     }
-    for (let i = 0; i < gts.length; i++) {
-      let g = gts[i];
+    for(let i = 0; i < gts.length; i++) {
+      let g = gts[ i ];
       let data = [];
       g.v.forEach(d => {
-        if (this._options.timeMode === 'timestamp') {
-          data.push({x: d[0], y: d[d.length - 1]});
+        if(this._options.timeMode === 'timestamp') {
+          data.push({ x: d[ 0 ], y: d[ d.length - 1 ] });
         } else {
-          data.push({x: moment.utc(d[0] / timestampdivider), y: d[d.length - 1]});
+          data.push({ x: moment.utc(d[ 0 ] / timestampdivider), y: d[ d.length - 1 ] });
         }
       });
       datasets.push({
@@ -197,7 +197,7 @@ export class WarpViewScatter {
         backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5)
       });
     }
-    this.LOG.debug(['gtsToScatter', 'datasets'], datasets);
+    this.LOG.debug([ 'gtsToScatter', 'datasets' ], datasets);
     return datasets;
   }
 

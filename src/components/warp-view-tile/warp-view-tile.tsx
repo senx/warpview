@@ -199,31 +199,31 @@ export class WarpViewTile {
   }
 
   render() {
-    if (this.executionErrorText != '') {
+    if(this.executionErrorText != '') {
       return <div class="executionErrorText"> {this.executionErrorText} </div>
     } else {
       return <div class="wrapper" id="wrapper">
         <div class="warpscript">
-          <slot />
+          <slot/>
         </div>
         {this.executionErrorText != '' ? <div class="executionErrorText"> {this.executionErrorText} </div> : ''}
-        {this.graphs['scatter'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'scatter' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}</h1>
             <div class="tile">
               <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
-                                 showLegend={this.showLegend} />
+                                 showLegend={this.showLegend}/>
             </div>
           </div>
           :
           ''
         }
-        {this.graphs['chart'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'chart' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}</h1>
             <div class="tile">
               <warp-view-chart type={this.type} responsive={this.responsive} unit={this.unit} data={this.data}
-                options={this._options} show-legend={this.showLegend} />
+                               options={this._options} show-legend={this.showLegend}/>
             </div>
           </div>
           :
@@ -236,7 +236,7 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-bubble showLegend={this.showLegend} responsive={true} unit={this.unit} data={this.data}
-                options={this._options} />
+                                options={this._options}/>
             </div>
           </div>
           : ''
@@ -247,53 +247,53 @@ export class WarpViewTile {
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
-              <warp-view-map responsive={true} data={this.data} options={this._options} />
+              <warp-view-map responsive={true} data={this.data} options={this._options}/>
             </div>
           </div>
           : ''
         }
-        {this.graphs['pie'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'pie' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
               <warp-view-pie responsive={this.responsive} data={this.data} options={this._options}
-                showLegend={this.showLegend} />
+                             showLegend={this.showLegend}/>
             </div>
           </div>
           : ''
         }
-        {this.graphs['polar'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'polar' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
               <warp-view-polar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                options={this._options} />
+                               options={this._options}/>
             </div>
           </div>
           : ''
         }
-        {this.graphs['radar'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'radar' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
               <warp-view-radar responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                options={this._options} />
+                               options={this._options}/>
             </div>
           </div>
           : ''
         }
-        {this.graphs['bar'].indexOf(this.type) > -1 ?
+        {this.graphs[ 'bar' ].indexOf(this.type) > -1 ?
           <div>
             <h1>{this.chartTitle}</h1>
             <div class="tile">
               <warp-view-bar responsive={this.responsive} unit={this.unit} data={this.data} showLegend={this.showLegend}
-                options={this._options} />
+                             options={this._options}/>
             </div>
           </div>
           : ''
@@ -302,7 +302,8 @@ export class WarpViewTile {
           <div>
             <h1>{this.chartTitle}</h1>
             <div class="tile">
-              <warp-view-display responsive={this.responsive} unit={this.unit} data={this.data} options={this._options} />
+              <warp-view-display responsive={this.responsive} unit={this.unit} data={this.data}
+                                 options={this._options}/>
             </div>
           </div>
           : ''
@@ -313,7 +314,7 @@ export class WarpViewTile {
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
-              <warp-view-image responsive={this.responsive} data={this.data} options={this._options} />
+              <warp-view-image responsive={this.responsive} data={this.data} options={this._options}/>
             </div>
           </div>
           : ''
@@ -325,7 +326,7 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-plot responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                options={this._options} gtsFilter={this.gtsFilter} />
+                              options={this._options} gtsFilter={this.gtsFilter}/>
             </div>
           </div>
           : ''
@@ -337,7 +338,7 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-annotation responsive={this.responsive} data={this.data} showLegend={this.showLegend}
-                options={this._options} />
+                                    options={this._options}/>
             </div>
           </div>
           : ''
@@ -348,12 +349,12 @@ export class WarpViewTile {
               <small>{this.unit}</small>
             </h1>
             <div class="tile">
-              <warp-view-gts-tree data={this.data} options={this._options} />
+              <warp-view-gts-tree data={this.data} options={this._options}/>
             </div>
           </div>
           : ''
         }
-        {this.loading ? <warp-view-spinner /> : ''}
+        {this.loading ? <warp-view-spinner/> : ''}
       </div>
     }
   }

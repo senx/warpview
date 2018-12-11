@@ -16,13 +16,13 @@
  */
 
 import Chart from 'chart.js';
-import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
-import {ColorLib} from "../../utils/color-lib";
-import {DataModel} from "../../model/dataModel";
-import {GTSLib} from "../../utils/gts.lib";
+import { Component, Element, Listen, Prop, Watch } from '@stencil/core';
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
+import { ColorLib } from "../../utils/color-lib";
+import { DataModel } from "../../model/dataModel";
+import { GTSLib } from "../../utils/gts.lib";
 
 @Component({
   tag: 'warp-view-radar',
@@ -34,8 +34,8 @@ export class WarpViewRadar {
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
-  @Prop({mutable: true}) width = '';
-  @Prop({mutable: true}) height = '';
+  @Prop({ mutable: true }) width = '';
+  @Prop({ mutable: true }) height = '';
 
   @Element() el: HTMLElement;
 
@@ -50,11 +50,11 @@ export class WarpViewRadar {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if(this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
         this.drawChart();
       }, 250);
     }
@@ -62,26 +62,26 @@ export class WarpViewRadar {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['data'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'data' ], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'options' ], newValue);
       this.drawChart();
     }
   }
 
   private parseData(gts) {
-    this.LOG.debug(['gtsToData'], gts);
+    this.LOG.debug([ 'gtsToData' ], gts);
     let datasets = [];
     let labels = {};
 
-    if (!gts || gts.length === 0) {
+    if(!gts || gts.length === 0) {
       return;
     } else {
       let i = 0;
@@ -93,18 +93,18 @@ export class WarpViewRadar {
             backgroundColor: ColorLib.transparentize(ColorLib.getColor(i), 0.5),
             borderColor: ColorLib.getColor(i)
           };
-          g[label].forEach(val => {
-            const l = Object.keys(val)[0];
-            labels[l] = 0;
-            dataSet.data.push(val[l]);
+          g[ label ].forEach(val => {
+            const l = Object.keys(val)[ 0 ];
+            labels[ l ] = 0;
+            dataSet.data.push(val[ l ]);
           });
           datasets.push(dataSet);
           i++;
         });
       });
     }
-    this.LOG.debug(['gtsToData', 'datasets'], [datasets, Object.keys(labels)]);
-    return {datasets: datasets, labels: Object.keys(labels)};
+    this.LOG.debug([ 'gtsToData', 'datasets' ], [ datasets, Object.keys(labels) ]);
+    return { datasets: datasets, labels: Object.keys(labels) };
   }
 
   private drawChart() {
@@ -114,32 +114,32 @@ export class WarpViewRadar {
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     const color = this._options.gridLineColor;
     let data: any = this.data;
-    if (!data) return;
+    if(!data) return;
     let dataList: any[];
-    if (typeof data === 'string') {
+    if(typeof data === 'string') {
       data = JSON.parse(data as string);
     }
-    if(GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
-      data = data[0];
+    if(GTSLib.isArray(data) && data[ 0 ] && (data[ 0 ] instanceof DataModel || data[ 0 ].hasOwnProperty('data'))) {
+      data = data[ 0 ];
     }
-    if (data instanceof DataModel || data.hasOwnProperty('data')) {
+    if(data instanceof DataModel || data.hasOwnProperty('data')) {
       dataList = data.data as any[];
     } else {
       dataList = data;
     }
     let gts = this.parseData(dataList);
-    if (!gts) {
+    if(!gts) {
       return;
     }
-    if (this._chart) {
+    if(this._chart) {
       this._chart.destroy();
       delete this._chart;
     }
-    this.LOG.debug(['gts.data'], gts.datasets);
-    if (gts.datasets && gts.datasets.length > 0) {
+    this.LOG.debug([ 'gts.data' ], gts.datasets);
+    if(gts.datasets && gts.datasets.length > 0) {
       this._chart = new Chart(ctx, {
         type: 'radar',
-        legend: {display: this.showLegend},
+        legend: { display: this.showLegend },
         data: {
           labels: gts.labels,
           datasets: gts.datasets
@@ -156,7 +156,7 @@ export class WarpViewRadar {
           animation: {
             duration: 0,
           },
-          legend: {display: this.showLegend},
+          legend: { display: this.showLegend },
           responsive: this.responsive,
           scale: {
             gridLines: {

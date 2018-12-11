@@ -15,17 +15,17 @@
  *
  */
 
-import {Component, Element, Prop, State, Watch} from "@stencil/core";
-import {GTSLib} from "../../utils/gts.lib";
-import {DataModel} from "../../model/dataModel";
-import {GTS} from "../../model/GTS";
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {ChartLib} from "../../utils/chart-lib";
+import { Component, Element, Prop, State, Watch } from "@stencil/core";
+import { GTSLib } from "../../utils/gts.lib";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+import { ChartLib } from "../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-gts-tree",
-  styleUrls: ["warp-view-gts-tree.scss"]
+  styleUrls: [ "warp-view-gts-tree.scss" ]
 })
 export class WarpViewGtsTree {
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
@@ -35,22 +35,22 @@ export class WarpViewGtsTree {
   @State() hide = false;
   @Element() el: HTMLElement;
 
-  private gtsList:  any[] =  [];
+  private gtsList: any[] = [];
   private _options: Param = new Param();
   private LOG: Logger = new Logger(WarpViewGtsTree);
   private _isFolded = false;
 
   @Watch("data")
   onData(newValue, oldValue) {
-    if (newValue !== oldValue) {
+    if(newValue !== oldValue) {
       this.doRender();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'options' ], newValue);
       this._isFolded = !!this.options.foldGTSTree;
       this.doRender();
     }
@@ -58,10 +58,10 @@ export class WarpViewGtsTree {
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['gtsFilter'], newValue);
+    if(oldValue !== newValue) {
+      this.LOG.debug([ 'gtsFilter' ], newValue);
       this.doRender();
-      if (this._options.foldGTSTree && !this._isFolded) {
+      if(this._options.foldGTSTree && !this._isFolded) {
         this.foldAll();
       }
     }
@@ -71,8 +71,8 @@ export class WarpViewGtsTree {
    *
    */
   componentWillLoad() {
-    this.LOG.debug(['componentWillLoad', 'data'], this.data);
-    if (this.data) {
+    this.LOG.debug([ 'componentWillLoad', 'data' ], this.data);
+    if(this.data) {
       this.doRender();
     }
   }
@@ -82,22 +82,22 @@ export class WarpViewGtsTree {
     if(!this.data) {
       return;
     }
-    this.LOG.debug(['doRender', 'gtsList'], this.data);
+    this.LOG.debug([ 'doRender', 'gtsList' ], this.data);
     let dataList = GTSLib.getData(this.data).data;
-    this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);
+    this.LOG.debug([ 'doRender', 'gtsList', 'dataList' ], dataList);
     if(!dataList) {
       return;
     }
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
-    this.LOG.debug(['doRender', 'gtsList'], [this.gtsList, this._options.foldGTSTree, this._isFolded]);
-    if (this._options.foldGTSTree && !this._isFolded) {
+    this.LOG.debug([ 'doRender', 'gtsList' ], [ this.gtsList, this._options.foldGTSTree, this._isFolded ]);
+    if(this._options.foldGTSTree && !this._isFolded) {
       this.foldAll();
     }
 
   }
 
   private foldAll() {
-    if (!this.el) {
+    if(!this.el) {
       window.setTimeout(() => {
         this.foldAll();
       }, 100)
@@ -111,7 +111,7 @@ export class WarpViewGtsTree {
 
   toggleVisibility(event: UIEvent) {
     let el = (event.currentTarget as HTMLElement).firstChild as HTMLElement;
-    if (el.className === 'expanded') {
+    if(el.className === 'expanded') {
       this._isFolded = true;
       el.className = 'collapsed';
       this.hide = true;
