@@ -25,6 +25,7 @@ import {ChartLib} from "../../utils/chart-lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment";
+import "moment-timezone";
 
 @Component({
   tag: "warp-view-annotation",
@@ -139,6 +140,7 @@ export class WarpViewAnnotation {
     if (!this.data) {
       return;
     }
+    moment.tz.setDefault("UTC");    //force X axis display in UTC  
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
@@ -309,9 +311,9 @@ export class WarpViewAnnotation {
           let color = ColorLib.getColor(g.id);
           const myImage = ChartLib.buildImage(1, 30, color);
           g.v.forEach(d => {
-            let time = d[0];
+            let time = d[0] / timestampdivider;
             if (this._options.timeMode !== 'timestamp') {
-              time = moment(time / timestampdivider).utc(true).valueOf();
+              time = moment(time).utc(true).valueOf();
             }
             data.push({x: time, y: 0.5, val: d[d.length - 1]});
           });
