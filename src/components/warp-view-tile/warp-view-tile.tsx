@@ -140,7 +140,7 @@ export class WarpViewTile {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
-    if(this.type == 'spectrum') {
+    if(this.type == 'spectrum2') {
       this.LOG.debug([ 'execute' ], this._options.spectrum);
       this.wsComplement =
         ' {} \'res\' STORE' +

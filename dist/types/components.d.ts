@@ -736,6 +736,45 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface CalendarHeatmap {
+      'color': string;
+      'data': any[];
+      'overview': string;
+    }
+  }
+
+  interface HTMLCalendarHeatmapElement extends StencilComponents.CalendarHeatmap, HTMLStencilElement {}
+
+  var HTMLCalendarHeatmapElement: {
+    prototype: HTMLCalendarHeatmapElement;
+    new (): HTMLCalendarHeatmapElement;
+  };
+  interface HTMLElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  interface ElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'calendar-heatmap': JSXElements.CalendarHeatmapAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface CalendarHeatmapAttributes extends HTMLAttributes {
+      'color'?: string;
+      'data'?: any[];
+      'onHandler'?: (event: CustomEvent) => void;
+      'onOnChange'?: (event: CustomEvent) => void;
+      'overview'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewSpectrum {
       'data': DataModel | any[] | string;
       'height': string;

@@ -1,8 +1,62 @@
 {
   "components": [
     {
-      "tag": "warp-view-annotation",
+      "tag": "calendar-heatmap",
       "dependencies": [],
+      "componentClass": "CalendarHeatmap",
+      "componentPath": "components/warp-view-spectrum/calendar-heatmap.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-spectrum/calendar-heatmap.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "color",
+          "type": "String",
+          "attr": "color"
+        },
+        {
+          "name": "data",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "overview",
+          "type": "String",
+          "mutable": true,
+          "attr": "overview"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "handler"
+        },
+        {
+          "event": "onChange"
+        }
+      ],
+      "shadow": true
+    },
+    {
+      "tag": "warp-view-annotation",
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewAnnotation",
       "componentPath": "components/warp-view-annotation/warp-view-annotation.js",
       "styles": {
@@ -93,7 +147,9 @@
     },
     {
       "tag": "warp-view-bar",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewBar",
       "componentPath": "components/warp-view-bar/warp-view-bar.js",
       "styles": {
@@ -161,7 +217,9 @@
     },
     {
       "tag": "warp-view-bubble",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewBubble",
       "componentPath": "components/warp-view-bubble/warp-view-bubble.js",
       "styles": {
@@ -229,7 +287,9 @@
     },
     {
       "tag": "warp-view-chart",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewChart",
       "componentPath": "components/warp-view-chart/warp-view-chart.js",
       "styles": {
@@ -358,6 +418,7 @@
     {
       "tag": "warp-view-display",
       "dependencies": [
+        "calendar-heatmap",
         "warp-view-spinner"
       ],
       "componentClass": "WarpViewDisplay",
@@ -416,6 +477,7 @@
     {
       "tag": "warp-view-gts-tree",
       "dependencies": [
+        "calendar-heatmap",
         "warp-view-tree-view"
       ],
       "componentClass": "WarpViewGtsTree",
@@ -518,6 +580,7 @@
     {
       "tag": "warp-view-image",
       "dependencies": [
+        "calendar-heatmap",
         "warp-view-spinner"
       ],
       "componentClass": "WarpViewImage",
@@ -678,7 +741,9 @@
     },
     {
       "tag": "warp-view-pie",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewPie",
       "componentPath": "components/warp-view-pie/warp-view-pie.js",
       "styles": {
@@ -742,6 +807,7 @@
     {
       "tag": "warp-view-plot",
       "dependencies": [
+        "calendar-heatmap",
         "warp-view-annotation",
         "warp-view-chart",
         "warp-view-gts-tree",
@@ -864,7 +930,9 @@
     },
     {
       "tag": "warp-view-polar",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewPolar",
       "componentPath": "components/warp-view-polar/warp-view-polar.js",
       "styles": {
@@ -927,7 +995,9 @@
     },
     {
       "tag": "warp-view-radar",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewRadar",
       "componentPath": "components/warp-view-radar/warp-view-radar.js",
       "styles": {
@@ -990,7 +1060,9 @@
     },
     {
       "tag": "warp-view-scatter",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewScatter",
       "componentPath": "components/warp-view-scatter/warp-view-scatter.js",
       "styles": {
@@ -1058,7 +1130,9 @@
     },
     {
       "tag": "warp-view-spectrum",
-      "dependencies": [],
+      "dependencies": [
+        "calendar-heatmap"
+      ],
       "componentClass": "WarpViewSpectrum",
       "componentPath": "components/warp-view-spectrum/warp-view-spectrum.js",
       "styles": {
@@ -1285,6 +1359,7 @@
     {
       "tag": "warp-view-tree-view",
       "dependencies": [
+        "calendar-heatmap",
         "warp-view-chip",
         "warp-view-tree-view"
       ],

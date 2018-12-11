@@ -1,4 +1,17 @@
 
+var CalendarHeatmapComponent = /** @class **/ (function() {
+  function CalendarHeatmap() {
+  }
+  CalendarHeatmap.is = 'calendar-heatmap';
+  CalendarHeatmap.getModule = function(opts) {
+    
+    return import('./calendar-heatmap.js').then(function(m) {
+        return m.CalendarHeatmap;
+      });
+
+  }
+});
+
 var WarpViewAnnotationComponent = /** @class **/ (function() {
   function WarpViewAnnotation() {
   }
@@ -261,6 +274,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
 
 export {
   
+  CalendarHeatmap,
   WarpViewAnnotation,
   WarpViewBar,
   WarpViewBubble,
