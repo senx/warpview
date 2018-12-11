@@ -42,6 +42,7 @@ export class WarpViewAnnotation {
   @Prop() timeMax: number;
   @Prop({mutable: true}) width = "";
   @Prop({mutable: true}) height = "";
+  @Prop() standalone = true;
 
   @Event() pointHover: EventEmitter;
 
@@ -167,7 +168,8 @@ export class WarpViewAnnotation {
     const chartOption = {
       layout: {
         padding: {
-          bottom: Math.max(30, 30 * gts.length)
+          bottom: Math.max(30, 30 * gts.length),
+          right: 26 //fine tuning, depends on chart element
         }
       },
       legend: {display: this.showLegend},
@@ -204,6 +206,7 @@ export class WarpViewAnnotation {
       scales: {
         xAxes: [
           {
+            display: this.standalone,
             drawTicks: false,
             type: "linear",
             time: {},
