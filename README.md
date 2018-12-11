@@ -2,7 +2,7 @@
 
 This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
 
-![Warp 10](https://blog.senx.io/wp-content/uploads/2018/10/warp10bySenx.png)
+![WarpView](imgs/warpView.png)
 
 - [Demo & documentation](https://senx.github.io/warpview/)
 - [licence Apache 2](./LICENSE.md)

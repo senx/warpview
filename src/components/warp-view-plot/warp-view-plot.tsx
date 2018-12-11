@@ -226,7 +226,7 @@ export class WarpViewPlot {
         <div class="annotation">
           <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
                                 show-legend={this.showLegend}
-                                timeMin={this._timeMin} timeMax={this._timeMax}
+                                timeMin={this._timeMin} timeMax={this._timeMax} standalone={false} 
                                 hiddenData={this._toHide} options={this._options}></warp-view-annotation>
         </div>
         <div style={{width: '100%', height: '768px'}} id={this.graphId}>

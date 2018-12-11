@@ -141,36 +141,35 @@ export class WarpViewChart {
       labels = new Array(gtsList.length);
       labels.push('Date');
       colors = [];
+      gtsList = gtsList.filter(g => {
+        return (g.v && GTSLib.isGtsToPlot(g));
+      });
       gtsList.forEach((g, i) => {
-        if (g.v && GTSLib.isGtsToPlot(g)) {
-          let label = GTSLib.serializeGtsMetadata(g);
-          GTSLib.gtsSort(g);
-          g.v.forEach(value => {
-            if (!data[value[0]]) {
-              data[value[0]] = new Array(gtsList.length);
-              data[value[0]].fill(null);
-            }
-            data[value[0]][i] = value[value.length - 1] || -1;
-          });
-          let color = ColorLib.getColor(g.id);
-          this.LOG.debug(['gtsToData', 'ColorLib'], [color, g.id]);
-
-          labels.push(label);
-          colors.push(color);
-          this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
-        }
+        let label = GTSLib.serializeGtsMetadata(g);
+        GTSLib.gtsSort(g);
+        g.v.forEach(value => {
+          const ts = value[0];
+          if (!data[ts]) {
+            data[ts] = new Array(gtsList.length);
+            data[ts].fill(null);
+          }
+          data[ts][i] = value[value.length - 1];
+        });
+        let color = ColorLib.getColor(g.id);
+        labels.push(label);
+        colors.push(color);
+        this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
       });
     }
     this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
-
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(parseInt(timestamp));
       } else {
-        const ts = Math.floor(parseInt(timestamp) / 1000);
-        datasets.push([moment(ts).utc(true).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
+        const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
+        datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(ts);
       }
     });
@@ -187,47 +186,93 @@ export class WarpViewChart {
     return this.type === 'area';
   }
 
-  private static toFixed(x: any): string {
+  private static toFixed(x: number): string {
     let e;
+    let res = '';
     if (Math.abs(x) < 1.0) {
       e = parseInt(x.toString().split('e-')[1]);
       if (e) {
         x *= Math.pow(10, e - 1);
-        x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+        res = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
       }
     } else {
+      res = x.toString();
       e = parseInt(x.toString().split('+')[1]);
       if (e > 20) {
         e -= 20;
         x /= Math.pow(10, e);
-        x += (new Array(e + 1)).join('0');
+        res = x.toString();
+        res += (new Array(e + 1)).join('0');
       }
     }
-    return x;
+    return res;
   }
 
-  private legendFormatter(data) {
-    // if(!this.showTooltip) return;
+  /**
+   *
+   * @param {string} data
+   * @returns {string}
+   */
+  private static formatLabel(data: string): string {
+    const serializedGTS = data.split('{');
+    let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
+    if (serializedGTS.length > 1) {
+      display += `<span class='gts-separator'>{</span>`;
+      const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
+      if (labels.length > 0) {
+        labels.forEach((l, i) => {
+          const label = l.split('=');
+          if (l.length > 1) {
+            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
+              display += `<span>, </span>`;
+            }
+          }
+        });
+      }
+      display += `<span class='gts-separator'>}</span>`;
+    }
+    if (serializedGTS.length > 2) {
+      display += `<span class='gts-separator'>{</span>`;
+      const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
+      if (labels.length > 0) {
+        labels.forEach((l, i) => {
+          const label = l.split('=');
+          if (l.length > 1) {
+            display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
+              display += `<span>, </span>`;
+            }
+          }
+        });
+      }
+      display += `<span class='gts-separator'>}</span>`;
+    }
+    return display;
+  }
+
+  private legendFormatter(data): string {
     if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return '<br>' + data.series.map(function (series) {
         if (!series.isVisible) return;
-        let labeledData = series.labelHTML + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
         if (series.isHighlighted) {
-          labeledData = '<b>' + labeledData + '</b>';
+          labeledData = `<b>${labeledData}</b>`;
         }
-        return series.dashHTML + ' ' + labeledData;
+        return WarpViewChart.formatLabel(series.labelHTML) + ' ' + labeledData;
       }).join('<br>');
     }
 
-    let html = data.xHTML;
+    let html = `<b>${data.xHTML}</b>`;
     data.series.forEach(function (series) {
-      if (!series.isVisible || !series.yHTML) return;
-      let labeledData = series.labelHTML + ':<br>' + WarpViewChart.toFixed(series.yHTML as number);
-      if (series.isHighlighted) {
-        labeledData = '<b>' + labeledData + '</b>';
+      if (series.isVisible && series.yHTML) {
+        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
+        if (series.isHighlighted) {
+          labeledData = `<b>${labeledData}</b>`;
+        }
+        html += `<br>${series.dashHTML} ${labeledData}`;
       }
-      html += '<br>' + series.dashHTML + ' ' + labeledData;
     });
     return html;
   }
@@ -242,7 +287,7 @@ export class WarpViewChart {
   }
 
   private scroll(event, g) {
-    if(!event.altKey) return;
+    if (!event.altKey) return;
     this.LOG.debug(['scroll'], g);
     const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
     // For me the normalized value shows 0.075 for one click. If I took
@@ -372,8 +417,8 @@ export class WarpViewChart {
             drawAxis: this.displayGraph()
           },
           y: {
-            axisLabelFormatter: (x) => {
-              return WarpViewChart.toFixed(x);
+            axisLabelFormatter: (y) => {
+              return WarpViewChart.toFixed(y as number);
             }
           }
         },
@@ -391,7 +436,7 @@ export class WarpViewChart {
       }
       if (this._options.timeMode === 'timestamp') {
         options.axes.x.axisLabelFormatter = (x) => {
-          return WarpViewChart.toFixed(x);
+          return WarpViewChart.toFixed(x as number);
         }
       }
       this._chart = new Dygraph(

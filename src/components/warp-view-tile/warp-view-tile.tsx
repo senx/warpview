@@ -45,6 +45,8 @@ export class WarpViewTile {
 
 
   private warpscript: string = '';
+  private execUrl = '';
+  private timeunit = 'us';
   private graphs = {
     'scatter': ['scatter'],
     'chart': ['line', 'spline', 'step', 'area'],
@@ -111,6 +113,7 @@ export class WarpViewTile {
       data.data = this.gtsList;
       data.globalParams = {type: this.type} as Param;
     }
+    data.globalParams.timeUnit=this.timeunit;
     this.LOG.debug(['parseGTS', 'data'], data);
     this.data = data;
     this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
@@ -127,11 +130,51 @@ export class WarpViewTile {
     this.loading = false;
   }
 
+  //detect some VSCode special modifiers in the beginnig of the code: 
+  // @endpoint xxxURLxxx
+  // @timeunit ns
+  //warning : the first line is empty (to confirm with other browsers) 
+  private detectWarpScriptSpecialComments(){
+    //
+    //analyse the first warpscript lines starting with //
+    // 
+    let warpscriptlines = this.warpscript.split('\n');
+    for (let l = 1; l < warpscriptlines.length; l++) {
+      let currentline = warpscriptlines[l];
+      if (currentline == "" || currentline.search("//") >= 0) {
+        //find and extract // @paramname parameters
+        let extraparamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
+        let lineonMatch: RegExpMatchArray | null;
+        let re = RegExp(extraparamsPattern);
+        while (lineonMatch = re.exec(currentline)) {
+          let parametername = lineonMatch[1];
+          let parametervalue = lineonMatch[2];
+          switch (parametername) {
+            case "endpoint":        //        // @endpoint http://mywarp10server/api/v0/exec
+              this.execUrl = parametervalue; 
+              break;
+            case "timeunit":
+              this.timeunit = parametervalue.toLowerCase();   // set the time unit for graphs
+              break;
+
+            default:
+              break;
+          }
+        }
+      }
+      else {
+        break; //no more comments at the beginning of the file
+      }
+    }
+  }
+
   private execute() {
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
     this.LOG.debug(['execute', 'warpscript'], this.warpscript);
-    fetch(this.url, {method: 'POST', body: this.warpscript}).then(response => {
+    this.execUrl = this.url;
+    this.detectWarpScriptSpecialComments();
+    fetch(this.execUrl, {method: 'POST', body: this.warpscript}).then(response => {
       response.text().then(gtsStr => {
         this.LOG.debug(['execute', 'response'], gtsStr);
         try {
@@ -162,7 +205,7 @@ export class WarpViewTile {
           <h1>{this.chartTitle}</h1>
           <div class="tile">
             <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
-                               show-legend={this.showLegend}/>
+                               showLegend={this.showLegend}/>
           </div>
         </div>
         :

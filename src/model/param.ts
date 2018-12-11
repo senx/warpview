@@ -40,4 +40,5 @@ export class Param {
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string;
+  timeUnit?: string = 'us';
 }

@@ -234,6 +234,9 @@ export class GTSLib {
   static flattenGtsIdArray(a: any[], r: number):{ res: any[], r: number} {
     const res = [];
     console.log('flattenGtsIdArray', a, r);
+    if(GTSLib.isGts(a)) {
+      a = [ a ];
+    }
     a.forEach(d => {
       console.log('flattenGtsIdArray a.forEach', d, r);
       if(GTSLib.isArray(d)) {
@@ -410,5 +413,16 @@ export class GTSLib {
       return {data: data as GTS[]} as DataModel;
     }
     return new DataModel();
+  }
+
+  static getDivider(timeUnit:string):number {
+    let timestampdivider : number = 1000; //default for µs timeunit
+    if (timeUnit === 'ms'){
+      timestampdivider = 1;
+    }
+    if (timeUnit === 'ns'){
+      timestampdivider = 1000000;
+    }
+    return timestampdivider;    
   }
 }

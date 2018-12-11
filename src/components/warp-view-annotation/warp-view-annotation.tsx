@@ -25,6 +25,7 @@ import {ChartLib} from "../../utils/chart-lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment";
+import "moment-timezone";
 
 @Component({
   tag: "warp-view-annotation",
@@ -41,6 +42,7 @@ export class WarpViewAnnotation {
   @Prop() timeMax: number;
   @Prop({mutable: true}) width = "";
   @Prop({mutable: true}) height = "";
+  @Prop() standalone = true;
 
   @Event() pointHover: EventEmitter;
 
@@ -113,7 +115,11 @@ export class WarpViewAnnotation {
     if (this._chart) {
       this._chart.options.animation.duration = 0;
       if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        this._chart.options.scales.xAxes[0].time.min = newValue;
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.min = newValue;
+        } else {
+          this._chart.options.scales.xAxes[0].time.min = newValue;
+        }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
         this._chart.update();
       }
@@ -125,7 +131,11 @@ export class WarpViewAnnotation {
     if (this._chart) {
       this._chart.options.animation.duration = 0;
       if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        this._chart.options.scales.xAxes[0].time.max = newValue;
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.max = newValue;
+        } else {
+          this._chart.options.scales.xAxes[0].time.max = newValue;
+        }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
         this._chart.update();
       }
@@ -139,6 +149,7 @@ export class WarpViewAnnotation {
     if (!this.data) {
       return;
     }
+    moment.tz.setDefault("UTC");    //force X axis display in UTC  
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
@@ -157,7 +168,8 @@ export class WarpViewAnnotation {
     const chartOption = {
       layout: {
         padding: {
-          bottom: Math.max(30, 30 * gts.length)
+          bottom: Math.max(30, 30 * gts.length),
+          right: 26 //fine tuning, depends on chart element
         }
       },
       legend: {display: this.showLegend},
@@ -194,6 +206,7 @@ export class WarpViewAnnotation {
       scales: {
         xAxes: [
           {
+            display: this.standalone,
             drawTicks: false,
             type: "linear",
             time: {},
@@ -233,12 +246,14 @@ export class WarpViewAnnotation {
     this.LOG.debug(['options'], this._options);
 
     if (this._options.timeMode === 'timestamp') {
-      chartOption.scales.xAxes[0].time = undefined;
+      chartOption.scales.xAxes[0].time = {};
       chartOption.scales.xAxes[0].type = 'linear';
       chartOption.scales.xAxes[0].ticks = {
         fontColor: color,
         min: this.timeMin,
         max: this.timeMax,
+        maxRotation : 0,
+        minRotation : 0
       };
     } else {
       chartOption.scales.xAxes[0].time = {
@@ -248,7 +263,9 @@ export class WarpViewAnnotation {
           millisecond: 'HH:mm:ss.SSS',
           second: 'HH:mm:ss',
           minute: 'HH:mm',
-          hour: 'HH'
+          hour: 'HH',
+          maxRotation : 0,
+          minRotation : 0
         }
       };
       chartOption.scales.xAxes[0].ticks = {
@@ -304,7 +321,7 @@ export class WarpViewAnnotation {
           g.v.forEach(d => {
             let time = d[0];
             if (this._options.timeMode !== 'timestamp') {
-              time = moment(time / 1000).utc(true).valueOf();
+              time = moment(time / GTSLib.getDivider(this._options.timeUnit)).utc(true).valueOf();
             }
             data.push({x: time, y: 0.5, val: d[d.length - 1]});
           });
