@@ -208,15 +208,16 @@ export class CalendarHeatmap {
       this.history.push(this.overview);
     }
     // Define start and end of the dataset
-    const startM: Moment = moment.utc(this.data[0]['date']).startOf('year');
-    const endM: Moment = moment.utc(this.data[this.data.length - 1]['date']).endOf('year');
+    console.log(moment.utc().startOf('y'));
+    const startM: Moment =this.data[0]['date'].startOf('y').utc();
+    const endM: Moment = this.data[this.data.length - 1]['date'].endOf('y').utc();
     // Define array of years and total values
-    console.log(startM, endM);
+    console.log(this.data[0]['date'].startOf('y').year());
     const data = this.data;
     const duration = Math.ceil(moment.duration(endM.diff(startM)).asYears());
     const scale = [];
     for (let i = 1; i <= duration; i++) {
-      scale.push(moment.utc().year(startM.year()).month(0).date(0));
+      scale.push(moment.utc().year(startM.year()).month(0).date(1));
     }
     const year_data = scale.map((date: Moment) => {
       return {
