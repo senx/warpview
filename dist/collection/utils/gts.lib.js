@@ -396,4 +396,14 @@ export class GTSLib {
         }
         return new DataModel();
     }
+    static getDivider(timeUnit) {
+        let timestampdivider = 1000; //default for µs timeunit
+        if (timeUnit === 'ms') {
+            timestampdivider = 1;
+        }
+        if (timeUnit === 'ns') {
+            timestampdivider = 1000000;
+        }
+        return timestampdivider;
+    }
 }

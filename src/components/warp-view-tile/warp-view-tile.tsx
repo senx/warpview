@@ -212,7 +212,7 @@ export class WarpViewTile {
             <h1>{this.chartTitle}</h1>
             <div class="tile">
               <warp-view-scatter responsive={this.responsive} unit={this.unit} data={this.data} options={this._options}
-                show-legend={this.showLegend} />
+                                 showLegend={this.showLegend} />
             </div>
           </div>
           :

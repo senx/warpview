@@ -43,6 +43,7 @@ declare global {
       'options': Param;
       'responsive': boolean;
       'showLegend': boolean;
+      'standalone': boolean;
       'timeMax': number;
       'timeMin': number;
       'width': string;
@@ -75,6 +76,7 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'showLegend'?: boolean;
+      'standalone'?: boolean;
       'timeMax'?: number;
       'timeMin'?: number;
       'width'?: string;

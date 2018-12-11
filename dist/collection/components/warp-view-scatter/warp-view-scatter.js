@@ -154,6 +154,13 @@ export class WarpViewScatter {
         }
         this.LOG.debug(['gtsToScatter'], gts);
         let datasets = [];
+        let timestampdivider = 1000; //default for µs timeunit
+        if (this._options.timeUnit && this._options.timeUnit === 'ms') {
+            timestampdivider = 1;
+        }
+        if (this._options.timeUnit && this._options.timeUnit === 'ns') {
+            timestampdivider = 1000000;
+        }
         for (let i = 0; i < gts.length; i++) {
             let g = gts[i];
             let data = [];
@@ -162,7 +169,7 @@ export class WarpViewScatter {
                     data.push({ x: d[0], y: d[d.length - 1] });
                 }
                 else {
-                    data.push({ x: moment.utc(d[0] / 1000), y: d[d.length - 1] });
+                    data.push({ x: moment.utc(d[0] / timestampdivider), y: d[d.length - 1] });
                 }
             });
             datasets.push({

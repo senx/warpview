@@ -1,0 +1,35 @@
+import '../../stencil.core';
+import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
+export declare class WarpViewTile {
+    LOG: Logger;
+    data: any;
+    options: Param;
+    unit: string;
+    type: string;
+    chartTitle: string;
+    responsive: boolean;
+    showLegend: boolean;
+    url: string;
+    gtsFilter: string;
+    wsElement: HTMLElement;
+    private warpscript;
+    private execUrl;
+    private timeunit;
+    private graphs;
+    private loading;
+    private executionErrorText;
+    private gtsList;
+    private _options;
+    private timer;
+    private _autoRefresh;
+    private onOptions;
+    private onGtsFilter;
+    resize(): void;
+    handleKeyDown(ev: KeyboardEvent): void;
+    componentDidLoad(): void;
+    private parseGTS;
+    private detectWarpScriptSpecialComments;
+    private execute;
+    render(): JSX.Element;
+}

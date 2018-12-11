@@ -5,7 +5,7 @@ var WarpViewAnnotationComponent = /** @class **/ (function() {
   WarpViewAnnotation.is = 'warp-view-annotation';
   WarpViewAnnotation.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./upvpj348.js').then(function(m) {
         return m.WarpViewAnnotation;
       });
 
@@ -18,7 +18,7 @@ var WarpViewBarComponent = /** @class **/ (function() {
   WarpViewBar.is = 'warp-view-bar';
   WarpViewBar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewBar;
       });
 
@@ -31,7 +31,7 @@ var WarpViewBubbleComponent = /** @class **/ (function() {
   WarpViewBubble.is = 'warp-view-bubble';
   WarpViewBubble.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewBubble;
       });
 
@@ -44,7 +44,7 @@ var WarpViewChartComponent = /** @class **/ (function() {
   WarpViewChart.is = 'warp-view-chart';
   WarpViewChart.getModule = function(opts) {
     
-    return import('./erblqumd.js').then(function(m) {
+    return import('./s5v84wbo.js').then(function(m) {
         return m.WarpViewChart;
       });
 
@@ -57,7 +57,7 @@ var WarpViewChipComponent = /** @class **/ (function() {
   WarpViewChip.is = 'warp-view-chip';
   WarpViewChip.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./spso5wle.js').then(function(m) {
         return m.WarpViewChip;
       });
 
@@ -70,7 +70,7 @@ var WarpViewDisplayComponent = /** @class **/ (function() {
   WarpViewDisplay.is = 'warp-view-display';
   WarpViewDisplay.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewDisplay;
       });
 
@@ -83,7 +83,7 @@ var WarpViewGtsTreeComponent = /** @class **/ (function() {
   WarpViewGtsTree.is = 'warp-view-gts-tree';
   WarpViewGtsTree.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./spso5wle.js').then(function(m) {
         return m.WarpViewGtsTree;
       });
 
@@ -96,7 +96,7 @@ var WarpViewHeatmapSlidersComponent = /** @class **/ (function() {
   WarpViewHeatmapSliders.is = 'warp-view-heatmap-sliders';
   WarpViewHeatmapSliders.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./upvpj348.js').then(function(m) {
         return m.WarpViewHeatmapSliders;
       });
 
@@ -109,7 +109,7 @@ var WarpViewImageComponent = /** @class **/ (function() {
   WarpViewImage.is = 'warp-view-image';
   WarpViewImage.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewImage;
       });
 
@@ -122,7 +122,7 @@ var WarpViewMapComponent = /** @class **/ (function() {
   WarpViewMap.is = 'warp-view-map';
   WarpViewMap.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./upvpj348.js').then(function(m) {
         return m.WarpViewMap;
       });
 
@@ -135,7 +135,7 @@ var WarpViewPieComponent = /** @class **/ (function() {
   WarpViewPie.is = 'warp-view-pie';
   WarpViewPie.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewPie;
       });
 
@@ -148,7 +148,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./1koybwqv.js').then(function(m) {
+    return import('./wd9wke89.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -161,7 +161,7 @@ var WarpViewPolarComponent = /** @class **/ (function() {
   WarpViewPolar.is = 'warp-view-polar';
   WarpViewPolar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewPolar;
       });
 
@@ -174,7 +174,7 @@ var WarpViewRadarComponent = /** @class **/ (function() {
   WarpViewRadar.is = 'warp-view-radar';
   WarpViewRadar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewRadar;
       });
 
@@ -187,7 +187,7 @@ var WarpViewScatterComponent = /** @class **/ (function() {
   WarpViewScatter.is = 'warp-view-scatter';
   WarpViewScatter.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewScatter;
       });
 
@@ -213,7 +213,7 @@ var WarpViewTileComponent = /** @class **/ (function() {
   WarpViewTile.is = 'warp-view-tile';
   WarpViewTile.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./wmlvmd5t.js').then(function(m) {
         return m.WarpViewTile;
       });
 
@@ -226,7 +226,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./1koybwqv.js').then(function(m) {
+    return import('./wd9wke89.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
@@ -239,7 +239,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
   WarpViewTreeView.is = 'warp-view-tree-view';
   WarpViewTreeView.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./spso5wle.js').then(function(m) {
         return m.WarpViewTreeView;
       });
 
