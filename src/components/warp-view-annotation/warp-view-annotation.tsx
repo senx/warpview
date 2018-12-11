@@ -249,6 +249,8 @@ export class WarpViewAnnotation {
         fontColor: color,
         min: this.timeMin,
         max: this.timeMax,
+        maxRotation : 0,
+        minRotation : 0
       };
     } else {
       chartOption.scales.xAxes[0].time = {
@@ -258,7 +260,9 @@ export class WarpViewAnnotation {
           millisecond: 'HH:mm:ss.SSS',
           second: 'HH:mm:ss',
           minute: 'HH:mm',
-          hour: 'HH'
+          hour: 'HH',
+          maxRotation : 0,
+          minRotation : 0
         }
       };
       chartOption.scales.xAxes[0].ticks = {
