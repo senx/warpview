@@ -1,4 +1,8 @@
 import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
+import '../../stencil.core';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
 export declare class WarpViewMap {
