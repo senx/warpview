@@ -114,7 +114,11 @@ export class WarpViewAnnotation {
     if (this._chart) {
       this._chart.options.animation.duration = 0;
       if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        this._chart.options.scales.xAxes[0].time.min = newValue;
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.min = newValue;
+        } else {
+          this._chart.options.scales.xAxes[0].time.min = newValue;
+        }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
         this._chart.update();
       }
@@ -126,7 +130,11 @@ export class WarpViewAnnotation {
     if (this._chart) {
       this._chart.options.animation.duration = 0;
       if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
-        this._chart.options.scales.xAxes[0].time.max = newValue;
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.max = newValue;
+        } else {
+          this._chart.options.scales.xAxes[0].time.max = newValue;
+        }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
         this._chart.update();
       }
@@ -235,7 +243,7 @@ export class WarpViewAnnotation {
     this.LOG.debug(['options'], this._options);
 
     if (this._options.timeMode === 'timestamp') {
-      chartOption.scales.xAxes[0].time = undefined;
+      chartOption.scales.xAxes[0].time = {};
       chartOption.scales.xAxes[0].type = 'linear';
       chartOption.scales.xAxes[0].ticks = {
         fontColor: color,
@@ -311,9 +319,9 @@ export class WarpViewAnnotation {
           let color = ColorLib.getColor(g.id);
           const myImage = ChartLib.buildImage(1, 30, color);
           g.v.forEach(d => {
-            let time = d[0] / timestampdivider;
+            let time = d[0];
             if (this._options.timeMode !== 'timestamp') {
-              time = moment(time).utc(true).valueOf();
+              time = moment(time / timestampdivider).utc(true).valueOf();
             }
             data.push({x: time, y: 0.5, val: d[d.length - 1]});
           });
