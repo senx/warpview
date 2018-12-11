@@ -163,19 +163,12 @@ export class WarpViewChart {
     }
     this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
     labels = labels.filter((i) => !!i);
-    let timestampdivider : number = 1000; //default for µs timeunit
-    if (this._options.timeUnit && this._options.timeUnit === 'ms'){
-      timestampdivider = 1;
-    }
-    if (this._options.timeUnit && this._options.timeUnit === 'ns'){
-      timestampdivider = 1000000;
-    }
     Object.keys(data).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(parseInt(timestamp));
       } else {
-        const ts = Math.floor(parseInt(timestamp) / timestampdivider);
+        const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
         datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(ts);
       }
