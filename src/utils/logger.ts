@@ -60,8 +60,8 @@ export class Logger {
 
   /**
    *
+   * @param {string[]} methods
    * @param message
-   * @param methods
    */
   debug(methods: string[], message: any) {
     this.log(LEVEL.DEBUG, methods, message);
@@ -69,8 +69,8 @@ export class Logger {
 
   /**
    *
+   * @param {string[]} methods
    * @param message
-   * @param methods
    */
   error(methods: string[], message: any) {
     this.log(LEVEL.ERROR, methods, message);
@@ -78,8 +78,8 @@ export class Logger {
 
   /**
    *
+   * @param {string[]} methods
    * @param message
-   * @param methods
    */
   warn(methods: string[], message: any) {
     this.log(LEVEL.WARN, methods, message);
@@ -87,8 +87,8 @@ export class Logger {
 
   /**
    *
+   * @param {string[]} methods
    * @param message
-   * @param methods
    */
   info(methods: string[], message: any) {
     this.log(LEVEL.INFO, methods, message);

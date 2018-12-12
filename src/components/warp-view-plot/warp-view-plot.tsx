@@ -41,7 +41,8 @@ export class WarpViewPlot {
 
   @State() private _options: Param = {
     showControls: true,
-    showGTSTree: true
+    showGTSTree: true,
+    showDots: true
   };
   @State() private _data: DataModel = new DataModel();
   @State() private _toHide: number[] = [];

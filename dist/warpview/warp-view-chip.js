@@ -1,8 +1,8 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { a as GTSLib, b as Logger, c as Param, d as ChartLib } from './chunk-cadda168.js';
-import { a as ColorLib } from './chunk-586fec56.js';
+import { a as GTSLib, b as Logger, c as Param, d as ChartLib } from './chunk-a35aff3f.js';
+import { a as ColorLib } from './chunk-08dc32d6.js';
 
 /*
  *  Copyright 2018  SenX S.A.S.

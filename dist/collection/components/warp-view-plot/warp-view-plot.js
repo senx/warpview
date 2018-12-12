@@ -28,7 +28,8 @@ export class WarpViewPlot {
         this.gtsFilter = '';
         this._options = {
             showControls: true,
-            showGTSTree: true
+            showGTSTree: true,
+            showDots: true
         };
         this._data = new DataModel();
         this._toHide = [];

@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { e as DataModel, c as Param, b as Logger, a as GTSLib, d as ChartLib } from './chunk-cadda168.js';
+import { e as DataModel, c as Param, b as Logger, a as GTSLib, d as ChartLib } from './chunk-a35aff3f.js';
 
 /*
  *  Copyright 2018  SenX S.A.S.
@@ -28,7 +28,8 @@ class WarpViewPlot {
         this.gtsFilter = '';
         this._options = {
             showControls: true,
-            showGTSTree: true
+            showGTSTree: true,
+            showDots: true
         };
         this._data = new DataModel();
         this._toHide = [];
