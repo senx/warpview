@@ -21,7 +21,6 @@ export class ColorLib {
     '#ff9900',
     '#004eff',
     '#E53935',
-    '#1E88E5',
     '#7CB342',
     '#F4511E',
     '#039BE5',
@@ -36,6 +35,7 @@ export class ColorLib {
     '#FFB300',
     '#3949AB',
     '#43A047',
+    '#1E88E5',
   ];
 
   /**
