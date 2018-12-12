@@ -14,26 +14,26 @@ export declare class Logger {
     log(level: LEVEL, methods: string[], message: any): void;
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     debug(methods: string[], message: any): void;
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     error(methods: string[], message: any): void;
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     warn(methods: string[], message: any): void;
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     info(methods: string[], message: any): void;
 }

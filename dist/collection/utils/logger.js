@@ -54,32 +54,32 @@ export class Logger {
     }
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     debug(methods, message) {
         this.log(LEVEL.DEBUG, methods, message);
     }
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     error(methods, message) {
         this.log(LEVEL.ERROR, methods, message);
     }
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     warn(methods, message) {
         this.log(LEVEL.WARN, methods, message);
     }
     /**
      *
+     * @param {string[]} methods
      * @param message
-     * @param methods
      */
     info(methods, message) {
         this.log(LEVEL.INFO, methods, message);
