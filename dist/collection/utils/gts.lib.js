@@ -292,19 +292,19 @@ export class GTSLib {
             return false;
         }
         for (let p in a.l) {
-            if (!b.l.hasOwnProperty(p))
-                return false;
-            if (a.l[p] !== b.l[p])
+            // noinspection JSUnfilteredForInLoop
+            if (!b.l.hasOwnProperty(p) || a.l[p] !== b.l[p])
                 return false;
         }
         for (let p in b.l) {
+            // noinspection JSUnfilteredForInLoop
             if (!a.l.hasOwnProperty(p))
                 return false;
         }
         return true;
     }
     static isGts(item) {
-        return !(!item || item === null || item.c === null || item.l === null ||
+        return !(!item || item.c === null || item.l === null ||
             item.a === null || item.v === null || !GTSLib.isArray(item.v));
     }
     static isGtsToPlot(gts) {
@@ -316,6 +316,7 @@ export class GTSLib {
         for (let i = 0; i < gts.v.length; i++) {
             if (gts.v[i][gts.v[i].length - 1] !== null) {
                 // console.log("[warp10-gts-tools] isGtsToPlot - First value type", gts.v[i][gts.v[i].length - 1] );
+                // noinspection JSPotentiallyInvalidConstructorUsage
                 if (typeof (gts.v[i][gts.v[i].length - 1]) === 'number' ||
                     // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
                     gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed !== undefined) {
@@ -350,6 +351,7 @@ export class GTSLib {
         // if it's a number it's a GTS to plot
         for (let i = 0; i < gts.v.length; i++) {
             if (gts.v[i][gts.v[i].length - 1] !== null) {
+                // noinspection JSPotentiallyInvalidConstructorUsage
                 if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'number' &&
                     (!!gts.v[i][gts.v[i].length - 1].constructor &&
                         gts.v[i][gts.v[i].length - 1].constructor.name !== 'Big') &&

@@ -18,6 +18,9 @@
 export class ColorLib {
 
   static color = [
+    '#ff9900',
+    '#004eff',
+    '#f8bc62',
     '#E53935',
     '#1E88E5',
     '#7CB342',
@@ -34,7 +37,6 @@ export class ColorLib {
     '#FFB300',
     '#3949AB',
     '#43A047',
-    '#FB8C00'
   ];
 
   /**

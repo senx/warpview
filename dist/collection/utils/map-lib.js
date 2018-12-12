@@ -20,7 +20,7 @@ import { Logger } from "./logger";
 export class MapLib {
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {object} data
      * @returns {any[]}
      */
     static toLeafletMapPaths(data) {
@@ -48,7 +48,7 @@ export class MapLib {
     }
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {data} data
      * @returns {any[]}
      */
     static annotationsToLeafletPositions(data) {
@@ -163,7 +163,7 @@ export class MapLib {
     }
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {object} data
      * @returns {any[]}
      */
     static toLeafletMapPositionArray(data) {

@@ -26,6 +26,7 @@ export class WarpViewTreeView {
         this.ref = false;
         this.hide = {};
     }
+    // noinspection JSMethodCanBeStatic
     /**
      *
      */

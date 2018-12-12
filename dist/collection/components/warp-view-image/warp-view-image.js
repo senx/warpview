@@ -109,7 +109,7 @@ export class WarpViewImage {
     render() {
         return h("div", null, this.toDisplay ?
             h("div", { class: "chart-container", id: "#wrapper" }, this.toDisplay.map((img) => h("div", { style: this.getStyle() },
-                h("img", { src: img, class: "responsive" }))))
+                h("img", { src: img, class: "responsive", alt: "Result" }))))
             :
                 h("warp-view-spinner", null));
     }

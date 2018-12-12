@@ -192,6 +192,9 @@ export class ColorLib {
     }
 }
 ColorLib.color = [
+    '#ff9900',
+    '#004eff',
+    '#f8bc62',
     '#E53935',
     '#1E88E5',
     '#7CB342',
@@ -208,5 +211,4 @@ ColorLib.color = [
     '#FFB300',
     '#3949AB',
     '#43A047',
-    '#FB8C00'
 ];

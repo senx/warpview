@@ -3,7 +3,7 @@ export declare class MapLib {
     private static LOG;
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {object} data
      * @returns {any[]}
      */
     static toLeafletMapPaths(data: {
@@ -12,7 +12,7 @@ export declare class MapLib {
     }): any[];
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {data} data
      * @returns {any[]}
      */
     static annotationsToLeafletPositions(data: {
@@ -35,7 +35,7 @@ export declare class MapLib {
     private static validateWeightedDotsPositionArray;
     /**
      *
-     * @param {{gts: any[]; params: any[]}} data
+     * @param {object} data
      * @returns {any[]}
      */
     static toLeafletMapPositionArray(data: {

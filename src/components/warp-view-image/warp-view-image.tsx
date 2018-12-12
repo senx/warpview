@@ -129,7 +129,7 @@ export class WarpViewImage {
         <div class="chart-container" id="#wrapper">
           {this.toDisplay.map((img) =>
             <div style={this.getStyle()}>
-              <img src={img} class="responsive"/>
+              <img src={img} class="responsive" alt="Result"/>
             </div>
           )}
         </div>

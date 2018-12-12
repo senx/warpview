@@ -104,7 +104,7 @@ export class ChartLib {
     static buildImage(w, h, color) {
         const img = new Image(w, h);
         const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">
-<rect width="${w}" height="${h}" style="fill:${color};" />
+<rect width="${w}" height="${h}" style="fill:${color};" ></rect>
 </svg>`;
         // 	myImage.src = "ripple.svg"
         img.src = "data:image/svg+xml;base64," + btoa(svg);

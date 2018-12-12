@@ -38,6 +38,7 @@ export class WarpViewTreeView {
   hide: any = {};
   private static LOG: Logger = new Logger(WarpViewTreeView);
 
+  // noinspection JSMethodCanBeStatic
   /**
    *
    */

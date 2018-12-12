@@ -1,8 +1,6 @@
 import '../../stencil.core';
 import '../../stencil.core';
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 export declare class WarpViewTile {

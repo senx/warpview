@@ -17,7 +17,6 @@
 
 import {DataModel} from "../model/dataModel";
 import {GTS} from "../model/GTS";
-import {ChartLib} from "./chart-lib";
 
 export class GTSLib {
 
@@ -231,28 +230,28 @@ export class GTSLib {
 
   /**
    */
-  static flattenGtsIdArray(a: any[], r: number):{ res: any[], r: number} {
+  static flattenGtsIdArray(a: any[], r: number): { res: any[], r: number } {
     const res = [];
     console.log('flattenGtsIdArray', a, r);
-    if(GTSLib.isGts(a)) {
-      a = [ a ];
+    if (GTSLib.isGts(a)) {
+      a = [a];
     }
     a.forEach(d => {
       console.log('flattenGtsIdArray a.forEach', d, r);
-      if(GTSLib.isArray(d)) {
+      if (GTSLib.isArray(d)) {
         console.log('flattenGtsIdArray d isArray');
         const walk = GTSLib.flattenGtsIdArray(d, r);
         res.push(walk.res);
         r = walk.r;
-      } else if(d.v) {
-          d.id = r;
-          res.push(d);
+      } else if (d.v) {
+        d.id = r;
+        res.push(d);
         r++;
       }
       console.log('flattenGtsIdArray res r', res, r);
     });
     console.log('flattenGtsIdArray res', res);
-    return { res: res, r: r};
+    return {res: res, r: r};
   }
 
   static serializeGtsMetadata(gts) {
@@ -309,17 +308,18 @@ export class GTSLib {
       return false;
     }
     for (let p in a.l) {
-      if (!b.l.hasOwnProperty(p)) return false;
-      if (a.l[p] !== b.l[p]) return false;
+      // noinspection JSUnfilteredForInLoop
+      if (!b.l.hasOwnProperty(p) || a.l[p] !== b.l[p]) return false;
     }
     for (let p in b.l) {
+      // noinspection JSUnfilteredForInLoop
       if (!a.l.hasOwnProperty(p)) return false;
     }
     return true;
   }
 
   static isGts(item) {
-    return !(!item || item === null || item.c === null || item.l === null ||
+    return !(!item || item.c === null || item.l === null ||
       item.a === null || item.v === null || !GTSLib.isArray(item.v));
   }
 
@@ -332,6 +332,7 @@ export class GTSLib {
     for (let i = 0; i < gts.v.length; i++) {
       if (gts.v[i][gts.v[i].length - 1] !== null) {
         // console.log("[warp10-gts-tools] isGtsToPlot - First value type", gts.v[i][gts.v[i].length - 1] );
+        // noinspection JSPotentiallyInvalidConstructorUsage
         if (typeof (gts.v[i][gts.v[i].length - 1]) === 'number' ||
           // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
           gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed !== undefined) {
@@ -368,6 +369,7 @@ export class GTSLib {
     // if it's a number it's a GTS to plot
     for (let i = 0; i < gts.v.length; i++) {
       if (gts.v[i][gts.v[i].length - 1] !== null) {
+        // noinspection JSPotentiallyInvalidConstructorUsage
         if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'number' &&
           (!!gts.v[i][gts.v[i].length - 1].constructor &&
             gts.v[i][gts.v[i].length - 1].constructor.name !== 'Big') &&
@@ -415,14 +417,14 @@ export class GTSLib {
     return new DataModel();
   }
 
-  static getDivider(timeUnit:string):number {
-    let timestampdivider : number = 1000; //default for µs timeunit
-    if (timeUnit === 'ms'){
+  static getDivider(timeUnit: string): number {
+    let timestampdivider: number = 1000; //default for µs timeunit
+    if (timeUnit === 'ms') {
       timestampdivider = 1;
     }
-    if (timeUnit === 'ns'){
+    if (timeUnit === 'ns') {
       timestampdivider = 1000000;
     }
-    return timestampdivider;    
+    return timestampdivider;
   }
 }

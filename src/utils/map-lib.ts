@@ -25,7 +25,7 @@ export class MapLib {
 
   /**
    *
-   * @param {{gts: any[]; params: any[]}} data
+   * @param {object} data
    * @returns {any[]}
    */
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }) {
@@ -54,7 +54,7 @@ export class MapLib {
 
   /**
    *
-   * @param {{gts: any[]; params: any[]}} data
+   * @param {data} data
    * @returns {any[]}
    */
   static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }) {
@@ -172,7 +172,7 @@ export class MapLib {
 
   /**
    *
-   * @param {{gts: any[]; params: any[]}} data
+   * @param {object} data
    * @returns {any[]}
    */
   static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }) {
