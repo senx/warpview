@@ -1,4 +1,5 @@
 import '../../stencil.core';
+import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
 export declare class CalendarHeatmap {
     el: HTMLElement;
@@ -42,6 +43,7 @@ export declare class CalendarHeatmap {
      * Utility function to calculate chart dimensions
      */
     calculateDimensions(): void;
+    groupBy(xs: any, key: any): any;
     /**
      * Helper function to check for data summary
      *

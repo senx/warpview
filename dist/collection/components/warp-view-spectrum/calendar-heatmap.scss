@@ -20,7 +20,14 @@
   -ms-user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
-
+  .round {
+    border-radius: 50%;
+    background-color: #bbbbbb;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #454545;
+  }
   .item {
     cursor: pointer;
   }

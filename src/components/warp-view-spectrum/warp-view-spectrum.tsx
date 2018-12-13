@@ -22,6 +22,7 @@ import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
+import { ColorLib } from "../../utils/color-lib";
 
 /**
  *
@@ -187,7 +188,7 @@ export class WarpViewSpectrum {
     const data = {};
     const reducer = (accumulator, currentValue) => accumulator + parseInt(currentValue);
     this.LOG.debug(['parseData'], dataList);
-    dataList.forEach(gts => {
+    dataList.forEach((gts, i) => {
       const name = GTSLib.serializeGtsMetadata(gts);
       gts.v.forEach(v => {
         const refDate = moment.utc(v[0] / 1000).startOf('day').toISOString();
@@ -202,7 +203,9 @@ export class WarpViewSpectrum {
         data[refDate].push({
           name: name,
           date: v[0] / 1000,
-          value: v[v.length - 1]
+          value: v[v.length - 1],
+          color: ColorLib.getColor(i),
+          id: i
         });
       });
     });

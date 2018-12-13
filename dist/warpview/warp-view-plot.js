@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { c as DataModel, b as Param, a as GTSLib } from './chunk-987ced16.js';
+import { d as DataModel, c as Param, a as GTSLib } from './chunk-19196831.js';
 import { a as Logger, b as ChartLib } from './chunk-2e826536.js';
 
 /*

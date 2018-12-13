@@ -1,8 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { a as GTSLib, b as Param } from './chunk-987ced16.js';
-import { a as ColorLib } from './chunk-1b4e64a6.js';
+import { a as GTSLib, b as ColorLib, c as Param } from './chunk-19196831.js';
 import { a as Logger, b as ChartLib } from './chunk-2e826536.js';
 
 /*

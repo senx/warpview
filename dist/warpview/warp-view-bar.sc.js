@@ -2,10 +2,9 @@
 const { h } = window.warpview;
 
 import { a as Chart } from './chunk-3aaa7bf7.js';
-import { a as GTSLib, b as Param, c as DataModel } from './chunk-987ced16.js';
-export { d as WarpViewSpectrum } from './chunk-987ced16.js';
+import { a as GTSLib, c as Param, b as ColorLib, d as DataModel } from './chunk-19196831.js';
+export { e as WarpViewSpectrum } from './chunk-19196831.js';
 import { b as ChartLib, a as Logger } from './chunk-2e826536.js';
-import { a as ColorLib } from './chunk-1b4e64a6.js';
 
 /*
  *  Copyright 2018  SenX S.A.S.
