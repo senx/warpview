@@ -1,6 +1,6 @@
 import '../../stencil.core';
-import '../../stencil.core';
 import { EventEmitter } from "../../stencil.core";
+import { Moment } from 'moment';
 export declare class CalendarHeatmap {
     el: HTMLElement;
     data: any[];
@@ -77,12 +77,13 @@ export declare class CalendarHeatmap {
     /**
      * Helper function to calculate item position on the x-axis
      *
-     *
      * @param d
-     * @param start_of_year
+     * @param {moment.Moment} start_of_year
      * @returns {number}
      */
-    calcItemX(d: any, start_of_year: any): number;
+    calcItemX(d: any, start_of_year: Moment): number;
+    calcItemXMonth(d: any, start: Moment, offset: number): number;
+    calcDayX(d: any, start: Moment): number;
     /**
      * Helper function to calculate item position on the y-axis
      * @param d object
@@ -133,4 +134,6 @@ export declare class CalendarHeatmap {
     static formatTime(seconds: number): string;
     componentDidLoad(): void;
     render(): JSX.Element;
+    private getTooltip;
+    private static formatLabel;
 }

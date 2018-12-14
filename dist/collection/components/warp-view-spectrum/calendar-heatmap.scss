@@ -20,14 +20,8 @@
   -ms-user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
-  .round {
-    border-radius: 50%;
-    background-color: #bbbbbb;
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border: 2px solid #454545;
-  }
+
+
   .item {
     cursor: pointer;
   }
@@ -55,29 +49,69 @@
     pointer-events: none;
     position: absolute;
     z-index: 9999;
-    width: 250px;
-    max-width: 250px;
+    width: auto;
+    max-width: 650px;
     overflow: hidden;
     padding: 15px;
     font-size: 12px;
     line-height: 14px;
-    color: rgb(51, 51, 51);
+    color: white;
     font-family: Helvetica, arial, 'Open Sans', sans-serif;
-    background: rgba(255, 255, 255, 0.75);
-
+    background: rgba(0, 0, 0, 0.75);
+    ul {
+      list-style: none;
+      padding: 0;
+      li {
+        padding: 0;
+        .gtsInfo {
+          padding-left: 20px;
+          width: auto;
+          max-width: 650px;
+        }
+      }
+    }
     .header strong {
       display: inline-block;
-      width: 250px;
+      width: 100%;
     }
 
-    span {
+
+    .gts-classname {
+      color: var(--gts-classname-font-color, #0074D9);
+    }
+
+    .gts-labelname {
+      color: var(--gts-labelname-font-color, #19A979);
+    }
+
+    .gts-attrname {
+      color: var(--gts-labelname-font-color, #ED4A7B);
+    }
+
+    .gts-separator {
+      color: var(--gts-separator-font-color, #bbbbbb);
+    }
+
+    .gts-labelvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic;
+    }
+
+    .gts-attrvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic;
+    }
+
+    .round {
+      border-radius: 50%;
+      background-color: #bbbbbb;
       display: inline-block;
-      width: 50%;
-      padding-right: 10px;
-      box-sizing: border-box;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #454545;
     }
 
-    span, .header strong {
+     .header strong {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

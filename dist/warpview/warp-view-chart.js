@@ -1,8 +1,8 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { a as GTSLib, b as ColorLib, c as Param } from './chunk-19196831.js';
-import { a as Logger, b as ChartLib, c as moment } from './chunk-2e826536.js';
+import { a as GTSLib, b as Param } from './chunk-c0936851.js';
+import { a as Logger, b as ChartLib, d as ColorLib, c as moment } from './chunk-563291fd.js';
 
 var global$1 = typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :

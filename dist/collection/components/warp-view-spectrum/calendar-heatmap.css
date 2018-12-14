@@ -20,13 +20,6 @@
   -ms-user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none; }
-  :host .round {
-    border-radius: 50%;
-    background-color: #bbbbbb;
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border: 2px solid #454545; }
   :host .item {
     cursor: pointer; }
   :host .label {
@@ -46,24 +39,49 @@
     pointer-events: none;
     position: absolute;
     z-index: 9999;
-    width: 250px;
-    max-width: 250px;
+    width: auto;
+    max-width: 650px;
     overflow: hidden;
     padding: 15px;
     font-size: 12px;
     line-height: 14px;
-    color: #333333;
+    color: white;
     font-family: Helvetica, arial, 'Open Sans', sans-serif;
-    background: rgba(255, 255, 255, 0.75); }
+    background: rgba(0, 0, 0, 0.75); }
+    :host .heatmap-tooltip ul {
+      list-style: none;
+      padding: 0; }
+      :host .heatmap-tooltip ul li {
+        padding: 0; }
+        :host .heatmap-tooltip ul li .gtsInfo {
+          padding-left: 20px;
+          width: auto;
+          max-width: 650px; }
     :host .heatmap-tooltip .header strong {
       display: inline-block;
-      width: 250px; }
-    :host .heatmap-tooltip span {
+      width: 100%; }
+    :host .heatmap-tooltip .gts-classname {
+      color: var(--gts-classname-font-color, #0074D9); }
+    :host .heatmap-tooltip .gts-labelname {
+      color: var(--gts-labelname-font-color, #19A979); }
+    :host .heatmap-tooltip .gts-attrname {
+      color: var(--gts-labelname-font-color, #ED4A7B); }
+    :host .heatmap-tooltip .gts-separator {
+      color: var(--gts-separator-font-color, #bbbbbb); }
+    :host .heatmap-tooltip .gts-labelvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic; }
+    :host .heatmap-tooltip .gts-attrvalue {
+      color: var(--gts-labelvalue-font-color, #AAAAAA);
+      font-style: italic; }
+    :host .heatmap-tooltip .round {
+      border-radius: 50%;
+      background-color: #bbbbbb;
       display: inline-block;
-      width: 50%;
-      padding-right: 10px;
-      box-sizing: border-box; }
-    :host .heatmap-tooltip span, :host .heatmap-tooltip .header strong {
+      width: 12px;
+      height: 12px;
+      border: 2px solid #454545; }
+    :host .heatmap-tooltip .header strong {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
