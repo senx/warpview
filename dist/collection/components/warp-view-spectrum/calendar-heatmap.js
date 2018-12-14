@@ -17,7 +17,7 @@
 import { Logger } from "../../utils/logger";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from 'moment';
-import { easeLinear, max, scaleBand, scaleLinear, scaleTime, sum, timeDays, timeHours, timeSecond } from "d3";
+import { easeLinear, max, range, scaleBand, scaleLinear, scaleTime, sum, timeDays, timeHours, timeSecond } from "d3";
 import { event, select } from 'd3-selection';
 import { ColorLib } from "../../utils/color-lib";
 export class CalendarHeatmap {
@@ -746,10 +746,8 @@ export class CalendarHeatmap {
                     });
                 });
             });
-            console.log('scale', scale);
             month_data = month_data.concat(scale);
         });
-        console.log('month_data', month_data);
         const max_value = max(month_data, (d) => {
             return d.total;
         });
@@ -796,9 +794,6 @@ export class CalendarHeatmap {
             .data(month_data)
             .enter().append('rect')
             .style('opacity', 0)
-            /*  .attr('transform', (d: any) => {
-                return 'translate(' + weekScale(d.date.week().toString()) + ',' + ((dayScale(d.date.weekday().toString()) + dayScale.bandwidth() / 1.75) - 15) + ')';
-              })*/
             .attr('class', 'item item-block-rect')
             .attr('y', (d) => {
             return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
@@ -1009,13 +1004,42 @@ export class CalendarHeatmap {
         const start_of_week = moment(this.selected.date).startOf('week');
         const end_of_week = moment(this.selected.date).endOf('week');
         // Filter data down to the selected week
-        const week_data = this.data.filter((d) => {
-            return moment(d.date).isBetween(start_of_week, end_of_week, null, '[]');
+        let week_data = [];
+        this.data.filter((d) => {
+            return moment.utc(d.date).isBetween(start_of_week, end_of_week, null, '[]');
+        }).map(d => {
+            let scale = [];
+            // Object.keys(this.groupBy(d.details, 'name')
+            d.details.forEach(det => {
+                const date = moment.utc(det.date);
+                const i = date.hours();
+                if (!scale[i]) {
+                    scale[i] = {
+                        date: date.startOf('hour'),
+                        total: 0,
+                        details: [],
+                        summary: []
+                    };
+                }
+                scale[i].total += det.value;
+                scale[i].details.push(det);
+            });
+            scale.forEach(s => {
+                const group = this.groupBy(s.details, 'name');
+                Object.keys(group).forEach(k => {
+                    s.summary.push({
+                        name: k,
+                        total: sum(group[k], (d) => {
+                            return d.total;
+                        }),
+                        color: group[k][0].color
+                    });
+                });
+            });
+            week_data = week_data.concat(scale);
         });
         const max_value = max(week_data, (d) => {
-            return max(d.summary, (d) => {
-                return +d.value;
-            });
+            return d.total;
         });
         // Define day labels and axis
         const day_labels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
@@ -1024,38 +1048,48 @@ export class CalendarHeatmap {
             .domain(day_labels.map((d) => {
             return moment.utc(d).weekday().toString();
         }));
-        // Define week labels and axis
-        const week_labels = [start_of_week];
+        // Define hours labels and axis
+        let week_labels = [];
+        range(0, 24).forEach(h => {
+            week_labels.push(moment.utc().hours(h).startOf('hour').format('HH:mm'));
+        });
+        console.log('week_labels', week_labels);
         const weekScale = scaleBand()
             .rangeRound([this.label_padding, this.width])
             .padding(0.01)
-            .domain(week_labels.map((weekday) => {
-            return weekday.weekday().toString();
-        }));
-        console.log('week_data', week_data);
+            .domain(week_labels);
+        const color = scaleLinear()
+            .range(['#ffffff', this.color])
+            .domain([-0.15 * max_value, max_value]);
         // Add week data items to the overview
         this.items.selectAll('.item-block-week').remove();
-        const item_block = this.items.selectAll('.item-block-week')
+        this.items.selectAll('.item-block-week')
             .data(week_data)
             .enter()
-            .append('g')
-            .attr('class', 'item item-block-week')
-            .attr('width', () => {
-            return (this.width - this.label_padding) / week_labels.length - this.gutter * 5;
+            .append('rect')
+            .style('opacity', 0)
+            .attr('class', 'item item-block-rect')
+            .attr('y', (d) => {
+            return this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
         })
-            .attr('height', () => {
-            return Math.min(dayScale.bandwidth(), this.max_block_height);
+            .attr('x', (d) => {
+            return this.gutter + weekScale(moment(d.date).startOf('hour').format('HH:mm')) + (this.item_size - this.calcItemSize(d, max_value)) / 2;
         })
-            .attr('transform', (d) => {
-            return 'translate(' + weekScale(moment(d.date).week().toString()) + ',' + ((dayScale(moment(d.date).weekday().toString()) + dayScale.bandwidth() / 1.75) - 15) + ')';
+            .attr('rx', (d) => {
+            return this.calcItemSize(d, max_value);
         })
-            .attr('total', (d) => {
-            return d.total;
+            .attr('ry', (d) => {
+            return this.calcItemSize(d, max_value);
         })
-            .attr('date', (d) => {
-            return d.date;
+            .attr('width', (d) => {
+            return this.calcItemSize(d, max_value);
         })
-            .attr('offset', 0)
+            .attr('height', (d) => {
+            return this.calcItemSize(d, max_value);
+        })
+            .attr('fill', (d) => {
+            return (d.total > 0) ? color(d.total) : 'transparent';
+        })
             .on('click', (d) => {
             if (this.in_transition) {
                 return;
@@ -1074,53 +1108,17 @@ export class CalendarHeatmap {
             // Redraw the chart
             this.overview = 'day';
             this.drawChart();
-        });
-        const item_width = (this.width - this.label_padding) / week_labels.length - this.gutter * 5;
-        const itemScale = scaleLinear().rangeRound([0, item_width]);
-        const item_gutter = this.item_gutter;
-        item_block.selectAll()
-            .data((d) => {
-            return d.summary;
-        })
-            .enter()
-            .append('rect')
-            .attr('class', 'item item-block-rect')
-            .attr('x', function (d) {
-            const total = parseInt(select(this.parentNode).attr('total'));
-            const offset = parseInt(select(this.parentNode).attr('offset'));
-            itemScale.domain([0, total]);
-            select(this.parentNode).attr('offset', offset + itemScale(d.value));
-            return offset;
-        })
-            .attr('width', function (d) {
-            const total = parseInt(select(this.parentNode).attr('total'));
-            itemScale.domain([0, total]);
-            return Math.max((itemScale(d.value) - item_gutter), 1);
-        })
-            .attr('height', () => {
-            return Math.min(dayScale.bandwidth(), this.max_block_height);
-        })
-            .attr('fill', (d) => {
-            const color = scaleLinear()
-                .range(['#ffffff', this.color])
-                .domain([-0.15 * max_value, max_value]);
-            return color(d.value) || '#ff4500';
-        })
-            .style('opacity', 0)
-            .on('mouseover', (d) => {
+        }).on('mouseover', (d) => {
             if (this.in_transition) {
                 return;
             }
-            // Get date from the parent node
-            const date = new Date(select(event.currentTarget.parentNode).attr('date'));
             // Calculate tooltip position
-            const total = parseInt(select(event.currentTarget.parentNode).attr('total'));
-            itemScale.domain([0, total]);
-            let x = parseInt(select(event.currentTarget).attr('x')) + this.tooltip_padding * 5;
+            /*   return this.gutter + weekScale(moment(d.date).startOf('hour').format('HH:mm')) + (this.item_size - this.calcItemSize(d, max_value)) / 2;*/
+            let x = weekScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltip_padding;
             while (this.width - x < (this.tooltip_width + this.tooltip_padding * 3)) {
                 x -= 10;
             }
-            const y = dayScale(moment.utc(date).weekday().toString()) + this.tooltip_padding;
+            const y = dayScale(d.date.weekday().toString()) + this.tooltip_padding;
             // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
@@ -1150,11 +1148,9 @@ export class CalendarHeatmap {
                 callback();
             }
             let n = 0;
-            transition
-                .each(() => {
+            transition.each(() => {
                 ++n;
-            })
-                .on('end', function () {
+            }).on('end', function () {
                 if (!--n) {
                     callback.apply(this, arguments);
                 }
@@ -1173,10 +1169,10 @@ export class CalendarHeatmap {
             return Math.floor(this.label_padding / 3) + 'px';
         })
             .text((d) => {
-            return 'Week ' + d.week;
+            return d;
         })
             .attr('x', (d) => {
-            return weekScale(d.week);
+            return weekScale(d);
         })
             .attr('y', this.label_padding / 2)
             .on('mouseenter', (weekday) => {
@@ -1464,7 +1460,6 @@ export class CalendarHeatmap {
     calcItemXMonth(d, start, offset) {
         const hourIndex = moment(d.date).hours();
         const colIndex = Math.trunc(hourIndex / 3);
-        console.log('calcItemXMonth', hourIndex, colIndex);
         return colIndex * (this.item_size + this.gutter) + offset;
     }
     ;
