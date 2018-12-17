@@ -699,6 +699,8 @@
   var defOpts = {
     gridLineColor: '#000000',
     fontColor: '#000000',
+    minColor : '#ffffff',
+    maxColor : '#333333',
     mapType: 'DEFAULT',
     showControls: true,
     showGTSTree: true,
@@ -711,6 +713,8 @@
       body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light').addClass('text-white');
       $('.card').addClass('bg-dark');
       defOpts.gridLineColor = '#ffffff';
+      defOpts.minColor = '#b4cef7';
+      defOpts.maxColor = '#4286f4';
       console.log('drawMap - index', defOpts);
       document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
@@ -721,6 +725,8 @@
       body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light').removeClass('text-white');
       $('.card').removeClass('bg-dark');
       defOpts.gridLineColor = '#000000';
+      defOpts.minColor = '#ffffff';
+      defOpts.maxColor = '#333333';
       document.querySelectorAll('warp-view-tile').forEach(el => {
         el.options = {...defOpts};
       });

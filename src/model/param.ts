@@ -24,7 +24,7 @@ export class Param {
   key?: string;
   interpolate?: string;
   type?: string;
-  showRangeSelector?: boolean ;
+  showRangeSelector?: boolean;
   startLat?: number;
   startLong?: number;
   startZoom?: number;
@@ -39,4 +39,6 @@ export class Param {
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string
+  minColor?: string;
+  maxColor?: string;
 }

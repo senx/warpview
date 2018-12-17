@@ -146,7 +146,9 @@ export class WarpViewDrillDown {
   render() {
     // noinspection CheckTagEmptyBody
     return <div class="wrapper">
-      <calendar-heatmap data={this.heatMapData} overview={'global'} color={this._options.gridLineColor}></calendar-heatmap>
+      <calendar-heatmap data={this.heatMapData} overview={'global'}
+                        minColor={this._options.minColor}
+                        maxColor={this._options.maxColor}></calendar-heatmap>
     </div>;
   }
 

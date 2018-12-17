@@ -271,8 +271,9 @@ declare global {
 
   namespace StencilComponents {
     interface CalendarHeatmap {
-      'color': string;
       'data': Datum[];
+      'maxColor': string;
+      'minColor': string;
       'overview': string;
     }
   }
@@ -296,8 +297,9 @@ declare global {
   }
   namespace JSXElements {
     export interface CalendarHeatmapAttributes extends HTMLAttributes {
-      'color'?: string;
       'data'?: Datum[];
+      'maxColor'?: string;
+      'minColor'?: string;
       'onHandler'?: (event: CustomEvent) => void;
       'onOnChange'?: (event: CustomEvent) => void;
       'overview'?: string;

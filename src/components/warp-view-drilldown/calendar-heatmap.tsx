@@ -24,6 +24,7 @@ import {easeLinear, max, range, scaleBand, scaleLinear, Selection, sum, timeDays
 import {event, select} from 'd3-selection';
 import {ColorLib} from "../../utils/color-lib";
 import {Datum, Detail, Summary} from "./datum";
+import {GTSLib} from "../../utils/gts.lib";
 
 @Component({
   tag: 'calendar-heatmap',
@@ -31,11 +32,13 @@ import {Datum, Detail, Summary} from "./datum";
   shadow: true
 })
 export class CalendarHeatmap {
-  private static DEF_COLOR: string = '#333333';
+  private static DEF_MIN_COLOR: string = '#ffffff';
+  private static DEF_MAX_COLOR: string = '#333333';
   @Element() el: HTMLElement;
 
   @Prop() data: Datum[];
-  @Prop() color: string = CalendarHeatmap.DEF_COLOR;
+  @Prop() minColor: string = CalendarHeatmap.DEF_MIN_COLOR;
+  @Prop() maxColor: string = CalendarHeatmap.DEF_MAX_COLOR;
   @Prop({mutable: true}) overview: string = 'global';
 
   @Event() handler: EventEmitter;
@@ -66,6 +69,22 @@ export class CalendarHeatmap {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
+      this.drawChart();
+    }
+  }
+
+  @Watch('minColor')
+  private onMinColor(newValue: string, oldValue: string) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
+      this.drawChart();
+    }
+  }
+
+  @Watch('maxColor')
+  private onMaxColor(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
@@ -151,6 +170,7 @@ export class CalendarHeatmap {
     if (!this.svg || !this.data) {
       return;
     }
+    this.LOG.debug(['drawChart'], [this.overview, this.selected])
     switch (this.overview) {
       case 'global':
         this.drawGlobalOverview();
@@ -231,7 +251,7 @@ export class CalendarHeatmap {
       const d = moment.utc().year(start_period.year() + i).month(0).date(1).startOf('y');
       scale.push(d);
     }
-    const year_data: Datum[] = yData.map((d: Datum) => {
+    let year_data: Datum[] = yData.map((d: Datum) => {
       const date: Moment = d.date;
       return {
         date: date,
@@ -271,6 +291,7 @@ export class CalendarHeatmap {
       };
     });
     // Calculate max value of all the years in the dataset
+    year_data = GTSLib.cleanArray(year_data);
     const max_value = max(year_data, (d: Datum) => d.total);
     // Define year labels and axis
     const year_labels = scale.map((d: Moment) => d);
@@ -280,7 +301,7 @@ export class CalendarHeatmap {
       .domain(year_labels.map((d: Moment) => d.year().toString()));
 
     const color = scaleLinear<string>()
-      .range(['#ffffff', this.color || CalendarHeatmap.DEF_COLOR])
+      .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
       .domain([-0.15 * max_value, max_value]);
     // Add global data items to the overview
     this.items.selectAll('.item-block-year').remove();
@@ -413,7 +434,7 @@ export class CalendarHeatmap {
     const start_of_year: Moment = moment(this.selected.date).startOf('year');
     const end_of_year: Moment = moment(this.selected.date).endOf('year');
     // Filter data down to the selected year
-    const year_data: Datum[] = this.data.filter((d: Datum) => {
+    let year_data: Datum[] = this.data.filter((d: Datum) => {
       return d.date.isBetween(start_of_year, end_of_year, null, '[]');
     });
     year_data.forEach((d: Datum) => {
@@ -431,9 +452,12 @@ export class CalendarHeatmap {
       });
       d.summary = summary;
     });
+    year_data = GTSLib.cleanArray(year_data);
     // Calculate max value of the year data
     const max_value = max(year_data, (d: Datum) => d.total);
-    const color = scaleLinear<string>().range(['#ffffff', this.color || CalendarHeatmap.DEF_COLOR]).domain([-0.15 * max_value, max_value]);
+    const color = scaleLinear<string>()
+      .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
+      .domain([-0.15 * max_value, max_value]);
     this.items.selectAll('.item-circle').remove();
     this.items.selectAll('.item-circle')
       .data(year_data)
@@ -682,6 +706,8 @@ export class CalendarHeatmap {
         });
         month_data = month_data.concat(scale)
       });
+    month_data = GTSLib.cleanArray(month_data);
+    this.LOG.debug(['drawMonthOverview'], [this.overview, this.selected, month_data]);
     const max_value: number = max(month_data, (d: any) => d.total);
     // Define day labels and axis
     const day_labels: Date[] = timeDays(moment(this.selected.date).startOf('week').toDate(), moment(this.selected.date).endOf('week').toDate());
@@ -715,7 +741,7 @@ export class CalendarHeatmap {
       .padding(0.05)
       .domain(week_labels.map((weekday) => weekday.week() + ''));
     const color = scaleLinear<string>()
-      .range(['#ffffff', this.color || CalendarHeatmap.DEF_COLOR])
+      .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
       .domain([-0.15 * max_value, max_value]);
     // Add month data items to the overview
     this.items.selectAll('.item-block-month').remove();
@@ -923,6 +949,7 @@ export class CalendarHeatmap {
       });
       week_data = week_data.concat(scale)
     });
+    week_data = GTSLib.cleanArray(week_data);
     const max_value: number = max(week_data, (d: Datum) => d.total);
     // Define day labels and axis
     const day_labels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
@@ -933,7 +960,9 @@ export class CalendarHeatmap {
     let hours_labels: string[] = [];
     range(0, 24).forEach(h => hours_labels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
     const hourScale = scaleBand().rangeRound([this.label_padding, this.width]).padding(0.01).domain(hours_labels);
-    const color = scaleLinear<string>().range(['#ffffff', this.color || CalendarHeatmap.DEF_COLOR]).domain([-0.15 * max_value, max_value]);
+    const color = scaleLinear<string>()
+      .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
+      .domain([-0.15 * max_value, max_value]);
     // Add week data items to the overview
     this.items.selectAll('.item-block-week').remove();
     this.items.selectAll('.item-block-week')
@@ -941,7 +970,7 @@ export class CalendarHeatmap {
       .enter()
       .append('rect')
       .style('opacity', 0)
-      .attr('class', 'item-block-week')
+      .attr('class', 'item item-block-week')
       .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
       .attr('x', (d: Datum) => this.gutter + hourScale(moment(d.date).startOf('hour').format('HH:mm')) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
       .attr('rx', (d: Datum) => this.calcItemSize(d, max_value))
@@ -1135,6 +1164,7 @@ export class CalendarHeatmap {
         data.push(s);
       });
     });
+    day_data = GTSLib.cleanArray(day_data);
     const max_value: number = max(data, (d: Summary) => d.total);
     const gtsNames = this.selected.summary.map((summary: Summary) => summary.name);
     const gtsNameScale = scaleBand().rangeRound([this.label_padding, this.height]).domain(gtsNames);
@@ -1160,7 +1190,7 @@ export class CalendarHeatmap {
       .attr('height', (d: Summary) => this.calcItemSize(d, max_value))
       .attr('fill', (d: Summary) => {
         const color = scaleLinear<string>()
-          .range(['#ffffff', d.color || CalendarHeatmap.DEF_COLOR])
+          .range(['#ffffff', d.color || CalendarHeatmap.DEF_MIN_COLOR])
           .domain([-0.5 * max_value, max_value]);
         return color(d.total);
       })
