@@ -14,29 +14,28 @@
  *  limitations under the License.
  *
  */
-export class Param {
-  bgColor?: string;
-  fontColor?: string;
-  borderColor?: string;
-  showLegend?: boolean;
-  responsive?: boolean;
-  gridLineColor?: string;
-  key?: string;
-  interpolate?: string;
-  type?: string;
-  showRangeSelector?: boolean ;
-  startLat?: number;
-  startLong?: number;
-  startZoom?: number;
-  dotsLimit?: number;
-  heatRadius?: number;
-  heatBlur?: number;
-  heatOpacity?: number;
-  heatControls?: boolean;
-  mapType?: string;
-  autoRefresh?: number;
-  showControls?: boolean;
-  showGTSTree?: boolean;
-  foldGTSTree?: boolean;
-  timeMode?: string
+
+import {Moment} from "moment";
+
+export class Datum {
+  date: Moment;
+  summary?: Summary[];
+  total?: number;
+  details?: Detail[];
+}
+
+export class Summary {
+  color?: string;
+  id?: number;
+  name: string;
+  total: number;
+  date?: Moment;
+}
+
+export class Detail {
+  color?: string;
+  date: number;
+  id: number;
+  name: string;
+  value: number;
 }

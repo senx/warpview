@@ -21,7 +21,6 @@ import { DataModel } from "../../model/dataModel";
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
-import { WarpViewSpectrumParam } from "../warp-view-spectrum/warp-view-spectrum";
 
 @Component({
   tag: 'warp-view-tile',
@@ -59,14 +58,7 @@ export class WarpViewTile {
   };
   private loading = true;
   private gtsList: any;
-  private _options: Param = {
-    spectrum: {
-      range: 'd',
-      granularity: '10 m',
-      scale: 24,
-      interval: 6
-    }
-  };
+  private _options:Param = new Param();
   private timer: any;
   private _autoRefresh;
   private wsComplement: string = '';
@@ -140,30 +132,6 @@ export class WarpViewTile {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.loading = true;
     this.warpscript = this.wsElement.textContent;
-    if(this.type == 'spectrum2') {
-      this.LOG.debug([ 'execute' ], this._options.spectrum);
-      this.wsComplement =
-        ' {} \'res\' STORE' +
-        ' 1 ' + this._options.spectrum.range + ' \'unit\' TIMEMODULO 0 GET 0 REMOVE DROP' +
-        ' <%' +
-        ' \'gts\' STORE' +
-        ' $gts LABELS \'unit\' GET TOLONG ' + this._options.spectrum.range + ' \'d\' STORE' +
-        ' { $d TOSTRING $gts VALUES } $res APPEND \'res\' STORE' +
-        ' %> FOREACH' +
-        ' { \'labels\' $res KEYLIST LSORT } \'out\' STORE' +
-        ' $out \'labels\' GET \'keys\' STORE' +
-        ' [] \'data\' STORE' +
-        ' $keys <%' +
-        ' \'k\' STORE' +
-        ' $res $k GET \'values\' STORE' +
-        ' $values \'v\' STORE' +
-        ' $values SIZE ' + (this._options.spectrum.scale * this._options.spectrum.interval - 1) + ' <% DROP $v 0.0 +  \'v\' STORE  %> FOR' +
-        ' $data [ $v ] APPEND \'data\' STORE' +
-        ' %> FOREACH' +
-        ' { \'data\' $data ZIP } $out APPEND'
-    } else {
-      this.wsComplement = '';
-    }
     this.LOG.debug([ 'execute', 'warpscript' ], this.warpscript);
     fetch(this.url, { method: 'POST', body: this.warpscript + '\n' + this.wsComplement }).then(response => {
       response.text().then(gtsStr => {
@@ -337,13 +305,13 @@ export class WarpViewTile {
         </div>
         : ''
       }
-      {this.type == 'spectrum' ?
+      {this.type == 'drilldown' ?
         <div>
           <h1>{this.chartTitle}
             <small>{this.unit}</small>
           </h1>
           <div class="tile">
-            <warp-view-spectrum data={this.data} options={this._options}/>
+            <warp-view-drilldown data={this.data} options={this._options}/>
           </div>
         </div>
         : ''

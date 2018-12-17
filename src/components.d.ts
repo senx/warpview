@@ -32,6 +32,9 @@ import {
 import {
   Param,
 } from './model/param';
+import {
+  Datum,
+} from './components/warp-view-drilldown/datum';
 
 declare global {
 
@@ -258,6 +261,88 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface CalendarHeatmap {
+      'color': string;
+      'data': Datum[];
+      'overview': string;
+    }
+  }
+
+  interface HTMLCalendarHeatmapElement extends StencilComponents.CalendarHeatmap, HTMLStencilElement {}
+
+  var HTMLCalendarHeatmapElement: {
+    prototype: HTMLCalendarHeatmapElement;
+    new (): HTMLCalendarHeatmapElement;
+  };
+  interface HTMLElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  interface ElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'calendar-heatmap': JSXElements.CalendarHeatmapAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface CalendarHeatmapAttributes extends HTMLAttributes {
+      'color'?: string;
+      'data'?: Datum[];
+      'onHandler'?: (event: CustomEvent) => void;
+      'onOnChange'?: (event: CustomEvent) => void;
+      'overview'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface WarpViewDrilldown {
+      'data': DataModel | any[] | string;
+      'height': string;
+      'options': Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLWarpViewDrilldownElement extends StencilComponents.WarpViewDrilldown, HTMLStencilElement {}
+
+  var HTMLWarpViewDrilldownElement: {
+    prototype: HTMLWarpViewDrilldownElement;
+    new (): HTMLWarpViewDrilldownElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-drilldown': HTMLWarpViewDrilldownElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-drilldown': HTMLWarpViewDrilldownElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-drilldown': JSXElements.WarpViewDrilldownAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewDrilldownAttributes extends HTMLAttributes {
+      'data'?: DataModel | any[] | string;
+      'height'?: string;
+      'options'?: Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
       'width'?: string;
     }
   }
@@ -726,88 +811,6 @@ declare global {
       'responsive'?: boolean;
       'showLegend'?: boolean;
       'unit'?: string;
-      'width'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface CalendarHeatmap {
-      'color': string;
-      'data': any[];
-      'overview': string;
-    }
-  }
-
-  interface HTMLCalendarHeatmapElement extends StencilComponents.CalendarHeatmap, HTMLStencilElement {}
-
-  var HTMLCalendarHeatmapElement: {
-    prototype: HTMLCalendarHeatmapElement;
-    new (): HTMLCalendarHeatmapElement;
-  };
-  interface HTMLElementTagNameMap {
-    'calendar-heatmap': HTMLCalendarHeatmapElement;
-  }
-  interface ElementTagNameMap {
-    'calendar-heatmap': HTMLCalendarHeatmapElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'calendar-heatmap': JSXElements.CalendarHeatmapAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface CalendarHeatmapAttributes extends HTMLAttributes {
-      'color'?: string;
-      'data'?: any[];
-      'onHandler'?: (event: CustomEvent) => void;
-      'onOnChange'?: (event: CustomEvent) => void;
-      'overview'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface WarpViewSpectrum {
-      'data': DataModel | any[] | string;
-      'height': string;
-      'options': Param;
-      'responsive': boolean;
-      'showLegend': boolean;
-      'width': string;
-    }
-  }
-
-  interface HTMLWarpViewSpectrumElement extends StencilComponents.WarpViewSpectrum, HTMLStencilElement {}
-
-  var HTMLWarpViewSpectrumElement: {
-    prototype: HTMLWarpViewSpectrumElement;
-    new (): HTMLWarpViewSpectrumElement;
-  };
-  interface HTMLElementTagNameMap {
-    'warp-view-spectrum': HTMLWarpViewSpectrumElement;
-  }
-  interface ElementTagNameMap {
-    'warp-view-spectrum': HTMLWarpViewSpectrumElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'warp-view-spectrum': JSXElements.WarpViewSpectrumAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface WarpViewSpectrumAttributes extends HTMLAttributes {
-      'data'?: DataModel | any[] | string;
-      'height'?: string;
-      'options'?: Param;
-      'responsive'?: boolean;
-      'showLegend'?: boolean;
       'width'?: string;
     }
   }

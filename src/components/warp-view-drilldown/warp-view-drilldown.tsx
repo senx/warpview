@@ -22,25 +22,17 @@ import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
-import { ColorLib } from "../../utils/color-lib";
+import {ColorLib} from "../../utils/color-lib";
 
 /**
  *
  */
-export class WarpViewSpectrumParam {
-  range: string = 'd';
-  granularity: string = '10 m';
-  scale: number = 24;
-  interval: 6
-}
-
-
 @Component({
-  tag: 'warp-view-spectrum',
-  styleUrl: 'warp-view-spectrum.scss',
+  tag: 'warp-view-drilldown',
+  styleUrl: 'warp-view-drilldown.scss',
   shadow: true
 })
-export class WarpViewSpectrum {
+export class WarpViewDrillDown {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | any[] | string;
@@ -50,11 +42,9 @@ export class WarpViewSpectrum {
 
   @Element() el: HTMLElement;
 
-  private uuid = 'spectrum-' + ChartLib.guid().split('-').join('');
-  private LOG: Logger = new Logger(WarpViewSpectrum);
+  private LOG: Logger = new Logger(WarpViewDrillDown);
   private _options: Param = {
-    gridLineColor: '#8e8e8e',
-    spectrum: new WarpViewSpectrumParam()
+    gridLineColor: '#8e8e8e'
   };
   private resizeTimer;
   private parentWidth = -1;
@@ -92,13 +82,11 @@ export class WarpViewSpectrum {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    const color = this._options.gridLineColor;
     if (!this.data) return;
     let data: any = this.data;
     if (typeof data === 'string') {
       data = JSON.parse(data as string);
     }
-
     if (GTSLib.isArray(data) && data[0] && (data[0] instanceof DataModel || data[0].hasOwnProperty('data'))) {
       data = data[0];
     }
@@ -109,77 +97,8 @@ export class WarpViewSpectrum {
       dataList = data;
     }
     this.heatMapData = this.parseData(GTSLib.flatDeep(dataList));
-    /*
-        if(!this._chart) {
-          this._chart = new HeatMap({
-            yAxis: { labels: this.formatAxis(dataList), isInversed: true },
-            xAxis: {
-              increment: 1,
-              interval: this._options.spectrum.interval,
-              minimum: 0,
-              maximum: (this._options.spectrum.scale - 1) * this._options.spectrum.interval,
-              labels: WarpViewSpectrum.buildLabels()
-            },
-            renderingMode: 'Canvas',
-            dataSource: dataList,
-            paletteSettings: {
-              emptyPointColor: 'transparent',
-              palette: [
-                { color: 'rgb(255,0,255)' },
-                { color: 'rgb(0,0,255)' },
-                { color: 'rgb(0,255,0)' },
-                { color: 'rgb(255,255,0)' },
-                { color: 'rgb(255,0,0)' },
-              ],
-              type: 'Gradient'
-            },
-            legendSettings: {
-              visible: true,
-              position: 'Bottom',
-              width: '75%',
-              enableSmartLegend: true
-            },
-            showTooltip: false,
-            cellSettings: {
-              border: {
-                width: 0
-              },
-              showLabel: false,
-            },
-          });
-
-          this._chart.appendTo(ctx);
-        } else {
-          this._chart.dataSource =dataList;
-        }
-    */
   }
 
-  static buildLabels() {
-    const r = [];
-    for (let i = 0; i < 24 * 6; i++) {
-      const j = i / 6;
-      if (j - Math.floor(j) === 0) {
-        if (j < 10) {
-          r.push('0' + j + ':00');
-        } else {
-          r.push(j + ':00');
-        }
-      } else {
-        r.push('');
-      }
-    }
-    return r;
-  }
-
-  formatAxis(labels: string[]) {
-    const formatedLabels = [];
-    labels.forEach(timestamp => {
-      const ts = Math.floor(parseInt(timestamp) / 1000);
-      formatedLabels.push(moment.utc(ts).format("D MMM YYYY"));
-    });
-    return formatedLabels
-  }
 
   private parseData(dataList: any[]) {
     const details = [];
@@ -192,10 +111,10 @@ export class WarpViewSpectrum {
       const name = GTSLib.serializeGtsMetadata(gts);
       gts.v.forEach(v => {
         const refDate = moment.utc(v[0] / 1000).startOf('day').toISOString();
-        if(!data[refDate]) {
+        if (!data[refDate]) {
           data[refDate] = [];
         }
-        if(!values[refDate]) {
+        if (!values[refDate]) {
           values[refDate] = [];
         }
         dates.push(v[0] / 1000);
@@ -209,7 +128,7 @@ export class WarpViewSpectrum {
         });
       });
     });
-    Object.keys(data).forEach((d:string) => {
+    Object.keys(data).forEach((d: string) => {
       details.push({
         date: moment.utc(d),
         total: values[d].reduce(reducer),
@@ -225,8 +144,9 @@ export class WarpViewSpectrum {
   }
 
   render() {
+    // noinspection CheckTagEmptyBody
     return <div class="wrapper">
-      <calendar-heatmap data={this.heatMapData} overview={'global'}></calendar-heatmap>
+      <calendar-heatmap data={this.heatMapData} overview={'global'} color={this._options.gridLineColor}></calendar-heatmap>
     </div>;
   }
 
