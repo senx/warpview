@@ -20,8 +20,7 @@ import { ColorLib } from "../../utils/color-lib";
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
-import moment from "moment";
-import "moment-timezone";
+import moment from "moment-timezone";
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;
@@ -120,7 +119,7 @@ export class WarpViewAnnotation {
         if (!this.data) {
             return;
         }
-        moment.tz.setDefault("UTC"); //force X axis display in UTC  
+        moment.tz.setDefault("UTC"); //force X axis display in UTC
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);

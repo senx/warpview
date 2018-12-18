@@ -25,4 +25,6 @@ export declare class Param {
     timeMode?: string;
     showDots?: boolean;
     timeUnit?: string;
+    minColor?: string;
+    maxColor?: string;
 }

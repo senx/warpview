@@ -18,6 +18,16 @@
 :host {
   --warp-view-chart-height: 100%;
 
+  warp-view-spinner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    top: 200px
+  }
+
   .warpscript {
     display: none;
   }

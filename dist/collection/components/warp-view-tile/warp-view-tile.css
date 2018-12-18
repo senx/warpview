@@ -16,6 +16,14 @@
  */
 :host {
   --warp-view-chart-height: 100%; }
+  :host warp-view-spinner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    top: 200px; }
   :host .warpscript {
     display: none; }
   :host .executionErrorText {
