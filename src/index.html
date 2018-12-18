@@ -199,7 +199,7 @@
                aria-controls="v-pills-image" aria-selected="false">Image</a>
             <a class="nav-link" id="v-pills-19-tab" data-toggle="pill" href="#v-pills-drilldown" role="tab"
                aria-controls="v-pills-drilldown" aria-selected="false">Drill down</a>
-            <a class="nav-link" id="v-pills-20-tab" data-toggle="pill" href="#v-pills-datgrid" role="tab"
+            <a class="nav-link" id="v-pills-20-tab" data-toggle="pill" href="#v-pills-datagrid" role="tab"
                aria-controls="v-pills-datagrid" aria-selected="false">Datagrid</a>
           </div>
         </div>
@@ -627,6 +627,8 @@
                                   chart-title="Datagrid">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 d ] FETCH
+                    'data' STORE
+                    { 'data' $data 'globalParams' { 'headers' [ 'A' 'B' ] } 'params' [ { 'headers' [ 'C' 'D' ] } ] }
                   </warp-view-tile>
                 </div>
               </div>

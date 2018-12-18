@@ -15,13 +15,12 @@
  *
  */
 
-import {Component, Element, Listen, Prop, State, Watch} from "@stencil/core";
+import {Component, Element, Prop, State, Watch} from "@stencil/core";
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 import {GTSLib} from "../../utils/gts.lib";
-import moment from 'moment';
 
 @Component({
   tag: 'warp-view-datagrid',
@@ -87,30 +86,44 @@ export class WarpViewDatagrid {
     this.LOG.debug(['drawChart', '_data'], this._data);
   }
 
+  private getHeaderParam(i: number, j: number, key: string, def: string): string {
+    return this.data['params'] && this.data['params'][i] && this.data['params'][i][key] && this.data['params'][i][key][j]
+      ? this.data['params'][i][key][j]
+      : this.data['globalParams'] && this.data['globalParams'][key] && this.data['globalParams'][key][j]
+        ? this.data['globalParams'][key][j]
+        : def;
+  }
+
   private parseData(data: any[]): { name: string, values: any[], headers: string[] }[] {
     const flatData: { name: string, values: any[], headers: string[] }[] = [];
     this.LOG.debug(['parseData'], data);
-    data.forEach(d => {
+
+    data.forEach((d, i) => {
+      let dataSet: { name: string, values: any[], headers: string[] } =   {
+        name: '',
+        values: [],
+        headers: []
+      };
       if (GTSLib.isGts(d)) {
         this.LOG.debug(['parseData', 'isGts'], d);
-        const dataSet: { name: string, values: any[], headers: string[] } = {
-          name: GTSLib.serializeGtsMetadata(d),
-          values: d.v,
-          headers: []
-        };
-        dataSet.headers = ['Date'];
-        if (d.v.length > 0 && d.v[0].length > 2) {
-          dataSet.headers.push('Latitude');
-        }
-        if (d.v.length > 0 && d.v[0].length > 3) {
-          dataSet.headers.push('Longitude');
-        }
-        if (d.v.length > 0 && d.v[0].length > 4) {
-          dataSet.headers.push('Elevation');
-        }
-        dataSet.headers.push('Value');
-        flatData.push(dataSet);
+        dataSet.name=  GTSLib.serializeGtsMetadata(d);
+        dataSet.values =d.v;
+      } else {
+        this.LOG.debug(['parseData', 'is not a Gts'], d);
+        dataSet.values = GTSLib.isArray(d) ? d : [d];
       }
+      dataSet.headers = [this.getHeaderParam(i, 0, 'headers', 'Date')];
+      if (d.v.length > 0 && d.v[0].length > 2) {
+        dataSet.headers.push(this.getHeaderParam(i, 1, 'headers', 'Latitude'));
+      }
+      if (d.v.length > 0 && d.v[0].length > 3) {
+        dataSet.headers.push(this.getHeaderParam(i, 2, 'headers', 'Longitude'));
+      }
+      if (d.v.length > 0 && d.v[0].length > 4) {
+        dataSet.headers.push(this.getHeaderParam(i, 3, 'headers', 'Elevation'));
+      }
+      dataSet.headers.push(this.getHeaderParam(i, d.v[0].length - 1, 'headers', 'Value'));
+      flatData.push(dataSet);
     });
     this.LOG.debug(['parseData', 'flatData'], flatData);
     return flatData;

@@ -1,6 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
 import { Param } from "../../model/param";

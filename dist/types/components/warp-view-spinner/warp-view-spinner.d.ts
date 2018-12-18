@@ -1,6 +1,4 @@
 import '../../stencil.core';
-import '../../stencil.core';
-import '../../stencil.core';
 /**
  * Spinner component
  */
