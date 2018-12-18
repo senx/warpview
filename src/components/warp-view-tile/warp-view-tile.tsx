@@ -15,12 +15,12 @@
  *
  */
 
-import { Component, Element, Listen, Method, Prop, State, Watch } from '@stencil/core';
-import { GTSLib } from '../../utils/gts.lib';
-import { DataModel } from "../../model/dataModel";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { ChartLib } from "../../utils/chart-lib";
+import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core';
+import {GTSLib} from '../../utils/gts.lib';
+import {DataModel} from "../../model/dataModel";
+import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: 'warp-view-tile',
@@ -48,22 +48,21 @@ export class WarpViewTile {
   private execUrl = '';
   private timeunit = 'us';
   private graphs = {
-    'scatter': [ 'scatter' ],
-    'chart': [ 'line', 'spline', 'step', 'area' ],
-    'pie': [ 'pie', 'doughnut', 'gauge' ],
-    'polar': [ 'polar' ],
-    'radar': [ 'radar' ],
-    'bar': [ 'bar' ],
-    'annotation': [ 'annotation' ],
-    'gts-tree': [ 'gts-tree' ],
+    'scatter': ['scatter'],
+    'chart': ['line', 'spline', 'step', 'area'],
+    'pie': ['pie', 'doughnut', 'gauge'],
+    'polar': ['polar'],
+    'radar': ['radar'],
+    'bar': ['bar'],
+    'annotation': ['annotation'],
+    'gts-tree': ['gts-tree']
   };
   private loading = true;
   private executionErrorText: string = '';
   private gtsList: any;
-  private _options: Param;
+  private _options:Param = new Param();
   private timer: any;
   private _autoRefresh;
-
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
@@ -117,7 +116,7 @@ export class WarpViewTile {
     this.LOG.debug([ 'parseGTS', 'data' ], data);
     this.data = data;
     this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-    this.LOG.debug([ 'parseGTS', 'options' ], this._options);
+    this.LOG.debug([ 'parseGTS', 'options' ], [this.options, this._options]);
     if(this._autoRefresh !== this._options.autoRefresh) {
       this._autoRefresh = this._options.autoRefresh;
       if(this.timer) {
@@ -350,6 +349,28 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-gts-tree data={this.data} options={this._options}/>
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'drilldown' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-drilldown data={this.data} options={this._options}/>
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'datagrid' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-datagrid data={this.data} options={this._options}/>
             </div>
           </div>
           : ''

@@ -1,6 +1,69 @@
 {
   "components": [
     {
+      "tag": "calendar-heatmap",
+      "dependencies": [],
+      "componentClass": "CalendarHeatmap",
+      "componentPath": "components/warp-view-drilldown/calendar-heatmap.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-drilldown/calendar-heatmap.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "maxColor",
+          "type": "String",
+          "attr": "max-color",
+          "watch": [
+            "onMaxColor"
+          ]
+        },
+        {
+          "name": "minColor",
+          "type": "String",
+          "attr": "min-color",
+          "watch": [
+            "onMinColor"
+          ]
+        },
+        {
+          "name": "overview",
+          "type": "String",
+          "mutable": true,
+          "attr": "overview"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "events": [
+        {
+          "event": "handler"
+        },
+        {
+          "event": "onChange"
+        }
+      ],
+      "shadow": true
+    },
+    {
       "tag": "warp-view-annotation",
       "dependencies": [],
       "componentClass": "WarpViewAnnotation",
@@ -361,6 +424,77 @@
       ]
     },
     {
+      "tag": "warp-view-datagrid",
+      "dependencies": [
+        "warp-view-paginable"
+      ],
+      "componentClass": "WarpViewDatagrid",
+      "componentPath": "components/warp-view-datagrid/warp-view-datagrid.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-datagrid/warp-view-datagrid.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "elemsCount",
+          "type": "Number",
+          "attr": "elems-count"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
+        }
+      ],
+      "states": [
+        {
+          "name": "_data"
+        },
+        {
+          "name": "page"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "warp-view-display",
       "dependencies": [
         "warp-view-spinner"
@@ -411,6 +545,71 @@
           "type": "String",
           "mutable": true,
           "attr": "width"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
+      "tag": "warp-view-drilldown",
+      "dependencies": [
+        "calendar-heatmap"
+      ],
+      "componentClass": "WarpViewDrillDown",
+      "componentPath": "components/warp-view-drilldown/warp-view-drilldown.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-drilldown/warp-view-drilldown.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "window:resize",
+          "method": "onResize",
+          "capture": false
         }
       ],
       "hostElement": {
@@ -679,6 +878,40 @@
       "hostElement": {
         "name": "el"
       },
+      "shadow": true
+    },
+    {
+      "tag": "warp-view-paginable",
+      "dependencies": [],
+      "componentClass": "WarpViewPaginable",
+      "componentPath": "components/warp-view-datagrid/warp-view-paginable.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-datagrid/warp-view-paginable.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "attr": "data"
+        },
+        {
+          "name": "elemsCount",
+          "type": "Number",
+          "attr": "elems-count"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        }
+      ],
+      "states": [
+        {
+          "name": "page"
+        }
+      ],
       "shadow": true
     },
     {
@@ -1089,7 +1322,9 @@
         "warp-view-bar",
         "warp-view-bubble",
         "warp-view-chart",
+        "warp-view-datagrid",
         "warp-view-display",
+        "warp-view-drilldown",
         "warp-view-gts-tree",
         "warp-view-image",
         "warp-view-map",

@@ -3,7 +3,6 @@ import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
-import "moment-timezone";
 export declare class WarpViewAnnotation {
     responsive: boolean;
     showLegend: boolean;

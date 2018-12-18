@@ -14,7 +14,6 @@
  *  limitations under the License.
  *
  */
-
 export class Param {
   bgColor?: string;
   fontColor?: string;
@@ -25,7 +24,7 @@ export class Param {
   key?: string;
   interpolate?: string;
   type?: string;
-  showRangeSelector?: boolean ;
+  showRangeSelector?: boolean;
   startLat?: number;
   startLong?: number;
   startZoom?: number;
@@ -42,4 +41,6 @@ export class Param {
   timeMode?: string;
   showDots?: boolean = true;
   timeUnit?: string = 'us';
+  minColor?: string;
+  maxColor?: string;
 }

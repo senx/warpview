@@ -32,6 +32,9 @@ import {
 import {
   Param,
 } from './model/param';
+import {
+  Datum,
+} from './components/warp-view-drilldown/datum';
 
 declare global {
 
@@ -226,6 +229,88 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewDatagrid {
+      'data': DataModel | any[] | string;
+      'elemsCount': number;
+      'height': string;
+      'options': Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLWarpViewDatagridElement extends StencilComponents.WarpViewDatagrid, HTMLStencilElement {}
+
+  var HTMLWarpViewDatagridElement: {
+    prototype: HTMLWarpViewDatagridElement;
+    new (): HTMLWarpViewDatagridElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-datagrid': HTMLWarpViewDatagridElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-datagrid': HTMLWarpViewDatagridElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-datagrid': JSXElements.WarpViewDatagridAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewDatagridAttributes extends HTMLAttributes {
+      'data'?: DataModel | any[] | string;
+      'elemsCount'?: number;
+      'height'?: string;
+      'options'?: Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface WarpViewPaginable {
+      'data': { name: string, values: any[], headers: string[] };
+      'elemsCount': number;
+      'options': Param;
+    }
+  }
+
+  interface HTMLWarpViewPaginableElement extends StencilComponents.WarpViewPaginable, HTMLStencilElement {}
+
+  var HTMLWarpViewPaginableElement: {
+    prototype: HTMLWarpViewPaginableElement;
+    new (): HTMLWarpViewPaginableElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-paginable': HTMLWarpViewPaginableElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-paginable': HTMLWarpViewPaginableElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-paginable': JSXElements.WarpViewPaginableAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewPaginableAttributes extends HTMLAttributes {
+      'data'?: { name: string, values: any[], headers: string[] };
+      'elemsCount'?: number;
+      'options'?: Param;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewDisplay {
       'data': DataModel | DataModel[] | any[] | string | number;
       'height': string;
@@ -260,6 +345,90 @@ declare global {
       'options'?: Param;
       'responsive'?: boolean;
       'unit'?: string;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface CalendarHeatmap {
+      'data': Datum[];
+      'maxColor': string;
+      'minColor': string;
+      'overview': string;
+    }
+  }
+
+  interface HTMLCalendarHeatmapElement extends StencilComponents.CalendarHeatmap, HTMLStencilElement {}
+
+  var HTMLCalendarHeatmapElement: {
+    prototype: HTMLCalendarHeatmapElement;
+    new (): HTMLCalendarHeatmapElement;
+  };
+  interface HTMLElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  interface ElementTagNameMap {
+    'calendar-heatmap': HTMLCalendarHeatmapElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'calendar-heatmap': JSXElements.CalendarHeatmapAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface CalendarHeatmapAttributes extends HTMLAttributes {
+      'data'?: Datum[];
+      'maxColor'?: string;
+      'minColor'?: string;
+      'onHandler'?: (event: CustomEvent) => void;
+      'onOnChange'?: (event: CustomEvent) => void;
+      'overview'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface WarpViewDrilldown {
+      'data': DataModel | any[] | string;
+      'height': string;
+      'options': Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLWarpViewDrilldownElement extends StencilComponents.WarpViewDrilldown, HTMLStencilElement {}
+
+  var HTMLWarpViewDrilldownElement: {
+    prototype: HTMLWarpViewDrilldownElement;
+    new (): HTMLWarpViewDrilldownElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-drilldown': HTMLWarpViewDrilldownElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-drilldown': HTMLWarpViewDrilldownElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-drilldown': JSXElements.WarpViewDrilldownAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewDrilldownAttributes extends HTMLAttributes {
+      'data'?: DataModel | any[] | string;
+      'height'?: string;
+      'options'?: Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
       'width'?: string;
     }
   }

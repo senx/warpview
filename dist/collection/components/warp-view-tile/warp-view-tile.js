@@ -17,6 +17,7 @@
 import { GTSLib } from '../../utils/gts.lib';
 import { DataModel } from "../../model/dataModel";
 import { Logger } from "../../utils/logger";
+import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 export class WarpViewTile {
     constructor() {
@@ -39,10 +40,11 @@ export class WarpViewTile {
             'radar': ['radar'],
             'bar': ['bar'],
             'annotation': ['annotation'],
-            'gts-tree': ['gts-tree'],
+            'gts-tree': ['gts-tree']
         };
         this.loading = true;
         this.executionErrorText = '';
+        this._options = new Param();
     }
     onOptions(newValue, oldValue) {
         this.LOG.debug(['options'], newValue);
@@ -89,7 +91,7 @@ export class WarpViewTile {
         this.LOG.debug(['parseGTS', 'data'], data);
         this.data = data;
         this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-        this.LOG.debug(['parseGTS', 'options'], this._options);
+        this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
         if (this._autoRefresh !== this._options.autoRefresh) {
             this._autoRefresh = this._options.autoRefresh;
             if (this.timer) {
@@ -281,6 +283,22 @@ export class WarpViewTile {
                             h("small", null, this.unit)),
                         h("div", { class: "tile" },
                             h("warp-view-gts-tree", { data: this.data, options: this._options })))
+                    : '',
+                this.type == 'drilldown' ?
+                    h("div", null,
+                        h("h1", null,
+                            this.chartTitle,
+                            h("small", null, this.unit)),
+                        h("div", { class: "tile" },
+                            h("warp-view-drilldown", { data: this.data, options: this._options })))
+                    : '',
+                this.type == 'datagrid' ?
+                    h("div", null,
+                        h("h1", null,
+                            this.chartTitle,
+                            h("small", null, this.unit)),
+                        h("div", { class: "tile" },
+                            h("warp-view-datagrid", { data: this.data, options: this._options })))
                     : '',
                 this.loading ? h("warp-view-spinner", null) : '');
         }
