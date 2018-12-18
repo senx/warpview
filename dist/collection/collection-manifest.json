@@ -424,6 +424,77 @@
       ]
     },
     {
+      "tag": "warp-view-datagrid",
+      "dependencies": [
+        "warp-view-paginable"
+      ],
+      "componentClass": "WarpViewDatagrid",
+      "componentPath": "components/warp-view-datagrid/warp-view-datagrid.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-datagrid/warp-view-datagrid.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "type": "String",
+          "attr": "data",
+          "watch": [
+            "onData"
+          ]
+        },
+        {
+          "name": "elemsCount",
+          "type": "Number",
+          "attr": "elems-count"
+        },
+        {
+          "name": "height",
+          "type": "String",
+          "mutable": true,
+          "attr": "height"
+        },
+        {
+          "name": "options",
+          "attr": "options",
+          "watch": [
+            "onOptions"
+          ]
+        },
+        {
+          "name": "responsive",
+          "type": "Boolean",
+          "attr": "responsive"
+        },
+        {
+          "name": "showLegend",
+          "type": "Boolean",
+          "attr": "show-legend"
+        },
+        {
+          "name": "width",
+          "type": "String",
+          "mutable": true,
+          "attr": "width"
+        }
+      ],
+      "states": [
+        {
+          "name": "_data"
+        },
+        {
+          "name": "page"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "warp-view-display",
       "dependencies": [
         "warp-view-spinner"
@@ -807,6 +878,40 @@
       "hostElement": {
         "name": "el"
       },
+      "shadow": true
+    },
+    {
+      "tag": "warp-view-paginable",
+      "dependencies": [],
+      "componentClass": "WarpViewPaginable",
+      "componentPath": "components/warp-view-datagrid/warp-view-paginable.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-datagrid/warp-view-paginable.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "data",
+          "attr": "data"
+        },
+        {
+          "name": "elemsCount",
+          "type": "Number",
+          "attr": "elems-count"
+        },
+        {
+          "name": "options",
+          "attr": "options"
+        }
+      ],
+      "states": [
+        {
+          "name": "page"
+        }
+      ],
       "shadow": true
     },
     {
@@ -1217,6 +1322,7 @@
         "warp-view-bar",
         "warp-view-bubble",
         "warp-view-chart",
+        "warp-view-datagrid",
         "warp-view-display",
         "warp-view-drilldown",
         "warp-view-gts-tree",

@@ -230,6 +230,88 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewDatagrid {
+      'data': DataModel | any[] | string;
+      'elemsCount': number;
+      'height': string;
+      'options': Param;
+      'responsive': boolean;
+      'showLegend': boolean;
+      'width': string;
+    }
+  }
+
+  interface HTMLWarpViewDatagridElement extends StencilComponents.WarpViewDatagrid, HTMLStencilElement {}
+
+  var HTMLWarpViewDatagridElement: {
+    prototype: HTMLWarpViewDatagridElement;
+    new (): HTMLWarpViewDatagridElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-datagrid': HTMLWarpViewDatagridElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-datagrid': HTMLWarpViewDatagridElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-datagrid': JSXElements.WarpViewDatagridAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewDatagridAttributes extends HTMLAttributes {
+      'data'?: DataModel | any[] | string;
+      'elemsCount'?: number;
+      'height'?: string;
+      'options'?: Param;
+      'responsive'?: boolean;
+      'showLegend'?: boolean;
+      'width'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface WarpViewPaginable {
+      'data': { name: string, values: any[], headers: string[] };
+      'elemsCount': number;
+      'options': Param;
+    }
+  }
+
+  interface HTMLWarpViewPaginableElement extends StencilComponents.WarpViewPaginable, HTMLStencilElement {}
+
+  var HTMLWarpViewPaginableElement: {
+    prototype: HTMLWarpViewPaginableElement;
+    new (): HTMLWarpViewPaginableElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-paginable': HTMLWarpViewPaginableElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-paginable': HTMLWarpViewPaginableElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-paginable': JSXElements.WarpViewPaginableAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewPaginableAttributes extends HTMLAttributes {
+      'data'?: { name: string, values: any[], headers: string[] };
+      'elemsCount'?: number;
+      'options'?: Param;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewDisplay {
       'data': DataModel | DataModel[] | any[] | string | number;
       'height': string;

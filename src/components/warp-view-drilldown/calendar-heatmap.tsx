@@ -99,7 +99,7 @@ export class CalendarHeatmap {
    */
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.calculateDimensions();
     }
   };
@@ -121,8 +121,7 @@ export class CalendarHeatmap {
   calculateDimensions() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(() => {
-      this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
-      if(this.el.parentElement.clientWidth !=0) {
+      if (this.el.parentElement.clientWidth != 0) {
         this.width = this.chart.clientWidth < 1000 ? 1000 : this.chart.clientWidth;
         this.item_size = ((this.width - this.label_padding) / CalendarHeatmap.getNumberOfWeeks() - this.gutter);
         this.height = this.label_padding + 7 * (this.item_size + this.gutter);
@@ -1542,52 +1541,13 @@ export class CalendarHeatmap {
     (d['summary'] || []).forEach(s => {
       tooltip_html += `<li>
   <div class="round" style="background-color:${ColorLib.transparentize(s.color)}; border-color:${s.color}"></div> 
-${CalendarHeatmap.formatLabel(s.name)}: ${s.total}</li>`;
+${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
     });
     if (d.total !== undefined && d['name']) {
-      tooltip_html += `<li><div class="round" style="background-color: ${ColorLib.transparentize(d['color'])}; border-color: ${d['color']}" ></div> ${CalendarHeatmap.formatLabel(d['name'])}: ${d.total}</li>`;
+      tooltip_html += `<li><div class="round" style="background-color: ${ColorLib.transparentize(d['color'])}; border-color: ${d['color']}" ></div> ${GTSLib.formatLabel(d['name'])}: ${d.total}</li>`;
     }
     tooltip_html += '</ul>';
     return tooltip_html;
-  };
-
-  private static formatLabel = (data: string): string => {
-    const serializedGTS = data.split('{');
-    let display = `<span class="gtsInfo"><span class='gts-classname'>${serializedGTS[0]}</span>`;
-    if (serializedGTS.length > 1) {
-      display += `<span class='gts-separator'>{</span>`;
-      const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
-      if (labels.length > 0) {
-        labels.forEach((l, i) => {
-          const label = l.split('=');
-          if (l.length > 1) {
-            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
-            if (i !== labels.length - 1) {
-              display += `<span>, </span>`;
-            }
-          }
-        });
-      }
-      display += `<span class='gts-separator'>}</span>`;
-    }
-    if (serializedGTS.length > 2) {
-      display += `<span class='gts-separator'>{</span>`;
-      const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
-      if (labels.length > 0) {
-        labels.forEach((l, i) => {
-          const label = l.split('=');
-          if (l.length > 1) {
-            display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
-            if (i !== labels.length - 1) {
-              display += `<span>, </span>`;
-            }
-          }
-        });
-      }
-      display += `<span class='gts-separator'>}</span>`;
-    }
-    display += '</span>';
-    return display;
   };
 
   componentDidLoad() {

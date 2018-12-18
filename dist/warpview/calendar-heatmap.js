@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { b as Logger, d as ChartLib, a as GTSLib, c as Param, e as DataModel } from './chunk-a35aff3f.js';
+import { b as Logger, d as ChartLib, a as GTSLib, c as Param, e as DataModel } from './chunk-35d55897.js';
 import { a as moment } from './chunk-07b61ac6.js';
 import { a as ColorLib } from './chunk-87d412af.js';
 import { c as Chart } from './chunk-dd0ef508.js';
@@ -5790,10 +5790,10 @@ class CalendarHeatmap {
             (d['summary'] || []).forEach(s => {
                 tooltip_html += `<li>
   <div class="round" style="background-color:${ColorLib.transparentize(s.color)}; border-color:${s.color}"></div> 
-${CalendarHeatmap.formatLabel(s.name)}: ${s.total}</li>`;
+${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             });
             if (d.total !== undefined && d['name']) {
-                tooltip_html += `<li><div class="round" style="background-color: ${ColorLib.transparentize(d['color'])}; border-color: ${d['color']}" ></div> ${CalendarHeatmap.formatLabel(d['name'])}: ${d.total}</li>`;
+                tooltip_html += `<li><div class="round" style="background-color: ${ColorLib.transparentize(d['color'])}; border-color: ${d['color']}" ></div> ${GTSLib.formatLabel(d['name'])}: ${d.total}</li>`;
             }
             tooltip_html += '</ul>';
             return tooltip_html;
@@ -5841,7 +5841,6 @@ ${CalendarHeatmap.formatLabel(s.name)}: ${s.total}</li>`;
     calculateDimensions() {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
-            this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
             if (this.el.parentElement.clientWidth != 0) {
                 this.width = this.chart.clientWidth < 1000 ? 1000 : this.chart.clientWidth;
                 this.item_size = ((this.width - this.label_padding) / CalendarHeatmap.getNumberOfWeeks() - this.gutter);
@@ -7308,44 +7307,6 @@ ${CalendarHeatmap.formatLabel(s.name)}: ${s.total}</li>`;
 }
 CalendarHeatmap.DEF_MIN_COLOR = '#ffffff';
 CalendarHeatmap.DEF_MAX_COLOR = '#333333';
-CalendarHeatmap.formatLabel = (data) => {
-    const serializedGTS = data.split('{');
-    let display = `<span class="gtsInfo"><span class='gts-classname'>${serializedGTS[0]}</span>`;
-    if (serializedGTS.length > 1) {
-        display += `<span class='gts-separator'>{</span>`;
-        const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
-        if (labels.length > 0) {
-            labels.forEach((l, i) => {
-                const label = l.split('=');
-                if (l.length > 1) {
-                    display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
-                    if (i !== labels.length - 1) {
-                        display += `<span>, </span>`;
-                    }
-                }
-            });
-        }
-        display += `<span class='gts-separator'>}</span>`;
-    }
-    if (serializedGTS.length > 2) {
-        display += `<span class='gts-separator'>{</span>`;
-        const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
-        if (labels.length > 0) {
-            labels.forEach((l, i) => {
-                const label = l.split('=');
-                if (l.length > 1) {
-                    display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
-                    if (i !== labels.length - 1) {
-                        display += `<span>, </span>`;
-                    }
-                }
-            });
-        }
-        display += `<span class='gts-separator'>}</span>`;
-    }
-    display += '</span>';
-    return display;
-};
 
 /*
  *  Copyright 2018  SenX S.A.S.
@@ -9146,7 +9107,7 @@ class WarpViewTile {
             'radar': ['radar'],
             'bar': ['bar'],
             'annotation': ['annotation'],
-            'gts-tree': ['gts-tree'],
+            'gts-tree': ['gts-tree']
         };
         this.loading = true;
         this.executionErrorText = '';
@@ -9197,7 +9158,7 @@ class WarpViewTile {
         this.LOG.debug(['parseGTS', 'data'], data);
         this.data = data;
         this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-        this.LOG.debug(['parseGTS', 'options'], this._options);
+        this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
         if (this._autoRefresh !== this._options.autoRefresh) {
             this._autoRefresh = this._options.autoRefresh;
             if (this.timer) {
@@ -9397,6 +9358,14 @@ class WarpViewTile {
                             h("small", null, this.unit)),
                         h("div", { class: "tile" },
                             h("warp-view-drilldown", { data: this.data, options: this._options })))
+                    : '',
+                this.type == 'datagrid' ?
+                    h("div", null,
+                        h("h1", null,
+                            this.chartTitle,
+                            h("small", null, this.unit)),
+                        h("div", { class: "tile" },
+                            h("warp-view-datagrid", { data: this.data, options: this._options })))
                     : '',
                 this.loading ? h("warp-view-spinner", null) : '');
         }

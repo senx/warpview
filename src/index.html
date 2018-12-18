@@ -211,6 +211,11 @@
               </p>
               <h2>Usage</h2>
               <div id="welcome">
+                <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="datagrid"
+                                chart-title="Datagrid">
+                  @training/dataset0
+                  [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 d ] FETCH
+                </warp-view-tile>
                 <h4>Code</h4>
                 <pre><code class="language-markup">
 &lt;html>
@@ -633,7 +638,7 @@
     mapType: 'DEFAULT',
     showControls: true,
     showGTSTree: true,
-    foldGTSTree: true
+    foldGTSTree: true,
   };
   $(function () {
     var body = $('body');
@@ -673,8 +678,14 @@
       var divs = $(id).find('warp-view-tile');
       for (var i = 0; i < divs.length; i++) {
         divs[i].options = {...defOpts};
+        console.log('index', divs[i].options)
       }
     });
+    var divs = $.find('warp-view-tile');
+    for (var i = 0; i < divs.length; i++) {
+      divs[i].options = {...defOpts};
+      console.log('index 2', divs[i].options)
+    }
   });
 </script>
 </body>

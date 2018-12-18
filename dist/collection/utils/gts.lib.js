@@ -215,6 +215,10 @@ export class GTSLib {
     }
     ;
     /**
+     *
+     * @param {any[]} a
+     * @param {number} r
+     * @returns {{res: any[]; r: number}}
      */
     static flattenGtsIdArray(a, r) {
         const res = [];
@@ -240,6 +244,11 @@ export class GTSLib {
         console.log('flattenGtsIdArray res', res);
         return { res: res, r: r };
     }
+    /**
+     *
+     * @param gts
+     * @returns {string}
+     */
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];
         Object.keys(gts.l).forEach((key) => {
@@ -251,6 +260,11 @@ export class GTSLib {
         });
         return gts.c + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
     }
+    /**
+     *
+     * @param gts
+     * @returns {any[]}
+     */
     static gtsToPath(gts) {
         let path = [];
         // Sort values
@@ -282,6 +296,12 @@ export class GTSLib {
         }
         return path;
     }
+    /**
+     *
+     * @param a
+     * @param b
+     * @returns {boolean}
+     */
     static equalMetadata(a, b) {
         if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
             !(a.l instanceof Object) || !(b.l instanceof Object)) {
@@ -303,10 +323,20 @@ export class GTSLib {
         }
         return true;
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isGts(item) {
         return !(!item || item.c === null || item.l === null ||
             item.a === null || item.v === null || !GTSLib.isArray(item.v));
     }
+    /**
+     *
+     * @param gts
+     * @returns {boolean}
+     */
     static isGtsToPlot(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
@@ -327,6 +357,11 @@ export class GTSLib {
         }
         return false;
     }
+    /**
+     *
+     * @param gts
+     * @returns {boolean}
+     */
     static isBooleanGts(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
@@ -343,6 +378,11 @@ export class GTSLib {
         }
         return false;
     }
+    /**
+     *
+     * @param gts
+     * @returns {boolean}
+     */
     static isGtsToAnnotate(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
@@ -363,6 +403,10 @@ export class GTSLib {
         }
         return false;
     }
+    /**
+     *
+     * @param gts
+     */
     static gtsSort(gts) {
         if (gts.isSorted) {
             return;
@@ -372,6 +416,11 @@ export class GTSLib {
         });
         gts.isSorted = true;
     }
+    /**
+     *
+     * @param gts
+     * @returns {any}
+     */
     static gtsTimeRange(gts) {
         GTSLib.gtsSort(gts);
         if (gts.v.length === 0) {
@@ -382,6 +431,7 @@ export class GTSLib {
     /**
      *
      * @param data
+     * @returns {DataModel}
      */
     static getData(data) {
         if (typeof data === 'string') {
@@ -398,6 +448,11 @@ export class GTSLib {
         }
         return new DataModel();
     }
+    /**
+     *
+     * @param {string} timeUnit
+     * @returns {number}
+     */
     static getDivider(timeUnit) {
         let timestampdivider = 1000; //default for µs timeunit
         if (timeUnit === 'ms') {
@@ -409,3 +464,46 @@ export class GTSLib {
         return timestampdivider;
     }
 }
+/**
+ *
+ * @param {string} data
+ * @returns {string}
+ */
+GTSLib.formatLabel = (data) => {
+    const serializedGTS = data.split('{');
+    let display = `<span class="gtsInfo"><span class='gts-classname'>${serializedGTS[0]}</span>`;
+    if (serializedGTS.length > 1) {
+        display += `<span class='gts-separator'>{</span>`;
+        const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
+        if (labels.length > 0) {
+            labels.forEach((l, i) => {
+                const label = l.split('=');
+                if (l.length > 1) {
+                    display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+                    if (i !== labels.length - 1) {
+                        display += `<span>, </span>`;
+                    }
+                }
+            });
+        }
+        display += `<span class='gts-separator'>}</span>`;
+    }
+    if (serializedGTS.length > 2) {
+        display += `<span class='gts-separator'>{</span>`;
+        const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
+        if (labels.length > 0) {
+            labels.forEach((l, i) => {
+                const label = l.split('=');
+                if (l.length > 1) {
+                    display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
+                    if (i !== labels.length - 1) {
+                        display += `<span>, </span>`;
+                    }
+                }
+            });
+        }
+        display += `<span class='gts-separator'>}</span>`;
+    }
+    display += '</span>';
+    return display;
+};

@@ -1,7 +1,7 @@
 /*! Built with http://stenciljs.com */
 const { h } = window.warpview;
 
-import { e as DataModel, c as Param, b as Logger, a as GTSLib, d as ChartLib } from './chunk-a35aff3f.js';
+import { e as DataModel, c as Param, b as Logger, a as GTSLib, d as ChartLib } from './chunk-35d55897.js';
 
 /*
  *  Copyright 2018  SenX S.A.S.

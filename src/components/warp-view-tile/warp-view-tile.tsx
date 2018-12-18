@@ -55,7 +55,7 @@ export class WarpViewTile {
     'radar': ['radar'],
     'bar': ['bar'],
     'annotation': ['annotation'],
-    'gts-tree': ['gts-tree'],
+    'gts-tree': ['gts-tree']
   };
   private loading = true;
   private executionErrorText: string = '';
@@ -116,7 +116,7 @@ export class WarpViewTile {
     this.LOG.debug([ 'parseGTS', 'data' ], data);
     this.data = data;
     this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-    this.LOG.debug([ 'parseGTS', 'options' ], this._options);
+    this.LOG.debug([ 'parseGTS', 'options' ], [this.options, this._options]);
     if(this._autoRefresh !== this._options.autoRefresh) {
       this._autoRefresh = this._options.autoRefresh;
       if(this.timer) {
@@ -360,6 +360,17 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-drilldown data={this.data} options={this._options}/>
+            </div>
+          </div>
+          : ''
+        }
+        {this.type == 'datagrid' ?
+          <div>
+            <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1>
+            <div class="tile">
+              <warp-view-datagrid data={this.data} options={this._options}/>
             </div>
           </div>
           : ''

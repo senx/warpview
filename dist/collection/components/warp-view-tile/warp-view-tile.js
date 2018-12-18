@@ -40,7 +40,7 @@ export class WarpViewTile {
             'radar': ['radar'],
             'bar': ['bar'],
             'annotation': ['annotation'],
-            'gts-tree': ['gts-tree'],
+            'gts-tree': ['gts-tree']
         };
         this.loading = true;
         this.executionErrorText = '';
@@ -91,7 +91,7 @@ export class WarpViewTile {
         this.LOG.debug(['parseGTS', 'data'], data);
         this.data = data;
         this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
-        this.LOG.debug(['parseGTS', 'options'], this._options);
+        this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
         if (this._autoRefresh !== this._options.autoRefresh) {
             this._autoRefresh = this._options.autoRefresh;
             if (this.timer) {
@@ -291,6 +291,14 @@ export class WarpViewTile {
                             h("small", null, this.unit)),
                         h("div", { class: "tile" },
                             h("warp-view-drilldown", { data: this.data, options: this._options })))
+                    : '',
+                this.type == 'datagrid' ?
+                    h("div", null,
+                        h("h1", null,
+                            this.chartTitle,
+                            h("small", null, this.unit)),
+                        h("div", { class: "tile" },
+                            h("warp-view-datagrid", { data: this.data, options: this._options })))
                     : '',
                 this.loading ? h("warp-view-spinner", null) : '');
         }

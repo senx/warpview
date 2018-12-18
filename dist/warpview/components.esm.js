@@ -77,6 +77,19 @@ var WarpViewChipComponent = /** @class **/ (function() {
   }
 });
 
+var WarpViewDatagridComponent = /** @class **/ (function() {
+  function WarpViewDatagrid() {
+  }
+  WarpViewDatagrid.is = 'warp-view-datagrid';
+  WarpViewDatagrid.getModule = function(opts) {
+    
+    return import('./warp-view-datagrid.js').then(function(m) {
+        return m.WarpViewDatagrid;
+      });
+
+  }
+});
+
 var WarpViewDisplayComponent = /** @class **/ (function() {
   function WarpViewDisplay() {
   }
@@ -150,6 +163,19 @@ var WarpViewMapComponent = /** @class **/ (function() {
     
     return import('./warp-view-annotation.js').then(function(m) {
         return m.WarpViewMap;
+      });
+
+  }
+});
+
+var WarpViewPaginableComponent = /** @class **/ (function() {
+  function WarpViewPaginable() {
+  }
+  WarpViewPaginable.is = 'warp-view-paginable';
+  WarpViewPaginable.getModule = function(opts) {
+    
+    return import('./warp-view-datagrid.js').then(function(m) {
+        return m.WarpViewPaginable;
       });
 
   }
@@ -280,12 +306,14 @@ export {
   WarpViewBubble,
   WarpViewChart,
   WarpViewChip,
+  WarpViewDatagrid,
   WarpViewDisplay,
   WarpViewDrillDown,
   WarpViewGtsTree,
   WarpViewHeatmapSliders,
   WarpViewImage,
   WarpViewMap,
+  WarpViewPaginable,
   WarpViewPie,
   WarpViewPlot,
   WarpViewPolar,
