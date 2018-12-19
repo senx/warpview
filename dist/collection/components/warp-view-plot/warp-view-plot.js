@@ -180,13 +180,13 @@ export class WarpViewPlot {
             this._options.showGTSTree
                 ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, options: this._options })
                 : '',
-            this.showChart ? h("div", { class: "maincontainer", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
+            this.showChart ? h("div", { class: "main-container", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
                 h("div", { class: "annotation" },
-                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", "show-legend": this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
+                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
                 h("div", { style: { width: '100%', height: '768px' }, id: this.graphId },
                     h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, hiddenData: this._toHide, type: this.chartType, options: this._options }))) : '',
-            this.showMap ? h("div", { style: { width: '100%', height: '768px' } },
+            this.showMap ? h("div", { class: "map-container" },
                 h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive, hiddenData: this._toHide })) : '');
     }
     static get is() { return "warp-view-plot"; }

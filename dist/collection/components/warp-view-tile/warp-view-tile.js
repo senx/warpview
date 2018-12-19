@@ -29,9 +29,9 @@ export class WarpViewTile {
         this.showLegend = false;
         this.url = '';
         this.gtsFilter = '';
-        this.warpscript = '';
+        this.warpScript = '';
         this.execUrl = '';
-        this.timeunit = 'us';
+        this.timeUnit = 'us';
         this.graphs = {
             'scatter': ['scatter'],
             'chart': ['line', 'spline', 'step', 'area'],
@@ -105,13 +105,13 @@ export class WarpViewTile {
     }
     //detect some VSCode special modifiers in the beginnig of the code:
     // @endpoint xxxURLxxx
-    // @timeunit ns
+    // @timeUnit ns
     //warning : the first line is empty (to confirm with other browsers)
     detectWarpScriptSpecialComments() {
         //
-        //analyse the first warpscript lines starting with //
+        //analyse the first warpScript lines starting with //
         //
-        let warpscriptlines = this.warpscript.split('\n');
+        let warpscriptlines = this.warpScript.split('\n');
         for (let l = 1; l < warpscriptlines.length; l++) {
             let currentline = warpscriptlines[l];
             if (currentline == "" || currentline.search("//") >= 0) {
@@ -119,15 +119,16 @@ export class WarpViewTile {
                 let extraparamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
                 let lineonMatch;
                 let re = RegExp(extraparamsPattern);
+                // noinspection JSAssignmentUsedAsCondition
                 while (lineonMatch = re.exec(currentline)) {
-                    let parametername = lineonMatch[1];
-                    let parametervalue = lineonMatch[2];
-                    switch (parametername) {
+                    let parameterName = lineonMatch[1];
+                    let parameterValue = lineonMatch[2];
+                    switch (parameterName) {
                         case "endpoint": //        // @endpoint http://mywarp10server/api/v0/exec
-                            this.execUrl = parametervalue;
+                            this.execUrl = parameterValue;
                             break;
-                        case "timeunit":
-                            this.timeunit = parametervalue.toLowerCase(); // set the time unit for graphs
+                        case "timeUnit":
+                            this.timeUnit = parameterValue.toLowerCase(); // set the time unit for graphs
                             break;
                         default:
                             break;
@@ -141,11 +142,11 @@ export class WarpViewTile {
     }
     execute() {
         this.loading = true;
-        this.warpscript = this.wsElement.textContent;
-        this.LOG.debug(['execute', 'warpscript'], this.warpscript);
+        this.warpScript = this.wsElement.textContent;
+        this.LOG.debug(['execute', 'warpScript'], this.warpScript);
         this.execUrl = this.url;
         this.detectWarpScriptSpecialComments();
-        fetch(this.execUrl, { method: 'POST', body: this.warpscript }).then(response => {
+        fetch(this.execUrl, { method: 'POST', body: this.warpScript }).then(response => {
             if (response.status == 200) {
                 response.text().then(gtsStr => {
                     this.LOG.debug(['execute', 'response'], gtsStr);
@@ -158,7 +159,7 @@ export class WarpViewTile {
                     }
                     this.loading = false;
                 }, err => {
-                    this.LOG.error(['execute'], [err, this.url, this.warpscript]);
+                    this.LOG.error(['execute'], [err, this.url, this.warpScript]);
                     this.loading = false;
                 });
             }
@@ -166,13 +167,14 @@ export class WarpViewTile {
                 this.executionErrorText = "Execution Error : #" + response.headers.get('X-Warp10-Error-Line') + ' ' + response.headers.get('X-Warp10-Error-Message');
             }
         }, err => {
-            this.LOG.error(['execute'], [err, this.url, this.warpscript]);
+            this.LOG.error(['execute'], [err, this.url, this.warpScript]);
             this.loading = false;
             this.executionErrorText = "Failed to reach execution endpoint " + this.url;
         });
     }
     render() {
         if (this.executionErrorText != '') {
+            // noinspection JSXNamespaceValidation
             return h("div", { class: "executionErrorText" },
                 " ",
                 this.executionErrorText,

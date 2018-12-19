@@ -645,12 +645,12 @@ declare global {
     interface WarpViewMap {
       'data': any;
       'heatData': any[];
-      'height': string;
+      'height': number;
       'hiddenData': number[];
       'options': any;
       'resize': () => void;
       'responsive': boolean;
-      'width': string;
+      'width': number;
     }
   }
 
@@ -675,11 +675,11 @@ declare global {
     export interface WarpViewMapAttributes extends HTMLAttributes {
       'data'?: any;
       'heatData'?: any[];
-      'height'?: string;
+      'height'?: number;
       'hiddenData'?: number[];
       'options'?: any;
       'responsive'?: boolean;
-      'width'?: string;
+      'width'?: number;
     }
   }
 }

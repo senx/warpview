@@ -57,23 +57,22 @@ export class MapLib {
             if (GTSLib.isGtsToAnnotate(gts)) {
                 this.LOG.debug(['annotationsToLeafletPositions'], gts);
                 let annotation = {};
-                let params = data.params[i];
+                let params = (data.params || [])[i];
+                if (!params) {
+                    params = {};
+                }
                 annotation.path = GTSLib.gtsToPath(gts);
                 MapLib.extractCommonParameters(annotation, params, i);
-                if (params.render !== undefined) {
+                if (params.render) {
                     annotation.render = params.render;
                 }
                 if (annotation.render === 'marker') {
-                    if (params.marker) {
-                        annotation.marker = params.marker;
-                    }
-                    else {
-                        annotation.marker = 'circle';
-                    }
+                    annotation.marker = 'circle';
                 }
                 if (annotation.render === 'weightedDots') {
                     MapLib.validateWeightedDotsPositionArray(annotation, params);
                 }
+                this.LOG.debug(['annotationsToLeafletPositions', 'annotations'], annotation);
                 annotations.push(annotation);
             }
         });
@@ -333,5 +332,5 @@ export class MapLib {
         return path;
     }
 }
-MapLib.BASE_RADIUS = 10;
+MapLib.BASE_RADIUS = 2;
 MapLib.LOG = new Logger(MapLib);

@@ -57,11 +57,11 @@ export class WarpViewMap {
         this.parentWidth = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.mapElement.parentElement.clientWidth !== this.parentWidth) {
+            this.parentWidth = this.mapElement.parentElement.clientWidth;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.LOG.debug(['onResize'], this.mapElement.parentElement.clientWidth);
                 this.drawMap();
             }, 250);
         }
@@ -164,12 +164,12 @@ export class WarpViewMap {
         if (this._map) {
             this._map.remove();
         }
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
-        ctx.style.width = width + 'px';
-        ctx.style.height = height + 'px';
-        this._map = Leaflet.map(ctx)
+        this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
+        const height = (this.responsive ? this.mapElement.parentElement.clientHeight : (this.height || WarpViewMap.DEFAULT_HEIGHT)) - 30;
+        const width = (this.responsive ? this.mapElement.parentElement.clientWidth : this.width || WarpViewMap.DEFAULT_WIDTH);
+        this.mapElement.style.width = width + 'px';
+        this.mapElement.style.height = height + 'px';
+        this._map = Leaflet.map(this.mapElement)
             .setView([this._options.startLat || 0, this._options.startLong || 0], this._options.startZoom || 2);
         Leaflet.tileLayer(this.mapTypes[this._options.mapType || 'DEFAULT'], {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -183,7 +183,13 @@ export class WarpViewMap {
             }
         });
         this.annotationsData.forEach(d => {
-            this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
+            //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
+            let plottedGts = this.updateGtsPath(d);
+            if (plottedGts) {
+                this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
+                this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+                this.currentValuesMarkers.push(plottedGts.currentValue);
+            }
         });
         this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
         // Create the positions arrays
@@ -256,9 +262,9 @@ export class WarpViewMap {
                     date = parseInt(p.ts);
                 }
                 else {
-                    date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                    date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
                 }
-                currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: 5, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
+                currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
                     .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
                 return {
                     beforeCurrentValue: beforeCurrentValue,
@@ -401,11 +407,11 @@ export class WarpViewMap {
         return positions;
     }
     resize() {
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        const height = (this.responsive ? this.el.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH) - 5;
-        ctx.style.width = width + 'px';
-        ctx.style.height = height + 'px';
+        this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
+        const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+        const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
+        this.mapElement.style.width = width + 'px';
+        this.mapElement.style.height = height + 'px';
     }
     componentDidLoad() {
         this.drawMap();
@@ -413,7 +419,7 @@ export class WarpViewMap {
     render() {
         return (h("div", { class: "wrapper" },
             h("div", { class: "map-container" },
-                h("div", { id: this.uuid, style: { width: this.width, height: this.height } })),
+                h("div", { id: this.uuid })),
             !!this._options.heatControls ? h("warp-view-heatmap-sliders", null) : ""));
     }
     static get is() { return "warp-view-map"; }
@@ -432,7 +438,7 @@ export class WarpViewMap {
             "attr": "heat-data"
         },
         "height": {
-            "type": String,
+            "type": Number,
             "attr": "height"
         },
         "hiddenData": {
@@ -453,7 +459,7 @@ export class WarpViewMap {
             "attr": "responsive"
         },
         "width": {
-            "type": String,
+            "type": Number,
             "attr": "width"
         }
     }; }

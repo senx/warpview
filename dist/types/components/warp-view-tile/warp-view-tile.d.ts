@@ -13,9 +13,9 @@ export declare class WarpViewTile {
     url: string;
     gtsFilter: string;
     wsElement: HTMLElement;
-    private warpscript;
+    private warpScript;
     private execUrl;
-    private timeunit;
+    private timeUnit;
     private graphs;
     private loading;
     private executionErrorText;
