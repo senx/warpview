@@ -21,17 +21,17 @@
     color: var(--warp-view-font-color, #000000);
 
     td, th {
-      padding: var(--warp-view-pagination-cell-padding, 5px);
+      padding: var(--warp-view-datagrid-cell-padding, 5px);
     }
 
     .odd {
-      background-color: var(--warp-view-pagination-odd-bg-color, #fff);
-      color: var(--warp-view-pagination-odd-color, #000);
+      background-color: var(--warp-view-datagrid-odd-bg-color, #fff);
+      color: var(--warp-view-datagrid-odd-color, #000);
     }
 
     .even {
-      background-color: var(--warp-view-pagination-even-bg-color, #ddd);
-      color: var(--warp-view-pagination-even-color, #000);
+      background-color: var(--warp-view-datagrid-even-bg-color, #ddd);
+      color: var(--warp-view-datagrid-even-color, #000);
     }
   }
 
