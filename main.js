@@ -165,6 +165,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiles_tile_tile_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./tiles/tile/tile.component */ "./src/app/tiles/tile/tile.component.ts");
 /* harmony import */ var _tiles_annotation_annotation_component__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./tiles/annotation/annotation.component */ "./src/app/tiles/annotation/annotation.component.ts");
 /* harmony import */ var _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./tiles/gts-tree/gts-tree.component */ "./src/app/tiles/gts-tree/gts-tree.component.ts");
+/* harmony import */ var _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./tiles/drilldown/drilldown.component */ "./src/app/tiles/drilldown/drilldown.component.ts");
+/* harmony import */ var _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./tiles/datagrid/datagrid.component */ "./src/app/tiles/datagrid/datagrid.component.ts");
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -186,6 +188,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -259,7 +263,9 @@ var AppModule = /** @class */ (function () {
                 _tiles_image_image_component__WEBPACK_IMPORTED_MODULE_32__["ImageComponent"],
                 _tiles_tile_tile_component__WEBPACK_IMPORTED_MODULE_33__["TileComponent"],
                 _tiles_annotation_annotation_component__WEBPACK_IMPORTED_MODULE_34__["AnnotationComponent"],
-                _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_35__["GtsTreeComponent"]
+                _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_35__["GtsTreeComponent"],
+                _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_36__["DrilldownComponent"],
+                _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_37__["DatagridComponent"]
             ],
             imports: [
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_6__["NgbModule"],
@@ -297,7 +303,9 @@ var AppModule = /** @class */ (function () {
                 _tiles_image_image_component__WEBPACK_IMPORTED_MODULE_32__["ImageComponent"],
                 _tiles_tile_tile_component__WEBPACK_IMPORTED_MODULE_33__["TileComponent"],
                 _tiles_annotation_annotation_component__WEBPACK_IMPORTED_MODULE_34__["AnnotationComponent"],
-                _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_35__["GtsTreeComponent"]
+                _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_35__["GtsTreeComponent"],
+                _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_36__["DrilldownComponent"],
+                _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_37__["DatagridComponent"]
             ],
             schemas: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["CUSTOM_ELEMENTS_SCHEMA"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"]]
@@ -657,6 +665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiles_tile_tile_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../tiles/tile/tile.component */ "./src/app/tiles/tile/tile.component.ts");
 /* harmony import */ var _tiles_annotation_annotation_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../tiles/annotation/annotation.component */ "./src/app/tiles/annotation/annotation.component.ts");
 /* harmony import */ var _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../tiles/gts-tree/gts-tree.component */ "./src/app/tiles/gts-tree/gts-tree.component.ts");
+/* harmony import */ var _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../tiles/drilldown/drilldown.component */ "./src/app/tiles/drilldown/drilldown.component.ts");
+/* harmony import */ var _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../tiles/datagrid/datagrid.component */ "./src/app/tiles/datagrid/datagrid.component.ts");
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -715,6 +725,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var HomeComponent = /** @class */ (function () {
     function HomeComponent(pico) {
         this.pico = pico;
@@ -731,6 +743,14 @@ var HomeComponent = /** @class */ (function () {
             {
                 tabTitle: 'Plot',
                 component: _tiles_plot_plot_component__WEBPACK_IMPORTED_MODULE_2__["PlotComponent"]
+            },
+            {
+                tabTitle: 'Drill Down',
+                component: _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_23__["DrilldownComponent"]
+            },
+            {
+                tabTitle: 'Datagrid',
+                component: _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_24__["DatagridComponent"]
             },
             {
                 tabTitle: 'Annotation',
@@ -985,8 +1005,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var AnnotationComponent = /** @class */ (function () {
     function AnnotationComponent() {
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"annotation\"\n                    chart-title=\"Annotation\">\n      << your warpscript >>\n</warp-view-tile>";
-        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.tostring 0 0 0 ] MAP 'values' STORE\n{ 'data' $values }";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"annotation\"\n                    chart-title=\"Annotation\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.tostring 0 0 0 ] MAP\n</warp-view-tile>";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.tostring 0 0 0 ] MAP";
     }
     AnnotationComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1063,8 +1083,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var AreaComponent = /** @class */ (function () {
     function AreaComponent() {
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"area\"\n                    chart-title=\"Area\">\n      << your warpscript >>\n</warp-view-tile>";
-        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE\n{ 'data' $values }";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"area\"\n                    chart-title=\"Area\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP\n</warp-view-tile>";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP";
     }
     AreaComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1141,8 +1161,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var BarComponent = /** @class */ (function () {
     function BarComponent() {
-        this.warpscript = "@training/dataset0\n                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\n                    false RESETS\n                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE\n                    { 'data' $values }";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    type=\"bar\"\n                    show-legend=\"false\"\n                    chart-title=\"Bar\">\n<< your warpscript >>\n</warp-view-tile>\n";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n[ SWAP mapper.delta 1 0 0 ] MAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    type=\"bar\"\n                    show-legend=\"false\"\n                    chart-title=\"Bar\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n[ SWAP mapper.delta 1 0 0 ] MAP\n</warp-view-tile>\n";
     }
     BarComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1219,8 +1239,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var BubblesComponent = /** @class */ (function () {
     function BubblesComponent() {
-        this.warpscript = "@training/dataset0\n                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH\n                    false RESETS\n                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n      10 LTTB\n      <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 * RAND 100 * RAND 100 * ]\n      %>\n      LMAP\n      }\n      %> LMAP 'values' STORE\n      { 'data' $values }";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    type=\"bubble\"\n                    show-legend=\"false\"\n                    chart-title=\"Bubbles\">\n<< your warpscript >>\n</warp-view-tile>\n";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH\nfalse RESETS\n[ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n10 LTTB\n<% \n  DROP 'gts' STORE { \n    $gts NAME \n    $gts VALUES \n    <% \n      DROP 'val' STORE [ RAND 100 * RAND 100 * RAND 100 * ]  \n    %> LMAP\n  }\n%> LMAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    type=\"bubble\"\n                    show-legend=\"false\"\n                    chart-title=\"Bubbles\">\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH\nfalse RESETS\n[ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE\n10 LTTB\n<%\n  DROP 'gts' STORE { \n    $gts NAME\n    $gts VALUES\n    <%\n      DROP 'val' STORE [ RAND 100 * RAND 100 * RAND 100 * ]\n    %> LMAP\n  }\n%> LMAP\n</warp-view-tile>\n";
     }
     BubblesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1231,6 +1251,84 @@ var BubblesComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], BubblesComponent);
     return BubblesComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tiles/datagrid/datagrid.component.html":
+/*!********************************************************!*\
+  !*** ./src/app/tiles/datagrid/datagrid.component.html ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<!--\n  ~  Copyright 2018  SenX S.A.S.\n  ~\n  ~  Licensed under the Apache License, Version 2.0 (the \"License\");\n  ~  you may not use this file except in compliance with the License.\n  ~  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~  Unless required by applicable law or agreed to in writing, software\n  ~  distributed under the License is distributed on an \"AS IS\" BASIS,\n  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~  See the License for the specific language governing permissions and\n  ~  limitations under the License.\n  -->\n\n<warp-view-tile url=\"https://warp.senx.io/api/v0/exec\" responsive=\"true\" type=\"datagrid\"\n                height=\"800\"\n                chart-title=\"Datagrid\">\n  {{warpscript}}\n</warp-view-tile>\n<ngx-prism language=\"markup\">{{sample}}</ngx-prism>\n\n\n<h2>Drilldown component</h2>\n<ngx-prism language=\"markup\"\n           code='<warp-view-datagrid responsive=\"true\" data=\"WarpScript result\" options=\"options\" show-legend=\"true\"/>'></ngx-prism>\n\n<h3>CSS vars</h3>\n<ul>\n  <li>--warp-view-font-color: Main font color</li>\n  <li>--warp-view-datagrid-cell-padding: Pagination cell padding</li>\n  <li>--warp-view-datagrid-odd-bg-color: Table odd row background color</li>\n  <li>--warp-view-datagrid-odd-color: Table odd row font color</li>\n  <li>--warp-view-datagrid-even-bg-color: Table even row background color</li>\n  <li>--warp-view-datagrid-even-color: Table even row font color</li>\n\n  <li>--warp-view-pagination-border-color: Pagination cell border color</li>\n  <li>--warp-view-pagination-bg-color: Pagination cell background color</li>\n  <li>--warp-view-pagination-active-color: Pagination active cell font color</li>\n  <li>--warp-view-pagination-active-border-color: Pagination active cell border color</li>\n  <li>--warp-view-pagination-active-bg-color: Pagination active cell background color</li>\n\n  <li>--warp-view-pagination-disabled-color: Pagination disabled cell font color</li>\n  <li>--warp-view-pagination-hover-color: Pagination hover cell font color</li>\n  <li>--warp-view-pagination-hover-border-color: Pagination hover cell border color</li>\n  <li>--warp-view-pagination-hover-bg-color: Pagination hover cell background color</li>\n\n  <li>--gts-classname-font-color: GTS class name font color</li>\n  <li>--gts-labelname-font-color: GTS label and attribute name font color</li>\n  <li>--gts-labelvalue-font-color: GTS label and attribute value font color</li>\n  <li>--gts-separator-font-color: GTS label/value separator font color</li>\n</ul>\n<h3>Attributes</h3>\n<table class=\"table table-striped table-sm\">\n  <thead class=\"thead-dark\">\n  <tr>\n    <th>Name</th>\n    <th>Type</th>\n    <th>Default</th>\n    <th>Description</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr>\n    <td>show-legend</td>\n    <td><code>boolean</code></td>\n    <td>true</td>\n    <td>Shows a legend</td>\n  </tr>\n  <tr>\n    <td>responsive</td>\n    <td><code>boolean</code></td>\n    <td>false</td>\n    <td>Fit the parent space</td>\n  </tr>\n  <tr>\n    <td>elems-count</td>\n    <td><code>number</code></td>\n    <td>Number of item per page</td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>options</td>\n    <td><code>object</code></td>\n    <td></td>\n    <td>Serialized JSON representation of display options</td>\n  </tr>\n  <tr>\n    <td>data</td>\n    <td><code>object</code></td>\n    <td></td>\n    <td>Serialized JSON representation of data to display</td>\n  </tr>\n  </tbody>\n</table>\n<h3>Data format</h3>\n\n<p>You can either pass the <a href=\"https://www.warp10.io/content/03_Documentation/04_WarpScript/01_Concepts\"\n                              rel=\"noopener\" target=\"_blank\">JSON representation of the stack</a>, or pass the first\n  element of the stack.</p>\n\n<h4>A GTS List</h4>\n<ngx-prism language=\"javascript\" code='[{\n  \"c\": \"class.name\",\n  \"l\": { \"label1\": \"label value\"},\n  \"a\": { \"attribute1\": \"attribute value\"},\n  \"v\" : [[0,0,0,\"4\"], [0,\"2\"]]\n  }, ... ]'></ngx-prism>\n\n<h4>An object holder</h4>\n<p></p>\n<ngx-prism language=\"javascript\" code='[{\n  \"data\": [{\n    \"c\": \"class.name\",\n    \"l\": { \"label1\": \"label value\"},\n    \"a\": { \"attribute1\": \"attribute value\"},\n    \"v\" : [[0,0,0,\"4\"], [0,\"2\"]]\n   }, ...],\n   \"globalParams\": { }\n}]'></ngx-prism>\n\n<ul>\n  <li>\n    <strong>data</strong>: data to be displayed as a GTS list.\n  </li>\n  <li>\n    <strong>globalParams</strong>: options to override (see options below)\n  </li>\n</ul>\n\n<h3>Option format</h3>\n<ngx-prism language=\"javascript\" code='{\n\t\"timeMode\": date\"\n}'></ngx-prism>\n<ul>\n  <li>\n    <strong>timeMode</strong>: Scale either 'timestamp' or 'date', default is 'date'\n  </li>\n</ul>\n"
+
+/***/ }),
+
+/***/ "./src/app/tiles/datagrid/datagrid.component.scss":
+/*!********************************************************!*\
+  !*** ./src/app/tiles/datagrid/datagrid.component.scss ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/*\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n */\n:host {\n  --warp-view-tile-height: 700px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL3hhdmllci93b3Jrc3BhY2Uvd2FycHZpZXctZGVtby9zcmMvYXBwL3RpbGVzL2RhdGFncmlkL2RhdGFncmlkLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7OztHQWNHO0FBQ0g7RUFDRSwrQkFBd0IsRUFDekIiLCJmaWxlIjoic3JjL2FwcC90aWxlcy9kYXRhZ3JpZC9kYXRhZ3JpZC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiAgQ29weXJpZ2h0IDIwMTggIFNlblggUy5BLlMuXG4gKlxuICogIExpY2Vuc2VkIHVuZGVyIHRoZSBBcGFjaGUgTGljZW5zZSwgVmVyc2lvbiAyLjAgKHRoZSBcIkxpY2Vuc2VcIik7XG4gKiAgeW91IG1heSBub3QgdXNlIHRoaXMgZmlsZSBleGNlcHQgaW4gY29tcGxpYW5jZSB3aXRoIHRoZSBMaWNlbnNlLlxuICogIFlvdSBtYXkgb2J0YWluIGEgY29weSBvZiB0aGUgTGljZW5zZSBhdFxuICpcbiAqICAgIGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMFxuICpcbiAqICBVbmxlc3MgcmVxdWlyZWQgYnkgYXBwbGljYWJsZSBsYXcgb3IgYWdyZWVkIHRvIGluIHdyaXRpbmcsIHNvZnR3YXJlXG4gKiAgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIExpY2Vuc2UgaXMgZGlzdHJpYnV0ZWQgb24gYW4gXCJBUyBJU1wiIEJBU0lTLFxuICogIFdJVEhPVVQgV0FSUkFOVElFUyBPUiBDT05ESVRJT05TIE9GIEFOWSBLSU5ELCBlaXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLlxuICogIFNlZSB0aGUgTGljZW5zZSBmb3IgdGhlIHNwZWNpZmljIGxhbmd1YWdlIGdvdmVybmluZyBwZXJtaXNzaW9ucyBhbmRcbiAqICBsaW1pdGF0aW9ucyB1bmRlciB0aGUgTGljZW5zZS5cbiAqL1xuOmhvc3Qge1xuICAtLXdhcnAtdmlldy10aWxlLWhlaWdodDogNzAwcHg7XG59XG4iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/tiles/datagrid/datagrid.component.ts":
+/*!******************************************************!*\
+  !*** ./src/app/tiles/datagrid/datagrid.component.ts ***!
+  \******************************************************/
+/*! exports provided: DatagridComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DatagridComponent", function() { return DatagridComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var DatagridComponent = /** @class */ (function () {
+    function DatagridComponent() {
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"datagrid\"\n                    chart-title=\"Datagrid\">\n @training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 h ] FETCH\n</warp-view-tile>";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 h ] FETCH";
+    }
+    DatagridComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-datagrid',
+            template: __webpack_require__(/*! ./datagrid.component.html */ "./src/app/tiles/datagrid/datagrid.component.html"),
+            styles: [__webpack_require__(/*! ./datagrid.component.scss */ "./src/app/tiles/datagrid/datagrid.component.scss")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], DatagridComponent);
+    return DatagridComponent;
 }());
 
 
@@ -1298,7 +1396,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var DefaultComponent = /** @class */ (function () {
     function DefaultComponent() {
         this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    show-legend=\"false\"\n                    chart-title=\"Default\">\n<< your warpscript >>\n</warp-view-tile>";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\"\n                    show-legend=\"false\"\n                    chart-title=\"Default\">\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP\n</warp-view-tile>";
     }
     DefaultComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1375,8 +1473,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var DoughnutComponent = /** @class */ (function () {
     function DoughnutComponent() {
-        this.warpscript = "@training/dataset0\n                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE\n                    { 'data' $values }";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"pie\" show-legend=\"false\" chart-title=\"Pie\">\n<< your warpscript >>\n</warp-view-tile>\n";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"pie\" show-legend=\"false\" chart-title=\"Pie\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP\n</warp-view-tile>\n";
     }
     DoughnutComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1387,6 +1485,84 @@ var DoughnutComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], DoughnutComponent);
     return DoughnutComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tiles/drilldown/drilldown.component.css":
+/*!*********************************************************!*\
+  !*** ./src/app/tiles/drilldown/drilldown.component.css ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/*\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n */\n\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdGlsZXMvZHJpbGxkb3duL2RyaWxsZG93bi5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7OztHQWNHIiwiZmlsZSI6InNyYy9hcHAvdGlsZXMvZHJpbGxkb3duL2RyaWxsZG93bi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLypcbiAqICBDb3B5cmlnaHQgMjAxOCAgU2VuWCBTLkEuUy5cbiAqXG4gKiAgTGljZW5zZWQgdW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlIFwiTGljZW5zZVwiKTtcbiAqICB5b3UgbWF5IG5vdCB1c2UgdGhpcyBmaWxlIGV4Y2VwdCBpbiBjb21wbGlhbmNlIHdpdGggdGhlIExpY2Vuc2UuXG4gKiAgWW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBMaWNlbnNlIGF0XG4gKlxuICogICAgaHR0cDovL3d3dy5hcGFjaGUub3JnL2xpY2Vuc2VzL0xJQ0VOU0UtMi4wXG4gKlxuICogIFVubGVzcyByZXF1aXJlZCBieSBhcHBsaWNhYmxlIGxhdyBvciBhZ3JlZWQgdG8gaW4gd3JpdGluZywgc29mdHdhcmVcbiAqICBkaXN0cmlidXRlZCB1bmRlciB0aGUgTGljZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiBcIkFTIElTXCIgQkFTSVMsXG4gKiAgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuXG4gKiAgU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZFxuICogIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLlxuICovXG5cbiJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/tiles/drilldown/drilldown.component.html":
+/*!**********************************************************!*\
+  !*** ./src/app/tiles/drilldown/drilldown.component.html ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<!--\n  ~  Copyright 2018  SenX S.A.S.\n  ~\n  ~  Licensed under the Apache License, Version 2.0 (the \"License\");\n  ~  you may not use this file except in compliance with the License.\n  ~  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~  Unless required by applicable law or agreed to in writing, software\n  ~  distributed under the License is distributed on an \"AS IS\" BASIS,\n  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~  See the License for the specific language governing permissions and\n  ~  limitations under the License.\n  -->\n\n<warp-view-tile url=\"https://warp.senx.io/api/v0/exec\" responsive=\"true\" type=\"drilldown\"\n                chart-title=\"Drilldown\">\n  {{warpscript}}\n</warp-view-tile>\n<ngx-prism language=\"markup\">{{sample}}</ngx-prism>\n\n\n<h2>Drilldown component</h2>\n<ngx-prism language=\"markup\"\n           code='<warp-view-drilldown responsive=\"true\" data=\"WarpScript result\" options=\"options\" show-legend=\"true\"/>'></ngx-prism>\n\n<h3>CSS vars</h3>\n<ul>\n  <li>--gts-stack-font-color: GTS stack level font color</li>\n  <li>--gts-classname-font-color: GTS class name font color</li>\n  <li>--gts-labelname-font-color: GTS label and attribute name font color</li>\n  <li>--gts-labelvalue-font-color: GTS label and attribute value font color</li>\n  <li>--gts-separator-font-color: GTS label/value separator font color</li>\n</ul>\n<h3>Attributes</h3>\n<table class=\"table table-striped table-sm\">\n  <thead class=\"thead-dark\">\n  <tr>\n    <th>Name</th>\n    <th>Type</th>\n    <th>Default</th>\n    <th>Description</th>\n  </tr>\n  </thead>\n  <tbody>\n  <tr>\n    <td>show-legend</td>\n    <td><code>boolean</code></td>\n    <td>true</td>\n    <td>Shows a legend</td>\n  </tr>\n  <tr>\n    <td>responsive</td>\n    <td><code>boolean</code></td>\n    <td>false</td>\n    <td>Fit the parent space</td>\n  </tr>\n  <tr>\n    <td>hidden-data</td>\n    <td><code>string[]</code></td>\n    <td>List of concatenated class names and labels to hide. (ie: <code>com.class.name&#123;label=a,label=b&#125;</code>\n    </td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>options</td>\n    <td><code>object</code></td>\n    <td></td>\n    <td>Serialized JSON representation of display options</td>\n  </tr>\n  <tr>\n    <td>data</td>\n    <td><code>object</code></td>\n    <td></td>\n    <td>Serialized JSON representation of data to display</td>\n  </tr>\n  </tbody>\n</table>\n<h3>Data format</h3>\n\n<p>You can either pass the <a href=\"https://www.warp10.io/content/03_Documentation/04_WarpScript/01_Concepts\"\n                              rel=\"noopener\" target=\"_blank\">JSON representation of the stack</a>, or pass the first\n  element of the stack.</p>\n\n<p>GTS values must be numeric</p>\n\n<h4>A GTS List</h4>\n<ngx-prism language=\"javascript\" code='[{\n  \"c\": \"class.name\",\n  \"l\": { \"label1\": \"label value\"},\n  \"a\": { \"attribute1\": \"attribute value\"},\n  \"v\" : [[0,0,0,\"4\"], [0,\"2\"]]\n  }, ... ]'></ngx-prism>\n\n<h4>An object holder</h4>\n<p></p>\n<ngx-prism language=\"javascript\" code='[{\n  \"data\": [{\n    \"c\": \"class.name\",\n    \"l\": { \"label1\": \"label value\"},\n    \"a\": { \"attribute1\": \"attribute value\"},\n    \"v\" : [[0,0,0,\"4\"], [0,\"2\"]]\n   }, ...],\n   \"globalParams\": { }\n}]'></ngx-prism>\n\n<ul>\n  <li>\n    <strong>data</strong>: data to be displayed as a GTS list.\n  </li>\n  <li>\n    <strong>globalParams</strong>: options to override (see options below)\n  </li>\n</ul>\n\n<h3>Option format</h3>\n<ngx-prism language=\"javascript\" code='{\n\t\"minColor\": \"#ffffff\",\n\t\"maxColor\": \"#333333\"\n}'></ngx-prism>\n<ul>\n  <li>\n    <strong>minColor</strong>: Minimum color for the heatmap. Default is \"#ffffff\"\n  </li>\n  <li>\n    <strong>maxColor</strong>: Maximum color for the heatmap. Default is \"#333333\"\n  </li>\n</ul>\n<h3>Events</h3>\n\n<h4>handler</h4>\n<p>Emit the clicked spot data</p>\n\n<ngx-prism language=\"javascript\" code='{\n  color?: string,\n  id?: number,\n  name: string,\n  total: number,\n  date?: Moment\n}'></ngx-prism>\n<h4>onChange</h4>\n<p>Emit when the view changes</p>\n\n<ngx-prism language=\"javascript\" code='{\n  overview: string,\n  start: Moment,\n  end: Moment\n}'></ngx-prism>\n"
+
+/***/ }),
+
+/***/ "./src/app/tiles/drilldown/drilldown.component.ts":
+/*!********************************************************!*\
+  !*** ./src/app/tiles/drilldown/drilldown.component.ts ***!
+  \********************************************************/
+/*! exports provided: DrilldownComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DrilldownComponent", function() { return DrilldownComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var DrilldownComponent = /** @class */ (function () {
+    function DrilldownComponent() {
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"drilldown\"\n                    chart-title=\"Drilldown\">\n @training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 700 d ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP\n[ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE\n[ NaN NaN NaN 0 ] FILLVALUE\n</warp-view-tile>";
+        this.warpscript = " @training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 700 d ] FETCH\nfalse RESETS\n[ SWAP mapper.delta 1 0 0 ] MAP\n[ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE\n[ NaN NaN NaN 0 ] FILLVALUE";
+    }
+    DrilldownComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-drilldown',
+            template: __webpack_require__(/*! ./drilldown.component.html */ "./src/app/tiles/drilldown/drilldown.component.html"),
+            styles: [__webpack_require__(/*! ./drilldown.component.css */ "./src/app/tiles/drilldown/drilldown.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], DrilldownComponent);
+    return DrilldownComponent;
 }());
 
 
@@ -1453,8 +1629,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var GaugeComponent = /** @class */ (function () {
     function GaugeComponent() {
-        this.warpscript = "@training/dataset0\n                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE\n                    { 'data' $values }";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"gauge\" show-legend=\"false\" chart-title=\"Gauge\">\n<< your warpscript >>\n</warp-view-tile>\n";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"gauge\" show-legend=\"false\" chart-title=\"Gauge\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP\n</warp-view-tile>\n";
     }
     GaugeComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1531,7 +1707,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var GtsTreeComponent = /** @class */ (function () {
     function GtsTreeComponent() {
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"gts-tree\"\n                    chart-title=\"GTS Tree\">\n      << your warpscript >>\n</warp-view-tile>";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"gts-tree\"\n                    chart-title=\"GTS Tree\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n</warp-view-tile>";
         this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH";
     }
     GtsTreeComponent = __decorate([
@@ -1609,8 +1785,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var ImageComponent = /** @class */ (function () {
     function ImageComponent() {
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" unit=\"\u00B0C\" type=\"image\"\n                    chart-title=\"Image\">\n<< your warpscript >>\n</warp-view-tile>";
-        this.warpscript = "//draw tangents along the curve\n                    300 200 '2D3' PGraphics\n                    255 Pbackground\n                    16 PtextSize\n\n                    50 'x1' STORE\n                    50 'y1' STORE\n                    200 'x2' STORE\n                    130 'y2' STORE\n\n                    100 'cx1' STORE\n                    40 'cy1' STORE\n\n                    110 'cx2' STORE\n                    140 'cy2' STORE\n\n\n                    4 PstrokeWeight\n                    $x1 $y1 Ppoint //first anchor\n                    $x2 $y2 Ppoint //second anchor\n\n                    2 PstrokeWeight\n                    $x1 $y1 $cx1 $cy1 Pline\n                    $x2 $y2 $cx2 $cy2 Pline\n\n                    2 PstrokeWeight\n                    0xffff0000 Pstroke\n                    $x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier\n\n                    0 10\n                    <%\n                    10.0 / 't' STORE\n\n                    $x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE\n                    $y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE\n                    $x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE\n                    $y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE\n                    $ty $tx ATAN2 PI 2.0 / - 'angle' STORE\n                    0xff009f00 Pstroke\n                    $x\n                    $y\n                    $x $angle COS 12 * +\n                    $y $angle SIN 12 * +\n                    Pline\n\n                    0x9f009f00 Pfill\n                    PnoStroke\n                    'CENTER' PellipseMode\n                    $x $y 5 5 Pellipse\n\n                    %> FOR\n                    \n                    Pencode";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"image\"\n                    chart-title=\"Image\">\n//draw tangents along the curve\n300 200 '2D3' PGraphics\n255 Pbackground\n16 PtextSize\n\n50 'x1' STORE\n50 'y1' STORE\n200 'x2' STORE\n130 'y2' STORE\n\n100 'cx1' STORE\n40 'cy1' STORE\n\n110 'cx2' STORE\n140 'cy2' STORE\n\n\n4 PstrokeWeight\n$x1 $y1 Ppoint //first anchor\n$x2 $y2 Ppoint //second anchor\n\n2 PstrokeWeight\n$x1 $y1 $cx1 $cy1 Pline\n$x2 $y2 $cx2 $cy2 Pline\n\n2 PstrokeWeight\n0xffff0000 Pstroke\n$x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier\n\n0 10\n<%\n10.0 / 't' STORE\n\n$x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE\n$y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE\n$x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE\n$y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE\n$ty $tx ATAN2 PI 2.0 / - 'angle' STORE\n0xff009f00 Pstroke\n$x\n$y\n$x $angle COS 12 * +\n$y $angle SIN 12 * +\nPline\n\n0x9f009f00 Pfill\nPnoStroke\n'CENTER' PellipseMode\n$x $y 5 5 Pellipse\n\n%> FOR\n\nPencode\n</warp-view-tile>";
+        this.warpscript = "//draw tangents along the curve\n300 200 '2D3' PGraphics\n255 Pbackground\n16 PtextSize\n\n50 'x1' STORE\n50 'y1' STORE\n200 'x2' STORE\n130 'y2' STORE\n\n100 'cx1' STORE\n40 'cy1' STORE\n\n110 'cx2' STORE\n140 'cy2' STORE\n\n\n4 PstrokeWeight\n$x1 $y1 Ppoint //first anchor\n$x2 $y2 Ppoint //second anchor\n\n2 PstrokeWeight\n$x1 $y1 $cx1 $cy1 Pline\n$x2 $y2 $cx2 $cy2 Pline\n\n2 PstrokeWeight\n0xffff0000 Pstroke\n$x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier\n\n0 10\n<%\n10.0 / 't' STORE\n\n$x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE\n$y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE\n$x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE\n$y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE\n$ty $tx ATAN2 PI 2.0 / - 'angle' STORE\n0xff009f00 Pstroke\n$x\n$y\n$x $angle COS 12 * +\n$y $angle SIN 12 * +\nPline\n\n0x9f009f00 Pfill\nPnoStroke\n'CENTER' PellipseMode\n$x $y 5 5 Pellipse\n\n%> FOR\n\nPencode";
     }
     ImageComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1710,8 +1886,8 @@ var MapComponent = /** @class */ (function () {
             { val: 'WATERCOLOR', label: 'Water color' }
         ];
         this.mapType = 'DEFAULT';
-        this.warpscript = "'{\"data\":[{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,\"a\"],[1460540131224657,51.45999999716878,-0.09000001475214958,\"b\"],[1460540121224657,51.41999996267259,-0.08000006899237633,\"c\"],[1460540111224657,51.39999998733401,-0.07000003941357136,\"d\"]]},{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{\"positions\":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{\"positions\":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{\"positions\":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{\"positions\":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],\"params\":[{\"color\":\"#ff1010\",\"key\":\"Path A\"},{\"color\":\"#1010ff\",\"key\":\"Path B\"},{\"key\":\"Annotations (text)\",\"render\":\"marker\",\"marker\":\"fuel\"},{\"key\":\"Annotations (boolean)\",\"baseRadius\":5},{\"key\":\"fuel\",\"render\":\"marker\"},{\"key\":\"points\",\"render\":\"dots\",\"color\":\"#ffa\",\"borderColor\":\"#f00\",\"baseRadius\":5},{\"key\":\"points\",\"render\":\"weightedDots\",\"color\":\"#aaf\",\"borderColor\":\"#f00\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"numSteps\":10},{\"key\":\"coloredWeightedDots\",\"render\":\"coloredWeightedDots\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"maxColorValue\":50,\"minColorValue\":0,\"numColorSteps\":10,\"startColor\":\"#ff0000\",\"endColor\":\"#00ff00\"}]}' JSON->";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"map\" chart-title=\"Map\">\n<< your warpscript >>\n</warp-view-tile>\n  ";
+        this.warpscript = "'{\"data\":[{\"c\":\"A\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{\"c\":\"B\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{\"c\":\"D\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,\"a\"],[1460540131224657,51.45999999716878,-0.09000001475214958,\"b\"],[1460540121224657,51.41999996267259,-0.08000006899237633,\"c\"],[1460540111224657,51.39999998733401,-0.07000003941357136,\"d\"]]},{\"c\":\"E\",\"l\":{},\"a\":{},\"v\":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{\"positions\":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{\"positions\":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{\"positions\":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{\"positions\":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],\"params\":[{\"key\":\"Path A\"},{\"key\":\"Path B\"},{\"key\":\"Annotations (text)\",\"render\":\"marker\",\"marker\":\"lodging\"},{\"key\":\"Annotations (boolean)\",\"baseRadius\":5},{\"key\":\"Test\",\"render\":\"marker\"},{\"key\":\"points 2\",\"render\":\"dots\",\"color\":\"#ffa\",\"borderColor\":\"#f00\",\"baseRadius\":5},{\"key\":\"points\",\"render\":\"weightedDots\",\"color\":\"#aaf\",\"borderColor\":\"#f00\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"numSteps\":10},{\"key\":\"coloredWeightedDots\",\"render\":\"coloredWeightedDots\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"maxColorValue\":50,\"minColorValue\":0,\"numColorSteps\":10,\"startColor\":\"#ff0000\",\"endColor\":\"#00ff00\"}]}'\n                    JSON->";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"map\" chart-title=\"Map\">\n'{\"data\":[{\"c\":\"A\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{\"c\":\"B\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{\"c\":\"D\",\"l\":{},\"a\":{},\"v\":[[1460540141224657,51.49999998975545,-0.10000004433095455,\"a\"],[1460540131224657,51.45999999716878,-0.09000001475214958,\"b\"],[1460540121224657,51.41999996267259,-0.08000006899237633,\"c\"],[1460540111224657,51.39999998733401,-0.07000003941357136,\"d\"]]},{\"c\":\"E\",\"l\":{},\"a\":{},\"v\":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{\"positions\":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{\"positions\":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{\"positions\":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{\"positions\":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],\"params\":[{\"key\":\"Path A\"},{\"key\":\"Path B\"},{\"key\":\"Annotations (text)\",\"render\":\"marker\",\"marker\":\"lodging\"},{\"key\":\"Annotations (boolean)\",\"baseRadius\":5},{\"key\":\"Test\",\"render\":\"marker\"},{\"key\":\"points 2\",\"render\":\"dots\",\"color\":\"#ffa\",\"borderColor\":\"#f00\",\"baseRadius\":5},{\"key\":\"points\",\"render\":\"weightedDots\",\"color\":\"#aaf\",\"borderColor\":\"#f00\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"numSteps\":10},{\"key\":\"coloredWeightedDots\",\"render\":\"coloredWeightedDots\",\"maxValue\":100,\"minValue\":0,\"baseRadius\":5,\"maxColorValue\":50,\"minColorValue\":0,\"numColorSteps\":10,\"startColor\":\"#ff0000\",\"endColor\":\"#00ff00\"}]}'\n                    JSON->\n</warp-view-tile>";
         this.sample2 = "<warp-view-map data=\n  '[{\n\"gts\":[\n{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[\n[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],\n[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],\n[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],\n[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],\n[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],\n[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],\n[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],\n[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],\n[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],\n[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]\n]},\n{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[\n[1460540141224657,51.49999998975545,-0.10000004433095455,10],\n[1460540131224657,51.45999999716878,-0.09000001475214958,9],\n[1460540121224657,51.41999996267259,-0.08000006899237633,8],\n[1460540111224657,51.39999998733401,-0.07000003941357136,7],\n[1460540101224657,51.439999979920685,-0.06000000983476639,6],\n[1460540091224657,51.47999997250736,-0.050000064074993134,8],\n[1460540081224657,51.49999998975545,-0.030000004917383194,10],\n[1460540071224657,51.51999996509403,-0.02000005915760994,9],\n[1460540061224657,51.539999982342124,-0.01000002957880497,8],\n[1460540051224657,51.55999999959022,0.0,9]\n]},\n{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[\n[1460540141224657,51.49999998975545,-0.10000004433095455,\"a\"],\n[1460540131224657,51.45999999716878,-0.09000001475214958,\"b\"],\n[1460540121224657,51.41999996267259,-0.08000006899237633,\"c\"],\n[1460540111224657,51.39999998733401,-0.07000003941357136,\"d\"]\n]},\n{\"c\":\"\",\"l\":{},\"a\":{},\"v\":[\n[1460540136224657,51.439999979920685,0.05999992601573467,true],\n[1460540116224657,51.47999997250736,0.04999998025596142,false],\n[1460540096224657,51.49999998975545,0.02999992109835148,true],\n[1460540076224657,51.51999996509403,0.019999975338578224,false],\n[1460540056224657,51.539999982342124,0.009999945759773254,true]\n]},\n{\"positions\":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},\n{\"positions\":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},\n{\"positions\":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]\n]}],\n\"params\":[\n{\"color\":\"#ff1010\", \"key\":\"path\", \"legend\":\"A\", \"displayDots\": true},\n{\"color\":\"#1010ff\", \"key\":\"path\", \"legend\":\"B\"},\n{\"key\":\"point\", \"render\":\"marker\", \"marker\":\"fuel\", \"color\":\"#ff0000\"},\n{\"key\":\"point\", \"render\":\"dot\", \"radius\":5, \"fillColor\":\"#ff0000\", \"fillOpacity\":\"0.9\"},\n{\"edgeColor\":\"#ffa\", \"radius\":20, \"fillColor\":\"#0f0\"},\n{\"fillColor\":\"#00f\"},\n{}\n]}]'\nheat-controls=true heat-data=\"[[51.4,-0.3, 0.3], [51.4,-0.32, 0.6], [51.1,-0.32, 0.4], [51.1,-0.315, 0.5], [51.105,-0.31, 0.9], [51.5,-0.3, 0.5], [51.6,-0.3, 0.7], [51.3, -0.3, 1]]\"\n/>";
     }
     /**
@@ -1803,8 +1979,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var PieComponent = /** @class */ (function () {
     function PieComponent() {
-        this.warpscript = "@training/dataset0\n                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE\n                    { 'data' $values }";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"pie\" show-legend=\"false\" chart-title=\"Pie\">\n<< your warpscript >>\n</warp-view-tile>\n";
+        this.warpscript = "@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"pie\" show-legend=\"false\" chart-title=\"Pie\">\n@training/dataset0\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH\n<% \n  DROP \n  'gts' STORE \n  [ $gts NAME $gts VALUES 0 GET ] \n%> LMAP\n</warp-view-tile>\n";
     }
     PieComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -1881,8 +2057,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var PlotComponent = /** @class */ (function () {
     function PlotComponent() {
-        this.warpscript = "@training/dataset0\n      // warp.store.hbase.puts.committed is the number of datapoints committed to\n      // HBase since the restart of the Store daemon\n      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH\n      [ SWAP mapper.rate 1 0 0 ] MAP\n      // Keep only 1000 datapoints per GTS\n      1000 LTTB\n      DUP\n      // Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test\n      5 false ESDTEST\n      // Convert the ticks identified by ESDTEST into an annotation GTS\n      <%\n      DROP \t\t// excude element index\n      NEWGTS \t// create a new GTS\n      SWAP \t\t// get timestamp list\n      <% NaN NaN NaN 'anomaly' ADDVALUE %> FOREACH // for each timestamp\n      %> LMAP\n      2 ->LIST // Put our GTS in a list\n      ZIP // merge into a list of GTS\n      // Now rename and relabel the anomaly GTS\n      <%\n      DROP \t\t\t\t// exclude element index\n      LIST-> \t\t\t\t// flatten list\n      DROP  \t\t\t\t// exclude number of elements of our list\n      SWAP  \t\t\t\t// put our fetched GTS on the top\n      DUP  \t\t\t\t// duplicate the GTS\n      NAME \t\t\t\t// get the className of the GTS\n      ':anomaly' + 'name' STORE  \t// suffix the name\n      DUP LABELS 'labels' STORE \t// duplicate the GTS and get labels\n      SWAP  \t\t\t\t// put the anomaly GTS on the top of the stack\n      $name RENAME   \t\t\t// rename the GTS\n      $labels RELABEL  \t\t// put labels\n      2 ->LIST   \t\t\t\t// put both GTS in a list\n      %> LMAP";
-        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"plot\" gts-filter=\"anomaly\" chart-title=\"Plot sample\">\n<< your warpscript >>\n</warp-view-tile>";
+        this.warpscript = "@training/dataset0\n// warp.store.hbase.puts.committed is the number of datapoints committed to\n// HBase since the restart of the Store daemon\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH\n[ SWAP mapper.rate 1 0 0 ] MAP\n// Keep only 1000 datapoints per GTS\n1000 LTTB\nDUP\n// Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test\n5 false ESDTEST\n// Convert the ticks identified by ESDTEST into an annotation GTS\n<%\nDROP \t\t// excude element index\nNEWGTS \t// create a new GTS\nSWAP \t\t// get timestamp list\n<% NaN NaN NaN 'anomaly' ADDVALUE %> FOREACH // for each timestamp\n%> LMAP\n2 ->LIST // Put our GTS in a list\nZIP // merge into a list of GTS\n// Now rename and relabel the anomaly GTS\n<%\nDROP \t\t\t\t// exclude element index\nLIST-> \t\t\t\t// flatten list\nDROP  \t\t\t\t// exclude number of elements of our list\nSWAP  \t\t\t\t// put our fetched GTS on the top\nDUP  \t\t\t\t// duplicate the GTS\nNAME \t\t\t\t// get the className of the GTS\n':anomaly' + 'name' STORE  \t// suffix the name\nDUP LABELS 'labels' STORE \t// duplicate the GTS and get labels\nSWAP  \t\t\t\t// put the anomaly GTS on the top of the stack\n$name RENAME   \t\t\t// rename the GTS\n$labels RELABEL  \t\t// put labels\n2 ->LIST   \t\t\t\t// put both GTS in a list\n%> LMAP";
+        this.sample = "<warp-view-tile url=\"warp 10 url\" responsive=\"true\" type=\"plot\" gts-filter=\"anomaly\" chart-title=\"Plot sample\">\n@training/dataset0\n// warp.store.hbase.puts.committed is the number of datapoints committed to\n// HBase since the restart of the Store daemon\n[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH\n[ SWAP mapper.rate 1 0 0 ] MAP\n// Keep only 1000 datapoints per GTS\n1000 LTTB\nDUP\n// Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test\n5 false ESDTEST\n// Convert the ticks identified by ESDTEST into an annotation GTS\n<%\n  DROP \t\t// excude element index\n  NEWGTS \t// create a new GTS\n  SWAP \t\t// get timestamp list\n  <% NaN NaN NaN 'anomaly' ADDVALUE %> FOREACH // for each timestamp\n%> LMAP\n2 ->LIST // Put our GTS in a list\nZIP // merge into a list of GTS\n// Now rename and relabel the anomaly GTS\n<%\n  DROP \t\t\t\t// exclude element index\n  LIST-> \t\t\t\t// flatten list\n  DROP  \t\t\t\t// exclude number of elements of our list\n  SWAP  \t\t\t\t// put our fetched GTS on the top\n  DUP  \t\t\t\t// duplicate the GTS\n  NAME \t\t\t\t// get the className of the GTS\n  ':anomaly' + 'name' STORE  \t// suffix the name\n  DUP LABELS 'labels' STORE \t// duplicate the GTS and get labels\n  SWAP  \t\t\t\t// put the anomaly GTS on the top of the stack\n  $name RENAME   \t\t\t// rename the GTS\n  $labels RELABEL  \t\t// put labels\n  2 ->LIST   \t\t\t\t// put both GTS in a list\n%> LMAP\n</warp-view-tile>";
     }
     PlotComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({

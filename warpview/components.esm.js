@@ -1,11 +1,24 @@
 
+var CalendarHeatmapComponent = /** @class **/ (function() {
+  function CalendarHeatmap() {
+  }
+  CalendarHeatmap.is = 'calendar-heatmap';
+  CalendarHeatmap.getModule = function(opts) {
+    
+    return import('./am38ab3l.js').then(function(m) {
+        return m.CalendarHeatmap;
+      });
+
+  }
+});
+
 var WarpViewAnnotationComponent = /** @class **/ (function() {
   function WarpViewAnnotation() {
   }
   WarpViewAnnotation.is = 'warp-view-annotation';
   WarpViewAnnotation.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./s8d5lfrn.js').then(function(m) {
         return m.WarpViewAnnotation;
       });
 
@@ -18,7 +31,7 @@ var WarpViewBarComponent = /** @class **/ (function() {
   WarpViewBar.is = 'warp-view-bar';
   WarpViewBar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewBar;
       });
 
@@ -31,7 +44,7 @@ var WarpViewBubbleComponent = /** @class **/ (function() {
   WarpViewBubble.is = 'warp-view-bubble';
   WarpViewBubble.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewBubble;
       });
 
@@ -44,7 +57,7 @@ var WarpViewChartComponent = /** @class **/ (function() {
   WarpViewChart.is = 'warp-view-chart';
   WarpViewChart.getModule = function(opts) {
     
-    return import('./8qycktj7.js').then(function(m) {
+    return import('./lmfaxw1q.js').then(function(m) {
         return m.WarpViewChart;
       });
 
@@ -57,8 +70,21 @@ var WarpViewChipComponent = /** @class **/ (function() {
   WarpViewChip.is = 'warp-view-chip';
   WarpViewChip.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./1n05yhbs.js').then(function(m) {
         return m.WarpViewChip;
+      });
+
+  }
+});
+
+var WarpViewDatagridComponent = /** @class **/ (function() {
+  function WarpViewDatagrid() {
+  }
+  WarpViewDatagrid.is = 'warp-view-datagrid';
+  WarpViewDatagrid.getModule = function(opts) {
+    
+    return import('./gbn3g0pr.js').then(function(m) {
+        return m.WarpViewDatagrid;
       });
 
   }
@@ -70,8 +96,21 @@ var WarpViewDisplayComponent = /** @class **/ (function() {
   WarpViewDisplay.is = 'warp-view-display';
   WarpViewDisplay.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewDisplay;
+      });
+
+  }
+});
+
+var WarpViewDrillDownComponent = /** @class **/ (function() {
+  function WarpViewDrillDown() {
+  }
+  WarpViewDrillDown.is = 'warp-view-drilldown';
+  WarpViewDrillDown.getModule = function(opts) {
+    
+    return import('./am38ab3l.js').then(function(m) {
+        return m.WarpViewDrillDown;
       });
 
   }
@@ -83,7 +122,7 @@ var WarpViewGtsTreeComponent = /** @class **/ (function() {
   WarpViewGtsTree.is = 'warp-view-gts-tree';
   WarpViewGtsTree.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./1n05yhbs.js').then(function(m) {
         return m.WarpViewGtsTree;
       });
 
@@ -96,7 +135,7 @@ var WarpViewHeatmapSlidersComponent = /** @class **/ (function() {
   WarpViewHeatmapSliders.is = 'warp-view-heatmap-sliders';
   WarpViewHeatmapSliders.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./s8d5lfrn.js').then(function(m) {
         return m.WarpViewHeatmapSliders;
       });
 
@@ -109,7 +148,7 @@ var WarpViewImageComponent = /** @class **/ (function() {
   WarpViewImage.is = 'warp-view-image';
   WarpViewImage.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewImage;
       });
 
@@ -122,8 +161,21 @@ var WarpViewMapComponent = /** @class **/ (function() {
   WarpViewMap.is = 'warp-view-map';
   WarpViewMap.getModule = function(opts) {
     
-    return import('./jqf6vtnd.js').then(function(m) {
+    return import('./s8d5lfrn.js').then(function(m) {
         return m.WarpViewMap;
+      });
+
+  }
+});
+
+var WarpViewPaginableComponent = /** @class **/ (function() {
+  function WarpViewPaginable() {
+  }
+  WarpViewPaginable.is = 'warp-view-paginable';
+  WarpViewPaginable.getModule = function(opts) {
+    
+    return import('./gbn3g0pr.js').then(function(m) {
+        return m.WarpViewPaginable;
       });
 
   }
@@ -135,7 +187,7 @@ var WarpViewPieComponent = /** @class **/ (function() {
   WarpViewPie.is = 'warp-view-pie';
   WarpViewPie.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewPie;
       });
 
@@ -148,7 +200,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./1koybwqv.js').then(function(m) {
+    return import('./btys4gpv.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -161,7 +213,7 @@ var WarpViewPolarComponent = /** @class **/ (function() {
   WarpViewPolar.is = 'warp-view-polar';
   WarpViewPolar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewPolar;
       });
 
@@ -174,7 +226,7 @@ var WarpViewRadarComponent = /** @class **/ (function() {
   WarpViewRadar.is = 'warp-view-radar';
   WarpViewRadar.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewRadar;
       });
 
@@ -187,7 +239,7 @@ var WarpViewScatterComponent = /** @class **/ (function() {
   WarpViewScatter.is = 'warp-view-scatter';
   WarpViewScatter.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewScatter;
       });
 
@@ -213,7 +265,7 @@ var WarpViewTileComponent = /** @class **/ (function() {
   WarpViewTile.is = 'warp-view-tile';
   WarpViewTile.getModule = function(opts) {
     
-    return import('./ua4ighnv.js').then(function(m) {
+    return import('./am38ab3l.js').then(function(m) {
         return m.WarpViewTile;
       });
 
@@ -226,7 +278,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./1koybwqv.js').then(function(m) {
+    return import('./btys4gpv.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
@@ -239,7 +291,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
   WarpViewTreeView.is = 'warp-view-tree-view';
   WarpViewTreeView.getModule = function(opts) {
     
-    return import('./mr2uox6j.js').then(function(m) {
+    return import('./1n05yhbs.js').then(function(m) {
         return m.WarpViewTreeView;
       });
 
@@ -248,16 +300,20 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
 
 export {
   
+  CalendarHeatmap,
   WarpViewAnnotation,
   WarpViewBar,
   WarpViewBubble,
   WarpViewChart,
   WarpViewChip,
+  WarpViewDatagrid,
   WarpViewDisplay,
+  WarpViewDrillDown,
   WarpViewGtsTree,
   WarpViewHeatmapSliders,
   WarpViewImage,
   WarpViewMap,
+  WarpViewPaginable,
   WarpViewPie,
   WarpViewPlot,
   WarpViewPolar,
