@@ -342,7 +342,7 @@ export class WarpViewMap {
 
       switch (gts.render) {
         case 'marker':
-          icon = this.icon(gts.color, gts.marker || gts.key[0]);
+          icon = this.icon(gts.color, gts.marker);
           gts.path.map(pathItem => {
             let date;
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -396,7 +396,7 @@ export class WarpViewMap {
         positions.push(polyline);
         break;
       case 'marker':
-        icon = this.icon(positionData.color, positionData.marker || positionData.key[0]);
+        icon = this.icon(positionData.color, positionData.marker);
         for (let j = 0; j < positionData.positions.length; j++) {
           if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
             let marker = Leaflet.marker({
