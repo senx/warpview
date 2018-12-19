@@ -25,7 +25,10 @@ import { ChartLib } from "../../utils/chart-lib";
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
 import moment from "moment-timezone";
-
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
+ */
 @Component({
   tag: "warp-view-annotation",
   styleUrl: "warp-view-annotation.scss",

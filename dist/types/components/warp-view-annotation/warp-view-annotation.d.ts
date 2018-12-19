@@ -3,6 +3,10 @@ import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
+ */
 export declare class WarpViewAnnotation {
     responsive: boolean;
     showLegend: boolean;

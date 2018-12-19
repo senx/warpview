@@ -21,6 +21,10 @@ import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment-timezone";
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
+ */
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;

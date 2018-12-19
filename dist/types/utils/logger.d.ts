@@ -5,37 +5,38 @@ export declare class Logger {
      * @param className
      */
     constructor(className: any);
+    private static isArray;
     /**
      *
-     * @param {string[]} message message
-     * @param {LEVEL} level level
-     * @param {string[]} methods methods
+     * @param {LEVEL} level
+     * @param {any[]} methods
+     * @param {any[]} args
      */
-    log(level: LEVEL, methods: string[], message: any): void;
+    log(level: LEVEL, methods: any[], args: any[]): void;
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    debug(methods: string[], message: any): void;
+    debug(methods: any[], ...args: any[]): void;
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    error(methods: string[], message: any): void;
+    error(methods: any[], ...args: any[]): void;
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    warn(methods: string[], message: any): void;
+    warn(methods: any[], ...args: any[]): void;
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    info(methods: string[], message: any): void;
+    info(methods: any[], ...args: any[]): void;
 }
 /**
  *

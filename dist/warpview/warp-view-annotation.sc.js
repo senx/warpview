@@ -2,7 +2,7 @@
 const { h } = window.warpview;
 
 import { a as commonjsGlobal, b as createCommonjsModule, c as Chart } from './chunk-dd0ef508.js';
-import { a as GTSLib, b as Logger, c as Param, d as ChartLib, e as DataModel } from './chunk-35d55897.js';
+import { a as GTSLib, b as Logger, c as Param, d as ChartLib, e as DataModel } from './chunk-0213d7cb.js';
 import { a as ColorLib } from './chunk-87d412af.js';
 import { a as moment } from './chunk-07b61ac6.js';
 
@@ -5172,6 +5172,10 @@ moment.tz.load(require$$1);
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
+ */
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
  */
 class WarpViewAnnotation {
     constructor() {
@@ -22225,15 +22229,15 @@ class MapLib {
      */
     static toLeafletMapPaths(data) {
         let paths = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isGtsToPlot(data.gts[i])) {
+        data.gts.map((gts, i) => {
+            if (GTSLib.isGtsToPlot(gts)) {
                 let sl = {};
-                sl.path = GTSLib.gtsToPath(data.gts[i]);
+                sl.path = GTSLib.gtsToPath(gts);
                 if (data.params && data.params[i] && data.params[i].key) {
                     sl.key = data.params[i].key;
                 }
                 else {
-                    sl.key = GTSLib.serializeGtsMetadata(data.gts[i]);
+                    sl.key = GTSLib.serializeGtsMetadata(gts);
                 }
                 if (data.params && data.params[i] && data.params[i].color) {
                     sl.color = data.params[i].color;
@@ -22243,7 +22247,7 @@ class MapLib {
                 }
                 paths.push(sl);
             }
-        }
+        });
         return paths;
     }
     /**
@@ -22253,11 +22257,12 @@ class MapLib {
      */
     static annotationsToLeafletPositions(data) {
         let annotations = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isGtsToAnnotate(data.gts[i])) {
+        data.gts.map((gts, i) => {
+            if (GTSLib.isGtsToAnnotate(gts)) {
+                this.LOG.debug(['annotationsToLeafletPositions'], gts);
                 let annotation = {};
                 let params = data.params[i];
-                annotation.path = GTSLib.gtsToPath(data.gts[i]);
+                annotation.path = GTSLib.gtsToPath(gts);
                 MapLib.extractCommonParameters(annotation, params, i);
                 if (params.render !== undefined) {
                     annotation.render = params.render;
@@ -22275,7 +22280,7 @@ class MapLib {
                 }
                 annotations.push(annotation);
             }
-        }
+        });
         return annotations;
     }
     /**
@@ -22285,21 +22290,9 @@ class MapLib {
      * @param index
      */
     static extractCommonParameters(obj, params, index) {
-        if (params.key !== undefined) {
-            obj.key = params.key;
-        }
-        if (params.color !== undefined) {
-            obj.color = params.color;
-        }
-        else {
-            obj.color = ColorLib.getColor(index);
-        }
-        if (params.borderColor !== undefined) {
-            obj.borderColor = params.borderColor;
-        }
-        else {
-            obj.borderColor = '#000';
-        }
+        obj.key = params.key || '';
+        obj.color = params.color || ColorLib.getColor(index);
+        obj.borderColor = params.borderColor || '#000';
         if (params.baseRadius === undefined || isNaN(parseInt(params.baseRadius)) || parseInt(params.baseRadius) < 0) {
             obj.baseRadius = MapLib.BASE_RADIUS;
         }
@@ -22368,9 +22361,10 @@ class MapLib {
      */
     static toLeafletMapPositionArray(data) {
         let positions = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isPositionArray(data.gts[i])) {
-                let posArray = data.gts[i];
+        data.gts.map((gts, i) => {
+            if (GTSLib.isPositionArray(gts)) {
+                this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
+                let posArray = gts;
                 let params = data.params[i];
                 MapLib.extractCommonParameters(posArray, params, i);
                 if (params.render !== undefined) {
@@ -22382,9 +22376,13 @@ class MapLib {
                 if (posArray.render === 'coloredWeightedDots') {
                     MapLib.validateWeightedColoredDotsPositionArray(posArray, params);
                 }
+                if (posArray.render === 'marker') {
+                    posArray.marker = params.marker;
+                }
+                this.LOG.debug(['toLeafletMapPositionArray', 'posArray'], posArray);
                 positions.push(posArray);
             }
-        }
+        });
         return positions;
     }
     /**
@@ -22719,6 +22717,7 @@ class WarpViewMap {
         this.annotationsData.forEach(d => {
             this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
         });
+        this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
         // Create the positions arrays
         this.positionData.forEach(d => {
             this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
@@ -22726,8 +22725,11 @@ class WarpViewMap {
         (this.tiles || []).forEach((t) => {
             leafletSrc.tileLayer(t).addTo(this._map);
         });
-        this.LOG.debug(['displayMap'], [this.positionArraysMarkers]);
+        this.LOG.debug(['displayMap', 'positionArraysMarkers'], this.positionArraysMarkers);
         this.positionArraysMarkers.forEach(m => {
+            m.addTo(this._map);
+        });
+        this.annotationsMarkers.forEach(m => {
             m.addTo(this._map);
         });
         if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0) {
@@ -22774,29 +22776,26 @@ class WarpViewMap {
             }).addTo(this._map);
             let afterCurrentValue = leafletSrc.polyline(MapLib.pathDataToLeaflet(gts.path, { from: 0 }), {
                 color: gts.color,
-                opacity: 0.5,
+                opacity: 0.7,
             }).addTo(this._map);
             let currentValue;
             // Let's verify we have a path... No path, no marker
-            if (gts.path[0] !== undefined) {
+            gts.path.map(p => {
                 let date;
                 if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                    date = parseInt(gts.path[0].ts);
+                    date = parseInt(p.ts);
                 }
                 else {
-                    date = moment(Math.floor(parseInt(gts.path[0].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                    date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
                 }
-                currentValue = leafletSrc.circleMarker([gts.path[0].lat, gts.path[0].lon], { radius: 5, color: '#fff', fillColor: gts.color, fillOpacity: 1 })
-                    .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[0].val.toString()}</p>`).addTo(this._map);
-            }
-            else {
-                currentValue = leafletSrc.circleMarker([0, 0]).addTo(this._map);
-            }
-            return {
-                beforeCurrentValue: beforeCurrentValue,
-                afterCurrentValue: afterCurrentValue,
-                currentValue: currentValue,
-            };
+                currentValue = leafletSrc.circleMarker([p.lat, p.lon], { radius: 5, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
+                    .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
+                return {
+                    beforeCurrentValue: beforeCurrentValue,
+                    afterCurrentValue: afterCurrentValue,
+                    currentValue: currentValue,
+                };
+            });
         }
         else {
             return undefined;
@@ -22809,24 +22808,25 @@ class WarpViewMap {
         if (this.hiddenData.filter((i) => i === gts.key).length === 0) {
             switch (gts.render) {
                 case 'marker':
-                    icon = this.icon(gts.color, gts.marker);
-                    for (let j = 0; j < gts.path.length; j++) {
+                    icon = this.icon(gts.color, gts.marker || gts.key[0]);
+                    gts.path.map(pathItem => {
                         let date;
                         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                            date = parseInt(gts.path[j].ts);
+                            date = parseInt(pathItem.ts);
                         }
                         else {
-                            date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                            date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
                         }
-                        let marker = leafletSrc.marker(gts.path[j], { icon: icon, opacity: 1 })
-                            .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
+                        let marker = leafletSrc.marker(pathItem, { icon: icon, opacity: 1 })
+                            .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
+                        this.LOG.debug(['updateAnnotation', 'marker'], marker);
                         positions.push(marker);
-                    }
+                    });
                     break;
                 case 'dots':
                 default:
-                    for (let j = 0; j < gts.path.length; j++) {
-                        let marker = leafletSrc.circleMarker(gts.path[j], {
+                    gts.path.map(pathItem => {
+                        let marker = leafletSrc.circleMarker(pathItem, {
                             radius: gts.baseRadius,
                             color: gts.color,
                             fillColor: gts.color,
@@ -22834,14 +22834,14 @@ class WarpViewMap {
                         });
                         let date;
                         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                            date = parseInt(gts.path[j].ts);
+                            date = parseInt(pathItem.ts);
                         }
                         else {
-                            date = moment(Math.floor(parseInt(gts.path[j].ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                            date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
                         }
-                        marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${gts.path[j].val.toString()}</p>`);
+                        marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
                         positions.push(marker);
-                    }
+                    });
                     break;
             }
         }
@@ -22860,7 +22860,7 @@ class WarpViewMap {
                 positions.push(polyline);
                 break;
             case 'marker':
-                icon = this.icon(positionData.color, positionData.key);
+                icon = this.icon(positionData.color, positionData.marker || positionData.key[0]);
                 for (let j = 0; j < positionData.positions.length; j++) {
                     if (this.hiddenData.filter((i) => i === positionData.key).length === 0) {
                         let marker = leafletSrc.marker({
@@ -22873,6 +22873,7 @@ class WarpViewMap {
                         marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
                         positions.push(marker);
                     }
+                    this.LOG.debug(['updatePositionArray', 'build marker'], icon);
                 }
                 break;
             case 'coloredWeightedDots':
@@ -22890,7 +22891,7 @@ class WarpViewMap {
                             radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
                             color: positionData.borderColor,
                             fillColor: ColorLib.rgb2hex(positionData.colorGradient[positionData.positions[j][5]].r, positionData.colorGradient[positionData.positions[j][5]].g, positionData.colorGradient[positionData.positions[j][5]].b),
-                            fillOpacity: 1,
+                            fillOpacity: 0.7,
                         });
                         this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
                         marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
@@ -22904,7 +22905,7 @@ class WarpViewMap {
                         let marker = leafletSrc.circleMarker({ lat: positionData.positions[j][0], lng: positionData.positions[j][1] }, {
                             radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
                             color: positionData.borderColor,
-                            fillColor: positionData.color, fillOpacity: 1,
+                            fillColor: positionData.color, fillOpacity: 0.7,
                         });
                         marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
                         positions.push(marker);

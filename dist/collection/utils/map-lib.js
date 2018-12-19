@@ -25,15 +25,15 @@ export class MapLib {
      */
     static toLeafletMapPaths(data) {
         let paths = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isGtsToPlot(data.gts[i])) {
+        data.gts.map((gts, i) => {
+            if (GTSLib.isGtsToPlot(gts)) {
                 let sl = {};
-                sl.path = GTSLib.gtsToPath(data.gts[i]);
+                sl.path = GTSLib.gtsToPath(gts);
                 if (data.params && data.params[i] && data.params[i].key) {
                     sl.key = data.params[i].key;
                 }
                 else {
-                    sl.key = GTSLib.serializeGtsMetadata(data.gts[i]);
+                    sl.key = GTSLib.serializeGtsMetadata(gts);
                 }
                 if (data.params && data.params[i] && data.params[i].color) {
                     sl.color = data.params[i].color;
@@ -43,7 +43,7 @@ export class MapLib {
                 }
                 paths.push(sl);
             }
-        }
+        });
         return paths;
     }
     /**
@@ -53,11 +53,12 @@ export class MapLib {
      */
     static annotationsToLeafletPositions(data) {
         let annotations = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isGtsToAnnotate(data.gts[i])) {
+        data.gts.map((gts, i) => {
+            if (GTSLib.isGtsToAnnotate(gts)) {
+                this.LOG.debug(['annotationsToLeafletPositions'], gts);
                 let annotation = {};
                 let params = data.params[i];
-                annotation.path = GTSLib.gtsToPath(data.gts[i]);
+                annotation.path = GTSLib.gtsToPath(gts);
                 MapLib.extractCommonParameters(annotation, params, i);
                 if (params.render !== undefined) {
                     annotation.render = params.render;
@@ -75,7 +76,7 @@ export class MapLib {
                 }
                 annotations.push(annotation);
             }
-        }
+        });
         return annotations;
     }
     /**
@@ -85,21 +86,9 @@ export class MapLib {
      * @param index
      */
     static extractCommonParameters(obj, params, index) {
-        if (params.key !== undefined) {
-            obj.key = params.key;
-        }
-        if (params.color !== undefined) {
-            obj.color = params.color;
-        }
-        else {
-            obj.color = ColorLib.getColor(index);
-        }
-        if (params.borderColor !== undefined) {
-            obj.borderColor = params.borderColor;
-        }
-        else {
-            obj.borderColor = '#000';
-        }
+        obj.key = params.key || '';
+        obj.color = params.color || ColorLib.getColor(index);
+        obj.borderColor = params.borderColor || '#000';
         if (params.baseRadius === undefined || isNaN(parseInt(params.baseRadius)) || parseInt(params.baseRadius) < 0) {
             obj.baseRadius = MapLib.BASE_RADIUS;
         }
@@ -168,9 +157,10 @@ export class MapLib {
      */
     static toLeafletMapPositionArray(data) {
         let positions = [];
-        for (let i = 0; i < data.gts.length; i++) {
-            if (GTSLib.isPositionArray(data.gts[i])) {
-                let posArray = data.gts[i];
+        data.gts.map((gts, i) => {
+            if (GTSLib.isPositionArray(gts)) {
+                this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
+                let posArray = gts;
                 let params = data.params[i];
                 MapLib.extractCommonParameters(posArray, params, i);
                 if (params.render !== undefined) {
@@ -182,9 +172,13 @@ export class MapLib {
                 if (posArray.render === 'coloredWeightedDots') {
                     MapLib.validateWeightedColoredDotsPositionArray(posArray, params);
                 }
+                if (posArray.render === 'marker') {
+                    posArray.marker = params.marker;
+                }
+                this.LOG.debug(['toLeafletMapPositionArray', 'posArray'], posArray);
                 positions.push(posArray);
             }
-        }
+        });
         return positions;
     }
     /**

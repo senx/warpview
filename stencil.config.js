@@ -10,7 +10,8 @@ exports.config = {
     },
     {
       type: "www"
-    }
+    },
+    { type: 'docs' }
   ],
   nodeResolve: {
     browser: true

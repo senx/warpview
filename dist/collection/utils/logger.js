@@ -22,67 +22,73 @@ export class Logger {
     constructor(className) {
         this.className = className.name;
     }
+    static isArray(value) {
+        return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
+            && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
+    }
     /**
      *
-     * @param {string[]} message message
-     * @param {LEVEL} level level
-     * @param {string[]} methods methods
+     * @param {LEVEL} level
+     * @param {any[]} methods
+     * @param {any[]} args
      */
-    log(level, methods, message) {
-        const display = `[${this.className}] ${methods.join(' - ')}`;
+    log(level, methods, args) {
+        let logChain = [];
+        logChain.push(`[${this.className}] ${methods.join(' - ')}`);
+        logChain = logChain.concat(args);
         switch (level) {
             case LEVEL.DEBUG: {
-                console.debug(display, message);
+                console.debug(...logChain);
                 break;
             }
             case LEVEL.ERROR: {
-                console.error(display, message);
+                console.error(...logChain);
                 break;
             }
             case LEVEL.INFO: {
-                console.log(display, message);
+                console.log(...logChain);
                 break;
             }
             case LEVEL.WARN: {
-                console.warn(display, message);
+                console.warn(...logChain);
                 break;
             }
             default: {
-                console.log(display, message);
+                console.log(...logChain);
             }
         }
     }
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    debug(methods, message) {
-        this.log(LEVEL.DEBUG, methods, message);
+    debug(methods, ...args) {
+        this.log(LEVEL.DEBUG, methods, args);
     }
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    error(methods, message) {
-        this.log(LEVEL.ERROR, methods, message);
+    error(methods, ...args) {
+        this.log(LEVEL.ERROR, methods, args);
     }
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    warn(methods, message) {
-        this.log(LEVEL.WARN, methods, message);
+    warn(methods, ...args) {
+        this.log(LEVEL.WARN, methods, args);
     }
     /**
      *
-     * @param {string[]} methods
-     * @param message
+     * @param {any[]} methods
+     * @param args
      */
-    info(methods, message) {
-        this.log(LEVEL.INFO, methods, message);
+    info(methods, ...args) {
+        this.log(LEVEL.INFO, methods, args);
     }
 }
 /**
