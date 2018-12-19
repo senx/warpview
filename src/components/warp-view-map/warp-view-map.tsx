@@ -237,7 +237,13 @@ export class WarpViewMap {
     });
 
     this.annotationsData.forEach(d => {
-      this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
+   //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
+      let plottedGts: any = this.updateGtsPath(d);
+      if (plottedGts) {
+        this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
+        this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+        this.currentValuesMarkers.push(plottedGts.currentValue);
+      }
     });
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     // Create the positions arrays
@@ -297,7 +303,6 @@ export class WarpViewMap {
   }
 
   private updateGtsPath(gts: any) {
-
     if (this.hiddenData.filter((i) => i === gts.id).length === 0) {
       let beforeCurrentValue = Leaflet.polyline(
         MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
@@ -316,10 +321,10 @@ export class WarpViewMap {
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           date = parseInt(p.ts);
         } else {
-          date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+          date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
         }
         currentValue = Leaflet.circleMarker([p.lat, p.lon],
-          {radius: 5, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
+          {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
           .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
 
         return {
