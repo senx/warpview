@@ -83,7 +83,7 @@ var WarpViewDatagridComponent = /** @class **/ (function() {
   WarpViewDatagrid.is = 'warp-view-datagrid';
   WarpViewDatagrid.getModule = function(opts) {
     
-    return import('./gbn3g0pr.js').then(function(m) {
+    return import('./qwqe2ivc.js').then(function(m) {
         return m.WarpViewDatagrid;
       });
 
@@ -174,7 +174,7 @@ var WarpViewPaginableComponent = /** @class **/ (function() {
   WarpViewPaginable.is = 'warp-view-paginable';
   WarpViewPaginable.getModule = function(opts) {
     
-    return import('./gbn3g0pr.js').then(function(m) {
+    return import('./qwqe2ivc.js').then(function(m) {
         return m.WarpViewPaginable;
       });
 

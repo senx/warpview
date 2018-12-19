@@ -18,13 +18,13 @@
   width: 100%;
   color: var(--warp-view-font-color, #000000); }
   :host table td, :host table th {
-    padding: var(--warp-view-pagination-cell-padding, 5px); }
+    padding: var(--warp-view-datagrid-cell-padding, 5px); }
   :host table .odd {
-    background-color: var(--warp-view-pagination-odd-bg-color, #fff);
-    color: var(--warp-view-pagination-even-color, #000); }
+    background-color: var(--warp-view-datagrid-odd-bg-color, #fff);
+    color: var(--warp-view-datagrid-odd-color, #000); }
   :host table .even {
-    background-color: var(--warp-view-pagination-even-bg-color, #ddd);
-    color: var(--warp-view-pagination-even-color, #000); }
+    background-color: var(--warp-view-datagrid-even-bg-color, #ddd);
+    color: var(--warp-view-datagrid-even-color, #000); }
 
 :host .center {
   text-align: center; }
@@ -50,7 +50,7 @@
         border: 1px solid var(--warp-view-pagination-hover-border-color, #ddd); }
       :host .center .pagination .index.disabled, :host .center .pagination .next.disabled, :host .center .pagination .prev.disabled {
         cursor: auto;
-        color: var(--warp-view-pagination-hover-color, #ddd); }
+        color: var(--warp-view-pagination-disabled-color, #ddd); }
 
 :host .gts-classname {
   color: var(--gts-classname-font-color, #0074D9); }
