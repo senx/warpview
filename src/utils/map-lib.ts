@@ -25,13 +25,14 @@ export class MapLib {
 
   /**
    *
-   * @param {object} data
+   * @param {any} data
+   * @param {number[]} hiddenData
    * @returns {any[]}
    */
-  static toLeafletMapPaths(data: { gts: any[]; params: any[] }) {
+  static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[]) {
     let paths = [];
     data.gts.map((gts, i) => {
-      if(GTSLib.isGtsToPlot(gts)) {
+      if(GTSLib.isGtsToPlot(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
         let sl: any = {};
         sl.path = GTSLib.gtsToPath(gts);
         if(data.params && data.params[ i ] && data.params[ i ].key) {
@@ -52,13 +53,14 @@ export class MapLib {
 
   /**
    *
-   * @param {data} data
+   * @param {any} data
+   * @param {number[]} hiddenData
    * @returns {any[]}
    */
-  static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }) {
+  static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[]) {
     let annotations = [];
     data.gts.map((gts, i) => {
-      if(GTSLib.isGtsToAnnotate(gts)) {
+      if(GTSLib.isGtsToAnnotate(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
         this.LOG.debug([ 'annotationsToLeafletPositions' ], gts);
         let annotation: any = {};
         let params = (data.params || [])[ i ];
@@ -160,13 +162,14 @@ export class MapLib {
 
   /**
    *
-   * @param {object} data
+   * @param {any} data
+   * @param {number[]} hiddenData
    * @returns {any[]}
    */
-  static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }) {
+  static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }, hiddenData: number[]) {
     let positions = [];
     data.gts.map((gts, i) => {
-      if(GTSLib.isPositionArray(gts)) {
+      if(GTSLib.isPositionArray(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
         this.LOG.debug([ 'toLeafletMapPositionArray' ], gts, data.params[ i ]);
         let posArray = gts;
         let params = data.params[ i ];
