@@ -211,6 +211,9 @@ export class GTSLib {
      * @returns {any[]}
      */
     static flatDeep(arr1) {
+        if (!GTSLib.isArray(arr1)) {
+            arr1 = [arr1];
+        }
         return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
     }
     ;
@@ -268,9 +271,9 @@ export class GTSLib {
     static gtsToPath(gts) {
         let path = [];
         // Sort values
-        gts.v = gts.v.sort(function (a, b) {
-            return a[0] - b[0];
-        });
+        /* gts.v = gts.v.sort(function(a, b) {
+           return a[ 0 ] - b[ 0 ];
+         });*/
         for (let i = 0; i < gts.v.length; i++) {
             let metric = gts.v[i];
             if (metric.length === 2) {

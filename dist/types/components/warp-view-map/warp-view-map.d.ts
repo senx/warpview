@@ -2,8 +2,8 @@ import '../../stencil.core';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
 export declare class WarpViewMap {
-    width: string;
-    height: string;
+    width: number;
+    height: number;
     responsive: boolean;
     data: any;
     heatData: any[];
@@ -31,6 +31,7 @@ export declare class WarpViewMap {
     private static DEFAULT_HEIGHT;
     private static DEFAULT_WIDTH;
     private parentWidth;
+    private mapElement;
     onResize(): void;
     private onHideData;
     private onData;

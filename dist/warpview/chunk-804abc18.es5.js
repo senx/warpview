@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warpview.h;
+warpview.loadBundle("chunk-804abc18.js", ["exports"], function (t) { window.warpview.h;
     var e = /** @class */ (function () {
         function e() {
         }
@@ -9,7 +9,7 @@ warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warp
         function s() {
         }
         s.cleanArray = function (t) { return t.filter(function (t) { return !!t; }); };
-        s.unique = function (t) { var e = {}, s = []; for (var r_1 = 0, n_1 = t.length; r_1 < n_1; ++r_1)
+        s.unique = function (t) { var e = {}, s = []; for (var r_1 = 0, a_1 = t.length; r_1 < a_1; ++r_1)
             e.hasOwnProperty(t[r_1]) || (s.push(t[r_1]), e[t[r_1]] = 1); return s; };
         s.isArray = function (t) { return t && "object" == typeof t && t instanceof Array && "number" == typeof t.length && "function" == typeof t.splice && !t.propertyIsEnumerable("length"); };
         s.isValidResponse = function (t) { var e; try {
@@ -58,17 +58,17 @@ warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warp
             case 5: e.lat = t[1], e.lon = t[2], e.alt = t[3], e.value = t[4];
         } return e; };
         s.gtsFromJSON = function (t, e) { return { gts: { c: t.c, l: t.l, a: t.a, v: t.v, id: e } }; };
-        s.gtsFromJSONList = function (t, e) { var r, n = []; return (t || []).forEach(function (t, a) { var o = t; t.gts && (o = t.gts), r = void 0 !== e && "" !== e ? e + "-" + a : a, s.isArray(o) && n.push(s.gtsFromJSONList(o, r)), s.isGts(o) && n.push(s.gtsFromJSON(o, r)), s.isEmbeddedImage(o) && n.push({ image: o, caption: "Image", id: r }), s.isEmbeddedImageObject(o) && n.push({ image: o.image, caption: o.caption, id: r }); }), { content: n || [] }; };
-        s.flatDeep = function (t) { return t.reduce(function (t, e) { return Array.isArray(e) ? t.concat(s.flatDeep(e)) : t.concat(e); }, []); };
+        s.gtsFromJSONList = function (t, e) { var r, a = []; return (t || []).forEach(function (t, n) { var o = t; t.gts && (o = t.gts), r = void 0 !== e && "" !== e ? e + "-" + n : n, s.isArray(o) && a.push(s.gtsFromJSONList(o, r)), s.isGts(o) && a.push(s.gtsFromJSON(o, r)), s.isEmbeddedImage(o) && a.push({ image: o, caption: "Image", id: r }), s.isEmbeddedImageObject(o) && a.push({ image: o.image, caption: o.caption, id: r }); }), { content: a || [] }; };
+        s.flatDeep = function (t) { return s.isArray(t) || (t = [t]), t.reduce(function (t, e) { return Array.isArray(e) ? t.concat(s.flatDeep(e)) : t.concat(e); }, []); };
         s.flattenGtsIdArray = function (t, e) { var r = []; return console.log("flattenGtsIdArray", t, e), s.isGts(t) && (t = [t]), t.forEach(function (t) { if (console.log("flattenGtsIdArray a.forEach", t, e), s.isArray(t)) {
             console.log("flattenGtsIdArray d isArray");
-            var n_2 = s.flattenGtsIdArray(t, e);
-            r.push(n_2.res), e = n_2.r;
+            var a_2 = s.flattenGtsIdArray(t, e);
+            r.push(a_2.res), e = a_2.r;
         }
         else
             t.v && (t.id = e, r.push(t), e++); console.log("flattenGtsIdArray res r", r, e); }), console.log("flattenGtsIdArray res", r), { res: r, r: e }; };
         s.serializeGtsMetadata = function (t) { var e = []; Object.keys(t.l).forEach(function (s) { e.push(s + "=" + t.l[s]); }); var s = []; return Object.keys(t.a).forEach(function (e) { s.push(e + "=" + t.a[e]); }), t.c + "{" + e.join(",") + (s.length > 0 ? "," : "") + s.join(",") + "}"; };
-        s.gtsToPath = function (t) { var e = []; t.v = t.v.sort(function (t, e) { return t[0] - e[0]; }); for (var s_4 = 0; s_4 < t.v.length; s_4++) {
+        s.gtsToPath = function (t) { var e = []; for (var s_4 = 0; s_4 < t.v.length; s_4++) {
             var r_2 = t.v[s_4];
             r_2.length, r_2.length, 4 === r_2.length && e.push({ ts: Math.floor(r_2[0] / 1e3), lat: r_2[1], lon: r_2[2], val: r_2[3] }), 5 === r_2.length && e.push({ ts: Math.floor(r_2[0] / 1e3), lat: r_2[1], lon: r_2[2], elev: r_2[3], val: r_2[4] });
         } return e; };
@@ -109,18 +109,18 @@ warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warp
     }());  var r; s.formatLabel = (function (t) { var e = t.split("{"); var s = "<span class=\"gtsInfo\"><span class='gts-classname'>" + e[0] + "</span>"; if (e.length > 1) {
     s += "<span class='gts-separator'>{</span>";
     var t_1 = e[1].substr(0, e[1].length - 1).split(",");
-    t_1.length > 0 && t_1.forEach(function (e, r) { var n = e.split("="); e.length > 1 && (s += "<span><span class='gts-labelname'>" + n[0] + "</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>" + n[1] + "</span>", r !== t_1.length - 1 && (s += "<span>, </span>")); }), s += "<span class='gts-separator'>}</span>";
+    t_1.length > 0 && t_1.forEach(function (e, r) { var a = e.split("="); e.length > 1 && (s += "<span><span class='gts-labelname'>" + a[0] + "</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>" + a[1] + "</span>", r !== t_1.length - 1 && (s += "<span>, </span>")); }), s += "<span class='gts-separator'>}</span>";
 } if (e.length > 2) {
     s += "<span class='gts-separator'>{</span>";
     var t_2 = e[2].substr(0, e[2].length - 1).split(",");
-    t_2.length > 0 && t_2.forEach(function (e, r) { var n = e.split("="); e.length > 1 && (s += "<span><span class='gts-attrname'>" + n[0] + "</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>" + n[1] + "</span>", r !== t_2.length - 1 && (s += "<span>, </span>")); }), s += "<span class='gts-separator'>}</span>";
+    t_2.length > 0 && t_2.forEach(function (e, r) { var a = e.split("="); e.length > 1 && (s += "<span><span class='gts-attrname'>" + a[0] + "</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>" + a[1] + "</span>", r !== t_2.length - 1 && (s += "<span>, </span>")); }), s += "<span class='gts-separator'>}</span>";
 } return s += "</span>"; }), function (t) { t[t.DEBUG = 0] = "DEBUG", t[t.ERROR = 1] = "ERROR", t[t.WARN = 2] = "WARN", t[t.INFO = 3] = "INFO"; }(r || (r = {}));
-    var n = /** @class */ (function () {
-        function n() {
+    var a = /** @class */ (function () {
+        function a() {
         }
-        n.guid = function () { var t, e, s = ""; for (t = 0; t < 32; t++)
+        a.guid = function () { var t, e, s = ""; for (t = 0; t < 32; t++)
             e = 16 * Math.random() | 0, 8 != t && 12 != t && 16 != t && 20 != t || (s += "-"), s += (12 == t ? 4 : 16 == t ? 3 & e | 8 : e).toString(16); return s; };
-        n.mergeDeep = function () {
+        a.mergeDeep = function () {
             var t = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 t[_i] = arguments[_i];
@@ -128,33 +128,33 @@ warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warp
             var e = {}, s = 0;
             for (; s < arguments.length; s++) {
                 var t_3 = arguments[s];
-                n.merge(t_3, e, !0);
+                a.merge(t_3, e, !0);
             }
             return e;
         };
-        n.merge = function (t, e, s) { for (var r_3 in t)
-            t.hasOwnProperty(r_3) && (s && "[object Object]" === Object.prototype.toString.call(t[r_3]) ? e[r_3] = n.mergeDeep(e[r_3], t[r_3]) : e[r_3] = t[r_3]); };
-        n.isObject = function (t) { return t && "object" == typeof t && !Array.isArray(t); };
-        n.getTooltipCallbacks = function () { return { title: function (t) { return t[0].xLabel; }, label: function (t, e) { var s = e.datasets[t.datasetIndex].label || ""; return s && (s += ": "), s + t.yLabel; } }; };
-        n.buildImage = function (t, e, s) { var r = new Image(t, e), n = "<svg width=\"" + t + "px\" height=\"" + e + "px\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + t + " " + e + "\" preserveAspectRatio=\"xMidYMid\">\n<rect width=\"" + t + "\" height=\"" + e + "\" style=\"fill:" + s + ";\" ></rect>\n</svg>"; return r.src = "data:image/svg+xml;base64," + btoa(n), r; };
-        return n;
+        a.merge = function (t, e, s) { for (var r_3 in t)
+            t.hasOwnProperty(r_3) && (s && "[object Object]" === Object.prototype.toString.call(t[r_3]) ? e[r_3] = a.mergeDeep(e[r_3], t[r_3]) : e[r_3] = t[r_3]); };
+        a.isObject = function (t) { return t && "object" == typeof t && !Array.isArray(t); };
+        a.getTooltipCallbacks = function () { return { title: function (t) { return t[0].xLabel; }, label: function (t, e) { var s = e.datasets[t.datasetIndex].label || ""; return s && (s += ": "), s + t.yLabel; } }; };
+        a.buildImage = function (t, e, s) { var r = new Image(t, e), a = "<svg width=\"" + t + "px\" height=\"" + e + "px\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + t + " " + e + "\" preserveAspectRatio=\"xMidYMid\">\n<rect width=\"" + t + "\" height=\"" + e + "\" style=\"fill:" + s + ";\" ></rect>\n</svg>"; return r.src = "data:image/svg+xml;base64," + btoa(a), r; };
+        return a;
     }());  t.GTSLib = s, t.Logger = /** @class */ (function () {
     function Logger(t) {
         this.className = t.name;
     }
     Logger.isArray = function (t) { return t && "object" == typeof t && t instanceof Array && "number" == typeof t.length && "function" == typeof t.splice && !t.propertyIsEnumerable("length"); };
-    Logger.prototype.log = function (t, e, s) { var n = []; switch ((n.push("[" + this.className + "] " + e.join(" - ")), n = n.concat(s), t)) {
+    Logger.prototype.log = function (t, e, s) { var a = []; switch ((a.push("[" + this.className + "] " + e.join(" - ")), a = a.concat(s), t)) {
         case r.DEBUG: break;
         case r.ERROR:
-            console.error.apply(console, n);
+            console.error.apply(console, a);
             break;
         case r.INFO:
-            console.log.apply(console, n);
+            console.log.apply(console, a);
             break;
         case r.WARN:
-            console.warn.apply(console, n);
+            console.warn.apply(console, a);
             break;
-        default: console.log.apply(console, n);
+        default: console.log.apply(console, a);
     } };
     Logger.prototype.debug = function (t) {
         var e = [];
@@ -190,4 +190,4 @@ warpview.loadBundle("chunk-a015fec6.js", ["exports"], function (t) { window.warp
         this.showDots = !0, this.timeUnit = "us";
     }
     return Param;
-}()), t.ChartLib = n, t.DataModel = e; });
+}()), t.ChartLib = a, t.DataModel = e; });

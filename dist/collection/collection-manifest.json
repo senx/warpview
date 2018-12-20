@@ -816,7 +816,7 @@
         },
         {
           "name": "height",
-          "type": "String",
+          "type": "Number",
           "attr": "height"
         },
         {
@@ -841,7 +841,7 @@
         },
         {
           "name": "width",
-          "type": "String",
+          "type": "Number",
           "attr": "width"
         }
       ],

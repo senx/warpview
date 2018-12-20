@@ -17,7 +17,14 @@
 
 :host {
   position: relative;
-  .maincontainer {
+
+  .main-container {
+    position: relative;
+  }
+
+  .map-container {
+    height: 768px;
+    width: 100%;
     position: relative;
   }
 

@@ -18,11 +18,14 @@
   width: var(--warp-view-chart-width, 100%);
   height: var(--warp-view-chart-height, 100%); }
   :host div.wrapper {
-    width: 100%;
-    height: 100%; }
+    width: calc(100% - var(--warp-view-map-margin, 15px));
+    height: 100%;
+    padding-left: var(--warp-view-map-margin, 15px);
+    padding-right: var(--warp-view-map-margin, 15px); }
     :host div.wrapper div.map-container, :host div.wrapper div.leaflet-container {
       width: 100%;
-      height: 100%; }
+      height: 100%;
+      position: relative; }
       :host div.wrapper div.map-container .leaflet-tile, :host div.wrapper div.leaflet-container .leaflet-tile {
         -webkit-filter: var(--warp-view-chart-tile-transform);
         filter: var(--warp-view-chart-tile-transform); }

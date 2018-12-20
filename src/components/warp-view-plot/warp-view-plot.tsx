@@ -220,12 +220,12 @@ export class WarpViewPlot {
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
                               options={this._options}></warp-view-gts-tree>
         : ''}
-      {this.showChart ? <div class="maincontainer" onMouseMove={evt => this.handleMouseMove(evt)}
+      {this.showChart ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
                              onMouseLeave={evt => this.handleMouseOut(evt)}>
         <div class="bar"/>
         <div class="annotation">
           <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
-                                show-legend={this.showLegend}
+                                showLegend={this.showLegend}
                                 timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
                                 hiddenData={this._toHide} options={this._options}></warp-view-annotation>
         </div>
@@ -235,7 +235,7 @@ export class WarpViewPlot {
                            options={this._options}></warp-view-chart>
         </div>
       </div> : ''}
-      {this.showMap ? <div style={{ width: '100%', height: '768px' }}>
+      {this.showMap ? <div class="map-container">
         <warp-view-map options={this._options} id="map" data={this._data as any}
                        responsive={this.responsive} hiddenData={this._toHide}
         ></warp-view-map>

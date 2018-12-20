@@ -16,7 +16,11 @@
  */
 :host {
   position: relative; }
-  :host .maincontainer {
+  :host .main-container {
+    position: relative; }
+  :host .map-container {
+    height: 768px;
+    width: 100%;
     position: relative; }
   :host .bar {
     width: 1px;

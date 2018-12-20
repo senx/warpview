@@ -1,5 +1,5 @@
 export declare class MapLib {
-    private static BASE_RADIUS;
+    static BASE_RADIUS: number;
     private static LOG;
     /**
      *
