@@ -3,22 +3,24 @@ export declare class MapLib {
     private static LOG;
     /**
      *
-     * @param {object} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
     static toLeafletMapPaths(data: {
         gts: any[];
         params: any[];
-    }): any[];
+    }, hiddenData: number[]): any[];
     /**
      *
-     * @param {data} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
     static annotationsToLeafletPositions(data: {
         gts: any[];
         params: any[];
-    }): any[];
+    }, hiddenData: number[]): any[];
     /**
      *
      * @param obj
@@ -35,13 +37,14 @@ export declare class MapLib {
     private static validateWeightedDotsPositionArray;
     /**
      *
-     * @param {object} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
     static toLeafletMapPositionArray(data: {
         gts: any[];
         params: any[];
-    }): any[];
+    }, hiddenData: number[]): any[];
     /**
      *
      * @param posArray

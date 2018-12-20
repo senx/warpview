@@ -27,5 +27,5 @@
       height: 100%;
       position: relative; }
       :host div.wrapper div.map-container .leaflet-tile, :host div.wrapper div.leaflet-container .leaflet-tile {
-        -webkit-filter: var(--warp-view-chart-tile-transform);
-        filter: var(--warp-view-chart-tile-transform); }
+        -webkit-filter: var(--warp-view-chart-tile-transform, grayscale(0.7));
+        filter: var(--warp-view-chart-tile-transform, grayscale(0.7)); }

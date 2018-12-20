@@ -20,13 +20,14 @@ import { Logger } from "./logger";
 export class MapLib {
     /**
      *
-     * @param {object} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
-    static toLeafletMapPaths(data) {
+    static toLeafletMapPaths(data, hiddenData) {
         let paths = [];
         data.gts.map((gts, i) => {
-            if (GTSLib.isGtsToPlot(gts)) {
+            if (GTSLib.isGtsToPlot(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
                 let sl = {};
                 sl.path = GTSLib.gtsToPath(gts);
                 if (data.params && data.params[i] && data.params[i].key) {
@@ -48,13 +49,14 @@ export class MapLib {
     }
     /**
      *
-     * @param {data} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
-    static annotationsToLeafletPositions(data) {
+    static annotationsToLeafletPositions(data, hiddenData) {
         let annotations = [];
         data.gts.map((gts, i) => {
-            if (GTSLib.isGtsToAnnotate(gts)) {
+            if (GTSLib.isGtsToAnnotate(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
                 this.LOG.debug(['annotationsToLeafletPositions'], gts);
                 let annotation = {};
                 let params = (data.params || [])[i];
@@ -151,13 +153,14 @@ export class MapLib {
     }
     /**
      *
-     * @param {object} data
+     * @param {any} data
+     * @param {number[]} hiddenData
      * @returns {any[]}
      */
-    static toLeafletMapPositionArray(data) {
+    static toLeafletMapPositionArray(data, hiddenData) {
         let positions = [];
         data.gts.map((gts, i) => {
-            if (GTSLib.isPositionArray(gts)) {
+            if (GTSLib.isPositionArray(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
                 this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
                 let posArray = gts;
                 let params = data.params[i];

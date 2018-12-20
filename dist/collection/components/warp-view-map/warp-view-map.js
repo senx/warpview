@@ -154,10 +154,10 @@ export class WarpViewMap {
         });
     }
     displayMap(data) {
-        this.LOG.debug(['drawMap'], [this.data, this._options]);
-        this.pathData = MapLib.toLeafletMapPaths(data);
-        this.annotationsData = MapLib.annotationsToLeafletPositions(data);
-        this.positionData = MapLib.toLeafletMapPositionArray(data);
+        this.LOG.debug(['drawMap'], this.data, this._options, this.hiddenData);
+        this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData);
+        this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData);
+        this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData);
         if (!this.data) {
             return;
         }
@@ -192,6 +192,7 @@ export class WarpViewMap {
             }
         });
         this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
+        this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
         // Create the positions arrays
         this.positionData.forEach(d => {
             this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
@@ -245,81 +246,74 @@ export class WarpViewMap {
         }
     }
     updateGtsPath(gts) {
-        if (this.hiddenData.filter((i) => i === gts.id).length === 0) {
-            let beforeCurrentValue = Leaflet.polyline(MapLib.pathDataToLeaflet(gts.path, { to: 0 }), {
-                color: gts.color,
-                opacity: 1,
-            }).addTo(this._map);
-            let afterCurrentValue = Leaflet.polyline(MapLib.pathDataToLeaflet(gts.path, { from: 0 }), {
-                color: gts.color,
-                opacity: 0.7,
-            }).addTo(this._map);
-            let currentValue;
-            // Let's verify we have a path... No path, no marker
-            gts.path.map(p => {
-                let date;
-                if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                    date = parseInt(p.ts);
-                }
-                else {
-                    date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
-                }
-                currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
-                    .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
-                return {
-                    beforeCurrentValue: beforeCurrentValue,
-                    afterCurrentValue: afterCurrentValue,
-                    currentValue: currentValue,
-                };
-            });
-        }
-        else {
-            return undefined;
-        }
+        let beforeCurrentValue = Leaflet.polyline(MapLib.pathDataToLeaflet(gts.path, { to: 0 }), {
+            color: gts.color,
+            opacity: 1,
+        }).addTo(this._map);
+        let afterCurrentValue = Leaflet.polyline(MapLib.pathDataToLeaflet(gts.path, { from: 0 }), {
+            color: gts.color,
+            opacity: 0.7,
+        }).addTo(this._map);
+        let currentValue;
+        // Let's verify we have a path... No path, no marker
+        gts.path.map(p => {
+            let date;
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                date = parseInt(p.ts);
+            }
+            else {
+                date = moment.utc(Math.floor(parseInt(p.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+            }
+            currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
+                .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
+            return {
+                beforeCurrentValue: beforeCurrentValue,
+                afterCurrentValue: afterCurrentValue,
+                currentValue: currentValue,
+            };
+        });
     }
     updateAnnotation(gts) {
         let positions = [];
         let icon;
         this.LOG.debug(['updateAnnotation'], gts);
-        if (this.hiddenData.filter((i) => i === gts.key).length === 0) {
-            switch (gts.render) {
-                case 'marker':
-                    icon = this.icon(gts.color, gts.marker);
-                    gts.path.map(pathItem => {
-                        let date;
-                        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                            date = parseInt(pathItem.ts);
-                        }
-                        else {
-                            date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
-                        }
-                        let marker = Leaflet.marker(pathItem, { icon: icon, opacity: 1 })
-                            .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-                        this.LOG.debug(['updateAnnotation', 'marker'], marker);
-                        positions.push(marker);
+        switch (gts.render) {
+            case 'marker':
+                icon = this.icon(gts.color, gts.marker);
+                gts.path.map(pathItem => {
+                    let date;
+                    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                        date = parseInt(pathItem.ts);
+                    }
+                    else {
+                        date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).utc(true).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                    }
+                    let marker = Leaflet.marker(pathItem, { icon: icon, opacity: 1 })
+                        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
+                    this.LOG.debug(['updateAnnotation', 'marker'], marker);
+                    positions.push(marker);
+                });
+                break;
+            case 'dots':
+            default:
+                gts.path.map(pathItem => {
+                    let marker = Leaflet.circleMarker(pathItem, {
+                        radius: gts.baseRadius,
+                        color: gts.color,
+                        fillColor: gts.color,
+                        fillOpacity: 1
                     });
-                    break;
-                case 'dots':
-                default:
-                    gts.path.map(pathItem => {
-                        let marker = Leaflet.circleMarker(pathItem, {
-                            radius: gts.baseRadius,
-                            color: gts.color,
-                            fillColor: gts.color,
-                            fillOpacity: 1
-                        });
-                        let date;
-                        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                            date = parseInt(pathItem.ts);
-                        }
-                        else {
-                            date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
-                        }
-                        marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-                        positions.push(marker);
-                    });
-                    break;
-            }
+                    let date;
+                    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                        date = parseInt(pathItem.ts);
+                    }
+                    else {
+                        date = moment.utc(Math.floor(parseInt(pathItem.ts) / 1000)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                    }
+                    marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
+                    positions.push(marker);
+                });
+                break;
         }
         return positions;
     }

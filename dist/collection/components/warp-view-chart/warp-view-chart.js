@@ -348,7 +348,7 @@ export class WarpViewChart {
                 width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
                 labels: dataToplot.labels,
                 showRoller: false,
-                showRangeSelector: this._options.showRangeSelector || true,
+                showRangeSelector: dataToplot.datasets && dataToplot.datasets.length > 0 && this._options.showRangeSelector,
                 showInRangeSelector: true,
                 connectSeparatedPoints: true,
                 colors: dataToplot.colors,

@@ -31,8 +31,8 @@
       position: relative;
 
       .leaflet-tile {
-        -webkit-filter: var(--warp-view-chart-tile-transform);
-        filter: var(--warp-view-chart-tile-transform);
+        -webkit-filter: var(--warp-view-chart-tile-transform, grayscale(.7));
+        filter: var(--warp-view-chart-tile-transform, grayscale(.7));
       }
 
     }
