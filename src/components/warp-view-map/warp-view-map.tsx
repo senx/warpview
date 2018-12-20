@@ -185,6 +185,7 @@ export class WarpViewMap {
     let i = 0;
     flattenGTS.forEach(item => {
       if (item.v) {
+        item.v.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
         item.i = i;
         i++;
       }

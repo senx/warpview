@@ -173,7 +173,7 @@ export class WarpViewChart {
         this.ticks.push(ts);
       }
     });
-    datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
+   // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
     this.LOG.debug([ 'gtsToData', 'datasets' ], [ datasets, labels, colors ]);
     return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
   }
