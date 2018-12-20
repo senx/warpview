@@ -196,14 +196,14 @@ export class WarpViewChart {
         res = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
       }
     } else {
-      res = x.toString();
+      res = (Math.round(x * 100000000000000) / 100000000000000).toString();
       e = parseInt(x.toString().split('+')[ 1 ]);
-      if(e > 20) {
-        e -= 20;
-        x /= Math.pow(10, e);
-        res = x.toString();
-        res += (new Array(e + 1)).join('0');
-      }
+        if(e > 20) {
+          e -= 20;
+          x /= Math.pow(10, e);
+          res = x.toString();
+          res += (new Array(e + 1)).join('0');
+        }
     }
     return res;
   }
@@ -416,9 +416,11 @@ export class WarpViewChart {
         drawGapEdgePoints: this._options.showDots,
         drawPoints: this._options.showDots,
         pointSize: 3,
+
+        digitsAfterDecimal: 5,
         axes: {
           x: {
-            drawAxis: this.displayGraph()
+            drawAxis: this.displayGraph(),
           },
           y: {
             axisLabelFormatter: (y) => {
