@@ -15,10 +15,12 @@
  *
  */
 
-import {Component, Event, EventEmitter, Prop, State} from "@stencil/core";
+import {Component, Event, EventEmitter, Listen, Prop, State, Watch} from "@stencil/core";
 import {DataModel} from "../../model/dataModel";
 import {ColorLib} from "../../utils/color-lib";
 import {GTSLib} from "../../utils/gts.lib";
+import {Logger} from "../../utils/logger";
+import {GTS} from "../../model/GTS";
 
 @Component({
   tag: 'warp-view-gts-popup',
@@ -34,24 +36,85 @@ export class WarpViewGtsPopup {
 
   @State() private show: boolean = false;
   @State() private displayed: any[] = [];
-  private current: number = 0;
+
+  private LOG: Logger = new Logger(WarpViewGtsPopup);
+  @State() current: number = 0;
+
+  @Listen('document:keyup')
+  handleKeyDown(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keyup'], ev);
+    if (ev.key === 'k') {
+      this.showPopup();
+    }
+    if (ev.key === 'ArrowUp') {
+      ev.preventDefault();
+      this.current = Math.max(0, this.current - 1);
+      return false;
+    }
+    if (ev.key === 'ArrowDown') {
+      ev.preventDefault();
+      this.current = Math.min(this.displayed.length - 1, this.current + 1);
+    }
+    if (ev.key === 'Escape') {
+      ev.preventDefault();
+      this.show = false;
+    }
+    if (ev.key === ' ') {
+      this.warpViewSelectedGTS.emit()
+    }
+  }
+
+  @Watch('hiddenData')
+  private onHideData(newValue: number[], oldValue: number[]) {
+    if (oldValue.length !== newValue.length) {
+      this.LOG.debug(['hiddenData'], newValue);
+      this.prepareData();
+    }
+  }
+
+  @Watch('gtsList')
+  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
+      this.prepareData();
+    }
+  }
+
+  private showPopup() {
+    this.current = 0;
+    this.prepareData();
+    this.show = true;
+  }
+
+  private prepareData() {
+    if (this.gtsList) {
+      const bottom = Math.max(0, this.current - Math.ceil(this.maxToShow / 2));
+      const gts = GTSLib.flatDeep([this.gtsList.data]); //.filter(g => this.hiddenData.filter((h) => h === g.id).length === 0);
+      this.displayed = gts.slice(bottom, Math.min(gts.length, bottom + this.maxToShow)) as any[];
+      this.LOG.debug(['prepareData'], bottom, this.displayed)
+    }
+  }
+
   componentDidLoad() {
-    const bottom = this.current - Math.ceil(this.maxToShow / 2);
-    this.displayed = this.gtsList.data.slice(bottom,  Math.min(this.gtsList.data.length, bottom + this.maxToShow)) as any[];
+    this.prepareData();
   }
 
   render() {
-    return  <div>{
+    return <div>{
       this.show
         ? <div class="popup">
           <ul>
-            { this.displayed.map(gts =>
-              <li>
-                <div class="round" style={ {'background-color' : ColorLib.transparentize(gts.id),  'border-color': ''}}></div>
-                {GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts.name))}
+            {this.displayed.map((gts, index) =>
+              <li class={this.current === index ? 'selected' : ''}>
+                <div class="round"
+                     style={{
+                       'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
+                       'border-color': ColorLib.getColor(gts.id)
+                     }}></div>
+                <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}></span>
               </li>
             )}
-            </ul>;
+          </ul>
         </div>
         : ''
     }</div>

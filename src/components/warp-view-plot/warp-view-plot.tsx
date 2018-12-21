@@ -160,17 +160,6 @@ export class WarpViewPlot {
     this.drawCharts();
   }
 
-
-
-  @Listen('document:keyup')
-  handleKeyDown(ev: KeyboardEvent) {
-    if(ev.key === 'k' || ev.key === 'k') {
-      this.selectPrevGts();
-    }
-  }
-
-  private selectPrevGts() {}
-
   private handleMouseMove(evt: MouseEvent) {
     this.line = this.el.shadowRoot.querySelector('div.bar');
     if(this.mouseOutTimer) {
@@ -212,7 +201,7 @@ export class WarpViewPlot {
     }
 
     this._options = ChartLib.mergeDeep(this._options, opts);
-    this.LOG.debug([ 'drawCharts', 'parsed' ], [ this._data, this._options ]);
+    this.LOG.debug([ 'drawCharts', 'parsed' ], this._data, this._options);
   }
 
   render() {
@@ -241,6 +230,7 @@ export class WarpViewPlot {
                                 hiddenData={this._toHide} options={this._options}></warp-view-annotation>
         </div>
         <div style={{ width: '100%', height: '768px' }} id={this.graphId}>
+          <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}></warp-view-gts-popup>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                            hiddenData={this._toHide} type={this.chartType}
                            options={this._options}></warp-view-chart>

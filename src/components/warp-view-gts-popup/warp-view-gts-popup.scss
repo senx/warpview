@@ -16,6 +16,22 @@
  */
 
 :host {
+  .selected {
+    background-color: #8e8e8e;
+  }
+  .popup {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background-color: white;
+    border: 1px solid black;
+    top: 25%;
+    bottom: 25%;
+    left: 25%;
+    right: 25%;
+    z-index: 999999;
+
+  }
   .gts-classname {
     color: var(--gts-classname-font-color, #0074D9);
   }
@@ -40,5 +56,20 @@
   .gts-attrvalue {
     color: var(--gts-labelvalue-font-color, #AAAAAA);
     font-style: italic;
+  }
+  ul {
+    list-style: none;
+  }
+  .round {
+    border-radius: 50%;
+    background-color: #bbbbbb;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border: 2px solid #454545;
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
+    margin-right: 5px;
   }
 }
