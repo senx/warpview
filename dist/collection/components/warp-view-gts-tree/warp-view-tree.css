@@ -59,9 +59,7 @@ warp-view-tree-view li .gtsInfo[disabled] {
 warp-view-tree-view li .normal {
   border-radius: 50%;
   background-color: #bbbbbb;
-  display: inline-block;
-  width: 12px;
-  height: 12px; }
+  display: inline-block; }
 
 warp-view-tree-view li i, warp-view-tree-view li span {
   cursor: pointer; }
