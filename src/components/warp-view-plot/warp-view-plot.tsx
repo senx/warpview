@@ -134,6 +134,43 @@ export class WarpViewPlot {
     this.line.style.left = '-100px';
   }
 
+  @Listen('warpViewChartResize')
+  onResize(event: CustomEvent) {
+    const div = this.el.shadowRoot.querySelector('#' + this.graphId) as HTMLElement;
+    this.LOG.debug([ 'warpViewChartResize' ], [ event.detail, div ]);
+    if(div) {
+      div.style.height = event.detail.h + 'px';
+    }
+  }
+
+  @Listen('warpViewSelectedGTS')
+  warpViewSelectedGTS(event: CustomEvent) {
+    this.LOG.debug([ 'warpViewSelectedGTS' ], event.detail);
+    if(!this._toHide.find(i => {
+      return i === event.detail.gts.id;
+    }) && !event.detail.selected) {
+      this._toHide.push(event.detail.gts.id);
+    } else {
+      this._toHide = this._toHide.filter(i => {
+        return i !== event.detail.gts.id;
+      });
+    }
+    this.LOG.debug([ 'warp-viewSelectedGTS' ], this._toHide);
+    this._toHide = this._toHide.slice();
+    this.drawCharts();
+  }
+
+
+
+  @Listen('document:keyup')
+  handleKeyDown(ev: KeyboardEvent) {
+    if(ev.key === 'k' || ev.key === 'k') {
+      this.selectPrevGts();
+    }
+  }
+
+  private selectPrevGts() {}
+
   private handleMouseMove(evt: MouseEvent) {
     this.line = this.el.shadowRoot.querySelector('div.bar');
     if(this.mouseOutTimer) {
@@ -161,32 +198,6 @@ export class WarpViewPlot {
         this.line.style.display = 'none';
       }, 500);
     }
-  }
-
-  @Listen('warpViewChartResize')
-  onResize(event: CustomEvent) {
-    const div = this.el.shadowRoot.querySelector('#' + this.graphId) as HTMLElement;
-    this.LOG.debug([ 'warpViewChartResize' ], [ event.detail, div ]);
-    if(div) {
-      div.style.height = event.detail.h + 'px';
-    }
-  }
-
-  @Listen('warpViewSelectedGTS')
-  warpViewSelectedGTS(event: CustomEvent) {
-    this.LOG.debug([ 'warpViewSelectedGTS' ], event.detail);
-    if(!this._toHide.find(i => {
-      return i === event.detail.gts.id;
-    }) && !event.detail.selected) {
-      this._toHide.push(event.detail.gts.id);
-    } else {
-      this._toHide = this._toHide.filter(i => {
-        return i !== event.detail.gts.id;
-      });
-    }
-    this.LOG.debug([ 'warp-viewSelectedGTS' ], this._toHide);
-    this._toHide = this._toHide.slice();
-    this.drawCharts();
   }
 
   private drawCharts() {

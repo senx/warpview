@@ -143,7 +143,7 @@ export class WarpViewChart {
                 this.ticks.push(ts);
             }
         });
-        datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
+        // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
         this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
         return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
     }
@@ -156,15 +156,11 @@ export class WarpViewChart {
     static toFixed(x) {
         let e;
         let res = '';
-        if (Math.abs(x) < 1.0) {
-            e = parseInt(x.toString().split('e-')[1]);
-            if (e) {
-                x *= Math.pow(10, e - 1);
-                res = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
-            }
+        if (Number.isSafeInteger(x)) {
+            return x.toString();
         }
         else {
-            res = x.toString();
+            res = x.toString(); //Math.round(x * 100000000000000) / 100000000000000).toString();
             e = parseInt(x.toString().split('+')[1]);
             if (e > 20) {
                 e -= 20;
@@ -172,8 +168,8 @@ export class WarpViewChart {
                 res = x.toString();
                 res += (new Array(e + 1)).join('0');
             }
+            return res;
         }
-        return res;
     }
     /**
      *
@@ -374,14 +370,10 @@ export class WarpViewChart {
                 drawGapEdgePoints: this._options.showDots,
                 drawPoints: this._options.showDots,
                 pointSize: 3,
+                digitsAfterDecimal: 5,
                 axes: {
                     x: {
-                        drawAxis: this.displayGraph()
-                    },
-                    y: {
-                        axisLabelFormatter: (y) => {
-                            return WarpViewChart.toFixed(y);
-                        }
+                        drawAxis: this.displayGraph(),
                     }
                 },
                 legendFormatter: this.legendFormatter,

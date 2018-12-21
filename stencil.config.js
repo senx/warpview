@@ -2,7 +2,7 @@ const sass = require("@stencil/sass");
 exports.config = {
   namespace: "warpview",
   plugins: [sass()],
-  enableCache: true,
+  enableCache: false,
   globalStyle: 'src/globals/style.scss',
   outputTargets: [
     {

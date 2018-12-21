@@ -15,15 +15,15 @@
  *
  */
 
-import { Component, Element, Event, EventEmitter, Listen, Prop, Watch } from '@stencil/core';
-import { GTSLib } from '../../utils/gts.lib';
+import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from '@stencil/core';
+import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
-import { Logger } from "../../utils/logger";
-import { ChartLib } from "../../utils/chart-lib";
-import { ColorLib } from "../../utils/color-lib";
-import { Param } from "../../model/param";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
+import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
+import {Param} from "../../model/param";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 import moment from "moment";
 import Options = dygraphs.Options;
 
@@ -37,7 +37,7 @@ import Options = dygraphs.Options;
  */
 @Component({
   tag: 'warp-view-chart',
-  styleUrls: [ '../../../node_modules/dygraphs/dist/dygraph.min.css', 'warp-view-chart.scss' ],
+  styleUrls: ['../../../node_modules/dygraphs/dist/dygraph.min.css', 'warp-view-chart.scss'],
   shadow: false
 })
 export class WarpViewChart {
@@ -73,19 +73,19 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
-      if(this._chart) {
-        if(!this.initialHeight) {
+      if (this._chart) {
+        if (!this.initialHeight) {
           this.initialHeight = this.el.parentElement.clientHeight;
         }
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
-          this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
           const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
           this._chart.resize(width, this.displayGraph() ? height : 30);
-          this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
+          this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
         }, 250);
       }
     }
@@ -93,31 +93,31 @@ export class WarpViewChart {
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if(oldValue.length !== newValue.length) {
+    if (oldValue.length !== newValue.length) {
       this.parentWidth = 0;
-      this.LOG.debug([ 'hiddenData' ], newValue);
+      this.LOG.debug(['hiddenData'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'data' ], newValue);
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'options' ], newValue);
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
   }
 
   private handleMouseOut(evt: MouseEvent) {
-    this.LOG.debug([ 'handleMouseOut' ], evt);
+    this.LOG.debug(['handleMouseOut'], evt);
     const legend = this.el.querySelector('.dygraph-legend') as HTMLElement;
     window.setTimeout(() => {
       legend.style.display = 'none';
@@ -125,19 +125,19 @@ export class WarpViewChart {
   }
 
   private gtsToData(gtsList) {
-    this.LOG.debug([ 'gtsToData' ], gtsList);
+    this.LOG.debug(['gtsToData'], gtsList);
     this.ticks = [];
     this.visibility = [];
     const datasets = [];
     const data = {};
     let labels = [];
     let colors = [];
-    if(!gtsList) {
+    if (!gtsList) {
       return;
     } else {
       gtsList = GTSLib.flattenGtsIdArray(gtsList, 0).res;
       gtsList = GTSLib.flatDeep(gtsList);
-      this.LOG.debug([ 'gtsToData', 'gtsList' ], gtsList);
+      this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels = new Array(gtsList.length);
       labels.push('Date');
       colors = [];
@@ -148,12 +148,12 @@ export class WarpViewChart {
         let label = GTSLib.serializeGtsMetadata(g);
         GTSLib.gtsSort(g);
         g.v.forEach(value => {
-          const ts = value[ 0 ];
-          if(!data[ ts ]) {
-            data[ ts ] = new Array(gtsList.length);
-            data[ ts ].fill(null);
+          const ts = value[0];
+          if (!data[ts]) {
+            data[ts] = new Array(gtsList.length);
+            data[ts].fill(null);
           }
-          data[ ts ][ i ] = value[ value.length - 1 ];
+          data[ts][i] = value[value.length - 1];
         });
         let color = ColorLib.getColor(g.id);
         labels.push(label);
@@ -161,21 +161,21 @@ export class WarpViewChart {
         this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
       });
     }
-    this.LOG.debug([ 'gtsToData', 'this.visibility' ], this.visibility);
+    this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
     labels = labels.filter((i) => !!i);
     Object.keys(data).forEach(timestamp => {
-      if(this._options.timeMode && this._options.timeMode === 'timestamp') {
-        datasets.push([ parseInt(timestamp) ].concat(data[ timestamp ].slice(0, labels.length - 1)));
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(parseInt(timestamp));
       } else {
         const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
-        datasets.push([ moment.utc(ts).toDate() ].concat(data[ timestamp ].slice(0, labels.length - 1)));
+        datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
         this.ticks.push(ts);
       }
     });
-   // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
-    this.LOG.debug([ 'gtsToData', 'datasets' ], [ datasets, labels, colors ]);
-    return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
+    // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
+    this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
+    return {datasets: datasets, labels: labels, colors: colors.slice(0, labels.length)};
   }
 
   private isStepped(): boolean {
@@ -189,23 +189,19 @@ export class WarpViewChart {
   private static toFixed(x: number): string {
     let e;
     let res = '';
-    if(Math.abs(x) < 1.0) {
-      e = parseInt(x.toString().split('e-')[ 1 ]);
-      if(e) {
-        x *= Math.pow(10, e - 1);
-        res = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
-      }
+    if (Number.isSafeInteger(x)) {
+      return x.toString();
     } else {
-      res = (Math.round(x * 100000000000000) / 100000000000000).toString();
-      e = parseInt(x.toString().split('+')[ 1 ]);
-        if(e > 20) {
-          e -= 20;
-          x /= Math.pow(10, e);
-          res = x.toString();
-          res += (new Array(e + 1)).join('0');
-        }
+      res = x.toString(); //Math.round(x * 100000000000000) / 100000000000000).toString();
+      e = parseInt(x.toString().split('+')[1]);
+      if (e > 20) {
+        e -= 20;
+        x /= Math.pow(10, e);
+        res = x.toString();
+        res += (new Array(e + 1)).join('0');
+      }
+      return res;
     }
-    return res;
   }
 
   /**
@@ -215,16 +211,16 @@ export class WarpViewChart {
    */
   private static formatLabel(data: string): string {
     const serializedGTS = data.split('{');
-    let display = `<span class='gts-classname'>${serializedGTS[ 0 ]}</span>`;
-    if(serializedGTS.length > 1) {
+    let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
+    if (serializedGTS.length > 1) {
       display += `<span class='gts-separator'>{</span>`;
-      const labels = serializedGTS[ 1 ].substr(0, serializedGTS[ 1 ].length - 1).split(',');
-      if(labels.length > 0) {
+      const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
+      if (labels.length > 0) {
         labels.forEach((l, i) => {
           const label = l.split('=');
-          if(l.length > 1) {
-            display += `<span><span class='gts-labelname'>${label[ 0 ]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[ 1 ]}</span>`;
-            if(i !== labels.length - 1) {
+          if (l.length > 1) {
+            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
               display += `<span>, </span>`;
             }
           }
@@ -232,15 +228,15 @@ export class WarpViewChart {
       }
       display += `<span class='gts-separator'>}</span>`;
     }
-    if(serializedGTS.length > 2) {
+    if (serializedGTS.length > 2) {
       display += `<span class='gts-separator'>{</span>`;
-      const labels = serializedGTS[ 2 ].substr(0, serializedGTS[ 2 ].length - 1).split(',');
-      if(labels.length > 0) {
+      const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
+      if (labels.length > 0) {
         labels.forEach((l, i) => {
           const label = l.split('=');
-          if(l.length > 1) {
-            display += `<span><span class='gts-attrname'>${label[ 0 ]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[ 1 ]}</span>`;
-            if(i !== labels.length - 1) {
+          if (l.length > 1) {
+            display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
+            if (i !== labels.length - 1) {
               display += `<span>, </span>`;
             }
           }
@@ -252,12 +248,12 @@ export class WarpViewChart {
   }
 
   private legendFormatter(data): string {
-    if(data.x === null) {
+    if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
-      return '<br>' + data.series.map(function(series) {
-        if(!series.isVisible) return;
+      return '<br>' + data.series.map(function (series) {
+        if (!series.isVisible) return;
         let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
-        if(series.isHighlighted) {
+        if (series.isHighlighted) {
           labeledData = `<b>${labeledData}</b>`;
         }
         return WarpViewChart.formatLabel(series.labelHTML) + ' ' + labeledData;
@@ -265,10 +261,10 @@ export class WarpViewChart {
     }
 
     let html = `<b>${data.xHTML}</b>`;
-    data.series.forEach(function(series) {
-      if(series.isVisible && series.yHTML) {
+    data.series.forEach(function (series) {
+      if (series.isVisible && series.yHTML) {
         let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
-        if(series.isHighlighted) {
+        if (series.isHighlighted) {
           labeledData = `<b>${labeledData}</b>`;
         }
         html += `<br>${series.dashHTML} ${labeledData}`;
@@ -287,20 +283,20 @@ export class WarpViewChart {
   }
 
   private scroll(event, g) {
-    if(!event.altKey) return;
-    this.LOG.debug([ 'scroll' ], g);
+    if (!event.altKey) return;
+    this.LOG.debug(['scroll'], g);
     const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
     // For me the normalized value shows 0.075 for one click. If I took
     // that verbatim, it would be a 7.5%.
     const percentage = normal / 50;
-    if(!(event.offsetX && event.offsetY)) {
+    if (!(event.offsetX && event.offsetY)) {
       event.offsetX = event.layerX - event.target.offsetLeft;
       event.offsetY = event.layerY - event.target.offsetTop;
     }
 
     const percentages = WarpViewChart.offsetToPercentage(g, event.offsetX, event.offsetY);
-    const xPct = percentages[ 0 ];
-    const yPct = percentages[ 1 ];
+    const xPct = percentages[0];
+    const yPct = percentages[1];
 
     WarpViewChart.zoom(g, percentage, xPct, yPct);
     event.preventDefault();
@@ -308,33 +304,33 @@ export class WarpViewChart {
 
   private static offsetToPercentage(g, offsetX, offsetY) {
     // This is calculating the pixel offset of the leftmost date.
-    const xOffset = g.toDomCoords(g.xAxisRange()[ 0 ], null)[ 0 ];
+    const xOffset = g.toDomCoords(g.xAxisRange()[0], null)[0];
     const yar0 = g.yAxisRange(0);
     // This is calculating the pixel of the higest value. (Top pixel)
-    const yOffset = g.toDomCoords(null, yar0[ 1 ])[ 1 ];
+    const yOffset = g.toDomCoords(null, yar0[1])[1];
     // x y w and h are relative to the corner of the drawing area,
     // so that the upper corner of the drawing area is (0, 0).
     const x = offsetX - xOffset;
     const y = offsetY - yOffset;
     // This is computing the rightmost pixel, effectively defining the
     // width.
-    const w = g.toDomCoords(g.xAxisRange()[ 1 ], null)[ 0 ] - xOffset;
+    const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset;
     // This is computing the lowest pixel, effectively defining the height.
-    const h = g.toDomCoords(null, yar0[ 0 ])[ 1 ] - yOffset;
+    const h = g.toDomCoords(null, yar0[0])[1] - yOffset;
     // Percentage from the left.
     const xPct = w === 0 ? 0 : (x / w);
     // Percentage from the top.
     const yPct = h === 0 ? 0 : (y / h);
     // The (1-) part below changes it from "% distance down from the top"
     // to "% distance up from the bottom".
-    return [ xPct, (1 - yPct) ];
+    return [xPct, (1 - yPct)];
   }
 
   private static adjustAxis(axis, zoomInPercentage, bias) {
-    const delta = axis[ 1 ] - axis[ 0 ];
+    const delta = axis[1] - axis[0];
     const increment = delta * zoomInPercentage;
-    const foo = [ increment * bias, increment * (1 - bias) ];
-    return [ axis[ 0 ] + foo[ 0 ], axis[ 1 ] - foo[ 1 ] ];
+    const foo = [increment * bias, increment * (1 - bias)];
+    return [axis[0] + foo[0], axis[1] - foo[1]];
   }
 
   private static zoom(g, zoomInPercentage, xBias, yBias) {
@@ -342,22 +338,22 @@ export class WarpViewChart {
     yBias = yBias || 0.5;
     const yAxes = g.yAxisRanges();
     const newYAxes = [];
-    for(let i = 0; i < yAxes.length; i++) {
-      newYAxes[ i ] = WarpViewChart.adjustAxis(yAxes[ i ], zoomInPercentage, yBias);
+    for (let i = 0; i < yAxes.length; i++) {
+      newYAxes[i] = WarpViewChart.adjustAxis(yAxes[i], zoomInPercentage, yBias);
     }
     g.updateOptions({
       dateWindow: WarpViewChart.adjustAxis(g.xAxisRange(), zoomInPercentage, xBias),
-      valueRange: newYAxes[ 0 ]
+      valueRange: newYAxes[0]
     });
   }
 
   private drawCallback(dygraph, is_initial) {
-    this.LOG.debug([ 'drawCallback' ], [ dygraph.dateWindow_, is_initial ]);
-    if(dygraph.dateWindow_) {
+    this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+    if (dygraph.dateWindow_) {
       this.boundsDidChange.emit({
         bounds: {
-          min: dygraph.dateWindow_[ 0 ],
-          max: dygraph.dateWindow_[ 1 ]
+          min: dygraph.dateWindow_[0],
+          max: dygraph.dateWindow_[1]
         }
       });
     } else {
@@ -371,16 +367,16 @@ export class WarpViewChart {
   }
 
   private drawChart() {
-    this.LOG.debug([ 'drawChart', 'this.data' ], [ this.data ]);
+    this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
 
     const dataToplot = this.gtsToData(dataList);
-    this.LOG.debug([ 'drawChart', 'dataToplot' ], dataToplot);
+    this.LOG.debug(['drawChart', 'dataToplot'], dataToplot);
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
-    if(dataToplot) {
+    if (dataToplot) {
       const color = this._options.gridLineColor;
       let interactionModel = Dygraph.defaultInteractionModel;
       interactionModel.mousewheel = this.scroll.bind(this);
@@ -421,11 +417,6 @@ export class WarpViewChart {
         axes: {
           x: {
             drawAxis: this.displayGraph(),
-          },
-          y: {
-            axisLabelFormatter: (y) => {
-              return WarpViewChart.toFixed(y as number);
-            }
           }
         },
         legendFormatter: this.legendFormatter,
@@ -435,12 +426,12 @@ export class WarpViewChart {
         rightGap: this.standalone ? 0 : 20,
         interactionModel: interactionModel
       };
-      if(!this.displayGraph()) {
+      if (!this.displayGraph()) {
         options.xAxisHeight = 30;
         options.rangeSelectorHeight = 30;
         chart.style.height = '30px';
       }
-      if(this._options.timeMode === 'timestamp') {
+      if (this._options.timeMode === 'timestamp') {
         options.axes.x.axisLabelFormatter = (x) => {
           return WarpViewChart.toFixed(x as number);
         }
@@ -451,7 +442,7 @@ export class WarpViewChart {
         options
       );
 
-      this.LOG.debug([ 'options.height' ], options.height);
+      this.LOG.debug(['options.height'], options.height);
       this.onResize();
     }
   }

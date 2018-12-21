@@ -618,6 +618,48 @@
       "shadow": true
     },
     {
+      "tag": "warp-view-gts-popup",
+      "dependencies": [],
+      "componentClass": "WarpViewGtsPopup",
+      "componentPath": "components/warp-view-gts-popup/warp-view-gts-popup.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-gts-popup/warp-view-gts-popup.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "gtsList",
+          "attr": "gts-list"
+        },
+        {
+          "name": "hiddenData",
+          "attr": "hidden-data"
+        },
+        {
+          "name": "maxToShow",
+          "type": "Number",
+          "attr": "max-to-show"
+        }
+      ],
+      "states": [
+        {
+          "name": "displayed"
+        },
+        {
+          "name": "show"
+        }
+      ],
+      "events": [
+        {
+          "event": "warpViewSelectedGTS"
+        }
+      ],
+      "shadow": true
+    },
+    {
       "tag": "warp-view-gts-tree",
       "dependencies": [
         "warp-view-tree-view"
@@ -1073,6 +1115,12 @@
         {
           "event": "boundsDidChange",
           "method": "boundsDidChange",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "document:keyup",
+          "method": "handleKeyDown",
           "passive": false,
           "capture": false
         },

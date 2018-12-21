@@ -14,17 +14,22 @@
  *  limitations under the License.
  *
  */
+:host .gts-classname {
+  color: var(--gts-classname-font-color, #0074D9); }
 
-:host {
-  .normal {
-    border-radius: 50%;
-    background-color: #bbbbbb;
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border: 2px solid #454545;
-    margin-top: auto;
-    margin-bottom: auto;
-    vertical-align: middle;
-  }
-}
+:host .gts-labelname {
+  color: var(--gts-labelname-font-color, #19A979); }
+
+:host .gts-attrname {
+  color: var(--gts-labelname-font-color, #ED4A7B); }
+
+:host .gts-separator {
+  color: var(--gts-separator-font-color, #bbbbbb); }
+
+:host .gts-labelvalue {
+  color: var(--gts-labelvalue-font-color, #AAAAAA);
+  font-style: italic; }
+
+:host .gts-attrvalue {
+  color: var(--gts-labelvalue-font-color, #AAAAAA);
+  font-style: italic; }

@@ -439,6 +439,44 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewGtsPopup {
+      'gtsList': DataModel;
+      'hiddenData': number[];
+      'maxToShow': number;
+    }
+  }
+
+  interface HTMLWarpViewGtsPopupElement extends StencilComponents.WarpViewGtsPopup, HTMLStencilElement {}
+
+  var HTMLWarpViewGtsPopupElement: {
+    prototype: HTMLWarpViewGtsPopupElement;
+    new (): HTMLWarpViewGtsPopupElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-gts-popup': HTMLWarpViewGtsPopupElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-gts-popup': HTMLWarpViewGtsPopupElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-gts-popup': JSXElements.WarpViewGtsPopupAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewGtsPopupAttributes extends HTMLAttributes {
+      'gtsList'?: DataModel;
+      'hiddenData'?: number[];
+      'maxToShow'?: number;
+      'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewChip {
       'gtsFilter': string;
       'name': string;

@@ -104,6 +104,35 @@ export class WarpViewPlot {
         this._timeMax = event.detail.bounds.max;
         this.line.style.left = '-100px';
     }
+    onResize(event) {
+        const div = this.el.shadowRoot.querySelector('#' + this.graphId);
+        this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
+        if (div) {
+            div.style.height = event.detail.h + 'px';
+        }
+    }
+    warpViewSelectedGTS(event) {
+        this.LOG.debug(['warpViewSelectedGTS'], event.detail);
+        if (!this._toHide.find(i => {
+            return i === event.detail.gts.id;
+        }) && !event.detail.selected) {
+            this._toHide.push(event.detail.gts.id);
+        }
+        else {
+            this._toHide = this._toHide.filter(i => {
+                return i !== event.detail.gts.id;
+            });
+        }
+        this.LOG.debug(['warp-viewSelectedGTS'], this._toHide);
+        this._toHide = this._toHide.slice();
+        this.drawCharts();
+    }
+    handleKeyDown(ev) {
+        if (ev.key === 'k' || ev.key === 'k') {
+            this.selectPrevGts();
+        }
+    }
+    selectPrevGts() { }
     handleMouseMove(evt) {
         this.line = this.el.shadowRoot.querySelector('div.bar');
         if (this.mouseOutTimer) {
@@ -130,29 +159,6 @@ export class WarpViewPlot {
                 this.line.style.display = 'none';
             }, 500);
         }
-    }
-    onResize(event) {
-        const div = this.el.shadowRoot.querySelector('#' + this.graphId);
-        this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
-        if (div) {
-            div.style.height = event.detail.h + 'px';
-        }
-    }
-    warpViewSelectedGTS(event) {
-        this.LOG.debug(['warpViewSelectedGTS'], event.detail);
-        if (!this._toHide.find(i => {
-            return i === event.detail.gts.id;
-        }) && !event.detail.selected) {
-            this._toHide.push(event.detail.gts.id);
-        }
-        else {
-            this._toHide = this._toHide.filter(i => {
-                return i !== event.detail.gts.id;
-            });
-        }
-        this.LOG.debug(['warp-viewSelectedGTS'], this._toHide);
-        this._toHide = this._toHide.slice();
-        this.drawCharts();
     }
     drawCharts() {
         this.LOG.debug(['drawCharts'], [this.data, this.options]);
@@ -265,6 +271,9 @@ export class WarpViewPlot {
         }, {
             "name": "warpViewSelectedGTS",
             "method": "warpViewSelectedGTS"
+        }, {
+            "name": "document:keyup",
+            "method": "handleKeyDown"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-plot:**/"; }
 }

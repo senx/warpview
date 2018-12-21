@@ -32,10 +32,12 @@ export declare class WarpViewPlot {
     private onOptions;
     stateChange(event: CustomEvent): void;
     boundsDidChange(event: CustomEvent): void;
-    private handleMouseMove;
-    private handleMouseOut;
     onResize(event: CustomEvent): void;
     warpViewSelectedGTS(event: CustomEvent): void;
+    handleKeyDown(ev: KeyboardEvent): void;
+    private selectPrevGts;
+    private handleMouseMove;
+    private handleMouseOut;
     private drawCharts;
     render(): JSX.Element;
 }
