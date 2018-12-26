@@ -184,6 +184,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChart {
       'data': DataModel | GTS[] | string;
+      'getTimeClip': () => number[];
       'hiddenData': number[];
       'options': Param;
       'responsive': boolean;
@@ -479,6 +480,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChip {
       'gtsFilter': string;
+      'hiddenData': number[];
       'name': string;
       'node': any;
     }
@@ -504,6 +506,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewChipAttributes extends HTMLAttributes {
       'gtsFilter'?: string;
+      'hiddenData'?: number[];
       'name'?: string;
       'node'?: any;
       'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
@@ -518,6 +521,7 @@ declare global {
     interface WarpViewGtsTree {
       'data': DataModel | DataModel[] | GTS[] | string;
       'gtsFilter': string;
+      'hiddenData': number[];
       'options': Param;
     }
   }
@@ -543,6 +547,7 @@ declare global {
     export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | DataModel[] | GTS[] | string;
       'gtsFilter'?: string;
+      'hiddenData'?: number[];
       'options'?: Param;
     }
   }
@@ -557,6 +562,7 @@ declare global {
       'gtsFilter': string;
       'gtsList': any[];
       'hidden': boolean;
+      'hiddenData': number[];
     }
   }
 
@@ -583,6 +589,7 @@ declare global {
       'gtsFilter'?: string;
       'gtsList'?: any[];
       'hidden'?: boolean;
+      'hiddenData'?: number[];
     }
   }
 }
@@ -726,6 +733,41 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewModal {
+      'close': () => void;
+      'open': () => void;
+      'title': string;
+    }
+  }
+
+  interface HTMLWarpViewModalElement extends StencilComponents.WarpViewModal, HTMLStencilElement {}
+
+  var HTMLWarpViewModalElement: {
+    prototype: HTMLWarpViewModalElement;
+    new (): HTMLWarpViewModalElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-modal': HTMLWarpViewModalElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-modal': HTMLWarpViewModalElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-modal': JSXElements.WarpViewModalAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewModalAttributes extends HTMLAttributes {
+      'title'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewPie {
       'data': DataModel | any[] | string;
       'height': string;
@@ -771,6 +813,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewPlot {
       'data': string | GTS[] | DataModel;
+      'getTimeClip': () => number[];
       'gtsFilter': string;
       'height': string;
       'options': string | Param;

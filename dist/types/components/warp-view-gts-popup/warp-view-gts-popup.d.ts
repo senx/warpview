@@ -6,9 +6,19 @@ export declare class WarpViewGtsPopup {
     maxToShow: number;
     hiddenData: number[];
     warpViewSelectedGTS: EventEmitter;
-    private show;
     private displayed;
-    private current;
+    current: number;
+    private _gts;
+    private chips;
+    private modal;
+    private LOG;
+    handleKeyDown(e: KeyboardEvent): boolean;
+    handleKeyUp(ev: KeyboardEvent): boolean;
+    private onHideData;
+    private onData;
+    private showPopup;
+    private prepareData;
+    private colorizeChips;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

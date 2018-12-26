@@ -135,7 +135,7 @@ var WarpViewGtsTreeComponent = /** @class **/ (function() {
   WarpViewGtsTree.is = 'warp-view-gts-tree';
   WarpViewGtsTree.getModule = function(opts) {
     
-    return import('./warp-view-chip.js').then(function(m) {
+    return import('./warp-view-gts-tree.js').then(function(m) {
         return m.WarpViewGtsTree;
       });
 
@@ -181,6 +181,19 @@ var WarpViewMapComponent = /** @class **/ (function() {
   }
 });
 
+var WarpViewModalComponent = /** @class **/ (function() {
+  function WarpViewModal() {
+  }
+  WarpViewModal.is = 'warp-view-modal';
+  WarpViewModal.getModule = function(opts) {
+    
+    return import('./warp-view-modal.js').then(function(m) {
+        return m.WarpViewModal;
+      });
+
+  }
+});
+
 var WarpViewPaginableComponent = /** @class **/ (function() {
   function WarpViewPaginable() {
   }
@@ -213,7 +226,7 @@ var WarpViewPlotComponent = /** @class **/ (function() {
   WarpViewPlot.is = 'warp-view-plot';
   WarpViewPlot.getModule = function(opts) {
     
-    return import('./warp-view-plot.js').then(function(m) {
+    return import('./warp-view-gts-popup.js').then(function(m) {
         return m.WarpViewPlot;
       });
 
@@ -291,7 +304,7 @@ var WarpViewToggleComponent = /** @class **/ (function() {
   WarpViewToggle.is = 'warp-view-toggle';
   WarpViewToggle.getModule = function(opts) {
     
-    return import('./warp-view-plot.js').then(function(m) {
+    return import('./warp-view-gts-popup.js').then(function(m) {
         return m.WarpViewToggle;
       });
 
@@ -304,7 +317,7 @@ var WarpViewTreeViewComponent = /** @class **/ (function() {
   WarpViewTreeView.is = 'warp-view-tree-view';
   WarpViewTreeView.getModule = function(opts) {
     
-    return import('./warp-view-chip.js').then(function(m) {
+    return import('./warp-view-gts-tree.js').then(function(m) {
         return m.WarpViewTreeView;
       });
 
@@ -327,6 +340,7 @@ export {
   WarpViewHeatmapSliders,
   WarpViewImage,
   WarpViewMap,
+  WarpViewModal,
   WarpViewPaginable,
   WarpViewPie,
   WarpViewPlot,

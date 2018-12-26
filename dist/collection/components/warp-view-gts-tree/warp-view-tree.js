@@ -23,15 +23,17 @@ export class WarpViewTreeView {
         this.branch = false;
         this.hidden = false;
         this.gtsFilter = '';
+        this.hiddenData = [];
         this.ref = false;
         this.hide = {};
+        this.LOG = new Logger(WarpViewTreeView);
     }
     // noinspection JSMethodCanBeStatic
     /**
      *
      */
     componentWillLoad() {
-        WarpViewTreeView.LOG.debug(['componentWillLoad'], Counter.item);
+        this.LOG.debug(['componentWillLoad'], Counter.item);
     }
     /**
      *
@@ -61,6 +63,10 @@ export class WarpViewTreeView {
             this.ref = !this.ref;
         }
     }
+    onHideData(newValue) {
+        this.LOG.debug(['hiddenData'], newValue);
+        this.ref = !this.ref;
+    }
     /**
      *
      * @param {number} index
@@ -80,7 +86,7 @@ export class WarpViewTreeView {
      */
     render() {
         return h("div", { class: "list" }, this.gtsList ? h("ul", null, this.gtsList.map((node, index) => (h("li", { hidden: this.hidden }, GTSLib.isGts(node)
-            ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter })
+            ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter, hiddenData: this.hiddenData })
             : h("span", null, node
                 ? h("div", null,
                     this.branch
@@ -131,10 +137,14 @@ export class WarpViewTreeView {
             "type": Boolean,
             "attr": "hidden"
         },
+        "hiddenData": {
+            "type": "Any",
+            "attr": "hidden-data",
+            "watchCallbacks": ["onHideData"]
+        },
         "ref": {
             "state": true
         }
     }; }
     static get style() { return "/**style-placeholder:warp-view-tree-view:**/"; }
 }
-WarpViewTreeView.LOG = new Logger(WarpViewTreeView);

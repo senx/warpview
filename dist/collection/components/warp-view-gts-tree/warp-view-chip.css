@@ -23,4 +23,25 @@
   border: 2px solid #454545;
   margin-top: auto;
   margin-bottom: auto;
-  vertical-align: middle; }
+  vertical-align: middle;
+  cursor: pointer; }
+
+:host .gts-classname {
+  color: var(--gts-classname-font-color, #0074D9); }
+
+:host .gts-labelname {
+  color: var(--gts-labelname-font-color, #19A979); }
+
+:host .gts-attrname {
+  color: var(--gts-labelname-font-color, #ED4A7B); }
+
+:host .gts-separator {
+  color: var(--gts-separator-font-color, #bbbbbb); }
+
+:host .gts-labelvalue {
+  color: var(--gts-labelvalue-font-color, #AAAAAA);
+  font-style: italic; }
+
+:host .gts-attrvalue {
+  color: var(--gts-labelvalue-font-color, #AAAAAA);
+  font-style: italic; }

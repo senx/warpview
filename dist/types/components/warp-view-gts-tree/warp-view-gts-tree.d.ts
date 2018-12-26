@@ -6,6 +6,7 @@ export declare class WarpViewGtsTree {
     data: DataModel | DataModel[] | GTS[] | string;
     gtsFilter: string;
     options: Param;
+    hiddenData: number[];
     hide: boolean;
     el: HTMLElement;
     private gtsList;
@@ -15,6 +16,7 @@ export declare class WarpViewGtsTree {
     onData(newValue: any, oldValue: any): void;
     private onOptions;
     private onGtsFilter;
+    private onHideData;
     /**
      *
      */

@@ -41,5 +41,14 @@
     justify-content: space-evenly;
     align-items: stretch;
     width: 100%; }
+  :host label {
+    display: inline-block; }
+  :host input {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5; }
   :host .annotation {
     max-width: 100%; }

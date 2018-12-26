@@ -38,6 +38,7 @@ export declare class WarpViewChart {
     private onHideData;
     private onData;
     private onOptions;
+    getTimeClip(): number[];
     private handleMouseOut;
     private gtsToData;
     private isStepped;

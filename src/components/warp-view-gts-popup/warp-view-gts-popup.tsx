@@ -55,7 +55,7 @@ export class WarpViewGtsPopup {
   handleKeyUp(ev: KeyboardEvent) {
     this.LOG.debug(['document:keyup'], ev);
     switch (ev.key) {
-      case 'k':
+      case 's':
         ev.preventDefault();
         this.showPopup();
         break;

@@ -359,6 +359,11 @@
           "capture": false
         }
       ],
+      "methods": [
+        {
+          "name": "getTimeClip"
+        }
+      ],
       "hostElement": {
         "name": "el"
       },
@@ -396,6 +401,13 @@
           ]
         },
         {
+          "name": "hiddenData",
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
+          ]
+        },
+        {
           "name": "name",
           "type": "String",
           "attr": "name"
@@ -406,6 +418,11 @@
           "attr": "node"
         }
       ],
+      "states": [
+        {
+          "name": "ref"
+        }
+      ],
       "listeners": [
         {
           "event": "document:keyup",
@@ -414,14 +431,12 @@
           "capture": false
         }
       ],
-      "hostElement": {
-        "name": "el"
-      },
       "events": [
         {
           "event": "warpViewSelectedGTS"
         }
-      ]
+      ],
+      "shadow": true
     },
     {
       "tag": "warp-view-datagrid",
@@ -619,7 +634,9 @@
     },
     {
       "tag": "warp-view-gts-popup",
-      "dependencies": [],
+      "dependencies": [
+        "warp-view-modal"
+      ],
       "componentClass": "WarpViewGtsPopup",
       "componentPath": "components/warp-view-gts-popup/warp-view-gts-popup.js",
       "styles": {
@@ -632,11 +649,17 @@
       "props": [
         {
           "name": "gtsList",
-          "attr": "gts-list"
+          "attr": "gts-list",
+          "watch": [
+            "onData"
+          ]
         },
         {
           "name": "hiddenData",
-          "attr": "hidden-data"
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
+          ]
         },
         {
           "name": "maxToShow",
@@ -646,10 +669,24 @@
       ],
       "states": [
         {
-          "name": "displayed"
+          "name": "current"
         },
         {
-          "name": "show"
+          "name": "displayed"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "document:keydown",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "document:keyup",
+          "method": "handleKeyUp",
+          "passive": false,
+          "capture": false
         }
       ],
       "events": [
@@ -688,6 +725,13 @@
           "attr": "gts-filter",
           "watch": [
             "onGtsFilter"
+          ]
+        },
+        {
+          "name": "hiddenData",
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
           ]
         },
         {
@@ -923,6 +967,52 @@
       "shadow": true
     },
     {
+      "tag": "warp-view-modal",
+      "dependencies": [],
+      "componentClass": "WarpViewModal",
+      "componentPath": "components/warp-view-modal/warp-view-modal.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/warp-view-modal/warp-view-modal.scss"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "title",
+          "type": "String",
+          "attr": "title"
+        }
+      ],
+      "listeners": [
+        {
+          "event": "document:keydown",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "document:keyup",
+          "method": "handleKeyUp",
+          "passive": false,
+          "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "close"
+        },
+        {
+          "name": "open"
+        }
+      ],
+      "hostElement": {
+        "name": "el"
+      },
+      "shadow": true
+    },
+    {
       "tag": "warp-view-paginable",
       "dependencies": [],
       "componentClass": "WarpViewPaginable",
@@ -1024,8 +1114,10 @@
       "dependencies": [
         "warp-view-annotation",
         "warp-view-chart",
+        "warp-view-gts-popup",
         "warp-view-gts-tree",
         "warp-view-map",
+        "warp-view-modal",
         "warp-view-toggle"
       ],
       "componentClass": "WarpViewPlot",
@@ -1049,6 +1141,7 @@
         {
           "name": "gtsFilter",
           "type": "String",
+          "mutable": true,
           "attr": "gts-filter",
           "watch": [
             "onGtsFilter"
@@ -1120,7 +1213,7 @@
         },
         {
           "event": "document:keyup",
-          "method": "handleKeyDown",
+          "method": "handleKeyUp",
           "passive": false,
           "capture": false
         },
@@ -1141,6 +1234,11 @@
           "method": "warpViewSelectedGTS",
           "passive": false,
           "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "getTimeClip"
         }
       ],
       "hostElement": {
@@ -1543,6 +1641,13 @@
           "name": "hidden",
           "type": "Boolean",
           "attr": "hidden"
+        },
+        {
+          "name": "hiddenData",
+          "attr": "hidden-data",
+          "watch": [
+            "onHideData"
+          ]
         }
       ],
       "states": [

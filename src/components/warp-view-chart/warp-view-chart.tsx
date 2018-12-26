@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import {Logger} from "../../utils/logger";
@@ -115,6 +115,12 @@ export class WarpViewChart {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
+  }
+
+  @Method()
+  public getTimeClip(): number[] {
+    this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
+    return this._chart.xAxisRange();
   }
 
   private handleMouseOut(evt: MouseEvent) {

@@ -21,6 +21,8 @@ import { Logger } from "../../utils/logger";
 export class WarpViewChip {
     constructor() {
         this.gtsFilter = '';
+        this.hiddenData = [];
+        this.ref = false;
         this._node = {
             selected: true,
             gts: GTS
@@ -34,6 +36,12 @@ export class WarpViewChip {
             }
         }
     }
+    onHideData(newValue) {
+        this.LOG.debug(['hiddenData'], newValue);
+        this._node = Object.assign({}, this._node, { selected: this.hiddenData.indexOf(this._node.gts.id) === -1, label: GTSLib.serializeGtsMetadata(this._node.gts) });
+        this.LOG.debug(['hiddenData'], this._node);
+        this.colorizeChip();
+    }
     handleKeyDown(ev) {
         if (ev.key === 'a') {
             this.setState(true);
@@ -43,26 +51,27 @@ export class WarpViewChip {
         }
     }
     colorizeChip() {
-        const chip = this.el.getElementsByClassName('normal')[0];
         if (this._node.selected) {
-            chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
-            chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
+            this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
+            this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
         }
         else {
-            chip.style.setProperty('background-color', '#eeeeee');
+            this.chip.style.setProperty('background-color', '#eeeeee');
         }
+        this.ref = !this.ref;
     }
     /**
      *
      */
     componentWillLoad() {
-        this._node = Object.assign({}, this.node, { selected: true });
+        this._node = Object.assign({}, this.node, { selected: this.hiddenData.indexOf(this.node.gts.id) === -1 });
     }
     /**
      *
      */
     componentDidLoad() {
-        if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+        if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+            || this.hiddenData.indexOf(this._node.gts.id) > -1) {
             this.setState(false);
         }
         this.colorizeChip();
@@ -113,7 +122,7 @@ export class WarpViewChip {
     render() {
         return h("div", null, this._node && this._node.gts && this._node.gts.l ?
             h("span", { onClick: (event) => this.switchPlotState(event) },
-                h("i", { class: "normal" }),
+                h("i", { class: "normal", ref: (el) => this.chip = el }),
                 h("span", { class: "gtsInfo" },
                     h("span", { class: 'gts-classname' },
                         "\u00A0 ",
@@ -138,14 +147,17 @@ export class WarpViewChip {
             : '');
     }
     static get is() { return "warp-view-chip"; }
+    static get encapsulation() { return "shadow"; }
     static get properties() { return {
-        "el": {
-            "elementRef": true
-        },
         "gtsFilter": {
             "type": String,
             "attr": "gts-filter",
             "watchCallbacks": ["onGtsFilter"]
+        },
+        "hiddenData": {
+            "type": "Any",
+            "attr": "hidden-data",
+            "watchCallbacks": ["onHideData"]
         },
         "name": {
             "type": String,
@@ -154,6 +166,9 @@ export class WarpViewChip {
         "node": {
             "type": "Any",
             "attr": "node"
+        },
+        "ref": {
+            "state": true
         }
     }; }
     static get events() { return [{

@@ -51,6 +51,19 @@
     width: 100%
   }
 
+  label {
+    display: inline-block;
+  }
+
+  input {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
   .annotation {
     max-width: 100%;
   }

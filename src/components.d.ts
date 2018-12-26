@@ -183,6 +183,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChart {
       'data': DataModel | GTS[] | string;
+      'getTimeClip': () => number[];
       'hiddenData': number[];
       'options': Param;
       'responsive': boolean;
@@ -811,6 +812,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewPlot {
       'data': string | GTS[] | DataModel;
+      'getTimeClip': () => number[];
       'gtsFilter': string;
       'height': string;
       'options': string | Param;

@@ -41,7 +41,8 @@ export class WarpViewChart {
         this._options = {
             timeMode: 'date',
             showRangeSelector: true,
-            gridLineColor: '#8e8e8e'
+            gridLineColor: '#8e8e8e',
+            showDots: false
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.ticks = [];
@@ -84,6 +85,10 @@ export class WarpViewChart {
             this.LOG.debug(['options'], newValue);
             this.drawChart();
         }
+    }
+    getTimeClip() {
+        this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
+        return this._chart.xAxisRange();
     }
     handleMouseOut(evt) {
         this.LOG.debug(['handleMouseOut'], evt);
@@ -421,6 +426,9 @@ export class WarpViewChart {
         },
         "el": {
             "elementRef": true
+        },
+        "getTimeClip": {
+            "method": true
         },
         "hiddenData": {
             "type": "Any",

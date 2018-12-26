@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Listen, Prop, State, Watch} from '@stencil/core'
+import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
@@ -23,6 +23,7 @@ import {GTS} from "../../model/GTS";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
 import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
+import {WarpViewChart} from "../warp-view-chart/warp-view-chart";
 
 @Component({
   tag: 'warp-view-plot',
@@ -59,8 +60,11 @@ export class WarpViewPlot {
   private chart: HTMLElement;
   private annotation: HTMLElement;
   private modal: WarpViewModal;
+  private timeClip: WarpViewModal;
+  private warpViewChart: WarpViewChart;
   private filterInput: HTMLInputElement;
   private mouseOutTimer: number;
+  private timeClipValue: string = '';
   private graphId = 'container-' + ChartLib.guid();
 
   componentDidLoad() {
@@ -69,6 +73,12 @@ export class WarpViewPlot {
     this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
     this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
     this.drawCharts();
+  }
+
+  @Method()
+  public getTimeClip(): number[] {
+    this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
+    return this.warpViewChart.getTimeClip();
   }
 
   @Watch('gtsFilter')
@@ -97,9 +107,18 @@ export class WarpViewPlot {
   @Listen('document:keyup')
   handleKeyUp(ev: KeyboardEvent) {
     this.LOG.debug(['document:keyup'], ev);
-    if(ev.key === 'f') {
+    if (ev.key === 'f') {
       this.modal.open();
     }
+    if (ev.key === 't') {
+     const tc = this.warpViewChart.getTimeClip();
+     this.timeClipValue = `${tc[0]} ISO8601 ${tc[1]} ISO8601 TIMECLIP`;
+     this.timeClip.open();
+    }
+  }
+
+  private getTimeClipValue(): string {
+    return this.timeClipValue;
   }
 
   @Listen('stateChange')
@@ -222,11 +241,14 @@ export class WarpViewPlot {
 
   render() {
     return <div>
-      <warp-view-modal title="GTS Filter" ref={(el: any) => {
+      <warp-view-modal title="TimeClip" ref={(el: any) => {
+        this.timeClip = el as WarpViewModal
+      }}><p>{this.getTimeClipValue()}</p></warp-view-modal>
+        <warp-view-modal title="GTS Filter" ref={(el: any) => {
         this.modal = el as WarpViewModal
       }}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input type="text" ref={(el) => this.filterInput = el as HTMLInputElement}/>
+        <input type="text" ref={(el) => this.filterInput = el as HTMLInputElement} value={this.gtsFilter}/>
         <button type="button" class={this._options.popupButtonValidateClass}
                 onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
@@ -257,6 +279,7 @@ export class WarpViewPlot {
         <div style={{width: '100%', height: '768px'}} id={this.graphId}>
           <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}/>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
+                           ref={(el: any) => this.warpViewChart = el}
                            hiddenData={this._toHide} type={this.chartType}
                            options={this._options}/>
         </div>

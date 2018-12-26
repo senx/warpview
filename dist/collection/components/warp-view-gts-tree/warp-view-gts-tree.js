@@ -22,6 +22,7 @@ export class WarpViewGtsTree {
     constructor() {
         this.gtsFilter = '';
         this.options = new Param();
+        this.hiddenData = [];
         this.hide = false;
         this.gtsList = [];
         this._options = new Param();
@@ -48,6 +49,10 @@ export class WarpViewGtsTree {
                 this.foldAll();
             }
         }
+    }
+    onHideData(newValue) {
+        this.LOG.debug(['hiddenData'], newValue);
+        this.doRender();
     }
     /**
      *
@@ -107,7 +112,7 @@ export class WarpViewGtsTree {
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
                     h("span", { class: "expanded", id: "root" }),
                     " Stack"),
-                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, gtsFilter: this.gtsFilter }))
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter }))
             : '';
     }
     static get is() { return "warp-view-gts-tree"; }
@@ -124,6 +129,11 @@ export class WarpViewGtsTree {
             "type": String,
             "attr": "gts-filter",
             "watchCallbacks": ["onGtsFilter"]
+        },
+        "hiddenData": {
+            "type": "Any",
+            "attr": "hidden-data",
+            "watchCallbacks": ["onHideData"]
         },
         "hide": {
             "state": true
@@ -151,6 +161,11 @@ export class Counter {
             "type": String,
             "attr": "gts-filter",
             "watchCallbacks": ["onGtsFilter"]
+        },
+        "hiddenData": {
+            "type": "Any",
+            "attr": "hidden-data",
+            "watchCallbacks": ["onHideData"]
         },
         "hide": {
             "state": true

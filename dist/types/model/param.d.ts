@@ -27,4 +27,6 @@ export declare class Param {
     timeUnit?: string;
     minColor?: string;
     maxColor?: string;
+    popupButtonValidateClass?: string;
+    popupButtonValidateLabel?: string;
 }
