@@ -207,20 +207,6 @@
           <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-main" role="tabpanel"
                  aria-labelledby="v-pills-1-tab">
-              <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
-                              height="800px"
-                              chart-title="Map">
-                1 50 <%
-                'i' STORE NEWGTS 'gts-' $i TOSTRING + RENAME
-                1 50 <%
-                NaN NaN NaN RAND ADDVALUE
-                %> FOR
-                %> FOR
-                STOP
-                @training/dataset0
-                [ $TOKEN '~warp.*' { } $NOW 1 d ] FETCH
-
-              </warp-view-tile>
               <h1>Warp View</h1>
               <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
                                                                               target="_blank">Warp 10™</a>
@@ -244,7 +230,7 @@
               </div>
             </div>
 
-       <!-- <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">
+       <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
@@ -646,7 +632,7 @@
                   </warp-view-tile>
                 </div>
               </div>
-            </div>-->
+            </div>
 
           </div>
         </div>
