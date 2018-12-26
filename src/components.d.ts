@@ -478,6 +478,7 @@ declare global {
   namespace StencilComponents {
     interface WarpViewChip {
       'gtsFilter': string;
+      'hiddenData': number[];
       'name': string;
       'node': any;
     }
@@ -503,6 +504,7 @@ declare global {
   namespace JSXElements {
     export interface WarpViewChipAttributes extends HTMLAttributes {
       'gtsFilter'?: string;
+      'hiddenData'?: number[];
       'name'?: string;
       'node'?: any;
       'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
@@ -517,6 +519,7 @@ declare global {
     interface WarpViewGtsTree {
       'data': DataModel | DataModel[] | GTS[] | string;
       'gtsFilter': string;
+      'hiddenData': number[];
       'options': Param;
     }
   }
@@ -542,6 +545,7 @@ declare global {
     export interface WarpViewGtsTreeAttributes extends HTMLAttributes {
       'data'?: DataModel | DataModel[] | GTS[] | string;
       'gtsFilter'?: string;
+      'hiddenData'?: number[];
       'options'?: Param;
     }
   }
@@ -556,6 +560,7 @@ declare global {
       'gtsFilter': string;
       'gtsList': any[];
       'hidden': boolean;
+      'hiddenData': number[];
     }
   }
 
@@ -582,6 +587,7 @@ declare global {
       'gtsFilter'?: string;
       'gtsList'?: any[];
       'hidden'?: boolean;
+      'hiddenData'?: number[];
     }
   }
 }

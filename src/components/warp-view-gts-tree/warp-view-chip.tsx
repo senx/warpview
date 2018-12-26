@@ -15,75 +15,90 @@
  *
  */
 
-import { Component, Element, Event, EventEmitter, Listen, Prop, Watch } from "@stencil/core";
-import { GTSLib } from "../../utils/gts.lib";
-import { ColorLib } from "../../utils/color-lib";
-import { GTS } from "../../model/GTS";
-import { Logger } from "../../utils/logger";
+import {Component, Event, EventEmitter, Listen, Prop, State, Watch} from "@stencil/core";
+import {GTSLib} from "../../utils/gts.lib";
+import {ColorLib} from "../../utils/color-lib";
+import {GTS} from "../../model/GTS";
+import {Logger} from "../../utils/logger";
 
 @Component({
   tag: 'warp-view-chip',
   styleUrls: [
     'warp-view-chip.scss'
-  ]
+  ],
+  shadow: true
 })
 export class WarpViewChip {
   @Prop() name: string;
   @Prop() node: any;
   @Prop() gtsFilter = '';
+  @Prop() hiddenData: number[] = [];
 
-  _node: any = {
-    selected: true,
-    gts: GTS
-  };
+  @State() ref = false;
 
   @Event() warpViewSelectedGTS: EventEmitter;
 
-  @Element() el: HTMLElement;
-
+  private chip: HTMLElement;
+  private _node: any = {
+    selected: true,
+    gts: GTS
+  };
   private LOG: Logger = new Logger(WarpViewChip);
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if(oldValue !== newValue) {
-      if(this.gtsFilter !== '') {
+    if (oldValue !== newValue) {
+      if (this.gtsFilter !== '') {
         this.setState(new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
       }
     }
   }
 
+  @Watch('hiddenData')
+  private onHideData(newValue: number[]) {
+    this.LOG.debug(['hiddenData'], newValue);
+    this._node = {
+      ...this._node,
+      selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
+      label: GTSLib.serializeGtsMetadata(this._node.gts)
+    };
+    this.LOG.debug(['hiddenData'], this._node);
+    this.colorizeChip();
+  }
+
   @Listen('document:keyup')
   handleKeyDown(ev: KeyboardEvent) {
-    if(ev.key === 'a') {
+    if (ev.key === 'a') {
       this.setState(true);
     }
-    if(ev.key === 'n') {
+    if (ev.key === 'n') {
       this.setState(false);
     }
   }
 
   private colorizeChip() {
-    const chip: HTMLElement = this.el.getElementsByClassName('normal')[ 0 ] as HTMLElement;
-    if(this._node.selected) {
-      chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
-      chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
+    if (this._node.selected) {
+      this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
+      this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
     } else {
-      chip.style.setProperty('background-color', '#eeeeee');
+      this.chip.style.setProperty('background-color', '#eeeeee');
     }
+    this.ref = !this.ref;
   }
 
   /**
    *
    */
   componentWillLoad() {
-    this._node = { ...this.node, selected: true };
+    this._node = {...this.node, selected: this.hiddenData.indexOf(this.node.gts.id) === -1};
   }
 
   /**
    *
    */
   componentDidLoad() {
-    if(this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))) {
+    if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+      || this.hiddenData.indexOf(this._node.gts.id) > -1) {
       this.setState(false);
     }
     this.colorizeChip();
@@ -108,13 +123,13 @@ export class WarpViewChip {
    * @private
    */
   private toArray(obj) {
-    if(obj === undefined) {
+    if (obj === undefined) {
       return [];
     }
-    return Object.keys(obj).map(function(key) {
+    return Object.keys(obj).map(function (key) {
       return {
         name: key,
-        value: obj[ key ],
+        value: obj[key],
       };
     });
   }
@@ -135,7 +150,7 @@ export class WarpViewChip {
       selected: state,
       label: GTSLib.serializeGtsMetadata(this._node.gts)
     };
-    this.LOG.debug([ 'switchPlotState' ], this._node);
+    this.LOG.debug(['switchPlotState'], this._node);
     this.colorizeChip();
     this.warpViewSelectedGTS.emit(this._node);
   }
@@ -143,7 +158,8 @@ export class WarpViewChip {
   render() {
     return <div>
       {this._node && this._node.gts && this._node.gts.l ?
-        <span onClick={(event: UIEvent) => this.switchPlotState(event)}><i class="normal"/>
+        <span onClick={(event: UIEvent) => this.switchPlotState(event)}>
+          <i class="normal" ref={(el) => this.chip = el as HTMLInputElement}/>
             <span class="gtsInfo">
           <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>

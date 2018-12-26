@@ -36,40 +36,60 @@ export class WarpViewGtsPopup {
 
   @State() private show: boolean = false;
   @State() private displayed: any[] = [];
-
-  private LOG: Logger = new Logger(WarpViewGtsPopup);
   @State() current: number = 0;
 
-  @Listen('document:keyup')
-  handleKeyDown(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keyup'], ev);
-    if (ev.key === 'k') {
-      this.showPopup();
-    }
-    if (ev.key === 'ArrowUp') {
-      ev.preventDefault();
-      this.current = Math.max(0, this.current - 1);
+
+  private _gts: any[] = [];
+  private chips: HTMLElement[] = [];
+  private LOG: Logger = new Logger(WarpViewGtsPopup);
+
+  @Listen('document:keydown')
+  handleKeyDown(e: KeyboardEvent) {
+    if (['ArrowUp', 'ArrowDown', 'Escape', ' '].indexOf(e.key) > -1) {
+      e.preventDefault();
       return false;
-    }
-    if (ev.key === 'ArrowDown') {
-      ev.preventDefault();
-      this.current = Math.min(this.displayed.length - 1, this.current + 1);
-    }
-    if (ev.key === 'Escape') {
-      ev.preventDefault();
-      this.show = false;
-    }
-    if (ev.key === ' ') {
-      this.warpViewSelectedGTS.emit()
     }
   }
 
-  @Watch('hiddenData')
-  private onHideData(newValue: number[], oldValue: number[]) {
-    if (oldValue.length !== newValue.length) {
-      this.LOG.debug(['hiddenData'], newValue);
-      this.prepareData();
+  @Listen('document:keyup')
+  handleKeyUp(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keyup'], ev);
+    switch (ev.key) {
+      case 'k':
+        ev.preventDefault();
+        this.showPopup();
+        break;
+      case'ArrowUp':
+        ev.preventDefault();
+        this.current = Math.max(0, this.current - 1);
+        this.prepareData();
+        break;
+      case 'ArrowDown':
+        ev.preventDefault();
+        this.current = Math.min(this._gts.length - 1, this.current + 1);
+        this.prepareData();
+        break;
+      case ' ':
+        ev.preventDefault();
+        this.warpViewSelectedGTS.emit({
+          gts: this.displayed[this.current],
+          selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
+        });
+        break;
+      case 'Escape':
+        this.show = false;
+        break;
+      default:
+        return true;
     }
+    return false;
+  }
+
+  @Watch('hiddenData')
+  private onHideData(newValue: number[]) {
+    this.LOG.debug(['hiddenData'], newValue);
+    this.prepareData();
+    this.colorizeChips();
   }
 
   @Watch('gtsList')
@@ -88,11 +108,24 @@ export class WarpViewGtsPopup {
 
   private prepareData() {
     if (this.gtsList) {
-      const bottom = Math.max(0, this.current - Math.ceil(this.maxToShow / 2));
-      const gts = GTSLib.flatDeep([this.gtsList.data]); //.filter(g => this.hiddenData.filter((h) => h === g.id).length === 0);
-      this.displayed = gts.slice(bottom, Math.min(gts.length, bottom + this.maxToShow)) as any[];
-      this.LOG.debug(['prepareData'], bottom, this.displayed)
+      this._gts = GTSLib.flatDeep([this.gtsList.data]);
+      this.displayed = this._gts.slice(
+        Math.max(0, Math.min(this.current - this.maxToShow, this._gts.length - 2 * this.maxToShow)),
+        Math.min(this._gts.length, this.current + this.maxToShow + Math.abs(Math.min(this.current - this.maxToShow, 0)))
+      ) as any[];
+      this.LOG.debug(['prepareData'], this.displayed)
     }
+  }
+
+  private colorizeChips() {
+    this.chips.map((chip, index) => {
+      if (this.hiddenData.indexOf(this.displayed[index].id) === -1) {
+        chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this.displayed[index].id)));
+        chip.style.setProperty('border-color', ColorLib.getColor(this.displayed[index].id));
+      } else {
+        chip.style.setProperty('background-color', '#eeeeee');
+      }
+    });
   }
 
   componentDidLoad() {
@@ -103,18 +136,31 @@ export class WarpViewGtsPopup {
     return <div>{
       this.show
         ? <div class="popup">
-          <ul>
-            {this.displayed.map((gts, index) =>
-              <li class={this.current === index ? 'selected' : ''}>
-                <div class="round"
-                     style={{
-                       'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                       'border-color': ColorLib.getColor(gts.id)
-                     }}></div>
-                <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}></span>
-              </li>
-            )}
-          </ul>
+          <div class="header">
+            <div class="close" onClick={() => {
+              this.show = false
+            }}>&times;</div>
+          </div>
+          <div class="body">
+            {this.current > 0 ? <div class="up-arrow"/> : ''}
+            <ul>
+              {this._gts.map((gts, index) =>
+                this.displayed.find(g => g.id === gts.id)
+                  ? <li class={this.current === index ? 'selected' : ''}>
+                    <div class="round"
+                         ref={(el) => this.chips[index] = el as HTMLInputElement}
+                         style={{
+                           'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
+                           'border-color': ColorLib.getColor(gts.id)
+                         }}/>
+                    <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
+                  </li>
+
+                  : ''
+              )}
+            </ul>
+            {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
+          </div>
         </div>
         : ''
     }</div>

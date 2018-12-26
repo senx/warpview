@@ -15,35 +15,36 @@
  *
  */
 
-import { Component, Element, Prop, State, Watch } from "@stencil/core";
-import { GTSLib } from "../../utils/gts.lib";
-import { Counter } from "./warp-view-gts-tree";
-import { Logger } from "../../utils/logger";
-import { ChartLib } from "../../utils/chart-lib";
+import {Component, Element, Prop, State, Watch} from "@stencil/core";
+import {GTSLib} from "../../utils/gts.lib";
+import {Counter} from "./warp-view-gts-tree";
+import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-tree-view",
-  styleUrls: [ "warp-view-tree.scss" ]
+  styleUrls: ["warp-view-tree.scss"]
 })
 export class WarpViewTreeView {
   @Prop() gtsList: any[];
   @Prop() branch = false;
   @Prop() hidden = false;
   @Prop() gtsFilter = '';
+  @Prop() hiddenData: number[] = [];
 
   @State() ref = false;
 
   @Element() el: HTMLElement;
 
-  hide: any = {};
-  private static LOG: Logger = new Logger(WarpViewTreeView);
+  private hide: any = {};
+  private LOG: Logger = new Logger(WarpViewTreeView);
 
   // noinspection JSMethodCanBeStatic
   /**
    *
    */
   componentWillLoad() {
-    WarpViewTreeView.LOG.debug([ 'componentWillLoad' ], Counter.item);
+    this.LOG.debug(['componentWillLoad'], Counter.item);
   }
 
   /**
@@ -53,26 +54,32 @@ export class WarpViewTreeView {
    */
   toggleVisibility(event: UIEvent, index: number) {
     let el: HTMLElement;
-    if((event.currentTarget as HTMLElement).id) {
+    if ((event.currentTarget as HTMLElement).id) {
       el = event.currentTarget as HTMLElement;
     } else {
       el = (event.currentTarget as HTMLElement).previousElementSibling as HTMLElement;
     }
-    if(el.className === 'expanded') {
+    if (el.className === 'expanded') {
       el.className = 'collapsed';
-      this.hide[ index + '' ] = true;
+      this.hide[index + ''] = true;
     } else {
       el.className = 'expanded';
-      this.hide[ index + '' ] = false;
+      this.hide[index + ''] = false;
     }
     this.ref = !this.ref;
   }
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if(oldValue !== newValue) {
+    if (oldValue !== newValue) {
       this.ref = !this.ref;
     }
+  }
+
+  @Watch('hiddenData')
+  private onHideData(newValue: number[]) {
+    this.LOG.debug(['hiddenData'], newValue);
+    this.ref = !this.ref;
   }
 
   /**
@@ -81,8 +88,8 @@ export class WarpViewTreeView {
    * @returns boolean
    */
   isHidden(index: number) {
-    if(this.hide.hasOwnProperty(index + '')) {
-      return this.hide[ index + '' ];
+    if (this.hide.hasOwnProperty(index + '')) {
+      return this.hide[index + ''];
     } else {
       return false;
     }
@@ -98,7 +105,8 @@ export class WarpViewTreeView {
         {this.gtsList.map((node, index) => (
           <li hidden={this.hidden}>
             {GTSLib.isGts(node)
-              ? <warp-view-chip node={{ gts: node }} name={node.c} gtsFilter={this.gtsFilter}/>
+              ? <warp-view-chip node={{gts: node}} name={node.c} gtsFilter={this.gtsFilter}
+                                hiddenData={this.hiddenData}/>
               : <span>{node
                 ? <div>{this.branch
                   ? <div>

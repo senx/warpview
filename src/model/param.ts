@@ -39,7 +39,7 @@ export class Param {
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string;
-  showDots?: boolean = true;
+  showDots?: boolean = false;
   timeUnit?: string = 'us';
   minColor?: string;
   maxColor?: string;

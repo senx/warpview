@@ -63,7 +63,8 @@ export class WarpViewChart {
   private _options: Param = {
     timeMode: 'date',
     showRangeSelector: true,
-    gridLineColor: '#8e8e8e'
+    gridLineColor: '#8e8e8e',
+    showDots: false
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private ticks = [];
