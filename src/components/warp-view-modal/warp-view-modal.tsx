@@ -15,9 +15,7 @@
  *
  */
 
-import {Component, Element, Listen, Method, Prop, State} from "@stencil/core";
-import {ColorLib} from "../../utils/color-lib";
-import {GTSLib} from "../../utils/gts.lib";
+import {Component, Element, Listen, Method, Prop} from "@stencil/core";
 
 @Component({
   tag: 'warp-view-modal',
