@@ -731,6 +731,41 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface WarpViewModal {
+      'close': () => void;
+      'open': () => void;
+      'title': string;
+    }
+  }
+
+  interface HTMLWarpViewModalElement extends StencilComponents.WarpViewModal, HTMLStencilElement {}
+
+  var HTMLWarpViewModalElement: {
+    prototype: HTMLWarpViewModalElement;
+    new (): HTMLWarpViewModalElement;
+  };
+  interface HTMLElementTagNameMap {
+    'warp-view-modal': HTMLWarpViewModalElement;
+  }
+  interface ElementTagNameMap {
+    'warp-view-modal': HTMLWarpViewModalElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'warp-view-modal': JSXElements.WarpViewModalAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface WarpViewModalAttributes extends HTMLAttributes {
+      'title'?: string;
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface WarpViewPie {
       'data': DataModel | any[] | string;
       'height': string;

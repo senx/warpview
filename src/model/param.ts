@@ -43,4 +43,6 @@ export class Param {
   timeUnit?: string = 'us';
   minColor?: string;
   maxColor?: string;
+  popupButtonValidateClass?: string;
+  popupButtonValidateLabel?: string;
 }

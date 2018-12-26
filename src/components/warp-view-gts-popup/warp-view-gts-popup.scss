@@ -17,75 +17,47 @@
 
 :host {
 
-  .popup {
+
+  ul {
+    list-style: none;
+    position: relative;
+
+    li {
+      line-height: 1.5em;
+      padding-left: 10px;
+      margin-right: 20px;
+
+      &.selected {
+        background-color: var(--warpview-popup-selected-bg-color, #ddd);
+      }
+    }
+  }
+
+  .down-arrow {
     position: absolute;
-    width: 50%;
-    height: auto;
-    background-color: var(--warpview-popup-bg-color, white);
-    border: 1px solid var(--warpview-popup-border-color, black);
-    top: 25%;
-    left: 25%;
-    z-index: 999999;
+    bottom: 2px;
+    left: 2px;
+    width: 35px;
+    height: 35px;
+    background-image: var(--warpview-popup-arrow-icon, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==));
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
 
-    .header {
-      width: 100%;
-      background-color: var(--warpview-popup-selected-bg-color, #ddd);
-      padding: 0;
-
-      .close {
-        text-align: right;
-        margin-right: 5px;
-        cursor: pointer;
-        color: var(--warpview-popup-close-color, #888);
-      }
-    }
-
-    .body {
-      position: relative;
-      height: auto;
-      ul {
-        list-style: none;
-        position: relative;
-
-        li {
-          line-height: 1.5em;
-          padding-left: 10px;
-          margin-right: 20px;
-
-          &.selected {
-            background-color: var(--warpview-popup-selected-bg-color, #ddd);
-          }
-        }
-      }
-    }
-
-    .down-arrow {
-      position: absolute;
-      bottom: 2px;
-      left: 2px;
-      width: 35px;
-      height: 35px;
-      background-image: var(--warpview-popup-arrow-icon, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==));
-      background-position: center center;
-      background-repeat: no-repeat;
-    }
-
-    .up-arrow {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 35px;
-      height: 35px;
-      background-image: var(--warpview-popup-arrow-icon, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==));
-      -webkit-transform: rotate(180deg);
-      -moz-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-      -o-transform: rotate(180deg);
-      transform: rotate(180deg);
-      background-repeat: no-repeat;
-      background-position: center center;
-    }
-
+  .up-arrow {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 35px;
+    height: 35px;
+    background-image: var(--warpview-popup-arrow-icon, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==));
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+    background-repeat: no-repeat;
+    background-position: center center;
   }
 
   .gts-classname {
@@ -127,4 +99,5 @@
     vertical-align: middle;
     margin-right: 5px;
   }
+
 }

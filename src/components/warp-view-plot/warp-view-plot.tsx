@@ -22,6 +22,7 @@ import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
+import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
 
 @Component({
   tag: 'warp-view-plot',
@@ -37,7 +38,7 @@ export class WarpViewPlot {
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
-  @Prop() gtsFilter = '';
+  @Prop({mutable: true}) gtsFilter = '';
 
   @State() private _options: Param = {
     showControls: true,
@@ -57,6 +58,8 @@ export class WarpViewPlot {
   private main: HTMLElement;
   private chart: HTMLElement;
   private annotation: HTMLElement;
+  private modal: WarpViewModal;
+  private filterInput: HTMLInputElement;
   private mouseOutTimer: number;
   private graphId = 'container-' + ChartLib.guid();
 
@@ -88,6 +91,14 @@ export class WarpViewPlot {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
       this.drawCharts();
+    }
+  }
+
+  @Listen('document:keyup')
+  handleKeyUp(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keyup'], ev);
+    if(ev.key === 'f') {
+      this.modal.open();
     }
   }
 
@@ -204,8 +215,22 @@ export class WarpViewPlot {
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 
+  private applyFilter() {
+    this.gtsFilter = this.filterInput.value;
+    this.modal.close();
+  }
+
   render() {
     return <div>
+      <warp-view-modal title="GTS Filter" ref={(el: any) => {
+        this.modal = el as WarpViewModal
+      }}>
+        <label>Enter a regular expression to filter GTS.</label>
+        <input type="text" ref={(el) => this.filterInput = el as HTMLInputElement}/>
+        <button type="button" class={this._options.popupButtonValidateClass}
+                onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
+        </button>
+      </warp-view-modal>
       {this._options.showControls
         ? <div class="inline">
           <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"/>

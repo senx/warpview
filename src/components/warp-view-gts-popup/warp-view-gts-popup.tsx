@@ -21,6 +21,7 @@ import {ColorLib} from "../../utils/color-lib";
 import {GTSLib} from "../../utils/gts.lib";
 import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
+import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
 
 @Component({
   tag: 'warp-view-gts-popup',
@@ -33,19 +34,18 @@ export class WarpViewGtsPopup {
   @Prop() hiddenData: number[] = [];
 
   @Event() warpViewSelectedGTS: EventEmitter;
-
-  @State() private show: boolean = false;
   @State() private displayed: any[] = [];
   @State() current: number = 0;
 
 
   private _gts: any[] = [];
   private chips: HTMLElement[] = [];
+  private modal: WarpViewModal;
   private LOG: Logger = new Logger(WarpViewGtsPopup);
 
   @Listen('document:keydown')
   handleKeyDown(e: KeyboardEvent) {
-    if (['ArrowUp', 'ArrowDown', 'Escape', ' '].indexOf(e.key) > -1) {
+    if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
       e.preventDefault();
       return false;
     }
@@ -76,9 +76,6 @@ export class WarpViewGtsPopup {
           selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
         });
         break;
-      case 'Escape':
-        this.show = false;
-        break;
       default:
         return true;
     }
@@ -103,7 +100,7 @@ export class WarpViewGtsPopup {
   private showPopup() {
     this.current = 0;
     this.prepareData();
-    this.show = true;
+    this.modal.open();
   }
 
   private prepareData() {
@@ -133,36 +130,27 @@ export class WarpViewGtsPopup {
   }
 
   render() {
-    return <div>{
-      this.show
-        ? <div class="popup">
-          <div class="header">
-            <div class="close" onClick={() => {
-              this.show = false
-            }}>&times;</div>
-          </div>
-          <div class="body">
-            {this.current > 0 ? <div class="up-arrow"/> : ''}
-            <ul>
-              {this._gts.map((gts, index) =>
-                this.displayed.find(g => g.id === gts.id)
-                  ? <li class={this.current === index ? 'selected' : ''}>
-                    <div class="round"
-                         ref={(el) => this.chips[index] = el as HTMLInputElement}
-                         style={{
-                           'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                           'border-color': ColorLib.getColor(gts.id)
-                         }}/>
-                    <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
-                  </li>
+    return<warp-view-modal title="GTS Selector" ref={(el: any) => {
+          this.modal = el as WarpViewModal
+        }}>
+          {this.current > 0 ? <div class="up-arrow"/> : ''}
+          <ul>
+            {this._gts.map((gts, index) =>
+              this.displayed.find(g => g.id === gts.id)
+                ? <li class={this.current === index ? 'selected' : ''}>
+                  <div class="round"
+                       ref={(el: HTMLElement) => this.chips[index] = el}
+                       style={{
+                         'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
+                         'border-color': ColorLib.getColor(gts.id)
+                       }}/>
+                  <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
+                </li>
 
-                  : ''
-              )}
-            </ul>
-            {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
-          </div>
-        </div>
-        : ''
-    }</div>
+                : ''
+            )}
+          </ul>
+          {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
+        </warp-view-modal>
   }
 }
