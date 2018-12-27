@@ -734,8 +734,8 @@ declare global {
   namespace StencilComponents {
     interface WarpViewModal {
       'close': () => void;
+      'modalTitle': string;
       'open': () => void;
-      'title': string;
     }
   }
 
@@ -758,7 +758,7 @@ declare global {
   }
   namespace JSXElements {
     export interface WarpViewModalAttributes extends HTMLAttributes {
-      'title'?: string;
+      'modalTitle'?: string;
     }
   }
 }

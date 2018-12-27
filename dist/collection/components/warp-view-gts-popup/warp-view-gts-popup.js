@@ -106,13 +106,15 @@ export class WarpViewGtsPopup {
                 this.modal = el;
             } },
             this.current > 0 ? h("div", { class: "up-arrow" }) : '',
-            h("ul", null, this._gts.map((gts, index) => this.displayed.find(g => g.id === gts.id)
-                ? h("li", { class: this.current === index ? 'selected' : '' },
-                    h("div", { class: "round", ref: (el) => this.chips[index] = el, style: {
-                            'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                            'border-color': ColorLib.getColor(gts.id)
-                        } }),
-                    h("span", { innerHTML: GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts)) }))
+            h("ul", null, this._gts.map((gts, index) => gts
+                ? this.displayed.find(g => g.id === gts.id)
+                    ? h("li", { class: this.current === index ? 'selected' : '' },
+                        h("div", { class: "round", ref: (el) => this.chips[index] = el, style: {
+                                'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
+                                'border-color': ColorLib.getColor(gts.id)
+                            } }),
+                        h("span", { innerHTML: GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts)) }))
+                    : ''
                 : '')),
             this.current < this._gts.length - 1 ? h("div", { class: "down-arrow" }) : '');
     }

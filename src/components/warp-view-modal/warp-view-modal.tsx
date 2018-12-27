@@ -24,7 +24,7 @@ import {Component, Element, Listen, Method, Prop} from "@stencil/core";
 })
 export class WarpViewModal {
 
-  @Prop() title: string = '';
+  @Prop() modalTitle: string = '';
   @Element() el: HTMLElement;
 
   @Method()
@@ -57,13 +57,17 @@ export class WarpViewModal {
   }
 
   componentDidLoad() {
-    this.el.addEventListener('click', () => this.close());
+    this.el.addEventListener('click', (event: any) => {
+      if (event.path[0].nodeName === 'WARP-VIEW-MODAL') {
+        this.close()
+      }
+    });
   }
 
   render() {
     return <div class="popup">
       <div class="header">
-        <div class="title" innerHTML={this.title}/>
+        <div class="title" innerHTML={this.modalTitle}/>
         <div class="close" onClick={() => this.close()}>&times;</div>
       </div>
       <div class="body">

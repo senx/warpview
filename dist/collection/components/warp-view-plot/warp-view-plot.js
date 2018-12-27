@@ -36,8 +36,8 @@ export class WarpViewPlot {
         this.showChart = true;
         this.showMap = false;
         this.chartType = 'line';
-        this.LOG = new Logger(WarpViewPlot);
         this.timeClipValue = '';
+        this.LOG = new Logger(WarpViewPlot);
         this.graphId = 'container-' + ChartLib.guid();
     }
     componentDidLoad() {
@@ -70,17 +70,19 @@ export class WarpViewPlot {
     }
     handleKeyUp(ev) {
         this.LOG.debug(['document:keyup'], ev);
-        if (ev.key === 'f') {
+        ev.preventDefault();
+        if (ev.key === '/') {
             this.modal.open();
+            this.filterInput.focus();
+            this.filterInput.select();
         }
         if (ev.key === 't') {
             const tc = this.warpViewChart.getTimeClip();
-            this.timeClipValue = `${tc[0]} ISO8601 ${tc[1]} ISO8601 TIMECLIP`;
+            this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+            this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
             this.timeClip.open();
         }
-    }
-    getTimeClipValue() {
-        return this.timeClipValue;
+        return false;
     }
     stateChange(event) {
         this.LOG.debug(['stateChange'], event.detail);
@@ -185,6 +187,8 @@ export class WarpViewPlot {
             opts = this.options;
         }
         this._options = ChartLib.mergeDeep(this._options, opts);
+        this.timeClip.close();
+        this.modal.close();
         this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
     }
     applyFilter() {
@@ -193,11 +197,12 @@ export class WarpViewPlot {
     }
     render() {
         return h("div", null,
-            h("warp-view-modal", { title: "TimeClip", ref: (el) => {
+            h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => {
                     this.timeClip = el;
                 } },
-                h("p", null, this.getTimeClipValue())),
-            h("warp-view-modal", { title: "GTS Filter", ref: (el) => {
+                h("pre", null,
+                    h("code", { ref: (el) => this.timeClipElement = el, innerHTML: this.timeClipValue }))),
+            h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => {
                     this.modal = el;
                 } },
                 h("label", null, "Enter a regular expression to filter GTS."),
@@ -283,6 +288,9 @@ export class WarpViewPlot {
             "attr": "show-legend"
         },
         "showMap": {
+            "state": true
+        },
+        "timeClipValue": {
             "state": true
         },
         "width": {

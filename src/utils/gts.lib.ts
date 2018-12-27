@@ -17,8 +17,10 @@
 
 import { DataModel } from "../model/dataModel";
 import { GTS } from "../model/GTS";
+import {Logger} from "./logger";
 
 export class GTSLib {
+  private static LOG: Logger = new Logger(GTSLib);
 
   /**
    *
@@ -59,11 +61,11 @@ export class GTSLib {
     try {
       response = JSON.parse(data);
     } catch(e) {
-      console.error('Response non JSON compliant', data);
+      this.LOG.error(['isValidResponse'], 'Response non JSON compliant', data);
       return false;
     }
     if(!GTSLib.isArray(response)) {
-      console.error('Response isn\'t an Array', response);
+      this.LOG.error(['isValidResponse'], 'Response isn\'t an Array', response);
       return false;
     }
     return true;
@@ -239,14 +241,11 @@ export class GTSLib {
    */
   static flattenGtsIdArray(a: any[], r: number): { res: any[], r: number } {
     const res = [];
-    console.log('flattenGtsIdArray', a, r);
     if(GTSLib.isGts(a)) {
       a = [ a ];
     }
     a.forEach(d => {
-      console.log('flattenGtsIdArray a.forEach', d, r);
       if(GTSLib.isArray(d)) {
-        console.log('flattenGtsIdArray d isArray');
         const walk = GTSLib.flattenGtsIdArray(d, r);
         res.push(walk.res);
         r = walk.r;
@@ -255,9 +254,7 @@ export class GTSLib {
         res.push(d);
         r++;
       }
-      console.log('flattenGtsIdArray res r', res, r);
     });
-    console.log('flattenGtsIdArray res', res);
     return { res: res, r: r };
   }
 
@@ -324,7 +321,7 @@ export class GTSLib {
   static equalMetadata(a, b) {
     if(a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
       !(a.l instanceof Object) || !(b.l instanceof Object)) {
-      console.error('[warp10-gts-tools] equalMetadata - Error in GTS, metadata is not well formed');
+      this.LOG.error(['equalMetadata'], 'Error in GTS, metadata is not well formed');
       return false;
     }
     if(a.c !== b.c) {
@@ -364,7 +361,6 @@ export class GTSLib {
     // if it's a number it's a GTS to plot
     for(let i = 0; i < gts.v.length; i++) {
       if(gts.v[ i ][ gts.v[ i ].length - 1 ] !== null) {
-        // console.log("[warp10-gts-tools] isGtsToPlot - First value type", gts.v[i][gts.v[i].length - 1] );
         // noinspection JSPotentiallyInvalidConstructorUsage
         if(typeof (gts.v[ i ][ gts.v[ i ].length - 1 ]) === 'number' ||
           // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||

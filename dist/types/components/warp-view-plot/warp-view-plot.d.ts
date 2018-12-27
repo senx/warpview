@@ -19,6 +19,7 @@ export declare class WarpViewPlot {
     showChart: boolean;
     showMap: boolean;
     chartType: string;
+    timeClipValue: string;
     private LOG;
     private line;
     private main;
@@ -28,16 +29,15 @@ export declare class WarpViewPlot {
     private timeClip;
     private warpViewChart;
     private filterInput;
+    private timeClipElement;
     private mouseOutTimer;
-    private timeClipValue;
     private graphId;
     componentDidLoad(): void;
     getTimeClip(): number[];
     private onGtsFilter;
     private onData;
     private onOptions;
-    handleKeyUp(ev: KeyboardEvent): void;
-    private getTimeClipValue;
+    handleKeyUp(ev: KeyboardEvent): boolean;
     stateChange(event: CustomEvent): void;
     boundsDidChange(event: CustomEvent): void;
     onResize(event: CustomEvent): void;

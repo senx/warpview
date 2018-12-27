@@ -83,12 +83,17 @@ export class WarpViewPie {
         else {
             dataList = data;
         }
-        dataList.forEach(d => {
-            _data.push(d[1]);
-            labels.push(d[0]);
-        });
-        this.LOG.debug(['parseData'], [labels, _data]);
-        return { labels: labels, data: _data };
+        if (!dataList) {
+            return { labels: [], data: [] };
+        }
+        else {
+            dataList.forEach(d => {
+                _data.push(d[1]);
+                labels.push(d[0]);
+            });
+            this.LOG.debug(['parseData'], [labels, _data]);
+            return { labels: labels, data: _data };
+        }
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);

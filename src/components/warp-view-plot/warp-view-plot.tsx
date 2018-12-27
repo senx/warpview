@@ -53,6 +53,7 @@ export class WarpViewPlot {
   @State() showChart = true;
   @State() showMap = false;
   @State() chartType = 'line';
+  @State() timeClipValue: string = '';
 
   private LOG: Logger = new Logger(WarpViewPlot);
   private line: HTMLElement;
@@ -63,8 +64,8 @@ export class WarpViewPlot {
   private timeClip: WarpViewModal;
   private warpViewChart: WarpViewChart;
   private filterInput: HTMLInputElement;
+  private timeClipElement: HTMLParagraphElement;
   private mouseOutTimer: number;
-  private timeClipValue: string = '';
   private graphId = 'container-' + ChartLib.guid();
 
   componentDidLoad() {
@@ -107,18 +108,19 @@ export class WarpViewPlot {
   @Listen('document:keyup')
   handleKeyUp(ev: KeyboardEvent) {
     this.LOG.debug(['document:keyup'], ev);
-    if (ev.key === 'f') {
+    ev.preventDefault();
+    if (ev.key === '/') {
       this.modal.open();
+      this.filterInput.focus();
+      this.filterInput.select();
     }
     if (ev.key === 't') {
-     const tc = this.warpViewChart.getTimeClip();
-     this.timeClipValue = `${tc[0]} ISO8601 ${tc[1]} ISO8601 TIMECLIP`;
-     this.timeClip.open();
+      const tc = this.warpViewChart.getTimeClip();
+      this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+      this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
+      this.timeClip.open();
     }
-  }
-
-  private getTimeClipValue(): string {
-    return this.timeClipValue;
+    return false;
   }
 
   @Listen('stateChange')
@@ -231,6 +233,8 @@ export class WarpViewPlot {
     }
 
     this._options = ChartLib.mergeDeep(this._options, opts);
+    this.timeClip.close();
+    this.modal.close();
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 
@@ -241,10 +245,11 @@ export class WarpViewPlot {
 
   render() {
     return <div>
-      <warp-view-modal title="TimeClip" ref={(el: any) => {
+      <warp-view-modal modalTitle="TimeClip" ref={(el: any) => {
         this.timeClip = el as WarpViewModal
-      }}><p>{this.getTimeClipValue()}</p></warp-view-modal>
-        <warp-view-modal title="GTS Filter" ref={(el: any) => {
+      }}><pre><code ref={(el) => this.timeClipElement = el as HTMLParagraphElement} innerHTML={this.timeClipValue}/></pre>
+      </warp-view-modal>
+      <warp-view-modal modalTitle="GTS Filter" ref={(el: any) => {
         this.modal = el as WarpViewModal
       }}>
         <label>Enter a regular expression to filter GTS.</label>

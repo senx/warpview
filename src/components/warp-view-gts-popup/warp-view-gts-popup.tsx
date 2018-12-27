@@ -130,27 +130,28 @@ export class WarpViewGtsPopup {
   }
 
   render() {
-    return<warp-view-modal title="GTS Selector" ref={(el: any) => {
-          this.modal = el as WarpViewModal
-        }}>
-          {this.current > 0 ? <div class="up-arrow"/> : ''}
-          <ul>
-            {this._gts.map((gts, index) =>
-              this.displayed.find(g => g.id === gts.id)
-                ? <li class={this.current === index ? 'selected' : ''}>
-                  <div class="round"
-                       ref={(el: HTMLElement) => this.chips[index] = el}
-                       style={{
-                         'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                         'border-color': ColorLib.getColor(gts.id)
-                       }}/>
-                  <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
-                </li>
-
-                : ''
-            )}
-          </ul>
-          {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
-        </warp-view-modal>
+    return <warp-view-modal title="GTS Selector" ref={(el: any) => {
+      this.modal = el as WarpViewModal
+    }}>
+      {this.current > 0 ? <div class="up-arrow"/> : ''}
+      <ul>
+        {this._gts.map((gts, index) =>
+          gts
+            ? this.displayed.find(g => g.id === gts.id)
+            ? <li class={this.current === index ? 'selected' : ''}>
+              <div class="round"
+                   ref={(el: HTMLElement) => this.chips[index] = el}
+                   style={{
+                     'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
+                     'border-color': ColorLib.getColor(gts.id)
+                   }}/>
+              <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
+            </li>
+            : ''
+            : ''
+        )}
+      </ul>
+      {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
+    </warp-view-modal>
   }
 }

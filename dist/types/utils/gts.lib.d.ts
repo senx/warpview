@@ -1,5 +1,6 @@
 import { DataModel } from "../model/dataModel";
 export declare class GTSLib {
+    private static LOG;
     /**
      *
      * @param actual
