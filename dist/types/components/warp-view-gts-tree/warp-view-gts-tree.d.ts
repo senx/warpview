@@ -26,6 +26,3 @@ export declare class WarpViewGtsTree {
     toggleVisibility(event: UIEvent): void;
     render(): JSX.Element;
 }
-export declare class Counter {
-    static item: number;
-}

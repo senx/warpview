@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
@@ -21,10 +5,6 @@ import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment-timezone";
-/**
- * @prop --warp-view-chart-width: Fixed width if not responsive
- * @prop --warp-view-chart-height: Fixed height if not responsive
- */
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;
@@ -116,14 +96,11 @@ export class WarpViewAnnotation {
             }
         }
     }
-    /**
-     *
-     */
     drawChart() {
         if (!this.data) {
             return;
         }
-        moment.tz.setDefault("UTC"); //force X axis display in UTC
+        moment.tz.setDefault("UTC");
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
@@ -142,7 +119,7 @@ export class WarpViewAnnotation {
             layout: {
                 padding: {
                     bottom: Math.max(30, 30 * gts.length),
-                    right: 26 //fine tuning, depends on chart element
+                    right: 26
                 }
             },
             legend: { display: this.showLegend },
@@ -198,7 +175,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: function (scaleInstance) {
-                            scaleInstance.width = 100; // sets the width to 100px
+                            scaleInstance.width = 100;
                         },
                         gridLines: {
                             color: color,
@@ -265,11 +242,6 @@ export class WarpViewAnnotation {
         this._chart.update();
         this.onResize();
     }
-    /**
-     *
-     * @param gts
-     * @returns {any[]}
-     */
     parseData(gts) {
         this.LOG.debug(['parseData'], gts);
         let dataList = GTSLib.getData(gts).data;

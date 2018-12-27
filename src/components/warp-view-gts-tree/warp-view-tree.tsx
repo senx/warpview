@@ -17,7 +17,6 @@
 
 import {Component, Element, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
-import {Counter} from "./warp-view-gts-tree";
 import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 
@@ -38,14 +37,6 @@ export class WarpViewTreeView {
 
   private hide: any = {};
   private LOG: Logger = new Logger(WarpViewTreeView);
-
-  // noinspection JSMethodCanBeStatic
-  /**
-   *
-   */
-  componentWillLoad() {
-    this.LOG.debug(['componentWillLoad'], Counter.item);
-  }
 
   /**
    *

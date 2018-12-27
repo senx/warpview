@@ -77,7 +77,7 @@ export class WarpViewPlot {
   }
 
   @Method()
-  public getTimeClip(): number[] {
+  async getTimeClip(): Promise<[number, number]> {
     this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
     return this.warpViewChart.getTimeClip();
   }
@@ -115,10 +115,11 @@ export class WarpViewPlot {
       this.filterInput.select();
     }
     if (ev.key === 't') {
-      const tc = this.warpViewChart.getTimeClip();
-      this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
-      this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
-      this.timeClip.open();
+      this.warpViewChart.getTimeClip().then(tc => {
+        this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+        this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
+        this.timeClip.open();
+      });
     }
     return false;
   }
@@ -245,13 +246,11 @@ export class WarpViewPlot {
 
   render() {
     return <div>
-      <warp-view-modal modalTitle="TimeClip" ref={(el: any) => {
-        this.timeClip = el as WarpViewModal
-      }}><pre><code ref={(el) => this.timeClipElement = el as HTMLParagraphElement} innerHTML={this.timeClipValue}/></pre>
+      <warp-view-modal modalTitle="TimeClip" ref={(el: any) => this.timeClip = el as WarpViewModal}>
+        <pre><code ref={(el) => this.timeClipElement = el as HTMLParagraphElement}
+                   innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
-      <warp-view-modal modalTitle="GTS Filter" ref={(el: any) => {
-        this.modal = el as WarpViewModal
-      }}>
+      <warp-view-modal modalTitle="GTS Filter" ref={(el: any) => this.modal = el as WarpViewModal}>
         <label>Enter a regular expression to filter GTS.</label>
         <input type="text" ref={(el) => this.filterInput = el as HTMLInputElement} value={this.gtsFilter}/>
         <button type="button" class={this._options.popupButtonValidateClass}

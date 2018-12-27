@@ -15,13 +15,13 @@
  *
  */
 
-import { Component, Element, Prop, State, Watch } from "@stencil/core";
-import { GTSLib } from "../../utils/gts.lib";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { ChartLib } from "../../utils/chart-lib";
+import {Component, Element, Prop, State, Watch} from "@stencil/core";
+import {GTSLib} from "../../utils/gts.lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
+import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-gts-tree",
@@ -140,8 +140,4 @@ export class WarpViewGtsTree {
       </div>
       : '';
   }
-}
-
-export class Counter {
-  public static item: number = -1;
 }

@@ -118,9 +118,11 @@ export class WarpViewChart {
   }
 
   @Method()
-  public getTimeClip(): number[] {
-    this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
-    return this._chart.xAxisRange();
+  async getTimeClip(): Promise<[number, number]> {
+    return new Promise<[number, number]>(resolve => {
+      this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
+      resolve(this._chart.xAxisRange());
+    });
   }
 
   private handleMouseOut(evt: MouseEvent) {

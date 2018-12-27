@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { Logger } from "../../utils/logger";
@@ -47,7 +31,7 @@ export class WarpViewPlot {
         this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
         this.drawCharts();
     }
-    getTimeClip() {
+    async getTimeClip() {
         this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
         return this.warpViewChart.getTimeClip();
     }
@@ -77,10 +61,11 @@ export class WarpViewPlot {
             this.filterInput.select();
         }
         if (ev.key === 't') {
-            const tc = this.warpViewChart.getTimeClip();
-            this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
-            this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
-            this.timeClip.open();
+            this.warpViewChart.getTimeClip().then(tc => {
+                this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+                this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
+                this.timeClip.open();
+            });
         }
         return false;
     }
@@ -197,14 +182,10 @@ export class WarpViewPlot {
     }
     render() {
         return h("div", null,
-            h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => {
-                    this.timeClip = el;
-                } },
+            h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
                 h("pre", null,
                     h("code", { ref: (el) => this.timeClipElement = el, innerHTML: this.timeClipValue }))),
-            h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => {
-                    this.modal = el;
-                } },
+            h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => this.modal = el },
                 h("label", null, "Enter a regular expression to filter GTS."),
                 h("input", { type: "text", ref: (el) => this.filterInput = el, value: this.gtsFilter }),
                 h("button", { type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),

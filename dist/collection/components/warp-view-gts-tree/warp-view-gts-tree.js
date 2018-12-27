@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { GTSLib } from "../../utils/gts.lib";
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
@@ -54,9 +38,6 @@ export class WarpViewGtsTree {
         this.LOG.debug(['hiddenData'], newValue);
         this.doRender();
     }
-    /**
-     *
-     */
     componentWillLoad() {
         this.LOG.debug(['componentWillLoad', 'data'], this.data);
         if (this.data) {
@@ -146,36 +127,3 @@ export class WarpViewGtsTree {
     }; }
     static get style() { return "/**style-placeholder:warp-view-gts-tree:**/"; }
 }
-export class Counter {
-    static get is() { return "warp-view-gts-tree"; }
-    static get properties() { return {
-        "data": {
-            "type": String,
-            "attr": "data",
-            "watchCallbacks": ["onData"]
-        },
-        "el": {
-            "elementRef": true
-        },
-        "gtsFilter": {
-            "type": String,
-            "attr": "gts-filter",
-            "watchCallbacks": ["onGtsFilter"]
-        },
-        "hiddenData": {
-            "type": "Any",
-            "attr": "hidden-data",
-            "watchCallbacks": ["onHideData"]
-        },
-        "hide": {
-            "state": true
-        },
-        "options": {
-            "type": "Any",
-            "attr": "options",
-            "watchCallbacks": ["onOptions"]
-        }
-    }; }
-    static get style() { return "/**style-placeholder:warp-view-gts-tree:**/"; }
-}
-Counter.item = -1;

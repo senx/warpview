@@ -1610,8 +1610,7 @@
     {
       "tag": "warp-view-tree-view",
       "dependencies": [
-        "warp-view-chip",
-        "warp-view-tree-view"
+        "warp-view-chip"
       ],
       "componentClass": "WarpViewTreeView",
       "componentPath": "components/warp-view-gts-tree/warp-view-tree.js",
@@ -1666,8 +1665,8 @@
   "collections": [],
   "compiler": {
     "name": "@stencil/core",
-    "version": "0.8.2",
-    "typescriptVersion": "2.9.2"
+    "version": "0.16.1",
+    "typescriptVersion": "3.1.6"
   },
   "bundles": []
 }

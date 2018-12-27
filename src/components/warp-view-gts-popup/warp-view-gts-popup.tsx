@@ -130,7 +130,7 @@ export class WarpViewGtsPopup {
   }
 
   render() {
-    return <warp-view-modal title="GTS Selector" ref={(el: any) => {
+    return <warp-view-modal modalTitle="GTS Selector" ref={(el: any) => {
       this.modal = el as WarpViewModal
     }}>
       {this.current > 0 ? <div class="up-arrow"/> : ''}

@@ -14,7 +14,7 @@
     "Times Series"
   ],
   "description": "WarpView Elements",
-  "main": "dist/warpview.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/senx/warpview.git"
@@ -31,16 +31,14 @@
     "dist/"
   ],
   "scripts": {
-    "build": "sd concurrent \"node --max_old_space_size=4096 --optimize_for_size --stack_size=4096 ./node_modules/.bin/stencil build\"",
-    "dev": "sd concurrent \"node --max_old_space_size=4096 --optimize_for_size --stack_size=4096 ./node_modules/.bin/stencil build --dev --watch\" \"stencil-dev-server\"",
-    "serve": "stencil-dev-server",
-    "start": "yarn run dev ",
-    "test": "jest --no-cache",
-    "test.watch": "jest --watch --no-cache"
+    "build": "stencil build --prod",
+    "dev": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "start": "yarn run dev "
   },
   "dependencies": {
     "@code-dimension/stencil-components": "0.0.0-beta.1",
-    "@stencil/core": "^0.8.0",
     "chart.js": "^2.7.2",
     "clipboard": "^2.0.1",
     "d3": "^5.7.0",
@@ -55,9 +53,8 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "@stencil/dev-server": "0.0.18",
-    "@stencil/sass": "^0.0.5",
-    "@stencil/utils": "0.0.4",
+    "@stencil/core": "~0.16.1",
+    "@stencil/sass": "^0.1.1",
     "@types/chartjs": "0.0.31",
     "@types/d3": "^5.0.1",
     "@types/dygraphs": "^1.1.8",

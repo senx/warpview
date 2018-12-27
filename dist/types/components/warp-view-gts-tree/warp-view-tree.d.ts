@@ -11,10 +11,6 @@ export declare class WarpViewTreeView {
     private LOG;
     /**
      *
-     */
-    componentWillLoad(): void;
-    /**
-     *
      * @param {UIEvent} event
      * @param {number} index
      */

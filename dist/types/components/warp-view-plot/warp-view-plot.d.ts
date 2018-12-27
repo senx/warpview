@@ -33,7 +33,7 @@ export declare class WarpViewPlot {
     private mouseOutTimer;
     private graphId;
     componentDidLoad(): void;
-    getTimeClip(): number[];
+    getTimeClip(): Promise<[number, number]>;
     private onGtsFilter;
     private onData;
     private onOptions;

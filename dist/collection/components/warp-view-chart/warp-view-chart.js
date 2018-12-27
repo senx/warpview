@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { GTSLib } from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import { Logger } from "../../utils/logger";
@@ -21,14 +5,6 @@ import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { Param } from "../../model/param";
 import moment from "moment";
-/**
- * options :
- *  gridLineColor: 'red | #fff'
- *  timeMode.timeMode: 'timestamp | date'
- *  showRangeSelector: boolean
- *  type : 'line | area | step'
- *
- */
 export class WarpViewChart {
     constructor() {
         this.options = new Param();
@@ -86,9 +62,11 @@ export class WarpViewChart {
             this.drawChart();
         }
     }
-    getTimeClip() {
-        this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
-        return this._chart.xAxisRange();
+    async getTimeClip() {
+        return new Promise(resolve => {
+            this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
+            resolve(this._chart.xAxisRange());
+        });
     }
     handleMouseOut(evt) {
         this.LOG.debug(['handleMouseOut'], evt);
@@ -148,7 +126,6 @@ export class WarpViewChart {
                 this.ticks.push(ts);
             }
         });
-        // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
         this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
         return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
     }
@@ -165,7 +142,7 @@ export class WarpViewChart {
             return x.toString();
         }
         else {
-            res = x.toString(); //Math.round(x * 100000000000000) / 100000000000000).toString();
+            res = x.toString();
             e = parseInt(x.toString().split('+')[1]);
             if (e > 20) {
                 e -= 20;
@@ -176,11 +153,6 @@ export class WarpViewChart {
             return res;
         }
     }
-    /**
-     *
-     * @param {string} data
-     * @returns {string}
-     */
     static formatLabel(data) {
         const serializedGTS = data.split('{');
         let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
@@ -220,7 +192,6 @@ export class WarpViewChart {
     }
     legendFormatter(data) {
         if (data.x === null) {
-            // This happens when there's no selection and {legend: 'always'} is set.
             return '<br>' + data.series.map(function (series) {
                 if (!series.isVisible)
                     return;
@@ -256,8 +227,6 @@ export class WarpViewChart {
             return;
         this.LOG.debug(['scroll'], g);
         const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
-        // For me the normalized value shows 0.075 for one click. If I took
-        // that verbatim, it would be a 7.5%.
         const percentage = normal / 50;
         if (!(event.offsetX && event.offsetY)) {
             event.offsetX = event.layerX - event.target.offsetLeft;
@@ -270,26 +239,15 @@ export class WarpViewChart {
         event.preventDefault();
     }
     static offsetToPercentage(g, offsetX, offsetY) {
-        // This is calculating the pixel offset of the leftmost date.
         const xOffset = g.toDomCoords(g.xAxisRange()[0], null)[0];
         const yar0 = g.yAxisRange(0);
-        // This is calculating the pixel of the higest value. (Top pixel)
         const yOffset = g.toDomCoords(null, yar0[1])[1];
-        // x y w and h are relative to the corner of the drawing area,
-        // so that the upper corner of the drawing area is (0, 0).
         const x = offsetX - xOffset;
         const y = offsetY - yOffset;
-        // This is computing the rightmost pixel, effectively defining the
-        // width.
         const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset;
-        // This is computing the lowest pixel, effectively defining the height.
         const h = g.toDomCoords(null, yar0[0])[1] - yOffset;
-        // Percentage from the left.
         const xPct = w === 0 ? 0 : (x / w);
-        // Percentage from the top.
         const yPct = h === 0 ? 0 : (y / h);
-        // The (1-) part below changes it from "% distance down from the top"
-        // to "% distance up from the bottom".
         return [xPct, (1 - yPct)];
     }
     static adjustAxis(axis, zoomInPercentage, bias) {
