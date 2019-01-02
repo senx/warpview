@@ -116,6 +116,7 @@ export class WarpViewAnnotation {
   minBoundChange(newValue: number, oldValue: number) {
     if(this._chart) {
       this._chart.options.animation.duration = 0;
+      if (newValue == 0  && !this.standalone) { newValue = 1;} //clunky hack for issue #22
       if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
         if(this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[ 0 ].ticks.min = newValue;
@@ -132,6 +133,7 @@ export class WarpViewAnnotation {
   maxBoundChange(newValue: number, oldValue: number) {
     if(this._chart) {
       this._chart.options.animation.duration = 0;
+      if (newValue == 0 && !this.standalone) { newValue = 1;} //clunky hack for issue #22
       if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
         if(this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[ 0 ].ticks.max = newValue;
@@ -258,9 +260,11 @@ export class WarpViewAnnotation {
         minRotation: 0
       };
     } else {
+      let tmin:number = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
+      let tmax:number = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
       chartOption.scales.xAxes[ 0 ].time = {
-        min: this.timeMin,
-        max: this.timeMax,
+        min: tmin,
+        max: tmax,
         displayFormats: {
           millisecond: 'HH:mm:ss.SSS',
           second: 'HH:mm:ss',
