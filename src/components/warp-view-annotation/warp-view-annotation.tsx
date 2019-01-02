@@ -116,11 +116,11 @@ export class WarpViewAnnotation {
   minBoundChange(newValue: number, oldValue: number) {
     if(this._chart) {
       this._chart.options.animation.duration = 0;
-      if (newValue == 0  && !this.standalone) { newValue = 1;} //clunky hack for issue #22
       if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
         if(this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[ 0 ].ticks.min = newValue;
         } else {
+          if (newValue == 0  && !this.standalone) { newValue = 1;} //clunky hack for issue #22
           this._chart.options.scales.xAxes[ 0 ].time.min = newValue;
         }
         this.LOG.debug([ 'minBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.min);
@@ -133,11 +133,11 @@ export class WarpViewAnnotation {
   maxBoundChange(newValue: number, oldValue: number) {
     if(this._chart) {
       this._chart.options.animation.duration = 0;
-      if (newValue == 0 && !this.standalone) { newValue = 1;} //clunky hack for issue #22
       if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
         if(this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[ 0 ].ticks.max = newValue;
         } else {
+          if (newValue == 0 && !this.standalone) { newValue = 1;} //clunky hack for issue #22
           this._chart.options.scales.xAxes[ 0 ].time.max = newValue;
         }
         this.LOG.debug([ 'maxBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.max);
