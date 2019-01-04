@@ -16,7 +16,6 @@
  */
 
 import {Component, Element, Event, EventEmitter, Prop, State, Watch} from '@stencil/core';
-import { watch } from 'fs';
 
 @Component({
   tag: 'warp-view-toggle',
