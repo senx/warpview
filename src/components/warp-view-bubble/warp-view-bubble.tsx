@@ -38,13 +38,14 @@ export class WarpViewBubble {
   @Prop() options: Param = new Param();
   @Prop({ mutable: true }) width = '';
   @Prop({ mutable: true }) height = '';
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
   private _options: Param = {
     gridLineColor: '#8e8e8e'
   };
-  private LOG: Logger = new Logger(WarpViewBubble);
+  private LOG: Logger;
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart: Chart;
   private resizeTimer;
@@ -192,6 +193,11 @@ export class WarpViewBubble {
       });
     }
     return datasets;
+  }
+
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewBubble, this.debug);
   }
 
   componentDidLoad() {

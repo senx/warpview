@@ -38,10 +38,11 @@ export class WarpViewDisplay {
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(WarpViewDisplay);
+  private LOG: Logger;
   private toDisplay: string = '';
   private _options: Param = new Param();
 
@@ -100,6 +101,10 @@ export class WarpViewDisplay {
       this.LOG.debug(['getStyle', 'style'], style);
       return style;
     }
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewDisplay, this.debug);
   }
 
   componentDidLoad() {

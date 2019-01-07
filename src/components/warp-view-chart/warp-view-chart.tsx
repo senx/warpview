@@ -48,6 +48,7 @@ export class WarpViewChart {
   @Prop() type: string = 'line';
   @Prop() responsive: boolean = false;
   @Prop() standalone = true;
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
@@ -55,7 +56,7 @@ export class WarpViewChart {
   @Event() pointHover: EventEmitter;
   @Event() warpViewChartResize: EventEmitter;
 
-  private LOG: Logger = new Logger(WarpViewChart);
+  private LOG: Logger;
   private static DEFAULT_WIDTH = 800;
   private static DEFAULT_HEIGHT = 600;
   private resizeTimer;
@@ -462,6 +463,10 @@ export class WarpViewChart {
       status = s || status;
     });
     return status;
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewChart, this.debug);
   }
 
   componentDidLoad() {

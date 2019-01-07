@@ -49,6 +49,7 @@ export class WarpViewMap {
   @Prop() heatData: any[] = [];
   @Prop() options: any = {};
   @Prop() hiddenData: number[] = [];
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
@@ -71,7 +72,7 @@ export class WarpViewMap {
 
   private _map: Leaflet.Map;
   private uuid = 'map-' + ChartLib.guid().split('-').join('');
-  private LOG: Logger = new Logger(WarpViewMap);
+  private LOG: Logger;
   private polylinesBeforeCurrentValue = [];
   private polylinesAfterCurrentValue = [];
   private currentValuesMarkers = [];
@@ -479,6 +480,10 @@ export class WarpViewMap {
     const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
     this.mapElement.style.width = width + 'px';
     this.mapElement.style.height = height + 'px';
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewMap, this.debug);
   }
 
   componentDidLoad() {

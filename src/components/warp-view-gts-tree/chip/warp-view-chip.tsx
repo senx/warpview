@@ -33,6 +33,7 @@ export class WarpViewChip {
   @Prop() node: any;
   @Prop() gtsFilter = '';
   @Prop() hiddenData: number[] = [];
+  @Prop() debug = false;
 
   @State() ref = false;
 
@@ -43,7 +44,7 @@ export class WarpViewChip {
     selected: true,
     gts: GTS
   };
-  private LOG: Logger = new Logger(WarpViewChip);
+  private LOG: Logger;
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
@@ -86,10 +87,9 @@ export class WarpViewChip {
     this.ref = !this.ref;
   }
 
-  /**
-   *
-   */
+
   componentWillLoad() {
+    this.LOG = new Logger(WarpViewChip, this.debug);
     this._node = {...this.node, selected: this.hiddenData.indexOf(this.node.gts.id) === -1};
   }
 

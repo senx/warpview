@@ -36,11 +36,13 @@ export class WarpViewDatagrid {
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
   @Prop() elemsCount = 15;
+  @Prop() debug = false;
+
   @Element() el: HTMLElement;
 
   @State() page = 0;
 
-  private LOG: Logger = new Logger(WarpViewDatagrid);
+  private LOG: Logger;
   private _options: Param = {
     timeMode: 'date'
   };
@@ -129,7 +131,9 @@ export class WarpViewDatagrid {
     return flatData;
   }
 
+
   componentWillLoad() {
+    this.LOG = new Logger(WarpViewDatagrid, this.debug);
     this.drawChart();
   }
 
@@ -137,7 +141,7 @@ export class WarpViewDatagrid {
     // noinspection CheckTagEmptyBody
     return <div class="wrapper">
       {this._data.map((data) =>
-        <warp-view-paginable data={data} options={this._options}></warp-view-paginable>
+        <warp-view-paginable data={data} options={this._options} debug={this.debug}></warp-view-paginable>
       )}
     </div>;
   }

@@ -39,10 +39,11 @@ export class WarpViewScatter {
   @Prop() options: Param = new Param();
   @Prop({ mutable: true }) width = '';
   @Prop({ mutable: true }) height = '';
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(WarpViewScatter);
+  private LOG: Logger;
   private _options: Param = {
     gridLineColor: '#8e8e8e'
   };
@@ -199,6 +200,11 @@ export class WarpViewScatter {
     }
     this.LOG.debug([ 'gtsToScatter', 'datasets' ], datasets);
     return datasets;
+  }
+
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewScatter, this.debug);
   }
 
   componentDidLoad() {

@@ -32,13 +32,14 @@ export class WarpViewGtsTree {
   @Prop() gtsFilter = '';
   @Prop() options: Param = new Param();
   @Prop() hiddenData: number[] = [];
+  @Prop() debug = false;
 
   @State() hide = false;
   @Element() el: HTMLElement;
 
   private gtsList: any[] = [];
   private _options: Param = new Param();
-  private LOG: Logger = new Logger(WarpViewGtsTree);
+  private LOG: Logger;
   private _isFolded = false;
 
   @Watch("data")
@@ -74,10 +75,8 @@ export class WarpViewGtsTree {
       this.doRender();
   }
 
-  /**
-   *
-   */
   componentWillLoad() {
+    this.LOG = new Logger(WarpViewGtsTree, this.debug);
     this.LOG.debug([ 'componentWillLoad', 'data' ], this.data);
     if(this.data) {
       this.doRender();
@@ -136,6 +135,7 @@ export class WarpViewGtsTree {
           <span class="expanded" id="root"/> Stack
         </div>
         <warp-view-tree-view gtsList={this.gtsList} branch={false} hidden={this.hide}
+                             debug={this.debug}
                              hiddenData={this.hiddenData} gtsFilter={this.gtsFilter}/>
       </div>
       : '';

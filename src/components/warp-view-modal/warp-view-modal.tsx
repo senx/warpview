@@ -25,6 +25,7 @@ import {Component, Element, Listen, Method, Prop} from "@stencil/core";
 export class WarpViewModal {
 
   @Prop() modalTitle: string = '';
+
   @Element() el: HTMLElement;
 
   @Method()

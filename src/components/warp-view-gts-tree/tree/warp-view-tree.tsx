@@ -30,13 +30,14 @@ export class WarpViewTreeView {
   @Prop() hidden = false;
   @Prop() gtsFilter = '';
   @Prop() hiddenData: number[] = [];
+  @Prop() debug = false;
 
   @State() ref = false;
 
   @Element() el: HTMLElement;
 
   private hide: any = {};
-  private LOG: Logger = new Logger(WarpViewTreeView);
+  private LOG: Logger;
 
   /**
    *
@@ -86,6 +87,10 @@ export class WarpViewTreeView {
     }
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewTreeView, this.debug);
+  }
+
   /**
    *
    * @returns {any}
@@ -97,7 +102,7 @@ export class WarpViewTreeView {
           <li hidden={this.hidden}>
             {GTSLib.isGts(node)
               ? <warp-view-chip node={{gts: node}} name={node.c} gtsFilter={this.gtsFilter}
-                                hiddenData={this.hiddenData}/>
+                                debug={this.debug} hiddenData={this.hiddenData}/>
               : <span>{node
                 ? <div>{this.branch
                   ? <div>
@@ -121,7 +126,7 @@ export class WarpViewTreeView {
                           : ''}</small></span>
                   </div>}
                   <warp-view-tree-view gtsList={node} branch={true} hidden={this.isHidden(index)}
-                                       gtsFilter={this.gtsFilter}/>
+                                       debug={this.debug} gtsFilter={this.gtsFilter}/>
                 </div>
                 : ''}
               </span>}

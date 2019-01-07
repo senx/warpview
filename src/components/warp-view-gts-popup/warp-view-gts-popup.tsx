@@ -32,16 +32,17 @@ export class WarpViewGtsPopup {
   @Prop() gtsList: DataModel = new DataModel();
   @Prop() maxToShow: number = 5;
   @Prop() hiddenData: number[] = [];
+  @Prop() debug = false;
 
   @Event() warpViewSelectedGTS: EventEmitter;
+
   @State() private displayed: any[] = [];
   @State() current: number = 0;
-
 
   private _gts: any[] = [];
   private chips: HTMLElement[] = [];
   private modal: WarpViewModal;
-  private LOG: Logger = new Logger(WarpViewGtsPopup);
+  private LOG: Logger;
 
   @Listen('document:keydown')
   handleKeyDown(e: KeyboardEvent) {
@@ -123,6 +124,10 @@ export class WarpViewGtsPopup {
         chip.style.setProperty('background-color', '#eeeeee');
       }
     });
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewGtsPopup, this.debug);
   }
 
   componentDidLoad() {

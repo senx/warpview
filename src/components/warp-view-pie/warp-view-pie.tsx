@@ -36,10 +36,11 @@ export class WarpViewPie {
   @Prop({ mutable: true }) width = '';
   @Prop({ mutable: true }) height = '';
   @Prop() responsive: boolean = false;
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(WarpViewPie);
+  private LOG: Logger;
   private _options: Param = {
     type: 'pie'
   };
@@ -174,6 +175,10 @@ export class WarpViewPie {
     } else {
       return 2 * Math.PI;
     }
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewPie, this.debug);
   }
 
   componentDidLoad() {

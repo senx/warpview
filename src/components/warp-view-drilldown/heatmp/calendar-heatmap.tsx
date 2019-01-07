@@ -40,11 +40,12 @@ export class CalendarHeatmap {
   @Prop() minColor: string = CalendarHeatmap.DEF_MIN_COLOR;
   @Prop() maxColor: string = CalendarHeatmap.DEF_MAX_COLOR;
   @Prop({mutable: true}) overview: string = 'global';
+  @Prop() debug = false;
 
   @Event() handler: EventEmitter;
   @Event() onChange: EventEmitter;
 
-  private LOG: Logger = new Logger(CalendarHeatmap);
+  private LOG: Logger;
   // Defaults
   private gutter: number = 5;
   private width: number = 1000;
@@ -1549,6 +1550,10 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
     tooltip_html += '</ul>';
     return tooltip_html;
   };
+
+  componentWillLoad() {
+    this.LOG = new Logger(CalendarHeatmap, this.debug);
+  }
 
   componentDidLoad() {
     this.chart = this.el.shadowRoot.querySelector('#' + this.uuid) as HTMLElement;

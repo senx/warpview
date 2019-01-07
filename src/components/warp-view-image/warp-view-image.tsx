@@ -37,10 +37,11 @@ export class WarpViewImage {
   @Prop() options: Param = new Param();
   @Prop({ mutable: true }) width = '';
   @Prop({ mutable: true }) height = '';
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(WarpViewImage);
+  private LOG: Logger;
   private _options: Param = new Param();
   private toDisplay: string[];
   private resizeTimer;
@@ -68,6 +69,10 @@ export class WarpViewImage {
       this.LOG.debug([ 'options' ], newValue);
       this.drawChart();
     }
+  }
+
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewImage, this.debug);
   }
 
   private drawChart() {

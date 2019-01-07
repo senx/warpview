@@ -16,15 +16,16 @@
  */
 
 import Chart from 'chart.js';
-import { Component, Element, Event, EventEmitter, Listen, Prop, Watch } from '@stencil/core';
-import { GTSLib } from '../../utils/gts.lib';
-import { ColorLib } from "../../utils/color-lib";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { ChartLib } from "../../utils/chart-lib";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
+import {Component, Element, Event, EventEmitter, Listen, Prop, State, Watch} from '@stencil/core';
+import {GTSLib} from '../../utils/gts.lib';
+import {ColorLib} from "../../utils/color-lib";
+import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {ChartLib} from "../../utils/chart-lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
+
 /**
  * @prop --warp-view-chart-width: Fixed width if not responsive
  * @prop --warp-view-chart-height: Fixed height if not responsive
@@ -42,9 +43,12 @@ export class WarpViewAnnotation {
   @Prop() hiddenData: number[] = [];
   @Prop() timeMin: number;
   @Prop() timeMax: number;
-  @Prop({ mutable: true }) width = "";
-  @Prop({ mutable: true }) height = "";
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
   @Prop() standalone = true;
+  @Prop() debug = false;
+
+  @State() expanded = false;
 
   @Event() pointHover: EventEmitter;
 
@@ -53,7 +57,7 @@ export class WarpViewAnnotation {
   private legendOffset = 70;
   private _chart: Chart;
   private _mapIndex = {};
-  private LOG: Logger = new Logger(WarpViewAnnotation);
+  private LOG: Logger;
   private _options: Param = {
     gridLineColor: '#000000',
     timeMode: 'date'
@@ -61,14 +65,15 @@ export class WarpViewAnnotation {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private resizeTimer;
   private parentWidth = -1;
+  private _height = '0';
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
         this.drawChart();
       }, 250);
     }
@@ -76,20 +81,20 @@ export class WarpViewAnnotation {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'data' ], newValue);
+    if (oldValue !== newValue) {
+      this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
   }
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'options' ], [ newValue, this.hiddenData ]);
+    if (oldValue !== newValue) {
+      this.LOG.debug(['options'], [newValue, this.hiddenData]);
       const hiddenData = GTSLib.cleanArray(this.hiddenData);
-      if(this._chart) {
+      if (this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!hiddenData.find(item => item + '' === key);
+          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
         });
         this._chart.update();
         this.drawChart();
@@ -99,12 +104,12 @@ export class WarpViewAnnotation {
 
   @Watch("hiddenData")
   hideData(newValue, oldValue) {
-    if(oldValue !== newValue && this._chart) {
-      this.LOG.debug([ 'hiddenData' ], newValue);
+    if (oldValue !== newValue && this._chart) {
+      this.LOG.debug(['hiddenData'], newValue);
       const hiddenData = GTSLib.cleanArray(newValue);
-      if(this._chart) {
+      if (this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!hiddenData.find(item => item + '' === key);
+          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
         });
         this._chart.update();
         this.drawChart();
@@ -114,16 +119,18 @@ export class WarpViewAnnotation {
 
   @Watch("timeMin")
   minBoundChange(newValue: number, oldValue: number) {
-    if(this._chart) {
+    if (this._chart) {
       this._chart.options.animation.duration = 0;
-      if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
-        if(this._options.timeMode === 'timestamp') {
-          this._chart.options.scales.xAxes[ 0 ].ticks.min = newValue;
+      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.min = newValue;
         } else {
-          if (newValue == 0  && !this.standalone) { newValue = 1;} //clunky hack for issue #22
-          this._chart.options.scales.xAxes[ 0 ].time.min = newValue;
+          if (newValue == 0 && !this.standalone) {
+            newValue = 1;
+          } //clunky hack for issue #22
+          this._chart.options.scales.xAxes[0].time.min = newValue;
         }
-        this.LOG.debug([ 'minBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.min);
+        this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
         this._chart.update();
       }
     }
@@ -131,16 +138,18 @@ export class WarpViewAnnotation {
 
   @Watch("timeMax")
   maxBoundChange(newValue: number, oldValue: number) {
-    if(this._chart) {
+    if (this._chart) {
       this._chart.options.animation.duration = 0;
-      if(oldValue !== newValue && this._chart.options.scales.xAxes[ 0 ].time) {
-        if(this._options.timeMode === 'timestamp') {
-          this._chart.options.scales.xAxes[ 0 ].ticks.max = newValue;
+      if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
+        if (this._options.timeMode === 'timestamp') {
+          this._chart.options.scales.xAxes[0].ticks.max = newValue;
         } else {
-          if (newValue == 0 && !this.standalone) { newValue = 1;} //clunky hack for issue #22
-          this._chart.options.scales.xAxes[ 0 ].time.max = newValue;
+          if (newValue == 0 && !this.standalone) {
+            newValue = 1;
+          } //clunky hack for issue #22
+          this._chart.options.scales.xAxes[0].time.max = newValue;
         }
-        this.LOG.debug([ 'maxBoundChange' ], this._chart.options.scales.xAxes[ 0 ].time.max);
+        this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
         this._chart.update();
       }
     }
@@ -150,21 +159,27 @@ export class WarpViewAnnotation {
    *
    */
   private drawChart() {
-    if(!this.data) {
+    if (!this.data) {
       return;
     }
     moment.tz.setDefault("UTC");    //force X axis display in UTC
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.LOG.debug([ 'drawChart', 'hiddenData' ], this.hiddenData);
+    this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.parseData(this.data);
-    let calculatedHeight = 30 * gts.length + this.legendOffset;
-    let height =
-      this.height || this.height !== ''
-        ? Math.max(calculatedHeight, parseInt(this.height))
-        : calculatedHeight;
-    this.height = height.toString();
+
+    if (!gts || gts.length === 0) {
+      return;
+    }
+
+    let calculatedHeight = (this.expanded ? 60 : 30) * gts.length + this.legendOffset;
+    let height = this.height
+    || this.height !== ''
+      ? Math.max(calculatedHeight, parseInt(this.height))
+      : calculatedHeight;
+    this._height = height.toString();
+    this.LOG.debug(['drawChart', 'height'], height, gts.length, calculatedHeight);
     (ctx as HTMLElement).parentElement.style.height = height + 'px';
     (ctx as HTMLElement).parentElement.style.width = '100%';
     const color = this._options.gridLineColor;
@@ -176,32 +191,32 @@ export class WarpViewAnnotation {
           right: 26 //fine tuning, depends on chart element
         }
       },
-      legend: { display: this.showLegend },
+      legend: {display: this.showLegend},
       responsive: this.responsive,
       animation: {
         duration: 0,
       },
       tooltips: {
-        mode: "x",
-        position: "nearest",
-        custom: function(tooltip) {
-          if(tooltip.opacity > 0) {
+        mode: 'x',
+        position: 'nearest',
+        custom: function (tooltip) {
+          if (tooltip.opacity > 0) {
             me.pointHover.emit({
-              x: tooltip.dataPoints[ 0 ].x,
+              x: tooltip.dataPoints[0].x,
               y: this._eventPosition.y
             });
           } else {
-            me.pointHover.emit({ x: -100, y: this._eventPosition.y });
+            me.pointHover.emit({x: -100, y: this._eventPosition.y});
           }
           return;
         },
         callbacks: {
           title: (tooltipItems) => {
-            return tooltipItems[ 0 ].xLabel || "";
+            return tooltipItems[0].xLabel || '';
           },
           label: (tooltipItem, data) => {
-            return `${data.datasets[ tooltipItem.datasetIndex ].label}: ${
-              data.datasets[ tooltipItem.datasetIndex ].data[ tooltipItem.index ]
+            return `${data.datasets[tooltipItem.datasetIndex].label}: ${
+              data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
                 .val
               }`;
           }
@@ -229,7 +244,7 @@ export class WarpViewAnnotation {
             scaleLabel: {
               display: false
             },
-            afterFit: function(scaleInstance) {
+            afterFit: (scaleInstance) => {
               scaleInstance.width = 100; // sets the width to 100px
             },
             gridLines: {
@@ -238,7 +253,7 @@ export class WarpViewAnnotation {
             },
             ticks: {
               fontColor: color,
-              min: 0,
+              min: -1,
               max: 1,
               beginAtZero: true,
               stepSize: 1
@@ -247,12 +262,15 @@ export class WarpViewAnnotation {
         ]
       }
     };
-    this.LOG.debug([ 'options' ], this._options);
+    this.LOG.debug(['options'], this._options);
+    if(this.expanded){
+      chartOption.scales.yAxes[0].ticks.min = -gts.length + 0.5;
+    }
 
-    if(this._options.timeMode === 'timestamp') {
-      chartOption.scales.xAxes[ 0 ].time = {};
-      chartOption.scales.xAxes[ 0 ].type = 'linear';
-      chartOption.scales.xAxes[ 0 ].ticks = {
+    if (this._options.timeMode === 'timestamp') {
+      chartOption.scales.xAxes[0].time = {};
+      chartOption.scales.xAxes[0].type = 'linear';
+      chartOption.scales.xAxes[0].ticks = {
         fontColor: color,
         min: this.timeMin,
         max: this.timeMax,
@@ -260,9 +278,9 @@ export class WarpViewAnnotation {
         minRotation: 0
       };
     } else {
-      let tmin:number = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
-      let tmax:number = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
-      chartOption.scales.xAxes[ 0 ].time = {
+      let tmin: number = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
+      let tmax: number = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
+      chartOption.scales.xAxes[0].time = {
         min: tmin,
         max: tmax,
         displayFormats: {
@@ -274,28 +292,19 @@ export class WarpViewAnnotation {
           minRotation: 0
         }
       };
-      chartOption.scales.xAxes[ 0 ].ticks = {
+      chartOption.scales.xAxes[0].ticks = {
         fontColor: color
       };
-      chartOption.scales.xAxes[ 0 ].type = 'time';
+      chartOption.scales.xAxes[0].type = 'time';
     }
-    this.LOG.debug([ 'drawChart' ], [ height, gts ]);
-    if(this._chart) {
+    this.LOG.debug(['drawChart'], [height, gts]);
+    if (this._chart) {
       this._chart.destroy();
     }
-    if(!gts || gts.length === 0) {
-      return;
-    }
-    this._chart = new Chart.Scatter(ctx, {
-        data: {
-          datasets: gts
-        },
-        options: chartOption
-      }
-    );
+    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: chartOption});
     Object.keys(this._mapIndex).forEach(key => {
-      this.LOG.debug([ 'drawChart', 'hide' ], [ key ]);
-      this._chart.getDatasetMeta(this._mapIndex[ key ]).hidden = !!this.hiddenData.find(item => item + '' === key);
+      this.LOG.debug(['drawChart', 'hide'], [key]);
+      this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
     });
     this._chart.update();
     this.onResize();
@@ -307,32 +316,32 @@ export class WarpViewAnnotation {
    * @returns {any[]}
    */
   private parseData(gts) {
-    this.LOG.debug([ 'parseData' ], gts);
+    this.LOG.debug(['parseData'], gts);
     let dataList = GTSLib.getData(gts).data;
     this._mapIndex = {};
-    if(!dataList || dataList.length === 0) {
+    if (!dataList || dataList.length === 0) {
       return [];
     } else {
       let dataSet = [];
       dataList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
       dataList = GTSLib.flatDeep(dataList) as any[];
-      this.LOG.debug([ 'parseData', 'dataList' ], dataList);
+      this.LOG.debug(['parseData', 'dataList'], dataList);
       let i = 0;
       dataList.forEach(g => {
-        if(GTSLib.isGtsToAnnotate(g)) {
-          this.LOG.debug([ 'parseData', 'will draw' ], g);
+        if (GTSLib.isGtsToAnnotate(g)) {
+          this.LOG.debug(['parseData', 'will draw'], g);
           let data = [];
           let color = ColorLib.getColor(g.id);
           const myImage = ChartLib.buildImage(1, 30, color);
           g.v.forEach(d => {
-            let time = d[ 0 ];
-            if(this._options.timeMode !== 'timestamp') {
+            let time = d[0];
+            if (this._options.timeMode !== 'timestamp') {
               time = moment(time / GTSLib.getDivider(this._options.timeUnit)).utc(true).valueOf();
             }
-            data.push({ x: time, y: 0.5, val: d[ d.length - 1 ] });
+            data.push({x: time, y: 0 - (this.expanded ? i : 0), val: d[d.length - 1]});
           });
           let label = GTSLib.serializeGtsMetadata(g);
-          this._mapIndex[ g.id + '' ] = i;
+          this._mapIndex[g.id + ''] = i;
           dataSet.push({
             label: label,
             data: data,
@@ -350,22 +359,32 @@ export class WarpViewAnnotation {
     }
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewAnnotation, this.debug);
+  }
+
   componentDidLoad() {
     this.drawChart();
   }
 
   render() {
     return <div>
+      <button class="expander" onClick={() => this.toggle()} title="collapse/expand">{this.debug}+/-</button>
       <div
         class="chart-container"
         style={{
           position: "relative",
           width: this.width,
-          height: this.height
+          height: this._height
         }}
       >
-        <canvas id={this.uuid} width={this.width} height={this.height}/>
+        <canvas id={this.uuid} width={this.width} height={this._height}/>
       </div>
     </div>;
+  }
+
+  private toggle() {
+    this.expanded = !this.expanded;
+    this.drawChart();
   }
 }

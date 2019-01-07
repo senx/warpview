@@ -39,10 +39,11 @@ export class WarpViewDrillDown {
   @Prop() options: Param = new Param();
   @Prop({mutable: true}) width = '';
   @Prop({mutable: true}) height = '';
+  @Prop() debug = false;
 
   @Element() el: HTMLElement;
 
-  private LOG: Logger = new Logger(WarpViewDrillDown);
+  private LOG: Logger;
   private _options: Param = {
     gridLineColor: '#8e8e8e'
   };
@@ -139,6 +140,10 @@ export class WarpViewDrillDown {
     return details;
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewDrillDown, this.debug);
+  }
+
   componentDidLoad() {
     this.drawChart()
   }
@@ -147,6 +152,7 @@ export class WarpViewDrillDown {
     // noinspection CheckTagEmptyBody
     return <div class="wrapper">
       <calendar-heatmap data={this.heatMapData} overview={'global'}
+                        debug={this.debug}
                         minColor={this._options.minColor}
                         maxColor={this._options.maxColor}></calendar-heatmap>
     </div>;

@@ -40,6 +40,7 @@ export class WarpViewPlot {
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
   @Prop({mutable: true}) gtsFilter = '';
+  @Prop() debug = false;
 
   @State() private _options: Param = {
     showControls: true,
@@ -55,7 +56,7 @@ export class WarpViewPlot {
   @State() chartType = 'line';
   @State() timeClipValue: string = '';
 
-  private LOG: Logger = new Logger(WarpViewPlot);
+  private LOG: Logger;
   private line: HTMLElement;
   private main: HTMLElement;
   private chart: HTMLElement;
@@ -267,6 +268,10 @@ export class WarpViewPlot {
     this.modal.close();
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewPlot, this.debug);
+  }
+
   render() {
     return <div>
       <warp-view-modal modalTitle="TimeClip" ref={(el: any) => this.timeClip = el as WarpViewModal}>
@@ -292,6 +297,7 @@ export class WarpViewPlot {
         : ''}
       {this._options.showGTSTree
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
+                              debug={this.debug}
                               hiddenData={this._toHide} options={this._options}/>
         : ''}
       {this.showChart ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
@@ -300,6 +306,7 @@ export class WarpViewPlot {
         <div class="annotation">
           <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
                                 showLegend={this.showLegend}
+                                debug={this.debug}
                                 timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
                                 hiddenData={this._toHide} options={this._options}/>
         </div>
@@ -307,12 +314,14 @@ export class WarpViewPlot {
           <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}/>
           <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                            ref={(el: any) => this.warpViewChart = el}
+                           debug={this.debug}
                            hiddenData={this._toHide} type={this.chartType}
                            options={this._options}/>
         </div>
       </div> : ''}
       {this.showMap ? <div class="map-container">
         <warp-view-map options={this._options} id="map" data={this._data as any}
+                       debug={this.debug}
                        responsive={this.responsive} hiddenData={this._toHide}/>
       </div> : ''}
     </div>;

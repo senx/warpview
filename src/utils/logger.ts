@@ -18,17 +18,16 @@
 export class Logger {
 
   className: string;
+  isDebug: boolean = false;
 
   /**
    *
    * @param className
+   * @param {boolean} isDebug
    */
-  constructor(className: any) {
+  constructor(className: any, isDebug: boolean = false) {
     this.className = className.name;
-  }
-  private static isArray(value) {
-    return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
-      && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
+    this.isDebug = isDebug;
   }
 
   /**
@@ -43,7 +42,9 @@ export class Logger {
     logChain = logChain.concat(args);
     switch (level) {
       case LEVEL.DEBUG: {
-        console.debug(...logChain);
+        if (this.isDebug) {
+          console.debug(...logChain);
+        }
         break;
       }
       case LEVEL.ERROR: {
@@ -59,7 +60,9 @@ export class Logger {
         break;
       }
       default: {
-        console.log(...logChain);
+        if (this.isDebug) {
+          console.log(...logChain);
+        }
       }
     }
   }

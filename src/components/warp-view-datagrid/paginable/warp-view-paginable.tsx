@@ -32,13 +32,14 @@ export class WarpViewPaginable {
   @Prop() data: { name: string, values: any[], headers: string[] };
   @Prop() options: Param = new Param();
   @Prop() elemsCount = 15;
+  @Prop() debug = false;
 
   @State() page = 0;
 
   private pages: number[] = [];
   private _data: { name: string, values: any[], headers: string[] };
   private displayedValues: any[] = [];
-  private LOG: Logger = new Logger(WarpViewPaginable);
+  private LOG: Logger;
   private _options: Param = {
     timeMode: 'date'
   };
@@ -77,6 +78,7 @@ export class WarpViewPaginable {
   }
 
   componentWillLoad() {
+    this.LOG = new Logger(WarpViewPaginable, this.debug);
     this.drawGridData();
   }
 
