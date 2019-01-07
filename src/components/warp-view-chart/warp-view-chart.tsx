@@ -138,7 +138,7 @@ export class WarpViewChart {
     this.ticks = [];
     this.visibility = [];
     const datasets = [];
-    const data = {};
+    const data = {}; //hashset, no order guaranteed
     let labels = [];
     let colors = [];
     if (!gtsList) {
@@ -155,7 +155,7 @@ export class WarpViewChart {
       });
       gtsList.forEach((g, i) => {
         let label = GTSLib.serializeGtsMetadata(g);
-        GTSLib.gtsSort(g);
+        //GTSLib.gtsSort(g); // no need because data{} is not sorted, will sort later the full dataset
         g.v.forEach(value => {
           const ts = value[0];
           if (!data[ts]) {
@@ -182,7 +182,7 @@ export class WarpViewChart {
         this.ticks.push(ts);
       }
     });
-    // datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
+    datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1); //needed, data is not a treeset or sortedset
     this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
     return {datasets: datasets, labels: labels, colors: colors.slice(0, labels.length)};
   }
