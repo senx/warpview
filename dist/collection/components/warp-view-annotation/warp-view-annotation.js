@@ -74,6 +74,9 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].ticks.min = newValue;
                 }
                 else {
+                    if (newValue == 0 && !this.standalone) {
+                        newValue = 1;
+                    }
                     this._chart.options.scales.xAxes[0].time.min = newValue;
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
@@ -89,6 +92,9 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].ticks.max = newValue;
                 }
                 else {
+                    if (newValue == 0 && !this.standalone) {
+                        newValue = 1;
+                    }
                     this._chart.options.scales.xAxes[0].time.max = newValue;
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
@@ -205,9 +211,11 @@ export class WarpViewAnnotation {
             };
         }
         else {
+            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin;
+            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax;
             chartOption.scales.xAxes[0].time = {
-                min: this.timeMin,
-                max: this.timeMax,
+                min: tmin,
+                max: tmax,
                 displayFormats: {
                     millisecond: 'HH:mm:ss.SSS',
                     second: 'HH:mm:ss',

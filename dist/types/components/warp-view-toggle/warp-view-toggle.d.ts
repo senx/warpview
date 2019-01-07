@@ -8,6 +8,7 @@ export declare class WarpViewToggle {
     state: boolean;
     stateChange: EventEmitter;
     componentWillLoad(): void;
+    private onchecked;
     switched(): void;
     render(): JSX.Element;
 }

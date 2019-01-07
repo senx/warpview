@@ -8,6 +8,9 @@ export class WarpViewToggle {
     componentWillLoad() {
         this.state = this.checked;
     }
+    onchecked(newValue, oldValue) {
+        this.state = newValue;
+    }
     switched() {
         this.state = !this.state;
         this.stateChange.emit({ state: this.state, id: this.el.id });
@@ -28,7 +31,8 @@ export class WarpViewToggle {
     static get properties() { return {
         "checked": {
             "type": Boolean,
-            "attr": "checked"
+            "attr": "checked",
+            "watchCallbacks": ["onchecked"]
         },
         "el": {
             "elementRef": true

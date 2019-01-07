@@ -29,7 +29,7 @@ export class WarpViewPlot {
         this.main = this.el.shadowRoot.querySelector('div.maincontainer');
         this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
         this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
-        this.drawCharts();
+        this.drawCharts(true);
     }
     async getTimeClip() {
         this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
@@ -43,7 +43,7 @@ export class WarpViewPlot {
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
-            this.drawCharts();
+            this.drawCharts(true);
         }
     }
     onOptions(newValue, oldValue) {
@@ -160,7 +160,7 @@ export class WarpViewPlot {
             }, 500);
         }
     }
-    drawCharts() {
+    drawCharts(firstdraw = false) {
         this.LOG.debug(['drawCharts'], [this.data, this.options]);
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this._data = GTSLib.getData(this.data);
@@ -172,6 +172,25 @@ export class WarpViewPlot {
             opts = this.options;
         }
         this._options = ChartLib.mergeDeep(this._options, opts);
+        this.LOG.debug(["PPts"], "firstdraw " + firstdraw);
+        if (firstdraw) {
+            let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+            let dataList = this._data.data;
+            if (dataList) {
+                let gtsList = GTSLib.flattenGtsIdArray(dataList, 0).res;
+                gtsList = GTSLib.flatDeep(gtsList);
+                let timestampMode = true;
+                gtsList.forEach(g => {
+                    if (g.v.length > 0) {
+                        timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
+                        timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
+                    }
+                });
+                if (timestampMode) {
+                    this._options.timeMode = "timestamp";
+                }
+            }
+        }
         this.timeClip.close();
         this.modal.close();
         this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
@@ -191,7 +210,7 @@ export class WarpViewPlot {
                 h("button", { type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),
             this._options.showControls
                 ? h("div", { class: "inline" },
-                    h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp" }),
+                    h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp", checked: this._options.timeMode == "timestamp" }),
                     h("warp-view-toggle", { id: "typeSwitch", "text-1": "Line", "text-2": "Step" }),
                     h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
                     h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }))

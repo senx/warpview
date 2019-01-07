@@ -1579,7 +1579,10 @@
         {
           "name": "checked",
           "type": "Boolean",
-          "attr": "checked"
+          "attr": "checked",
+          "watch": [
+            "onchecked"
+          ]
         },
         {
           "name": "text1",
