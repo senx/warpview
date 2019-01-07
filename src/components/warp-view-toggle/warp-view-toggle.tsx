@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Prop, State} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Prop, State, Watch} from '@stencil/core';
 
 @Component({
   tag: 'warp-view-toggle',
@@ -35,6 +35,11 @@ export class WarpViewToggle {
 
   componentWillLoad() {
     this.state = this.checked;
+  }
+
+  @Watch('checked') 
+  private onchecked(newValue:boolean, oldValue:boolean) {
+    this.state = newValue;
   }
 
   switched() {
