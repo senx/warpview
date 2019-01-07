@@ -211,6 +211,7 @@
           <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-main" role="tabpanel"
                  aria-labelledby="v-pills-1-tab">
+
               <h1>Warp View</h1>
               <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
                                                                               target="_blank">Warp 10™</a>s
@@ -693,7 +694,6 @@
       var divs = $(id).find('warp-view-tile');
       for (var i = 0; i < divs.length; i++) {
         divs[i].options = {...defOpts};
-        console.log('index', divs[i].options)
       }
     });
     var divs = $.find('warp-view-tile');

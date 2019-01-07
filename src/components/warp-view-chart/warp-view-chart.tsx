@@ -151,6 +151,9 @@ export class WarpViewChart {
       labels = new Array(gtsList.length);
       labels.push('Date');
       colors = [];
+      const nonPlottable = gtsList.filter(g => {
+        return (g.v && !GTSLib.isGtsToPlot(g));
+      });
       gtsList = gtsList.filter(g => {
         return (g.v && GTSLib.isGtsToPlot(g));
       });
@@ -170,6 +173,22 @@ export class WarpViewChart {
         colors.push(color);
         this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
       });
+      this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
+      if (nonPlottable.length > 0 && gtsList.length === 0) {
+        const nonPlottableArr = nonPlottable.reduce((accumulator, currentValue) => accumulator.concat(currentValue.v), []);
+        nonPlottableArr.forEach(value => {
+          const ts = value[0];
+          if (!data[ts]) {
+            data[ts] = new Array(gtsList.length);
+            data[ts].fill(null);
+          }
+          data[ts][0] = 0;
+        });
+        let color = ColorLib.getColor(0);
+        labels.push('');
+        colors.push(color);
+        this.visibility.push(false);
+      }
     }
     this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
     labels = labels.filter((i) => !!i);
@@ -183,7 +202,7 @@ export class WarpViewChart {
         this.ticks.push(ts);
       }
     });
-    datasets.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1); //needed, data is not a treeset or sortedset
+    datasets.sort((a, b) => a[0] > b[0] ? 1 : -1); //needed, data is not a treeset or sortedset
     this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
     return {datasets: datasets, labels: labels, colors: colors.slice(0, labels.length)};
   }
@@ -446,11 +465,13 @@ export class WarpViewChart {
           return WarpViewChart.toFixed(x as number);
         }
       }
-      this._chart = new Dygraph(
-        chart,
-        dataToplot.datasets || [],
-        options
-      );
+      if (!!this._chart) {
+        this._chart.destroy();
+      }
+      dataToplot.datasets = dataToplot.datasets || [];
+      if (dataToplot.datasets.length > 0) {
+        this._chart = new Dygraph(chart, dataToplot.datasets, options);
+      }
 
       this.LOG.debug(['options.height'], options.height);
       this.onResize();
