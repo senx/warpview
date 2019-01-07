@@ -11,6 +11,7 @@ export declare class WarpViewPlot {
     responsive: boolean;
     showLegend: boolean;
     gtsFilter: string;
+    debug: boolean;
     private _options;
     private _data;
     private _toHide;
@@ -46,5 +47,6 @@ export declare class WarpViewPlot {
     private handleMouseOut;
     private drawCharts;
     private applyFilter;
+    componentWillLoad(): void;
     render(): JSX.Element;
 }

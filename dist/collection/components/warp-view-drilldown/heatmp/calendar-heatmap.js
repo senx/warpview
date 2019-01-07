@@ -11,7 +11,7 @@ export class CalendarHeatmap {
         this.minColor = CalendarHeatmap.DEF_MIN_COLOR;
         this.maxColor = CalendarHeatmap.DEF_MAX_COLOR;
         this.overview = 'global';
-        this.LOG = new Logger(CalendarHeatmap);
+        this.debug = false;
         this.gutter = 5;
         this.width = 1000;
         this.height = 200;
@@ -1303,6 +1303,9 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             .remove();
     }
     ;
+    componentWillLoad() {
+        this.LOG = new Logger(CalendarHeatmap, this.debug);
+    }
     componentDidLoad() {
         this.chart = this.el.shadowRoot.querySelector('#' + this.uuid);
         this.svg = select(this.chart).append('svg').attr('class', 'svg');
@@ -1325,6 +1328,10 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

@@ -11,6 +11,7 @@ export declare class WarpViewImage {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -19,6 +20,7 @@ export declare class WarpViewImage {
     onResize(): void;
     private onData;
     private onOptions;
+    componentWillLoad(): void;
     private drawChart;
     private getStyle;
     componentDidLoad(): void;

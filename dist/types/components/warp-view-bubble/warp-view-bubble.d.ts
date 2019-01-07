@@ -10,6 +10,7 @@ export declare class WarpViewBubble {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private _options;
     private LOG;
@@ -22,6 +23,7 @@ export declare class WarpViewBubble {
     private onOptions;
     private drawChart;
     private parseData;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

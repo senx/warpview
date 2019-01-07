@@ -8,6 +8,7 @@ export declare class WarpViewPaginable {
     };
     options: Param;
     elemsCount: number;
+    debug: boolean;
     page: number;
     private pages;
     private _data;

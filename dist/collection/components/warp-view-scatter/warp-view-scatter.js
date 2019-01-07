@@ -14,7 +14,7 @@ export class WarpViewScatter {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewScatter);
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
@@ -167,6 +167,9 @@ export class WarpViewScatter {
         this.LOG.debug(['gtsToScatter', 'datasets'], datasets);
         return datasets;
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewScatter, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -182,6 +185,10 @@ export class WarpViewScatter {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

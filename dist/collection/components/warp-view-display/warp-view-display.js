@@ -10,7 +10,7 @@ export class WarpViewDisplay {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewDisplay);
+        this.debug = false;
         this.toDisplay = '';
         this._options = new Param();
     }
@@ -68,6 +68,9 @@ export class WarpViewDisplay {
             return style;
         }
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewDisplay, this.debug);
+    }
     componentDidLoad() {
         this.LOG.debug(['componentDidLoad'], this._options);
         this.drawChart();
@@ -89,6 +92,10 @@ export class WarpViewDisplay {
             "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

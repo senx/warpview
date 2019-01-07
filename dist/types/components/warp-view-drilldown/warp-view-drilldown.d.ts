@@ -11,6 +11,7 @@ export declare class WarpViewDrillDown {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -22,6 +23,7 @@ export declare class WarpViewDrillDown {
     private onOptions;
     private drawChart;
     private parseData;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

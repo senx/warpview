@@ -1,8 +1,6 @@
 import '../../stencil.core';
-import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 export declare class WarpViewTile {
-    LOG: Logger;
     data: any;
     options: Param;
     unit: string;
@@ -12,7 +10,9 @@ export declare class WarpViewTile {
     showLegend: boolean;
     url: string;
     gtsFilter: string;
+    debug: boolean;
     wsElement: HTMLElement;
+    private LOG;
     private warpScript;
     private execUrl;
     private timeUnit;
@@ -30,6 +30,7 @@ export declare class WarpViewTile {
     componentDidLoad(): void;
     private parseGTS;
     private detectWarpScriptSpecialComments;
+    componentWillLoad(): void;
     private execute;
     render(): JSX.Element;
 }

@@ -1,10 +1,8 @@
 export class Logger {
-    constructor(className) {
+    constructor(className, isDebug = false) {
+        this.isDebug = false;
         this.className = className.name;
-    }
-    static isArray(value) {
-        return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
-            && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
+        this.isDebug = isDebug;
     }
     log(level, methods, args) {
         let logChain = [];
@@ -12,7 +10,9 @@ export class Logger {
         logChain = logChain.concat(args);
         switch (level) {
             case LEVEL.DEBUG: {
-                console.debug(...logChain);
+                if (this.isDebug) {
+                    console.debug(...logChain);
+                }
                 break;
             }
             case LEVEL.ERROR: {
@@ -28,7 +28,9 @@ export class Logger {
                 break;
             }
             default: {
-                console.log(...logChain);
+                if (this.isDebug) {
+                    console.log(...logChain);
+                }
             }
         }
     }

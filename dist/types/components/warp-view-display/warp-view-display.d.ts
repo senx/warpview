@@ -11,6 +11,7 @@ export declare class WarpViewDisplay {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private toDisplay;
@@ -19,6 +20,7 @@ export declare class WarpViewDisplay {
     private onOptions;
     private drawChart;
     private getStyle;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

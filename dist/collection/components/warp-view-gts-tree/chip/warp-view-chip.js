@@ -6,12 +6,12 @@ export class WarpViewChip {
     constructor() {
         this.gtsFilter = '';
         this.hiddenData = [];
+        this.debug = false;
         this.ref = false;
         this._node = {
             selected: true,
             gts: GTS
         };
-        this.LOG = new Logger(WarpViewChip);
     }
     onGtsFilter(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -45,6 +45,7 @@ export class WarpViewChip {
         this.ref = !this.ref;
     }
     componentWillLoad() {
+        this.LOG = new Logger(WarpViewChip, this.debug);
         this._node = Object.assign({}, this.node, { selected: this.hiddenData.indexOf(this.node.gts.id) === -1 });
     }
     componentDidLoad() {
@@ -110,6 +111,10 @@ export class WarpViewChip {
     static get is() { return "warp-view-chip"; }
     static get encapsulation() { return "shadow"; }
     static get properties() { return {
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
+        },
         "gtsFilter": {
             "type": String,
             "attr": "gts-filter",

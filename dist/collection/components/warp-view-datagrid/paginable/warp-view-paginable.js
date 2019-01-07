@@ -7,10 +7,10 @@ export class WarpViewPaginable {
     constructor() {
         this.options = new Param();
         this.elemsCount = 15;
+        this.debug = false;
         this.page = 0;
         this.pages = [];
         this.displayedValues = [];
-        this.LOG = new Logger(WarpViewPaginable);
         this._options = {
             timeMode: 'date'
         };
@@ -45,6 +45,7 @@ export class WarpViewPaginable {
         this.LOG.debug(['drawGridData', '_data'], this.data);
     }
     componentWillLoad() {
+        this.LOG = new Logger(WarpViewPaginable, this.debug);
         this.drawGridData();
     }
     render() {
@@ -76,6 +77,10 @@ export class WarpViewPaginable {
         "data": {
             "type": "Any",
             "attr": "data"
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "elemsCount": {
             "type": Number,

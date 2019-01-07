@@ -5,6 +5,7 @@ export declare class WarpViewChip {
     node: any;
     gtsFilter: string;
     hiddenData: number[];
+    debug: boolean;
     ref: boolean;
     warpViewSelectedGTS: EventEmitter;
     private chip;
@@ -14,9 +15,6 @@ export declare class WarpViewChip {
     private onHideData;
     handleKeyDown(ev: KeyboardEvent): void;
     private colorizeChip;
-    /**
-     *
-     */
     componentWillLoad(): void;
     /**
      *

@@ -16,9 +16,23 @@
  */
 
 :host {
-  .chart-container {
-    width: var(--warp-view-chart-width, 100%);
-    height: var(--warp-view-chart-height, 100%);
+  div {
     position: relative;
+
+    .chart-container {
+      width: var(--warp-view-chart-width, 100%);
+      height: var(--warp-view-chart-height, 100%);
+      position: relative;
+    }
+
+    .expander {
+      background-color: #fff;
+      border: solid 1px #888;
+      cursor: pointer;
+      top: 25px;
+      position: absolute;
+      z-index: 100;
+    }
   }
+
 }

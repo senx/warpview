@@ -14,6 +14,7 @@ export class WarpViewMap {
         this.heatData = [];
         this.options = {};
         this.hiddenData = [];
+        this.debug = false;
         this._options = {
             dotsLimit: 1000,
             heatControls: false,
@@ -30,7 +31,6 @@ export class WarpViewMap {
             WATERCOLOR: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png'
         };
         this.uuid = 'map-' + ChartLib.guid().split('-').join('');
-        this.LOG = new Logger(WarpViewMap);
         this.polylinesBeforeCurrentValue = [];
         this.polylinesAfterCurrentValue = [];
         this.currentValuesMarkers = [];
@@ -385,6 +385,9 @@ export class WarpViewMap {
         this.mapElement.style.width = width + 'px';
         this.mapElement.style.height = height + 'px';
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewMap, this.debug);
+    }
     componentDidLoad() {
         this.drawMap();
     }
@@ -401,6 +404,10 @@ export class WarpViewMap {
             "type": "Any",
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

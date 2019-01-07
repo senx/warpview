@@ -7,10 +7,10 @@ export class WarpViewGtsTree {
         this.gtsFilter = '';
         this.options = new Param();
         this.hiddenData = [];
+        this.debug = false;
         this.hide = false;
         this.gtsList = [];
         this._options = new Param();
-        this.LOG = new Logger(WarpViewGtsTree);
         this._isFolded = false;
     }
     onData(newValue, oldValue) {
@@ -39,6 +39,7 @@ export class WarpViewGtsTree {
         this.doRender();
     }
     componentWillLoad() {
+        this.LOG = new Logger(WarpViewGtsTree, this.debug);
         this.LOG.debug(['componentWillLoad', 'data'], this.data);
         if (this.data) {
             this.doRender();
@@ -93,7 +94,7 @@ export class WarpViewGtsTree {
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
                     h("span", { class: "expanded", id: "root" }),
                     " Stack"),
-                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter }))
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, debug: this.debug, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter }))
             : '';
     }
     static get is() { return "warp-view-gts-tree"; }
@@ -102,6 +103,10 @@ export class WarpViewGtsTree {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

@@ -9,6 +9,7 @@ export declare class WarpViewDatagrid {
     width: string;
     height: string;
     elemsCount: number;
+    debug: boolean;
     el: HTMLElement;
     page: number;
     private LOG;

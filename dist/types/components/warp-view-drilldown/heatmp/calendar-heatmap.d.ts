@@ -9,6 +9,7 @@ export declare class CalendarHeatmap {
     minColor: string;
     maxColor: string;
     overview: string;
+    debug: boolean;
     handler: EventEmitter;
     onChange: EventEmitter;
     private LOG;
@@ -141,6 +142,7 @@ export declare class CalendarHeatmap {
      */
     private hideBackButton;
     private getTooltip;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

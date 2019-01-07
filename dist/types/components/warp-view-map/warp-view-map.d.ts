@@ -9,6 +9,7 @@ export declare class WarpViewMap {
     heatData: any[];
     options: any;
     hiddenData: number[];
+    debug: boolean;
     el: HTMLElement;
     private _options;
     private mapTypes;
@@ -46,6 +47,7 @@ export declare class WarpViewMap {
     private updateAnnotation;
     private updatePositionArray;
     resize(): void;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

@@ -12,7 +12,7 @@ export class WarpViewDrillDown {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewDrillDown);
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
@@ -100,12 +100,15 @@ export class WarpViewDrillDown {
         });
         return details;
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewDrillDown, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
     render() {
         return h("div", { class: "wrapper" },
-            h("calendar-heatmap", { data: this.heatMapData, overview: 'global', minColor: this._options.minColor, maxColor: this._options.maxColor }));
+            h("calendar-heatmap", { data: this.heatMapData, overview: 'global', debug: this.debug, minColor: this._options.minColor, maxColor: this._options.maxColor }));
     }
     static get is() { return "warp-view-drilldown"; }
     static get encapsulation() { return "shadow"; }
@@ -114,6 +117,10 @@ export class WarpViewDrillDown {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

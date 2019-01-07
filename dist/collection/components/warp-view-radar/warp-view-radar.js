@@ -12,7 +12,7 @@ export class WarpViewRadar {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewRadar);
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
@@ -146,6 +146,9 @@ export class WarpViewRadar {
             this.onResize();
         }
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewRadar, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -161,6 +164,10 @@ export class WarpViewRadar {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

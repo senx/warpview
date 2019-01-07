@@ -8,6 +8,7 @@ export declare class WarpViewPie {
     width: string;
     height: string;
     responsive: boolean;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -27,6 +28,7 @@ export declare class WarpViewPie {
     private drawChart;
     private getRotation;
     private getCirc;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

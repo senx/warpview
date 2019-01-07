@@ -7,11 +7,11 @@ export class WarpViewGtsPopup {
         this.gtsList = new DataModel();
         this.maxToShow = 5;
         this.hiddenData = [];
+        this.debug = false;
         this.displayed = [];
         this.current = 0;
         this._gts = [];
         this.chips = [];
-        this.LOG = new Logger(WarpViewGtsPopup);
     }
     handleKeyDown(e) {
         if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
@@ -82,6 +82,9 @@ export class WarpViewGtsPopup {
             }
         });
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewGtsPopup, this.debug);
+    }
     componentDidLoad() {
         this.prepareData();
     }
@@ -107,6 +110,10 @@ export class WarpViewGtsPopup {
     static get properties() { return {
         "current": {
             "state": true
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "displayed": {
             "state": true

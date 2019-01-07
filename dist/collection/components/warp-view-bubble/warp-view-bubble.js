@@ -13,10 +13,10 @@ export class WarpViewBubble {
         this.options = new Param();
         this.width = '';
         this.height = '';
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
-        this.LOG = new Logger(WarpViewBubble);
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
     }
@@ -155,6 +155,9 @@ export class WarpViewBubble {
         }
         return datasets;
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewBubble, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -170,6 +173,10 @@ export class WarpViewBubble {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

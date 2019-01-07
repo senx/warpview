@@ -10,6 +10,7 @@ export declare class WarpViewBar {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -24,6 +25,7 @@ export declare class WarpViewBar {
     private buildGraph;
     private drawChart;
     private gtsToData;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

@@ -1,11 +1,12 @@
 export declare class Logger {
     className: string;
+    isDebug: boolean;
     /**
      *
      * @param className
+     * @param {boolean} isDebug
      */
-    constructor(className: any);
-    private static isArray;
+    constructor(className: any, isDebug?: boolean);
     /**
      *
      * @param {LEVEL} level

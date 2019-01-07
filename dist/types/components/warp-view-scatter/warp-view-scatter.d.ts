@@ -10,6 +10,7 @@ export declare class WarpViewScatter {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -22,6 +23,7 @@ export declare class WarpViewScatter {
     private onOptions;
     private drawChart;
     private gtsToScatter;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

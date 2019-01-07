@@ -11,18 +11,21 @@ export class WarpViewAnnotation {
         this.showLegend = true;
         this.options = new Param();
         this.hiddenData = [];
-        this.width = "";
-        this.height = "";
+        this.width = '';
+        this.height = '';
         this.standalone = true;
+        this.debug = false;
+        this.displayExpander = true;
         this.legendOffset = 70;
         this._mapIndex = {};
-        this.LOG = new Logger(WarpViewAnnotation);
         this._options = {
             gridLineColor: '#000000',
             timeMode: 'date'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
+        this._height = '0';
+        this.expanded = false;
     }
     onResize() {
         if (this.el.parentElement.clientWidth !== this.parentWidth) {
@@ -57,9 +60,12 @@ export class WarpViewAnnotation {
         if (oldValue !== newValue && this._chart) {
             this.LOG.debug(['hiddenData'], newValue);
             const hiddenData = GTSLib.cleanArray(newValue);
+            this.displayExpander = false;
             if (this._chart) {
                 Object.keys(this._mapIndex).forEach(key => {
-                    this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+                    const hidden = !!hiddenData.find(item => item + '' === key);
+                    this.displayExpander = this.displayExpander || !hidden;
+                    this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
                 });
                 this._chart.update();
                 this.drawChart();
@@ -112,11 +118,16 @@ export class WarpViewAnnotation {
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.parseData(this.data);
-        let calculatedHeight = 30 * gts.length + this.legendOffset;
-        let height = this.height || this.height !== ''
+        if (!gts || gts.length === 0) {
+            return;
+        }
+        let calculatedHeight = (this.expanded ? 60 : 30) * gts.length + this.legendOffset;
+        let height = this.height
+            || this.height !== ''
             ? Math.max(calculatedHeight, parseInt(this.height))
             : calculatedHeight;
-        this.height = height.toString();
+        this._height = height.toString();
+        this.LOG.debug(['drawChart', 'height'], height, gts.length, calculatedHeight);
         ctx.parentElement.style.height = height + 'px';
         ctx.parentElement.style.width = '100%';
         const color = this._options.gridLineColor;
@@ -134,8 +145,8 @@ export class WarpViewAnnotation {
                 duration: 0,
             },
             tooltips: {
-                mode: "x",
-                position: "nearest",
+                mode: 'x',
+                position: 'nearest',
                 custom: function (tooltip) {
                     if (tooltip.opacity > 0) {
                         me.pointHover.emit({
@@ -150,7 +161,7 @@ export class WarpViewAnnotation {
                 },
                 callbacks: {
                     title: (tooltipItems) => {
-                        return tooltipItems[0].xLabel || "";
+                        return tooltipItems[0].xLabel || '';
                     },
                     label: (tooltipItem, data) => {
                         return `${data.datasets[tooltipItem.datasetIndex].label}: ${data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
@@ -175,20 +186,21 @@ export class WarpViewAnnotation {
                 ],
                 yAxes: [
                     {
-                        display: false,
+                        display: true,
                         drawTicks: false,
                         scaleLabel: {
                             display: false
                         },
-                        afterFit: function (scaleInstance) {
+                        afterFit: (scaleInstance) => {
                             scaleInstance.width = 100;
                         },
                         gridLines: {
                             color: color,
                             zeroLineColor: color,
+                            drawBorder: false
                         },
                         ticks: {
-                            fontColor: color,
+                            display: false,
                             min: 0,
                             max: 1,
                             beginAtZero: true,
@@ -199,6 +211,9 @@ export class WarpViewAnnotation {
             }
         };
         this.LOG.debug(['options'], this._options);
+        if (this.expanded) {
+            chartOption.scales.yAxes[0].ticks.max = gts.length;
+        }
         if (this._options.timeMode === 'timestamp') {
             chartOption.scales.xAxes[0].time = {};
             chartOption.scales.xAxes[0].type = 'linear';
@@ -234,15 +249,7 @@ export class WarpViewAnnotation {
         if (this._chart) {
             this._chart.destroy();
         }
-        if (!gts || gts.length === 0) {
-            return;
-        }
-        this._chart = new Chart.Scatter(ctx, {
-            data: {
-                datasets: gts
-            },
-            options: chartOption
-        });
+        this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: chartOption });
         Object.keys(this._mapIndex).forEach(key => {
             this.LOG.debug(['drawChart', 'hide'], [key]);
             this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
@@ -263,48 +270,61 @@ export class WarpViewAnnotation {
             dataList = GTSLib.flatDeep(dataList);
             this.LOG.debug(['parseData', 'dataList'], dataList);
             let i = 0;
+            dataList = dataList.filter(g => {
+                return (g.v && GTSLib.isGtsToAnnotate(g));
+            });
             dataList.forEach(g => {
-                if (GTSLib.isGtsToAnnotate(g)) {
-                    this.LOG.debug(['parseData', 'will draw'], g);
-                    let data = [];
-                    let color = ColorLib.getColor(g.id);
-                    const myImage = ChartLib.buildImage(1, 30, color);
-                    g.v.forEach(d => {
-                        let time = d[0];
-                        if (this._options.timeMode !== 'timestamp') {
-                            time = moment(time / GTSLib.getDivider(this._options.timeUnit)).utc(true).valueOf();
-                        }
-                        data.push({ x: time, y: 0.5, val: d[d.length - 1] });
-                    });
-                    let label = GTSLib.serializeGtsMetadata(g);
-                    this._mapIndex[g.id + ''] = i;
-                    dataSet.push({
-                        label: label,
-                        data: data,
-                        pointRadius: 5,
-                        pointHoverRadius: 5,
-                        pointHitRadius: 5,
-                        pointStyle: myImage,
-                        borderColor: color,
-                        backgroundColor: ColorLib.transparentize(color)
-                    });
-                    i++;
-                }
+                this.LOG.debug(['parseData', 'will draw'], g);
+                let data = [];
+                let color = ColorLib.getColor(g.id);
+                const myImage = ChartLib.buildImage(1, 30, color);
+                g.v.forEach(d => {
+                    let time = d[0];
+                    if (this._options.timeMode !== 'timestamp') {
+                        time = moment(time / GTSLib.getDivider(this._options.timeUnit)).utc(true).valueOf();
+                    }
+                    data.push({ x: time, y: (this.expanded ? dataList.length - 1 - i : 0) + 0.5, val: d[d.length - 1] });
+                });
+                let label = GTSLib.serializeGtsMetadata(g);
+                this._mapIndex[g.id + ''] = i;
+                dataSet.push({
+                    label: label,
+                    data: data,
+                    pointRadius: 5,
+                    pointHoverRadius: 5,
+                    pointHitRadius: 5,
+                    pointStyle: myImage,
+                    borderColor: color,
+                    backgroundColor: ColorLib.transparentize(color)
+                });
+                i++;
             });
             return dataSet;
         }
+    }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewAnnotation, this.debug);
     }
     componentDidLoad() {
         this.drawChart();
     }
     render() {
         return h("div", null,
+            this.displayExpander
+                ? h("button", { class: "expander", onClick: () => this.toggle(), title: "collapse/expand" },
+                    this.debug,
+                    "+/-")
+                : '',
             h("div", { class: "chart-container", style: {
                     position: "relative",
                     width: this.width,
-                    height: this.height
+                    height: this._height
                 } },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
+                h("canvas", { id: this.uuid, width: this.width, height: this._height })));
+    }
+    toggle() {
+        this.expanded = !this.expanded;
+        this.drawChart();
     }
     static get is() { return "warp-view-annotation"; }
     static get encapsulation() { return "shadow"; }
@@ -313,6 +333,13 @@ export class WarpViewAnnotation {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
+        },
+        "displayExpander": {
+            "state": true
         },
         "el": {
             "elementRef": true

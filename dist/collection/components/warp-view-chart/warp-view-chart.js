@@ -13,7 +13,7 @@ export class WarpViewChart {
         this.type = 'line';
         this.responsive = false;
         this.standalone = true;
-        this.LOG = new Logger(WarpViewChart);
+        this.debug = false;
         this._options = {
             timeMode: 'date',
             showRangeSelector: true,
@@ -93,6 +93,9 @@ export class WarpViewChart {
             labels = new Array(gtsList.length);
             labels.push('Date');
             colors = [];
+            const nonPlottable = gtsList.filter(g => {
+                return (g.v && !GTSLib.isGtsToPlot(g));
+            });
             gtsList = gtsList.filter(g => {
                 return (g.v && GTSLib.isGtsToPlot(g));
             });
@@ -111,6 +114,22 @@ export class WarpViewChart {
                 colors.push(color);
                 this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
             });
+            this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
+            if (nonPlottable.length > 0 && gtsList.length === 0) {
+                const nonPlottableArr = nonPlottable.reduce((accumulator, currentValue) => accumulator.concat(currentValue.v), []);
+                nonPlottableArr.forEach(value => {
+                    const ts = value[0];
+                    if (!data[ts]) {
+                        data[ts] = new Array(gtsList.length);
+                        data[ts].fill(null);
+                    }
+                    data[ts][0] = 0;
+                });
+                let color = ColorLib.getColor(0);
+                labels.push('');
+                colors.push(color);
+                this.visibility.push(false);
+            }
         }
         this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
         labels = labels.filter((i) => !!i);
@@ -356,7 +375,13 @@ export class WarpViewChart {
                     return WarpViewChart.toFixed(x);
                 };
             }
-            this._chart = new Dygraph(chart, dataToplot.datasets || [], options);
+            if (!!this._chart) {
+                this._chart.destroy();
+            }
+            dataToplot.datasets = dataToplot.datasets || [];
+            if (dataToplot.datasets.length > 0) {
+                this._chart = new Dygraph(chart, dataToplot.datasets, options);
+            }
             this.LOG.debug(['options.height'], options.height);
             this.onResize();
         }
@@ -367,6 +392,9 @@ export class WarpViewChart {
             status = s || status;
         });
         return status;
+    }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewChart, this.debug);
     }
     componentDidLoad() {
         this.drawChart();
@@ -381,6 +409,10 @@ export class WarpViewChart {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

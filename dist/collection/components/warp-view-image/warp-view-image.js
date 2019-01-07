@@ -10,7 +10,7 @@ export class WarpViewImage {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewImage);
+        this.debug = false;
         this._options = new Param();
     }
     onResize() {
@@ -31,6 +31,9 @@ export class WarpViewImage {
             this.LOG.debug(['options'], newValue);
             this.drawChart();
         }
+    }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewImage, this.debug);
     }
     drawChart() {
         this.LOG.debug(['drawChart'], [this.options, this._options]);
@@ -100,6 +103,10 @@ export class WarpViewImage {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

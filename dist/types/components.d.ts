@@ -26,6 +26,7 @@ export namespace Components {
 
   interface WarpViewAnnotation {
     'data': DataModel | DataModel[] | GTS[] | string;
+    'debug': boolean;
     'height': string;
     'hiddenData': number[];
     'options': Param;
@@ -38,6 +39,7 @@ export namespace Components {
   }
   interface WarpViewAnnotationAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | DataModel[] | GTS[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'hiddenData'?: number[];
     'onPointHover'?: (event: CustomEvent) => void;
@@ -52,6 +54,7 @@ export namespace Components {
 
   interface WarpViewBar {
     'data': DataModel | DataModel[] | GTS[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -61,6 +64,7 @@ export namespace Components {
   }
   interface WarpViewBarAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | DataModel[] | GTS[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -71,6 +75,7 @@ export namespace Components {
 
   interface WarpViewBubble {
     'data': DataModel | DataModel[] | GTS[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -80,6 +85,7 @@ export namespace Components {
   }
   interface WarpViewBubbleAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | DataModel[] | GTS[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -90,6 +96,7 @@ export namespace Components {
 
   interface WarpViewChart {
     'data': DataModel | GTS[] | string;
+    'debug': boolean;
     'getTimeClip': () => Promise<[number, number]>;
     'hiddenData': number[];
     'options': Param;
@@ -100,6 +107,7 @@ export namespace Components {
   }
   interface WarpViewChartAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | GTS[] | string;
+    'debug'?: boolean;
     'hiddenData'?: number[];
     'onBoundsDidChange'?: (event: CustomEvent) => void;
     'onPointHover'?: (event: CustomEvent) => void;
@@ -113,17 +121,20 @@ export namespace Components {
 
   interface WarpViewPaginable {
     'data': { name: string, values: any[], headers: string[] };
+    'debug': boolean;
     'elemsCount': number;
     'options': Param;
   }
   interface WarpViewPaginableAttributes extends StencilHTMLAttributes {
     'data'?: { name: string, values: any[], headers: string[] };
+    'debug'?: boolean;
     'elemsCount'?: number;
     'options'?: Param;
   }
 
   interface WarpViewDatagrid {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'elemsCount': number;
     'height': string;
     'options': Param;
@@ -133,6 +144,7 @@ export namespace Components {
   }
   interface WarpViewDatagridAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'elemsCount'?: number;
     'height'?: string;
     'options'?: Param;
@@ -143,6 +155,7 @@ export namespace Components {
 
   interface WarpViewDisplay {
     'data': DataModel | DataModel[] | any[] | string | number;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -151,6 +164,7 @@ export namespace Components {
   }
   interface WarpViewDisplayAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | DataModel[] | any[] | string | number;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -160,12 +174,14 @@ export namespace Components {
 
   interface CalendarHeatmap {
     'data': Datum[];
+    'debug': boolean;
     'maxColor': string;
     'minColor': string;
     'overview': string;
   }
   interface CalendarHeatmapAttributes extends StencilHTMLAttributes {
     'data'?: Datum[];
+    'debug'?: boolean;
     'maxColor'?: string;
     'minColor'?: string;
     'onHandler'?: (event: CustomEvent) => void;
@@ -175,6 +191,7 @@ export namespace Components {
 
   interface WarpViewDrilldown {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -183,6 +200,7 @@ export namespace Components {
   }
   interface WarpViewDrilldownAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -191,11 +209,13 @@ export namespace Components {
   }
 
   interface WarpViewGtsPopup {
+    'debug': boolean;
     'gtsList': DataModel;
     'hiddenData': number[];
     'maxToShow': number;
   }
   interface WarpViewGtsPopupAttributes extends StencilHTMLAttributes {
+    'debug'?: boolean;
     'gtsList'?: DataModel;
     'hiddenData'?: number[];
     'maxToShow'?: number;
@@ -203,12 +223,14 @@ export namespace Components {
   }
 
   interface WarpViewChip {
+    'debug': boolean;
     'gtsFilter': string;
     'hiddenData': number[];
     'name': string;
     'node': any;
   }
   interface WarpViewChipAttributes extends StencilHTMLAttributes {
+    'debug'?: boolean;
     'gtsFilter'?: string;
     'hiddenData'?: number[];
     'name'?: string;
@@ -218,6 +240,7 @@ export namespace Components {
 
   interface WarpViewTreeView {
     'branch': boolean;
+    'debug': boolean;
     'gtsFilter': string;
     'gtsList': any[];
     'hidden': boolean;
@@ -225,6 +248,7 @@ export namespace Components {
   }
   interface WarpViewTreeViewAttributes extends StencilHTMLAttributes {
     'branch'?: boolean;
+    'debug'?: boolean;
     'gtsFilter'?: string;
     'gtsList'?: any[];
     'hidden'?: boolean;
@@ -233,12 +257,14 @@ export namespace Components {
 
   interface WarpViewGtsTree {
     'data': DataModel | DataModel[] | GTS[] | string;
+    'debug': boolean;
     'gtsFilter': string;
     'hiddenData': number[];
     'options': Param;
   }
   interface WarpViewGtsTreeAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | DataModel[] | GTS[] | string;
+    'debug'?: boolean;
     'gtsFilter'?: string;
     'hiddenData'?: number[];
     'options'?: Param;
@@ -246,6 +272,7 @@ export namespace Components {
 
   interface WarpViewImage {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'height': string;
     'imageTitle': string;
     'options': Param;
@@ -254,6 +281,7 @@ export namespace Components {
   }
   interface WarpViewImageAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'imageTitle'?: string;
     'options'?: Param;
@@ -283,6 +311,7 @@ export namespace Components {
 
   interface WarpViewMap {
     'data': any;
+    'debug': boolean;
     'heatData': any[];
     'height': number;
     'hiddenData': number[];
@@ -293,6 +322,7 @@ export namespace Components {
   }
   interface WarpViewMapAttributes extends StencilHTMLAttributes {
     'data'?: any;
+    'debug'?: boolean;
     'heatData'?: any[];
     'height'?: number;
     'hiddenData'?: number[];
@@ -312,6 +342,7 @@ export namespace Components {
 
   interface WarpViewPie {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -320,6 +351,7 @@ export namespace Components {
   }
   interface WarpViewPieAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -329,6 +361,7 @@ export namespace Components {
 
   interface WarpViewPlot {
     'data': string | GTS[] | DataModel;
+    'debug': boolean;
     'getTimeClip': () => Promise<[number, number]>;
     'gtsFilter': string;
     'height': string;
@@ -339,6 +372,7 @@ export namespace Components {
   }
   interface WarpViewPlotAttributes extends StencilHTMLAttributes {
     'data'?: string | GTS[] | DataModel;
+    'debug'?: boolean;
     'gtsFilter'?: string;
     'height'?: string;
     'options'?: string | Param;
@@ -349,6 +383,7 @@ export namespace Components {
 
   interface WarpViewPolar {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -357,6 +392,7 @@ export namespace Components {
   }
   interface WarpViewPolarAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -366,6 +402,7 @@ export namespace Components {
 
   interface WarpViewRadar {
     'data': DataModel | any[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -374,6 +411,7 @@ export namespace Components {
   }
   interface WarpViewRadarAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | any[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -383,6 +421,7 @@ export namespace Components {
 
   interface WarpViewScatter {
     'data': DataModel | GTS[] | string;
+    'debug': boolean;
     'height': string;
     'options': Param;
     'responsive': boolean;
@@ -392,6 +431,7 @@ export namespace Components {
   }
   interface WarpViewScatterAttributes extends StencilHTMLAttributes {
     'data'?: DataModel | GTS[] | string;
+    'debug'?: boolean;
     'height'?: string;
     'options'?: Param;
     'responsive'?: boolean;
@@ -409,6 +449,7 @@ export namespace Components {
 
   interface WarpViewTile {
     'chartTitle': string;
+    'debug': boolean;
     'gtsFilter': string;
     'options': Param;
     'resize': () => void;
@@ -420,6 +461,7 @@ export namespace Components {
   }
   interface WarpViewTileAttributes extends StencilHTMLAttributes {
     'chartTitle'?: string;
+    'debug'?: boolean;
     'gtsFilter'?: string;
     'options'?: Param;
     'responsive'?: boolean;

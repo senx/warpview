@@ -12,7 +12,7 @@ export class WarpViewPie {
         this.width = '';
         this.height = '';
         this.responsive = false;
-        this.LOG = new Logger(WarpViewPie);
+        this.debug = false;
         this._options = {
             type: 'pie'
         };
@@ -136,6 +136,9 @@ export class WarpViewPie {
             return 2 * Math.PI;
         }
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewPie, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -151,6 +154,10 @@ export class WarpViewPie {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

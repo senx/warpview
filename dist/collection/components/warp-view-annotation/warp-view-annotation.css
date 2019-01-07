@@ -14,7 +14,16 @@
  *  limitations under the License.
  *
  */
-:host .chart-container {
-  width: var(--warp-view-chart-width, 100%);
-  height: var(--warp-view-chart-height, 100%);
+:host div {
   position: relative; }
+  :host div .chart-container {
+    width: var(--warp-view-chart-width, 100%);
+    height: var(--warp-view-chart-height, 100%);
+    position: relative; }
+  :host div .expander {
+    background-color: #fff;
+    border: solid 1px #888;
+    cursor: pointer;
+    top: 25px;
+    position: absolute;
+    z-index: 100; }

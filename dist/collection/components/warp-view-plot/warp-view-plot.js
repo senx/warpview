@@ -10,6 +10,7 @@ export class WarpViewPlot {
         this.responsive = false;
         this.showLegend = false;
         this.gtsFilter = '';
+        this.debug = false;
         this._options = {
             showControls: true,
             showGTSTree: true,
@@ -21,7 +22,6 @@ export class WarpViewPlot {
         this.showMap = false;
         this.chartType = 'line';
         this.timeClipValue = '';
-        this.LOG = new Logger(WarpViewPlot);
         this.graphId = 'container-' + ChartLib.guid();
     }
     componentDidLoad() {
@@ -199,6 +199,9 @@ export class WarpViewPlot {
         this.gtsFilter = this.filterInput.value;
         this.modal.close();
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewPlot, this.debug);
+    }
     render() {
         return h("div", null,
             h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
@@ -216,17 +219,17 @@ export class WarpViewPlot {
                     h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }))
                 : '',
             this._options.showGTSTree
-                ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, hiddenData: this._toHide, options: this._options })
+                ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options })
                 : '',
             this.showChart ? h("div", { class: "main-container", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
                 h("div", { class: "bar" }),
                 h("div", { class: "annotation" },
-                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
+                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, debug: this.debug, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
                 h("div", { style: { width: '100%', height: '768px' }, id: this.graphId },
                     h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data }),
-                    h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.warpViewChart = el, hiddenData: this._toHide, type: this.chartType, options: this._options }))) : '',
+                    h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.warpViewChart = el, debug: this.debug, hiddenData: this._toHide, type: this.chartType, options: this._options }))) : '',
             this.showMap ? h("div", { class: "map-container" },
-                h("warp-view-map", { options: this._options, id: "map", data: this._data, responsive: this.responsive, hiddenData: this._toHide })) : '');
+                h("warp-view-map", { options: this._options, id: "map", data: this._data, debug: this.debug, responsive: this.responsive, hiddenData: this._toHide })) : '');
     }
     static get is() { return "warp-view-plot"; }
     static get encapsulation() { return "shadow"; }
@@ -253,6 +256,10 @@ export class WarpViewPlot {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

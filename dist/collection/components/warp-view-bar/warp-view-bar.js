@@ -14,7 +14,7 @@ export class WarpViewBar {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewBar);
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
@@ -198,6 +198,9 @@ export class WarpViewBar {
         this.LOG.debug(['gtsToData', 'datasets'], datasets);
         return { datasets: datasets, ticks: GTSLib.unique(ticks).sort((a, b) => a > b ? 1 : a === b ? 0 : -1) };
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewBar, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -213,6 +216,10 @@ export class WarpViewBar {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

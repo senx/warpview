@@ -12,7 +12,7 @@ export class WarpViewPolar {
         this.options = new Param();
         this.width = '';
         this.height = '';
-        this.LOG = new Logger(WarpViewPolar);
+        this.debug = false;
         this._options = {
             gridLineColor: '#8e8e8e'
         };
@@ -125,6 +125,9 @@ export class WarpViewPolar {
             this.onResize();
         }
     }
+    componentWillLoad() {
+        this.LOG = new Logger(WarpViewPolar, this.debug);
+    }
     componentDidLoad() {
         this.drawChart();
     }
@@ -140,6 +143,10 @@ export class WarpViewPolar {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

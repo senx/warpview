@@ -18,6 +18,8 @@ export declare class WarpViewAnnotation {
     width: string;
     height: string;
     standalone: boolean;
+    debug: boolean;
+    displayExpander: boolean;
     pointHover: EventEmitter;
     el: HTMLElement;
     private legendOffset;
@@ -28,6 +30,8 @@ export declare class WarpViewAnnotation {
     private uuid;
     private resizeTimer;
     private parentWidth;
+    private _height;
+    private expanded;
     onResize(): void;
     private onData;
     onOptions(newValue: Param, oldValue: Param): void;
@@ -44,6 +48,8 @@ export declare class WarpViewAnnotation {
      * @returns {any[]}
      */
     private parseData;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
+    private toggle;
 }

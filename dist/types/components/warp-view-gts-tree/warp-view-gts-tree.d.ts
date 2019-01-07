@@ -7,6 +7,7 @@ export declare class WarpViewGtsTree {
     gtsFilter: string;
     options: Param;
     hiddenData: number[];
+    debug: boolean;
     hide: boolean;
     el: HTMLElement;
     private gtsList;
@@ -17,9 +18,6 @@ export declare class WarpViewGtsTree {
     private onOptions;
     private onGtsFilter;
     private onHideData;
-    /**
-     *
-     */
     componentWillLoad(): void;
     private doRender;
     private foldAll;

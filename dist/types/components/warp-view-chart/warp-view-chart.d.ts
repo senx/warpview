@@ -19,6 +19,7 @@ export declare class WarpViewChart {
     type: string;
     responsive: boolean;
     standalone: boolean;
+    debug: boolean;
     el: HTMLElement;
     boundsDidChange: EventEmitter;
     pointHover: EventEmitter;
@@ -59,6 +60,7 @@ export declare class WarpViewChart {
     private drawCallback;
     private drawChart;
     private displayGraph;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

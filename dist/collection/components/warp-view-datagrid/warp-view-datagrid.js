@@ -11,8 +11,8 @@ export class WarpViewDatagrid {
         this.width = '';
         this.height = '';
         this.elemsCount = 15;
+        this.debug = false;
         this.page = 0;
-        this.LOG = new Logger(WarpViewDatagrid);
         this._options = {
             timeMode: 'date'
         };
@@ -96,10 +96,11 @@ export class WarpViewDatagrid {
         return flatData;
     }
     componentWillLoad() {
+        this.LOG = new Logger(WarpViewDatagrid, this.debug);
         this.drawChart();
     }
     render() {
-        return h("div", { class: "wrapper" }, this._data.map((data) => h("warp-view-paginable", { data: data, options: this._options })));
+        return h("div", { class: "wrapper" }, this._data.map((data) => h("warp-view-paginable", { data: data, options: this._options, debug: this.debug })));
     }
     static get is() { return "warp-view-datagrid"; }
     static get encapsulation() { return "shadow"; }
@@ -111,6 +112,10 @@ export class WarpViewDatagrid {
             "type": String,
             "attr": "data",
             "watchCallbacks": ["onData"]
+        },
+        "debug": {
+            "type": Boolean,
+            "attr": "debug"
         },
         "el": {
             "elementRef": true

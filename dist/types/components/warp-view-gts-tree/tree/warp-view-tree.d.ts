@@ -5,6 +5,7 @@ export declare class WarpViewTreeView {
     hidden: boolean;
     gtsFilter: string;
     hiddenData: number[];
+    debug: boolean;
     ref: boolean;
     el: HTMLElement;
     private hide;
@@ -23,6 +24,7 @@ export declare class WarpViewTreeView {
      * @returns boolean
      */
     isHidden(index: number): any;
+    componentWillLoad(): void;
     /**
      *
      * @returns {any}

@@ -5,6 +5,7 @@ export declare class WarpViewGtsPopup {
     gtsList: DataModel;
     maxToShow: number;
     hiddenData: number[];
+    debug: boolean;
     warpViewSelectedGTS: EventEmitter;
     private displayed;
     current: number;
@@ -19,6 +20,7 @@ export declare class WarpViewGtsPopup {
     private showPopup;
     private prepareData;
     private colorizeChips;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }

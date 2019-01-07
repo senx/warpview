@@ -8,6 +8,7 @@ export declare class WarpViewPolar {
     options: Param;
     width: string;
     height: string;
+    debug: boolean;
     el: HTMLElement;
     private LOG;
     private _options;
@@ -20,6 +21,7 @@ export declare class WarpViewPolar {
     private onOptions;
     private parseData;
     private drawChart;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
 }
