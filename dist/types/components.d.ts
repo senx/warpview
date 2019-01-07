@@ -19,7 +19,7 @@ import {
 } from './model/param';
 import {
   Datum,
-} from './components/warp-view-drilldown/datum';
+} from './components/warp-view-drilldown/model/datum';
 
 
 export namespace Components {
@@ -111,6 +111,17 @@ export namespace Components {
     'unit'?: string;
   }
 
+  interface WarpViewPaginable {
+    'data': { name: string, values: any[], headers: string[] };
+    'elemsCount': number;
+    'options': Param;
+  }
+  interface WarpViewPaginableAttributes extends StencilHTMLAttributes {
+    'data'?: { name: string, values: any[], headers: string[] };
+    'elemsCount'?: number;
+    'options'?: Param;
+  }
+
   interface WarpViewDatagrid {
     'data': DataModel | any[] | string;
     'elemsCount': number;
@@ -128,17 +139,6 @@ export namespace Components {
     'responsive'?: boolean;
     'showLegend'?: boolean;
     'width'?: string;
-  }
-
-  interface WarpViewPaginable {
-    'data': { name: string, values: any[], headers: string[] };
-    'elemsCount': number;
-    'options': Param;
-  }
-  interface WarpViewPaginableAttributes extends StencilHTMLAttributes {
-    'data'?: { name: string, values: any[], headers: string[] };
-    'elemsCount'?: number;
-    'options'?: Param;
   }
 
   interface WarpViewDisplay {
@@ -216,19 +216,6 @@ export namespace Components {
     'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
   }
 
-  interface WarpViewGtsTree {
-    'data': DataModel | DataModel[] | GTS[] | string;
-    'gtsFilter': string;
-    'hiddenData': number[];
-    'options': Param;
-  }
-  interface WarpViewGtsTreeAttributes extends StencilHTMLAttributes {
-    'data'?: DataModel | DataModel[] | GTS[] | string;
-    'gtsFilter'?: string;
-    'hiddenData'?: number[];
-    'options'?: Param;
-  }
-
   interface WarpViewTreeView {
     'branch': boolean;
     'gtsFilter': string;
@@ -242,6 +229,19 @@ export namespace Components {
     'gtsList'?: any[];
     'hidden'?: boolean;
     'hiddenData'?: number[];
+  }
+
+  interface WarpViewGtsTree {
+    'data': DataModel | DataModel[] | GTS[] | string;
+    'gtsFilter': string;
+    'hiddenData': number[];
+    'options': Param;
+  }
+  interface WarpViewGtsTreeAttributes extends StencilHTMLAttributes {
+    'data'?: DataModel | DataModel[] | GTS[] | string;
+    'gtsFilter'?: string;
+    'hiddenData'?: number[];
+    'options'?: Param;
   }
 
   interface WarpViewImage {
@@ -448,15 +448,15 @@ declare global {
     'WarpViewBar': Components.WarpViewBar;
     'WarpViewBubble': Components.WarpViewBubble;
     'WarpViewChart': Components.WarpViewChart;
-    'WarpViewDatagrid': Components.WarpViewDatagrid;
     'WarpViewPaginable': Components.WarpViewPaginable;
+    'WarpViewDatagrid': Components.WarpViewDatagrid;
     'WarpViewDisplay': Components.WarpViewDisplay;
     'CalendarHeatmap': Components.CalendarHeatmap;
     'WarpViewDrilldown': Components.WarpViewDrilldown;
     'WarpViewGtsPopup': Components.WarpViewGtsPopup;
     'WarpViewChip': Components.WarpViewChip;
-    'WarpViewGtsTree': Components.WarpViewGtsTree;
     'WarpViewTreeView': Components.WarpViewTreeView;
+    'WarpViewGtsTree': Components.WarpViewGtsTree;
     'WarpViewImage': Components.WarpViewImage;
     'WarpViewHeatmapSliders': Components.WarpViewHeatmapSliders;
     'WarpViewMap': Components.WarpViewMap;
@@ -476,15 +476,15 @@ declare global {
     'warp-view-bar': Components.WarpViewBarAttributes;
     'warp-view-bubble': Components.WarpViewBubbleAttributes;
     'warp-view-chart': Components.WarpViewChartAttributes;
-    'warp-view-datagrid': Components.WarpViewDatagridAttributes;
     'warp-view-paginable': Components.WarpViewPaginableAttributes;
+    'warp-view-datagrid': Components.WarpViewDatagridAttributes;
     'warp-view-display': Components.WarpViewDisplayAttributes;
     'calendar-heatmap': Components.CalendarHeatmapAttributes;
     'warp-view-drilldown': Components.WarpViewDrilldownAttributes;
     'warp-view-gts-popup': Components.WarpViewGtsPopupAttributes;
     'warp-view-chip': Components.WarpViewChipAttributes;
-    'warp-view-gts-tree': Components.WarpViewGtsTreeAttributes;
     'warp-view-tree-view': Components.WarpViewTreeViewAttributes;
+    'warp-view-gts-tree': Components.WarpViewGtsTreeAttributes;
     'warp-view-image': Components.WarpViewImageAttributes;
     'warp-view-heatmap-sliders': Components.WarpViewHeatmapSlidersAttributes;
     'warp-view-map': Components.WarpViewMapAttributes;
@@ -524,16 +524,16 @@ declare global {
     new (): HTMLWarpViewChartElement;
   };
 
-  interface HTMLWarpViewDatagridElement extends Components.WarpViewDatagrid, HTMLStencilElement {}
-  var HTMLWarpViewDatagridElement: {
-    prototype: HTMLWarpViewDatagridElement;
-    new (): HTMLWarpViewDatagridElement;
-  };
-
   interface HTMLWarpViewPaginableElement extends Components.WarpViewPaginable, HTMLStencilElement {}
   var HTMLWarpViewPaginableElement: {
     prototype: HTMLWarpViewPaginableElement;
     new (): HTMLWarpViewPaginableElement;
+  };
+
+  interface HTMLWarpViewDatagridElement extends Components.WarpViewDatagrid, HTMLStencilElement {}
+  var HTMLWarpViewDatagridElement: {
+    prototype: HTMLWarpViewDatagridElement;
+    new (): HTMLWarpViewDatagridElement;
   };
 
   interface HTMLWarpViewDisplayElement extends Components.WarpViewDisplay, HTMLStencilElement {}
@@ -566,16 +566,16 @@ declare global {
     new (): HTMLWarpViewChipElement;
   };
 
-  interface HTMLWarpViewGtsTreeElement extends Components.WarpViewGtsTree, HTMLStencilElement {}
-  var HTMLWarpViewGtsTreeElement: {
-    prototype: HTMLWarpViewGtsTreeElement;
-    new (): HTMLWarpViewGtsTreeElement;
-  };
-
   interface HTMLWarpViewTreeViewElement extends Components.WarpViewTreeView, HTMLStencilElement {}
   var HTMLWarpViewTreeViewElement: {
     prototype: HTMLWarpViewTreeViewElement;
     new (): HTMLWarpViewTreeViewElement;
+  };
+
+  interface HTMLWarpViewGtsTreeElement extends Components.WarpViewGtsTree, HTMLStencilElement {}
+  var HTMLWarpViewGtsTreeElement: {
+    prototype: HTMLWarpViewGtsTreeElement;
+    new (): HTMLWarpViewGtsTreeElement;
   };
 
   interface HTMLWarpViewImageElement extends Components.WarpViewImage, HTMLStencilElement {}
@@ -655,15 +655,15 @@ declare global {
     'warp-view-bar': HTMLWarpViewBarElement
     'warp-view-bubble': HTMLWarpViewBubbleElement
     'warp-view-chart': HTMLWarpViewChartElement
-    'warp-view-datagrid': HTMLWarpViewDatagridElement
     'warp-view-paginable': HTMLWarpViewPaginableElement
+    'warp-view-datagrid': HTMLWarpViewDatagridElement
     'warp-view-display': HTMLWarpViewDisplayElement
     'calendar-heatmap': HTMLCalendarHeatmapElement
     'warp-view-drilldown': HTMLWarpViewDrilldownElement
     'warp-view-gts-popup': HTMLWarpViewGtsPopupElement
     'warp-view-chip': HTMLWarpViewChipElement
-    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement
     'warp-view-tree-view': HTMLWarpViewTreeViewElement
+    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement
     'warp-view-image': HTMLWarpViewImageElement
     'warp-view-heatmap-sliders': HTMLWarpViewHeatmapSlidersElement
     'warp-view-map': HTMLWarpViewMapElement
@@ -683,15 +683,15 @@ declare global {
     'warp-view-bar': HTMLWarpViewBarElement;
     'warp-view-bubble': HTMLWarpViewBubbleElement;
     'warp-view-chart': HTMLWarpViewChartElement;
-    'warp-view-datagrid': HTMLWarpViewDatagridElement;
     'warp-view-paginable': HTMLWarpViewPaginableElement;
+    'warp-view-datagrid': HTMLWarpViewDatagridElement;
     'warp-view-display': HTMLWarpViewDisplayElement;
     'calendar-heatmap': HTMLCalendarHeatmapElement;
     'warp-view-drilldown': HTMLWarpViewDrilldownElement;
     'warp-view-gts-popup': HTMLWarpViewGtsPopupElement;
     'warp-view-chip': HTMLWarpViewChipElement;
-    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement;
     'warp-view-tree-view': HTMLWarpViewTreeViewElement;
+    'warp-view-gts-tree': HTMLWarpViewGtsTreeElement;
     'warp-view-image': HTMLWarpViewImageElement;
     'warp-view-heatmap-sliders': HTMLWarpViewHeatmapSlidersElement;
     'warp-view-map': HTMLWarpViewMapElement;

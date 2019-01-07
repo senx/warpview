@@ -1,11 +1,11 @@
-import { Logger } from "../../utils/logger";
-import { ChartLib } from "../../utils/chart-lib";
+import { Logger } from "../../../utils/logger";
+import { ChartLib } from "../../../utils/chart-lib";
 import moment from 'moment';
 import { easeLinear, max, range, scaleBand, scaleLinear, sum, timeDays } from "d3";
 import { event, select } from 'd3-selection';
-import { ColorLib } from "../../utils/color-lib";
-import { Datum } from "./datum";
-import { GTSLib } from "../../utils/gts.lib";
+import { ColorLib } from "../../../utils/color-lib";
+import { Datum } from "../model/datum";
+import { GTSLib } from "../../../utils/gts.lib";
 export class CalendarHeatmap {
     constructor() {
         this.minColor = CalendarHeatmap.DEF_MIN_COLOR;

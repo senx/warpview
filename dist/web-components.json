@@ -150,6 +150,17 @@
       ]
     },
     {
+      "label": "warp-view-paginable",
+      "description": "",
+      "attributes": [
+        {
+          "label": "elems-count",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
       "label": "warp-view-datagrid",
       "description": "",
       "attributes": [
@@ -238,6 +249,37 @@
       ]
     },
     {
+      "label": "warp-view-drilldown",
+      "description": "",
+      "attributes": [
+        {
+          "label": "data",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "height",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "responsive",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "show-legend",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "width",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
       "label": "warp-view-gts-popup",
       "description": "",
       "attributes": [
@@ -264,6 +306,43 @@
         },
         {
           "label": "node",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
+      "label": "warp-view-tree-view",
+      "description": "",
+      "attributes": [
+        {
+          "label": "branch",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "gts-filter",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "hidden",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
+      "label": "warp-view-gts-tree",
+      "description": "",
+      "attributes": [
+        {
+          "label": "data",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "gts-filter",
           "description": "",
           "required": false
         }
@@ -331,6 +410,37 @@
         },
         {
           "label": "radius-value",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    {
+      "label": "warp-view-map",
+      "description": "",
+      "attributes": [
+        {
+          "label": "data",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "height",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "options",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "responsive",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "width",
           "description": "",
           "required": false
         }

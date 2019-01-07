@@ -1,7 +1,7 @@
-import { GTSLib } from "../../utils/gts.lib";
-import { ColorLib } from "../../utils/color-lib";
-import { GTS } from "../../model/GTS";
-import { Logger } from "../../utils/logger";
+import { GTSLib } from "../../../utils/gts.lib";
+import { ColorLib } from "../../../utils/color-lib";
+import { GTS } from "../../../model/GTS";
+import { Logger } from "../../../utils/logger";
 export class WarpViewChip {
     constructor() {
         this.gtsFilter = '';

@@ -1,6 +1,6 @@
-import '../../stencil.core';
-import { EventEmitter } from "../../stencil.core";
-import { Datum } from "./datum";
+import '../../../stencil.core';
+import { EventEmitter } from "../../../stencil.core";
+import { Datum } from "../model/datum";
 export declare class CalendarHeatmap {
     private static DEF_MIN_COLOR;
     private static DEF_MAX_COLOR;

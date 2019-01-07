@@ -4,11 +4,11 @@
       "tag": "calendar-heatmap",
       "dependencies": [],
       "componentClass": "CalendarHeatmap",
-      "componentPath": "components/warp-view-drilldown/calendar-heatmap.js",
+      "componentPath": "components/warp-view-drilldown/heatmp/calendar-heatmap.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/warp-view-drilldown/calendar-heatmap.scss"
+            "components/warp-view-drilldown/heatmp/calendar-heatmap.scss"
           ]
         }
       },
@@ -383,11 +383,11 @@
       "tag": "warp-view-chip",
       "dependencies": [],
       "componentClass": "WarpViewChip",
-      "componentPath": "components/warp-view-gts-tree/warp-view-chip.js",
+      "componentPath": "components/warp-view-gts-tree/chip/warp-view-chip.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/warp-view-gts-tree/warp-view-chip.scss"
+            "components/warp-view-gts-tree/chip/warp-view-chip.scss"
           ]
         }
       },
@@ -755,7 +755,7 @@
       "tag": "warp-view-heatmap-sliders",
       "dependencies": [],
       "componentClass": "WarpViewHeatmapSliders",
-      "componentPath": "components/warp-view-map/warp-view-heatmap-sliders.js",
+      "componentPath": "components/warp-view-map/slider/warp-view-heatmap-sliders.js",
       "styles": {},
       "props": [
         {
@@ -1016,11 +1016,11 @@
       "tag": "warp-view-paginable",
       "dependencies": [],
       "componentClass": "WarpViewPaginable",
-      "componentPath": "components/warp-view-datagrid/warp-view-paginable.js",
+      "componentPath": "components/warp-view-datagrid/paginable/warp-view-paginable.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/warp-view-datagrid/warp-view-paginable.scss"
+            "components/warp-view-datagrid/paginable/warp-view-paginable.scss"
           ]
         }
       },
@@ -1616,11 +1616,11 @@
         "warp-view-chip"
       ],
       "componentClass": "WarpViewTreeView",
-      "componentPath": "components/warp-view-gts-tree/warp-view-tree.js",
+      "componentPath": "components/warp-view-gts-tree/tree/warp-view-tree.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/warp-view-gts-tree/warp-view-tree.scss"
+            "components/warp-view-gts-tree/tree/warp-view-tree.scss"
           ]
         }
       },

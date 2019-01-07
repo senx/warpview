@@ -1,5 +1,5 @@
-import '../../stencil.core';
-import { Param } from "../../model/param";
+import '../../../stencil.core';
+import { Param } from "../../../model/param";
 export declare class WarpViewPaginable {
     data: {
         name: string;
