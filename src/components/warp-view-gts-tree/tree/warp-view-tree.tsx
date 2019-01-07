@@ -16,9 +16,9 @@
  */
 
 import {Component, Element, Prop, State, Watch} from "@stencil/core";
-import {GTSLib} from "../../utils/gts.lib";
-import {Logger} from "../../utils/logger";
-import {ChartLib} from "../../utils/chart-lib";
+import {GTSLib} from "../../../utils/gts.lib";
+import {Logger} from "../../../utils/logger";
+import {ChartLib} from "../../../utils/chart-lib";
 
 @Component({
   tag: "warp-view-tree-view",

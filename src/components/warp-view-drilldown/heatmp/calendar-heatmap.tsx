@@ -16,15 +16,15 @@
  */
 
 import {Component, Element, Event, EventEmitter, Listen, Prop, Watch} from "@stencil/core";
-import {DataModel} from "../../model/dataModel";
-import {Logger} from "../../utils/logger";
-import {ChartLib} from "../../utils/chart-lib";
+import {DataModel} from "../../../model/dataModel";
+import {Logger} from "../../../utils/logger";
+import {ChartLib} from "../../../utils/chart-lib";
 import moment, {Moment} from 'moment';
 import {easeLinear, max, range, scaleBand, scaleLinear, Selection, sum, timeDays} from "d3";
 import {event, select} from 'd3-selection';
-import {ColorLib} from "../../utils/color-lib";
-import {Datum, Detail, Summary} from "./datum";
-import {GTSLib} from "../../utils/gts.lib";
+import {ColorLib} from "../../../utils/color-lib";
+import {Datum, Detail, Summary} from "../model/datum";
+import {GTSLib} from "../../../utils/gts.lib";
 
 @Component({
   tag: 'calendar-heatmap',

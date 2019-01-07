@@ -54,6 +54,10 @@
       padding: 0;
     }
 
+    .card-body {
+      min-height: calc(100vh - 132px);
+    }
+
     .jumbotron p:last-child {
       margin-bottom: 0;
     }
@@ -68,7 +72,7 @@
     }
 
     body {
-      --warp-view-tile-height: 500px;
+      --warp-view-tile-height: calc(100vh - 172px);
       --warp-view-chart-legend-bg: #000;
 
     }
@@ -156,7 +160,7 @@
 </header>
 <main role="main">
 
-  <div class="album py-5">
+  <div class="album pt-5">
     <div class="container-fluid">
       <div class="row">
         <div class="col-2">

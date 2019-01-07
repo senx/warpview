@@ -16,11 +16,11 @@
  */
 
 import {Component, Prop, State} from "@stencil/core";
-import {ChartLib} from "../../utils/chart-lib";
-import {GTSLib} from "../../utils/gts.lib";
+import {ChartLib} from "../../../utils/chart-lib";
+import {GTSLib} from "../../../utils/gts.lib";
 import moment from "moment";
-import {Param} from "../../model/param";
-import {Logger} from "../../utils/logger";
+import {Param} from "../../../model/param";
+import {Logger} from "../../../utils/logger";
 
 @Component({
   tag: 'warp-view-paginable',

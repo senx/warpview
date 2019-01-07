@@ -16,10 +16,10 @@
  */
 
 import {Component, Event, EventEmitter, Listen, Prop, State, Watch} from "@stencil/core";
-import {GTSLib} from "../../utils/gts.lib";
-import {ColorLib} from "../../utils/color-lib";
-import {GTS} from "../../model/GTS";
-import {Logger} from "../../utils/logger";
+import {GTSLib} from "../../../utils/gts.lib";
+import {ColorLib} from "../../../utils/color-lib";
+import {GTS} from "../../../model/GTS";
+import {Logger} from "../../../utils/logger";
 
 @Component({
   tag: 'warp-view-chip',
