@@ -26,8 +26,9 @@
     }
 
     .expander {
-      background-color: #fff;
-      border: solid 1px #888;
+      background-color: var(--warp-view-annotation-btn-bg-color, #fff);
+      border: solid 1px var(--warp-view-annotation-btn-border-color, #888);
+      color: var(--warp-view-annotation-btn-color, #888);
       cursor: pointer;
       top: 25px;
       position: absolute;

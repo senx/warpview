@@ -377,7 +377,7 @@ export class WarpViewAnnotation {
   render() {
     return <div>
       {this.displayExpander
-        ? <button class="expander" onClick={() => this.toggle()} title="collapse/expand">{this.debug}+/-</button>
+        ? <button class={'expander'} onClick={() => this.toggle()} title="collapse/expand">+/-</button>
         : ''
       }
       <div
