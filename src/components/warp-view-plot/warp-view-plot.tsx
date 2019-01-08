@@ -182,12 +182,14 @@ export class WarpViewPlot {
     this.LOG.debug(['warpViewSelectedGTS'], event.detail);
     if (!this._toHide.find(i => {
       return i === event.detail.gts.id;
-    }) && !event.detail.selected) {
+    }) && !event.detail.selected) { //if not in toHide and state false, put id in toHide
       this._toHide.push(event.detail.gts.id);
-    } else {
-      this._toHide = this._toHide.filter(i => {
-        return i !== event.detail.gts.id;
-      });
+    } else { 
+      if(event.detail.selected) { //if in toHide and state true, remove it from toHide
+        this._toHide = this._toHide.filter(i => {
+          return i !== event.detail.gts.id;
+        });
+      }
     }
     this.LOG.debug(['warpViewSelectedGTS'], this._toHide);
     this._toHide = this._toHide.slice();

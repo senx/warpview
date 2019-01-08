@@ -15,15 +15,15 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch} from '@stencil/core';
-import {GTSLib} from '../../utils/gts.lib';
+import { Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch } from '@stencil/core';
+import { GTSLib } from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
-import {Logger} from "../../utils/logger";
-import {ChartLib} from "../../utils/chart-lib";
-import {ColorLib} from "../../utils/color-lib";
-import {Param} from "../../model/param";
-import {DataModel} from "../../model/dataModel";
-import {GTS} from "../../model/GTS";
+import { Logger } from "../../utils/logger";
+import { ChartLib } from "../../utils/chart-lib";
+import { ColorLib } from "../../utils/color-lib";
+import { Param } from "../../model/param";
+import { DataModel } from "../../model/dataModel";
+import { GTS } from "../../model/GTS";
 import moment from "moment";
 import Options = dygraphs.Options;
 
@@ -68,14 +68,45 @@ export class WarpViewChart {
     showDots: false
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
-  private ticks = [];
   private visibility: boolean[] = [];
   private initialHeight: number;
   private parentWidth = -1;
+  /**
+   * usefull for default zoom
+   */
+  private maxTick = 0;
+  /**
+   * usefull for default zoom
+   */
+  private minTick = 0;
+  /**
+   * table of gts id displayed in dygraph. array order is the one of dygraph series
+   */
+  private visibleGtsId = []; 
+  /**
+   * key = timestamp. values = table of available points, filled by null.
+   */
+  private dataHashset = {}; 
+  /**
+   * the big matrix that dygraph expects
+   */
+  private dygraphdataSets = [];
+  /**
+   * the labels of each series. array order is the one of dygraph series
+   */
+  private dygraphLabels = [];
+  /**
+   * the colors of each series. array order is the one of dygraph series
+   */
+  private dygraphColors = [];
+  /**
+   * put this to true before creating a new dygraph to force a resize in the drawCallback
+   */
+  private initialResizeNeeded = false;
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
       this.parentWidth = this.el.parentElement.clientWidth;
       if (this._chart) {
         if (!this.initialHeight) {
@@ -83,22 +114,41 @@ export class WarpViewChart {
         }
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
           const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
           const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
           this._chart.resize(width, this.displayGraph() ? height : 30);
-          this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
-        }, 250);
+          this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
+          this.initialResizeNeeded = false;
+        }, 50);
       }
     }
   }
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (oldValue.length !== newValue.length) {
+    if (oldValue !== newValue) {
       this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
-      this.drawChart();
+
+      let previousvisibility = JSON.stringify(this.visibility);
+      let previouslyAllHidden = !this.displayGraph();
+      if (!!this._chart) {
+        this.visibility = []
+        this.visibleGtsId.forEach((id, i) => {
+          //sadly, this does not work.
+          //this._chart.setVisibility(i,newValue.indexOf(id) < 0);
+          //best workaround : rebuild the dygraph with same dataset and different visibility options. 
+          //TODO: try each next version of dygraph.
+          this.visibility.push(newValue.indexOf(id) < 0);
+        });
+        this.LOG.debug(['hiddendygraphfullv'], this.visibility);
+      }
+      let newvisibility = JSON.stringify(this.visibility);
+      if (previousvisibility !== newvisibility) {
+        this.drawChart(false, previouslyAllHidden && this.displayGraph()); //the workaround...
+        this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
+      }
     }
   }
 
@@ -106,16 +156,43 @@ export class WarpViewChart {
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (oldValue !== newValue) {
       this.LOG.debug(['data'], newValue);
-      this.drawChart();
+      this.drawChart(true); //force reparse
+      this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    //here we have a problem. 
+    // - this function is sometimes called twice, and very often called with oldValue==newValue
+    // - changing the visibility of an annotation trigger this function too.
+    // so, we must compare the newValue keys with the current _options before launching a redraw.
+    let optionchanged = false;
+    Object.keys(newValue).forEach(opt => {
+      if (this._options.hasOwnProperty(opt)) {
+        optionchanged = optionchanged || (newValue[opt] !== (this._options[opt]));
+      } else {
+        optionchanged = true; //new unknown option
+      }
+    })
+    this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionchanged);
+    if (optionchanged) {
       this.LOG.debug(['options'], newValue);
+      this.LOG.debug(['optionsupdate', 'destroy'], 'redraw by option change');
       this.drawChart();
     }
+  }
+
+  @Watch('type')
+  private onTypeChange(newValue: Param, oldValue: Param) {
+    this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
+    this.drawChart();
+  }
+
+  @Watch('unit')
+  private onUnitChange(newValue: Param, oldValue: Param) {
+    this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
+    this.drawChart(true); //reparse all 
   }
 
   @Method()
@@ -134,12 +211,17 @@ export class WarpViewChart {
     }, 1000)
   }
 
+  /**
+   * this function build this.dataHashset (high computing cost), then it build this.dygraphdataSets  (high computing cost too)
+   * 
+   * this function also refresh this.dygraphColors  this.dygraphLabels
+   * 
+   * @param gtsList a flat array of gts
+   */
   private gtsToData(gtsList) {
     this.LOG.debug(['gtsToData'], gtsList);
-    this.ticks = [];
     this.visibility = [];
-    const datasets = [];
-    const data = {}; //hashset, no order guaranteed
+    this.dataHashset = {}; //hashset, no order guaranteed
     let labels = [];
     let colors = [];
     if (!gtsList) {
@@ -148,63 +230,91 @@ export class WarpViewChart {
       gtsList = GTSLib.flattenGtsIdArray(gtsList, 0).res;
       gtsList = GTSLib.flatDeep(gtsList);
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
-      labels = new Array(gtsList.length);
       labels.push('Date');
       colors = [];
+      this.maxTick = Number.MIN_SAFE_INTEGER;
+      this.minTick = Number.MAX_SAFE_INTEGER;
+      this.visibleGtsId = [];
+
+      //build a non plotable list, then keep plotable ones
       const nonPlottable = gtsList.filter(g => {
         return (g.v && !GTSLib.isGtsToPlot(g));
       });
       gtsList = gtsList.filter(g => {
         return (g.v && GTSLib.isGtsToPlot(g));
       });
+
+      //first, add plotable data to the data hashset
       gtsList.forEach((g, i) => {
         let label = GTSLib.serializeGtsMetadata(g);
         //GTSLib.gtsSort(g); // no need because data{} is not sorted, will sort later the full dataset
         g.v.forEach(value => {
           const ts = value[0];
-          if (!data[ts]) {
-            data[ts] = new Array(gtsList.length);
-            data[ts].fill(null);
+          if (!this.dataHashset[ts]) {
+            this.dataHashset[ts] = new Array(gtsList.length);
+            this.dataHashset[ts].fill(null);
           }
-          data[ts][i] = value[value.length - 1];
+          this.dataHashset[ts][i] = value[value.length - 1];
+          if (ts < this.minTick) { this.minTick = ts; }
+          if (ts > this.maxTick) { this.maxTick = ts; }
         });
         let color = ColorLib.getColor(g.id);
         labels.push(label);
         colors.push(color);
-        this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
+        this.visibility.push(true);
+        this.visibleGtsId.push(g.id);
       });
+
+      this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId)
+      //non plotable data are important to fix the bounds of the graphics (with null values)
+      //just add min and max tick to the hashset
       this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
-      if (nonPlottable.length > 0 && gtsList.length === 0) {
-        const nonPlottableArr = nonPlottable.reduce((accumulator, currentValue) => accumulator.concat(currentValue.v), []);
-        nonPlottableArr.forEach(value => {
-          const ts = value[0];
-          if (!data[ts]) {
-            data[ts] = new Array(gtsList.length);
-            data[ts].fill(null);
-          }
-          data[ts][0] = 0;
+      if (nonPlottable.length > 0) { //&& gtsList.length === 0) {
+        nonPlottable.forEach(g => {
+          g.v.forEach(value => {
+            const ts = value[0];
+            if (ts < this.minTick) { this.minTick = ts; }
+            if (ts > this.maxTick) { this.maxTick = ts; }
+          })
         });
-        let color = ColorLib.getColor(0);
-        labels.push('');
-        colors.push(color);
-        this.visibility.push(false);
+
+        if (!this.dataHashset[this.minTick]) {
+          this.dataHashset[this.minTick] = new Array(gtsList.length);
+          this.dataHashset[this.minTick].fill(null);
+        }
+        if (!this.dataHashset[this.maxTick]) {
+          this.dataHashset[this.maxTick] = new Array(gtsList.length);
+          this.dataHashset[this.maxTick].fill(null);
+        }
       }
     }
-    this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
-    labels = labels.filter((i) => !!i);
-    Object.keys(data).forEach(timestamp => {
+
+    this.rebuildDygraphDataSets();
+
+    this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
+    this.dygraphColors = colors;
+    this.dygraphLabels = labels;
+
+  }
+
+  /**
+   * This function build this.dygraphdataSets from this.dataHashset
+   * 
+   * It could be called independently from gtsToData, when only unit or timeMode change.
+   */
+  private rebuildDygraphDataSets() {
+    this.dygraphdataSets = [];
+    //build the big matrix for dygraph from the data hashset.
+    Object.keys(this.dataHashset).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
-        this.ticks.push(parseInt(timestamp));
+        this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
       } else {
         const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
-        datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
-        this.ticks.push(ts);
+        this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
       }
     });
-    datasets.sort((a, b) => a[0] > b[0] ? 1 : -1); //needed, data is not a treeset or sortedset
-    this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
-    return {datasets: datasets, labels: labels, colors: colors.slice(0, labels.length)};
+    //sort the big table. (needed, data is not a treeset or sortedset)
+    this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
   }
 
   private isStepped(): boolean {
@@ -376,8 +486,8 @@ export class WarpViewChart {
     });
   }
 
-  private drawCallback(dygraph, is_initial) {
-    this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+  private drawCallback(dygraph, is_initial) { //also called after a resize, be carefull.
+    this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
     if (dygraph.dateWindow_) {
       this.boundsDidChange.emit({
         bounds: {
@@ -388,24 +498,32 @@ export class WarpViewChart {
     } else {
       this.boundsDidChange.emit({
         bounds: {
-          min: Math.min.apply(null, this.ticks),
-          max: Math.max.apply(null, this.ticks)
+          min: this.minTick,
+          max: this.maxTick
         }
       });
     }
+    if (this.initialResizeNeeded) {
+      this.onResize();
+    }
   }
 
-  private drawChart() {
+  private drawChart(reparseNewData: boolean = false, forceresize: boolean = false) {
     this.LOG.debug(['drawChart', 'this.data'], [this.data]);
+    let previousTimeMode = this._options.timeMode || ''; //detect a timemode change
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
-
-    const dataToplot = this.gtsToData(dataList);
-    this.LOG.debug(['drawChart', 'dataToplot'], dataToplot);
+    if (reparseNewData) {
+      this.gtsToData(dataList);
+    } else {
+      if (previousTimeMode !== this._options.timeMode) {
+        this.rebuildDygraphDataSets();
+      }
+    }
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
-    if (dataToplot) {
+    if (this.dygraphdataSets) {
       const color = this._options.gridLineColor;
       let interactionModel = Dygraph.defaultInteractionModel;
       interactionModel.mousewheel = this.scroll.bind(this);
@@ -413,12 +531,12 @@ export class WarpViewChart {
       let options: Options = {
         height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
         width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
-        labels: dataToplot.labels,
+        labels: this.dygraphLabels,
         showRoller: false,
-        showRangeSelector: dataToplot.datasets && dataToplot.datasets.length > 0 && this._options.showRangeSelector,
+        showRangeSelector: this.dygraphdataSets && this.dygraphdataSets.length > 0 && this._options.showRangeSelector,
         showInRangeSelector: true,
         connectSeparatedPoints: true,
-        colors: dataToplot.colors,
+        colors: this.dygraphColors,
         legend: 'follow',
         stackedGraph: this.isStacked(),
         strokeBorderWidth: this.isStacked() ? null : 0,
@@ -465,16 +583,18 @@ export class WarpViewChart {
           return WarpViewChart.toFixed(x as number);
         }
       }
+
+      this.initialResizeNeeded = reparseNewData || forceresize; //even on visibility change. setting this to reparseNewData is not a solution.
+
       if (!!this._chart) {
         this._chart.destroy();
+        this.LOG.debug(['dygraphdestroyed'], 'dygraph destroyed to reborn with reparseNewData=', reparseNewData, 'and forceresize=', forceresize);
       }
-      dataToplot.datasets = dataToplot.datasets || [];
-      if (dataToplot.datasets.length > 0) {
-        this._chart = new Dygraph(chart, dataToplot.datasets, options);
+      this.dygraphdataSets = this.dygraphdataSets || [];
+      if (this.dygraphdataSets.length > 0) {
+        this._chart = new Dygraph(chart, this.dygraphdataSets, options);
       }
 
-      this.LOG.debug(['options.height'], options.height);
-      this.onResize();
     }
   }
 
@@ -491,12 +611,12 @@ export class WarpViewChart {
   }
 
   componentDidLoad() {
-    this.drawChart();
+    this.drawChart(true);
   }
 
   render() {
     return <div>
-      <div id={this.uuid} class="chart"/>
+      <div id={this.uuid} class="chart" />
     </div>;
   }
 }
