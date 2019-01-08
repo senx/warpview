@@ -311,9 +311,7 @@ export class WarpViewAnnotation {
     render() {
         return h("div", null,
             this.displayExpander
-                ? h("button", { class: "expander", onClick: () => this.toggle(), title: "collapse/expand" },
-                    this.debug,
-                    "+/-")
+                ? h("button", { class: 'expander', onClick: () => this.toggle(), title: "collapse/expand" }, "+/-")
                 : '',
             h("div", { class: "chart-container", style: {
                     position: "relative",
