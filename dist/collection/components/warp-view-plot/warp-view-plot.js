@@ -125,9 +125,11 @@ export class WarpViewPlot {
             this._toHide.push(event.detail.gts.id);
         }
         else {
-            this._toHide = this._toHide.filter(i => {
-                return i !== event.detail.gts.id;
-            });
+            if (event.detail.selected) {
+                this._toHide = this._toHide.filter(i => {
+                    return i !== event.detail.gts.id;
+                });
+            }
         }
         this.LOG.debug(['warpViewSelectedGTS'], this._toHide);
         this._toHide = this._toHide.slice();

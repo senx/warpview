@@ -31,17 +31,63 @@ export declare class WarpViewChart {
     private _chart;
     private _options;
     private uuid;
-    private ticks;
     private visibility;
     private initialHeight;
     private parentWidth;
+    /**
+     * usefull for default zoom
+     */
+    private maxTick;
+    /**
+     * usefull for default zoom
+     */
+    private minTick;
+    /**
+     * table of gts id displayed in dygraph. array order is the one of dygraph series
+     */
+    private visibleGtsId;
+    /**
+     * key = timestamp. values = table of available points, filled by null.
+     */
+    private dataHashset;
+    /**
+     * the big matrix that dygraph expects
+     */
+    private dygraphdataSets;
+    /**
+     * the labels of each series. array order is the one of dygraph series
+     */
+    private dygraphLabels;
+    /**
+     * the colors of each series. array order is the one of dygraph series
+     */
+    private dygraphColors;
+    /**
+     * put this to true before creating a new dygraph to force a resize in the drawCallback
+     */
+    private initialResizeNeeded;
     onResize(): void;
     private onHideData;
     private onData;
     private onOptions;
+    private onTypeChange;
+    private onUnitChange;
     getTimeClip(): Promise<[number, number]>;
     private handleMouseOut;
+    /**
+     * this function build this.dataHashset (high computing cost), then it build this.dygraphdataSets  (high computing cost too)
+     *
+     * this function also refresh this.dygraphColors  this.dygraphLabels
+     *
+     * @param gtsList a flat array of gts
+     */
     private gtsToData;
+    /**
+     * This function build this.dygraphdataSets from this.dataHashset
+     *
+     * It could be called independently from gtsToData, when only unit or timeMode change.
+     */
+    private rebuildDygraphDataSets;
     private isStepped;
     private isStacked;
     private static toFixed;

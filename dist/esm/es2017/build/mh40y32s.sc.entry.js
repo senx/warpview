@@ -13,14 +13,21 @@ class WarpViewGtsPopup {
         this.current = 0;
         this._gts = [];
         this.chips = [];
+        this.modalOpenned = false;
     }
-    handleKeyDown(e) {
+    onWarpViewModalOpen(e) {
+        this.modalOpenned = true;
+    }
+    onWarpViewModalClose(e) {
+        this.modalOpenned = false;
+    }
+    onKeyDown(e) {
         if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
             e.preventDefault();
             return false;
         }
     }
-    handleKeyUp(ev) {
+    onKeyUp(ev) {
         this.LOG.debug(['document:keyup'], ev);
         switch (ev.key) {
             case 's':
@@ -29,20 +36,24 @@ class WarpViewGtsPopup {
                 break;
             case 'ArrowUp':
                 ev.preventDefault();
+                this.showPopup();
                 this.current = Math.max(0, this.current - 1);
                 this.prepareData();
                 break;
             case 'ArrowDown':
                 ev.preventDefault();
+                this.showPopup();
                 this.current = Math.min(this._gts.length - 1, this.current + 1);
                 this.prepareData();
                 break;
             case ' ':
-                ev.preventDefault();
-                this.warpViewSelectedGTS.emit({
-                    gts: this.displayed[this.current],
-                    selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
-                });
+                if (this.modalOpenned) {
+                    ev.preventDefault();
+                    this.warpViewSelectedGTS.emit({
+                        gts: this.displayed[this.current],
+                        selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
+                    });
+                }
                 break;
             default:
                 return true;
@@ -142,11 +153,17 @@ class WarpViewGtsPopup {
             "composed": true
         }]; }
     static get listeners() { return [{
+            "name": "warpViewModalOpen",
+            "method": "onWarpViewModalOpen"
+        }, {
+            "name": "warpViewModalClose",
+            "method": "onWarpViewModalClose"
+        }, {
             "name": "document:keydown",
-            "method": "handleKeyDown"
+            "method": "onKeyDown"
         }, {
             "name": "document:keyup",
-            "method": "handleKeyUp"
+            "method": "onKeyUp"
         }]; }
     static get style() { return ".sc-warp-view-gts-popup-h   ul.sc-warp-view-gts-popup{list-style:none;position:relative}.sc-warp-view-gts-popup-h   ul.sc-warp-view-gts-popup   li.sc-warp-view-gts-popup{line-height:1.5em;padding-left:10px;margin-right:20px}.sc-warp-view-gts-popup-h   ul.sc-warp-view-gts-popup   li.selected.sc-warp-view-gts-popup{background-color:var(--warpview-popup-selected-bg-color,#ddd)}.sc-warp-view-gts-popup-h   .down-arrow.sc-warp-view-gts-popup{bottom:2px}.sc-warp-view-gts-popup-h   .down-arrow.sc-warp-view-gts-popup, .sc-warp-view-gts-popup-h   .up-arrow.sc-warp-view-gts-popup{position:absolute;left:2px;width:35px;height:35px;background-image:var(--warpview-popup-arrow-icon,url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==));background-position:50%;background-repeat:no-repeat}.sc-warp-view-gts-popup-h   .up-arrow.sc-warp-view-gts-popup{top:2px;-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg)}.sc-warp-view-gts-popup-h   .gts-classname.sc-warp-view-gts-popup{color:var(--gts-classname-font-color,#0074d9)}.sc-warp-view-gts-popup-h   .gts-labelname.sc-warp-view-gts-popup{color:var(--gts-labelname-font-color,#19a979)}.sc-warp-view-gts-popup-h   .gts-attrname.sc-warp-view-gts-popup{color:var(--gts-labelname-font-color,#ed4a7b)}.sc-warp-view-gts-popup-h   .gts-separator.sc-warp-view-gts-popup{color:var(--gts-separator-font-color,#bbb)}.sc-warp-view-gts-popup-h   .gts-attrvalue.sc-warp-view-gts-popup, .sc-warp-view-gts-popup-h   .gts-labelvalue.sc-warp-view-gts-popup{color:var(--gts-labelvalue-font-color,#aaa);font-style:italic}.sc-warp-view-gts-popup-h   .round.sc-warp-view-gts-popup{border-radius:50%;background-color:#bbb;display:inline-block;width:5px;height:5px;border:2px solid #454545;margin-top:auto;margin-bottom:auto;vertical-align:middle;margin-right:5px}"; }
 }
@@ -273,9 +290,11 @@ class WarpViewPlot {
             this._toHide.push(event.detail.gts.id);
         }
         else {
-            this._toHide = this._toHide.filter(i => {
-                return i !== event.detail.gts.id;
-            });
+            if (event.detail.selected) {
+                this._toHide = this._toHide.filter(i => {
+                    return i !== event.detail.gts.id;
+                });
+            }
         }
         this.LOG.debug(['warpViewSelectedGTS'], this._toHide);
         this._toHide = this._toHide.slice();

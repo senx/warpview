@@ -21,12 +21,19 @@ export class WarpViewChart {
             showDots: false
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
-        this.ticks = [];
         this.visibility = [];
         this.parentWidth = -1;
+        this.maxTick = 0;
+        this.minTick = 0;
+        this.visibleGtsId = [];
+        this.dataHashset = {};
+        this.dygraphdataSets = [];
+        this.dygraphLabels = [];
+        this.dygraphColors = [];
+        this.initialResizeNeeded = false;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
             this.parentWidth = this.el.parentElement.clientWidth;
             if (this._chart) {
                 if (!this.initialHeight) {
@@ -34,33 +41,67 @@ export class WarpViewChart {
                 }
                 clearTimeout(this.resizeTimer);
                 this.resizeTimer = setTimeout(() => {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
                     const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
                     const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
                     this._chart.resize(width, this.displayGraph() ? height : 30);
                     this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
-                }, 250);
+                    this.initialResizeNeeded = false;
+                }, 50);
             }
         }
     }
     onHideData(newValue, oldValue) {
-        if (oldValue.length !== newValue.length) {
+        if (oldValue !== newValue) {
             this.parentWidth = 0;
             this.LOG.debug(['hiddenData'], newValue);
-            this.drawChart();
+            let previousvisibility = JSON.stringify(this.visibility);
+            let previouslyAllHidden = !this.displayGraph();
+            if (!!this._chart) {
+                this.visibility = [];
+                this.visibleGtsId.forEach((id, i) => {
+                    this.visibility.push(newValue.indexOf(id) < 0);
+                });
+                this.LOG.debug(['hiddendygraphfullv'], this.visibility);
+            }
+            let newvisibility = JSON.stringify(this.visibility);
+            if (previousvisibility !== newvisibility) {
+                this.drawChart(false, previouslyAllHidden && this.displayGraph());
+                this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
+            }
         }
     }
     onData(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['data'], newValue);
-            this.drawChart();
+            this.drawChart(true);
+            this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        let optionchanged = false;
+        Object.keys(newValue).forEach(opt => {
+            if (this._options.hasOwnProperty(opt)) {
+                optionchanged = optionchanged || (newValue[opt] !== (this._options[opt]));
+            }
+            else {
+                optionchanged = true;
+            }
+        });
+        this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionchanged);
+        if (optionchanged) {
             this.LOG.debug(['options'], newValue);
+            this.LOG.debug(['optionsupdate', 'destroy'], 'redraw by option change');
             this.drawChart();
         }
+    }
+    onTypeChange(newValue, oldValue) {
+        this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
+        this.drawChart();
+    }
+    onUnitChange(newValue, oldValue) {
+        this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
+        this.drawChart(true);
     }
     async getTimeClip() {
         return new Promise(resolve => {
@@ -77,10 +118,8 @@ export class WarpViewChart {
     }
     gtsToData(gtsList) {
         this.LOG.debug(['gtsToData'], gtsList);
-        this.ticks = [];
         this.visibility = [];
-        const datasets = [];
-        const data = {};
+        this.dataHashset = {};
         let labels = [];
         let colors = [];
         if (!gtsList) {
@@ -90,9 +129,11 @@ export class WarpViewChart {
             gtsList = GTSLib.flattenGtsIdArray(gtsList, 0).res;
             gtsList = GTSLib.flatDeep(gtsList);
             this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
-            labels = new Array(gtsList.length);
             labels.push('Date');
             colors = [];
+            this.maxTick = Number.MIN_SAFE_INTEGER;
+            this.minTick = Number.MAX_SAFE_INTEGER;
+            this.visibleGtsId = [];
             const nonPlottable = gtsList.filter(g => {
                 return (g.v && !GTSLib.isGtsToPlot(g));
             });
@@ -103,50 +144,65 @@ export class WarpViewChart {
                 let label = GTSLib.serializeGtsMetadata(g);
                 g.v.forEach(value => {
                     const ts = value[0];
-                    if (!data[ts]) {
-                        data[ts] = new Array(gtsList.length);
-                        data[ts].fill(null);
+                    if (!this.dataHashset[ts]) {
+                        this.dataHashset[ts] = new Array(gtsList.length);
+                        this.dataHashset[ts].fill(null);
                     }
-                    data[ts][i] = value[value.length - 1];
+                    this.dataHashset[ts][i] = value[value.length - 1];
+                    if (ts < this.minTick) {
+                        this.minTick = ts;
+                    }
+                    if (ts > this.maxTick) {
+                        this.maxTick = ts;
+                    }
                 });
                 let color = ColorLib.getColor(g.id);
                 labels.push(label);
                 colors.push(color);
-                this.visibility.push(this.hiddenData.filter((h) => h === g.id).length === 0);
+                this.visibility.push(true);
+                this.visibleGtsId.push(g.id);
             });
+            this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
             this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
-            if (nonPlottable.length > 0 && gtsList.length === 0) {
-                const nonPlottableArr = nonPlottable.reduce((accumulator, currentValue) => accumulator.concat(currentValue.v), []);
-                nonPlottableArr.forEach(value => {
-                    const ts = value[0];
-                    if (!data[ts]) {
-                        data[ts] = new Array(gtsList.length);
-                        data[ts].fill(null);
-                    }
-                    data[ts][0] = 0;
+            if (nonPlottable.length > 0) {
+                nonPlottable.forEach(g => {
+                    g.v.forEach(value => {
+                        const ts = value[0];
+                        if (ts < this.minTick) {
+                            this.minTick = ts;
+                        }
+                        if (ts > this.maxTick) {
+                            this.maxTick = ts;
+                        }
+                    });
                 });
-                let color = ColorLib.getColor(0);
-                labels.push('');
-                colors.push(color);
-                this.visibility.push(false);
+                if (!this.dataHashset[this.minTick]) {
+                    this.dataHashset[this.minTick] = new Array(gtsList.length);
+                    this.dataHashset[this.minTick].fill(null);
+                }
+                if (!this.dataHashset[this.maxTick]) {
+                    this.dataHashset[this.maxTick] = new Array(gtsList.length);
+                    this.dataHashset[this.maxTick].fill(null);
+                }
             }
         }
-        this.LOG.debug(['gtsToData', 'this.visibility'], this.visibility);
-        labels = labels.filter((i) => !!i);
-        Object.keys(data).forEach(timestamp => {
+        this.rebuildDygraphDataSets();
+        this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
+        this.dygraphColors = colors;
+        this.dygraphLabels = labels;
+    }
+    rebuildDygraphDataSets() {
+        this.dygraphdataSets = [];
+        Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                datasets.push([parseInt(timestamp)].concat(data[timestamp].slice(0, labels.length - 1)));
-                this.ticks.push(parseInt(timestamp));
+                this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
             else {
                 const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
-                datasets.push([moment.utc(ts).toDate()].concat(data[timestamp].slice(0, labels.length - 1)));
-                this.ticks.push(ts);
+                this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
             }
         });
-        datasets.sort((a, b) => a[0] > b[0] ? 1 : -1);
-        this.LOG.debug(['gtsToData', 'datasets'], [datasets, labels, colors]);
-        return { datasets: datasets, labels: labels, colors: colors.slice(0, labels.length) };
+        this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
     }
     isStepped() {
         return this.type === 'step';
@@ -289,7 +345,7 @@ export class WarpViewChart {
         });
     }
     drawCallback(dygraph, is_initial) {
-        this.LOG.debug(['drawCallback'], [dygraph.dateWindow_, is_initial]);
+        this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
         if (dygraph.dateWindow_) {
             this.boundsDidChange.emit({
                 bounds: {
@@ -301,22 +357,32 @@ export class WarpViewChart {
         else {
             this.boundsDidChange.emit({
                 bounds: {
-                    min: Math.min.apply(null, this.ticks),
-                    max: Math.max.apply(null, this.ticks)
+                    min: this.minTick,
+                    max: this.maxTick
                 }
             });
         }
+        if (this.initialResizeNeeded) {
+            this.onResize();
+        }
     }
-    drawChart() {
+    drawChart(reparseNewData = false, forceresize = false) {
         this.LOG.debug(['drawChart', 'this.data'], [this.data]);
+        let previousTimeMode = this._options.timeMode || '';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let data = GTSLib.getData(this.data);
         let dataList = data.data;
         this._options = ChartLib.mergeDeep(this._options, data.globalParams);
-        const dataToplot = this.gtsToData(dataList);
-        this.LOG.debug(['drawChart', 'dataToplot'], dataToplot);
+        if (reparseNewData) {
+            this.gtsToData(dataList);
+        }
+        else {
+            if (previousTimeMode !== this._options.timeMode) {
+                this.rebuildDygraphDataSets();
+            }
+        }
         const chart = this.el.querySelector('#' + this.uuid);
-        if (dataToplot) {
+        if (this.dygraphdataSets) {
             const color = this._options.gridLineColor;
             let interactionModel = Dygraph.defaultInteractionModel;
             interactionModel.mousewheel = this.scroll.bind(this);
@@ -324,12 +390,12 @@ export class WarpViewChart {
             let options = {
                 height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
                 width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
-                labels: dataToplot.labels,
+                labels: this.dygraphLabels,
                 showRoller: false,
-                showRangeSelector: dataToplot.datasets && dataToplot.datasets.length > 0 && this._options.showRangeSelector,
+                showRangeSelector: this.dygraphdataSets && this.dygraphdataSets.length > 0 && this._options.showRangeSelector,
                 showInRangeSelector: true,
                 connectSeparatedPoints: true,
-                colors: dataToplot.colors,
+                colors: this.dygraphColors,
                 legend: 'follow',
                 stackedGraph: this.isStacked(),
                 strokeBorderWidth: this.isStacked() ? null : 0,
@@ -375,15 +441,15 @@ export class WarpViewChart {
                     return WarpViewChart.toFixed(x);
                 };
             }
+            this.initialResizeNeeded = reparseNewData || forceresize;
             if (!!this._chart) {
                 this._chart.destroy();
+                this.LOG.debug(['dygraphdestroyed'], 'dygraph destroyed to reborn with reparseNewData=', reparseNewData, 'and forceresize=', forceresize);
             }
-            dataToplot.datasets = dataToplot.datasets || [];
-            if (dataToplot.datasets.length > 0) {
-                this._chart = new Dygraph(chart, dataToplot.datasets, options);
+            this.dygraphdataSets = this.dygraphdataSets || [];
+            if (this.dygraphdataSets.length > 0) {
+                this._chart = new Dygraph(chart, this.dygraphdataSets, options);
             }
-            this.LOG.debug(['options.height'], options.height);
-            this.onResize();
         }
     }
     displayGraph() {
@@ -397,7 +463,7 @@ export class WarpViewChart {
         this.LOG = new Logger(WarpViewChart, this.debug);
     }
     componentDidLoad() {
-        this.drawChart();
+        this.drawChart(true);
     }
     render() {
         return h("div", null,
@@ -440,11 +506,13 @@ export class WarpViewChart {
         },
         "type": {
             "type": String,
-            "attr": "type"
+            "attr": "type",
+            "watchCallbacks": ["onTypeChange"]
         },
         "unit": {
             "type": String,
-            "attr": "unit"
+            "attr": "unit",
+            "watchCallbacks": ["onUnitChange"]
         }
     }; }
     static get events() { return [{

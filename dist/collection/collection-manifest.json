@@ -374,12 +374,18 @@
         {
           "name": "type",
           "type": "String",
-          "attr": "type"
+          "attr": "type",
+          "watch": [
+            "onTypeChange"
+          ]
         },
         {
           "name": "unit",
           "type": "String",
-          "attr": "unit"
+          "attr": "unit",
+          "watch": [
+            "onUnitChange"
+          ]
         }
       ],
       "listeners": [
@@ -733,13 +739,25 @@
       "listeners": [
         {
           "event": "document:keydown",
-          "method": "handleKeyDown",
+          "method": "onKeyDown",
           "passive": false,
           "capture": false
         },
         {
           "event": "document:keyup",
-          "method": "handleKeyUp",
+          "method": "onKeyUp",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "warpViewModalClose",
+          "method": "onWarpViewModalClose",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "warpViewModalOpen",
+          "method": "onWarpViewModalOpen",
           "passive": false,
           "capture": false
         }
@@ -1080,6 +1098,14 @@
       "hostElement": {
         "name": "el"
       },
+      "events": [
+        {
+          "event": "warpViewModalClose"
+        },
+        {
+          "event": "warpViewModalOpen"
+        }
+      ],
       "shadow": true
     },
     {

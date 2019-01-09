@@ -12,9 +12,12 @@ export declare class WarpViewGtsPopup {
     private _gts;
     private chips;
     private modal;
+    private modalOpenned;
     private LOG;
-    handleKeyDown(e: KeyboardEvent): boolean;
-    handleKeyUp(ev: KeyboardEvent): boolean;
+    onWarpViewModalOpen(e: CustomEvent): void;
+    onWarpViewModalClose(e: CustomEvent): void;
+    onKeyDown(e: KeyboardEvent): boolean;
+    onKeyUp(ev: KeyboardEvent): boolean;
     private onHideData;
     private onData;
     private showPopup;

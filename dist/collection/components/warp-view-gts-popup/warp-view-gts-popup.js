@@ -12,14 +12,21 @@ export class WarpViewGtsPopup {
         this.current = 0;
         this._gts = [];
         this.chips = [];
+        this.modalOpenned = false;
     }
-    handleKeyDown(e) {
+    onWarpViewModalOpen(e) {
+        this.modalOpenned = true;
+    }
+    onWarpViewModalClose(e) {
+        this.modalOpenned = false;
+    }
+    onKeyDown(e) {
         if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
             e.preventDefault();
             return false;
         }
     }
-    handleKeyUp(ev) {
+    onKeyUp(ev) {
         this.LOG.debug(['document:keyup'], ev);
         switch (ev.key) {
             case 's':
@@ -28,20 +35,24 @@ export class WarpViewGtsPopup {
                 break;
             case 'ArrowUp':
                 ev.preventDefault();
+                this.showPopup();
                 this.current = Math.max(0, this.current - 1);
                 this.prepareData();
                 break;
             case 'ArrowDown':
                 ev.preventDefault();
+                this.showPopup();
                 this.current = Math.min(this._gts.length - 1, this.current + 1);
                 this.prepareData();
                 break;
             case ' ':
-                ev.preventDefault();
-                this.warpViewSelectedGTS.emit({
-                    gts: this.displayed[this.current],
-                    selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
-                });
+                if (this.modalOpenned) {
+                    ev.preventDefault();
+                    this.warpViewSelectedGTS.emit({
+                        gts: this.displayed[this.current],
+                        selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
+                    });
+                }
                 break;
             default:
                 return true;
@@ -141,11 +152,17 @@ export class WarpViewGtsPopup {
             "composed": true
         }]; }
     static get listeners() { return [{
+            "name": "warpViewModalOpen",
+            "method": "onWarpViewModalOpen"
+        }, {
+            "name": "warpViewModalClose",
+            "method": "onWarpViewModalClose"
+        }, {
             "name": "document:keydown",
-            "method": "handleKeyDown"
+            "method": "onKeyDown"
         }, {
             "name": "document:keyup",
-            "method": "handleKeyUp"
+            "method": "onKeyUp"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-gts-popup:**/"; }
 }

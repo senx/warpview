@@ -338,6 +338,8 @@ export namespace Components {
   }
   interface WarpViewModalAttributes extends StencilHTMLAttributes {
     'modalTitle'?: string;
+    'onWarpViewModalClose'?: (event: CustomEvent) => void;
+    'onWarpViewModalOpen'?: (event: CustomEvent) => void;
   }
 
   interface WarpViewPie {

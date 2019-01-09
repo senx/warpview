@@ -7,10 +7,12 @@ class WarpViewModal {
     open() {
         this.el.style.display = 'block';
         this.el.style.zIndex = '999999';
+        this.warpViewModalOpen.emit({});
     }
     close() {
         this.el.style.display = 'none';
         this.el.style.zIndex = '-1';
+        this.warpViewModalClose.emit({});
     }
     handleKeyDown(ev) {
         if ('Escape' === ev.key) {
@@ -57,6 +59,19 @@ class WarpViewModal {
             "method": true
         }
     }; }
+    static get events() { return [{
+            "name": "warpViewModalOpen",
+            "method": "warpViewModalOpen",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "warpViewModalClose",
+            "method": "warpViewModalClose",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }]; }
     static get listeners() { return [{
             "name": "document:keydown",
             "method": "handleKeyDown"
