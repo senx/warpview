@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import { GTSLib } from '../../utils/gts.lib';
 import { DataModel } from "../../model/dataModel";
 import { Logger } from "../../utils/logger";
@@ -87,23 +103,32 @@ export class WarpViewTile {
         }
         this.loading = false;
     }
+    //detect some VSCode special modifiers in the beginnig of the code:
+    // @endpoint xxxURLxxx
+    // @timeUnit ns
+    //warning : the first line is empty (to confirm with other browsers)
     detectWarpScriptSpecialComments() {
+        //
+        //analyse the first warpScript lines starting with //
+        //
         let warpscriptlines = this.warpScript.split('\n');
         for (let l = 1; l < warpscriptlines.length; l++) {
             let currentline = warpscriptlines[l];
             if (currentline == "" || currentline.search("//") >= 0) {
+                //find and extract // @paramname parameters
                 let extraparamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
                 let lineonMatch;
                 let re = RegExp(extraparamsPattern);
+                // noinspection JSAssignmentUsedAsCondition
                 while (lineonMatch = re.exec(currentline)) {
                     let parameterName = lineonMatch[1];
                     let parameterValue = lineonMatch[2];
                     switch (parameterName) {
-                        case "endpoint":
+                        case "endpoint": //        // @endpoint http://mywarp10server/api/v0/exec
                             this.execUrl = parameterValue;
                             break;
                         case "timeUnit":
-                            this.timeUnit = parameterValue.toLowerCase();
+                            this.timeUnit = parameterValue.toLowerCase(); // set the time unit for graphs
                             break;
                         default:
                             break;
@@ -111,7 +136,7 @@ export class WarpViewTile {
                 }
             }
             else {
-                break;
+                break; //no more comments at the beginning of the file
             }
         }
     }
@@ -152,6 +177,7 @@ export class WarpViewTile {
     }
     render() {
         if (this.executionErrorText != '') {
+            // noinspection JSXNamespaceValidation
             return h("div", { class: "executionErrorText" },
                 " ",
                 this.executionErrorText,

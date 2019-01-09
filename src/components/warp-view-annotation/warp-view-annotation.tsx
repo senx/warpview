@@ -62,7 +62,8 @@ export class WarpViewAnnotation {
     gridLineColor: '#000000',
     timeMode: 'date'
   };
-  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private canvas: HTMLCanvasElement;
+  private tooltip: HTMLDivElement;
   private resizeTimer;
   private parentWidth = -1;
   private _height = '0';
@@ -170,28 +171,26 @@ export class WarpViewAnnotation {
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.parseData(this.data);
 
     if (!gts || gts.length === 0) {
       return;
     }
 
-    let calculatedHeight = (this.expanded ? 60 : 30) * gts.length + this.legendOffset;
+    let calculatedHeight = (this.expanded ? 30 * gts.length : 30);
     let height = this.height
     || this.height !== ''
       ? Math.max(calculatedHeight, parseInt(this.height))
       : calculatedHeight;
     this._height = height.toString();
     this.LOG.debug(['drawChart', 'height'], height, gts.length, calculatedHeight);
-    (ctx as HTMLElement).parentElement.style.height = height + 'px';
-    (ctx as HTMLElement).parentElement.style.width = '100%';
+    this.canvas.parentElement.style.height = height + 'px';
+    this.canvas.parentElement.style.width = '100%';
     const color = this._options.gridLineColor;
     const me = this;
     const chartOption = {
       layout: {
         padding: {
-          bottom: Math.max(30, 30 * gts.length),
           right: 26 //fine tuning, depends on chart element
         }
       },
@@ -201,17 +200,35 @@ export class WarpViewAnnotation {
         duration: 0,
       },
       tooltips: {
-        mode: 'x',
-        position: 'nearest',
-        custom: function (tooltip) {
-          if (tooltip.opacity > 0) {
+        enabled: false,
+        custom: function (tooltipModel) {
+          const layout = me.canvas.getBoundingClientRect();
+          me.LOG.debug(['tooltip', 'tooltipModel'], tooltipModel);
+          me.tooltip.innerHTML = `<div class="tooltip-body">${tooltipModel.title || []}</div>`;
+          if (tooltipModel.opacity === 0) {
+            me.tooltip.style.opacity = '0';
+            return;
+          }
+          if (tooltipModel.dataPoints && tooltipModel.dataPoints[0]) {
             me.pointHover.emit({
-              x: tooltip.dataPoints[0].x,
+              x: tooltipModel.dataPoints[0].x,
               y: this._eventPosition.y
             });
           } else {
             me.pointHover.emit({x: -100, y: this._eventPosition.y});
           }
+          me.tooltip.style.opacity = '1';
+          me.tooltip.style.top = (tooltipModel.caretY - 15) + 'px';
+          me.tooltip.classList.remove('right', 'left');
+          if(tooltipModel.caretX > layout.width / 2) {
+            me.tooltip.classList.add('left');
+            me.tooltip.style.left='100px';
+          } else {
+            me.tooltip.classList.add('right');
+            me.tooltip.style.right='26px';
+          }
+          me.tooltip.style.pointerEvents = 'none';
+          me.LOG.debug(['tooltip', 'tooltipEl'], me.tooltip);
           return;
         },
         callbacks: {
@@ -307,7 +324,7 @@ export class WarpViewAnnotation {
     if (this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: chartOption});
+    this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: chartOption});
     Object.keys(this._mapIndex).forEach(key => {
       this.LOG.debug(['drawChart', 'hide'], [key]);
       this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
@@ -376,6 +393,7 @@ export class WarpViewAnnotation {
 
   render() {
     return <div>
+      <div class="tooltip-body" ref={(el) => this.tooltip = el as HTMLDivElement}/>
       {this.displayExpander
         ? <button class={'expander'} onClick={() => this.toggle()} title="collapse/expand">+/-</button>
         : ''
@@ -388,7 +406,7 @@ export class WarpViewAnnotation {
           height: this._height
         }}
       >
-        <canvas id={this.uuid} width={this.width} height={this._height}/>
+        <canvas ref={(el) => this.canvas = el as HTMLCanvasElement} width={this.width} height={this._height}/>
       </div>
     </div>;
   }

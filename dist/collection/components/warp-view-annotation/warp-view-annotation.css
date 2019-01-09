@@ -16,6 +16,15 @@
  */
 :host div {
   position: relative; }
+  :host div .tooltip-body {
+    position: absolute;
+    background-color: #0074D9;
+    width: auto;
+    height: 30px; }
+    :host div .tooltip-body .left {
+      text-align: left; }
+    :host div .tooltip-body .right {
+      text-align: right; }
   :host div .chart-container {
     width: var(--warp-view-chart-width, 100%);
     height: var(--warp-view-chart-height, 100%);

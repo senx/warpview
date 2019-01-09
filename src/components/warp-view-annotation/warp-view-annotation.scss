@@ -19,6 +19,21 @@
   div {
     position: relative;
 
+    .tooltip-body {
+      position: absolute;
+      background-color: #0074D9;
+      width: auto;
+      height: 30px;
+
+      .left {
+        text-align: left;
+      }
+
+      .right {
+        text-align: right;
+      }
+    }
+
     .chart-container {
       width: var(--warp-view-chart-width, 100%);
       height: var(--warp-view-chart-height, 100%);

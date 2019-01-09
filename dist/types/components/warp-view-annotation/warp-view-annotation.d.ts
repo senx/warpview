@@ -27,7 +27,8 @@ export declare class WarpViewAnnotation {
     private _mapIndex;
     private LOG;
     private _options;
-    private uuid;
+    private canvas;
+    private tooltip;
     private resizeTimer;
     private parentWidth;
     private _height;

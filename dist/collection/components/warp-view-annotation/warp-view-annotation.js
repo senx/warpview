@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
@@ -5,6 +21,10 @@ import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment-timezone";
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
+ */
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;
@@ -22,7 +42,6 @@ export class WarpViewAnnotation {
             gridLineColor: '#000000',
             timeMode: 'date'
         };
-        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
         this._height = '0';
         this.expanded = false;
@@ -82,7 +101,7 @@ export class WarpViewAnnotation {
                 else {
                     if (newValue == 0 && !this.standalone) {
                         newValue = 1;
-                    }
+                    } //clunky hack for issue #22
                     this._chart.options.scales.xAxes[0].time.min = newValue;
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
@@ -100,7 +119,7 @@ export class WarpViewAnnotation {
                 else {
                     if (newValue == 0 && !this.standalone) {
                         newValue = 1;
-                    }
+                    } //clunky hack for issue #22
                     this._chart.options.scales.xAxes[0].time.max = newValue;
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
@@ -108,35 +127,36 @@ export class WarpViewAnnotation {
             }
         }
     }
+    /**
+     *
+     */
     drawChart() {
         if (!this.data) {
             return;
         }
-        moment.tz.setDefault("UTC");
+        moment.tz.setDefault("UTC"); //force X axis display in UTC
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.parseData(this.data);
         if (!gts || gts.length === 0) {
             return;
         }
-        let calculatedHeight = (this.expanded ? 60 : 30) * gts.length + this.legendOffset;
+        let calculatedHeight = (this.expanded ? 30 * gts.length : 30);
         let height = this.height
             || this.height !== ''
             ? Math.max(calculatedHeight, parseInt(this.height))
             : calculatedHeight;
         this._height = height.toString();
         this.LOG.debug(['drawChart', 'height'], height, gts.length, calculatedHeight);
-        ctx.parentElement.style.height = height + 'px';
-        ctx.parentElement.style.width = '100%';
+        this.canvas.parentElement.style.height = height + 'px';
+        this.canvas.parentElement.style.width = '100%';
         const color = this._options.gridLineColor;
         const me = this;
         const chartOption = {
             layout: {
                 padding: {
-                    bottom: Math.max(30, 30 * gts.length),
-                    right: 26
+                    right: 26 //fine tuning, depends on chart element
                 }
             },
             legend: { display: this.showLegend },
@@ -145,18 +165,37 @@ export class WarpViewAnnotation {
                 duration: 0,
             },
             tooltips: {
-                mode: 'x',
-                position: 'nearest',
-                custom: function (tooltip) {
-                    if (tooltip.opacity > 0) {
+                enabled: false,
+                custom: function (tooltipModel) {
+                    const layout = me.canvas.getBoundingClientRect();
+                    me.LOG.debug(['tooltip', 'tooltipModel'], tooltipModel);
+                    me.tooltip.innerHTML = `<div class="tooltip-body">${tooltipModel.title || []}</div>`;
+                    if (tooltipModel.opacity === 0) {
+                        me.tooltip.style.opacity = '0';
+                        return;
+                    }
+                    if (tooltipModel.dataPoints && tooltipModel.dataPoints[0]) {
                         me.pointHover.emit({
-                            x: tooltip.dataPoints[0].x,
+                            x: tooltipModel.dataPoints[0].x,
                             y: this._eventPosition.y
                         });
                     }
                     else {
                         me.pointHover.emit({ x: -100, y: this._eventPosition.y });
                     }
+                    me.tooltip.style.opacity = '1';
+                    me.tooltip.style.top = (tooltipModel.caretY - 15) + 'px';
+                    me.tooltip.classList.remove('right', 'left');
+                    if (tooltipModel.caretX > layout.width / 2) {
+                        me.tooltip.classList.add('left');
+                        me.tooltip.style.left = '100px';
+                    }
+                    else {
+                        me.tooltip.classList.add('right');
+                        me.tooltip.style.right = '26px';
+                    }
+                    me.tooltip.style.pointerEvents = 'none';
+                    me.LOG.debug(['tooltip', 'tooltipEl'], me.tooltip);
                     return;
                 },
                 callbacks: {
@@ -192,7 +231,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: (scaleInstance) => {
-                            scaleInstance.width = 100;
+                            scaleInstance.width = 100; // sets the width to 100px
                         },
                         gridLines: {
                             color: color,
@@ -226,8 +265,8 @@ export class WarpViewAnnotation {
             };
         }
         else {
-            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin;
-            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax;
+            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
+            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
             chartOption.scales.xAxes[0].time = {
                 min: tmin,
                 max: tmax,
@@ -249,7 +288,7 @@ export class WarpViewAnnotation {
         if (this._chart) {
             this._chart.destroy();
         }
-        this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: chartOption });
+        this._chart = new Chart.Scatter(this.canvas, { data: { datasets: gts }, options: chartOption });
         Object.keys(this._mapIndex).forEach(key => {
             this.LOG.debug(['drawChart', 'hide'], [key]);
             this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
@@ -257,6 +296,11 @@ export class WarpViewAnnotation {
         this._chart.update();
         this.onResize();
     }
+    /**
+     *
+     * @param gts
+     * @returns {any[]}
+     */
     parseData(gts) {
         this.LOG.debug(['parseData'], gts);
         let dataList = GTSLib.getData(gts).data;
@@ -310,6 +354,7 @@ export class WarpViewAnnotation {
     }
     render() {
         return h("div", null,
+            h("div", { class: "tooltip-body", ref: (el) => this.tooltip = el }),
             this.displayExpander
                 ? h("button", { class: 'expander', onClick: () => this.toggle(), title: "collapse/expand" }, "+/-")
                 : '',
@@ -318,7 +363,7 @@ export class WarpViewAnnotation {
                     width: this.width,
                     height: this._height
                 } },
-                h("canvas", { id: this.uuid, width: this.width, height: this._height })));
+                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })));
     }
     toggle() {
         this.expanded = !this.expanded;

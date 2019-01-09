@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { Logger } from "../../utils/logger";
@@ -121,11 +137,11 @@ export class WarpViewPlot {
         this.LOG.debug(['warpViewSelectedGTS'], event.detail);
         if (!this._toHide.find(i => {
             return i === event.detail.gts.id;
-        }) && !event.detail.selected) {
+        }) && !event.detail.selected) { //if not in toHide and state false, put id in toHide
             this._toHide.push(event.detail.gts.id);
         }
         else {
-            if (event.detail.selected) {
+            if (event.detail.selected) { //if in toHide and state true, remove it from toHide
                 this._toHide = this._toHide.filter(i => {
                     return i !== event.detail.gts.id;
                 });
@@ -175,7 +191,9 @@ export class WarpViewPlot {
         }
         this._options = ChartLib.mergeDeep(this._options, opts);
         this.LOG.debug(["PPts"], "firstdraw " + firstdraw);
-        if (firstdraw) {
+        if (firstdraw) { //on the first draw, we can set some default options.
+            //automatically switch to timestamp mode
+            //when the first tick and last tick of all the series are in the interval [-100ms 100ms]
             let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
             let dataList = this._data.data;
             if (dataList) {
@@ -183,7 +201,7 @@ export class WarpViewPlot {
                 gtsList = GTSLib.flatDeep(gtsList);
                 let timestampMode = true;
                 gtsList.forEach(g => {
-                    if (g.v.length > 0) {
+                    if (g.v.length > 0) { //if gts not empty
                         timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
                         timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
                     }

@@ -1,3 +1,5 @@
+const h = window.warpview.h;
+
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -14,7 +16,7 @@
  *  limitations under the License.
  *
  */
-export class ColorLib {
+class ColorLib {
     /**
      * Get a color from index
      * @param i
@@ -211,3 +213,5 @@ ColorLib.color = [
     '#43A047',
     '#1E88E5',
 ];
+
+export { ColorLib as a };

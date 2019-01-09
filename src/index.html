@@ -211,14 +211,11 @@
           <div class="tab-content" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-main" role="tabpanel"
                  aria-labelledby="v-pills-1-tab">
-              <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
+              <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
+                              debug="true"
                               gts-filter="anomaly"
                               chart-title="Plot">
-                {}
-                NOW
-                96
-                h
-                @senx/alerting/_fetch
+                {} NOW 96 h @senx/alerting/_fetch
               </warp-view-tile>
               <h1>Warp View</h1>
               <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
