@@ -112,7 +112,8 @@ export class WarpViewChart {
                     //this._chart.setVisibility(i,newValue.indexOf(id) < 0);
                     //best workaround : rebuild the dygraph with same dataset and different visibility options. 
                     //TODO: try each next version of dygraph.
-                    this.visibility.push(newValue.indexOf(id) < 0);
+                    //id -1 is a special empty serie only used when there only annotations
+                    this.visibility.push(newValue.indexOf(id) < 0 && (id != -1));
                 });
                 this.LOG.debug(['hiddendygraphfullv'], this.visibility);
             }
@@ -228,26 +229,50 @@ export class WarpViewChart {
                 this.visibility.push(true);
                 this.visibleGtsId.push(g.id);
             });
-            this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
             //non plotable data are important to fix the bounds of the graphics (with null values)
             //just add min and max tick to the hashset
             this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
-            if (nonPlottable.length > 0) {
-                nonPlottable.forEach(value => {
-                    const ts = value[0];
-                    if (!this.dataHashset[ts]) {
-                        this.dataHashset[ts] = new Array(gtsList.length);
-                        this.dataHashset[ts].fill(null);
-                    }
-                    this.dataHashset[ts][0] = 0;
+            if (nonPlottable.length > 0) { //&& gtsList.length === 0) {
+                nonPlottable.forEach(g => {
+                    g.v.forEach(value => {
+                        const ts = value[0];
+                        if (ts < this.minTick) {
+                            this.minTick = ts;
+                        }
+                        if (ts > this.maxTick) {
+                            this.maxTick = ts;
+                        }
+                    });
                 });
-                let color = ColorLib.getColor(0);
-                labels.push('');
-                colors.push(color);
-                this.visibility.push(false);
+                //if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
+                if (0 == gtsList.length) {
+                    if (!this.dataHashset[this.minTick]) {
+                        this.dataHashset[this.minTick] = [0];
+                    }
+                    if (!this.dataHashset[this.maxTick]) {
+                        this.dataHashset[this.maxTick] = [0];
+                    }
+                    labels.push('emptyserie');
+                    let color = ColorLib.getColor(0);
+                    colors.push(color);
+                    this.visibility.push(false);
+                    this.visibleGtsId.push(-1);
+                }
+                else {
+                    //if there is some plottable data, just add some missing points to define min and max
+                    if (!this.dataHashset[this.minTick]) {
+                        this.dataHashset[this.minTick] = new Array(gtsList.length);
+                        this.dataHashset[this.minTick].fill(null);
+                    }
+                    if (!this.dataHashset[this.maxTick]) {
+                        this.dataHashset[this.maxTick] = new Array(gtsList.length);
+                        this.dataHashset[this.maxTick].fill(null);
+                    }
+                }
             }
         }
         this.rebuildDygraphDataSets();
+        this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
         this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
         this.dygraphColors = colors;
         this.dygraphLabels = labels;
@@ -260,12 +285,13 @@ export class WarpViewChart {
     rebuildDygraphDataSets() {
         this.dygraphdataSets = [];
         //build the big matrix for dygraph from the data hashset.
+        const divider = GTSLib.getDivider(this._options.timeUnit);
         Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
             else {
-                const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
+                const ts = Math.floor(parseInt(timestamp) / divider);
                 this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
             }
         });
@@ -440,14 +466,20 @@ export class WarpViewChart {
                     max: dygraph.dateWindow_[1]
                 }
             });
+            this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0], dygraph.dateWindow_[1]]);
         }
         else {
+            let divider = GTSLib.getDivider(this._options.timeUnit);
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                divider = 1;
+            }
             this.boundsDidChange.emit({
                 bounds: {
-                    min: this.minTick,
-                    max: this.maxTick
+                    min: this.minTick / divider,
+                    max: this.maxTick / divider
                 }
             });
+            this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
         }
         if (this.initialResizeNeeded) {
             this.onResize();

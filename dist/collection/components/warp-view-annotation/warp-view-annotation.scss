@@ -16,21 +16,95 @@
  */
 
 :host {
+  resize: horizontal;
+
   div {
     position: relative;
 
-    .tooltip-body {
-      position: absolute;
-      background-color: #0074D9;
-      width: auto;
-      height: 30px;
+    .date {
+      text-align: right;
+      display: block;
+      height: 20px;
+      vertical-align: middle;
+      line-height: 20px;
+      width: calc(100% - 110px);
+      margin-left: 90px;
+      padding-right: 10px;
+    }
 
-      .left {
-        text-align: left;
+    .tooltip {
+      position: absolute;
+      width: calc(100% - 110px);
+      z-index: 999;
+      height: 29px;
+      margin-left: 90px;
+      top: -1000px;
+
+      .tooltip-body {
+        background-color: #ffffffcc;
+        padding-left: 10px;
+        padding-right: 10px;
+        max-width: 49%;
+        width: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 29px;
+        vertical-align: middle;
+
+        .timestamp {
+          font-size: 1rem;
+        }
+
+        .gts-classname {
+          color: var(--gts-classname-font-color, #0074D9);
+        }
+
+        .gts-labelname {
+          color: var(--gts-labelname-font-color, #19A979);
+        }
+
+        .gts-attrname {
+          color: var(--gts-labelname-font-color, #ED4A7B);
+        }
+
+        .gts-separator {
+          color: var(--gts-separator-font-color, #bbbbbb);
+        }
+
+        .gts-labelvalue {
+          color: var(--gts-labelvalue-font-color, #AAAAAA);
+          font-style: italic;
+        }
+
+        .gts-attrvalue {
+          color: var(--gts-labelvalue-font-color, #AAAAAA);
+          font-style: italic;
+        }
+
+
+        .round {
+          border-radius: 50%;
+          background-color: #bbbbbb;
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          border: 2px solid #454545;
+          margin-top: auto;
+          margin-bottom: auto;
+          vertical-align: middle;
+          margin-right: 5px;
+        }
       }
 
-      .right {
+      &.left div {
+        text-align: left;
+        float: left;
+      }
+
+      &.right div {
         text-align: right;
+        float: right;
       }
     }
 
@@ -45,7 +119,8 @@
       border: solid 1px var(--warp-view-annotation-btn-border-color, #888);
       color: var(--warp-view-annotation-btn-color, #888);
       cursor: pointer;
-      top: 25px;
+      top: 5px;
+      left: 20px;
       position: absolute;
       z-index: 100;
     }

@@ -22,13 +22,13 @@ export declare class WarpViewAnnotation {
     displayExpander: boolean;
     pointHover: EventEmitter;
     el: HTMLElement;
-    private legendOffset;
     private _chart;
     private _mapIndex;
     private LOG;
     private _options;
     private canvas;
     private tooltip;
+    private date;
     private resizeTimer;
     private parentWidth;
     private _height;

@@ -3,7 +3,7 @@ const h = window.warpview.h;
 import { d as Param, b as GTSLib, a as ChartLib, c as Logger, e as DataModel } from './chunk-714499cf.js';
 import { a as require$$0 } from './chunk-e5c40192.js';
 import { a as ColorLib } from './chunk-53a0d97b.js';
-import { b as getCjsExportFromNamespace, c as createCommonjsModule, d as commonjsGlobal, a as Chart } from './chunk-eecc9450.js';
+import { b as createCommonjsModule, c as commonjsGlobal, d as getCjsExportFromNamespace, a as Chart } from './chunk-eecc9450.js';
 
 var hookCallback;
 
@@ -4506,12 +4506,6 @@ hooks.HTML5_FMT = {
     MONTH: 'YYYY-MM'                                // <input type="month" />
 };
 
-var moment = /*#__PURE__*/Object.freeze({
-    default: hooks
-});
-
-var require$$0$1 = getCjsExportFromNamespace(moment);
-
 var momentTimezone = createCommonjsModule(function (module) {
 //! moment-timezone.js
 //! version : 0.5.23
@@ -4524,7 +4518,7 @@ var momentTimezone = createCommonjsModule(function (module) {
 
 	/*global define*/
 	if ('object' === 'object' && module.exports) {
-		module.exports = factory(require$$0$1); // Node
+		module.exports = factory(hooks); // Node
 	} else if (typeof undefined === 'function' && undefined.amd) {
 		undefined(['moment'], factory);                 // AMD
 	} else {
@@ -5182,7 +5176,6 @@ class WarpViewAnnotation {
         this.standalone = true;
         this.debug = false;
         this.displayExpander = true;
-        this.legendOffset = 70;
         this._mapIndex = {};
         this._options = {
             gridLineColor: '#000000',
@@ -5314,10 +5307,9 @@ class WarpViewAnnotation {
                 enabled: false,
                 custom: function (tooltipModel) {
                     const layout = me.canvas.getBoundingClientRect();
-                    me.LOG.debug(['tooltip', 'tooltipModel'], tooltipModel);
-                    me.tooltip.innerHTML = `<div class="tooltip-body">${tooltipModel.title || []}</div>`;
                     if (tooltipModel.opacity === 0) {
                         me.tooltip.style.opacity = '0';
+                        me.date.innerHTML = '';
                         return;
                     }
                     if (tooltipModel.dataPoints && tooltipModel.dataPoints[0]) {
@@ -5330,18 +5322,23 @@ class WarpViewAnnotation {
                         me.pointHover.emit({ x: -100, y: this._eventPosition.y });
                     }
                     me.tooltip.style.opacity = '1';
-                    me.tooltip.style.top = (tooltipModel.caretY - 15) + 'px';
+                    me.tooltip.style.top = (tooltipModel.caretY - 14 + 20) + 'px';
                     me.tooltip.classList.remove('right', 'left');
+                    if (tooltipModel.body) {
+                        me.date.innerHTML = tooltipModel.title || '';
+                        const label = tooltipModel.body[0].lines[0].split('}:');
+                        me.tooltip.innerHTML = `<div class="tooltip-body">
+  <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
+  <span class="value">${label[1]}</span>
+</div>`;
+                    }
                     if (tooltipModel.caretX > layout.width / 2) {
                         me.tooltip.classList.add('left');
-                        me.tooltip.style.left = '100px';
                     }
                     else {
                         me.tooltip.classList.add('right');
-                        me.tooltip.style.right = '26px';
                     }
                     me.tooltip.style.pointerEvents = 'none';
-                    me.LOG.debug(['tooltip', 'tooltipEl'], me.tooltip);
                     return;
                 },
                 callbacks: {
@@ -5386,10 +5383,11 @@ class WarpViewAnnotation {
                         },
                         ticks: {
                             display: false,
-                            min: 0,
+                            min: -0.05,
                             max: 1,
-                            beginAtZero: true,
-                            stepSize: 1
+                            beginAtZero: false,
+                            stepSize: 1,
+                            offsetGridLines: true
                         }
                     }
                 ]
@@ -5430,17 +5428,17 @@ class WarpViewAnnotation {
             };
             chartOption.scales.xAxes[0].type = 'time';
         }
-        this.LOG.debug(['drawChart'], [height, gts]);
+        this.LOG.debug(['drawChart', 'about to render'], [chartOption, gts]);
         if (this._chart) {
             this._chart.destroy();
         }
         this._chart = new Chart.Scatter(this.canvas, { data: { datasets: gts }, options: chartOption });
+        this.onResize();
+        this._chart.update();
         Object.keys(this._mapIndex).forEach(key => {
             this.LOG.debug(['drawChart', 'hide'], [key]);
             this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
         });
-        this._chart.update();
-        this.onResize();
     }
     /**
      *
@@ -5500,7 +5498,7 @@ class WarpViewAnnotation {
     }
     render() {
         return h("div", null,
-            h("div", { class: "tooltip-body", ref: (el) => this.tooltip = el }),
+            h("div", { class: "date", ref: (el) => this.date = el }),
             this.displayExpander
                 ? h("button", { class: 'expander', onClick: () => this.toggle(), title: "collapse/expand" }, "+/-")
                 : '',
@@ -5509,7 +5507,8 @@ class WarpViewAnnotation {
                     width: this.width,
                     height: this._height
                 } },
-                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })));
+                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })),
+            h("div", { class: "tooltip", ref: (el) => this.tooltip = el }));
     }
     toggle() {
         this.expanded = !this.expanded;
@@ -5588,7 +5587,7 @@ class WarpViewAnnotation {
             "method": "onResize",
             "passive": true
         }]; }
-    static get style() { return "/*!\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n *\n */\n:host div {\n  position: relative; }\n  :host div .tooltip-body {\n    position: absolute;\n    background-color: #0074D9;\n    width: auto;\n    height: 30px; }\n    :host div .tooltip-body .left {\n      text-align: left; }\n    :host div .tooltip-body .right {\n      text-align: right; }\n  :host div .chart-container {\n    width: var(--warp-view-chart-width, 100%);\n    height: var(--warp-view-chart-height, 100%);\n    position: relative; }\n  :host div .expander {\n    background-color: var(--warp-view-annotation-btn-bg-color, #fff);\n    border: solid 1px var(--warp-view-annotation-btn-border-color, #888);\n    color: var(--warp-view-annotation-btn-color, #888);\n    cursor: pointer;\n    top: 25px;\n    position: absolute;\n    z-index: 100; }"; }
+    static get style() { return "/*!\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n *\n */\n:host {\n  resize: horizontal; }\n  :host div {\n    position: relative; }\n    :host div .date {\n      text-align: right;\n      display: block;\n      height: 20px;\n      vertical-align: middle;\n      line-height: 20px;\n      width: calc(100% - 110px);\n      margin-left: 90px;\n      padding-right: 10px; }\n    :host div .tooltip {\n      position: absolute;\n      width: calc(100% - 110px);\n      z-index: 999;\n      height: 29px;\n      margin-left: 90px;\n      top: -1000px; }\n      :host div .tooltip .tooltip-body {\n        background-color: #ffffffcc;\n        padding-left: 10px;\n        padding-right: 10px;\n        max-width: 49%;\n        width: auto;\n        white-space: nowrap;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        line-height: 29px;\n        vertical-align: middle; }\n        :host div .tooltip .tooltip-body .timestamp {\n          font-size: 1rem; }\n        :host div .tooltip .tooltip-body .gts-classname {\n          color: var(--gts-classname-font-color, #0074D9); }\n        :host div .tooltip .tooltip-body .gts-labelname {\n          color: var(--gts-labelname-font-color, #19A979); }\n        :host div .tooltip .tooltip-body .gts-attrname {\n          color: var(--gts-labelname-font-color, #ED4A7B); }\n        :host div .tooltip .tooltip-body .gts-separator {\n          color: var(--gts-separator-font-color, #bbbbbb); }\n        :host div .tooltip .tooltip-body .gts-labelvalue {\n          color: var(--gts-labelvalue-font-color, #AAAAAA);\n          font-style: italic; }\n        :host div .tooltip .tooltip-body .gts-attrvalue {\n          color: var(--gts-labelvalue-font-color, #AAAAAA);\n          font-style: italic; }\n        :host div .tooltip .tooltip-body .round {\n          border-radius: 50%;\n          background-color: #bbbbbb;\n          display: inline-block;\n          width: 5px;\n          height: 5px;\n          border: 2px solid #454545;\n          margin-top: auto;\n          margin-bottom: auto;\n          vertical-align: middle;\n          margin-right: 5px; }\n      :host div .tooltip.left div {\n        text-align: left;\n        float: left; }\n      :host div .tooltip.right div {\n        text-align: right;\n        float: right; }\n    :host div .chart-container {\n      width: var(--warp-view-chart-width, 100%);\n      height: var(--warp-view-chart-height, 100%);\n      position: relative; }\n    :host div .expander {\n      background-color: var(--warp-view-annotation-btn-bg-color, #fff);\n      border: solid 1px var(--warp-view-annotation-btn-border-color, #888);\n      color: var(--warp-view-annotation-btn-color, #888);\n      cursor: pointer;\n      top: 5px;\n      left: 20px;\n      position: absolute;\n      z-index: 100; }"; }
 }
 
 /**
@@ -17053,7 +17052,8 @@ class WarpViewChart {
                     //this._chart.setVisibility(i,newValue.indexOf(id) < 0);
                     //best workaround : rebuild the dygraph with same dataset and different visibility options. 
                     //TODO: try each next version of dygraph.
-                    this.visibility.push(newValue.indexOf(id) < 0);
+                    //id -1 is a special empty serie only used when there only annotations
+                    this.visibility.push(newValue.indexOf(id) < 0 && (id != -1));
                 });
                 this.LOG.debug(['hiddendygraphfullv'], this.visibility);
             }
@@ -17169,26 +17169,50 @@ class WarpViewChart {
                 this.visibility.push(true);
                 this.visibleGtsId.push(g.id);
             });
-            this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
             //non plotable data are important to fix the bounds of the graphics (with null values)
             //just add min and max tick to the hashset
             this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
-            if (nonPlottable.length > 0) {
-                nonPlottable.forEach(value => {
-                    const ts = value[0];
-                    if (!this.dataHashset[ts]) {
-                        this.dataHashset[ts] = new Array(gtsList.length);
-                        this.dataHashset[ts].fill(null);
-                    }
-                    this.dataHashset[ts][0] = 0;
+            if (nonPlottable.length > 0) { //&& gtsList.length === 0) {
+                nonPlottable.forEach(g => {
+                    g.v.forEach(value => {
+                        const ts = value[0];
+                        if (ts < this.minTick) {
+                            this.minTick = ts;
+                        }
+                        if (ts > this.maxTick) {
+                            this.maxTick = ts;
+                        }
+                    });
                 });
-                let color = ColorLib.getColor(0);
-                labels.push('');
-                colors.push(color);
-                this.visibility.push(false);
+                //if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
+                if (0 == gtsList.length) {
+                    if (!this.dataHashset[this.minTick]) {
+                        this.dataHashset[this.minTick] = [0];
+                    }
+                    if (!this.dataHashset[this.maxTick]) {
+                        this.dataHashset[this.maxTick] = [0];
+                    }
+                    labels.push('emptyserie');
+                    let color = ColorLib.getColor(0);
+                    colors.push(color);
+                    this.visibility.push(false);
+                    this.visibleGtsId.push(-1);
+                }
+                else {
+                    //if there is some plottable data, just add some missing points to define min and max
+                    if (!this.dataHashset[this.minTick]) {
+                        this.dataHashset[this.minTick] = new Array(gtsList.length);
+                        this.dataHashset[this.minTick].fill(null);
+                    }
+                    if (!this.dataHashset[this.maxTick]) {
+                        this.dataHashset[this.maxTick] = new Array(gtsList.length);
+                        this.dataHashset[this.maxTick].fill(null);
+                    }
+                }
             }
         }
         this.rebuildDygraphDataSets();
+        this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
         this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
         this.dygraphColors = colors;
         this.dygraphLabels = labels;
@@ -17201,12 +17225,13 @@ class WarpViewChart {
     rebuildDygraphDataSets() {
         this.dygraphdataSets = [];
         //build the big matrix for dygraph from the data hashset.
+        const divider = GTSLib.getDivider(this._options.timeUnit);
         Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
             else {
-                const ts = Math.floor(parseInt(timestamp) / GTSLib.getDivider(this._options.timeUnit));
+                const ts = Math.floor(parseInt(timestamp) / divider);
                 this.dygraphdataSets.push([require$$0.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
             }
         });
@@ -17381,14 +17406,20 @@ class WarpViewChart {
                     max: dygraph.dateWindow_[1]
                 }
             });
+            this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0], dygraph.dateWindow_[1]]);
         }
         else {
+            let divider = GTSLib.getDivider(this._options.timeUnit);
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                divider = 1;
+            }
             this.boundsDidChange.emit({
                 bounds: {
-                    min: this.minTick,
-                    max: this.maxTick
+                    min: this.minTick / divider,
+                    max: this.maxTick / divider
                 }
             });
+            this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
         }
         if (this.initialResizeNeeded) {
             this.onResize();

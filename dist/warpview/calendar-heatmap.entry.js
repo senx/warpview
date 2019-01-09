@@ -327,7 +327,7 @@ function histogram() {
   return histogram;
 }
 
-function quantile(values, p, valueof) {
+function threshold(values, p, valueof) {
   if (valueof == null) valueof = number;
   if (!(n = values.length)) return;
   if ((p = +p) <= 0 || n < 2) return +valueof(values[0], 0, values);
@@ -342,7 +342,7 @@ function quantile(values, p, valueof) {
 
 function freedmanDiaconis(values, min, max) {
   values = map.call(values, number).sort(ascending);
-  return Math.ceil((max - min) / (2 * (quantile(values, 0.75) - quantile(values, 0.25)) * Math.pow(values.length, -1 / 3)));
+  return Math.ceil((max - min) / (2 * (threshold(values, 0.75) - threshold(values, 0.25)) * Math.pow(values.length, -1 / 3)));
 }
 
 function scott(values, min, max) {
@@ -430,7 +430,7 @@ function median(values, valueof) {
     }
   }
 
-  return quantile(numbers.sort(ascending), 0.5);
+  return threshold(numbers.sort(ascending), 0.5);
 }
 
 function merge(arrays) {
@@ -5368,11 +5368,11 @@ var cases = [
 function contours() {
   var dx = 1,
       dy = 1,
-      threshold = thresholdSturges,
+      threshold$$1 = thresholdSturges,
       smooth = smoothLinear;
 
   function contours(values) {
-    var tz = threshold(values);
+    var tz = threshold$$1(values);
 
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
@@ -5532,7 +5532,7 @@ function contours() {
   };
 
   contours.thresholds = function(_) {
-    return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant$6(slice$3.call(_)) : constant$6(_), contours) : threshold;
+    return arguments.length ? (threshold$$1 = typeof _ === "function" ? _ : Array.isArray(_) ? constant$6(slice$3.call(_)) : constant$6(_), contours) : threshold$$1;
   };
 
   contours.smooth = function(_) {
@@ -5609,7 +5609,7 @@ function density() {
       o = r * 3, // grid offset, to pad for blur
       n = (dx + o * 2) >> k, // grid width
       m = (dy + o * 2) >> k, // grid height
-      threshold = constant$6(20);
+      threshold$$1 = constant$6(20);
 
   function density(data) {
     var values0 = new Float32Array(n * m),
@@ -5632,7 +5632,7 @@ function density() {
     blurX({width: n, height: m, data: values0}, {width: n, height: m, data: values1}, r >> k);
     blurY({width: n, height: m, data: values1}, {width: n, height: m, data: values0}, r >> k);
 
-    var tz = threshold(values0);
+    var tz = threshold$$1(values0);
 
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
@@ -5702,7 +5702,7 @@ function density() {
   };
 
   density.thresholds = function(_) {
-    return arguments.length ? (threshold = typeof _ === "function" ? _ : Array.isArray(_) ? constant$6(slice$3.call(_)) : constant$6(_), density) : threshold;
+    return arguments.length ? (threshold$$1 = typeof _ === "function" ? _ : Array.isArray(_) ? constant$6(slice$3.call(_)) : constant$6(_), density) : threshold$$1;
   };
 
   density.bandwidth = function(_) {
@@ -12402,7 +12402,7 @@ function sqrt$1() {
   return pow$1().exponent(0.5);
 }
 
-function quantile$1() {
+function quantile$$1() {
   var domain = [],
       range = [],
       thresholds = [];
@@ -12410,7 +12410,7 @@ function quantile$1() {
   function rescale() {
     var i = 0, n = Math.max(1, range.length);
     thresholds = new Array(n - 1);
-    while (++i < n) thresholds[i - 1] = quantile(domain, i / n);
+    while (++i < n) thresholds[i - 1] = threshold(domain, i / n);
     return scale;
   }
 
@@ -12443,7 +12443,7 @@ function quantile$1() {
   };
 
   scale.copy = function() {
-    return quantile$1()
+    return quantile$$1()
         .domain(domain)
         .range(range);
   };
@@ -12494,7 +12494,7 @@ function quantize$1() {
   return linearish(scale);
 }
 
-function threshold() {
+function threshold$1() {
   var domain = [0.5],
       range = [0, 1],
       n = 1;
@@ -12517,7 +12517,7 @@ function threshold() {
   };
 
   scale.copy = function() {
-    return threshold()
+    return threshold$1()
         .domain(domain)
         .range(range);
   };

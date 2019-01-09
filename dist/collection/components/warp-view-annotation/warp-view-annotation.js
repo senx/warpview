@@ -36,7 +36,6 @@ export class WarpViewAnnotation {
         this.standalone = true;
         this.debug = false;
         this.displayExpander = true;
-        this.legendOffset = 70;
         this._mapIndex = {};
         this._options = {
             gridLineColor: '#000000',
@@ -168,10 +167,9 @@ export class WarpViewAnnotation {
                 enabled: false,
                 custom: function (tooltipModel) {
                     const layout = me.canvas.getBoundingClientRect();
-                    me.LOG.debug(['tooltip', 'tooltipModel'], tooltipModel);
-                    me.tooltip.innerHTML = `<div class="tooltip-body">${tooltipModel.title || []}</div>`;
                     if (tooltipModel.opacity === 0) {
                         me.tooltip.style.opacity = '0';
+                        me.date.innerHTML = '';
                         return;
                     }
                     if (tooltipModel.dataPoints && tooltipModel.dataPoints[0]) {
@@ -184,18 +182,23 @@ export class WarpViewAnnotation {
                         me.pointHover.emit({ x: -100, y: this._eventPosition.y });
                     }
                     me.tooltip.style.opacity = '1';
-                    me.tooltip.style.top = (tooltipModel.caretY - 15) + 'px';
+                    me.tooltip.style.top = (tooltipModel.caretY - 14 + 20) + 'px';
                     me.tooltip.classList.remove('right', 'left');
+                    if (tooltipModel.body) {
+                        me.date.innerHTML = tooltipModel.title || '';
+                        const label = tooltipModel.body[0].lines[0].split('}:');
+                        me.tooltip.innerHTML = `<div class="tooltip-body">
+  <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
+  <span class="value">${label[1]}</span>
+</div>`;
+                    }
                     if (tooltipModel.caretX > layout.width / 2) {
                         me.tooltip.classList.add('left');
-                        me.tooltip.style.left = '100px';
                     }
                     else {
                         me.tooltip.classList.add('right');
-                        me.tooltip.style.right = '26px';
                     }
                     me.tooltip.style.pointerEvents = 'none';
-                    me.LOG.debug(['tooltip', 'tooltipEl'], me.tooltip);
                     return;
                 },
                 callbacks: {
@@ -240,10 +243,11 @@ export class WarpViewAnnotation {
                         },
                         ticks: {
                             display: false,
-                            min: 0,
+                            min: -0.05,
                             max: 1,
-                            beginAtZero: true,
-                            stepSize: 1
+                            beginAtZero: false,
+                            stepSize: 1,
+                            offsetGridLines: true
                         }
                     }
                 ]
@@ -284,17 +288,17 @@ export class WarpViewAnnotation {
             };
             chartOption.scales.xAxes[0].type = 'time';
         }
-        this.LOG.debug(['drawChart'], [height, gts]);
+        this.LOG.debug(['drawChart', 'about to render'], [chartOption, gts]);
         if (this._chart) {
             this._chart.destroy();
         }
         this._chart = new Chart.Scatter(this.canvas, { data: { datasets: gts }, options: chartOption });
+        this.onResize();
+        this._chart.update();
         Object.keys(this._mapIndex).forEach(key => {
             this.LOG.debug(['drawChart', 'hide'], [key]);
             this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
         });
-        this._chart.update();
-        this.onResize();
     }
     /**
      *
@@ -354,7 +358,7 @@ export class WarpViewAnnotation {
     }
     render() {
         return h("div", null,
-            h("div", { class: "tooltip-body", ref: (el) => this.tooltip = el }),
+            h("div", { class: "date", ref: (el) => this.date = el }),
             this.displayExpander
                 ? h("button", { class: 'expander', onClick: () => this.toggle(), title: "collapse/expand" }, "+/-")
                 : '',
@@ -363,7 +367,8 @@ export class WarpViewAnnotation {
                     width: this.width,
                     height: this._height
                 } },
-                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })));
+                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })),
+            h("div", { class: "tooltip", ref: (el) => this.tooltip = el }));
     }
     toggle() {
         this.expanded = !this.expanded;

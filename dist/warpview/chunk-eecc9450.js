@@ -14311,4 +14311,4 @@ Chart.canvasHelpers = Chart.helpers.canvas;
  */
 Chart.layoutService = Chart.layouts;
 
-export { chart as a, getCjsExportFromNamespace as b, createCommonjsModule as c, commonjsGlobal as d };
+export { chart as a, createCommonjsModule as b, commonjsGlobal as c, getCjsExportFromNamespace as d };

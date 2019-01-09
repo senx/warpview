@@ -16,6 +16,9 @@
  */
 
 :host {
+  div span {
+    cursor: pointer;
+  }
   .normal {
     border-radius: 50%;
     background-color: #bbbbbb;

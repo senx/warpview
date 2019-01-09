@@ -14,26 +14,80 @@
  *  limitations under the License.
  *
  */
-:host div {
-  position: relative; }
-  :host div .tooltip-body {
-    position: absolute;
-    background-color: #0074D9;
-    width: auto;
-    height: 30px; }
-    :host div .tooltip-body .left {
-      text-align: left; }
-    :host div .tooltip-body .right {
-      text-align: right; }
-  :host div .chart-container {
-    width: var(--warp-view-chart-width, 100%);
-    height: var(--warp-view-chart-height, 100%);
+:host {
+  resize: horizontal; }
+  :host div {
     position: relative; }
-  :host div .expander {
-    background-color: var(--warp-view-annotation-btn-bg-color, #fff);
-    border: solid 1px var(--warp-view-annotation-btn-border-color, #888);
-    color: var(--warp-view-annotation-btn-color, #888);
-    cursor: pointer;
-    top: 25px;
-    position: absolute;
-    z-index: 100; }
+    :host div .date {
+      text-align: right;
+      display: block;
+      height: 20px;
+      vertical-align: middle;
+      line-height: 20px;
+      width: calc(100% - 110px);
+      margin-left: 90px;
+      padding-right: 10px; }
+    :host div .tooltip {
+      position: absolute;
+      width: calc(100% - 110px);
+      z-index: 999;
+      height: 29px;
+      margin-left: 90px;
+      top: -1000px; }
+      :host div .tooltip .tooltip-body {
+        background-color: #ffffffcc;
+        padding-left: 10px;
+        padding-right: 10px;
+        max-width: 49%;
+        width: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 29px;
+        vertical-align: middle; }
+        :host div .tooltip .tooltip-body .timestamp {
+          font-size: 1rem; }
+        :host div .tooltip .tooltip-body .gts-classname {
+          color: var(--gts-classname-font-color, #0074D9); }
+        :host div .tooltip .tooltip-body .gts-labelname {
+          color: var(--gts-labelname-font-color, #19A979); }
+        :host div .tooltip .tooltip-body .gts-attrname {
+          color: var(--gts-labelname-font-color, #ED4A7B); }
+        :host div .tooltip .tooltip-body .gts-separator {
+          color: var(--gts-separator-font-color, #bbbbbb); }
+        :host div .tooltip .tooltip-body .gts-labelvalue {
+          color: var(--gts-labelvalue-font-color, #AAAAAA);
+          font-style: italic; }
+        :host div .tooltip .tooltip-body .gts-attrvalue {
+          color: var(--gts-labelvalue-font-color, #AAAAAA);
+          font-style: italic; }
+        :host div .tooltip .tooltip-body .round {
+          border-radius: 50%;
+          background-color: #bbbbbb;
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          border: 2px solid #454545;
+          margin-top: auto;
+          margin-bottom: auto;
+          vertical-align: middle;
+          margin-right: 5px; }
+      :host div .tooltip.left div {
+        text-align: left;
+        float: left; }
+      :host div .tooltip.right div {
+        text-align: right;
+        float: right; }
+    :host div .chart-container {
+      width: var(--warp-view-chart-width, 100%);
+      height: var(--warp-view-chart-height, 100%);
+      position: relative; }
+    :host div .expander {
+      background-color: var(--warp-view-annotation-btn-bg-color, #fff);
+      border: solid 1px var(--warp-view-annotation-btn-border-color, #888);
+      color: var(--warp-view-annotation-btn-color, #888);
+      cursor: pointer;
+      top: 5px;
+      left: 20px;
+      position: absolute;
+      z-index: 100; }
