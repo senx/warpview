@@ -95,9 +95,9 @@ export class WarpViewAnnotation {
       this.LOG.debug(['options'], [newValue, this.hiddenData]);
       const hiddenData = GTSLib.cleanArray(this.hiddenData);
       if (this._chart) {
-        Object.keys(this._mapIndex).forEach(key => {
-          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
-        });
+        // Object.keys(this._mapIndex).forEach(key => {
+        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
+        // });
         this._chart.update();
         this.drawChart();
       }
@@ -108,13 +108,14 @@ export class WarpViewAnnotation {
   hideData(newValue, oldValue) {
     if (oldValue !== newValue && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
-      const hiddenData = GTSLib.cleanArray(newValue);
-      this.displayExpander = false;
+      const hiddenData = newValue; // GTSLib.cleanArray(newValue); //buggy. !!'0' is always false, and hidden gts.id could be 0 
+      //this.displayExpander = false; //but... why ? after adding everything, usefull to click collapse for example.
       if (this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          const hidden = !!hiddenData.find(item => item + '' === key);
-          this.displayExpander = this.displayExpander || !hidden;
-          this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
+          const hidden = hiddenData.indexOf(parseInt(key))>=0; //!!hiddenData.find(item => item + '' === key); //buggy. !!'0' is always false, and hidden gts.id could be 0 
+        //  this.displayExpander = this.displayExpander || !hidden;
+          //this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
+          this.LOG.debug(['hiddenDataHidden'], [key,hidden,this._chart.getDatasetMeta(this._mapIndex[key])]);
         });
         this._chart.update();
         this.drawChart();
@@ -200,7 +201,7 @@ export class WarpViewAnnotation {
         duration: 0,
       },
       tooltips: {
-        enabled: false,
+        enabled: true,
         custom: function (tooltipModel) {
           const layout = me.canvas.getBoundingClientRect();
           if (tooltipModel.opacity === 0) {
@@ -329,12 +330,13 @@ export class WarpViewAnnotation {
       this._chart.destroy();
     }
     this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: chartOption});
-    this.onResize();
+    this.onResize(); //TODO : this call drawchart too. infinite loop ?!
     this._chart.update();
-    Object.keys(this._mapIndex).forEach(key => {
-      this.LOG.debug(['drawChart', 'hide'], [key]);
-      this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
-    });
+    // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
+    // Object.keys(this._mapIndex).forEach(key => {
+    //   this.LOG.debug(['drawChart', 'hide'], [key]);
+    //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
+    // });
   }
 
   /**
@@ -379,7 +381,8 @@ export class WarpViewAnnotation {
           pointHitRadius: 5,
           pointStyle: myImage,
           borderColor: color,
-          backgroundColor: ColorLib.transparentize(color)
+          backgroundColor: ColorLib.transparentize(color),
+          hidden: this.hiddenData.indexOf(g.id) >= 0
         });
         i++;
       });
