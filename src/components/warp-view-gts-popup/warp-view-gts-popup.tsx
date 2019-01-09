@@ -72,12 +72,14 @@ export class WarpViewGtsPopup {
         this.showPopup();
         break;
       case'ArrowUp':
+      case'j':
         ev.preventDefault();
         this.showPopup();
         this.current = Math.max(0, this.current - 1);
         this.prepareData();
         break;
       case 'ArrowDown':
+      case 'k':
         ev.preventDefault();
         this.showPopup();
         this.current = Math.min(this._gts.length - 1, this.current + 1);
