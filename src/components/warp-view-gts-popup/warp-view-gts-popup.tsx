@@ -42,10 +42,21 @@ export class WarpViewGtsPopup {
   private _gts: any[] = [];
   private chips: HTMLElement[] = [];
   private modal: WarpViewModal;
+  private modalOpenned: boolean = false;
   private LOG: Logger;
 
+  @Listen('warpViewModalOpen')
+  onWarpViewModalOpen(e: CustomEvent) {
+    this.modalOpenned = true;
+  }
+
+  @Listen('warpViewModalClose')
+  onWarpViewModalClose(e: CustomEvent) {
+    this.modalOpenned = false;
+  }
+
   @Listen('document:keydown')
-  handleKeyDown(e: KeyboardEvent) {
+  onKeyDown(e: KeyboardEvent) {
     if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
       e.preventDefault();
       return false;
@@ -53,7 +64,7 @@ export class WarpViewGtsPopup {
   }
 
   @Listen('document:keyup')
-  handleKeyUp(ev: KeyboardEvent) {
+  onKeyUp(ev: KeyboardEvent) {
     this.LOG.debug(['document:keyup'], ev);
     switch (ev.key) {
       case 's':
@@ -62,20 +73,24 @@ export class WarpViewGtsPopup {
         break;
       case'ArrowUp':
         ev.preventDefault();
+        this.showPopup();
         this.current = Math.max(0, this.current - 1);
         this.prepareData();
         break;
       case 'ArrowDown':
         ev.preventDefault();
+        this.showPopup();
         this.current = Math.min(this._gts.length - 1, this.current + 1);
         this.prepareData();
         break;
       case ' ':
-        ev.preventDefault();
-        this.warpViewSelectedGTS.emit({
-          gts: this.displayed[this.current],
-          selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
-        });
+        if(this.modalOpenned) {
+          ev.preventDefault();
+          this.warpViewSelectedGTS.emit({
+            gts: this.displayed[this.current],
+            selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
+          });
+        }
         break;
       default:
         return true;

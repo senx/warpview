@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Listen, Method, Prop} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Listen, Method, Prop} from "@stencil/core";
 
 @Component({
   tag: 'warp-view-modal',
@@ -27,17 +27,21 @@ export class WarpViewModal {
   @Prop() modalTitle: string = '';
 
   @Element() el: HTMLElement;
+  @Event() warpViewModalOpen: EventEmitter;
+  @Event() warpViewModalClose: EventEmitter;
 
   @Method()
   public open() {
     this.el.style.display = 'block';
     this.el.style.zIndex = '999999';
+    this.warpViewModalOpen.emit({});
   }
 
   @Method()
   public close() {
     this.el.style.display = 'none';
     this.el.style.zIndex = '-1';
+    this.warpViewModalClose.emit({});
   }
 
   @Listen('document:keydown')
