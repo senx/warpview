@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Prop, State, Watch} from "@stencil/core";
+import {Component, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../../utils/gts.lib";
 import {Logger} from "../../../utils/logger";
 import {ChartLib} from "../../../utils/chart-lib";
@@ -33,8 +33,6 @@ export class WarpViewTreeView {
   @Prop() debug = false;
 
   @State() ref = false;
-
-  @Element() el: HTMLElement;
 
   private hide: any = {};
   private LOG: Logger;

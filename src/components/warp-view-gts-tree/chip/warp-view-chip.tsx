@@ -159,7 +159,7 @@ export class WarpViewChip {
     return <div>
       {this._node && this._node.gts && this._node.gts.l ?
         <span onClick={(event: UIEvent) => this.switchPlotState(event)}>
-          <i class="normal" ref={(el) => this.chip = el as HTMLInputElement}/>
+          <i class="normal" ref={el => this.chip = el}/>
             <span class="gtsInfo">
           <span class='gts-classname'>&nbsp; {this._node.gts.c}</span>
           <span class='gts-separator' innerHTML={'&lcub; '}/>
