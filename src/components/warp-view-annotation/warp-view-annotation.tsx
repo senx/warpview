@@ -216,9 +216,11 @@ export class WarpViewAnnotation {
           me.tooltip.classList.remove('right', 'left');
           if (tooltipModel.body) {
             me.LOG.debug(['tooltip'], tooltipModel.title[0]);
-            me.date.innerHTML = moment(tooltipModel.title[0]).utc().toISOString() || '';
+            me.date.innerHTML = me._options.timeMode === 'timestamp'
+              ? tooltipModel.title[0]
+              : moment(tooltipModel.title[0]).utc().toISOString() || '';
             me.tooltip.innerHTML = `<div class="tooltip-body">
-  <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts )}: </span>
+  <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
   <span class="value">${tooltipModel.body[0].lines[0].value}</span>
 </div>`;
           }
