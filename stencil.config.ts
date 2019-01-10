@@ -22,6 +22,11 @@ export const config: Config = {
   namespace: "warpview",
   plugins: [
     sass()
+  ],  
+  copy: [
+    { src: 'tests-Plot.html' },
+    { src: 'tests-Plot-2Mpoints.html' },
+    { src: 'tests-Plot-200kpoints.html' }
   ],
   enableCache: true,
   devServer: {

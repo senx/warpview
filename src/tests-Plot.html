@@ -1,0 +1,530 @@
+<!--
+  ~  Copyright 2018  SenX S.A.S.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<!DOCTYPE html>
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedLibraryURL, JSValidateTypes, JSUnresolvedFunction -->
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Warp View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+    crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup.min.js"></script>
+  <!--suppress HtmlUnknownTarget -->
+  <script src="/build/warpview.js"></script>
+
+  <style>
+
+    :root {
+      --jumbotron-padding-y: 3rem;
+    }
+
+    .card {
+      padding: 0;
+    }
+
+    .jumbotron p:last-child {
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    footer p {
+      margin-bottom: .25rem;
+    }
+
+    body {
+      --warp-view-tile-height: 100vh;
+      --warp-view-chart-legend-bg: #000;
+
+    }
+
+    body #welcome {
+      --warp-view-switch-width: 50px;
+      --warp-view-switch-height: 20px;
+      --warp-view-switch-radius: 10px;
+    }
+
+    body.dark {
+      --warp-view-font-color: #ffffff;
+      --warp-view-chart-label-color: #ffffff;
+      --gts-tree-expanded-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==');
+      --gts-stack-font-color: #ffffff;
+      --warp-view-switch-inset-color: #000000;
+      --warp-view-switch-inset-checked-color: darkgreen;
+      --warp-view-switch-handle-color: #8e8e8e;
+      --warp-view-switch-handle-checked-color: lime;
+ /*     --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%); */
+    }
+
+    #v-pills-image, #v-pills-plot {
+      --warp-view-tile-height: 100vh;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">About</h4>
+            <p class="text-muted"><a href="https://www.warp10.io" target="_blank">Warp 10&trade;</a> dedicated
+              visualization components.</p>
+            <p class="lead text-muted">Choose a main theme</p>
+            <p>
+              <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off"
+                id="light">Light
+              </button>
+              <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off"
+                id="dark">Dark
+              </button>
+            </p>
+            <p>
+              <label for="autoRefresh" class="text-white">Auto refresh:</label>
+              <select class="form-control col-2" id="autoRefresh">
+                <option value="-1">off</option>
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+                <option value="30">30s</option>
+                <option value="60">1m</option>
+                <option value="300">5m</option>
+                <option value="600">10m</option>
+              </select>
+            </p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact</h4>
+            <ul class="list-unstyled">
+              <li><a href="https://twitter.com/warp10" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container-fluid d-flex justify-content-between">
+        <a href="/" class="navbar-brand d-flex align-items-center">
+          <img width="32" height="32" class="mr-3" alt="WarpView" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAAhXpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY5BDoUwCET3nMIjUKBDOY4xmvwb/ONLrdqVbwGTCUyG9v/voKVTWMiqNwTAiYWFrCkaD5S5CJe+cw7urSWVTJtUhkA0Z5uHdvsPVdFwuLmjYsMmmS676jXzh3oq9xoxQ94M/fCfFic/OCwP5MjXYQAACgJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4KIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzMiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjMyIgogICB0aWZmOkltYWdlV2lkdGg9IjMyIgogICB0aWZmOkltYWdlSGVpZ2h0PSIzMiIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIvPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DYV1NQAAAm1QTFRFAAAA/////////////////////////////////////////////////////////////////////////////////////v7+/v7+/////v7+/v7+/v7+/////v7+9/f39vb2/////f398/Pz9fX18vLy8/Pz6enp+Pj4+fn5////5+fn9fX1CwsLEBAQEhISFBQUFRUVFhYWFxcXGBgYICAgISEhLS0tLi4uLy8vMzMzNDQ0NTU1NjY2Pz8/QUFBSEhISUlJUlJSU1NTVFRUWlpaXFxcXl5eYmJiY2NjZGRka2trbm5ucHBwcXFxcnJydHR0dXV1eHh4eXl5enp6gICAgYGBhISEhYWFh4eHiYmJioqKj4+PlJSUlZWVmZmZmpqam5ubnJycnp6ep6enqKioqampqqqqsLCwtra2uLi4ubm5urq6v7+/w8PDxsbGx8fHyMjIycnJzc3N0NDQ0dHR0tLS2NjY4uLi4+Pj5+fn6Ojo6enp6urq7Ozs8PDw8vLy8/Pz9PT09vb29/f3+Pj4/f39/v7+/5kA/5kB/5oC/5oD/5wI/54N/58Q/6EV/6IW/6MZ/6Qd/6Yh/6Yi/6ko/6os/6ww/60z/600/641/642/684/685/7A7/7E+/7I//7ZJ/7hN/7hO/7xa/8Vw/8dz/8d1/8h2/8h3/8l5/8t+/86G/8+H/9CL/9GN/9KO/9OR/9SV/9ec/9mg/9mh/9qj/+O6/+W+/+W//+nJ/+nK/+rL/+rM/+vN/+zP//Db//Hc//Lf//Lg//Pi//Xm//bq//jv//nx//v2//v3//38//78//79//7+/////63IMwAAACx0Uk5TAAAJCgsPECQlJjEyM1laiYqMj5ucncvMzM3R09PU6erq7PT09fX5+fn5+vxJ4zjHAAACuUlEQVQYGV3BS28bVQCA0e/eGT/m4diOx5Mm4LZqLYEiItbAogskZFGIEItu+Fn8DliQzagL6JYd6oJS0qgJgdgl49jJPO54Xmbc1iFwjmBN6M26ZpnEKksXKWsabzU77r5tSCEa/fufTLVlzhuC12Rra/ekZpmGTq5UmN55dn5ZsiJYafRGv1iOZei6RpHnKvKjDx/7CyqCium8f7HdtS3d1EZ4ZZxF4WzS+d2PAAE0tu4tBl27tc/awVU4P60dv0pAA+nuxnd77e5Drr13JvTGxXYUL9Gg/eXx3V7n0ZAbhh+8RB9/dJyg0dy52HHbj/if3RdwaIS5FPau1bXb5AtuWORstLqtoY1Wc5Od3ubD5a/PugZr858Td/gyK060QDY/rVnWPqh8zLVxHkHdshsPDFk/tQwdhMO0BE5flFBMcWBUa9qndanNTd0EHBFPIXh+5MMsEg5g6sZck1Zs6BrQ2mQKk4JzmNLdAKRuKFOaS10bAcJhWmZ/CTlRpY8jgJGulQ3JmiPDmb+4tZ2/moeiT8UDljIWeeFRsRz8MW6fM5+ezUpeyFRXWyovqYje32fphivalwkOK2WhjHOZdVQes+LIlIEUAzLNYSXOVSeT6SBUGSuGS9MF18AxqXiZCgepXPy4V0YHVERf3K5D7Y7oCypZHCVPEq3Qvv0t0M+GQOsdRwDtd7sC8C7nZ1tHgST65lYRXbLSFFREUwDeVTALjkIkavL5PTf5jv/y4mA+3psoBMidHzi4aH/FDd5VMDsxno9zdCjPv/5+2q3zLy8Lgvmf+qGfg6Bi9XevPu7kX+Ax8ijjLA5n4/bhNAQEK83eZ09dc7NTZDp5kavID/Z+8hUVwWvaxvbwj4ZtGBqFUmFy+2hylbMieMuwOw9O56pEGp3Bk8tQ8YbgWs2oa2ZjmSZZmqSs/QPKgitkZ2DCugAAAABJRU5ErkJggg==" />
+          <strong>Plot tests</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main role="main">
+
+    <div class="album py-5">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab"
+                aria-controls="v-pills-main" aria-selected="true">annotations only</a>
+              <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2"
+                aria-selected="false">annotations only + empty</a>
+              <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3"
+                aria-selected="false">annotations only ts mode</a>
+              <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-4" role="tab" aria-controls="v-pills-4"
+                aria-selected="false">min annotation ts zero</a>
+              <a class="nav-link" id="v-pills-5-tab" data-toggle="pill" href="#v-pills-5" role="tab" aria-controls="v-pills-5"
+                aria-selected="false">max annotation ts zero</a>
+              <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6"
+                aria-selected="false">annotation span greater than plottables</a>
+              <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-7" role="tab" aria-controls="v-pills-7"
+                aria-selected="false">chart and annotation ts</a>
+              <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-8" role="tab" aria-controls="v-pills-8"
+                aria-selected="false">chart 2M points</a>
+              <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-9" role="tab" aria-controls="v-pills-9"
+                aria-selected="false">chart 200k points</a>
+
+              <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
+               aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
+            <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-area" role="tab"
+               aria-controls="v-pills-area" aria-selected="false">Area</a>
+            <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-scatter" role="tab"
+               aria-controls="v-pills-scatter" aria-selected="false">Scatter</a>
+            <a class="nav-link" id="v-pills-10-tab" data-toggle="pill" href="#v-pills-bar" role="tab"
+               aria-controls="v-pills-bar" aria-selected="false">Bar</a>
+            <a class="nav-link" id="v-pills-11-tab" data-toggle="pill" href="#v-pills-gauge" role="tab"
+               aria-controls="v-pills-gauge" aria-selected="false">Gauge</a>
+            <a class="nav-link" id="v-pills-12-tab" data-toggle="pill" href="#v-pills-pie" role="tab"
+               aria-controls="v-pills-pie" aria-selected="false">Pie</a>
+            <a class="nav-link" id="v-pills-13-tab" data-toggle="pill" href="#v-pills-doughnut" role="tab"
+               aria-controls="v-pills-doughnut" aria-selected="false">Doughnut</a>
+            <a class="nav-link" id="v-pills-14-tab" data-toggle="pill" href="#v-pills-polar" role="tab"
+               aria-controls="v-pills-polar" aria-selected="false">Polar</a>
+            <a class="nav-link" id="v-pills-15-tab" data-toggle="pill" href="#v-pills-radar" role="tab"
+               aria-controls="v-pills-radar" aria-selected="false">Radar</a>
+            <a class="nav-link" id="v-pills-16-tab" data-toggle="pill" href="#v-pills-image" role="tab"
+               aria-controls="v-pills-image" aria-selected="false">Image</a>
+            <a class="nav-link" id="v-pills-19-tab" data-toggle="pill" href="#v-pills-drilldown" role="tab"
+               aria-controls="v-pills-drilldown" aria-selected="false">Drill down</a>
+            <a class="nav-link" id="v-pills-20-tab" data-toggle="pill" href="#v-pills-datagrid" role="tab"
+               aria-controls="v-pills-datagrid" aria-selected="false">Datagrid</a> -->
+            </div>
+          </div>
+          <div class="col-10">
+
+            <div class="tab-content" id="v-pills-tabContent">
+              <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1">
+                <p>
+                  Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
+                  The string one contains some strange utf8 characters "ïs fælse"
+                </p>
+                <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                  debug="false">
+                  "2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
+
+                  NEWGTS 'booleanone' RENAME
+                  0 24
+                  <%
+                    'h' STORE  
+                    $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+                  %>
+                  FOR
+
+                  NEWGTS 'stringone' RENAME
+                  0 24
+                  <%
+                    'h' STORE  
+                    $start $h h + NaN NaN NaN 
+                    $h 2 % 0 ==
+                    <% 'iß true' %>
+                  <% 'ïs fælse' %> IFTE ADDVALUE
+
+                  %> FOR
+
+
+
+                </warp-view-tile>
+              </div>
+
+
+              <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Same as previous with some empty gts in between.
+                      Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
+                      The string one contains some strange utf8 characters "ïs fælse"
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                      debug="false">
+                      "2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
+                      NEWGTS 'emptyone, stack bottom' RENAME
+                      NEWGTS 'booleanone' RENAME
+                      0 24
+                      <%
+                      'h' STORE  
+                      $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+                    %>
+                      FOR
+                      NEWGTS 'empty one, middle of stack' RENAME
+                      NEWGTS 'stringone' RENAME
+                      0 24
+                      <%
+                      'h' STORE  
+                      $start $h h + NaN NaN NaN 
+                      $h 2 % 0 ==
+                      <% 'iß true' %>
+                      <% 'ïs fælse' %> IFTE ADDVALUE
+
+                      %> FOR
+                      NEWGTS 'emptyone, stack top' RENAME
+
+
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-3">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Must switch into timestamp mode automatically.
+                      annotations at -10 -5 0 2 4.
+                      one is ordered, not the other.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                      debug="false">
+
+                      NEWGTS 'boolannotation, not ordered' RENAME
+                      -5 NaN NaN NaN T ADDVALUE
+                      4 NaN NaN NaN T ADDVALUE
+                      2 NaN NaN NaN T ADDVALUE
+                      -10 NaN NaN NaN T ADDVALUE
+                      0 NaN NaN NaN T ADDVALUE
+                      'g' STORE
+
+                      $g CLONE 'boolannotation, sorted' RENAME SORT
+
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-4" role="tabpanel" aria-labelledby="v-pills-4">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Min time scale is timestamp 0.
+                      jschart may consider this as "automatic minimum".
+                      The spike in data is aligned to error annotation.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                      debug="false">
+
+                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP
+                      '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..'
+                      UNWRAP
+                      '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.'
+                      UNWRAP "
+                      EVAL
+                      DEPTH ->LIST 0.000001 TIMESCALE
+                      456664666
+                      -545546668
+                      200 200 '2D' PGraphics
+                      Pencode 'an image here for fun'
+                      NEWGTS 'emptyone' RENAME
+                      'a string here for fun'
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-5" role="tabpanel" aria-labelledby="v-pills-5">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Max time scale is timestamp 0.
+                      jschart may consider this as "automatic maximum".
+                      The spike in data is aligned to error annotation.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                      debug="false">
+
+                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP
+                      '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..'
+                      UNWRAP
+                      '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.'
+                      UNWRAP "
+                      EVAL
+                      DEPTH ->LIST 0.000001 TIMESCALE -1 TIMESCALE '+ flipped' RENAME
+                      456664666
+                      -545546668
+                      200 200 '2D' PGraphics
+                      Pencode 'an image here for fun'
+                      NEWGTS 'emptyone' RENAME
+                      'a string here for fun'
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-6" role="tabpanel" aria-labelledby="v-pills-6">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      The time bound is defined by annotations, not by plottable data.
+                      You must see annotation
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
+                      debug="false">
+                      NEWGTS 'bool 1 2' RENAME
+                      1 NaN NaN NaN T ADDVALUE
+                      2 NaN NaN NaN T ADDVALUE
+
+                      CLONE 'bool in the future at 5' RENAME
+                      5 NaN NaN NaN T ADDVALUE
+
+                      NEWGTS 'plot 3 4' RENAME
+                      3 NaN NaN NaN 2.2 ADDVALUE
+                      4 NaN NaN NaN 3.2 ADDVALUE
+
+                      NEWGTS 'plot -4 -3 ' RENAME
+                      -4 NaN NaN NaN 2.2 ADDVALUE
+                      -3 NaN NaN NaN 3.2 ADDVALUE
+
+                      NEWGTS 'bool in the past at -6' RENAME
+                      -6 NaN NaN NaN T ADDVALUE
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-pane fade" id="v-pills-7" role="tabpanel" aria-labelledby="v-pills-7">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      On another endpoint, some annotation and plottable gts.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
+                      debug="true" chart-title="Plot">
+                      {} NOW 96 h @senx/alerting/_fetch
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-8" role="tabpanel" aria-labelledby="v-pills-8">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Will work only on MY computer.
+                      it loads two really heavy GTS (1.2millions points each)
+                      you need 1.5GB free ram.
+                      It also put a annotation 1s after the end of both acquisition.
+                      hiding the annoation should not redraw the chart.
+                      hide or resize action should take more than 10s.
+
+                    </p>
+                    <p>
+                      RAM used after garbage collection : 126MB
+                    </p>
+                    <p>
+                      <a href="/tests-Plot-2Mpoints.html">Lauch the test</a>
+                    </p>
+
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-9" role="tabpanel" aria-labelledby="v-pills-9">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Will work only on MY computer.
+                      it loads two 100k points GTS.
+                      It also put an annotation 1s after the end of both acquisition.
+                      hiding the annoation should not redraw the chart.
+                      hide or resize action should take more than 2s.
+
+                    </p>
+                    <p>
+                      RAM used after garbage collection : 126MB
+                    </p>
+                    <p>
+                      <a href="/tests-Plot-200kpoints.html">Lauch the test</a>
+                    </p>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+  <script language="JavaScript">
+    var defOpts = {
+      gridLineColor: '#000000',
+      fontColor: '#000000',
+      minColor: '#ffffff',
+      maxColor: '#333333',
+      mapType: 'DEFAULT',
+      showControls: true,
+      showGTSTree: true,
+      foldGTSTree: true,
+    };
+    $(function () {
+      var body = $('body');
+      $("#dark").click(function () {
+        defOpts.mapType = "DEFAULT";
+        body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light').addClass('text-white');
+        $('.card').addClass('bg-dark');
+        defOpts.gridLineColor = '#ffffff';
+        defOpts.minColor = '#b4cef7';
+        defOpts.maxColor = '#4286f4';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $("#light").button('toggle').click(function () {
+        defOpts.mapType = "WATERCOLOR";
+        body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light').removeClass('text-white');
+        $('.card').removeClass('bg-dark');
+        defOpts.gridLineColor = '#000000';
+        defOpts.minColor = '#ffffff';
+        defOpts.maxColor = '#333333';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $('#autoRefresh').change(function () {
+        $("select option:selected").each(function () {
+          defOpts.autoRefresh = parseInt($(this).val());
+          document.querySelectorAll('warp-view-tile').forEach(el => {
+            el.options = { ...defOpts };
+          });
+        });
+      });
+      $('a[role="tab"]').on('shown.bs.tab', function (e) {
+        var id = e.target.href.replace(document.location, '');
+        var divs = $(id).find('warp-view-tile');
+        for (var i = 0; i < divs.length; i++) {
+          divs[i].options = { ...defOpts };
+          console.log('index', divs[i].options)
+        }
+      });
+      var divs = $.find('warp-view-tile');
+      for (var i = 0; i < divs.length; i++) {
+        divs[i].options = { ...defOpts };
+      }
+    });
+  </script>
+</body>
+
+</html>
