@@ -28,6 +28,7 @@ export class WarpViewGtsTree {
         this.gtsList = [];
         this._options = new Param();
         this._isFolded = false;
+        this.initialized = false;
     }
     onData(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -37,7 +38,7 @@ export class WarpViewGtsTree {
     onOptions(newValue, oldValue) {
         if (oldValue !== newValue) {
             this.LOG.debug(['options'], newValue);
-            this._isFolded = !!this.options.foldGTSTree;
+            // this._isFolded = !!this.options.foldGTSTree;
             this.doRender();
         }
     }
@@ -45,7 +46,7 @@ export class WarpViewGtsTree {
         if (oldValue !== newValue) {
             this.LOG.debug(['gtsFilter'], newValue);
             this.doRender();
-            if (this._options.foldGTSTree && !this._isFolded) {
+            if (!!this._options.foldGTSTree && !this._isFolded) {
                 this.foldAll();
             }
         }
@@ -54,7 +55,7 @@ export class WarpViewGtsTree {
         this.LOG.debug(['hiddenData'], newValue);
         this.doRender();
     }
-    componentWillLoad() {
+    componentDidLoad() {
         this.LOG = new Logger(WarpViewGtsTree, this.debug);
         this.LOG.debug(['componentWillLoad', 'data'], this.data);
         if (this.data) {
@@ -73,20 +74,25 @@ export class WarpViewGtsTree {
             return;
         }
         this.gtsList = GTSLib.flattenGtsIdArray(dataList, 0).res;
-        this.LOG.debug(['doRender', 'gtsList'], [this.gtsList, this._options.foldGTSTree, this._isFolded]);
-        if (this._options.foldGTSTree && !this._isFolded) {
-            this.foldAll();
+        this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this._isFolded);
+        if (!this.initialized) {
+            if (this._options.foldGTSTree !== undefined && !!this._options.foldGTSTree && !this._isFolded) {
+                this.LOG.debug(['doRender'], 'About to fold');
+                this.foldAll();
+            }
+            this.initialized = true;
         }
     }
     foldAll() {
-        if (!this.el) {
+        if (!this.root) {
+            this.LOG.debug(['doRender'], 'no root');
             window.setTimeout(() => {
                 this.foldAll();
             }, 100);
         }
         else {
-            let el = this.el.querySelector("#root");
-            el.className = 'collapsed';
+            this.LOG.debug(['doRender'], 'Ok collapse');
+            this.root.className = 'collapsed';
             this.hide = true;
             this._isFolded = true;
         }
@@ -108,7 +114,7 @@ export class WarpViewGtsTree {
         return this.gtsList
             ? h("div", null,
                 h("div", { class: "stack-level", onClick: (event) => this.toggleVisibility(event) },
-                    h("span", { class: "expanded", id: "root" }),
+                    h("span", { class: "expanded", ref: el => this.root = el }),
                     " Stack"),
                 h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, debug: this.debug, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter }))
             : '';
@@ -123,9 +129,6 @@ export class WarpViewGtsTree {
         "debug": {
             "type": Boolean,
             "attr": "debug"
-        },
-        "el": {
-            "elementRef": true
         },
         "gtsFilter": {
             "type": String,

@@ -3,7 +3,6 @@ import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { GTS } from "../../model/GTS";
 export declare class WarpViewPlot {
-    el: HTMLElement;
     data: string | GTS[] | DataModel;
     options: string | Param;
     width: string;
@@ -24,15 +23,15 @@ export declare class WarpViewPlot {
     private LOG;
     private line;
     private main;
+    private chartContainer;
     private chart;
     private annotation;
     private modal;
+    private map;
     private timeClip;
-    private warpViewChart;
     private filterInput;
     private timeClipElement;
     private mouseOutTimer;
-    private graphId;
     componentDidLoad(): void;
     getTimeClip(): Promise<[number, number]>;
     private onGtsFilter;

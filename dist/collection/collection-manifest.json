@@ -824,10 +824,7 @@
         {
           "name": "hide"
         }
-      ],
-      "hostElement": {
-        "name": "el"
-      }
+      ]
     },
     {
       "tag": "warp-view-heatmap-sliders",
@@ -1355,9 +1352,6 @@
           "name": "getTimeClip"
         }
       ],
-      "hostElement": {
-        "name": "el"
-      },
       "shadow": true
     },
     {
@@ -1795,10 +1789,7 @@
         {
           "name": "ref"
         }
-      ],
-      "hostElement": {
-        "name": "el"
-      }
+      ]
     }
   ],
   "collections": [],

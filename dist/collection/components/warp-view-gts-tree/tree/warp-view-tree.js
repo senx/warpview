@@ -120,9 +120,6 @@ export class WarpViewTreeView {
             "type": Boolean,
             "attr": "debug"
         },
-        "el": {
-            "elementRef": true
-        },
         "gtsFilter": {
             "type": String,
             "attr": "gts-filter",

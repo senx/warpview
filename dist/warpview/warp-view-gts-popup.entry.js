@@ -221,18 +221,13 @@ class WarpViewPlot {
         this.showMap = false;
         this.chartType = 'line';
         this.timeClipValue = '';
-        this.graphId = 'container-' + ChartLib.guid();
     }
     componentDidLoad() {
-        this.line = this.el.shadowRoot.querySelector('div.bar');
-        this.main = this.el.shadowRoot.querySelector('div.maincontainer');
-        this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
-        this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
         this.drawCharts(true);
     }
     async getTimeClip() {
-        this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
-        return this.warpViewChart.getTimeClip();
+        this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
+        return this.chart.getTimeClip();
     }
     onGtsFilter(newValue, oldValue) {
         if (oldValue !== newValue) {
@@ -260,7 +255,7 @@ class WarpViewPlot {
             this.filterInput.select();
         }
         if (ev.key === 't') {
-            this.warpViewChart.getTimeClip().then(tc => {
+            this.chart.getTimeClip().then(tc => {
                 this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
                 this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
                 this.timeClip.open();
@@ -296,9 +291,7 @@ class WarpViewPlot {
             case 'mapSwitch':
                 this.showMap = event.detail.state;
                 if (this.showMap) {
-                    window.setTimeout(() => {
-                        this.el.shadowRoot.querySelector('#map').resize();
-                    }, 500);
+                    window.setTimeout(() => this.map.resize(), 500);
                 }
                 break;
         }
@@ -310,10 +303,9 @@ class WarpViewPlot {
         this.line.style.left = '-100px';
     }
     onResize(event) {
-        const div = this.el.shadowRoot.querySelector('#' + this.graphId);
-        this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
-        if (div) {
-            div.style.height = event.detail.h + 'px';
+        this.LOG.debug(['warpViewChartResize'], event.detail);
+        if (this.chartContainer) {
+            this.chartContainer.style.height = event.detail.h + 'px';
         }
     }
     warpViewSelectedGTS(event) {
@@ -335,7 +327,6 @@ class WarpViewPlot {
         this.drawCharts();
     }
     handleMouseMove(evt) {
-        this.line = this.el.shadowRoot.querySelector('div.bar');
         if (this.mouseOutTimer) {
             window.clearTimeout(this.mouseOutTimer);
             delete this.mouseOutTimer;
@@ -343,13 +334,12 @@ class WarpViewPlot {
         if (!this.mouseOutTimer) {
             this.mouseOutTimer = window.setTimeout(() => {
                 this.line.style.display = 'block';
-                this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
+                this.line.style.left = Math.max(evt.clientX - this.main.getBoundingClientRect().left, 100) + 'px';
             }, 1);
         }
     }
     handleMouseOut(evt) {
-        this.LOG.debug(['handleMouseOut'], evt);
-        this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
+        this.line.style.left = Math.max(evt.clientX - this.main.getBoundingClientRect().left, 100) + 'px';
         if (this.mouseOutTimer) {
             window.clearTimeout(this.mouseOutTimer);
             delete this.mouseOutTimer;
@@ -361,9 +351,11 @@ class WarpViewPlot {
             }, 500);
         }
     }
-    drawCharts(firstdraw = false) {
+    drawCharts(firstDraw = false) {
         this.LOG.debug(['drawCharts'], [this.data, this.options]);
-        this._options = ChartLib.mergeDeep(this._options, this.options);
+        this.timeClip.close();
+        this.modal.close();
+        let options = ChartLib.mergeDeep(this._options, this.options);
         this._data = GTSLib.getData(this.data);
         let opts = new Param();
         if (typeof this.options === 'string') {
@@ -372,9 +364,9 @@ class WarpViewPlot {
         else {
             opts = this.options;
         }
-        this._options = ChartLib.mergeDeep(this._options, opts);
-        this.LOG.debug(["PPts"], "firstdraw " + firstdraw);
-        if (firstdraw) { //on the first draw, we can set some default options.
+        options = ChartLib.mergeDeep(options, opts);
+        this.LOG.debug(['PPts'], 'firstdraw ', firstDraw);
+        if (firstDraw) { //on the first draw, we can set some default options.
             //automatically switch to timestamp mode
             //when the first tick and last tick of all the series are in the interval [-100ms 100ms]
             let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
@@ -390,12 +382,11 @@ class WarpViewPlot {
                     }
                 });
                 if (timestampMode) {
-                    this._options.timeMode = "timestamp";
+                    options.timeMode = 'timestamp';
                 }
             }
         }
-        this.timeClip.close();
-        this.modal.close();
+        this._options = Object.assign({}, options);
         this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
     }
     applyFilter() {
@@ -412,7 +403,7 @@ class WarpViewPlot {
                     h("code", { ref: (el) => this.timeClipElement = el, innerHTML: this.timeClipValue }))),
             h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => this.modal = el },
                 h("label", null, "Enter a regular expression to filter GTS."),
-                h("input", { type: "text", ref: (el) => this.filterInput = el, value: this.gtsFilter }),
+                h("input", { type: "text", ref: el => this.filterInput = el, value: this.gtsFilter }),
                 h("button", { type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),
             this._options.showControls
                 ? h("div", { class: "inline" },
@@ -424,15 +415,19 @@ class WarpViewPlot {
             this._options.showGTSTree
                 ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options })
                 : '',
-            this.showChart ? h("div", { class: "main-container", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt) },
-                h("div", { class: "bar" }),
-                h("div", { class: "annotation" },
-                    h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, debug: this.debug, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
-                h("div", { style: { width: '100%', height: '768px' }, id: this.graphId },
-                    h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data }),
-                    h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.warpViewChart = el, debug: this.debug, hiddenData: this._toHide, type: this.chartType, options: this._options }))) : '',
-            this.showMap ? h("div", { class: "map-container" },
-                h("warp-view-map", { options: this._options, id: "map", data: this._data, debug: this.debug, responsive: this.responsive, hiddenData: this._toHide })) : '');
+            this.showChart
+                ? h("div", { class: "main-container", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt), ref: el => this.main = el },
+                    h("div", { class: "bar", ref: el => this.line = el }),
+                    h("div", { class: "annotation" },
+                        h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, ref: (el) => this.annotation = el, debug: this.debug, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
+                    h("div", { style: { width: '100%', height: '768px' }, ref: el => this.chartContainer = el },
+                        h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data }),
+                        h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.chart = el, debug: this.debug, hiddenData: this._toHide, type: this.chartType, options: this._options })))
+                : '',
+            this.showMap
+                ? h("div", { class: "map-container" },
+                    h("warp-view-map", { options: this._options, ref: (el) => this.map = el, data: this._data, debug: this.debug, responsive: this.responsive, hiddenData: this._toHide }))
+                : '');
     }
     static get is() { return "warp-view-plot"; }
     static get encapsulation() { return "shadow"; }
@@ -463,9 +458,6 @@ class WarpViewPlot {
         "debug": {
             "type": Boolean,
             "attr": "debug"
-        },
-        "el": {
-            "elementRef": true
         },
         "getTimeClip": {
             "method": true
