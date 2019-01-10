@@ -1,0 +1,666 @@
+<!--
+  ~  Copyright 2018  SenX S.A.S.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<!DOCTYPE html>
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedLibraryURL, JSValidateTypes, JSUnresolvedFunction -->
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Warp View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+    crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup.min.js"></script>
+  <!--suppress HtmlUnknownTarget -->
+  <script src="/build/warpview.js"></script>
+
+  <style>
+
+    :root {
+      --jumbotron-padding-y: 3rem;
+    }
+
+    .card {
+      padding: 0;
+    }
+
+    .jumbotron p:last-child {
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    footer p {
+      margin-bottom: .25rem;
+    }
+
+    body {
+      --warp-view-tile-height: 500px;
+      --warp-view-chart-legend-bg: #000;
+
+    }
+
+    body #welcome {
+      --warp-view-switch-width: 50px;
+      --warp-view-switch-height: 20px;
+      --warp-view-switch-radius: 10px;
+    }
+
+    body.dark {
+      --warp-view-font-color: #ffffff;
+      --warp-view-chart-label-color: #ffffff;
+      --gts-tree-expanded-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==');
+      --gts-stack-font-color: #ffffff;
+      --warp-view-switch-inset-color: #000000;
+      --warp-view-switch-inset-checked-color: darkgreen;
+      --warp-view-switch-handle-color: #8e8e8e;
+      --warp-view-switch-handle-checked-color: lime;
+ /*     --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%); */
+    }
+
+    #v-pills-image, #v-pills-plot {
+      --warp-view-tile-height: 100vh;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">About</h4>
+            <p class="text-muted"><a href="https://www.warp10.io" target="_blank">Warp 10&trade;</a> dedicated
+              visualization components.</p>
+            <p class="lead text-muted">Choose a main theme</p>
+            <p>
+              <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off"
+                id="light">Light
+              </button>
+              <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off"
+                id="dark">Dark
+              </button>
+            </p>
+            <p>
+              <label for="autoRefresh" class="text-white">Auto refresh:</label>
+              <select class="form-control col-2" id="autoRefresh">
+                <option value="-1">off</option>
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+                <option value="30">30s</option>
+                <option value="60">1m</option>
+                <option value="300">5m</option>
+                <option value="600">10m</option>
+              </select>
+            </p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact</h4>
+            <ul class="list-unstyled">
+              <li><a href="https://twitter.com/warp10" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container-fluid d-flex justify-content-between">
+        <a href="/" class="navbar-brand d-flex align-items-center">
+          <img width="32" height="32" class="mr-3" alt="WarpView" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAAhXpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY5BDoUwCET3nMIjUKBDOY4xmvwb/ONLrdqVbwGTCUyG9v/voKVTWMiqNwTAiYWFrCkaD5S5CJe+cw7urSWVTJtUhkA0Z5uHdvsPVdFwuLmjYsMmmS676jXzh3oq9xoxQ94M/fCfFic/OCwP5MjXYQAACgJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4KIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzMiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjMyIgogICB0aWZmOkltYWdlV2lkdGg9IjMyIgogICB0aWZmOkltYWdlSGVpZ2h0PSIzMiIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIvPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DYV1NQAAAm1QTFRFAAAA/////////////////////////////////////////////////////////////////////////////////////v7+/v7+/////v7+/v7+/v7+/////v7+9/f39vb2/////f398/Pz9fX18vLy8/Pz6enp+Pj4+fn5////5+fn9fX1CwsLEBAQEhISFBQUFRUVFhYWFxcXGBgYICAgISEhLS0tLi4uLy8vMzMzNDQ0NTU1NjY2Pz8/QUFBSEhISUlJUlJSU1NTVFRUWlpaXFxcXl5eYmJiY2NjZGRka2trbm5ucHBwcXFxcnJydHR0dXV1eHh4eXl5enp6gICAgYGBhISEhYWFh4eHiYmJioqKj4+PlJSUlZWVmZmZmpqam5ubnJycnp6ep6enqKioqampqqqqsLCwtra2uLi4ubm5urq6v7+/w8PDxsbGx8fHyMjIycnJzc3N0NDQ0dHR0tLS2NjY4uLi4+Pj5+fn6Ojo6enp6urq7Ozs8PDw8vLy8/Pz9PT09vb29/f3+Pj4/f39/v7+/5kA/5kB/5oC/5oD/5wI/54N/58Q/6EV/6IW/6MZ/6Qd/6Yh/6Yi/6ko/6os/6ww/60z/600/641/642/684/685/7A7/7E+/7I//7ZJ/7hN/7hO/7xa/8Vw/8dz/8d1/8h2/8h3/8l5/8t+/86G/8+H/9CL/9GN/9KO/9OR/9SV/9ec/9mg/9mh/9qj/+O6/+W+/+W//+nJ/+nK/+rL/+rM/+vN/+zP//Db//Hc//Lf//Lg//Pi//Xm//bq//jv//nx//v2//v3//38//78//79//7+/////63IMwAAACx0Uk5TAAAJCgsPECQlJjEyM1laiYqMj5ucncvMzM3R09PU6erq7PT09fX5+fn5+vxJ4zjHAAACuUlEQVQYGV3BS28bVQCA0e/eGT/m4diOx5Mm4LZqLYEiItbAogskZFGIEItu+Fn8DliQzagL6JYd6oJS0qgJgdgl49jJPO54Xmbc1iFwjmBN6M26ZpnEKksXKWsabzU77r5tSCEa/fufTLVlzhuC12Rra/ekZpmGTq5UmN55dn5ZsiJYafRGv1iOZei6RpHnKvKjDx/7CyqCium8f7HdtS3d1EZ4ZZxF4WzS+d2PAAE0tu4tBl27tc/awVU4P60dv0pAA+nuxnd77e5Drr13JvTGxXYUL9Gg/eXx3V7n0ZAbhh+8RB9/dJyg0dy52HHbj/if3RdwaIS5FPau1bXb5AtuWORstLqtoY1Wc5Od3ubD5a/PugZr858Td/gyK060QDY/rVnWPqh8zLVxHkHdshsPDFk/tQwdhMO0BE5flFBMcWBUa9qndanNTd0EHBFPIXh+5MMsEg5g6sZck1Zs6BrQ2mQKk4JzmNLdAKRuKFOaS10bAcJhWmZ/CTlRpY8jgJGulQ3JmiPDmb+4tZ2/moeiT8UDljIWeeFRsRz8MW6fM5+ezUpeyFRXWyovqYje32fphivalwkOK2WhjHOZdVQes+LIlIEUAzLNYSXOVSeT6SBUGSuGS9MF18AxqXiZCgepXPy4V0YHVERf3K5D7Y7oCypZHCVPEq3Qvv0t0M+GQOsdRwDtd7sC8C7nZ1tHgST65lYRXbLSFFREUwDeVTALjkIkavL5PTf5jv/y4mA+3psoBMidHzi4aH/FDd5VMDsxno9zdCjPv/5+2q3zLy8Lgvmf+qGfg6Bi9XevPu7kX+Ax8ijjLA5n4/bhNAQEK83eZ09dc7NTZDp5kavID/Z+8hUVwWvaxvbwj4ZtGBqFUmFy+2hylbMieMuwOw9O56pEGp3Bk8tQ8YbgWs2oa2ZjmSZZmqSs/QPKgitkZ2DCugAAAABJRU5ErkJggg==" />
+          <strong>Plot tests</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main role="main">
+
+    <div class="album py-5">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab"
+                aria-controls="v-pills-1" aria-selected="true">annotations only</a>
+              <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2"
+                aria-selected="false">annotations only + empty</a>
+              <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3"
+                aria-selected="false">annotations only ts mode</a>
+              <a class="nav-link" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-4" role="tab" aria-controls="v-pills-4"
+                aria-selected="false">min annotation ts zero</a>
+              <a class="nav-link" id="v-pills-4-tab" data-toggle="pill" href="#v-pills-5" role="tab" aria-controls="v-pills-5"
+                aria-selected="false">max annotation ts zero</a>
+              <a class="nav-link" id="v-pills-5-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6"
+                aria-selected="false">annotation span greater than plottables</a>
+              <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-7" role="tab" aria-controls="v-pills-7"
+                aria-selected="false">chart and annotation ts</a>
+              <a class="nav-link" id="v-pills-17-tab" data-toggle="pill" href="#v-pills-8" role="tab" aria-controls="v-pills-8"
+                aria-selected="false">chart heavy lift</a>
+
+              <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
+               aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
+            <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-area" role="tab"
+               aria-controls="v-pills-area" aria-selected="false">Area</a>
+            <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-scatter" role="tab"
+               aria-controls="v-pills-scatter" aria-selected="false">Scatter</a>
+            <a class="nav-link" id="v-pills-10-tab" data-toggle="pill" href="#v-pills-bar" role="tab"
+               aria-controls="v-pills-bar" aria-selected="false">Bar</a>
+            <a class="nav-link" id="v-pills-11-tab" data-toggle="pill" href="#v-pills-gauge" role="tab"
+               aria-controls="v-pills-gauge" aria-selected="false">Gauge</a>
+            <a class="nav-link" id="v-pills-12-tab" data-toggle="pill" href="#v-pills-pie" role="tab"
+               aria-controls="v-pills-pie" aria-selected="false">Pie</a>
+            <a class="nav-link" id="v-pills-13-tab" data-toggle="pill" href="#v-pills-doughnut" role="tab"
+               aria-controls="v-pills-doughnut" aria-selected="false">Doughnut</a>
+            <a class="nav-link" id="v-pills-14-tab" data-toggle="pill" href="#v-pills-polar" role="tab"
+               aria-controls="v-pills-polar" aria-selected="false">Polar</a>
+            <a class="nav-link" id="v-pills-15-tab" data-toggle="pill" href="#v-pills-radar" role="tab"
+               aria-controls="v-pills-radar" aria-selected="false">Radar</a>
+            <a class="nav-link" id="v-pills-16-tab" data-toggle="pill" href="#v-pills-image" role="tab"
+               aria-controls="v-pills-image" aria-selected="false">Image</a>
+            <a class="nav-link" id="v-pills-19-tab" data-toggle="pill" href="#v-pills-drilldown" role="tab"
+               aria-controls="v-pills-drilldown" aria-selected="false">Drill down</a>
+            <a class="nav-link" id="v-pills-20-tab" data-toggle="pill" href="#v-pills-datagrid" role="tab"
+               aria-controls="v-pills-datagrid" aria-selected="false">Datagrid</a> -->
+            </div>
+          </div>
+          <div class="col-10">
+
+            <div class="tab-content" id="v-pills-tabContent">
+              <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+                <p>
+                  Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
+                   The string one contains some strange utf8 characters "ïs fælse"
+                </p>
+                <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                  chart-title="Plot" debug="false" >
+                  "2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
+
+                  NEWGTS 'booleanone' RENAME
+                  0 24 
+                  <%
+                    'h' STORE  
+                    $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+                  %> FOR
+                  
+                  NEWGTS 'stringone' RENAME
+                  0 24 
+                  <%
+                    'h' STORE  
+                    $start $h h + NaN NaN NaN 
+                    $h 2 % 0 ==
+                    <% 'iß true' %> <% 'ïs fælse' %> IFTE ADDVALUE
+                  
+                  %> FOR
+                  
+
+
+                </warp-view-tile>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-plot" role="tabpanel" aria-labelledby="v-pills-2-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="http://127.0.0.1:8080/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                    chart-title="Plot">
+                    "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP
+                    '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..'
+                    UNWRAP
+                    '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.'
+                    UNWRAP "
+                    EVAL
+
+                    DEPTH ->LIST 0.000001 TIMESCALE DUP -1 TIMESCALE SORT '+ flipped' RENAME
+                    456664666
+                    -545546668
+                    200 200 '2D' PGraphics
+                    Pencode
+                    NEWGTS
+                    STOP
+                    CLEAR
+                    @mymacros/rst_readtoken
+                    [ $READTOKEN '~.*acceleration' { "SensorSerial" "~.*" } NOW -200000 ] FETCH
+                    DUP 0 GET 'a' STORE
+                    1 GET 'b' STORE
+                    $a
+                    $b $a FIRSTTICK $b FIRSTTICK - TIMESHIFT
+
+
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-map" role="tabpanel" aria-labelledby="v-pills-3-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="map" chart-title="Map">
+                    '{"data":[{"c":"A","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"B","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"D","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"E","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"key":"Path
+                    A"},{"key":"Path B"},{"key":"Annotations
+                    (text)","render":"marker","marker":"lodging"},{"key":"Annotations
+                    (boolean)","baseRadius":5},{"key":"Test","render":"marker"},{"key":"points
+                    2","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}'
+                    JSON->
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-text" role="tabpanel" aria-labelledby="v-pills-4-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="text"
+                    chart-title="Text">
+                    { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
+                  </warp-view-tile>
+                </div>
+                <div class="card-footer text-muted">
+                  <pre><code class="language-markup">
+&lt;warp-view-tile
+  url="https://warp.senx.io/api/v0/exec"
+  responsive="true" unit="°C" type="text"
+  chart-title="Text">
+  { 'data' 42
+    'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' }
+  }
+&lt;/warp-view-tile>
+              </code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-bubble" role="tabpanel" aria-labelledby="v-pills-5-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="bubble"
+                    show-legend="false" chart-title="Bubbles">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH
+                    false RESETS
+                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
+                    10 LTTB
+                    <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 *
+                    RAND 100 * RAND 100 * ]
+                    %>
+                    LMAP
+                    }
+                    %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-default" role="tabpanel" aria-labelledby="v-pills-6-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" show-legend="false"
+                    chart-title="Default">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-step" role="tabpanel" aria-labelledby="v-pills-7-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="step"
+                    show-legend="false" chart-title="Step">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-annotation" role="tabpanel" aria-labelledby="v-pills-17-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="annotation"
+                    chart-title="Annotation">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.tostring 0 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-gts-list" role="tabpanel" aria-labelledby="v-pills-18-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="gts-tree" chart-title="GTS Tree">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-area" role="tabpanel" aria-labelledby="v-pills-8-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="area"
+                    show-legend="false" chart-title="Area">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-scatter" role="tabpanel" aria-labelledby="v-pills-9-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="scatter"
+                    show-legend="false" chart-title="Scatter">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-bar" role="tabpanel" aria-labelledby="v-pills-10-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="bar"
+                    show-legend="false" chart-title="Bar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+                    false RESETS
+                    [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
+                    [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-gauge" role="tabpanel" aria-labelledby="v-pills-11-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="gauge"
+                    show-legend="false" chart-title="gauge">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-pie" role="tabpanel" aria-labelledby="v-pills-12-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="pie"
+                    show-legend="false" chart-title="pie">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-doughnut" role="tabpanel" aria-labelledby="v-pills-13-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="doughnut"
+                    show-legend="false" chart-title="doughnut">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-polar" role="tabpanel" aria-labelledby="v-pills-14-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="polar"
+                    show-legend="false" chart-title="polar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+                    <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-radar" role="tabpanel" aria-labelledby="v-pills-15-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="radar"
+                    show-legend="false" chart-title="Radar">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
+                    'list' STORE
+                    $list
+                    <%
+                    DROP 'gts' STORE
+                    $gts LABELS 'rack' GET 'rack' STORE
+
+                    {
+                    $rack $gts VALUES <%
+                    'index' STORE 'val' STORE
+                    { $index TOSTRING $val 5 % }
+                    %>
+                    LMAP
+                    }
+                    %> LMAP
+                    STOP 'values' STORE
+                    { 'data' $values }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-image" role="tabpanel" aria-labelledby="v-pills-16-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="image" show-legend="false"
+                    chart-title="Image">
+                    //draw tangents along the curve
+                    300 200 '2D3' PGraphics
+                    255 Pbackground
+                    16 PtextSize
+
+                    50 'x1' STORE
+                    50 'y1' STORE
+                    200 'x2' STORE
+                    130 'y2' STORE
+
+                    100 'cx1' STORE
+                    40 'cy1' STORE
+
+                    110 'cx2' STORE
+                    140 'cy2' STORE
+
+
+                    4 PstrokeWeight
+                    $x1 $y1 Ppoint //first anchor
+                    $x2 $y2 Ppoint //second anchor
+
+                    2 PstrokeWeight
+                    $x1 $y1 $cx1 $cy1 Pline
+                    $x2 $y2 $cx2 $cy2 Pline
+
+                    2 PstrokeWeight
+                    0xffff0000 Pstroke
+                    $x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier
+
+                    0 10
+                    <%
+                    10.0 / 't' STORE
+
+                    $x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE
+                    $y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE
+                    $x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE
+                    $y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE
+                    $ty $tx ATAN2 PI 2.0 / - 'angle' STORE
+                    0xff009f00 Pstroke
+                    $x
+                    $y
+                    $x $angle COS 12 * +
+                    $y $angle SIN 12 * +
+                    Pline
+
+                    0x9f009f00 Pfill
+                    PnoStroke
+                    'CENTER' PellipseMode
+                    $x $y 5 5 Pellipse
+                    %>
+                    FOR
+                    Pencode
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-drilldown" role="tabpanel" aria-labelledby="v-pills-19-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="drilldown" chart-title="drilldown">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 700 d ] FETCH
+                    false RESETS
+                    [ SWAP mapper.delta 1 0 0 ] MAP
+                    [ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE
+                    [ NaN NaN NaN 0 ] FILLVALUE
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="v-pills-datagrid" role="tabpanel" aria-labelledby="v-pills-20-tab">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="datagrid" chart-title="Datagrid">
+                    @training/dataset0
+                    [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 d ] FETCH
+                    'data' STORE
+                    { 'data' $data 'globalParams' { 'headers' [ 'A' 'B' ] } 'params' [ { 'headers' [ 'C' 'D' ] } ] }
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </main>
+  <script language="JavaScript">
+    var defOpts = {
+      gridLineColor: '#000000',
+      fontColor: '#000000',
+      minColor: '#ffffff',
+      maxColor: '#333333',
+      mapType: 'DEFAULT',
+      showControls: true,
+      showGTSTree: true,
+      foldGTSTree: true,
+    };
+    $(function () {
+      var body = $('body');
+      $("#dark").click(function () {
+        defOpts.mapType = "DEFAULT";
+        body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light').addClass('text-white');
+        $('.card').addClass('bg-dark');
+        defOpts.gridLineColor = '#ffffff';
+        defOpts.minColor = '#b4cef7';
+        defOpts.maxColor = '#4286f4';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $("#light").button('toggle').click(function () {
+        defOpts.mapType = "WATERCOLOR";
+        body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light').removeClass('text-white');
+        $('.card').removeClass('bg-dark');
+        defOpts.gridLineColor = '#000000';
+        defOpts.minColor = '#ffffff';
+        defOpts.maxColor = '#333333';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $('#autoRefresh').change(function () {
+        $("select option:selected").each(function () {
+          defOpts.autoRefresh = parseInt($(this).val());
+          document.querySelectorAll('warp-view-tile').forEach(el => {
+            el.options = { ...defOpts };
+          });
+        });
+      });
+      $('a[role="tab"]').on('shown.bs.tab', function (e) {
+        var id = e.target.href.replace(document.location, '');
+        var divs = $(id).find('warp-view-tile');
+        for (var i = 0; i < divs.length; i++) {
+          divs[i].options = { ...defOpts };
+          console.log('index', divs[i].options)
+        }
+      });
+      var divs = $.find('warp-view-tile');
+      for (var i = 0; i < divs.length; i++) {
+        divs[i].options = { ...defOpts };
+      }
+    });
+  </script>
+</body>
+
+</html>

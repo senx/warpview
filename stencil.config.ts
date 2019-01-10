@@ -22,7 +22,13 @@ export const config: Config = {
   namespace: "warpview",
   plugins: [
     sass()
+  ],  
+  copy: [
+    { src: 'tests-Plot.html' }
   ],
+  devServer: {
+    openBrowser: false
+  },
   enableCache: false,
   outputTargets:[
     { type: 'dist' },
