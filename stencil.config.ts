@@ -23,7 +23,7 @@ export const config: Config = {
   plugins: [
     sass()
   ],
-  enableCache: false,
+  enableCache: true,
   devServer: {
     openBrowser: false
   },

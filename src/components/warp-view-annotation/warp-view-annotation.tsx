@@ -217,10 +217,9 @@ export class WarpViewAnnotation {
           if (tooltipModel.body) {
             me.LOG.debug(['tooltip'], tooltipModel.title[0]);
             me.date.innerHTML = moment(tooltipModel.title[0]).utc().toISOString() || '';
-            const label = tooltipModel.body[0].lines[0].split('}:');
             me.tooltip.innerHTML = `<div class="tooltip-body">
-  <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
-  <span class="value">${label[1]}</span>
+  <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts )}: </span>
+  <span class="value">${tooltipModel.body[0].lines[0].value}</span>
 </div>`;
           }
           if (tooltipModel.caretX > layout.width / 2) {
@@ -232,14 +231,14 @@ export class WarpViewAnnotation {
           return;
         },
         callbacks: {
-          title: (tooltipItems) => {
-            return tooltipItems[0].xLabel || '';
+          title: (tooltipItems, data) => {
+            return data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x;
           },
           label: (tooltipItem, data) => {
-            return `${data.datasets[tooltipItem.datasetIndex].label}: ${
-              data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
-                .val
-              }`;
+            return {
+              gts: data.datasets[tooltipItem.datasetIndex].label,
+              value: data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val
+            }
           }
         }
       },
