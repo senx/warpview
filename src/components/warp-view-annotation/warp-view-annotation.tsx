@@ -91,10 +91,9 @@ export class WarpViewAnnotation {
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
       this.LOG.debug(['options'], [newValue, this.hiddenData]);
       if (this._chart) {
-        this._chart.update();
         this.drawChart();
       }
     }
@@ -111,7 +110,9 @@ export class WarpViewAnnotation {
           this.LOG.debug(['hiddenDataHidden'], [key, hidden, this._chart.getDatasetMeta(this._mapIndex[key])]);
         });
         this.drawChart();
-        this._chart.update();
+        setTimeout(() => {
+          this._chart.update();
+        }, 250);
       }
     }
   }
@@ -191,7 +192,7 @@ export class WarpViewAnnotation {
       legend: {display: this.showLegend},
       responsive: this.responsive,
       animation: {
-        duration: 0,
+        duration: 0
       },
       tooltips: {
         enabled: false,
@@ -207,10 +208,6 @@ export class WarpViewAnnotation {
               x: tooltipModel.dataPoints[0].x,
               y: this._eventPosition.y
             });
-            me.LOG.debug(['bar'], {
-              x: tooltipModel.dataPoints[0].x,
-              y: this._eventPosition.y
-            })
           } else {
             me.pointHover.emit({x: -100, y: this._eventPosition.y});
           }
@@ -218,7 +215,8 @@ export class WarpViewAnnotation {
           me.tooltip.style.top = (tooltipModel.caretY - 14 + 20) + 'px';
           me.tooltip.classList.remove('right', 'left');
           if (tooltipModel.body) {
-            me.date.innerHTML = tooltipModel.title || '';
+            me.LOG.debug(['tooltip'], tooltipModel.title[0]);
+            me.date.innerHTML = moment(tooltipModel.title[0]).utc().toISOString() || '';
             const label = tooltipModel.body[0].lines[0].split('}:');
             me.tooltip.innerHTML = `<div class="tooltip-body">
   <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
@@ -327,7 +325,7 @@ export class WarpViewAnnotation {
       this._chart.destroy();
     }
     this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: chartOption});
-    this.onResize(); //TODO : this call drawchart too. infinite loop ?!
+    this.onResize();
     this._chart.update();
     // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
     // Object.keys(this._mapIndex).forEach(key => {
@@ -397,7 +395,7 @@ export class WarpViewAnnotation {
 
   render() {
     return <div>
-      <div class="date" ref={(el) => this.date = el as HTMLDivElement}/>
+      <div class="date" ref={el => this.date = el}/>
       {this.displayExpander
         ? <button class={'expander'} onClick={() => this.toggle()} title="collapse/expand">+/-</button>
         : ''
@@ -410,9 +408,9 @@ export class WarpViewAnnotation {
           height: this._height
         }}
       >
-        <canvas ref={(el) => this.canvas = el as HTMLCanvasElement} width={this.width} height={this._height}/>
+        <canvas ref={el => this.canvas = el} width={this.width} height={this._height}/>
       </div>
-      <div class="tooltip" ref={(el) => this.tooltip = el as HTMLDivElement}/>
+      <div class="tooltip" ref={el => this.tooltip = el}/>
     </div>;
   }
 

@@ -24,6 +24,9 @@ export const config: Config = {
     sass()
   ],
   enableCache: false,
+  devServer: {
+    openBrowser: false
+  },
   outputTargets:[
     { type: 'dist' },
     {

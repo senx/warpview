@@ -63,7 +63,7 @@ export class WarpViewPlot {
   private map: HTMLWarpViewMapElement;
   private timeClip: HTMLWarpViewModalElement;
   private filterInput: HTMLInputElement;
-  private timeClipElement: HTMLParagraphElement;
+  private timeClipElement: HTMLElement;
   private mouseOutTimer: number;
 
   componentDidLoad() {
@@ -215,7 +215,9 @@ export class WarpViewPlot {
 
   private drawCharts(firstDraw: boolean = false) {
     this.LOG.debug(['drawCharts'], [this.data, this.options]);
-    this._options = ChartLib.mergeDeep(this._options, this.options);
+    this.timeClip.close();
+    this.modal.close();
+    let options: Param = ChartLib.mergeDeep(this._options, this.options);
     this._data = GTSLib.getData(this.data);
     let opts = new Param();
     if (typeof this.options === 'string') {
@@ -224,7 +226,7 @@ export class WarpViewPlot {
       opts = this.options as Param;
     }
 
-    this._options = ChartLib.mergeDeep(this._options, opts);
+    options = ChartLib.mergeDeep(options, opts);
 
     this.LOG.debug(['PPts'], 'firstdraw ', firstDraw);
     if (firstDraw) { //on the first draw, we can set some default options.
@@ -243,13 +245,12 @@ export class WarpViewPlot {
           }
         });
         if (timestampMode) {
-          this._options.timeMode = 'timestamp';
+          options.timeMode = 'timestamp';
         }
       }
     }
 
-    this.timeClip.close();
-    this.modal.close();
+    this._options = {... options};
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 
@@ -265,12 +266,12 @@ export class WarpViewPlot {
   render() {
     return <div>
       <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
-        <pre><code ref={(el) => this.timeClipElement = el as HTMLParagraphElement}
+        <pre><code ref={(el) => this.timeClipElement = el}
                    innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
       <warp-view-modal modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input type="text" ref={el => this.filterInput = el as HTMLInputElement} value={this.gtsFilter}/>
+        <input type="text" ref={el => this.filterInput = el} value={this.gtsFilter}/>
         <button type="button" class={this._options.popupButtonValidateClass}
                 onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
@@ -294,9 +295,9 @@ export class WarpViewPlot {
       {this.showChart
         ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
                onMouseLeave={evt => this.handleMouseOut(evt)}
-               ref={el => this.main = el as HTMLDivElement}
+               ref={el => this.main = el}
         >
-          <div class="bar" ref={el => this.line = el as HTMLDivElement}/>
+          <div class="bar" ref={el => this.line = el}/>
           <div class="annotation">
             <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
                                   showLegend={this.showLegend}

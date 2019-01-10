@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "build": "stencil build --prod",
-    "dev": "stencil build --dev --watch --serve",
+    "dev": "stencil build --dev --watch --serve --es5",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "start": "yarn run dev "
