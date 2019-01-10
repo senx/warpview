@@ -93,11 +93,7 @@ export class WarpViewAnnotation {
   onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], [newValue, this.hiddenData]);
-      const hiddenData = GTSLib.cleanArray(this.hiddenData);
       if (this._chart) {
-        // Object.keys(this._mapIndex).forEach(key => {
-        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
-        // });
         this._chart.update();
         this.drawChart();
       }
@@ -108,17 +104,14 @@ export class WarpViewAnnotation {
   hideData(newValue, oldValue) {
     if (oldValue !== newValue && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
-      const hiddenData = newValue; // GTSLib.cleanArray(newValue); //buggy. !!'0' is always false, and hidden gts.id could be 0 
-      //this.displayExpander = false; //but... why ? after adding everything, usefull to click collapse for example.
+      const hiddenData = newValue;
       if (this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          const hidden = hiddenData.indexOf(parseInt(key))>=0; //!!hiddenData.find(item => item + '' === key); //buggy. !!'0' is always false, and hidden gts.id could be 0 
-        //  this.displayExpander = this.displayExpander || !hidden;
-          //this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
-          this.LOG.debug(['hiddenDataHidden'], [key,hidden,this._chart.getDatasetMeta(this._mapIndex[key])]);
+          const hidden = hiddenData.indexOf(parseInt(key)) >= 0;
+          this.LOG.debug(['hiddenDataHidden'], [key, hidden, this._chart.getDatasetMeta(this._mapIndex[key])]);
         });
-        this._chart.update();
         this.drawChart();
+        this._chart.update();
       }
     }
   }
@@ -201,7 +194,7 @@ export class WarpViewAnnotation {
         duration: 0,
       },
       tooltips: {
-        enabled: true,
+        enabled: false,
         custom: function (tooltipModel) {
           const layout = me.canvas.getBoundingClientRect();
           if (tooltipModel.opacity === 0) {
@@ -214,6 +207,10 @@ export class WarpViewAnnotation {
               x: tooltipModel.dataPoints[0].x,
               y: this._eventPosition.y
             });
+            me.LOG.debug(['bar'], {
+              x: tooltipModel.dataPoints[0].x,
+              y: this._eventPosition.y
+            })
           } else {
             me.pointHover.emit({x: -100, y: this._eventPosition.y});
           }

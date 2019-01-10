@@ -15,15 +15,13 @@
  *
  */
 
-import {Component, Element, Listen, Method, Prop, State, Watch} from '@stencil/core'
+import {Component, Listen, Method, Prop, State, Watch} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
-import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
-import {WarpViewChart} from "../warp-view-chart/warp-view-chart";
 
 @Component({
   tag: 'warp-view-plot',
@@ -31,7 +29,6 @@ import {WarpViewChart} from "../warp-view-chart/warp-view-chart";
   shadow: true
 })
 export class WarpViewPlot {
-  @Element() el: HTMLElement;
 
   @Prop() data: string | GTS[] | DataModel;
   @Prop() options: string | Param;
@@ -57,30 +54,26 @@ export class WarpViewPlot {
   @State() timeClipValue: string = '';
 
   private LOG: Logger;
-  private line: HTMLElement;
-  private main: HTMLElement;
-  private chart: HTMLElement;
-  private annotation: HTMLElement;
-  private modal: WarpViewModal;
-  private timeClip: WarpViewModal;
-  private warpViewChart: WarpViewChart;
+  private line: HTMLDivElement;
+  private main: HTMLDivElement;
+  private chartContainer: HTMLDivElement;
+  private chart: HTMLWarpViewChartElement;
+  private annotation: HTMLWarpViewAnnotationElement;
+  private modal: HTMLWarpViewModalElement;
+  private map: HTMLWarpViewMapElement;
+  private timeClip: HTMLWarpViewModalElement;
   private filterInput: HTMLInputElement;
   private timeClipElement: HTMLParagraphElement;
   private mouseOutTimer: number;
-  private graphId = 'container-' + ChartLib.guid();
 
   componentDidLoad() {
-    this.line = this.el.shadowRoot.querySelector('div.bar');
-    this.main = this.el.shadowRoot.querySelector('div.maincontainer');
-    this.chart = this.el.shadowRoot.querySelector('warp-view-chart');
-    this.annotation = this.el.shadowRoot.querySelector('warp-view-annotation');
     this.drawCharts(true);
   }
 
   @Method()
   async getTimeClip(): Promise<[number, number]> {
-    this.LOG.debug(['getTimeClip'], this.warpViewChart.getTimeClip());
-    return this.warpViewChart.getTimeClip();
+    this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
+    return this.chart.getTimeClip();
   }
 
   @Watch('gtsFilter')
@@ -116,7 +109,7 @@ export class WarpViewPlot {
       this.filterInput.select();
     }
     if (ev.key === 't') {
-      this.warpViewChart.getTimeClip().then(tc => {
+      this.chart.getTimeClip().then(tc => {
         this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
@@ -152,9 +145,7 @@ export class WarpViewPlot {
       case 'mapSwitch' :
         this.showMap = event.detail.state;
         if (this.showMap) {
-          window.setTimeout(() => {
-            (this.el.shadowRoot.querySelector('#map') as any).resize();
-          }, 500);
+          window.setTimeout(() => this.map.resize(), 500);
         }
         break;
     }
@@ -170,10 +161,9 @@ export class WarpViewPlot {
 
   @Listen('warpViewChartResize')
   onResize(event: CustomEvent) {
-    const div = this.el.shadowRoot.querySelector('#' + this.graphId) as HTMLElement;
-    this.LOG.debug(['warpViewChartResize'], [event.detail, div]);
-    if (div) {
-      div.style.height = event.detail.h + 'px';
+    this.LOG.debug(['warpViewChartResize'], event.detail);
+    if (this.chartContainer) {
+      this.chartContainer.style.height = event.detail.h + 'px';
     }
   }
 
@@ -197,7 +187,6 @@ export class WarpViewPlot {
   }
 
   private handleMouseMove(evt: MouseEvent) {
-    this.line = this.el.shadowRoot.querySelector('div.bar');
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
@@ -205,14 +194,13 @@ export class WarpViewPlot {
     if (!this.mouseOutTimer) {
       this.mouseOutTimer = window.setTimeout(() => {
         this.line.style.display = 'block';
-        this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
+        this.line.style.left = Math.max(evt.clientX - this.main.getBoundingClientRect().left, 100) + 'px';
       }, 1);
     }
   }
 
   private handleMouseOut(evt: MouseEvent) {
-    this.LOG.debug(['handleMouseOut'], evt);
-    this.line.style.left = Math.max(evt.offsetX, 100) + 'px';
+    this.line.style.left = Math.max(evt.clientX - this.main.getBoundingClientRect().left, 100) + 'px';
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
@@ -225,7 +213,7 @@ export class WarpViewPlot {
     }
   }
 
-  private drawCharts(firstdraw: boolean = false) {
+  private drawCharts(firstDraw: boolean = false) {
     this.LOG.debug(['drawCharts'], [this.data, this.options]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this._data = GTSLib.getData(this.data);
@@ -238,8 +226,8 @@ export class WarpViewPlot {
 
     this._options = ChartLib.mergeDeep(this._options, opts);
 
-    this.LOG.debug(["PPts"], "firstdraw " + firstdraw);
-    if (firstdraw) { //on the first draw, we can set some default options.
+    this.LOG.debug(['PPts'], 'firstdraw ', firstDraw);
+    if (firstDraw) { //on the first draw, we can set some default options.
       //automatically switch to timestamp mode
       //when the first tick and last tick of all the series are in the interval [-100ms 100ms]
       let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
@@ -255,7 +243,7 @@ export class WarpViewPlot {
           }
         });
         if (timestampMode) {
-          this._options.timeMode = "timestamp";
+          this._options.timeMode = 'timestamp';
         }
       }
     }
@@ -276,13 +264,13 @@ export class WarpViewPlot {
 
   render() {
     return <div>
-      <warp-view-modal modalTitle="TimeClip" ref={(el: any) => this.timeClip = el as WarpViewModal}>
+      <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
         <pre><code ref={(el) => this.timeClipElement = el as HTMLParagraphElement}
                    innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
-      <warp-view-modal modalTitle="GTS Filter" ref={(el: any) => this.modal = el as WarpViewModal}>
+      <warp-view-modal modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input type="text" ref={(el) => this.filterInput = el as HTMLInputElement} value={this.gtsFilter}/>
+        <input type="text" ref={el => this.filterInput = el as HTMLInputElement} value={this.gtsFilter}/>
         <button type="button" class={this._options.popupButtonValidateClass}
                 onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
@@ -303,30 +291,38 @@ export class WarpViewPlot {
                               debug={this.debug}
                               hiddenData={this._toHide} options={this._options}/>
         : ''}
-      {this.showChart ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
-                             onMouseLeave={evt => this.handleMouseOut(evt)}>
-        <div class="bar"/>
-        <div class="annotation">
-          <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
-                                showLegend={this.showLegend}
-                                debug={this.debug}
-                                timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
-                                hiddenData={this._toHide} options={this._options}/>
+      {this.showChart
+        ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
+               onMouseLeave={evt => this.handleMouseOut(evt)}
+               ref={el => this.main = el as HTMLDivElement}
+        >
+          <div class="bar" ref={el => this.line = el as HTMLDivElement}/>
+          <div class="annotation">
+            <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
+                                  showLegend={this.showLegend}
+                                  ref={(el: HTMLWarpViewAnnotationElement) => this.annotation = el}
+                                  debug={this.debug}
+                                  timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
+                                  hiddenData={this._toHide} options={this._options}/>
+          </div>
+          <div style={{width: '100%', height: '768px'}} ref={el => this.chartContainer = el}>
+            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}/>
+            <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
+                             ref={(el: HTMLWarpViewChartElement) => this.chart = el}
+                             debug={this.debug}
+                             hiddenData={this._toHide} type={this.chartType}
+                             options={this._options}/>
+          </div>
         </div>
-        <div style={{width: '100%', height: '768px'}} id={this.graphId}>
-          <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}/>
-          <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
-                           ref={(el: any) => this.warpViewChart = el}
-                           debug={this.debug}
-                           hiddenData={this._toHide} type={this.chartType}
-                           options={this._options}/>
+        : ''}
+      {this.showMap
+        ? <div class="map-container">
+          <warp-view-map options={this._options}
+                         ref={(el: HTMLWarpViewMapElement) => this.map = el} data={this._data as any}
+                         debug={this.debug}
+                         responsive={this.responsive} hiddenData={this._toHide}/>
         </div>
-      </div> : ''}
-      {this.showMap ? <div class="map-container">
-        <warp-view-map options={this._options} id="map" data={this._data as any}
-                       debug={this.debug}
-                       responsive={this.responsive} hiddenData={this._toHide}/>
-      </div> : ''}
+        : ''}
     </div>;
   }
 }
