@@ -62,31 +62,24 @@ export class WarpViewAnnotation {
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['options'], [newValue, this.hiddenData]);
-            const hiddenData = GTSLib.cleanArray(this.hiddenData);
-            if (this._chart) {
-                Object.keys(this._mapIndex).forEach(key => {
-                    this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
-                });
-                this._chart.update();
-                this.drawChart();
-            }
+        this.LOG.debug(['options'], newValue, oldValue);
+        if (this._chart) {
+            this.drawChart();
         }
     }
     hideData(newValue, oldValue) {
         if (oldValue !== newValue && this._chart) {
             this.LOG.debug(['hiddenData'], newValue);
-            const hiddenData = GTSLib.cleanArray(newValue);
-            this.displayExpander = false;
+            const hiddenData = newValue;
             if (this._chart) {
                 Object.keys(this._mapIndex).forEach(key => {
-                    const hidden = !!hiddenData.find(item => item + '' === key);
-                    this.displayExpander = this.displayExpander || !hidden;
-                    this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
+                    const hidden = hiddenData.indexOf(parseInt(key)) >= 0;
+                    this.LOG.debug(['hiddenDataHidden'], [key, hidden, this._chart.getDatasetMeta(this._mapIndex[key])]);
                 });
-                this._chart.update();
                 this.drawChart();
+                setTimeout(() => {
+                    this._chart.update();
+                }, 250);
             }
         }
     }
@@ -104,7 +97,6 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].time.min = newValue;
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
-                this._chart.update();
             }
         }
     }
@@ -122,7 +114,6 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].time.max = newValue;
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
-                this._chart.update();
             }
         }
     }
@@ -161,7 +152,7 @@ export class WarpViewAnnotation {
             legend: { display: this.showLegend },
             responsive: this.responsive,
             animation: {
-                duration: 0,
+                duration: 0
             },
             tooltips: {
                 enabled: false,
@@ -185,11 +176,13 @@ export class WarpViewAnnotation {
                     me.tooltip.style.top = (tooltipModel.caretY - 14 + 20) + 'px';
                     me.tooltip.classList.remove('right', 'left');
                     if (tooltipModel.body) {
-                        me.date.innerHTML = tooltipModel.title || '';
-                        const label = tooltipModel.body[0].lines[0].split('}:');
+                        me.LOG.debug(['tooltip'], tooltipModel.title[0]);
+                        me.date.innerHTML = me._options.timeMode === 'timestamp'
+                            ? tooltipModel.title[0]
+                            : moment(tooltipModel.title[0]).utc().toISOString() || '';
                         me.tooltip.innerHTML = `<div class="tooltip-body">
-  <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
-  <span class="value">${label[1]}</span>
+  <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
+  <span class="value">${tooltipModel.body[0].lines[0].value}</span>
 </div>`;
                     }
                     if (tooltipModel.caretX > layout.width / 2) {
@@ -202,12 +195,14 @@ export class WarpViewAnnotation {
                     return;
                 },
                 callbacks: {
-                    title: (tooltipItems) => {
-                        return tooltipItems[0].xLabel || '';
+                    title: (tooltipItems, data) => {
+                        return data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x;
                     },
                     label: (tooltipItem, data) => {
-                        return `${data.datasets[tooltipItem.datasetIndex].label}: ${data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
-                            .val}`;
+                        return {
+                            gts: data.datasets[tooltipItem.datasetIndex].label,
+                            value: data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val
+                        };
                     }
                 }
             },
@@ -288,17 +283,20 @@ export class WarpViewAnnotation {
             };
             chartOption.scales.xAxes[0].type = 'time';
         }
-        this.LOG.debug(['drawChart', 'about to render'], [chartOption, gts]);
+        this.LOG.debug(['drawChart', 'about to render'], this._options, chartOption, gts);
         if (this._chart) {
             this._chart.destroy();
         }
         this._chart = new Chart.Scatter(this.canvas, { data: { datasets: gts }, options: chartOption });
         this.onResize();
-        this._chart.update();
-        Object.keys(this._mapIndex).forEach(key => {
-            this.LOG.debug(['drawChart', 'hide'], [key]);
-            this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
-        });
+        setTimeout(() => {
+            this._chart.update();
+        }, 250);
+        // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
+        // Object.keys(this._mapIndex).forEach(key => {
+        //   this.LOG.debug(['drawChart', 'hide'], [key]);
+        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
+        // });
     }
     /**
      *
@@ -343,7 +341,8 @@ export class WarpViewAnnotation {
                     pointHitRadius: 5,
                     pointStyle: myImage,
                     borderColor: color,
-                    backgroundColor: ColorLib.transparentize(color)
+                    backgroundColor: ColorLib.transparentize(color),
+                    hidden: this.hiddenData.indexOf(g.id) >= 0
                 });
                 i++;
             });
@@ -358,7 +357,7 @@ export class WarpViewAnnotation {
     }
     render() {
         return h("div", null,
-            h("div", { class: "date", ref: (el) => this.date = el }),
+            h("div", { class: "date", ref: el => this.date = el }),
             this.displayExpander
                 ? h("button", { class: 'expander', onClick: () => this.toggle(), title: "collapse/expand" }, "+/-")
                 : '',
@@ -367,8 +366,8 @@ export class WarpViewAnnotation {
                     width: this.width,
                     height: this._height
                 } },
-                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this._height })),
-            h("div", { class: "tooltip", ref: (el) => this.tooltip = el }));
+                h("canvas", { ref: el => this.canvas = el, width: this.width, height: this._height })),
+            h("div", { class: "tooltip", ref: el => this.tooltip = el }));
     }
     toggle() {
         this.expanded = !this.expanded;

@@ -39,8 +39,9 @@ export class WarpViewGtsTree {
   private gtsList: any[] = [];
   private _options: Param = new Param();
   private LOG: Logger;
-  private _isFolded = false;
+  private _isFolded : boolean = false;
   private root: HTMLSpanElement;
+  private initialized = false;
 
   @Watch("data")
   onData(newValue, oldValue) {
@@ -53,7 +54,7 @@ export class WarpViewGtsTree {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-     // this._isFolded = !!this.options.foldGTSTree;
+      this._isFolded = !!this.options.foldGTSTree;
       this.doRender();
     }
   }
@@ -75,7 +76,7 @@ export class WarpViewGtsTree {
     this.doRender();
   }
 
-  componentWillLoad() {
+  componentDidLoad() {
     this.LOG = new Logger(WarpViewGtsTree, this.debug);
     this.LOG.debug(['componentWillLoad', 'data'], this.data);
     if (this.data) {
@@ -96,9 +97,12 @@ export class WarpViewGtsTree {
     }
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
     this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this._isFolded);
-    if (!!this._options.foldGTSTree && !this._isFolded) {
-      this.LOG.debug(['doRender'], 'About to fold');
-      this.foldAll();
+    if(!this.initialized) {
+      if (this._options.foldGTSTree !== undefined && !!this._options.foldGTSTree && !this._isFolded) {
+        this.LOG.debug(['doRender'], 'About to fold');
+        this.foldAll();
+      }
+      this.initialized = true;
     }
 
   }

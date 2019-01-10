@@ -7,7 +7,6 @@ export declare class WarpViewTreeView {
     hiddenData: number[];
     debug: boolean;
     ref: boolean;
-    el: HTMLElement;
     private hide;
     private LOG;
     /**
