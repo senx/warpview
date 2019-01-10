@@ -58,7 +58,7 @@ export class WarpViewChart {
 
   private LOG: Logger;
   private static DEFAULT_WIDTH = 800;
-  private static DEFAULT_HEIGHT = 600;
+  private static DEFAULT_HEIGHT = 500;
   private resizeTimer;
   private _chart: Dygraph;
   private _options: Param = {
@@ -108,19 +108,20 @@ export class WarpViewChart {
   onResize() {
     if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
       this.parentWidth = this.el.parentElement.clientWidth;
+      this.initialResizeNeeded = false;
       if (this._chart) {
         if (!this.initialHeight) {
           this.initialHeight = this.el.parentElement.clientHeight;
         }
-        clearTimeout(this.resizeTimer);
+        clearTimeout(this.resizeTimer); //keep a timer to avoid too much refresh
         this.resizeTimer = setTimeout(() => {
           this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
           const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
           const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
           this._chart.resize(width, this.displayGraph() ? height : 30);
           this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
-          this.initialResizeNeeded = false;
-        }, 50);
+          
+        }, 150);
       }
     }
   }
@@ -138,6 +139,7 @@ export class WarpViewChart {
         this.visibleGtsId.forEach(id => {
           //sadly, this does not work.
           //this._chart.setVisibility(i,newValue.indexOf(id) < 0);
+          // well, not so sad. for a 2 millions points, destroying and redrawing is faster than setvisibility (8s instead 17s)
           //best workaround : rebuild the dygraph with same dataset and different visibility options. 
           //TODO: try each next version of dygraph.
           //id -1 is a special empty serie only used when there only annotations
@@ -509,6 +511,7 @@ export class WarpViewChart {
 
   private drawCallback(dygraph, is_initial) { //also called after a resize, be carefull.
     this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
+    this._chart=dygraph; //usefull for the on resize, because into the callback, this._chart is still undefined.
     if (dygraph.dateWindow_) {
       this.boundsDidChange.emit({
         bounds: {
