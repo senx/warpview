@@ -130,6 +130,7 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
       }
+      this._chart.update();
     }
   }
 
@@ -148,6 +149,7 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
       }
+      this._chart.update();
     }
   }
 
