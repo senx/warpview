@@ -64,7 +64,7 @@
     }
 
     body {
-      --warp-view-tile-height: 500px;
+      --warp-view-tile-height: 100vh;
       --warp-view-chart-legend-bg: #000;
 
     }
@@ -205,7 +205,7 @@
                   Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
                   The string one contains some strange utf8 characters "ïs fælse"
                 </p>
-                <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
                   chart-title="Plot" debug="false">
                   "2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
 
@@ -242,7 +242,7 @@
                       Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
                       The string one contains some strange utf8 characters "ïs fælse"
                     </p>
-                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
                       chart-title="Plot" debug="false">
                       "2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
                       NEWGTS 'emptyone, stack bottom' RENAME
@@ -283,7 +283,7 @@
                       annotations at -10 -5 0 2 4.
                       one is ordered, not the other.
                     </p>
-                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
                       chart-title="Plot" debug="false">
 
                       NEWGTS 'boolannotation, not ordered' RENAME
@@ -312,10 +312,14 @@
                       jschart may consider this as "automatic minimum".
                       The spike in data is aligned to error annotation.
                     </p>
-                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
                       chart-title="Plot" debug="false">
 
-                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..' UNWRAP '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.' UNWRAP "
+                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP
+                      '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..'
+                      UNWRAP
+                      '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.'
+                      UNWRAP "
                       EVAL
                       DEPTH ->LIST 0.000001 TIMESCALE
                       456664666
@@ -340,10 +344,14 @@
                       jschart may consider this as "automatic maximum".
                       The spike in data is aligned to error annotation.
                     </p>
-                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
                       chart-title="Plot" debug="false">
 
-                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..' UNWRAP '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.' UNWRAP "
+                      "'60V5OM8mQr8n5k570bC_Ra_WQ00IFJRkB2.lBnFtCnNoCYFp4V.L.0g..4N.5.S3VBnqaT734V7H..' UNWRAP
+                      '60VII4.lDYckAY3iD1slAY7pCIcuBWg2X.KnR5ldS.JlCnJtBFOnOM8dNLkFJo46B2.kBIBoDIRqC2NoCFFiNM0k0MCWOqKh4f9dV8mwXwzfIGQdxcyopREJhJsQ.1N..4N.5Bo56sg7.........4MJUI2IRGk6w8b6fQMF83cdfiL9FyWDxb08ClGi_OcspwBdG.wZdIOopPbdVQ6AO6RT8ZhmnMaNHobRuVXQ3odtUgXgccqloOruUivuzUTuxzUniTzIvph4kC0aZv1r_8GbMQYJsh7y3xdgFOtPiaD.WxYCPrp5zNcsJzd37SMn3Mwg86eUtbm0pDT4d7OdVUWAuWJiXPFVzXFM5XTECZC9fyJLYMRX9Vo1LMZX6.lqbhylyLk9cgduIJe0XIbXOCgbWnBYKcYUYTkpEvbFTRAQpM8SiWOHVvU2p5JQl64m2xTiZcFsJ_zfBxDTXnWe9y2L2hl062jOt4h2KBCVcbh3FBFBsh20Gmdlr2Qcz2AUVwrx1AJmjK0lbVrIg05t98WQ7QMRayZQV.MTh7nbOsO.eu97Bp965sWIQXq0ON3CB3_WzZIjdIQcMAtrBZDVVTMAcpaGomANeqetcqEW4IYFAQrlVhS3G3qE7jN.llDcAhtLUuFRJMhBdjc_QJAJBRyl9svA30Tel6nfQvPFKWW98ZMnZ3cs2MfBGJYxEulz4JL5ndpS1MUr63CRvDVQ6bjM.fLwbIs4mYU.6ABA4jXpk219wtptD9E4lP22RqKkjfdWoJUExBTF4YpwQwsG.tCYR0_Lg8DudI7vkNOfX6dXO98WzqUVzuTzG5.wKxKvz1BSFqPE2BJlV4_py5FbJy1snbpe_.wBAHpEJsX0AZIMUQ3lF4NRnfev5h4VI00qH_i1X2oG_IyxmVpHySGcfgk4oU2kyiu6TSE.zUAdOBcmcd4Er1OnAVqNKdSke3e1P99sig.Ur.MB8C_5vtNYaY3Q51MrcCOgb0luTpBqw8jFc2Oe00462qzCe4FWs__ypJp8052YEinxs2eVJuhQUWVKPXxFvKiMoPx0CqLoMlSUjVhBh0b5ZAFkHMBxqmwKjHdoNqJL9RNq08QzTpPUIUL1fQi3nOKs6V2ixwSvfhsDQ5uTPvZg.0vS3algrkbvfCzNX0afWBjkdQpXDUkRr8nhDF5RKAXILbln7uqYVzHrp05nwj379wIFp94LJkgEs1aNyxvE7i.v3CLOVw9rIy3yPom2bjOl96w.yJBW38k4...Lk.3G..'
+                      UNWRAP
+                      '60V7CI0ZALp_NLsQ.cV5RqKmPL4g34C0Gn.kB23nC2ZrCYFqC2J3Aa4kR.KnNLS_QGN.4V.Q..0L.0Y00WyA1.........04oq_Fn53N.E1qSfhcH9kDrHgmMO9CZarHGahFNlDhaPPaS9pvZGcJ6KiZFqFIJ__gGITOXWHSYZXIa_AQhhi4YibRSjbHwzYsazznjgzpzgiL9x1a9UdK5tCfqxLXwdto9SDa6A8YxLnxodRsTLaSFtCtEb01grzAHooyRdrRXLjJXXFRRHm9SF5DwwOQXxpM7Ap1UK7zX859M9yw1uv.EmQJBFx53z0M4fEtP03GDENdJRO8E.sRCNXTqSuO0Wml6mXyMKZ468eX07Wgb73H4tisvZYB9tNofYlkYFBRI1xdSf5R.scge4c2p.QVF6gWpHf46cBKePbAwaBlT3v2zW50Y2Uj8I9eVuDGcwuoUY75Hm93b7DXAeFCPTnOBbEZSvQ_No3qhb.sXbbGU2aHNWWndJ.KVmLB6bpO6MvCbgbZ8ok1WwBnh_OG3b0oUJJwBUoiAdIidTBbQFIDv2RPr1.w1tkYv8dhsvc2tkKPuHMBYR14QZuVWF.Q_4QFEKq5Hc5A6HiUbaXuVQIa2YRdNpMHzKor2toBlugLnpsqanq5fDPOh2au7Kxl1L5jGRXd64tYR1fmyLOLGYsAqM7xljAz7tHL889yUar5BbIN4jDxOgXVh_D5DRM7Cz5OIgxxVI9vjbUWuWVg3lMirA6y7p.TNMf5H3Z8qT8U_fxq.jXrnYjRIrlyXRs9n2WqfR48O8ARUo8H1HHcujJJP0gYpr1RTQaQZ6R1mSoPEs19YDkAAvOf7OEaSKKeC85jFunfVxi.Hiux6WQ2O9GV_SkrQ0O7tEB6fAOWMaMHaEstoY0FGKKRyeoV5SbtGOhKTkPc9iwhS4xs14GYphnJAFx.mhZCvP5GFEKQjuqm56_7sF_qdeoTocgNNq0AlvCWbiFdNI2avU9lsdI37Dyb8PaEY52Celw7d56jVPH2pI8EXYcqaBXA_4k_Njj5tSsfL13sexN9gviuDt5vzNMnSbXLJ3HG0tbmZMgDpkUhsy4y1IHuVxhbU2a5jcwX6NvXbz8SimEk1Lm0CbguWTJS.fDXnUlwmz_RMc3ZBUnaUZCKhDaRpBmgr35ZYyiATEPxUx833TDR0F..4g.03F.'
+                      UNWRAP "
                       EVAL
                       DEPTH ->LIST 0.000001 TIMESCALE -1 TIMESCALE '+ flipped' RENAME
                       456664666
@@ -359,38 +367,82 @@
               </div>
 
               <div class="tab-pane fade" id="v-pills-6" role="tabpanel" aria-labelledby="v-pills-6">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      The time bound is defined by annotations, not by plottable data.
+                      You must see annotation
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" 
+                      chart-title="Plot" debug="false">
+                      NEWGTS 'bool 1 2' RENAME
+                      1 NaN NaN NaN T ADDVALUE
+                      2 NaN NaN NaN T ADDVALUE
+
+                      CLONE 'bool in the future at 5' RENAME
+                      5 NaN NaN NaN T ADDVALUE
+
+                      NEWGTS 'plot 3 4' RENAME
+                      3 NaN NaN NaN 2.2 ADDVALUE
+                      4 NaN NaN NaN 3.2 ADDVALUE
+
+                      NEWGTS 'plot -4 -3 ' RENAME
+                      -4 NaN NaN NaN 2.2 ADDVALUE
+                      -3 NaN NaN NaN 3.2 ADDVALUE
+
+                      NEWGTS 'bool in the past at -6' RENAME
+                      -6 NaN NaN NaN T ADDVALUE
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="tab-pane fade" id="v-pills-7" role="tabpanel" aria-labelledby="v-pills-7">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      On another endpoint, some annotation and plottable gts.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
+                      debug="true"  chart-title="Plot">
+                      {} NOW 96 h @senx/alerting/_fetch
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-8" role="tabpanel" aria-labelledby="v-pills-8">
                   <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                       <p>
-                        The time bound is defined by annotations, not by plottable data.
-                        You must see annotation 
-                      </p>
-                      <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" gts-filter="anomaly"
-                        chart-title="Plot" debug="false">
-                        NEWGTS 'bool 1 2' RENAME
-                        1 NaN NaN NaN T ADDVALUE
-                        2 NaN NaN NaN T ADDVALUE
-                        
-                        CLONE 'bool in the future at 5' RENAME
-                        5 NaN NaN NaN T ADDVALUE
-                        
-                        NEWGTS 'plot 3 4' RENAME
-                        3 NaN NaN NaN 2.2 ADDVALUE
-                        4 NaN NaN NaN 3.2 ADDVALUE
-                        
-                        NEWGTS 'plot -4 -3 ' RENAME
-                        -4 NaN NaN NaN 2.2 ADDVALUE
-                        -3 NaN NaN NaN 3.2 ADDVALUE
-                        
-                        NEWGTS 'bool in the past at -6' RENAME
-                        -6 NaN NaN NaN T ADDVALUE
+                        Will work only on MY computer. 
+                        it loads two really heavy GTS (1.2millions points each)
+                        you need 1.5GB free ram.
+                        It also put a annotation 1s after the end of both acquisition.
+                        hiding the annoation should not redraw the chart.
+                        hide or resize action should take more than 10s.
   
+                      </p>
+                      <warp-view-tile url="http://127.0.0.1:8080/api/v0/exec" responsive="true" type="plot"
+                        debug="false"  chart-title="Plot">
+
+                        'qw7mYRxmiVAC_2leF.WEnrS8Lr2UM66nUnhKCkvJRiepDj8WSN32Zz63ABouq6pqIerEcVgCu2nidme9orunLt6g6xfKbRfEUkam2KQij0tLVTXFFxVR.CaP4c27p1gVw5tUQMNImC64Dxpg9Bi4wYnMqoeAgKDt' 
+                        'READTOKEN' STORE
+                        [ $READTOKEN '~.*acceleration' { "SensorSerial" "~.*" } NOW -2000000 ] FETCH
+                        DUP 0 GET 'a' STORE
+                        1 GET 'b' STORE
+                        $a
+                        $b $a FIRSTTICK $b FIRSTTICK - TIMESHIFT
+                        
+                        NEWGTS '1slater' RENAME
+                        $a LASTTICK NaN NaN NaN T ADDVALUE
+                        $a LASTTICK 1 s + NaN NaN NaN T ADDVALUE
                       </warp-view-tile>
                     </div>
                   </div>
                 </div>
-  
-
 
             </div>
           </div>
