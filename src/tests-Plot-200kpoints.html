@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedLibraryURL, JSValidateTypes, JSUnresolvedFunction -->
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Warp View</title>
+  <script src="/build/warpview.js"></script>
+</head>
+
+<body>
+  <div class="card-body">
+    <p>
+      Will work only on MY computer.
+      it loads two 100k points GTS.
+      It also put an annotation 1s after the end of both acquisition.
+      hiding the annoation should not redraw the chart.
+      hide or resize action should take more than 2s.
+
+    </p>
+    <p>
+      RAM used after garbage collection : 126MB
+    </p>
+
+    <warp-view-tile url="http://127.0.0.1:8080/api/v0/exec" responsive="true" type="plot" debug="false" chart-title="Plot">
+
+      'qw7mYRxmiVAC_2leF.WEnrS8Lr2UM66nUnhKCkvJRiepDj8WSN32Zz63ABouq6pqIerEcVgCu2nidme9orunLt6g6xfKbRfEUkam2KQij0tLVTXFFxVR.CaP4c27p1gVw5tUQMNImC64Dxpg9Bi4wYnMqoeAgKDt'
+      'READTOKEN' STORE
+      [ $READTOKEN '~.*acceleration' { "SensorSerial" "~.*" } NOW -100000 ] FETCH
+      DUP 0 GET 'a' STORE
+      1 GET 'b' STORE
+      $a
+      $b $a FIRSTTICK $b FIRSTTICK - TIMESHIFT
+
+      NEWGTS '1slater' RENAME
+      $a LASTTICK NaN NaN NaN T ADDVALUE
+      $a LASTTICK 1 s + NaN NaN NaN T ADDVALUE
+    </warp-view-tile>
+  </div>
+
+</body>
