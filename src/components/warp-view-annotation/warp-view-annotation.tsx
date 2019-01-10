@@ -91,14 +91,9 @@ export class WarpViewAnnotation {
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
       this.LOG.debug(['options'], [newValue, this.hiddenData]);
-      const hiddenData = GTSLib.cleanArray(this.hiddenData);
       if (this._chart) {
-        // Object.keys(this._mapIndex).forEach(key => {
-        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!hiddenData.find(item => item + '' === key);
-        // });
-        this._chart.update();
         this.drawChart();
       }
     }
@@ -108,17 +103,16 @@ export class WarpViewAnnotation {
   hideData(newValue, oldValue) {
     if (oldValue !== newValue && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
-      const hiddenData = newValue; // GTSLib.cleanArray(newValue); //buggy. !!'0' is always false, and hidden gts.id could be 0 
-      //this.displayExpander = false; //but... why ? after adding everything, usefull to click collapse for example.
+      const hiddenData = newValue;
       if (this._chart) {
         Object.keys(this._mapIndex).forEach(key => {
-          const hidden = hiddenData.indexOf(parseInt(key))>=0; //!!hiddenData.find(item => item + '' === key); //buggy. !!'0' is always false, and hidden gts.id could be 0 
-        //  this.displayExpander = this.displayExpander || !hidden;
-          //this._chart.getDatasetMeta(this._mapIndex[key]).hidden = hidden;
-          this.LOG.debug(['hiddenDataHidden'], [key,hidden,this._chart.getDatasetMeta(this._mapIndex[key])]);
+          const hidden = hiddenData.indexOf(parseInt(key)) >= 0;
+          this.LOG.debug(['hiddenDataHidden'], [key, hidden, this._chart.getDatasetMeta(this._mapIndex[key])]);
         });
-        this._chart.update();
         this.drawChart();
+        setTimeout(() => {
+          this._chart.update();
+        }, 250);
       }
     }
   }
@@ -198,10 +192,10 @@ export class WarpViewAnnotation {
       legend: {display: this.showLegend},
       responsive: this.responsive,
       animation: {
-        duration: 0,
+        duration: 0
       },
       tooltips: {
-        enabled: true,
+        enabled: false,
         custom: function (tooltipModel) {
           const layout = me.canvas.getBoundingClientRect();
           if (tooltipModel.opacity === 0) {
@@ -221,7 +215,8 @@ export class WarpViewAnnotation {
           me.tooltip.style.top = (tooltipModel.caretY - 14 + 20) + 'px';
           me.tooltip.classList.remove('right', 'left');
           if (tooltipModel.body) {
-            me.date.innerHTML = tooltipModel.title || '';
+            me.LOG.debug(['tooltip'], tooltipModel.title[0]);
+            me.date.innerHTML = moment(tooltipModel.title[0]).utc().toISOString() || '';
             const label = tooltipModel.body[0].lines[0].split('}:');
             me.tooltip.innerHTML = `<div class="tooltip-body">
   <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
@@ -330,7 +325,7 @@ export class WarpViewAnnotation {
       this._chart.destroy();
     }
     this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: chartOption});
-    this.onResize(); //TODO : this call drawchart too. infinite loop ?!
+    this.onResize();
     this._chart.update();
     // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
     // Object.keys(this._mapIndex).forEach(key => {
@@ -400,7 +395,7 @@ export class WarpViewAnnotation {
 
   render() {
     return <div>
-      <div class="date" ref={(el) => this.date = el as HTMLDivElement}/>
+      <div class="date" ref={el => this.date = el}/>
       {this.displayExpander
         ? <button class={'expander'} onClick={() => this.toggle()} title="collapse/expand">+/-</button>
         : ''
@@ -413,9 +408,9 @@ export class WarpViewAnnotation {
           height: this._height
         }}
       >
-        <canvas ref={(el) => this.canvas = el as HTMLCanvasElement} width={this.width} height={this._height}/>
+        <canvas ref={el => this.canvas = el} width={this.width} height={this._height}/>
       </div>
-      <div class="tooltip" ref={(el) => this.tooltip = el as HTMLDivElement}/>
+      <div class="tooltip" ref={el => this.tooltip = el}/>
     </div>;
   }
 

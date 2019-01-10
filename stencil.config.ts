@@ -30,6 +30,9 @@ export const config: Config = {
     openBrowser: false
   },
   enableCache: false,
+  devServer: {
+    openBrowser: false
+  },
   outputTargets:[
     { type: 'dist' },
     {
