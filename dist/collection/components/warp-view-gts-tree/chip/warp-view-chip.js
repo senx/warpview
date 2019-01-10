@@ -120,7 +120,7 @@ export class WarpViewChip {
     render() {
         return h("div", null, this._node && this._node.gts && this._node.gts.l ?
             h("span", { onClick: (event) => this.switchPlotState(event) },
-                h("i", { class: "normal", ref: (el) => this.chip = el }),
+                h("i", { class: "normal", ref: el => this.chip = el }),
                 h("span", { class: "gtsInfo" },
                     h("span", { class: 'gts-classname' },
                         "\u00A0 ",

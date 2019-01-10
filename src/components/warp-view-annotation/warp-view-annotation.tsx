@@ -130,6 +130,7 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
       }
+      this._chart.update();
     }
   }
 
@@ -148,6 +149,7 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
       }
+      this._chart.update();
     }
   }
 
@@ -213,8 +215,8 @@ export class WarpViewAnnotation {
           if (tooltipModel.body) {
             me.LOG.debug(['tooltip'], tooltipModel.title[0]);
             me.date.innerHTML = me._options.timeMode === 'timestamp'
-              ? tooltipModel.title[0]
-              : moment(tooltipModel.title[0]).utc().toISOString() || '';
+              ? tooltipModel.title[0].time
+              : moment(tooltipModel.title[0].time).utc().toISOString() || '';
             me.tooltip.innerHTML = `<div class="tooltip-body">
   <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
   <span class="value">${tooltipModel.body[0].lines[0].value}</span>
@@ -230,7 +232,8 @@ export class WarpViewAnnotation {
         },
         callbacks: {
           title: (tooltipItems, data) => {
-            return data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x;
+            me.LOG.debug(['annotationtooltip','data.datasets'],data.datasets,data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x)
+            return { time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x };
           },
           label: (tooltipItem, data) => {
             return {
