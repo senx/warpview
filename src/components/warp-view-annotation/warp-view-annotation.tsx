@@ -91,11 +91,9 @@ export class WarpViewAnnotation {
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
-      this.LOG.debug(['options'], [newValue, this.hiddenData]);
-      if (this._chart) {
-        this.drawChart();
-      }
+    this.LOG.debug(['options'], newValue, oldValue);
+    if (this._chart) {
+      this.drawChart();
     }
   }
 
@@ -131,7 +129,6 @@ export class WarpViewAnnotation {
           this._chart.options.scales.xAxes[0].time.min = newValue;
         }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
-        this._chart.update();
       }
     }
   }
@@ -150,7 +147,6 @@ export class WarpViewAnnotation {
           this._chart.options.scales.xAxes[0].time.max = newValue;
         }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
-        this._chart.update();
       }
     }
   }
@@ -216,11 +212,12 @@ export class WarpViewAnnotation {
           me.tooltip.classList.remove('right', 'left');
           if (tooltipModel.body) {
             me.LOG.debug(['tooltip'], tooltipModel.title[0]);
-            me.date.innerHTML = moment(tooltipModel.title[0]).utc().toISOString() || '';
-            const label = tooltipModel.body[0].lines[0].split('}:');
+            me.date.innerHTML = me._options.timeMode === 'timestamp'
+              ? tooltipModel.title[0]
+              : moment(tooltipModel.title[0]).utc().toISOString() || '';
             me.tooltip.innerHTML = `<div class="tooltip-body">
-  <span>${GTSLib.formatLabel(label[0] + '}')}: </span>
-  <span class="value">${label[1]}</span>
+  <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
+  <span class="value">${tooltipModel.body[0].lines[0].value}</span>
 </div>`;
           }
           if (tooltipModel.caretX > layout.width / 2) {
@@ -232,14 +229,14 @@ export class WarpViewAnnotation {
           return;
         },
         callbacks: {
-          title: (tooltipItems) => {
-            return tooltipItems[0].xLabel || '';
+          title: (tooltipItems, data) => {
+            return data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x;
           },
           label: (tooltipItem, data) => {
-            return `${data.datasets[tooltipItem.datasetIndex].label}: ${
-              data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
-                .val
-              }`;
+            return {
+              gts: data.datasets[tooltipItem.datasetIndex].label,
+              value: data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].val
+            }
           }
         }
       },
@@ -320,13 +317,15 @@ export class WarpViewAnnotation {
       };
       chartOption.scales.xAxes[0].type = 'time';
     }
-    this.LOG.debug(['drawChart', 'about to render'], [chartOption, gts]);
+    this.LOG.debug(['drawChart', 'about to render'], this._options, chartOption, gts);
     if (this._chart) {
       this._chart.destroy();
     }
     this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: chartOption});
     this.onResize();
-    this._chart.update();
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
     // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
     // Object.keys(this._mapIndex).forEach(key => {
     //   this.LOG.debug(['drawChart', 'hide'], [key]);
@@ -400,14 +399,11 @@ export class WarpViewAnnotation {
         ? <button class={'expander'} onClick={() => this.toggle()} title="collapse/expand">+/-</button>
         : ''
       }
-      <div
-        class="chart-container"
-        style={{
-          position: "relative",
-          width: this.width,
-          height: this._height
-        }}
-      >
+      <div class="chart-container" style={{
+        position: "relative",
+        width: this.width,
+        height: this._height
+      }}>
         <canvas ref={el => this.canvas = el} width={this.width} height={this._height}/>
       </div>
       <div class="tooltip" ref={el => this.tooltip = el}/>

@@ -28,10 +28,10 @@ export const config: Config = {
     { src: 'tests-Plot-2Mpoints.html' },
     { src: 'tests-Plot-200kpoints.html' }
   ],
+  enableCache: true,
   devServer: {
     openBrowser: false
   },
-  enableCache: false,
   outputTargets:[
     { type: 'dist' },
     {
