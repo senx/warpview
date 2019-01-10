@@ -53,7 +53,7 @@ export class WarpViewGtsTree {
   private onOptions(newValue: Param, oldValue: Param) {
     if (oldValue !== newValue) {
       this.LOG.debug(['options'], newValue);
-      this._isFolded = !!this.options.foldGTSTree;
+     // this._isFolded = !!this.options.foldGTSTree;
       this.doRender();
     }
   }
@@ -95,8 +95,9 @@ export class WarpViewGtsTree {
       return;
     }
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
-    this.LOG.debug(['doRender', 'gtsList'], [this.gtsList, this._options.foldGTSTree, this._isFolded]);
-    if (this._options.foldGTSTree && !this._isFolded) {
+    this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this._isFolded);
+    if (!!this._options.foldGTSTree && !this._isFolded) {
+      this.LOG.debug(['doRender'], 'About to fold');
       this.foldAll();
     }
 
@@ -104,10 +105,12 @@ export class WarpViewGtsTree {
 
   private foldAll() {
     if (!this.root) {
+      this.LOG.debug(['doRender'], 'no root');
       window.setTimeout(() => {
         this.foldAll();
       }, 100)
     } else {
+      this.LOG.debug(['doRender'], 'Ok collapse');
       this.root.className = 'collapsed';
       this.hide = true;
       this._isFolded = true;
