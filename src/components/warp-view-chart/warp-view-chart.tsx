@@ -170,8 +170,23 @@ export class WarpViewChart {
 
   @Watch('options')
   private onOptions(newValue: Param) {
-    this.LOG.debug(['options'], newValue);
-    this.drawChart();
+    //here we have a problem. 
+    // - this function is sometimes called twice, and very often called with oldValue==newValue
+    // - changing the visibility of an annotation trigger this function too.
+    // so, we must compare the newValue keys with the current _options before launching a redraw.
+    let optionChanged = false;
+    Object.keys(newValue).forEach(opt => {
+      if (this._options.hasOwnProperty(opt)) {
+        optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
+      } else {
+        optionChanged = true; //new unknown option
+      }
+    });
+    this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
+    if (optionChanged) {
+      this.LOG.debug(['options'], newValue);
+      this.drawChart();
+    }
   }
 
   @Watch('type')
@@ -227,8 +242,8 @@ export class WarpViewChart {
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels.push('Date');
       colors = [];
-      this.maxTick = Number.MIN_SAFE_INTEGER;
-      this.minTick = Number.MAX_SAFE_INTEGER;
+      this.maxTick = Number.MIN_VALUE;
+      this.minTick = Number.MAX_VALUE;
       this.visibleGtsId = [];
 
       //build a non plotable list, then keep plotable ones
@@ -324,6 +339,7 @@ export class WarpViewChart {
     this.dygraphdataSets = [];
     //build the big matrix for dygraph from the data hashset.
     const divider = GTSLib.getDivider(this._options.timeUnit);
+    this.LOG.debug(['chart','divider','timeunit'],divider, this._options.timeUnit);
     Object.keys(this.dataHashset).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
@@ -537,6 +553,7 @@ export class WarpViewChart {
   private drawChart(reparseNewData: boolean = false, forceresize: boolean = false) {
     this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     let previousTimeMode = this._options.timeMode || ''; //detect a timemode change
+    let previousTimeUnit = this._options.timeUnit || ''; //detect a timeUnit change
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
@@ -544,7 +561,7 @@ export class WarpViewChart {
     if (reparseNewData) {
       this.gtsToData(dataList);
     } else {
-      if (previousTimeMode !== this._options.timeMode) {
+      if (previousTimeMode !== this._options.timeMode || previousTimeUnit !== this._options.timeUnit) {
         this.rebuildDygraphDataSets();
       }
     }
