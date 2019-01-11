@@ -23,6 +23,7 @@ import {Logger} from "../../utils/logger";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
 import {ColorLib} from "../../utils/color-lib";
+import deepEqual from "deep-equal";
 
 /**
  *
@@ -65,7 +66,7 @@ export class WarpViewDrillDown {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
@@ -73,7 +74,7 @@ export class WarpViewDrillDown {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }

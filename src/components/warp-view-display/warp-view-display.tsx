@@ -21,6 +21,7 @@ import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
 import {DataModel} from "../../model/dataModel";
 import {ChartLib} from "../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 /**
  * Display component
@@ -48,7 +49,7 @@ export class WarpViewDisplay {
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['onData'], newValue);
       this.drawChart();
     }
@@ -56,7 +57,7 @@ export class WarpViewDisplay {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
@@ -77,7 +78,8 @@ export class WarpViewDisplay {
       } catch (error) {
         // empty : it's a plain string
       }
-    }if(GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+    }
+    if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
       gts = gts[0];
     }
     if (gts instanceof DataModel || gts.hasOwnProperty('data')) {

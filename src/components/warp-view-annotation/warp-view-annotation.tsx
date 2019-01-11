@@ -25,6 +25,7 @@ import {ChartLib} from "../../utils/chart-lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
+import deepEqual from "deep-equal";
 
 /**
  * @prop --warp-view-chart-width: Fixed width if not responsive
@@ -83,7 +84,7 @@ export class WarpViewAnnotation {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
@@ -91,15 +92,14 @@ export class WarpViewAnnotation {
 
   @Watch("options")
   onOptions(newValue: Param, oldValue: Param) {
-    this.LOG.debug(['options'], newValue, oldValue);
-    if (this._chart) {
+    if (!deepEqual(newValue, oldValue) && this._chart) {
       this.drawChart();
     }
   }
 
   @Watch("hiddenData")
   hideData(newValue, oldValue) {
-    if (oldValue !== newValue && this._chart) {
+    if (!deepEqual(newValue, oldValue) && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
       const hiddenData = newValue;
       if (this._chart) {
@@ -232,8 +232,7 @@ export class WarpViewAnnotation {
         },
         callbacks: {
           title: (tooltipItems, data) => {
-            me.LOG.debug(['annotationtooltip','data.datasets'],data.datasets,data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x)
-            return { time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x };
+            return {time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x};
           },
           label: (tooltipItem, data) => {
             return {

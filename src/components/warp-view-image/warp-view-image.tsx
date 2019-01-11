@@ -15,12 +15,13 @@
  *
  */
 
-import { Component, Element, Listen, Prop, Watch } from "@stencil/core";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { GTSLib } from "../../utils/gts.lib";
-import { DataModel } from "../../model/dataModel";
-import { ChartLib } from "../../utils/chart-lib";
+import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
+import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {GTSLib} from "../../utils/gts.lib";
+import {DataModel} from "../../model/dataModel";
+import {ChartLib} from "../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 /**
  * Display component
@@ -35,8 +36,8 @@ export class WarpViewImage {
   @Prop() responsive: boolean = false;
   @Prop() data: DataModel | any[] | string;
   @Prop() options: Param = new Param();
-  @Prop({ mutable: true }) width = '';
-  @Prop({ mutable: true }) height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
   @Prop() debug = false;
 
   @Element() el: HTMLElement;
@@ -50,23 +51,23 @@ export class WarpViewImage {
   onResize() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(() => {
-      this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
+      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
       this.drawChart();
     }, 250);
   }
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'onData' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['onData'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'options' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
   }
@@ -76,55 +77,55 @@ export class WarpViewImage {
   }
 
   private drawChart() {
-    this.LOG.debug([ 'drawChart' ], [ this.options, this._options ]);
+    this.LOG.debug(['drawChart'], [this.options, this._options]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
     this.toDisplay = [];
-    if(!this.data) return;
+    if (!this.data) return;
     let gts: any = this.data;
-    if(typeof gts === 'string') {
+    if (typeof gts === 'string') {
       try {
         gts = JSON.parse(gts as string);
-      } catch(error) {
+      } catch (error) {
         // empty : it's a base64 string
       }
     }
-    if(gts instanceof DataModel || gts.hasOwnProperty('data')) {
-      if(gts.data && gts.data.length > 0 && GTSLib.isEmbeddedImage(gts.data[ 0 ])) {
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
+      if (gts.data && gts.data.length > 0 && GTSLib.isEmbeddedImage(gts.data[0])) {
         this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
-        this.toDisplay.push(gts.data[ 0 ]);
-      } else if(gts.data && GTSLib.isEmbeddedImage(gts.data)) {
+        this.toDisplay.push(gts.data[0]);
+      } else if (gts.data && GTSLib.isEmbeddedImage(gts.data)) {
         this.toDisplay.push(gts.data as string);
       }
     } else {
-      if(GTSLib.isArray(gts)) {
+      if (GTSLib.isArray(gts)) {
         (gts as string[]).forEach(d => {
-          if(GTSLib.isEmbeddedImage(d)) {
+          if (GTSLib.isEmbeddedImage(d)) {
             this.toDisplay.push(d)
           }
         })
       }
     }
-    this.LOG.debug([ 'drawChart' ], [ this.data, this.toDisplay ]);
+    this.LOG.debug(['drawChart'], [this.data, this.toDisplay]);
   }
 
   private getStyle() {
-    this.LOG.debug([ 'getStyle' ], this._options);
-    if(!this._options) {
+    this.LOG.debug(['getStyle'], this._options);
+    if (!this._options) {
       return {};
     } else {
-      const style: any = { 'background-color': this._options.bgColor || 'transparent' };
-      if(this._options.fontColor) {
+      const style: any = {'background-color': this._options.bgColor || 'transparent'};
+      if (this._options.fontColor) {
         style.color = this._options.fontColor;
       }
-      this.LOG.debug([ 'getStyle', 'style' ], style);
+      this.LOG.debug(['getStyle', 'style'], style);
       return style;
     }
   }
 
   componentDidLoad() {
-    this.LOG.debug([ 'componentDidLoad' ], this._options);
+    this.LOG.debug(['componentDidLoad'], this._options);
     this.drawChart()
   }
 

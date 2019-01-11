@@ -19,6 +19,7 @@ import {Component, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../../utils/gts.lib";
 import {Logger} from "../../../utils/logger";
 import {ChartLib} from "../../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: "warp-view-tree-view",
@@ -67,9 +68,11 @@ export class WarpViewTreeView {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[]) {
-    this.LOG.debug(['hiddenData'], newValue);
-    this.ref = !this.ref;
+  private onHideData(newValue: number[], oldValue: number[]) {
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['hiddenData'], newValue);
+      this.ref = !this.ref;
+    }
   }
 
   /**

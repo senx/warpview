@@ -16,14 +16,15 @@
  */
 
 import Chart from 'chart.js';
-import { Component, Element, Listen, Prop, Watch } from '@stencil/core';
-import { GTSLib } from '../../utils/gts.lib';
-import { Param } from "../../model/param";
-import { Logger } from "../../utils/logger";
-import { ChartLib } from "../../utils/chart-lib";
-import { ColorLib } from "../../utils/color-lib";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
+import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
+import {GTSLib} from '../../utils/gts.lib';
+import {Param} from "../../model/param";
+import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-bubble',
@@ -36,8 +37,8 @@ export class WarpViewBubble {
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
   @Prop() options: Param = new Param();
-  @Prop({ mutable: true }) width = '';
-  @Prop({ mutable: true }) height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
   @Prop() debug = false;
 
   @Element() el: HTMLElement;
@@ -53,11 +54,11 @@ export class WarpViewBubble {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
+        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
         this.drawChart();
       }, 250);
     }
@@ -65,16 +66,16 @@ export class WarpViewBubble {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'data' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'options' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
   }
@@ -84,16 +85,16 @@ export class WarpViewBubble {
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-    if(!this.data) return;
+    if (!this.data) return;
     let dataList: any[];
     let gts: any = this.data;
-    if(typeof gts === 'string') {
+    if (typeof gts === 'string') {
       gts = JSON.parse(gts as string);
     }
-    if(GTSLib.isArray(gts) && gts[ 0 ] && (gts[ 0 ] instanceof DataModel || gts[ 0 ].hasOwnProperty('data'))) {
-      gts = gts[ 0 ];
+    if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+      gts = gts[0];
     }
-    if(gts instanceof DataModel || gts.hasOwnProperty('data')) {
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
       dataList = gts.data as any[];
       this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
     } else {
@@ -118,7 +119,7 @@ export class WarpViewBubble {
         duration: 0,
       },
       scales: {
-        xAxes: [ {
+        xAxes: [{
           gridLines: {
             color: color,
             zeroLineColor: color,
@@ -126,7 +127,7 @@ export class WarpViewBubble {
           ticks: {
             fontColor: color
           }
-        } ],
+        }],
         yAxes: [
           {
             gridLines: {
@@ -148,8 +149,8 @@ export class WarpViewBubble {
 
     const dataSets = this.parseData(dataList);
 
-    this.LOG.debug([ 'drawChart' ], [ options, dataSets ]);
-    if(this._chart) {
+    this.LOG.debug(['drawChart'], [options, dataSets]);
+    if (this._chart) {
       this._chart.destroy();
     }
     this._chart = new Chart(ctx, {
@@ -168,18 +169,18 @@ export class WarpViewBubble {
   }
 
   private parseData(gts) {
-    if(!gts) return;
+    if (!gts) return;
     let datasets = [];
-    for(let i = 0; i < gts.length; i++) {
-      let label = Object.keys(gts[ i ])[ 0 ];
+    for (let i = 0; i < gts.length; i++) {
+      let label = Object.keys(gts[i])[0];
       let data = [];
-      let g = gts[ i ][ label ];
-      if(GTSLib.isArray(g)) {
+      let g = gts[i][label];
+      if (GTSLib.isArray(g)) {
         g.forEach(d => {
           data.push({
-              x: d[ 0 ],
-              y: d[ 1 ],
-              r: d[ 2 ],
+              x: d[0],
+              y: d[1],
+              r: d[2],
             }
           )
         });
@@ -193,11 +194,6 @@ export class WarpViewBubble {
       });
     }
     return datasets;
-  }
-
-
-  componentWillLoad() {
-    this.LOG = new Logger(WarpViewBubble, this.debug);
   }
 
   componentDidLoad() {

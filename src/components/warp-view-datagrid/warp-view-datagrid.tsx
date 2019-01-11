@@ -21,6 +21,7 @@ import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
 import {ChartLib} from "../../utils/chart-lib";
 import {GTSLib} from "../../utils/gts.lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-datagrid',
@@ -51,7 +52,7 @@ export class WarpViewDatagrid {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
@@ -59,7 +60,7 @@ export class WarpViewDatagrid {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
@@ -101,15 +102,15 @@ export class WarpViewDatagrid {
     this.LOG.debug(['parseData'], data);
 
     data.forEach((d, i) => {
-      let dataSet: { name: string, values: any[], headers: string[] } =   {
+      let dataSet: { name: string, values: any[], headers: string[] } = {
         name: '',
         values: [],
         headers: []
       };
       if (GTSLib.isGts(d)) {
         this.LOG.debug(['parseData', 'isGts'], d);
-        dataSet.name=  GTSLib.serializeGtsMetadata(d);
-        dataSet.values =d.v;
+        dataSet.name = GTSLib.serializeGtsMetadata(d);
+        dataSet.values = d.v;
       } else {
         this.LOG.debug(['parseData', 'is not a Gts'], d);
         dataSet.values = GTSLib.isArray(d) ? d : [d];

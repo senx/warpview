@@ -29,6 +29,7 @@ import {MapLib} from "../../utils/map-lib";
 import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-map',
@@ -107,7 +108,7 @@ export class WarpViewMap {
 
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
-    if (oldValue.length !== newValue.length) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['hiddenData'], newValue);
       this.drawMap();
     }
@@ -115,7 +116,7 @@ export class WarpViewMap {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawMap();
     }
@@ -123,7 +124,7 @@ export class WarpViewMap {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawMap();
     }
@@ -186,7 +187,7 @@ export class WarpViewMap {
     let i = 0;
     flattenGTS.forEach(item => {
       if (item.v) {
-        item.v.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
+        item.v.sort((a, b) => a[0] > b[0] ? 1 : -1);
         item.i = i;
         i++;
       }

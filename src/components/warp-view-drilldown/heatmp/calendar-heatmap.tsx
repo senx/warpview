@@ -25,6 +25,7 @@ import {event, select} from 'd3-selection';
 import {ColorLib} from "../../../utils/color-lib";
 import {Datum, Detail, Summary} from "../model/datum";
 import {GTSLib} from "../../../utils/gts.lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'calendar-heatmap',
@@ -73,7 +74,7 @@ export class CalendarHeatmap {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
