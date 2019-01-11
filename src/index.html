@@ -241,8 +241,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
-                                  gts-filter="anomaly"
-                                  chart-title="Plot">
+                                  gts-filter="anomaly" chart-title="Plot">
                     @training/dataset0
                     // warp.store.hbase.puts.committed is the number of datapoints committed to
                     // HBase since the restart of the Store daemon
@@ -298,8 +297,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="text"
-                                  chart-title="Text">
+                                  type="text" chart-title="Text">
                     { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
                   </warp-view-tile>
                 </div>
@@ -322,9 +320,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="bubble"
-                                  show-legend="false"
-                                  chart-title="Bubbles">
+                                  type="bubble" show-legend="false" chart-title="Bubbles">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH
                     false RESETS
@@ -346,8 +342,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  show-legend="false"
-                                  chart-title="Default">
+                                  show-legend="false" chart-title="Default">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
@@ -361,9 +356,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="step"
-                                  show-legend="false"
-                                  chart-title="Step">
+                                  type="step" show-legend="false" chart-title="Step">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
@@ -378,8 +371,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true"
-                                  type="annotation"
-                                  chart-title="Annotation">
+                                  type="annotation" chart-title="Annotation">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
@@ -394,8 +386,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true"
-                                  type="gts-tree"
-                                  chart-title="GTS Tree">
+                                  type="gts-tree" chart-title="GTS Tree">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                   </warp-view-tile>
@@ -407,9 +398,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="area"
-                                  show-legend="false"
-                                  chart-title="Area">
+                                  type="area" show-legend="false" chart-title="Area">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
@@ -424,9 +413,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="scatter"
-                                  show-legend="false"
-                                  chart-title="Scatter">
+                                  type="scatter" show-legend="false" chart-title="Scatter">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS

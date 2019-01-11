@@ -107,7 +107,7 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       this.initialResizeNeeded = false;
       if (this._chart) {
@@ -116,12 +116,15 @@ export class WarpViewChart {
         }
         clearTimeout(this.resizeTimer); //keep a timer to avoid too much refresh
         this.resizeTimer = setTimeout(() => {
-          this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
-          const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-          const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-          this._chart.resize(width, this.displayGraph() ? height : 30);
-          this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
-
+          if (this.parentWidth > 0) {
+            this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
+            const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+            const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+            this._chart.resize(width, this.displayGraph() ? height : 30);
+            this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
+          } else {
+            this.onResize();
+          }
         }, 150);
       }
     }

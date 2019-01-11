@@ -96,13 +96,17 @@ export class WarpViewMap {
 
   @Listen('window:resize')
   onResize() {
-    if (this.mapElement.parentElement.clientWidth !== this.parentWidth) {
-      this.parentWidth = this.mapElement.parentElement.clientWidth;
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
+      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.mapElement.parentElement.clientWidth);
-        this.drawMap();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawMap();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
@@ -194,6 +198,7 @@ export class WarpViewMap {
     });
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
     this.displayMap({gts: flattenGTS, params: params});
+    this.onResize();
   }
 
   private icon(color, marker = '') {

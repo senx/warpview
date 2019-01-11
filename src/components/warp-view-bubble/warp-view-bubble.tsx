@@ -47,35 +47,41 @@ export class WarpViewBubble {
     gridLineColor: '#8e8e8e'
   };
   private LOG: Logger;
-  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
+  private canvas: HTMLCanvasElement;
   private _chart: Chart;
   private resizeTimer;
   private parentWidth = -1;
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-        this.drawChart();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawChart();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+    this.LOG.debug(['onData'], newValue, oldValue);
     if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
+      this.LOG.debug(['onData'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
+    this.LOG.debug(['onOptions'], newValue, oldValue);
     if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['options'], newValue);
+      this.LOG.debug(['onOptions'], newValue);
       this.drawChart();
     }
   }
@@ -84,7 +90,6 @@ export class WarpViewBubble {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     if (!this.data) return;
     let dataList: any[];
     let gts: any = this.data;
@@ -153,7 +158,7 @@ export class WarpViewBubble {
     if (this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart(ctx, {
+    this._chart = new Chart(this.canvas, {
       type: 'bubble',
       tooltips: {
         mode: 'x',
@@ -196,6 +201,10 @@ export class WarpViewBubble {
     return datasets;
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewBubble, this.debug);
+  }
+
   componentDidLoad() {
     this.drawChart();
   }
@@ -203,7 +212,7 @@ export class WarpViewBubble {
   render() {
     return <div>
       <div class="chart-container">
-        <canvas id={this.uuid} width={this.width} height={this.height}/>
+        <canvas ref={(el) => this.canvas = el} width={this.width} height={this.height}/>
       </div>
     </div>;
   }

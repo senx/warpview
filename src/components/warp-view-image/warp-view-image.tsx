@@ -46,14 +46,22 @@ export class WarpViewImage {
   private _options: Param = new Param();
   private toDisplay: string[];
   private resizeTimer;
+  private parentWidth = -1;
 
   @Listen('window:resize')
   onResize() {
-    clearTimeout(this.resizeTimer);
-    this.resizeTimer = setTimeout(() => {
-      this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-      this.drawChart();
-    }, 250);
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
+      this.parentWidth = this.el.parentElement.clientWidth;
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawChart();
+        } else {
+          this.onResize();
+        }
+      }, 150);
+    }
   }
 
   @Watch('data')
