@@ -22,6 +22,7 @@ import {GTS} from "../../model/GTS";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: "warp-view-gts-tree",
@@ -39,23 +40,24 @@ export class WarpViewGtsTree {
   private gtsList: any[] = [];
   private _options: Param = new Param();
   private LOG: Logger;
-  private _isFolded : boolean = false;
   private root: HTMLSpanElement;
-  private initialized = false;
 
   @Watch("data")
   onData(newValue, oldValue) {
-    if (newValue !== oldValue) {
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['options'], newValue, oldValue);
       this.doRender();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
-      this.LOG.debug(['options'], newValue);
-      this._isFolded = !!this.options.foldGTSTree;
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['options'], newValue, oldValue);
       this.doRender();
+      if (!!this._options.foldGTSTree && !this.hide) {
+        this.foldAll();
+      }
     }
   }
 
@@ -64,81 +66,65 @@ export class WarpViewGtsTree {
     if (oldValue !== newValue) {
       this.LOG.debug(['gtsFilter'], newValue);
       this.doRender();
-      if (!!this._options.foldGTSTree && !this._isFolded) {
-        this.foldAll();
-      }
     }
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[]) {
-    this.LOG.debug(['hiddenData'], newValue);
-    this.doRender();
-  }
-
-  componentDidLoad() {
-    this.LOG = new Logger(WarpViewGtsTree, this.debug);
-    this.LOG.debug(['componentWillLoad', 'data'], this.data);
-    if (this.data) {
+  private onHideData(newValue: number[], oldValue: number[]) {
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['hiddenData'], newValue);
       this.doRender();
     }
   }
 
+  componentWillLoad() {
+    this.LOG = new Logger(WarpViewGtsTree, this.debug);
+  }
+
+  componentDidLoad() {
+    this.LOG.debug(['componentDidLoad', 'data'], this.data);
+    if (this.data) {
+      this.doRender();
+    }
+    if (this._options.foldGTSTree !== undefined && !!this._options.foldGTSTree && !this.hide) {
+      this.foldAll();
+    }
+  }
+
   private doRender() {
+    this.LOG.debug(['doRender', 'gtsList'], this.data);
     this._options = ChartLib.mergeDeep(this._options, this.options);
     if (!this.data) {
       return;
     }
-    this.LOG.debug(['doRender', 'gtsList'], this.data);
     let dataList = GTSLib.getData(this.data).data;
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);
     if (!dataList) {
       return;
     }
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
-    this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this._isFolded);
-    if(!this.initialized) {
-      if (this._options.foldGTSTree !== undefined && !!this._options.foldGTSTree && !this._isFolded) {
-        this.LOG.debug(['doRender'], 'About to fold');
-        this.foldAll();
-      }
-      this.initialized = true;
-    }
-
+    this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this.hide);
   }
 
   private foldAll() {
     if (!this.root) {
-      this.LOG.debug(['doRender'], 'no root');
       window.setTimeout(() => {
         this.foldAll();
       }, 100)
     } else {
-      this.LOG.debug(['doRender'], 'Ok collapse');
-      this.root.className = 'collapsed';
       this.hide = true;
-      this._isFolded = true;
     }
   }
 
-  toggleVisibility(event: UIEvent) {
-    let el = (event.currentTarget as HTMLElement).firstChild as HTMLElement;
-    if (el.className === 'expanded') {
-      this._isFolded = true;
-      el.className = 'collapsed';
-      this.hide = true;
-    } else {
-      el.className = 'expanded';
-      this._isFolded = false;
-      this.hide = false;
-    }
+  toggleVisibility() {
+    this.hide = !this.hide;
   }
 
   render() {
     return this.gtsList
       ? <div>
-        <div class="stack-level" onClick={(event: UIEvent) => this.toggleVisibility(event)}>
-          <span class="expanded" ref={el => this.root = el}/> Stack
+        <div class="stack-level" onClick={() => this.toggleVisibility()}>
+          <span class={{'expanded': !this.hide, 'collapsed': this.hide}} ref={el => this.root = el}/> Stack
         </div>
         <warp-view-tree-view gtsList={this.gtsList} branch={false} hidden={this.hide}
                              debug={this.debug}
