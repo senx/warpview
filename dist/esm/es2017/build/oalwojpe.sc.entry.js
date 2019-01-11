@@ -11147,7 +11147,7 @@ class WarpViewChart {
         }
     }
     onHideData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
+        if (newValue !== oldValue) {
             this.parentWidth = 0;
             this.LOG.debug(['hiddenData'], newValue);
             let previousVisibility = JSON.stringify(this.visibility);
@@ -11167,15 +11167,27 @@ class WarpViewChart {
         }
     }
     onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
+        if (newValue !== oldValue) {
             this.LOG.debug(['data'], newValue);
             this.drawChart(true);
             this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
         }
     }
     onOptions(newValue) {
-        this.LOG.debug(['options'], newValue);
-        this.drawChart();
+        let optionChanged = false;
+        Object.keys(newValue).forEach(opt => {
+            if (this._options.hasOwnProperty(opt)) {
+                optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
+            }
+            else {
+                optionChanged = true;
+            }
+        });
+        this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
+        if (optionChanged) {
+            this.LOG.debug(['options'], newValue);
+            this.drawChart(false, true);
+        }
     }
     onTypeChange(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -11217,8 +11229,8 @@ class WarpViewChart {
             this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
             labels.push('Date');
             colors = [];
-            this.maxTick = Number.MIN_SAFE_INTEGER;
-            this.minTick = Number.MAX_SAFE_INTEGER;
+            this.maxTick = Number.MIN_VALUE;
+            this.minTick = Number.MAX_VALUE;
             this.visibleGtsId = [];
             const nonPlottable = gtsList.filter(g => {
                 return (g.v && !GTSLib.isGtsToPlot(g));
@@ -11295,6 +11307,7 @@ class WarpViewChart {
     rebuildDygraphDataSets() {
         this.dygraphdataSets = [];
         const divider = GTSLib.getDivider(this._options.timeUnit);
+        this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
         Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
@@ -11478,6 +11491,7 @@ class WarpViewChart {
     drawChart(reparseNewData = false, forceresize = false) {
         this.LOG.debug(['drawChart', 'this.data'], [this.data]);
         let previousTimeMode = this._options.timeMode || '';
+        let previousTimeUnit = this._options.timeUnit || '';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let data = GTSLib.getData(this.data);
         let dataList = data.data;
@@ -11486,7 +11500,7 @@ class WarpViewChart {
             this.gtsToData(dataList);
         }
         else {
-            if (previousTimeMode !== this._options.timeMode) {
+            if (previousTimeMode !== this._options.timeMode || previousTimeUnit !== this._options.timeUnit) {
                 this.rebuildDygraphDataSets();
             }
         }
