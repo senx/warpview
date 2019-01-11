@@ -25,7 +25,6 @@ import {Param} from "../../model/param";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment";
-import deepEqual from "deep-equal";
 import Options = dygraphs.Options;
 
 /**
@@ -132,7 +131,7 @@ export class WarpViewChart {
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (!deepEqual(newValue, oldValue)) {
+    if (newValue !== oldValue) {
       this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
 
@@ -161,7 +160,7 @@ export class WarpViewChart {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
+    if (newValue !== oldValue) {
       this.LOG.debug(['data'], newValue);
       this.drawChart(true); //force reparse
       this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
@@ -185,7 +184,7 @@ export class WarpViewChart {
     this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
     if (optionChanged) {
       this.LOG.debug(['options'], newValue);
-      this.drawChart();
+      this.drawChart(false,true); //need to resize after.
     }
   }
 
