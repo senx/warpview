@@ -55,7 +55,7 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "@stencil/core": "~0.16.2-4",
+    "@stencil/core": "~0.16.2",
     "@stencil/sass": "^0.1.1",
     "@types/chartjs": "0.0.31",
     "@types/d3": "^5.0.1",
