@@ -169,11 +169,9 @@ export class WarpViewChart {
   }
 
   @Watch('options')
-  private onOptions(newValue: Param, oldValue: Param) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['options'], newValue);
-      this.drawChart();
-    }
+  private onOptions(newValue: Param) {
+    this.LOG.debug(['options'], newValue);
+    this.drawChart();
   }
 
   @Watch('type')

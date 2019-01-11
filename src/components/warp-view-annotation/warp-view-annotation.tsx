@@ -95,10 +95,9 @@ export class WarpViewAnnotation {
   }
 
   @Watch("options")
-  onOptions(newValue: Param, oldValue: Param) {
-    if (!deepEqual(newValue, oldValue) && this._chart) {
-      this.drawChart();
-    }
+  onOptions(newValue: Param) {
+    this.LOG.debug(['options'], newValue);
+    this.drawChart();
   }
 
   @Watch("hiddenData")

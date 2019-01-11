@@ -92,6 +92,7 @@
       --warp-view-switch-inset-checked-color: darkgreen;
       --warp-view-switch-handle-color: #8e8e8e;
       --warp-view-switch-handle-checked-color: lime;
+      --warp-view-pagination-bg-color: #000;
  /*     --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%); */
     }
 
@@ -428,9 +429,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="bar"
-                                  show-legend="false"
-                                  chart-title="Bar">
+                                  type="bar" show-legend="false" chart-title="Bar">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
                     false RESETS
@@ -446,9 +445,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="gauge"
-                                  show-legend="false"
-                                  chart-title="gauge">
+                                  type="gauge" show-legend="false" chart-title="gauge">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
                     <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
@@ -463,9 +460,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="pie"
-                                  show-legend="false"
-                                  chart-title="pie">
+                                  type="pie" show-legend="false" chart-title="pie">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
                     <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
@@ -480,9 +475,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="doughnut"
-                                  show-legend="false"
-                                  chart-title="doughnut">
+                                  type="doughnut" show-legend="false" chart-title="doughnut">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
                     <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
@@ -495,9 +488,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="polar"
-                                  show-legend="false"
-                                  chart-title="polar">
+                                  type="polar" show-legend="false" chart-title="polar">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
                     <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
@@ -510,9 +501,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C"
-                                  type="radar"
-                                  show-legend="false"
-                                  chart-title="Radar">
+                                  type="radar" show-legend="false" chart-title="Radar">
                     @training/dataset0
                     [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
                     'list' STORE
@@ -539,9 +528,7 @@
               <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                   <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true"
-                                  type="image"
-                                  show-legend="false"
-                                  chart-title="Image">
+                                  type="image" show-legend="false" chart-title="Image">
                     //draw tangents along the curve
                     300 200 '2D3' PGraphics
                     255 Pbackground
