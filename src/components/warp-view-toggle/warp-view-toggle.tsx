@@ -37,8 +37,8 @@ export class WarpViewToggle {
     this.state = this.checked;
   }
 
-  @Watch('checked') 
-  private onchecked(newValue:boolean, oldValue:boolean) {
+  @Watch('checked')
+  private onChecked(newValue: boolean) {
     this.state = newValue;
   }
 

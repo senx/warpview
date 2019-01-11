@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
@@ -24,6 +8,7 @@ import { DataModel } from "../../model/dataModel";
 import { MapLib } from "../../utils/map-lib";
 import { GTSLib } from "../../utils/gts.lib";
 import moment from "moment";
+import deepEqual from "deep-equal";
 export class WarpViewMap {
     constructor() {
         this.responsive = false;
@@ -57,29 +42,34 @@ export class WarpViewMap {
         this.parentWidth = -1;
     }
     onResize() {
-        if (this.mapElement.parentElement.clientWidth !== this.parentWidth) {
-            this.parentWidth = this.mapElement.parentElement.clientWidth;
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
+            this.parentWidth = this.el.parentElement.clientWidth;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.mapElement.parentElement.clientWidth);
-                this.drawMap();
-            }, 250);
+                if (this.el.parentElement.clientWidth > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    this.drawMap();
+                }
+                else {
+                    this.onResize();
+                }
+            }, 150);
         }
     }
     onHideData(newValue, oldValue) {
-        if (oldValue.length !== newValue.length) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['hiddenData'], newValue);
             this.drawMap();
         }
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['data'], newValue);
             this.drawMap();
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['options'], newValue);
             this.drawMap();
         }
@@ -109,7 +99,6 @@ export class WarpViewMap {
                 gts = JSON.parse(gts);
             }
             catch (error) {
-                // empty
             }
         }
         if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
@@ -144,6 +133,7 @@ export class WarpViewMap {
         });
         this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
         this.displayMap({ gts: flattenGTS, params: params });
+        this.onResize();
     }
     icon(color, marker = '') {
         let c = "+" + color.slice(1);
@@ -184,7 +174,6 @@ export class WarpViewMap {
             }
         });
         this.annotationsData.forEach(d => {
-            //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
             let plottedGts = this.updateGtsPath(d);
             if (plottedGts) {
                 this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
@@ -194,7 +183,6 @@ export class WarpViewMap {
         });
         this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
         this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
-        // Create the positions arrays
         this.positionData.forEach(d => {
             this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
         });
@@ -209,13 +197,10 @@ export class WarpViewMap {
             m.addTo(this._map);
         });
         if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0) {
-            // Fit map to curves
             let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData);
             window.setTimeout(() => {
                 this._options.startZoom = this._options.startZoom || 2;
-                // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
                 this._map.invalidateSize();
-                //   this.resize();
                 if (bounds.length > 1) {
                     this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1]), {
                         padding: [20, 20],
@@ -256,7 +241,6 @@ export class WarpViewMap {
             opacity: 0.7,
         }).addTo(this._map);
         let currentValue;
-        // Let's verify we have a path... No path, no marker
         gts.path.map(p => {
             let date;
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {

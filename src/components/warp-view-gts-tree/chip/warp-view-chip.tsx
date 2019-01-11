@@ -20,6 +20,7 @@ import {GTSLib} from "../../../utils/gts.lib";
 import {ColorLib} from "../../../utils/color-lib";
 import {GTS} from "../../../model/GTS";
 import {Logger} from "../../../utils/logger";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-chip',
@@ -56,15 +57,17 @@ export class WarpViewChip {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[]) {
-    this.LOG.debug(['hiddenData'], newValue);
-    this._node = {
-      ...this._node,
-      selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
-      label: GTSLib.serializeGtsMetadata(this._node.gts)
-    };
-    this.LOG.debug(['hiddenData'], this._node);
-    this.colorizeChip();
+  private onHideData(newValue: number[], oldValue: number[]) {
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['hiddenData'], newValue);
+      this._node = {
+        ...this._node,
+        selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
+        label: GTSLib.serializeGtsMetadata(this._node.gts)
+      };
+      this.LOG.debug(['hiddenData'], this._node);
+      this.colorizeChip();
+    }
   }
 
   @Listen('document:keyup')

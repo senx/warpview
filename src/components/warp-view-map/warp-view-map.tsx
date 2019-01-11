@@ -29,6 +29,7 @@ import {MapLib} from "../../utils/map-lib";
 import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-map',
@@ -95,19 +96,23 @@ export class WarpViewMap {
 
   @Listen('window:resize')
   onResize() {
-    if (this.mapElement.parentElement.clientWidth !== this.parentWidth) {
-      this.parentWidth = this.mapElement.parentElement.clientWidth;
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
+      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.mapElement.parentElement.clientWidth);
-        this.drawMap();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawMap();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
-    if (oldValue.length !== newValue.length) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['hiddenData'], newValue);
       this.drawMap();
     }
@@ -115,7 +120,7 @@ export class WarpViewMap {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawMap();
     }
@@ -123,7 +128,7 @@ export class WarpViewMap {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawMap();
     }
@@ -186,13 +191,14 @@ export class WarpViewMap {
     let i = 0;
     flattenGTS.forEach(item => {
       if (item.v) {
-        item.v.sort((a, b) => a[ 0 ] > b[ 0 ] ? 1 : -1);
+        item.v.sort((a, b) => a[0] > b[0] ? 1 : -1);
         item.i = i;
         i++;
       }
     });
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
     this.displayMap({gts: flattenGTS, params: params});
+    this.onResize();
   }
 
   private icon(color, marker = '') {

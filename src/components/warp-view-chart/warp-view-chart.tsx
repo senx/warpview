@@ -15,16 +15,17 @@
  *
  */
 
-import { Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch } from '@stencil/core';
-import { GTSLib } from '../../utils/gts.lib';
+import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch} from '@stencil/core';
+import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
-import { Logger } from "../../utils/logger";
-import { ChartLib } from "../../utils/chart-lib";
-import { ColorLib } from "../../utils/color-lib";
-import { Param } from "../../model/param";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
+import {Logger} from "../../utils/logger";
+import {ChartLib} from "../../utils/chart-lib";
+import {ColorLib} from "../../utils/color-lib";
+import {Param} from "../../model/param";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 import moment from "moment";
+import deepEqual from "deep-equal";
 import Options = dygraphs.Options;
 
 /**
@@ -106,7 +107,7 @@ export class WarpViewChart {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       this.initialResizeNeeded = false;
       if (this._chart) {
@@ -115,12 +116,15 @@ export class WarpViewChart {
         }
         clearTimeout(this.resizeTimer); //keep a timer to avoid too much refresh
         this.resizeTimer = setTimeout(() => {
-          this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
-          const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-          const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-          this._chart.resize(width, this.displayGraph() ? height : 30);
-          this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
-          
+          if (this.parentWidth > 0) {
+            this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
+            const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+            const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+            this._chart.resize(width, this.displayGraph() ? height : 30);
+            this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
+          } else {
+            this.onResize();
+          }
         }, 150);
       }
     }
@@ -128,7 +132,7 @@ export class WarpViewChart {
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
 
@@ -157,7 +161,7 @@ export class WarpViewChart {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart(true); //force reparse
       this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
@@ -166,36 +170,24 @@ export class WarpViewChart {
 
   @Watch('options')
   private onOptions(newValue: Param) {
-    //here we have a problem. 
-    // - this function is sometimes called twice, and very often called with oldValue==newValue
-    // - changing the visibility of an annotation trigger this function too.
-    // so, we must compare the newValue keys with the current _options before launching a redraw.
-    let optionChanged = false;
-    Object.keys(newValue).forEach(opt => {
-      if (this._options.hasOwnProperty(opt)) {
-        optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
-      } else {
-        optionChanged = true; //new unknown option
-      }
-    });
-    this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
-    if (optionChanged) {
-      this.LOG.debug(['options'], newValue);
-      this.LOG.debug(['optionsupdate', 'destroy'], 'redraw by option change');
+    this.LOG.debug(['options'], newValue);
+    this.drawChart();
+  }
+
+  @Watch('type')
+  private onTypeChange(newValue: string, oldValue: string) {
+    if (newValue !== oldValue) {
+      this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
       this.drawChart();
     }
   }
 
-  @Watch('type')
-  private onTypeChange() {
-    this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
-    this.drawChart();
-  }
-
   @Watch('unit')
-  private onUnitChange() {
-    this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
-    this.drawChart(true); //reparse all 
+  private onUnitChange(newValue: string, oldValue: string) {
+    if (newValue !== oldValue) {
+      this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
+      this.drawChart(true); //reparse all
+    }
   }
 
   @Method()
@@ -279,24 +271,28 @@ export class WarpViewChart {
         nonPlottable.forEach(g => {
           g.v.forEach(value => {
             const ts = value[0];
-            if (ts < this.minTick) { this.minTick = ts; }
-            if (ts > this.maxTick) { this.maxTick = ts; }
+            if (ts < this.minTick) {
+              this.minTick = ts;
+            }
+            if (ts > this.maxTick) {
+              this.maxTick = ts;
+            }
           })
         });
         //if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
         if (0 == gtsList.length) {
           if (!this.dataHashset[this.minTick]) {
-            this.dataHashset[this.minTick] = [ 0 ]
+            this.dataHashset[this.minTick] = [0]
           }
           if (!this.dataHashset[this.maxTick]) {
-            this.dataHashset[this.maxTick] = [ 0 ];
+            this.dataHashset[this.maxTick] = [0];
           }
           labels.push('emptyserie');
           let color = ColorLib.getColor(0);
           colors.push(color);
           this.visibility.push(false);
           this.visibleGtsId.push(-1);
-        } else { 
+        } else {
           //if there is some plottable data, just add some missing points to define min and max
           if (!this.dataHashset[this.minTick]) {
             this.dataHashset[this.minTick] = new Array(gtsList.length);
@@ -511,7 +507,7 @@ export class WarpViewChart {
 
   private drawCallback(dygraph, is_initial) { //also called after a resize, be carefull.
     this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
-    this._chart=dygraph; //usefull for the on resize, because into the callback, this._chart is still undefined.
+    this._chart = dygraph; //usefull for the on resize, because into the callback, this._chart is still undefined.
     if (dygraph.dateWindow_) {
       this.boundsDidChange.emit({
         bounds: {
@@ -519,9 +515,9 @@ export class WarpViewChart {
           max: dygraph.dateWindow_[1]
         }
       });
-      this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0],dygraph.dateWindow_[1]]);
+      this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0], dygraph.dateWindow_[1]]);
     } else {
-      let divider =  GTSLib.getDivider(this._options.timeUnit);
+      let divider = GTSLib.getDivider(this._options.timeUnit);
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         divider = 1;
       }
@@ -531,7 +527,7 @@ export class WarpViewChart {
           max: this.maxTick / divider
         }
       });
-      this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick,this.maxTick]);
+      this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
     }
     if (this.initialResizeNeeded) {
       this.onResize();

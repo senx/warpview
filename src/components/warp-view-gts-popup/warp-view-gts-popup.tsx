@@ -22,6 +22,7 @@ import {GTSLib} from "../../utils/gts.lib";
 import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
 import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-gts-popup',
@@ -46,12 +47,12 @@ export class WarpViewGtsPopup {
   private LOG: Logger;
 
   @Listen('warpViewModalOpen')
-  onWarpViewModalOpen(e: CustomEvent) {
+  onWarpViewModalOpen() {
     this.modalOpenned = true;
   }
 
   @Listen('warpViewModalClose')
-  onWarpViewModalClose(e: CustomEvent) {
+  onWarpViewModalClose() {
     this.modalOpenned = false;
   }
 
@@ -86,7 +87,7 @@ export class WarpViewGtsPopup {
         this.prepareData();
         break;
       case ' ':
-        if(this.modalOpenned) {
+        if (this.modalOpenned) {
           ev.preventDefault();
           this.warpViewSelectedGTS.emit({
             gts: this.displayed[this.current],
@@ -101,15 +102,17 @@ export class WarpViewGtsPopup {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[]) {
-    this.LOG.debug(['hiddenData'], newValue);
-    this.prepareData();
-    this.colorizeChips();
+  private onHideData(newValue: number[], oldValue: number[]) {
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['hiddenData'], newValue);
+      this.prepareData();
+      this.colorizeChips();
+    }
   }
 
   @Watch('gtsList')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.prepareData();
     }

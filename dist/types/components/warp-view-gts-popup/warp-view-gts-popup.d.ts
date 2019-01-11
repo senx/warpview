@@ -14,8 +14,8 @@ export declare class WarpViewGtsPopup {
     private modal;
     private modalOpenned;
     private LOG;
-    onWarpViewModalOpen(e: CustomEvent): void;
-    onWarpViewModalClose(e: CustomEvent): void;
+    onWarpViewModalOpen(): void;
+    onWarpViewModalClose(): void;
     onKeyDown(e: KeyboardEvent): boolean;
     onKeyUp(ev: KeyboardEvent): boolean;
     private onHideData;

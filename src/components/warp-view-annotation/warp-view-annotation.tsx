@@ -25,6 +25,7 @@ import {ChartLib} from "../../utils/chart-lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
+import deepEqual from "deep-equal";
 
 /**
  * @prop --warp-view-chart-width: Fixed width if not responsive
@@ -71,35 +72,37 @@ export class WarpViewAnnotation {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-        this.drawChart();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawChart();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
   }
 
   @Watch("options")
-  onOptions(newValue: Param, oldValue: Param) {
-    this.LOG.debug(['options'], newValue, oldValue);
-    if (this._chart) {
-      this.drawChart();
-    }
+  onOptions(newValue: Param) {
+    this.LOG.debug(['options'], newValue);
+    this.drawChart();
   }
 
   @Watch("hiddenData")
   hideData(newValue, oldValue) {
-    if (oldValue !== newValue && this._chart) {
+    if (!deepEqual(newValue, oldValue) && this._chart) {
       this.LOG.debug(['hiddenData'], newValue);
       const hiddenData = newValue;
       if (this._chart) {
@@ -123,9 +126,6 @@ export class WarpViewAnnotation {
         if (this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[0].ticks.min = newValue;
         } else {
-          if (newValue == 0 && !this.standalone) {
-            newValue = 1;
-          } //clunky hack for issue #22
           this._chart.options.scales.xAxes[0].time.min = newValue;
         }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
@@ -142,9 +142,6 @@ export class WarpViewAnnotation {
         if (this._options.timeMode === 'timestamp') {
           this._chart.options.scales.xAxes[0].ticks.max = newValue;
         } else {
-          if (newValue == 0 && !this.standalone) {
-            newValue = 1;
-          } //clunky hack for issue #22
           this._chart.options.scales.xAxes[0].time.max = newValue;
         }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
@@ -232,8 +229,7 @@ export class WarpViewAnnotation {
         },
         callbacks: {
           title: (tooltipItems, data) => {
-            me.LOG.debug(['annotationtooltip','data.datasets'],data.datasets,data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x)
-            return { time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x };
+            return {time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x};
           },
           label: (tooltipItem, data) => {
             return {
@@ -246,7 +242,7 @@ export class WarpViewAnnotation {
       scales: {
         xAxes: [
           {
-            display: this.standalone,
+            display: false,
             drawTicks: false,
             type: "linear",
             time: {},

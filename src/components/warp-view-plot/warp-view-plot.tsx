@@ -22,6 +22,7 @@ import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-plot',
@@ -85,7 +86,7 @@ export class WarpViewPlot {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawCharts(true);
     }
@@ -93,7 +94,7 @@ export class WarpViewPlot {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawCharts();
     }
@@ -250,7 +251,7 @@ export class WarpViewPlot {
       }
     }
 
-    this._options = {... options};
+    this._options = {...options};
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 

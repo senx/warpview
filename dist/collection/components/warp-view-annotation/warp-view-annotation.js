@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
@@ -21,10 +5,7 @@ import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment-timezone";
-/**
- * @prop --warp-view-chart-width: Fixed width if not responsive
- * @prop --warp-view-chart-height: Fixed height if not responsive
- */
+import deepEqual from "deep-equal";
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;
@@ -46,29 +27,32 @@ export class WarpViewAnnotation {
         this.expanded = false;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
             this.parentWidth = this.el.parentElement.clientWidth;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-                this.drawChart();
-            }, 250);
+                if (this.el.parentElement.clientWidth > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    this.drawChart();
+                }
+                else {
+                    this.onResize();
+                }
+            }, 150);
         }
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['data'], newValue);
             this.drawChart();
         }
     }
-    onOptions(newValue, oldValue) {
-        this.LOG.debug(['options'], newValue, oldValue);
-        if (this._chart) {
-            this.drawChart();
-        }
+    onOptions(newValue) {
+        this.LOG.debug(['options'], newValue);
+        this.drawChart();
     }
     hideData(newValue, oldValue) {
-        if (oldValue !== newValue && this._chart) {
+        if (!deepEqual(newValue, oldValue) && this._chart) {
             this.LOG.debug(['hiddenData'], newValue);
             const hiddenData = newValue;
             if (this._chart) {
@@ -91,13 +75,11 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].ticks.min = newValue;
                 }
                 else {
-                    if (newValue == 0 && !this.standalone) {
-                        newValue = 1;
-                    } //clunky hack for issue #22
                     this._chart.options.scales.xAxes[0].time.min = newValue;
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
             }
+            this._chart.update();
         }
     }
     maxBoundChange(newValue, oldValue) {
@@ -108,23 +90,18 @@ export class WarpViewAnnotation {
                     this._chart.options.scales.xAxes[0].ticks.max = newValue;
                 }
                 else {
-                    if (newValue == 0 && !this.standalone) {
-                        newValue = 1;
-                    } //clunky hack for issue #22
                     this._chart.options.scales.xAxes[0].time.max = newValue;
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
             }
+            this._chart.update();
         }
     }
-    /**
-     *
-     */
     drawChart() {
         if (!this.data) {
             return;
         }
-        moment.tz.setDefault("UTC"); //force X axis display in UTC
+        moment.tz.setDefault("UTC");
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
@@ -146,7 +123,7 @@ export class WarpViewAnnotation {
         const chartOption = {
             layout: {
                 padding: {
-                    right: 26 //fine tuning, depends on chart element
+                    right: 26
                 }
             },
             legend: { display: this.showLegend },
@@ -178,8 +155,8 @@ export class WarpViewAnnotation {
                     if (tooltipModel.body) {
                         me.LOG.debug(['tooltip'], tooltipModel.title[0]);
                         me.date.innerHTML = me._options.timeMode === 'timestamp'
-                            ? tooltipModel.title[0]
-                            : moment(tooltipModel.title[0]).utc().toISOString() || '';
+                            ? tooltipModel.title[0].time
+                            : moment(tooltipModel.title[0].time).utc().toISOString() || '';
                         me.tooltip.innerHTML = `<div class="tooltip-body">
   <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
   <span class="value">${tooltipModel.body[0].lines[0].value}</span>
@@ -196,7 +173,7 @@ export class WarpViewAnnotation {
                 },
                 callbacks: {
                     title: (tooltipItems, data) => {
-                        return data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x;
+                        return { time: data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].x };
                     },
                     label: (tooltipItem, data) => {
                         return {
@@ -209,7 +186,7 @@ export class WarpViewAnnotation {
             scales: {
                 xAxes: [
                     {
-                        display: this.standalone,
+                        display: false,
                         drawTicks: false,
                         type: "linear",
                         time: {},
@@ -229,7 +206,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: (scaleInstance) => {
-                            scaleInstance.width = 100; // sets the width to 100px
+                            scaleInstance.width = 100;
                         },
                         gridLines: {
                             color: color,
@@ -264,8 +241,8 @@ export class WarpViewAnnotation {
             };
         }
         else {
-            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
-            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
+            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin;
+            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax;
             chartOption.scales.xAxes[0].time = {
                 min: tmin,
                 max: tmax,
@@ -292,17 +269,7 @@ export class WarpViewAnnotation {
         setTimeout(() => {
             this._chart.update();
         }, 250);
-        // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
-        // Object.keys(this._mapIndex).forEach(key => {
-        //   this.LOG.debug(['drawChart', 'hide'], [key]);
-        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
-        // });
     }
-    /**
-     *
-     * @param gts
-     * @returns {any[]}
-     */
     parseData(gts) {
         this.LOG.debug(['parseData'], gts);
         let dataList = GTSLib.getData(gts).data;

@@ -1,27 +1,9 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { Logger } from "../../utils/logger";
 import { Param } from "../../model/param";
 import { GTSLib } from "../../utils/gts.lib";
 import { DataModel } from "../../model/dataModel";
 import { ChartLib } from "../../utils/chart-lib";
-/**
- * Display component
- */
+import deepEqual from "deep-equal";
 export class WarpViewDisplay {
     constructor() {
         this.unit = '';
@@ -34,13 +16,13 @@ export class WarpViewDisplay {
         this._options = new Param();
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['onData'], newValue);
             this.drawChart();
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['options'], newValue);
             this.drawChart();
         }
@@ -59,7 +41,6 @@ export class WarpViewDisplay {
                 gts = JSON.parse(gts);
             }
             catch (error) {
-                // empty : it's a plain string
             }
         }
         if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {

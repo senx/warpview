@@ -16,15 +16,16 @@
  */
 
 import Chart from "chart.js";
-import { Component, Element, Listen, Prop, Watch } from "@stencil/core";
-import { GTSLib } from "../../utils/gts.lib";
-import { ChartLib } from "../../utils/chart-lib";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { ColorLib } from "../../utils/color-lib";
-import { DataModel } from "../../model/dataModel";
-import { GTS } from "../../model/GTS";
+import {Component, Element, Listen, Prop, Watch} from "@stencil/core";
+import {GTSLib} from "../../utils/gts.lib";
+import {ChartLib} from "../../utils/chart-lib";
+import {Logger} from "../../utils/logger";
+import {Param} from "../../model/param";
+import {ColorLib} from "../../utils/color-lib";
+import {DataModel} from "../../model/dataModel";
+import {GTS} from "../../model/GTS";
 import moment from "moment";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: "warp-view-bar",
@@ -37,8 +38,8 @@ export class WarpViewBar {
   @Prop() showLegend: boolean = true;
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
   @Prop() options: Param = new Param();
-  @Prop({ mutable: true }) width = '';
-  @Prop({ mutable: true }) height = '';
+  @Prop({mutable: true}) width = '';
+  @Prop({mutable: true}) height = '';
   @Prop() debug = false;
 
   @Element() el: HTMLElement;
@@ -55,28 +56,32 @@ export class WarpViewBar {
 
   @Listen('window:resize')
   onResize() {
-    if(this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug([ 'onResize' ], this.el.parentElement.clientWidth);
-        this.drawChart();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawChart();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'data' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if(oldValue !== newValue) {
-      this.LOG.debug([ 'options' ], newValue);
+    if (!deepEqual(newValue, oldValue)) {
+      this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
   }
@@ -85,7 +90,7 @@ export class WarpViewBar {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.gtsToData(this.data);
-    if(!gts) {
+    if (!gts) {
       return;
     }
     const color = this._options.gridLineColor;
@@ -101,7 +106,7 @@ export class WarpViewBar {
         position: 'nearest'
       },
       scales: {
-        xAxes: [ {
+        xAxes: [{
           type: "time",
           gridLines: {
             color: color,
@@ -110,7 +115,7 @@ export class WarpViewBar {
           ticks: {
             fontColor: color
           }
-        } ],
+        }],
         yAxes: [
           {
             gridLines: {
@@ -129,14 +134,14 @@ export class WarpViewBar {
       },
       responsive: this.responsive
     };
-    if(this._options.timeMode === 'timestamp') {
-      graphOpts.scales.xAxes[ 0 ].time = undefined;
-      graphOpts.scales.xAxes[ 0 ].type = 'linear';
-      graphOpts.scales.xAxes[ 0 ].ticks = {
+    if (this._options.timeMode === 'timestamp') {
+      graphOpts.scales.xAxes[0].time = undefined;
+      graphOpts.scales.xAxes[0].type = 'linear';
+      graphOpts.scales.xAxes[0].ticks = {
         fontColor: color,
       };
     } else {
-      graphOpts.scales.xAxes[ 0 ].time = {
+      graphOpts.scales.xAxes[0].time = {
         displayFormats: {
           millisecond: 'HH:mm:ss.SSS',
           second: 'HH:mm:ss',
@@ -144,12 +149,12 @@ export class WarpViewBar {
           hour: 'HH'
         }
       };
-      graphOpts.scales.xAxes[ 0 ].ticks = {
+      graphOpts.scales.xAxes[0].ticks = {
         fontColor: color
       };
-      graphOpts.scales.xAxes[ 0 ].type = 'time';
+      graphOpts.scales.xAxes[0].type = 'time';
     }
-    if(this._chart) {
+    if (this._chart) {
       this._chart.destroy();
     }
     this._chart = new Chart(ctx, {
@@ -167,55 +172,55 @@ export class WarpViewBar {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-    if(!this.data) return;
+    if (!this.data) return;
     this.buildGraph();
   }
 
   private gtsToData(gts) {
-    this.LOG.debug([ 'gtsToData' ], gts);
+    this.LOG.debug(['gtsToData'], gts);
     let datasets = [];
     let ticks = [];
     let pos = 0;
     let dataList: any[];
-    if(typeof gts === 'string') {
+    if (typeof gts === 'string') {
       gts = JSON.parse(this.data as string);
     }
-    if(GTSLib.isArray(gts) && gts[ 0 ] && (gts[ 0 ] instanceof DataModel || gts[ 0 ].hasOwnProperty('data'))) {
-      gts = gts[ 0 ];
+    if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
+      gts = gts[0];
     }
-    if(gts instanceof DataModel || gts.hasOwnProperty('data')) {
+    if (gts instanceof DataModel || gts.hasOwnProperty('data')) {
       dataList = gts.data as any[];
       this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {});
     } else {
       dataList = gts;
     }
-    if(!dataList || dataList.length === 0) {
+    if (!dataList || dataList.length === 0) {
       return;
     } else {
       dataList = GTSLib.flatDeep(dataList);
       let i = 0;
       let timestampdivider: number = 1000; //default for µs timeunit
-      if(this._options.timeUnit && this._options.timeUnit === 'ms') {
+      if (this._options.timeUnit && this._options.timeUnit === 'ms') {
         timestampdivider = 1;
       }
-      if(this._options.timeUnit && this._options.timeUnit === 'ns') {
+      if (this._options.timeUnit && this._options.timeUnit === 'ns') {
         timestampdivider = 1000000;
       }
       dataList.forEach(g => {
         let data = [];
-        if(g.v) {
+        if (g.v) {
           GTSLib.gtsSort(g);
           g.v.forEach(d => {
-            if(this._options.timeMode === 'timestamp') {
-              ticks.push(d[ 0 ]);
+            if (this._options.timeMode === 'timestamp') {
+              ticks.push(d[0]);
             } else {
-              ticks.push(moment.utc(d[ 0 ] / timestampdivider));
+              ticks.push(moment.utc(d[0] / timestampdivider));
             }
-            data.push(d[ d.length - 1 ]);
+            data.push(d[d.length - 1]);
           });
           let color = ColorLib.getColor(pos);
           let label = GTSLib.serializeGtsMetadata(g);
-          this._mapIndex[ label ] = pos;
+          this._mapIndex[label] = pos;
           let ds = {
             label: label,
             data: data,
@@ -229,8 +234,8 @@ export class WarpViewBar {
         }
       });
     }
-    this.LOG.debug([ 'gtsToData', 'datasets' ], datasets);
-    return { datasets: datasets, ticks: GTSLib.unique(ticks).sort((a, b) => a > b ? 1 : a === b ? 0 : -1) };
+    this.LOG.debug(['gtsToData', 'datasets'], datasets);
+    return {datasets: datasets, ticks: GTSLib.unique(ticks).sort((a, b) => a > b ? 1 : a === b ? 0 : -1)};
   }
 
   componentWillLoad() {

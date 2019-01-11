@@ -17,6 +17,7 @@ export declare class WarpViewImage {
     private _options;
     private toDisplay;
     private resizeTimer;
+    private parentWidth;
     onResize(): void;
     private onData;
     private onOptions;

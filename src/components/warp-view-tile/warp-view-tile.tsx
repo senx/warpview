@@ -21,6 +21,7 @@ import {DataModel} from "../../model/dataModel";
 import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
+import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-tile',
@@ -41,6 +42,7 @@ export class WarpViewTile {
   @Prop() debug = false;
 
   @Element() wsElement: HTMLElement;
+
   private LOG: Logger;
   private warpScript: string = '';
   private execUrl = '';
@@ -64,8 +66,7 @@ export class WarpViewTile {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    this.LOG.debug(['options'], newValue);
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options', 'changed'], newValue);
       this.parseGTS();
     }

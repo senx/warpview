@@ -23,6 +23,7 @@ import {Logger} from "../../utils/logger";
 import {GTSLib} from "../../utils/gts.lib";
 import moment from "moment";
 import {ColorLib} from "../../utils/color-lib";
+import deepEqual from "deep-equal";
 
 /**
  *
@@ -53,19 +54,23 @@ export class WarpViewDrillDown {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
       this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-        this.drawChart();
-      }, 250);
+        if (this.el.parentElement.clientWidth > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+          this.drawChart();
+        } else {
+          this.onResize();
+        }
+      }, 150);
     }
   }
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['data'], newValue);
       this.drawChart();
     }
@@ -73,7 +78,7 @@ export class WarpViewDrillDown {
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (oldValue !== newValue) {
+    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['options'], newValue);
       this.drawChart();
     }
