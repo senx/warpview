@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { Logger } from "../../utils/logger";
 import Chart from 'chart.js';
 import { Param } from "../../model/param";
@@ -21,6 +5,7 @@ import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
 import { GTSLib } from "../../utils/gts.lib";
+import deepEqual from "deep-equal";
 export class WarpViewPie {
     constructor() {
         this.showLegend = true;
@@ -36,32 +21,32 @@ export class WarpViewPie {
         this.parentWidth = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
             this.parentWidth = this.el.parentElement.clientWidth;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-                this.drawChart();
-            }, 250);
+                if (this.el.parentElement.clientWidth > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    this.drawChart();
+                }
+                else {
+                    this.onResize();
+                }
+            }, 150);
         }
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['data'], newValue);
             this.drawChart();
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['options'], newValue);
             this.drawChart();
         }
     }
-    /**
-     *
-     * @param data
-     * @returns {{labels: any[]; data: any[]}}
-     */
     parseData(data) {
         this.LOG.debug(['parseData'], data);
         if (!data) {

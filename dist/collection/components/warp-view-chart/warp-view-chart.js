@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { GTSLib } from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import { Logger } from "../../utils/logger";
@@ -21,14 +5,7 @@ import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { Param } from "../../model/param";
 import moment from "moment";
-/**
- * options :
- *  gridLineColor: 'red | #fff'
- *  timeMode.timeMode: 'timestamp | date'
- *  showRangeSelector: boolean
- *  type : 'line | area | step'
- *
- */
+import deepEqual from "deep-equal";
 export class WarpViewChart {
     constructor() {
         this.options = new Param();
@@ -47,60 +24,41 @@ export class WarpViewChart {
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
         this.parentWidth = -1;
-        /**
-         * usefull for default zoom
-         */
         this.maxTick = 0;
-        /**
-         * usefull for default zoom
-         */
         this.minTick = 0;
-        /**
-         * table of gts id displayed in dygraph. array order is the one of dygraph series
-         */
         this.visibleGtsId = [];
-        /**
-         * key = timestamp. values = table of available points, filled by null.
-         */
         this.dataHashset = {};
-        /**
-         * the big matrix that dygraph expects
-         */
         this.dygraphdataSets = [];
-        /**
-         * the labels of each series. array order is the one of dygraph series
-         */
         this.dygraphLabels = [];
-        /**
-         * the colors of each series. array order is the one of dygraph series
-         */
         this.dygraphColors = [];
-        /**
-         * put this to true before creating a new dygraph to force a resize in the drawCallback
-         */
         this.initialResizeNeeded = false;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded) {
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded || this.parentWidth <= 0) {
             this.parentWidth = this.el.parentElement.clientWidth;
+            this.initialResizeNeeded = false;
             if (this._chart) {
                 if (!this.initialHeight) {
                     this.initialHeight = this.el.parentElement.clientHeight;
                 }
                 clearTimeout(this.resizeTimer);
                 this.resizeTimer = setTimeout(() => {
-                    this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
-                    const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-                    const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-                    this._chart.resize(width, this.displayGraph() ? height : 30);
-                    this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
-                    this.initialResizeNeeded = false;
-                }, 50);
+                    if (this.parentWidth > 0) {
+                        this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
+                        const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
+                        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
+                        this._chart.resize(width, this.displayGraph() ? height : 30);
+                        this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
+                    }
+                    else {
+                        this.onResize();
+                    }
+                }, 150);
             }
         }
     }
     onHideData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.parentWidth = 0;
             this.LOG.debug(['hiddenData'], newValue);
             let previousVisibility = JSON.stringify(this.visibility);
@@ -108,57 +66,39 @@ export class WarpViewChart {
             if (!!this._chart) {
                 this.visibility = [];
                 this.visibleGtsId.forEach(id => {
-                    //sadly, this does not work.
-                    //this._chart.setVisibility(i,newValue.indexOf(id) < 0);
-                    //best workaround : rebuild the dygraph with same dataset and different visibility options. 
-                    //TODO: try each next version of dygraph.
-                    //id -1 is a special empty serie only used when there only annotations
                     this.visibility.push(newValue.indexOf(id) < 0 && (id != -1));
                 });
                 this.LOG.debug(['hiddendygraphfullv'], this.visibility);
             }
             let newVisibility = JSON.stringify(this.visibility);
             if (previousVisibility !== newVisibility) {
-                this.drawChart(false, previouslyAllHidden && this.displayGraph()); //the workaround...
+                this.drawChart(false, previouslyAllHidden && this.displayGraph());
                 this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
             }
         }
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['data'], newValue);
-            this.drawChart(true); //force reparse
+            this.drawChart(true);
             this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
         }
     }
     onOptions(newValue) {
-        //here we have a problem. 
-        // - this function is sometimes called twice, and very often called with oldValue==newValue
-        // - changing the visibility of an annotation trigger this function too.
-        // so, we must compare the newValue keys with the current _options before launching a redraw.
-        let optionChanged = false;
-        Object.keys(newValue).forEach(opt => {
-            if (this._options.hasOwnProperty(opt)) {
-                optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
-            }
-            else {
-                optionChanged = true; //new unknown option
-            }
-        });
-        this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
-        if (optionChanged) {
-            this.LOG.debug(['options'], newValue);
-            this.LOG.debug(['optionsupdate', 'destroy'], 'redraw by option change');
+        this.LOG.debug(['options'], newValue);
+        this.drawChart();
+    }
+    onTypeChange(newValue, oldValue) {
+        if (newValue !== oldValue) {
+            this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
             this.drawChart();
         }
     }
-    onTypeChange() {
-        this.LOG.debug(['typeupdate', 'destroy'], 'redraw by type change');
-        this.drawChart();
-    }
-    onUnitChange() {
-        this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
-        this.drawChart(true); //reparse all 
+    onUnitChange(newValue, oldValue) {
+        if (newValue !== oldValue) {
+            this.LOG.debug(['unitupdate', 'destroy'], 'redraw by unit change (full redraw)');
+            this.drawChart(true);
+        }
     }
     async getTimeClip() {
         return new Promise(resolve => {
@@ -173,17 +113,10 @@ export class WarpViewChart {
             legend.style.display = 'none';
         }, 1000);
     }
-    /**
-     * this function build this.dataHashset (high computing cost), then it build this.dygraphdataSets  (high computing cost too)
-     *
-     * this function also refresh this.dygraphColors  this.dygraphLabels
-     *
-     * @param gtsList a flat array of gts
-     */
     gtsToData(gtsList) {
         this.LOG.debug(['gtsToData'], gtsList);
         this.visibility = [];
-        this.dataHashset = {}; //hashset, no order guaranteed
+        this.dataHashset = {};
         let labels = [];
         let colors = [];
         if (!gtsList) {
@@ -198,17 +131,14 @@ export class WarpViewChart {
             this.maxTick = Number.MIN_SAFE_INTEGER;
             this.minTick = Number.MAX_SAFE_INTEGER;
             this.visibleGtsId = [];
-            //build a non plotable list, then keep plotable ones
             const nonPlottable = gtsList.filter(g => {
                 return (g.v && !GTSLib.isGtsToPlot(g));
             });
             gtsList = gtsList.filter(g => {
                 return (g.v && GTSLib.isGtsToPlot(g));
             });
-            //first, add plotable data to the data hashset
             gtsList.forEach((g, i) => {
                 let label = GTSLib.serializeGtsMetadata(g);
-                //GTSLib.gtsSort(g); // no need because data{} is not sorted, will sort later the full dataset
                 g.v.forEach(value => {
                     const ts = value[0];
                     if (!this.dataHashset[ts]) {
@@ -229,10 +159,8 @@ export class WarpViewChart {
                 this.visibility.push(true);
                 this.visibleGtsId.push(g.id);
             });
-            //non plotable data are important to fix the bounds of the graphics (with null values)
-            //just add min and max tick to the hashset
             this.LOG.debug(['gtsToData', 'nonPlottable'], nonPlottable);
-            if (nonPlottable.length > 0) { //&& gtsList.length === 0) {
+            if (nonPlottable.length > 0) {
                 nonPlottable.forEach(g => {
                     g.v.forEach(value => {
                         const ts = value[0];
@@ -244,7 +172,6 @@ export class WarpViewChart {
                         }
                     });
                 });
-                //if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
                 if (0 == gtsList.length) {
                     if (!this.dataHashset[this.minTick]) {
                         this.dataHashset[this.minTick] = [0];
@@ -259,7 +186,6 @@ export class WarpViewChart {
                     this.visibleGtsId.push(-1);
                 }
                 else {
-                    //if there is some plottable data, just add some missing points to define min and max
                     if (!this.dataHashset[this.minTick]) {
                         this.dataHashset[this.minTick] = new Array(gtsList.length);
                         this.dataHashset[this.minTick].fill(null);
@@ -277,14 +203,8 @@ export class WarpViewChart {
         this.dygraphColors = colors;
         this.dygraphLabels = labels;
     }
-    /**
-     * This function build this.dygraphdataSets from this.dataHashset
-     *
-     * It could be called independently from gtsToData, when only unit or timeMode change.
-     */
     rebuildDygraphDataSets() {
         this.dygraphdataSets = [];
-        //build the big matrix for dygraph from the data hashset.
         const divider = GTSLib.getDivider(this._options.timeUnit);
         Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -295,7 +215,6 @@ export class WarpViewChart {
                 this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
             }
         });
-        //sort the big table. (needed, data is not a treeset or sortedset)
         this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
     }
     isStepped() {
@@ -311,7 +230,7 @@ export class WarpViewChart {
             return x.toString();
         }
         else {
-            res = x.toString(); //Math.round(x * 100000000000000) / 100000000000000).toString();
+            res = x.toString();
             e = parseInt(x.toString().split('+')[1]);
             if (e > 20) {
                 e -= 20;
@@ -322,11 +241,6 @@ export class WarpViewChart {
             return res;
         }
     }
-    /**
-     *
-     * @param {string} data
-     * @returns {string}
-     */
     static formatLabel(data) {
         const serializedGTS = data.split('{');
         let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
@@ -366,7 +280,6 @@ export class WarpViewChart {
     }
     legendFormatter(data) {
         if (data.x === null) {
-            // This happens when there's no selection and {legend: 'always'} is set.
             return '<br>' + data.series.map(function (series) {
                 if (!series.isVisible)
                     return;
@@ -402,8 +315,6 @@ export class WarpViewChart {
             return;
         this.LOG.debug(['scroll'], g);
         const normal = event.detail ? event.detail * -1 : event.wheelDelta / 40;
-        // For me the normalized value shows 0.075 for one click. If I took
-        // that verbatim, it would be a 7.5%.
         const percentage = normal / 50;
         if (!(event.offsetX && event.offsetY)) {
             event.offsetX = event.layerX - event.target.offsetLeft;
@@ -416,26 +327,15 @@ export class WarpViewChart {
         event.preventDefault();
     }
     static offsetToPercentage(g, offsetX, offsetY) {
-        // This is calculating the pixel offset of the leftmost date.
         const xOffset = g.toDomCoords(g.xAxisRange()[0], null)[0];
         const yar0 = g.yAxisRange(0);
-        // This is calculating the pixel of the higest value. (Top pixel)
         const yOffset = g.toDomCoords(null, yar0[1])[1];
-        // x y w and h are relative to the corner of the drawing area,
-        // so that the upper corner of the drawing area is (0, 0).
         const x = offsetX - xOffset;
         const y = offsetY - yOffset;
-        // This is computing the rightmost pixel, effectively defining the
-        // width.
         const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset;
-        // This is computing the lowest pixel, effectively defining the height.
         const h = g.toDomCoords(null, yar0[0])[1] - yOffset;
-        // Percentage from the left.
         const xPct = w === 0 ? 0 : (x / w);
-        // Percentage from the top.
         const yPct = h === 0 ? 0 : (y / h);
-        // The (1-) part below changes it from "% distance down from the top"
-        // to "% distance up from the bottom".
         return [xPct, (1 - yPct)];
     }
     static adjustAxis(axis, zoomInPercentage, bias) {
@@ -459,6 +359,7 @@ export class WarpViewChart {
     }
     drawCallback(dygraph, is_initial) {
         this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
+        this._chart = dygraph;
         if (dygraph.dateWindow_) {
             this.boundsDidChange.emit({
                 bounds: {
@@ -487,7 +388,7 @@ export class WarpViewChart {
     }
     drawChart(reparseNewData = false, forceresize = false) {
         this.LOG.debug(['drawChart', 'this.data'], [this.data]);
-        let previousTimeMode = this._options.timeMode || ''; //detect a timemode change
+        let previousTimeMode = this._options.timeMode || '';
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let data = GTSLib.getData(this.data);
         let dataList = data.data;
@@ -560,7 +461,7 @@ export class WarpViewChart {
                     return WarpViewChart.toFixed(x);
                 };
             }
-            this.initialResizeNeeded = reparseNewData || forceresize; //even on visibility change. setting this to reparseNewData is not a solution.
+            this.initialResizeNeeded = reparseNewData || forceresize;
             if (!!this._chart) {
                 this._chart.destroy();
                 this.LOG.debug(['drawChart', 'dygraphdestroyed'], 'dygraph destroyed to reborn with reparseNewData=', reparseNewData, 'and forceresize=', forceresize);
@@ -661,4 +562,4 @@ export class WarpViewChart {
     static get style() { return "/**style-placeholder:warp-view-chart:**/"; }
 }
 WarpViewChart.DEFAULT_WIDTH = 800;
-WarpViewChart.DEFAULT_HEIGHT = 600;
+WarpViewChart.DEFAULT_HEIGHT = 500;

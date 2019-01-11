@@ -12,16 +12,15 @@ export declare class WarpViewGtsTree {
     private gtsList;
     private _options;
     private LOG;
-    private _isFolded;
     private root;
-    private initialized;
     onData(newValue: any, oldValue: any): void;
     private onOptions;
     private onGtsFilter;
     private onHideData;
+    componentWillLoad(): void;
     componentDidLoad(): void;
     private doRender;
     private foldAll;
-    toggleVisibility(event: UIEvent): void;
+    toggleVisibility(): void;
     render(): JSX.Element;
 }

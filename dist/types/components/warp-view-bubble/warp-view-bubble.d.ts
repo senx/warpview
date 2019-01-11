@@ -14,7 +14,7 @@ export declare class WarpViewBubble {
     el: HTMLElement;
     private _options;
     private LOG;
-    private uuid;
+    private canvas;
     private _chart;
     private resizeTimer;
     private parentWidth;

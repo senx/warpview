@@ -1706,7 +1706,7 @@
           "type": "Boolean",
           "attr": "checked",
           "watch": [
-            "onchecked"
+            "onChecked"
           ]
         },
         {
@@ -1795,7 +1795,7 @@
   "collections": [],
   "compiler": {
     "name": "@stencil/core",
-    "version": "0.16.2-4",
+    "version": "0.16.2",
     "typescriptVersion": "3.2.2"
   },
   "bundles": []

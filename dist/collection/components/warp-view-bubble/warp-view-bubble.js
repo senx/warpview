@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { Param } from "../../model/param";
@@ -21,6 +5,7 @@ import { Logger } from "../../utils/logger";
 import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { DataModel } from "../../model/dataModel";
+import deepEqual from "deep-equal";
 export class WarpViewBubble {
     constructor() {
         this.unit = '';
@@ -33,28 +18,34 @@ export class WarpViewBubble {
         this._options = {
             gridLineColor: '#8e8e8e'
         };
-        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
             this.parentWidth = this.el.parentElement.clientWidth;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
-                this.drawChart();
-            }, 250);
+                if (this.el.parentElement.clientWidth > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                    this.drawChart();
+                }
+                else {
+                    this.onResize();
+                }
+            }, 150);
         }
     }
     onData(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['data'], newValue);
+        this.LOG.debug(['onData'], newValue, oldValue);
+        if (!deepEqual(newValue, oldValue)) {
+            this.LOG.debug(['onData'], newValue);
             this.drawChart();
         }
     }
     onOptions(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            this.LOG.debug(['options'], newValue);
+        this.LOG.debug(['onOptions'], newValue, oldValue);
+        if (!deepEqual(newValue, oldValue)) {
+            this.LOG.debug(['onOptions'], newValue);
             this.drawChart();
         }
     }
@@ -62,7 +53,6 @@ export class WarpViewBubble {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         if (!this.data)
             return;
         let dataList;
@@ -130,7 +120,7 @@ export class WarpViewBubble {
         if (this._chart) {
             this._chart.destroy();
         }
-        this._chart = new Chart(ctx, {
+        this._chart = new Chart(this.canvas, {
             type: 'bubble',
             tooltips: {
                 mode: 'x',
@@ -180,7 +170,7 @@ export class WarpViewBubble {
     render() {
         return h("div", null,
             h("div", { class: "chart-container" },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
+                h("canvas", { ref: (el) => this.canvas = el, width: this.width, height: this.height })));
     }
     static get is() { return "warp-view-bubble"; }
     static get encapsulation() { return "shadow"; }
