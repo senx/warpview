@@ -29,12 +29,12 @@ export class MapLib {
    * @param {number[]} hiddenData
    * @returns {any[]}
    */
-  static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[]) {
+  static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[],divider:number=1000) {
     let paths = [];
     data.gts.map((gts, i) => {
       if(GTSLib.isGtsToPlot(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
         let sl: any = {};
-        sl.path = GTSLib.gtsToPath(gts);
+        sl.path = GTSLib.gtsToPath(gts,divider);
         if(data.params && data.params[ i ] && data.params[ i ].key) {
           sl.key = data.params[ i ].key;
         } else {
@@ -57,7 +57,7 @@ export class MapLib {
    * @param {number[]} hiddenData
    * @returns {any[]}
    */
-  static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[]) {
+  static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[], divider:number=1000) {
     let annotations = [];
     data.gts.map((gts, i) => {
       if(GTSLib.isGtsToAnnotate(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
@@ -67,7 +67,7 @@ export class MapLib {
         if(!params) {
           params = {};
         }
-        annotation.path = GTSLib.gtsToPath(gts);
+        annotation.path = GTSLib.gtsToPath(gts,divider);
         MapLib.extractCommonParameters(annotation, params, i);
         if(params.render) {
           annotation.render = params.render;
