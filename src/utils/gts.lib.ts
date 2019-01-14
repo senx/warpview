@@ -280,7 +280,7 @@ export class GTSLib {
    * @param gts
    * @returns {any[]}
    */
-  static gtsToPath(gts) {
+  static gtsToPath(gts, divider:number=1000) {
     let path = [];
     // Sort values
    /* gts.v = gts.v.sort(function(a, b) {
@@ -296,12 +296,12 @@ export class GTSLib {
       }
       if(metric.length === 4) {
         // timestamp, lat, lon, value
-        path.push({ ts: Math.floor(metric[ 0 ] / 1000), lat: metric[ 1 ], lon: metric[ 2 ], val: metric[ 3 ] });
+        path.push({ ts: Math.floor(metric[ 0 ] / divider), lat: metric[ 1 ], lon: metric[ 2 ], val: metric[ 3 ] });
       }
       if(metric.length === 5) {
         // timestamp, lat, lon, elevation, value
         path.push({
-          ts: Math.floor(metric[ 0 ] / 1000),
+          ts: Math.floor(metric[ 0 ] / divider),
           lat: metric[ 1 ],
           lon: metric[ 2 ],
           elev: metric[ 3 ],

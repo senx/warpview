@@ -213,8 +213,9 @@ export class WarpViewMap {
 
   private displayMap(data: { gts: any[], params: any[] }) {
     this.LOG.debug(['drawMap'], this.data, this._options, this.hiddenData);
-    this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData);
-    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData);
+    let divider = GTSLib.getDivider(this._options.timeUnit);
+    this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData,divider);
+    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData,divider);
     this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData);
 
     if (!this.data) {
