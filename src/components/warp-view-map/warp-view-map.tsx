@@ -328,7 +328,7 @@ export class WarpViewMap {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         date = parseInt(p.ts);
       } else {
-        date = moment.utc(parseInt(p.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+        date = moment.utc(parseInt(p.ts)).toISOString();
       }
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
@@ -354,7 +354,7 @@ export class WarpViewMap {
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             date = parseInt(pathItem.ts);
           } else {
-            date = moment.utc(parseInt(pathItem.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+            date = moment.utc(parseInt(pathItem.ts)).toISOString();
           }
           let marker = Leaflet.marker(pathItem, {icon: icon, opacity: 1})
             .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
@@ -378,7 +378,7 @@ export class WarpViewMap {
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             date = parseInt(pathItem.ts);
           } else {
-            date = moment.utc(parseInt(pathItem.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+            date = moment.utc(parseInt(pathItem.ts)).toISOString();
           }
           marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
           positions.push(marker);
