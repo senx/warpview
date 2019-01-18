@@ -51,9 +51,14 @@
         text-overflow: ellipsis;
         line-height: 29px;
         vertical-align: middle;
+        color: var(--gts-separator-font-color, #bbbbbb);
 
         .timestamp {
           font-size: 1rem;
+        }
+
+        .value {
+          color: var(--gts-annotationtooltip-value-font-color,#0074D9)
         }
 
         .gts-classname {
