@@ -264,6 +264,13 @@ export class WarpViewPlot {
     this.LOG = new Logger(WarpViewPlot, this.debug);
   }
 
+  inputTextKeyboardEvents(e:KeyboardEvent) {
+    e.stopImmediatePropagation();
+    if (e.key === 'Enter'){
+      this.applyFilter();
+    }
+  }
+
   render() {
     return <div>
       <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
@@ -272,7 +279,7 @@ export class WarpViewPlot {
       </warp-view-modal>
       <warp-view-modal modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input type="text" ref={el => this.filterInput = el} value={this.gtsFilter}/>
+        <input type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter}/>
         <button type="button" class={this._options.popupButtonValidateClass}
                 onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
