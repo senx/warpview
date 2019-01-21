@@ -146,8 +146,9 @@ export class WarpViewMap {
     }
     displayMap(data) {
         this.LOG.debug(['drawMap'], this.data, this._options, this.hiddenData);
-        this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData);
-        this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData);
+        let divider = GTSLib.getDivider(this._options.timeUnit);
+        this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData, divider);
+        this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData, divider);
         this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData);
         if (!this.data) {
             return;
@@ -247,7 +248,7 @@ export class WarpViewMap {
                 date = parseInt(p.ts);
             }
             else {
-                date = moment.utc(parseInt(p.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                date = moment.utc(parseInt(p.ts)).toISOString();
             }
             currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
                 .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
@@ -271,7 +272,7 @@ export class WarpViewMap {
                         date = parseInt(pathItem.ts);
                     }
                     else {
-                        date = moment.utc(parseInt(pathItem.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                        date = moment.utc(parseInt(pathItem.ts)).toISOString();
                     }
                     let marker = Leaflet.marker(pathItem, { icon: icon, opacity: 1 })
                         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
@@ -293,7 +294,7 @@ export class WarpViewMap {
                         date = parseInt(pathItem.ts);
                     }
                     else {
-                        date = moment.utc(parseInt(pathItem.ts)).format("YYYY/MM/DD hh:mm:ss.SSSS");
+                        date = moment.utc(parseInt(pathItem.ts)).toISOString();
                     }
                     marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
                     positions.push(marker);

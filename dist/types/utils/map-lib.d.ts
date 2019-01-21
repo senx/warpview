@@ -10,7 +10,7 @@ export declare class MapLib {
     static toLeafletMapPaths(data: {
         gts: any[];
         params: any[];
-    }, hiddenData: number[]): any[];
+    }, hiddenData: number[], divider?: number): any[];
     /**
      *
      * @param {any} data
@@ -20,7 +20,7 @@ export declare class MapLib {
     static annotationsToLeafletPositions(data: {
         gts: any[];
         params: any[];
-    }, hiddenData: number[]): any[];
+    }, hiddenData: number[], divider?: number): any[];
     /**
      *
      * @param obj

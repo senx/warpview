@@ -84,6 +84,7 @@
       --warp-view-switch-inset-checked-color: darkgreen;
       --warp-view-switch-handle-color: #8e8e8e;
       --warp-view-switch-handle-checked-color: lime;
+      --gts-separator-font-color: #8e8e8e;
  /*     --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%); */
     }
 
@@ -213,7 +214,8 @@
               <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1">
                 <p>
                   Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
-                  The string one contains some strange utf8 characters "ïs fælse"
+                  The string one contains some strange utf8 characters "ïs fælse".
+                  The cross of path on the map should be 2000/01/01 12:00:00.0000, even if you set your computer to another timezone.
                 </p>
                 <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot"
                   debug="true">
@@ -223,7 +225,7 @@
                   0 24
                   <%
                     'h' STORE  
-                    $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+                    $start $h h +  $h  $h  NaN $h 2 % 0 == ADDVALUE
                   %>
                   FOR
 
@@ -231,7 +233,7 @@
                   0 24
                   <%
                     'h' STORE  
-                    $start $h h + NaN NaN NaN 
+                    $start $h h +   24 $h - $h NaN 
                     $h 2 % 0 ==
                     <% 'iß true' %>
                   <% 'ïs fælse' %> IFTE ADDVALUE
@@ -503,7 +505,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+          $start $h h +  $h $h NaN $h 2 % 0 == ADDVALUE
         %>
                       FOR
 
@@ -511,7 +513,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN 
+          $start $h h +  24 $h - $h NaN 
           $h ADDVALUE
         
         %>
@@ -541,7 +543,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+          $start $h h +  $h $h NaN $h 2 % 0 == ADDVALUE
         %>
                       FOR
 
@@ -549,7 +551,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN 
+          $start $h h + 24 $h - $h NaN 
           $h ADDVALUE
         
         %>
@@ -580,7 +582,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN $h 2 % 0 == ADDVALUE
+          $start $h h +  $h $h NaN $h 2 % 0 == ADDVALUE
         %>
                       FOR
 
@@ -588,7 +590,7 @@
                       0 24
                       <%
           'h' STORE  
-          $start $h h + NaN NaN NaN 
+          $start $h h +  24 $h - $h NaN 
           $h ADDVALUE
         
         %>

@@ -2,12 +2,12 @@ import { GTSLib } from "./gts.lib";
 import { ColorLib } from "./color-lib";
 import { Logger } from "./logger";
 export class MapLib {
-    static toLeafletMapPaths(data, hiddenData) {
+    static toLeafletMapPaths(data, hiddenData, divider = 1000) {
         let paths = [];
         data.gts.map((gts, i) => {
             if (GTSLib.isGtsToPlot(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
                 let sl = {};
-                sl.path = GTSLib.gtsToPath(gts);
+                sl.path = GTSLib.gtsToPath(gts, divider);
                 if (data.params && data.params[i] && data.params[i].key) {
                     sl.key = data.params[i].key;
                 }
@@ -25,7 +25,7 @@ export class MapLib {
         });
         return paths;
     }
-    static annotationsToLeafletPositions(data, hiddenData) {
+    static annotationsToLeafletPositions(data, hiddenData, divider = 1000) {
         let annotations = [];
         data.gts.map((gts, i) => {
             if (GTSLib.isGtsToAnnotate(gts) && hiddenData.filter((i) => i === gts.id).length === 0) {
@@ -35,7 +35,7 @@ export class MapLib {
                 if (!params) {
                     params = {};
                 }
-                annotation.path = GTSLib.gtsToPath(gts);
+                annotation.path = GTSLib.gtsToPath(gts, divider);
                 MapLib.extractCommonParameters(annotation, params, i);
                 if (params.render) {
                     annotation.render = params.render;

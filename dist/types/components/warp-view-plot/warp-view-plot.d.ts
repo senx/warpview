@@ -47,5 +47,6 @@ export declare class WarpViewPlot {
     private drawCharts;
     private applyFilter;
     componentWillLoad(): void;
+    inputTextKeyboardEvents(e: KeyboardEvent): void;
     render(): JSX.Element;
 }

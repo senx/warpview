@@ -44,9 +44,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 29px;
-        vertical-align: middle; }
+        vertical-align: middle;
+        color: var(--gts-separator-font-color, #bbbbbb); }
         :host div .tooltip .tooltip-body .timestamp {
           font-size: 1rem; }
+        :host div .tooltip .tooltip-body .value {
+          color: var(--gts-annotationtooltip-value-font-color, #0074D9); }
         :host div .tooltip .tooltip-body .gts-classname {
           color: var(--gts-classname-font-color, #0074D9); }
         :host div .tooltip .tooltip-body .gts-labelname {

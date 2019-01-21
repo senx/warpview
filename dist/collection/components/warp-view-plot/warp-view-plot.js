@@ -196,6 +196,12 @@ export class WarpViewPlot {
     componentWillLoad() {
         this.LOG = new Logger(WarpViewPlot, this.debug);
     }
+    inputTextKeyboardEvents(e) {
+        e.stopImmediatePropagation();
+        if (e.key === 'Enter') {
+            this.applyFilter();
+        }
+    }
     render() {
         return h("div", null,
             h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
@@ -203,7 +209,7 @@ export class WarpViewPlot {
                     h("code", { ref: (el) => this.timeClipElement = el, innerHTML: this.timeClipValue }))),
             h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => this.modal = el },
                 h("label", null, "Enter a regular expression to filter GTS."),
-                h("input", { type: "text", ref: el => this.filterInput = el, value: this.gtsFilter }),
+                h("input", { type: "text", onKeyPress: (e) => this.inputTextKeyboardEvents(e), onKeyDown: (e) => this.inputTextKeyboardEvents(e), onKeyUp: (e) => this.inputTextKeyboardEvents(e), ref: el => this.filterInput = el, value: this.gtsFilter }),
                 h("button", { type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),
             this._options.showControls
                 ? h("div", { class: "inline" },

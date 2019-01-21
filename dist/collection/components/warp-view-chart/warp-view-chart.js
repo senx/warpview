@@ -302,7 +302,13 @@ export class WarpViewChart {
                 return WarpViewChart.formatLabel(series.labelHTML) + ' ' + labeledData;
             }).join('<br>');
         }
-        let html = `<b>${data.xHTML}</b>`;
+        let html = '';
+        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+            html = `<b>${data.x}</b>`;
+        }
+        else {
+            html = `<b>${moment.utc(parseInt(data.x)).toISOString()}</b>`;
+        }
         data.series.forEach(function (series) {
             if (series.isVisible && series.yHTML) {
                 let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
@@ -457,7 +463,7 @@ export class WarpViewChart {
                         drawAxis: this.displayGraph(),
                     }
                 },
-                legendFormatter: this.legendFormatter,
+                legendFormatter: this.legendFormatter.bind(this),
                 highlightCallback: this.highlightCallback.bind(this),
                 drawCallback: this.drawCallback.bind(this),
                 axisLabelWidth: this.standalone ? 50 : 94,
