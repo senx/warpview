@@ -181,6 +181,12 @@
                 aria-selected="false">microsecond timeunit</a>
               <a class="nav-link" id="v-pills-13-tab" data-toggle="pill" href="#v-pills-13" role="tab" aria-controls="v-pills-13"
                 aria-selected="false">millisecond timeunit</a>
+                <a class="nav-link" id="v-pills-14-tab" data-toggle="pill" href="#v-pills-14" role="tab" aria-controls="v-pills-14"
+                aria-selected="false">timezone now</a>
+                <a class="nav-link" id="v-pills-15-tab" data-toggle="pill" href="#v-pills-15" role="tab" aria-controls="v-pills-15"
+                aria-selected="false">same name gts</a>
+                <a class="nav-link" id="v-pills-16-tab" data-toggle="pill" href="#v-pills-16" role="tab" aria-controls="v-pills-16"
+                aria-selected="false">gts in the past (Asterix)</a>
 
               <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
                aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
@@ -602,6 +608,165 @@
                   </div>
                 </div>
               </div>
+
+
+              <div class="tab-pane fade" id="v-pills-14" role="tabpanel" aria-labelledby="v-pills-14">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Generates data starting from now -10 s to now +10s. test different timezones to check if it is OK.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                      chart-title="Plotns">
+
+             
+                      NEWGTS 'booleanone' RENAME
+                      -10 10
+                      <%
+          's' STORE  
+          NOW $s s + $s 0.0 NaN $s 2 % 0 == ADDVALUE
+        %>
+                      FOR
+
+                      NEWGTS 'stringone' RENAME
+                      -10 10
+                      <%
+          's' STORE  
+          NOW $s s + 0.0 $s NaN 
+          $s ADDVALUE
+        
+        %>
+                      FOR
+
+                      NEWGTS '2h ago' RENAME
+                      NOW 2 h - NaN NaN NaN 12 ADDVALUE
+                      NOW 2 h + NaN NaN NaN -12 ADDVALUE
+                      
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="tab-pane fade" id="v-pills-15" role="tabpanel" aria-labelledby="v-pills-15">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Generate GTS with the same name. colors must be different and ok.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                      chart-title="Plotns">
+
+             
+                    NEWGTS 'a' RENAME
+                    1000 NaN NaN NaN -1 ADDVALUE
+                    2000 NaN NaN NaN 1 ADDVALUE
+
+                    NEWGTS 'a' RENAME
+                    3000 NaN NaN NaN -2.0 ADDVALUE
+                    4000 NaN NaN NaN 2.0 ADDVALUE
+
+                    NEWGTS 'a' RENAME
+                    -1000 NaN NaN NaN 0.5 ADDVALUE
+                    4000 NaN NaN NaN 0.0 ADDVALUE
+
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-16" role="tabpanel" aria-labelledby="v-pills-16">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Generate GTS in the past, life of Asterix. 
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                      chart-title="Plotns">
+
+
+                      "-0052-04-01T09:24:00.0Z" TOTIMESTAMP 'birth' STORE
+                      "0008-12-05T16:22:00.0Z" TOTIMESTAMP 'death' STORE
+                      
+                      // $birth ISO8601
+                      // $death ISO8601
+                      
+                      NEWGTS 'Asterix life' RENAME
+                      $birth NaN NaN NaN "birth" ADDVALUE
+                      $birth 18 365 * d + NaN NaN NaN "around 18 years old" ADDVALUE
+                      
+                      $death NaN NaN NaN "death" ADDVALUE 
+
+
+                      NEWGTS
+                      'Asterix internal temperature' RENAME
+                      { 'unit' '°C' } RELABEL
+                      'gts' STORE
+                      
+                      //random temperatures during his childhood (15 years)
+                      $birth 
+                      $birth 12 30 * 15 * d  +  
+                      <% RAND 4 * 1 + TOLONG d + %>
+                      <%
+                        RAND 2 h * TOLONG + 'measuretime' STORE
+                        
+                        //compute standard a value
+                        36.5 
+                        RAND +
+                        't' STORE
+                      
+                        //illness : around 40°C
+                        <% RAND 0.99 > %>
+                        <% 40.0 RAND 0.3 * -0.15 + + 't' STORE %> IFT
+                      
+                        $gts $measuretime NaN NaN NaN $t ADDVALUE DROP
+                      
+                      %> FORSTEP
+                      
+                      
+                      //life with magic potion (and very few illness)
+                      $birth 12 30 * 15 * 1 + d  +  
+                      $death 1 d -
+                      <% RAND 9 * 1 + TOLONG d + %>
+                      <%
+                        RAND 2 h * TOLONG + 'measuretime' STORE
+                        
+                        //compute standard a value
+                        36.5 
+                        RAND +
+                        't' STORE
+                      
+                        //illness : around 40°C
+                        <% RAND 0.995 > %>
+                        <% 40.0 RAND 0.3 * -0.15 + + 't' STORE %> IFT
+                      
+                      
+                        //magic potion : around 38°C
+                        <% RAND 0.95 > %>
+                        <% 38.0 RAND 0.3 * -0.15 + + 't' STORE %> IFT
+                      
+                        $gts $measuretime NaN NaN NaN $t ADDVALUE DROP
+                      
+                      %> FORSTEP
+                      
+                      //day of his death
+                      $gts $death NaN NaN NaN -5.0 ADDVALUE DROP
+                      
+                      $gts
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
 
             </div>
           </div>
