@@ -241,8 +241,8 @@ export class WarpViewChart {
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels.push('Date');
       colors = [];
-      this.maxTick = Number.MIN_VALUE;
-      this.minTick = Number.MAX_VALUE;
+      this.maxTick = Number.NEGATIVE_INFINITY;
+      this.minTick = Number.POSITIVE_INFINITY;
       this.visibleGtsId = [];
 
       //build a non plotable list, then keep plotable ones
