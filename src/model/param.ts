@@ -45,4 +45,5 @@ export class Param {
   maxColor?: string;
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
+  timeZone?: string = 'UTC';
 }

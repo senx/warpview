@@ -344,7 +344,8 @@ export class WarpViewChart {
         this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
       } else {
         const ts = Math.floor(parseInt(timestamp) / divider);
-        this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
+        //this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
+        this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
       }
     });
     //sort the big table. (needed, data is not a treeset or sortedset)
@@ -543,8 +544,8 @@ export class WarpViewChart {
       }
       this.boundsDidChange.emit({
         bounds: {
-          min: this.minTick / divider,
-          max: this.maxTick / divider
+          min: moment(this.minTick / divider).utc(true).valueOf(),
+          max: moment(this.maxTick / divider).utc(true).valueOf()
         }
       });
       this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
@@ -558,14 +559,18 @@ export class WarpViewChart {
     this.LOG.debug(['drawChart', 'this.data'], [this.data]);
     let previousTimeMode = this._options.timeMode || ''; //detect a timemode change
     let previousTimeUnit = this._options.timeUnit || ''; //detect a timeUnit change
+    let previousTimeZone = this._options.timeZone || 'UTC'; //detect a timeZone change
     this._options = ChartLib.mergeDeep(this._options, this.options);
+    moment.tz.setDefault(this._options.timeZone);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
     if (reparseNewData) {
       this.gtsToData(dataList);
     } else {
-      if (previousTimeMode !== this._options.timeMode || previousTimeUnit !== this._options.timeUnit) {
+      if (previousTimeMode !== this._options.timeMode 
+        || previousTimeUnit !== this._options.timeUnit
+        || previousTimeZone !== this._options.timeZone) {
         this.rebuildDygraphDataSets();
       }
     }
