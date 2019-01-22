@@ -157,9 +157,9 @@ export class WarpViewAnnotation {
     if (!this.data) {
       return;
     }
-    moment.tz.setDefault("UTC");    //force X axis display in UTC
     this._options.timeMode = 'date';
     this._options = ChartLib.mergeDeep(this._options, this.options);
+    moment.tz.setDefault(this._options.timeZone);    //force X axis display in UTC
     this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
     let gts = this.parseData(this.data);
 

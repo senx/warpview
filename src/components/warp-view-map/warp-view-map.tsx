@@ -112,7 +112,7 @@ export class WarpViewMap {
 
   @Watch('hiddenData')
   private onHideData(newValue: string[], oldValue: string[]) {
-    if (!deepEqual(newValue, oldValue)) {
+    if (newValue !== oldValue) {
       this.LOG.debug(['hiddenData'], newValue);
       this.drawMap();
     }
@@ -120,15 +120,21 @@ export class WarpViewMap {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawMap();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawMap();
   }
 
   @Watch('options')
   private onOptions(newValue: Param, oldValue: Param) {
-    if (!deepEqual(newValue, oldValue)) {
+    let optionChanged = false;
+    Object.keys(newValue).forEach(opt => {
+      if (this._options.hasOwnProperty(opt)) {
+        optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
+      } else {
+        optionChanged = true; //new unknown option
+      }
+    });
+    if (optionChanged) {
       this.LOG.debug(['options'], newValue);
       this.drawMap();
     }
@@ -156,6 +162,7 @@ export class WarpViewMap {
   private drawMap() {
     this.LOG.debug(['drawMap'], this.data);
     this._options = ChartLib.mergeDeep(this._options, this.options);
+    moment.tz.setDefault(this._options.timeZone);
     let gts: any = this.data;
     if (!gts) {
       return;
@@ -329,7 +336,7 @@ export class WarpViewMap {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         date = parseInt(p.ts);
       } else {
-        date = moment.utc(parseInt(p.ts)).toISOString();
+        date = moment(parseInt(p.ts)).utc(true).toISOString();
       }
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
@@ -355,7 +362,7 @@ export class WarpViewMap {
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             date = parseInt(pathItem.ts);
           } else {
-            date = moment.utc(parseInt(pathItem.ts)).toISOString();
+            date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
           }
           let marker = Leaflet.marker(pathItem, {icon: icon, opacity: 1})
             .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
@@ -379,7 +386,7 @@ export class WarpViewMap {
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             date = parseInt(pathItem.ts);
           } else {
-            date = moment.utc(parseInt(pathItem.ts)).toISOString();
+            date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
           }
           marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
           positions.push(marker);

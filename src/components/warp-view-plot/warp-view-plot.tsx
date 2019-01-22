@@ -23,6 +23,7 @@ import {GTS} from "../../model/GTS";
 import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
+import moment from "moment-timezone";
 
 @Component({
   tag: 'warp-view-plot',
@@ -66,6 +67,7 @@ export class WarpViewPlot {
   private filterInput: HTMLInputElement;
   private timeClipElement: HTMLElement;
   private mouseOutTimer: number;
+  private tzSelector: HTMLSelectElement;
 
   componentDidLoad() {
     this.drawCharts(true);
@@ -271,6 +273,13 @@ export class WarpViewPlot {
     }
   }
 
+  tzSelected(e:Event){
+    let timeZone=this.tzSelector.value;
+    this.LOG.debug(["timezone","tzselect"],timeZone);
+    this._options.timeZone=timeZone;
+    this.drawCharts();
+  }
+
   render() {
     return <div>
       <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
@@ -293,6 +302,9 @@ export class WarpViewPlot {
                             checked={this.showChart}/>
           <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
                             checked={this.showMap}/>
+          <select id="tzSelector" ref={(el)=>this.tzSelector = el} onChange={(e) => this.tzSelected(e)}> 
+            {moment.tz.names().map((z) => <option value={z} selected={z==='UTC'}>{z}</option>)} 
+          </select>
         </div>
         : ''}
       {this._options.showGTSTree
