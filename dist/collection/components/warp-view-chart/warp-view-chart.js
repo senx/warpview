@@ -138,7 +138,6 @@ export class WarpViewChart {
             gtsList = GTSLib.flatDeep(gtsList);
             this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
             labels.push('Date');
-            colors = [];
             this.maxTick = Number.MIN_VALUE;
             this.minTick = Number.MAX_VALUE;
             this.visibleGtsId = [];
@@ -149,7 +148,7 @@ export class WarpViewChart {
                 return (g.v && GTSLib.isGtsToPlot(g));
             });
             gtsList.forEach((g, i) => {
-                let label = GTSLib.serializeGtsMetadata(g);
+                labels.push(GTSLib.serializeGtsMetadata(g) + g.id);
                 g.v.forEach(value => {
                     const ts = value[0];
                     if (!this.dataHashset[ts]) {
@@ -164,9 +163,8 @@ export class WarpViewChart {
                         this.maxTick = ts;
                     }
                 });
-                let color = ColorLib.getColor(g.id);
-                labels.push(label);
-                colors.push(color);
+                this.LOG.debug(['gtsToData', 'gts'], g);
+                colors.push(ColorLib.getColor(g.id));
                 this.visibility.push(true);
                 this.visibleGtsId.push(g.id);
             });
@@ -190,9 +188,8 @@ export class WarpViewChart {
                     if (!this.dataHashset[this.maxTick]) {
                         this.dataHashset[this.maxTick] = [0];
                     }
-                    labels.push('emptyserie');
-                    let color = ColorLib.getColor(0);
-                    colors.push(color);
+                    labels.push('emptySeries');
+                    colors.push(ColorLib.getColor(0));
                     this.visibility.push(false);
                     this.visibleGtsId.push(-1);
                 }
@@ -210,7 +207,7 @@ export class WarpViewChart {
         }
         this.rebuildDygraphDataSets();
         this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
-        this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
+        this.LOG.debug(['gtsToData', 'datasets'], this.dygraphdataSets, labels, colors);
         this.dygraphColors = colors;
         this.dygraphLabels = labels;
     }
