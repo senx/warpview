@@ -240,7 +240,6 @@ export class WarpViewChart {
       gtsList = GTSLib.flatDeep(gtsList);
       this.LOG.debug(['gtsToData', 'gtsList'], gtsList);
       labels.push('Date');
-      colors = [];
       this.maxTick = Number.NEGATIVE_INFINITY;
       this.minTick = Number.POSITIVE_INFINITY;
       this.visibleGtsId = [];
@@ -255,7 +254,7 @@ export class WarpViewChart {
 
       //first, add plotable data to the data hashset
       gtsList.forEach((g, i) => {
-        let label = GTSLib.serializeGtsMetadata(g);
+        labels.push(GTSLib.serializeGtsMetadata(g) + g.id);
         //GTSLib.gtsSort(g); // no need because data{} is not sorted, will sort later the full dataset
         g.v.forEach(value => {
           const ts = value[0];
@@ -271,9 +270,8 @@ export class WarpViewChart {
             this.maxTick = ts;
           }
         });
-        let color = ColorLib.getColor(g.id);
-        labels.push(label);
-        colors.push(color);
+        this.LOG.debug(['gtsToData', 'gts'], g);
+        colors.push(ColorLib.getColor(g.id));
         this.visibility.push(true);
         this.visibleGtsId.push(g.id);
       });
@@ -301,9 +299,8 @@ export class WarpViewChart {
           if (!this.dataHashset[this.maxTick]) {
             this.dataHashset[this.maxTick] = [0];
           }
-          labels.push('emptyserie');
-          let color = ColorLib.getColor(0);
-          colors.push(color);
+          labels.push('emptySeries');
+          colors.push(ColorLib.getColor(0));
           this.visibility.push(false);
           this.visibleGtsId.push(-1);
         } else {
@@ -323,7 +320,7 @@ export class WarpViewChart {
     this.rebuildDygraphDataSets();
 
     this.LOG.debug(['dygraphgtsidtable'], this.visibleGtsId);
-    this.LOG.debug(['gtsToData', 'datasets'], [this.dygraphdataSets, labels, colors]);
+    this.LOG.debug(['gtsToData', 'datasets'], this.dygraphdataSets, labels, colors);
     this.dygraphColors = colors;
     this.dygraphLabels = labels;
 
@@ -336,7 +333,7 @@ export class WarpViewChart {
    */
   private rebuildDygraphDataSets() {
     this.dygraphdataSets = [];
-    //build the big matrix for dygraph from the data hashset.
+    //build the big matrix for dygraph from the data hashSet.
     const divider = GTSLib.getDivider(this._options.timeUnit);
     this.LOG.debug(['chart','divider','timeunit'],divider, this._options.timeUnit);
     Object.keys(this.dataHashset).forEach(timestamp => {
@@ -348,7 +345,7 @@ export class WarpViewChart {
         this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
       }
     });
-    //sort the big table. (needed, data is not a treeset or sortedset)
+    //sort the big table. (needed, data is not a treeSet or sortedSet)
     this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
   }
 
@@ -366,7 +363,7 @@ export class WarpViewChart {
     if (Number.isSafeInteger(x)) {
       return x.toString();
     } else {
-      res = x.toString(); //Math.round(x * 100000000000000) / 100000000000000).toString();
+      res = x.toString();
       e = parseInt(x.toString().split('+')[1]);
       if (e > 20) {
         e -= 20;

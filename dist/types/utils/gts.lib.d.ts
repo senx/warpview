@@ -76,7 +76,7 @@ export declare class GTSLib {
      * @param gts
      * @returns {any[]}
      */
-    static gtsToPath(gts: any): any[];
+    static gtsToPath(gts: any, divider?: number): any[];
     /**
      *
      * @param a

@@ -207,7 +207,7 @@ export class GTSLib {
         });
         return gts.c + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
     }
-    static gtsToPath(gts) {
+    static gtsToPath(gts, divider = 1000) {
         let path = [];
         for (let i = 0; i < gts.v.length; i++) {
             let metric = gts.v[i];
@@ -216,11 +216,11 @@ export class GTSLib {
             if (metric.length === 3) {
             }
             if (metric.length === 4) {
-                path.push({ ts: Math.floor(metric[0] / 1000), lat: metric[1], lon: metric[2], val: metric[3] });
+                path.push({ ts: Math.floor(metric[0] / divider), lat: metric[1], lon: metric[2], val: metric[3] });
             }
             if (metric.length === 5) {
                 path.push({
-                    ts: Math.floor(metric[0] / 1000),
+                    ts: Math.floor(metric[0] / divider),
                     lat: metric[1],
                     lon: metric[2],
                     elev: metric[3],
