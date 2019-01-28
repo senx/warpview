@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Listen, Method, Prop, State, Watch} from '@stencil/core'
+import {Component, Listen, Method, Prop, State, Watch, Event, EventEmitter} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
@@ -40,6 +40,7 @@ export class WarpViewPlot {
   @Prop() showLegend: boolean = false;
   @Prop({mutable: true}) gtsFilter = '';
   @Prop() debug = false;
+  @Prop() hasfocus:boolean = true;
 
   @State() private _options: Param = {
     showControls: true,
@@ -54,7 +55,10 @@ export class WarpViewPlot {
   @State() showMap = false;
   @State() chartType = 'line';
   @State() timeClipValue: string = '';
-
+  
+  @Event() keyboardPlotEvent: EventEmitter<KeyboardEvent>;
+  
+  private mainPlotDiv:HTMLElement;
   private LOG: Logger;
   private line: HTMLDivElement;
   private main: HTMLDivElement;
@@ -102,23 +106,25 @@ export class WarpViewPlot {
     }
   }
 
-  @Listen('document:keyup')
-  handleKeyUp(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keyup'], ev);
-    ev.preventDefault();
+  @Listen('keydown')
+  handleKeyDown(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keyup'], ev);    
+    this.keyboardPlotEvent.emit(ev);
     if (ev.key === '/') {
+      ev.preventDefault(); //do not display firefox quicksearch.
       this.modal.open();
       this.filterInput.focus();
       this.filterInput.select();
     }
     if (ev.key === 't') {
+      ev.preventDefault();
       this.chart.getTimeClip().then(tc => {
         this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
     }
-    return false;
+
   }
 
   @Listen('stateChange')
@@ -281,8 +287,9 @@ export class WarpViewPlot {
   }
 
   render() {
-    return <div>
-      <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
+    return <div tabindex="0" onClick={(e)=> {console.log(['plot','userevents'],'main plot div clicked, got focus'); this.mainPlotDiv.focus();} }  ref={(el) => this.mainPlotDiv = el}>
+
+      <warp-view-modal modalTitle="TimeClip" hasfocus={this.hasfocus} ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
         <pre><code ref={(el) => this.timeClipElement = el}
                    innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
