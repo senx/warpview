@@ -189,6 +189,8 @@
                 aria-selected="false">gts in the past (Asterix)</a>
                 <a class="nav-link" id="v-pills-17-tab" data-toggle="pill" href="#v-pills-17" role="tab" aria-controls="v-pills-17"
                 aria-selected="false">boat data in st Barth</a>
+                <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-18" role="tab" aria-controls="v-pills-18"
+                aria-selected="false">keyboard events propagation</a>
 
               <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
                aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
@@ -794,6 +796,52 @@
                   </div>
                 </div>
               </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-18" role="tabpanel" aria-labelledby="v-pills-18">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      Keyboard event stolen... test all the modals (gts selector, regexp selector), then test the text input field to check if every keyboard event are working (space...)
+                    </p>
+                    <textarea name="test" cols="40" rows="5">TEST HERE</textarea>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                      chart-title="Plotns">
+
+             
+                      NEWGTS 'booleanone' RENAME
+                      -10 10
+                      <%
+          's' STORE  
+          NOW $s s + $s 0.0 NaN $s 2 % 0 == ADDVALUE
+        %>
+                      FOR
+
+                      NEWGTS 'stringone' RENAME
+                      -10 10
+                      <%
+          's' STORE  
+          NOW $s s + 0.0 $s NaN 
+          $s ADDVALUE
+        
+        %>
+                      FOR
+
+                      NEWGTS '2h ago' RENAME
+                      NOW 2 h - NaN NaN NaN 12 ADDVALUE
+                      NOW 2 h + NaN NaN NaN -12 ADDVALUE
+                      
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
 
             </div>
           </div>
