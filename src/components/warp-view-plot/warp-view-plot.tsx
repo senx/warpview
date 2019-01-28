@@ -289,7 +289,7 @@ export class WarpViewPlot {
   render() {
     return <div tabindex="0" onClick={(e)=> {console.log(['plot','userevents'],'main plot div clicked, got focus'); this.mainPlotDiv.focus();} }  ref={(el) => this.mainPlotDiv = el}>
 
-      <warp-view-modal modalTitle="TimeClip" hasfocus={this.hasfocus} ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
+      <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
         <pre><code ref={(el) => this.timeClipElement = el}
                    innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
