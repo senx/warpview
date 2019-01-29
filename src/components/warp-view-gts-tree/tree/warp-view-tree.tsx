@@ -32,8 +32,9 @@ export class WarpViewTreeView {
   @Prop() gtsFilter = '';
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
+  @Prop() kbdLastKeyPressed:string[] = [];
 
-  @State() ref = false;
+  @State() ref: number = 0; //just to trigger the render
 
   private hide: any = {};
   private LOG: Logger;
@@ -57,22 +58,20 @@ export class WarpViewTreeView {
       el.className = 'expanded';
       this.hide[index + ''] = false;
     }
-    this.ref = !this.ref;
+    this.ref++;
   }
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
     if (oldValue !== newValue) {
-      this.ref = !this.ref;
+      this.ref++;
     }
   }
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['hiddenData'], newValue);
-      this.ref = !this.ref;
-    }
+    this.LOG.debug(['hiddenData'], newValue);
+    this.ref++;
   }
 
   /**
@@ -103,7 +102,7 @@ export class WarpViewTreeView {
           <li hidden={this.hidden}>
             {GTSLib.isGts(node)
               ? <warp-view-chip node={{gts: node}} name={node.c} gtsFilter={this.gtsFilter}
-                                debug={this.debug} hiddenData={this.hiddenData}/>
+                                debug={this.debug} hiddenData={this.hiddenData} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
               : <span>{node
                 ? <div>{this.branch
                   ? <div>
@@ -127,7 +126,7 @@ export class WarpViewTreeView {
                           : ''}</small></span>
                   </div>}
                   <warp-view-tree-view gtsList={node} branch={true} hidden={this.isHidden(index)}
-                                       debug={this.debug} gtsFilter={this.gtsFilter}/>
+                                       debug={this.debug} gtsFilter={this.gtsFilter} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
                 </div>
                 : ''}
               </span>}

@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Method, Prop} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch, State} from "@stencil/core";
 
 @Component({
   tag: 'warp-view-modal',
@@ -25,6 +25,7 @@ import {Component, Element, Event, EventEmitter, Listen, Method, Prop} from "@st
 export class WarpViewModal {
 
   @Prop() modalTitle: string = '';
+  @Prop() kbdLastKeyPressed:string[] = [];
 
   @Element() el: HTMLElement;
   @Event() warpViewModalOpen: EventEmitter;
@@ -44,20 +45,10 @@ export class WarpViewModal {
     this.warpViewModalClose.emit({});
   }
 
-  @Listen('document:keydown')
-  handleKeyDown(ev: KeyboardEvent) {
-    if ('Escape' === ev.key) {
-      ev.preventDefault();
-      return false;
-    }
-  }
-
-  @Listen('document:keyup')
-  handleKeyUp(ev: KeyboardEvent) {
-    if (ev.key === 'Escape') {
-      ev.preventDefault();
+  @Watch('kbdLastKeyPressed')
+  handleKeyDown(key:string[]) {
+    if ('Escape' === key[0]) {
       this.close();
-      return false;
     }
   }
 

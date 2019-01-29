@@ -40,6 +40,7 @@ export class WarpViewTile {
   @Prop() url: string = '';
   @Prop() gtsFilter: string = '';
   @Prop() debug = false;
+  @Prop() isalone: boolean = false; //used by plot to manage its keyboard events
 
   @Element() wsElement: HTMLElement;
 
@@ -332,7 +333,7 @@ export class WarpViewTile {
             </h1>
             <div class="tile">
               <warp-view-plot debug={this.debug} responsive={this.responsive} data={this.data}
-                              showLegend={this.showLegend} options={this._options} gtsFilter={this.gtsFilter}/>
+                              showLegend={this.showLegend} options={this._options} gtsFilter={this.gtsFilter} isalone={this.isalone}/>
             </div>
           </div>
           : ''

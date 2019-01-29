@@ -34,6 +34,7 @@ export class WarpViewGtsPopup {
   @Prop() maxToShow: number = 5;
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
+  @Prop() kbdLastKeyPressed:string[] = [];
 
   @Event() warpViewSelectedGTS: EventEmitter;
 
@@ -41,7 +42,7 @@ export class WarpViewGtsPopup {
   @State() current: number = 0;
 
   private _gts: any[] = [];
-  private chips: HTMLElement[] = [];
+//  private chips: HTMLElement[] = [];
   private modal: WarpViewModal;
   private modalOpenned: boolean = false;
   private LOG: Logger;
@@ -56,66 +57,45 @@ export class WarpViewGtsPopup {
     this.modalOpenned = false;
   }
 
-  @Listen('document:keydown')
-  onKeyDown(e: KeyboardEvent) {
-    if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
-      e.preventDefault();
-      return false;
+  @Watch('kbdLastKeyPressed')
+  handleKeyDown(key: string[]) {
+    if (key[0] ==='s' && !this.modalOpenned) {
+      this.showPopup();
     }
-  }
-
-  @Listen('document:keyup')
-  onKeyUp(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keyup'], ev);
-    switch (ev.key) {
-      case 's':
-        ev.preventDefault();
-        this.showPopup();
-        break;
-      case'ArrowUp':
-      case'j':
-        ev.preventDefault();
-        this.showPopup();
-        this.current = Math.max(0, this.current - 1);
-        this.prepareData();
-        break;
-      case 'ArrowDown':
-      case 'k':
-        ev.preventDefault();
-        this.showPopup();
-        this.current = Math.min(this._gts.length - 1, this.current + 1);
-        this.prepareData();
-        break;
-      case ' ':
-        if (this.modalOpenned) {
-          ev.preventDefault();
+    else if (this.modalOpenned) {
+      switch (key[0]) {
+        case'ArrowUp':
+        case'j':
+          this.current = Math.max(0, this.current - 1);
+          this.prepareData();
+          break;
+        case 'ArrowDown':
+        case 'k':
+          this.current = Math.min(this._gts.length - 1, this.current + 1);
+          this.prepareData();
+          break;
+        case ' ':
           this.warpViewSelectedGTS.emit({
-            gts: this.displayed[this.current],
-            selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
-          });
-        }
-        break;
-      default:
-        return true;
+          gts: this._gts[this.current],
+          selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1 
+        });
+          break;
+        default:
+          return true;
+      }
     }
-    return false;
   }
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['hiddenData'], newValue);
-      this.prepareData();
-      this.colorizeChips();
-    }
+    this.LOG.debug(['hiddenData'], newValue);
+    this.prepareData();
   }
 
   @Watch('gtsList')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.prepareData();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.prepareData();
   }
 
   private showPopup() {
@@ -135,17 +115,6 @@ export class WarpViewGtsPopup {
     }
   }
 
-  private colorizeChips() {
-    this.chips.map((chip, index) => {
-      if (this.hiddenData.indexOf(this.displayed[index].id) === -1) {
-        chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this.displayed[index].id)));
-        chip.style.setProperty('border-color', ColorLib.getColor(this.displayed[index].id));
-      } else {
-        chip.style.setProperty('background-color', '#eeeeee');
-      }
-    });
-  }
-
   componentWillLoad() {
     this.LOG = new Logger(WarpViewGtsPopup, this.debug);
   }
@@ -155,28 +124,23 @@ export class WarpViewGtsPopup {
   }
 
   render() {
-    return <warp-view-modal modalTitle="GTS Selector" ref={(el: any) => {
-      this.modal = el as WarpViewModal
-    }}>
-      {this.current > 0 ? <div class="up-arrow"/> : ''}
-      <ul>
-        {this._gts.map((gts, index) =>
-          gts
-            ? this.displayed.find(g => g.id === gts.id)
-            ? <li class={this.current === index ? 'selected' : ''}>
-              <div class="round"
-                   ref={(el: HTMLElement) => this.chips[index] = el}
-                   style={{
-                     'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                     'border-color': ColorLib.getColor(gts.id)
-                   }}/>
-              <span innerHTML={GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts))}/>
-            </li>
-            : ''
-            : ''
-        )}
-      </ul>
-      {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
-    </warp-view-modal>
+    // reusing the warp-view-chip, without passing keyboard events.
+    // STENCIL BUG. mapping this.displayed should work... but including webcomponents inside slot is not working correctly at all. hence the trick to set display none.
+    return <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="GTS Selector" ref={(el: any) => {
+            this.modal = el as WarpViewModal
+          }}>
+          {this.current > 0 ? <div class="up-arrow"/> : ''}
+          <ul>
+            {this._gts.map( (gts,index) => {
+              return <li class={this.current == index ? 'selected' : ''} style={ this.displayed.find( g => g.id === gts.id) ? {} : { 'display':'none' }} >
+                <warp-view-chip node={{gts: gts}} name={gts.c} hiddenData={this.hiddenData}/>
+              </li>
+            }
+            )}
+          </ul>
+          {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
+          </warp-view-modal>
+          
   }
+
 }

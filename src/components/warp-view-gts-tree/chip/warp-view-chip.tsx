@@ -35,6 +35,7 @@ export class WarpViewChip {
   @Prop() gtsFilter = '';
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
+  @Prop() kbdLastKeyPressed:string[] = [];
 
   @State() ref = false;
 
@@ -58,24 +59,22 @@ export class WarpViewChip {
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['hiddenData'], newValue);
-      this._node = {
-        ...this._node,
-        selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
-        label: GTSLib.serializeGtsMetadata(this._node.gts)
-      };
-      this.LOG.debug(['hiddenData'], this._node);
-      this.colorizeChip();
-    }
+    this.LOG.debug(['hiddenData'], newValue);
+    this._node = {
+      ...this._node,
+      selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
+      label: GTSLib.serializeGtsMetadata(this._node.gts)
+    };
+    this.LOG.debug(['hiddenData'], this._node);
+    this.colorizeChip();
   }
 
-  @Listen('document:keyup')
-  handleKeyDown(ev: KeyboardEvent) {
-    if (ev.key === 'a') {
+  @Watch('kbdLastKeyPressed')
+  handleKeyDown(key:string[]) {
+    if (key[0] === 'a') {
       this.setState(true);
     }
-    if (ev.key === 'n') {
+    if (key[0] === 'n') {
       this.setState(false);
     }
   }
