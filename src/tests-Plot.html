@@ -168,7 +168,7 @@
               <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6"
                 aria-selected="false">annotation span greater than plottables</a>
               <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-7" role="tab" aria-controls="v-pills-7"
-                aria-selected="false">chart and annotation ts</a>
+                aria-selected="false">lots of annotation</a>
               <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-8" role="tab" aria-controls="v-pills-8"
                 aria-selected="false">chart 2M points</a>
               <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-9" role="tab" aria-controls="v-pills-9"
@@ -419,7 +419,7 @@
                 <div class="card mb-4 shadow-sm">
                   <div class="card-body">
                     <p>
-                      On another endpoint, some annotation and plottable gts.
+                      On another endpoint, some annotation gts. Test the GTS selector to see if everything is normal.
                     </p>
                     <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
                       debug="true" chart-title="Plot">
@@ -803,8 +803,8 @@
                 <div class="card mb-4 shadow-sm">
                   <div class="card-body">
                     <p>
-                      The plot element below has focus false. So, keyboard events must not be stolen. Place the focus in the text area then test all the shortcut a n / s r j k t arrowUp arrowdown space (gts selector, regexp selector).
-                      No shortcut should ever trigger an action.
+                      The plot element below has focus false. So, keyboard events must not be stolen. Place the focus in the text area then test all the shortcut a n / s j k t arrowUp arrowdown space (gts selector, regexp selector).
+                      No shortcut should ever trigger an action. The 'r' key should trigger a refresh of every tiles (catch at document level).
                     </p>
                     <textarea name="test" cols="40" rows="5">TEST HERE</textarea>
                     <div style="width: 100%">
