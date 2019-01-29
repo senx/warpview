@@ -212,12 +212,14 @@ export namespace Components {
     'debug': boolean;
     'gtsList': DataModel;
     'hiddenData': number[];
+    'kbdLastKeyPressed': string[];
     'maxToShow': number;
   }
   interface WarpViewGtsPopupAttributes extends StencilHTMLAttributes {
     'debug'?: boolean;
     'gtsList'?: DataModel;
     'hiddenData'?: number[];
+    'kbdLastKeyPressed'?: string[];
     'maxToShow'?: number;
     'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
   }
@@ -226,6 +228,7 @@ export namespace Components {
     'debug': boolean;
     'gtsFilter': string;
     'hiddenData': number[];
+    'kbdLastKeyPressed': string[];
     'name': string;
     'node': any;
   }
@@ -233,6 +236,7 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'hiddenData'?: number[];
+    'kbdLastKeyPressed'?: string[];
     'name'?: string;
     'node'?: any;
     'onWarpViewSelectedGTS'?: (event: CustomEvent) => void;
@@ -245,6 +249,7 @@ export namespace Components {
     'gtsList': any[];
     'hidden': boolean;
     'hiddenData': number[];
+    'kbdLastKeyPressed': string[];
   }
   interface WarpViewTreeViewAttributes extends StencilHTMLAttributes {
     'branch'?: boolean;
@@ -253,6 +258,7 @@ export namespace Components {
     'gtsList'?: any[];
     'hidden'?: boolean;
     'hiddenData'?: number[];
+    'kbdLastKeyPressed'?: string[];
   }
 
   interface WarpViewGtsTree {
@@ -260,6 +266,7 @@ export namespace Components {
     'debug': boolean;
     'gtsFilter': string;
     'hiddenData': number[];
+    'kbdLastKeyPressed': string[];
     'options': Param;
   }
   interface WarpViewGtsTreeAttributes extends StencilHTMLAttributes {
@@ -267,6 +274,7 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'hiddenData'?: number[];
+    'kbdLastKeyPressed'?: string[];
     'options'?: Param;
   }
 
@@ -333,10 +341,12 @@ export namespace Components {
 
   interface WarpViewModal {
     'close': () => void;
+    'kbdLastKeyPressed': string[];
     'modalTitle': string;
     'open': () => void;
   }
   interface WarpViewModalAttributes extends StencilHTMLAttributes {
+    'kbdLastKeyPressed'?: string[];
     'modalTitle'?: string;
     'onWarpViewModalClose'?: (event: CustomEvent) => void;
     'onWarpViewModalOpen'?: (event: CustomEvent) => void;
@@ -367,6 +377,7 @@ export namespace Components {
     'getTimeClip': () => Promise<[number, number]>;
     'gtsFilter': string;
     'height': string;
+    'isalone': boolean;
     'options': string | Param;
     'responsive': boolean;
     'showLegend': boolean;
@@ -377,6 +388,7 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'height'?: string;
+    'isalone'?: boolean;
     'options'?: string | Param;
     'responsive'?: boolean;
     'showLegend'?: boolean;
@@ -453,6 +465,7 @@ export namespace Components {
     'chartTitle': string;
     'debug': boolean;
     'gtsFilter': string;
+    'isalone': boolean;
     'options': Param;
     'resize': () => void;
     'responsive': boolean;
@@ -465,6 +478,7 @@ export namespace Components {
     'chartTitle'?: string;
     'debug'?: boolean;
     'gtsFilter'?: string;
+    'isalone'?: boolean;
     'options'?: Param;
     'responsive'?: boolean;
     'showLegend'?: boolean;
