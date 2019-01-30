@@ -379,7 +379,7 @@ export namespace Components {
     'getTimeClip': () => Promise<[number, number]>;
     'gtsFilter': string;
     'height': string;
-    'isalone': boolean;
+    'isAlone': boolean;
     'options': string | Param;
     'responsive': boolean;
     'showLegend': boolean;
@@ -390,7 +390,7 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'height'?: string;
-    'isalone'?: boolean;
+    'isAlone'?: boolean;
     'options'?: string | Param;
     'responsive'?: boolean;
     'showLegend'?: boolean;
@@ -467,7 +467,7 @@ export namespace Components {
     'chartTitle': string;
     'debug': boolean;
     'gtsFilter': string;
-    'isalone': boolean;
+    'isAlone': boolean;
     'options': Param;
     'resize': () => void;
     'responsive': boolean;
@@ -480,7 +480,7 @@ export namespace Components {
     'chartTitle'?: string;
     'debug'?: boolean;
     'gtsFilter'?: string;
-    'isalone'?: boolean;
+    'isAlone'?: boolean;
     'options'?: Param;
     'responsive'?: boolean;
     'showLegend'?: boolean;
