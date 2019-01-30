@@ -330,7 +330,7 @@ export class WarpViewPlot {
   }
 
   render() {
-    return <div tabindex="0" onClick={(e:any)=> {
+    return <div id="focusablePlotDiv" tabindex="0" onClick={(e:any)=> {
           if (!this.isAlone && e.path[0].nodeName != 'SELECT') {this.mainPlotDiv.focus();} //prevent stealing focus of the timezone selector.
         }
       }  ref={(el) => this.mainPlotDiv = el}>
