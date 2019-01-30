@@ -105,7 +105,7 @@ export class WarpViewGtsPopup {
   }
 
   private prepareData() {
-    if (this.gtsList) {
+    if (this.gtsList && this.gtsList.data) {
       this._gts = GTSLib.flatDeep([this.gtsList.data]);
       this.displayed = this._gts.slice(
         Math.max(0, Math.min(this.current - this.maxToShow, this._gts.length - 2 * this.maxToShow)),
