@@ -11,6 +11,7 @@ export declare class WarpViewPlot {
     showLegend: boolean;
     gtsFilter: string;
     debug: boolean;
+    isalone: boolean;
     private _options;
     private _data;
     private _toHide;
@@ -20,6 +21,8 @@ export declare class WarpViewPlot {
     showMap: boolean;
     chartType: string;
     timeClipValue: string;
+    kbdLastKeyPressed: string[];
+    private mainPlotDiv;
     private LOG;
     private line;
     private main;
@@ -32,12 +35,20 @@ export declare class WarpViewPlot {
     private filterInput;
     private timeClipElement;
     private mouseOutTimer;
+    private tzSelector;
+    private kbdCounter;
+    private gtsPopupModal;
     componentDidLoad(): void;
     getTimeClip(): Promise<[number, number]>;
     private onGtsFilter;
     private onData;
     private onOptions;
-    handleKeyUp(ev: KeyboardEvent): boolean;
+    handlelocalkeydown(ev: KeyboardEvent): void;
+    handledockeydown(ev: KeyboardEvent): void;
+    private preventDefaultKeyList;
+    private preventDefaultKeyListInModals;
+    private handleKeyDown;
+    private pushKbdEvent;
     stateChange(event: CustomEvent): void;
     boundsDidChange(event: CustomEvent): void;
     onResize(event: CustomEvent): void;
@@ -47,6 +58,8 @@ export declare class WarpViewPlot {
     private drawCharts;
     private applyFilter;
     componentWillLoad(): void;
+    onWarpViewModalClose(): void;
     inputTextKeyboardEvents(e: KeyboardEvent): void;
+    tzSelected(e: Event): void;
     render(): JSX.Element;
 }

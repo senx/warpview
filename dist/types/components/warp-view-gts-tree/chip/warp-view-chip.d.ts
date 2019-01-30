@@ -6,14 +6,15 @@ export declare class WarpViewChip {
     gtsFilter: string;
     hiddenData: number[];
     debug: boolean;
-    ref: boolean;
+    kbdLastKeyPressed: string[];
+    refreshCounter: number;
     warpViewSelectedGTS: EventEmitter;
     private chip;
     private _node;
     private LOG;
     private onGtsFilter;
     private onHideData;
-    handleKeyDown(ev: KeyboardEvent): void;
+    handleKeyDown(key: string[]): void;
     private colorizeChip;
     componentWillLoad(): void;
     /**

@@ -8,6 +8,7 @@ export declare class WarpViewGtsTree {
     options: Param;
     hiddenData: number[];
     debug: boolean;
+    kbdLastKeyPressed: string[];
     hide: boolean;
     private gtsList;
     private _options;

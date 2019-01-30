@@ -212,6 +212,7 @@ export namespace Components {
     'debug': boolean;
     'gtsList': DataModel;
     'hiddenData': number[];
+    'isOpened': () => Promise<boolean>;
     'kbdLastKeyPressed': string[];
     'maxToShow': number;
   }
@@ -324,7 +325,7 @@ export namespace Components {
     'height': number;
     'hiddenData': number[];
     'options': any;
-    'resize': () => void;
+    'resize': () => Promise<boolean>;
     'responsive': boolean;
     'width': number;
   }
@@ -341,6 +342,7 @@ export namespace Components {
 
   interface WarpViewModal {
     'close': () => void;
+    'isOpened': () => Promise<boolean>;
     'kbdLastKeyPressed': string[];
     'modalTitle': string;
     'open': () => void;

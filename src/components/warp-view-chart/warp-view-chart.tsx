@@ -24,7 +24,7 @@ import {ColorLib} from "../../utils/color-lib";
 import {Param} from "../../model/param";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
-import moment from "moment";
+import moment from "moment-timezone";
 import Options = dygraphs.Options;
 
 /**

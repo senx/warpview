@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch, State} from "@stencil/core";
+import {Component, Element, Event, EventEmitter, Method, Prop, Watch} from "@stencil/core";
 
 @Component({
   tag: 'warp-view-modal',
@@ -25,7 +25,7 @@ import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch, St
 export class WarpViewModal {
 
   @Prop() modalTitle: string = '';
-  @Prop() kbdLastKeyPressed:string[] = [];
+  @Prop() kbdLastKeyPressed: string[] = [];
 
   @Element() el: HTMLElement;
   @Event() warpViewModalOpen: EventEmitter;
@@ -51,12 +51,14 @@ export class WarpViewModal {
   }
 
   @Method()
-  public isOpened(): boolean {
-    return this.opened;
+  public isOpened(): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      resolve(this.opened);
+    });
   }
 
   @Watch('kbdLastKeyPressed')
-  handleKeyDown(key:string[]) {
+  handleKeyDown(key: string[]) {
     if ('Escape' === key[0]) {
       this.close();
     }

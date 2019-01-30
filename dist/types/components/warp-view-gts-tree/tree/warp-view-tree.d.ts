@@ -6,7 +6,8 @@ export declare class WarpViewTreeView {
     gtsFilter: string;
     hiddenData: number[];
     debug: boolean;
-    ref: boolean;
+    kbdLastKeyPressed: string[];
+    ref: number;
     private hide;
     private LOG;
     /**

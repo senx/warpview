@@ -29,4 +29,5 @@ export declare class Param {
     maxColor?: string;
     popupButtonValidateClass?: string;
     popupButtonValidateLabel?: string;
+    timeZone?: string;
 }

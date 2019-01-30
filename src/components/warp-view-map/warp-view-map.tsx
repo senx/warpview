@@ -28,8 +28,7 @@ import {GTS} from "../../model/GTS";
 import {MapLib} from "../../utils/map-lib";
 import {Param} from "../../model/param";
 import {GTSLib} from "../../utils/gts.lib";
-import moment from "moment";
-import deepEqual from "deep-equal";
+import moment from "moment-timezone";
 
 @Component({
   tag: 'warp-view-map',
@@ -221,8 +220,8 @@ export class WarpViewMap {
   private displayMap(data: { gts: any[], params: any[] }) {
     this.LOG.debug(['drawMap'], this.data, this._options, this.hiddenData);
     let divider = GTSLib.getDivider(this._options.timeUnit);
-    this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData,divider);
-    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData,divider);
+    this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData, divider);
+    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData, divider);
     this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData);
 
     if (!this.data) {
@@ -487,13 +486,20 @@ export class WarpViewMap {
     return positions;
   }
 
+  /**
+   *
+   * @returns {Promise<boolean>}
+   */
   @Method()
-  resize() {
-    this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid) as any;
-    const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-    const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
-    this.mapElement.style.width = width + 'px';
-    this.mapElement.style.height = height + 'px';
+  resize(): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid) as any;
+      const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+      const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
+      this.mapElement.style.width = width + 'px';
+      this.mapElement.style.height = height + 'px';
+      resolve(true);
+    });
   }
 
   componentWillLoad() {

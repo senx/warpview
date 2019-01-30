@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Listen, Method, Prop, State, Watch, Event, EventEmitter} from '@stencil/core'
+import {Component, Event, Listen, Method, Prop, State, Watch} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
@@ -131,12 +131,12 @@ export class WarpViewPlot {
   private preventDefaultKeyList: string[] = ['Escape', '/'];
   private preventDefaultKeyListInModals: string[] = ['Escape','ArrowUp', 'ArrowDown', ' ', '/'];
   
-  private handleKeyDown(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keydown'], ev);    
+  private async handleKeyDown(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keydown'], ev);
     if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
       ev.preventDefault();
     }
-    if (this.timeClip.isOpened() || this.modal.isOpened() || this.gtsPopupModal.isOpened()) {
+    if (await this.timeClip.isOpened() || await this.modal.isOpened() || await this.gtsPopupModal.isOpened()) {
       if (this.preventDefaultKeyListInModals.indexOf(ev.key) >= 0) {
         ev.preventDefault();
       }
@@ -145,15 +145,13 @@ export class WarpViewPlot {
       this.modal.open();
       this.filterInput.focus();
       this.filterInput.select();
-    }
-    else if (ev.key === 't') {
+    } else if (ev.key === 't') {
       this.chart.getTimeClip().then(tc => {
         this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
-    }
-    else {
+    } else {
       this.pushKbdEvent(ev.key);
     }
 

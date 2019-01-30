@@ -15,14 +15,12 @@
  *
  */
 
-import {Component, Event, EventEmitter, Listen, Prop, State, Watch, Method} from "@stencil/core";
+import {Component, Event, EventEmitter, Listen, Method, Prop, State, Watch} from "@stencil/core";
 import {DataModel} from "../../model/dataModel";
-import {ColorLib} from "../../utils/color-lib";
 import {GTSLib} from "../../utils/gts.lib";
 import {Logger} from "../../utils/logger";
 import {GTS} from "../../model/GTS";
 import {WarpViewModal} from "../warp-view-modal/warp-view-modal";
-import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-gts-popup',
@@ -34,7 +32,7 @@ export class WarpViewGtsPopup {
   @Prop() maxToShow: number = 5;
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
-  @Prop() kbdLastKeyPressed:string[] = [];
+  @Prop() kbdLastKeyPressed: string[] = [];
 
   @Event() warpViewSelectedGTS: EventEmitter;
 
@@ -42,7 +40,6 @@ export class WarpViewGtsPopup {
   @State() current: number = 0;
 
   private _gts: any[] = [];
-//  private chips: HTMLElement[] = [];
   private modal: WarpViewModal;
   private modalOpenned: boolean = false;
   private LOG: Logger;
@@ -59,10 +56,9 @@ export class WarpViewGtsPopup {
 
   @Watch('kbdLastKeyPressed')
   handleKeyDown(key: string[]) {
-    if (key[0] ==='s' && !this.modalOpenned) {
+    if (key[0] === 's' && !this.modalOpenned) {
       this.showPopup();
-    }
-    else if (this.modalOpenned) {
+    } else if (this.modalOpenned) {
       switch (key[0]) {
         case'ArrowUp':
         case'j':
@@ -76,9 +72,9 @@ export class WarpViewGtsPopup {
           break;
         case ' ':
           this.warpViewSelectedGTS.emit({
-          gts: this._gts[this.current],
-          selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1 
-        });
+            gts: this._gts[this.current],
+            selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
+          });
           break;
         default:
           return true;
@@ -87,7 +83,7 @@ export class WarpViewGtsPopup {
   }
 
   @Method()
-  public isOpened(): boolean {
+  public isOpened(): Promise<boolean> {
     return this.modal.isOpened();
   }
 
@@ -132,20 +128,21 @@ export class WarpViewGtsPopup {
     // reusing the warp-view-chip, without passing keyboard events.
     // STENCIL BUG. mapping this.displayed should work... but including webcomponents inside slot is not working correctly at all. hence the trick to set display none.
     return <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="GTS Selector" ref={(el: any) => {
-            this.modal = el as WarpViewModal
-          }}>
-          {this.current > 0 ? <div class="up-arrow"/> : ''}
-          <ul>
-            {this._gts.map( (gts,index) => {
-              return <li class={this.current == index ? 'selected' : ''} style={ this.displayed.find( g => g.id === gts.id) ? {} : { 'display':'none' }} >
-                <warp-view-chip node={{gts: gts}} name={gts.c} hiddenData={this.hiddenData}/>
-              </li>
-            }
-            )}
-          </ul>
-          {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
-          </warp-view-modal>
-          
+      this.modal = el as WarpViewModal
+    }}>
+      {this.current > 0 ? <div class="up-arrow"/> : ''}
+      <ul>
+        {this._gts.map((gts, index) => {
+            return <li class={this.current == index ? 'selected' : ''}
+                       style={this.displayed.find(g => g.id === gts.id) ? {} : {'display': 'none'}}>
+              <warp-view-chip node={{gts: gts}} name={gts.c} hiddenData={this.hiddenData}/>
+            </li>
+          }
+        )}
+      </ul>
+      {this.current < this._gts.length - 1 ? <div class="down-arrow"/> : ''}
+    </warp-view-modal>
+
   }
 
 }

@@ -46,7 +46,11 @@ export declare class WarpViewMap {
     private updateGtsPath;
     private updateAnnotation;
     private updatePositionArray;
-    resize(): void;
+    /**
+     *
+     * @returns {Promise<boolean>}
+     */
+    resize(): Promise<boolean>;
     componentWillLoad(): void;
     componentDidLoad(): void;
     render(): JSX.Element;
