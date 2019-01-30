@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Event, EventEmitter, Listen, Prop, State, Watch} from "@stencil/core";
+import {Component, Event, EventEmitter, Listen, Prop, State, Watch, Method} from "@stencil/core";
 import {DataModel} from "../../model/dataModel";
 import {ColorLib} from "../../utils/color-lib";
 import {GTSLib} from "../../utils/gts.lib";
@@ -84,6 +84,11 @@ export class WarpViewGtsPopup {
           return true;
       }
     }
+  }
+
+  @Method()
+  public isOpened(): boolean {
+    return this.modal.isOpened();
   }
 
   @Watch('hiddenData')

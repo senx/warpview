@@ -72,6 +72,7 @@ export class WarpViewPlot {
   private mouseOutTimer: number;
   private tzSelector: HTMLSelectElement;
   private kbdCounter: number = 0;
+  private gtsPopupModal: HTMLWarpViewGtsPopupElement;
 
   componentDidLoad() {
     this.drawCharts(true);
@@ -127,12 +128,18 @@ export class WarpViewPlot {
   
   //key event are trapped in plot component.
   //if one of this key is pressed, default action is prevented.
-  private preventDefaultKeyList: string[] = ['Escape','ArrowUp', 'ArrowDown', ' ', '/'];
+  private preventDefaultKeyList: string[] = ['Escape', '/'];
+  private preventDefaultKeyListInModals: string[] = ['Escape','ArrowUp', 'ArrowDown', ' ', '/'];
   
   private handleKeyDown(ev: KeyboardEvent) {
     this.LOG.debug(['document:keydown'], ev);    
     if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
       ev.preventDefault();
+    }
+    if (this.timeClip.isOpened() || this.modal.isOpened() || this.gtsPopupModal.isOpened()) {
+      if (this.preventDefaultKeyListInModals.indexOf(ev.key) >= 0) {
+        ev.preventDefault();
+      }
     }
     if (ev.key === '/') {
       this.modal.open();
@@ -375,7 +382,7 @@ export class WarpViewPlot {
                                   hiddenData={this._toHide} options={this._options}/>
           </div>
           <div style={{width: '100%', height: '768px'}} ref={el => this.chartContainer = el}>
-            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
+            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el}/>
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                              ref={(el: HTMLWarpViewChartElement) => this.chart = el}
                              debug={this.debug}

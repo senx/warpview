@@ -31,10 +31,14 @@ export class WarpViewModal {
   @Event() warpViewModalOpen: EventEmitter;
   @Event() warpViewModalClose: EventEmitter;
 
+  private opened: boolean = false;
+
+
   @Method()
   public open() {
     this.el.style.display = 'block';
     this.el.style.zIndex = '999999';
+    this.opened = true;
     this.warpViewModalOpen.emit({});
   }
 
@@ -42,7 +46,13 @@ export class WarpViewModal {
   public close() {
     this.el.style.display = 'none';
     this.el.style.zIndex = '-1';
+    this.opened = false;
     this.warpViewModalClose.emit({});
+  }
+
+  @Method()
+  public isOpened(): boolean {
+    return this.opened;
   }
 
   @Watch('kbdLastKeyPressed')
