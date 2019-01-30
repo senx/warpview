@@ -1262,9 +1262,9 @@
           "attr": "height"
         },
         {
-          "name": "isalone",
+          "name": "isAlone",
           "type": "Boolean",
-          "attr": "isalone"
+          "attr": "is-alone"
         },
         {
           "name": "options",
@@ -1332,13 +1332,13 @@
         },
         {
           "event": "document:keydown",
-          "method": "handledockeydown",
+          "method": "handleDocKeydown",
           "passive": false,
           "capture": false
         },
         {
           "event": "keydown",
-          "method": "handlelocalkeydown",
+          "method": "handleLocalKeydown",
           "passive": false,
           "capture": false
         },
@@ -1653,9 +1653,9 @@
           ]
         },
         {
-          "name": "isalone",
+          "name": "isAlone",
           "type": "Boolean",
-          "attr": "isalone"
+          "attr": "is-alone"
         },
         {
           "name": "options",

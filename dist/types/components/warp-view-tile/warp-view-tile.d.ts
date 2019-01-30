@@ -11,7 +11,7 @@ export declare class WarpViewTile {
     url: string;
     gtsFilter: string;
     debug: boolean;
-    isalone: boolean;
+    isAlone: boolean;
     wsElement: HTMLElement;
     private LOG;
     private warpScript;

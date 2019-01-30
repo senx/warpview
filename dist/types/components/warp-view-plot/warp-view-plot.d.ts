@@ -11,7 +11,7 @@ export declare class WarpViewPlot {
     showLegend: boolean;
     gtsFilter: string;
     debug: boolean;
-    isalone: boolean;
+    isAlone: boolean;
     private _options;
     private _data;
     private _toHide;
@@ -43,8 +43,8 @@ export declare class WarpViewPlot {
     private onGtsFilter;
     private onData;
     private onOptions;
-    handlelocalkeydown(ev: KeyboardEvent): void;
-    handledockeydown(ev: KeyboardEvent): void;
+    handleLocalKeydown(ev: KeyboardEvent): void;
+    handleDocKeydown(ev: KeyboardEvent): void;
     private preventDefaultKeyList;
     private preventDefaultKeyListInModals;
     private handleKeyDown;
@@ -60,6 +60,6 @@ export declare class WarpViewPlot {
     componentWillLoad(): void;
     onWarpViewModalClose(): void;
     inputTextKeyboardEvents(e: KeyboardEvent): void;
-    tzSelected(e: Event): void;
+    tzSelected(): void;
     render(): JSX.Element;
 }

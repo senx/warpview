@@ -14,7 +14,7 @@ export class WarpViewTile {
         this.url = '';
         this.gtsFilter = '';
         this.debug = false;
-        this.isalone = false;
+        this.isAlone = false;
         this.warpScript = '';
         this.execUrl = '';
         this.timeUnit = 'us';
@@ -246,7 +246,7 @@ export class WarpViewTile {
                             this.chartTitle,
                             h("small", null, this.unit)),
                         h("div", { class: "tile" },
-                            h("warp-view-plot", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options, gtsFilter: this.gtsFilter, isalone: this.isalone })))
+                            h("warp-view-plot", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options, gtsFilter: this.gtsFilter, isAlone: this.isAlone })))
                     : '',
                 this.type == 'annotation' ?
                     h("div", null,
@@ -302,9 +302,9 @@ export class WarpViewTile {
             "attr": "gts-filter",
             "watchCallbacks": ["onGtsFilter"]
         },
-        "isalone": {
+        "isAlone": {
             "type": Boolean,
-            "attr": "isalone"
+            "attr": "is-alone"
         },
         "options": {
             "type": "Any",
