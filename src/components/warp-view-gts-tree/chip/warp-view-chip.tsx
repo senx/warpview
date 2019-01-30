@@ -37,7 +37,7 @@ export class WarpViewChip {
   @Prop() debug = false;
   @Prop() kbdLastKeyPressed:string[] = [];
 
-  @State() ref = false;
+  @State() refreshCounter: number = 0;
 
   @Event() warpViewSelectedGTS: EventEmitter;
 
@@ -80,13 +80,15 @@ export class WarpViewChip {
   }
 
   private colorizeChip() {
-    if (this._node.selected) {
-      this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
-      this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
-    } else {
-      this.chip.style.setProperty('background-color', '#eeeeee');
+    if (this.chip) {
+      if (this._node.selected) {
+        this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id))); //ERROR TO FIX TypeError: Cannot read property 'style' of undefined
+        this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
+      } else {
+        this.chip.style.setProperty('background-color', '#eeeeee');
+      }
+      this.refreshCounter++;
     }
-    this.ref = !this.ref;
   }
 
 
