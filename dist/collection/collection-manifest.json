@@ -449,6 +449,13 @@
           ]
         },
         {
+          "name": "kbdLastKeyPressed",
+          "attr": "kbd-last-key-pressed",
+          "watch": [
+            "handleKeyDown"
+          ]
+        },
+        {
           "name": "name",
           "type": "String",
           "attr": "name"
@@ -461,15 +468,7 @@
       ],
       "states": [
         {
-          "name": "ref"
-        }
-      ],
-      "listeners": [
-        {
-          "event": "document:keyup",
-          "method": "handleKeyDown",
-          "passive": false,
-          "capture": false
+          "name": "refreshCounter"
         }
       ],
       "events": [
@@ -691,6 +690,7 @@
     {
       "tag": "warp-view-gts-popup",
       "dependencies": [
+        "warp-view-chip",
         "warp-view-modal"
       ],
       "componentClass": "WarpViewGtsPopup",
@@ -723,6 +723,13 @@
           ]
         },
         {
+          "name": "kbdLastKeyPressed",
+          "attr": "kbd-last-key-pressed",
+          "watch": [
+            "handleKeyDown"
+          ]
+        },
+        {
           "name": "maxToShow",
           "type": "Number",
           "attr": "max-to-show"
@@ -738,18 +745,6 @@
       ],
       "listeners": [
         {
-          "event": "document:keydown",
-          "method": "onKeyDown",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "document:keyup",
-          "method": "onKeyUp",
-          "passive": false,
-          "capture": false
-        },
-        {
           "event": "warpViewModalClose",
           "method": "onWarpViewModalClose",
           "passive": false,
@@ -760,6 +755,11 @@
           "method": "onWarpViewModalOpen",
           "passive": false,
           "capture": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "isOpened"
         }
       ],
       "events": [
@@ -811,6 +811,10 @@
           "watch": [
             "onHideData"
           ]
+        },
+        {
+          "name": "kbdLastKeyPressed",
+          "attr": "kbd-last-key-pressed"
         },
         {
           "name": "options",
@@ -1065,28 +1069,24 @@
       },
       "props": [
         {
+          "name": "kbdLastKeyPressed",
+          "attr": "kbd-last-key-pressed",
+          "watch": [
+            "handleKeyDown"
+          ]
+        },
+        {
           "name": "modalTitle",
           "type": "String",
           "attr": "modal-title"
         }
       ],
-      "listeners": [
-        {
-          "event": "document:keydown",
-          "method": "handleKeyDown",
-          "passive": false,
-          "capture": false
-        },
-        {
-          "event": "document:keyup",
-          "method": "handleKeyUp",
-          "passive": false,
-          "capture": false
-        }
-      ],
       "methods": [
         {
           "name": "close"
+        },
+        {
+          "name": "isOpened"
         },
         {
           "name": "open"
@@ -1262,6 +1262,11 @@
           "attr": "height"
         },
         {
+          "name": "isalone",
+          "type": "Boolean",
+          "attr": "isalone"
+        },
+        {
           "name": "options",
           "type": "String",
           "attr": "options",
@@ -1306,6 +1311,9 @@
           "name": "chartType"
         },
         {
+          "name": "kbdLastKeyPressed"
+        },
+        {
           "name": "showChart"
         },
         {
@@ -1323,8 +1331,14 @@
           "capture": false
         },
         {
-          "event": "document:keyup",
-          "method": "handleKeyUp",
+          "event": "document:keydown",
+          "method": "handledockeydown",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "keydown",
+          "method": "handlelocalkeydown",
           "passive": false,
           "capture": false
         },
@@ -1337,6 +1351,12 @@
         {
           "event": "warpViewChartResize",
           "method": "onResize",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "warpViewModalClose",
+          "method": "onWarpViewModalClose",
           "passive": false,
           "capture": false
         },
@@ -1633,6 +1653,11 @@
           ]
         },
         {
+          "name": "isalone",
+          "type": "Boolean",
+          "attr": "isalone"
+        },
+        {
           "name": "options",
           "attr": "options",
           "watch": [
@@ -1783,6 +1808,10 @@
           "watch": [
             "onHideData"
           ]
+        },
+        {
+          "name": "kbdLastKeyPressed",
+          "attr": "kbd-last-key-pressed"
         }
       ],
       "states": [

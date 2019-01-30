@@ -1,7 +1,6 @@
 import { GTSLib } from "../../../utils/gts.lib";
 import { Logger } from "../../../utils/logger";
 import { ChartLib } from "../../../utils/chart-lib";
-import deepEqual from "deep-equal";
 export class WarpViewTreeView {
     constructor() {
         this.branch = false;
@@ -9,7 +8,8 @@ export class WarpViewTreeView {
         this.gtsFilter = '';
         this.hiddenData = [];
         this.debug = false;
-        this.ref = false;
+        this.kbdLastKeyPressed = [];
+        this.ref = 0;
         this.hide = {};
     }
     toggleVisibility(event, index) {
@@ -28,18 +28,16 @@ export class WarpViewTreeView {
             el.className = 'expanded';
             this.hide[index + ''] = false;
         }
-        this.ref = !this.ref;
+        this.ref++;
     }
     onGtsFilter(newValue, oldValue) {
         if (oldValue !== newValue) {
-            this.ref = !this.ref;
+            this.ref++;
         }
     }
     onHideData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['hiddenData'], newValue);
-            this.ref = !this.ref;
-        }
+        this.LOG.debug(['hiddenData'], newValue);
+        this.ref++;
     }
     isHidden(index) {
         if (this.hide.hasOwnProperty(index + '')) {
@@ -54,7 +52,7 @@ export class WarpViewTreeView {
     }
     render() {
         return h("div", { class: "list" }, this.gtsList ? h("ul", null, this.gtsList.map((node, index) => (h("li", { hidden: this.hidden }, GTSLib.isGts(node)
-            ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this.hiddenData })
+            ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this.hiddenData, kbdLastKeyPressed: this.kbdLastKeyPressed })
             : h("span", null, node
                 ? h("div", null,
                     this.branch
@@ -80,7 +78,7 @@ export class WarpViewTreeView {
                                     node.length > 1
                                         ? 's'
                                         : ''))),
-                    h("warp-view-tree-view", { gtsList: node, branch: true, hidden: this.isHidden(index), debug: this.debug, gtsFilter: this.gtsFilter }))
+                    h("warp-view-tree-view", { gtsList: node, branch: true, hidden: this.isHidden(index), debug: this.debug, gtsFilter: this.gtsFilter, kbdLastKeyPressed: this.kbdLastKeyPressed }))
                 : ''))))) : '');
     }
     static get is() { return "warp-view-tree-view"; }
@@ -110,6 +108,10 @@ export class WarpViewTreeView {
             "type": "Any",
             "attr": "hidden-data",
             "watchCallbacks": ["onHideData"]
+        },
+        "kbdLastKeyPressed": {
+            "type": "Any",
+            "attr": "kbd-last-key-pressed"
         },
         "ref": {
             "state": true

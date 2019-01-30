@@ -7,8 +7,7 @@ import { Logger } from "../../utils/logger";
 import { DataModel } from "../../model/dataModel";
 import { MapLib } from "../../utils/map-lib";
 import { GTSLib } from "../../utils/gts.lib";
-import moment from "moment";
-import deepEqual from "deep-equal";
+import moment from "moment-timezone";
 export class WarpViewMap {
     constructor() {
         this.responsive = false;
@@ -57,19 +56,26 @@ export class WarpViewMap {
         }
     }
     onHideData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
+        if (newValue !== oldValue) {
             this.LOG.debug(['hiddenData'], newValue);
             this.drawMap();
         }
     }
     onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawMap();
-        }
+        this.LOG.debug(['data'], newValue);
+        this.drawMap();
     }
     onOptions(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
+        let optionChanged = false;
+        Object.keys(newValue).forEach(opt => {
+            if (this._options.hasOwnProperty(opt)) {
+                optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
+            }
+            else {
+                optionChanged = true;
+            }
+        });
+        if (optionChanged) {
             this.LOG.debug(['options'], newValue);
             this.drawMap();
         }
@@ -90,6 +96,7 @@ export class WarpViewMap {
     drawMap() {
         this.LOG.debug(['drawMap'], this.data);
         this._options = ChartLib.mergeDeep(this._options, this.options);
+        moment.tz.setDefault(this._options.timeZone);
         let gts = this.data;
         if (!gts) {
             return;
@@ -248,7 +255,7 @@ export class WarpViewMap {
                 date = parseInt(p.ts);
             }
             else {
-                date = moment.utc(parseInt(p.ts)).toISOString();
+                date = moment(parseInt(p.ts)).utc(true).toISOString();
             }
             currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
                 .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
@@ -272,7 +279,7 @@ export class WarpViewMap {
                         date = parseInt(pathItem.ts);
                     }
                     else {
-                        date = moment.utc(parseInt(pathItem.ts)).toISOString();
+                        date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
                     }
                     let marker = Leaflet.marker(pathItem, { icon: icon, opacity: 1 })
                         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
@@ -294,7 +301,7 @@ export class WarpViewMap {
                         date = parseInt(pathItem.ts);
                     }
                     else {
-                        date = moment.utc(parseInt(pathItem.ts)).toISOString();
+                        date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
                     }
                     marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
                     positions.push(marker);
@@ -387,11 +394,14 @@ export class WarpViewMap {
         return positions;
     }
     resize() {
-        this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
-        const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-        const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
-        this.mapElement.style.width = width + 'px';
-        this.mapElement.style.height = height + 'px';
+        return new Promise(resolve => {
+            this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
+            const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
+            const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
+            this.mapElement.style.width = width + 'px';
+            this.mapElement.style.height = height + 'px';
+            resolve(true);
+        });
     }
     componentWillLoad() {
         this.LOG = new Logger(WarpViewMap, this.debug);

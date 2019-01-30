@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Event, Listen, Method, Prop, State, Watch} from '@stencil/core'
+import {Component, Listen, Method, Prop, State, Watch} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
@@ -40,7 +40,7 @@ export class WarpViewPlot {
   @Prop() showLegend: boolean = false;
   @Prop({mutable: true}) gtsFilter = '';
   @Prop() debug = false;
-  @Prop() isalone: boolean = false;
+  @Prop() isAlone: boolean = false;
 
   @State() private _options: Param = {
     showControls: true,
@@ -111,16 +111,16 @@ export class WarpViewPlot {
 // - local level, click to get focus. 
 // - document level (only if isalone property is true)
   @Listen('keydown')
-  handlelocalkeydown(ev:KeyboardEvent) {
-    if (!this.isalone) {
-      this.handleKeyDown(ev);
+  handleLocalKeydown(ev:KeyboardEvent) {
+    if (!this.isAlone) {
+      this.handleKeyDown(ev).then(() => {});
     }
   }
   
   @Listen('document:keydown')
-  handledockeydown(ev:KeyboardEvent) {
-    if (this.isalone) {
-      this.handleKeyDown(ev);
+  handleDocKeydown(ev:KeyboardEvent) {
+    if (this.isAlone) {
+      this.handleKeyDown(ev).then(() => {});
     }
   }
 
@@ -322,7 +322,7 @@ export class WarpViewPlot {
     }
   }
 
-  tzSelected(e:Event){
+  tzSelected(){
     let timeZone=this.tzSelector.value;
     this.LOG.debug(["timezone","tzselect"],timeZone);
     this._options.timeZone=timeZone;
@@ -331,7 +331,7 @@ export class WarpViewPlot {
 
   render() {
     return <div tabindex="0" onClick={(e:any)=> {
-          if (!this.isalone && e.path[0].nodeName != 'SELECT') {this.mainPlotDiv.focus();} //prevent stoling focus of the timezone selector.
+          if (!this.isAlone && e.path[0].nodeName != 'SELECT') {this.mainPlotDiv.focus();} //prevent stealing focus of the timezone selector.
         }
       }  ref={(el) => this.mainPlotDiv = el}>
 
@@ -355,7 +355,7 @@ export class WarpViewPlot {
                             checked={this.showChart}/>
           <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
                             checked={this.showMap}/>
-          <select id="tzSelector" ref={(el)=>this.tzSelector = el} onChange={(e) => this.tzSelected(e)}> 
+          <select id="tzSelector" ref={(el)=>this.tzSelector = el} onChange={() => this.tzSelected()}>
             {moment.tz.names().map((z) => <option value={z} selected={z==='UTC'}>{z}</option>)} 
           </select>
         </div>

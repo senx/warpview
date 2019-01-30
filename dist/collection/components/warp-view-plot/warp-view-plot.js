@@ -4,6 +4,7 @@ import { Logger } from "../../utils/logger";
 import { GTSLib } from "../../utils/gts.lib";
 import { ChartLib } from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
+import moment from "moment-timezone";
 export class WarpViewPlot {
     constructor() {
         this.width = "";
@@ -12,6 +13,7 @@ export class WarpViewPlot {
         this.showLegend = false;
         this.gtsFilter = '';
         this.debug = false;
+        this.isalone = false;
         this._options = {
             showControls: true,
             showGTSTree: true,
@@ -23,6 +25,10 @@ export class WarpViewPlot {
         this.showMap = false;
         this.chartType = 'line';
         this.timeClipValue = '';
+        this.kbdLastKeyPressed = [];
+        this.kbdCounter = 0;
+        this.preventDefaultKeyList = ['Escape', '/'];
+        this.preventDefaultKeyListInModals = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
     }
     componentDidLoad() {
         this.drawCharts(true);
@@ -48,22 +54,45 @@ export class WarpViewPlot {
             this.drawCharts();
         }
     }
-    handleKeyUp(ev) {
-        this.LOG.debug(['document:keyup'], ev);
-        ev.preventDefault();
+    handlelocalkeydown(ev) {
+        if (!this.isalone) {
+            this.handleKeyDown(ev);
+        }
+    }
+    handledockeydown(ev) {
+        if (this.isalone) {
+            this.handleKeyDown(ev);
+        }
+    }
+    handleKeyDown(ev) {
+        this.LOG.debug(['document:keydown'], ev);
+        if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
+            ev.preventDefault();
+        }
+        if (this.timeClip.isOpened() || this.modal.isOpened() || this.gtsPopupModal.isOpened()) {
+            if (this.preventDefaultKeyListInModals.indexOf(ev.key) >= 0) {
+                ev.preventDefault();
+            }
+        }
         if (ev.key === '/') {
             this.modal.open();
             this.filterInput.focus();
             this.filterInput.select();
         }
-        if (ev.key === 't') {
+        else if (ev.key === 't') {
             this.chart.getTimeClip().then(tc => {
                 this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
                 this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
                 this.timeClip.open();
             });
         }
-        return false;
+        else {
+            this.pushKbdEvent(ev.key);
+        }
+    }
+    pushKbdEvent(key) {
+        this.kbdCounter++;
+        this.kbdLastKeyPressed = [key, this.kbdCounter.toString()];
     }
     stateChange(event) {
         this.LOG.debug(['stateChange'], event.detail);
@@ -196,30 +225,47 @@ export class WarpViewPlot {
     componentWillLoad() {
         this.LOG = new Logger(WarpViewPlot, this.debug);
     }
+    onWarpViewModalClose() {
+        this.mainPlotDiv.focus();
+    }
     inputTextKeyboardEvents(e) {
         e.stopImmediatePropagation();
         if (e.key === 'Enter') {
             this.applyFilter();
         }
+        else if (e.key === 'Escape') {
+            this.pushKbdEvent('Escape');
+        }
+    }
+    tzSelected(e) {
+        let timeZone = this.tzSelector.value;
+        this.LOG.debug(["timezone", "tzselect"], timeZone);
+        this._options.timeZone = timeZone;
+        this.drawCharts();
     }
     render() {
-        return h("div", null,
-            h("warp-view-modal", { modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
+        return h("div", { tabindex: "0", onClick: (e) => {
+                if (!this.isalone && e.path[0].nodeName != 'SELECT') {
+                    this.mainPlotDiv.focus();
+                }
+            }, ref: (el) => this.mainPlotDiv = el },
+            h("warp-view-modal", { kbdLastKeyPressed: this.kbdLastKeyPressed, modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
                 h("pre", null,
                     h("code", { ref: (el) => this.timeClipElement = el, innerHTML: this.timeClipValue }))),
-            h("warp-view-modal", { modalTitle: "GTS Filter", ref: (el) => this.modal = el },
+            h("warp-view-modal", { kbdLastKeyPressed: this.kbdLastKeyPressed, modalTitle: "GTS Filter", ref: (el) => this.modal = el },
                 h("label", null, "Enter a regular expression to filter GTS."),
-                h("input", { type: "text", onKeyPress: (e) => this.inputTextKeyboardEvents(e), onKeyDown: (e) => this.inputTextKeyboardEvents(e), onKeyUp: (e) => this.inputTextKeyboardEvents(e), ref: el => this.filterInput = el, value: this.gtsFilter }),
-                h("button", { type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),
+                h("input", { tabindex: "1", type: "text", onKeyPress: (e) => this.inputTextKeyboardEvents(e), onKeyDown: (e) => this.inputTextKeyboardEvents(e), onKeyUp: (e) => this.inputTextKeyboardEvents(e), ref: el => this.filterInput = el, value: this.gtsFilter }),
+                h("button", { tabindex: "2", type: "button", class: this._options.popupButtonValidateClass, onClick: () => this.applyFilter(), innerHTML: this._options.popupButtonValidateLabel || 'Apply' })),
             this._options.showControls
                 ? h("div", { class: "inline" },
                     h("warp-view-toggle", { id: "timeSwitch", "text-1": "Date", "text-2": "Timestamp", checked: this._options.timeMode == "timestamp" }),
                     h("warp-view-toggle", { id: "typeSwitch", "text-1": "Line", "text-2": "Step" }),
                     h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
-                    h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }))
+                    h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }),
+                    h("select", { id: "tzSelector", ref: (el) => this.tzSelector = el, onChange: (e) => this.tzSelected(e) }, moment.tz.names().map((z) => h("option", { value: z, selected: z === 'UTC' }, z))))
                 : '',
             this._options.showGTSTree
-                ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options })
+                ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options, kbdLastKeyPressed: this.kbdLastKeyPressed })
                 : '',
             this.showChart
                 ? h("div", { class: "main-container", onMouseMove: evt => this.handleMouseMove(evt), onMouseLeave: evt => this.handleMouseOut(evt), ref: el => this.main = el },
@@ -227,7 +273,7 @@ export class WarpViewPlot {
                     h("div", { class: "annotation" },
                         h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, ref: (el) => this.annotation = el, debug: this.debug, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
                     h("div", { style: { width: '100%', height: '768px' }, ref: el => this.chartContainer = el },
-                        h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data }),
+                        h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data, kbdLastKeyPressed: this.kbdLastKeyPressed, ref: (el) => this.gtsPopupModal = el }),
                         h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.chart = el, debug: this.debug, hiddenData: this._toHide, type: this.chartType, options: this._options })))
                 : '',
             this.showMap
@@ -279,6 +325,13 @@ export class WarpViewPlot {
             "attr": "height",
             "mutable": true
         },
+        "isalone": {
+            "type": Boolean,
+            "attr": "isalone"
+        },
+        "kbdLastKeyPressed": {
+            "state": true
+        },
         "options": {
             "type": String,
             "attr": "options",
@@ -308,8 +361,11 @@ export class WarpViewPlot {
         }
     }; }
     static get listeners() { return [{
-            "name": "document:keyup",
-            "method": "handleKeyUp"
+            "name": "keydown",
+            "method": "handlelocalkeydown"
+        }, {
+            "name": "document:keydown",
+            "method": "handledockeydown"
         }, {
             "name": "stateChange",
             "method": "stateChange"
@@ -322,6 +378,9 @@ export class WarpViewPlot {
         }, {
             "name": "warpViewSelectedGTS",
             "method": "warpViewSelectedGTS"
+        }, {
+            "name": "warpViewModalClose",
+            "method": "onWarpViewModalClose"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-plot:**/"; }
 }

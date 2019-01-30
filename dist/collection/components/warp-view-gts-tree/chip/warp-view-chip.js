@@ -2,13 +2,13 @@ import { GTSLib } from "../../../utils/gts.lib";
 import { ColorLib } from "../../../utils/color-lib";
 import { GTS } from "../../../model/GTS";
 import { Logger } from "../../../utils/logger";
-import deepEqual from "deep-equal";
 export class WarpViewChip {
     constructor() {
         this.gtsFilter = '';
         this.hiddenData = [];
         this.debug = false;
-        this.ref = false;
+        this.kbdLastKeyPressed = [];
+        this.refreshCounter = 0;
         this._node = {
             selected: true,
             gts: GTS
@@ -22,30 +22,30 @@ export class WarpViewChip {
         }
     }
     onHideData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['hiddenData'], newValue);
-            this._node = Object.assign({}, this._node, { selected: this.hiddenData.indexOf(this._node.gts.id) === -1, label: GTSLib.serializeGtsMetadata(this._node.gts) });
-            this.LOG.debug(['hiddenData'], this._node);
-            this.colorizeChip();
-        }
+        this.LOG.debug(['hiddenData'], newValue);
+        this._node = Object.assign({}, this._node, { selected: this.hiddenData.indexOf(this._node.gts.id) === -1, label: GTSLib.serializeGtsMetadata(this._node.gts) });
+        this.LOG.debug(['hiddenData'], this._node);
+        this.colorizeChip();
     }
-    handleKeyDown(ev) {
-        if (ev.key === 'a') {
+    handleKeyDown(key) {
+        if (key[0] === 'a') {
             this.setState(true);
         }
-        if (ev.key === 'n') {
+        if (key[0] === 'n') {
             this.setState(false);
         }
     }
     colorizeChip() {
-        if (this._node.selected) {
-            this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
-            this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
+        if (this.chip) {
+            if (this._node.selected) {
+                this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
+                this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
+            }
+            else {
+                this.chip.style.setProperty('background-color', '#eeeeee');
+            }
+            this.refreshCounter++;
         }
-        else {
-            this.chip.style.setProperty('background-color', '#eeeeee');
-        }
-        this.ref = !this.ref;
     }
     componentWillLoad() {
         this.LOG = new Logger(WarpViewChip, this.debug);
@@ -128,6 +128,11 @@ export class WarpViewChip {
             "attr": "hidden-data",
             "watchCallbacks": ["onHideData"]
         },
+        "kbdLastKeyPressed": {
+            "type": "Any",
+            "attr": "kbd-last-key-pressed",
+            "watchCallbacks": ["handleKeyDown"]
+        },
         "name": {
             "type": String,
             "attr": "name"
@@ -136,7 +141,7 @@ export class WarpViewChip {
             "type": "Any",
             "attr": "node"
         },
-        "ref": {
+        "refreshCounter": {
             "state": true
         }
     }; }
@@ -146,10 +151,6 @@ export class WarpViewChip {
             "bubbles": true,
             "cancelable": true,
             "composed": true
-        }]; }
-    static get listeners() { return [{
-            "name": "document:keyup",
-            "method": "handleKeyDown"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-chip:**/"; }
 }

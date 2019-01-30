@@ -593,6 +593,11 @@
           "required": false
         },
         {
+          "label": "isalone",
+          "description": "",
+          "required": false
+        },
+        {
           "label": "options",
           "description": "",
           "required": false
@@ -754,6 +759,11 @@
         },
         {
           "label": "gts-filter",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "isalone",
           "description": "",
           "required": false
         },

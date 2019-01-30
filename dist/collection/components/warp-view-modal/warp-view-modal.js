@@ -1,28 +1,29 @@
 export class WarpViewModal {
     constructor() {
         this.modalTitle = '';
+        this.kbdLastKeyPressed = [];
+        this.opened = false;
     }
     open() {
         this.el.style.display = 'block';
         this.el.style.zIndex = '999999';
+        this.opened = true;
         this.warpViewModalOpen.emit({});
     }
     close() {
         this.el.style.display = 'none';
         this.el.style.zIndex = '-1';
+        this.opened = false;
         this.warpViewModalClose.emit({});
     }
-    handleKeyDown(ev) {
-        if ('Escape' === ev.key) {
-            ev.preventDefault();
-            return false;
-        }
+    isOpened() {
+        return new Promise(resolve => {
+            resolve(this.opened);
+        });
     }
-    handleKeyUp(ev) {
-        if (ev.key === 'Escape') {
-            ev.preventDefault();
+    handleKeyDown(key) {
+        if ('Escape' === key[0]) {
             this.close();
-            return false;
         }
     }
     componentDidLoad() {
@@ -49,6 +50,14 @@ export class WarpViewModal {
         "el": {
             "elementRef": true
         },
+        "isOpened": {
+            "method": true
+        },
+        "kbdLastKeyPressed": {
+            "type": "Any",
+            "attr": "kbd-last-key-pressed",
+            "watchCallbacks": ["handleKeyDown"]
+        },
         "modalTitle": {
             "type": String,
             "attr": "modal-title"
@@ -69,13 +78,6 @@ export class WarpViewModal {
             "bubbles": true,
             "cancelable": true,
             "composed": true
-        }]; }
-    static get listeners() { return [{
-            "name": "document:keydown",
-            "method": "handleKeyDown"
-        }, {
-            "name": "document:keyup",
-            "method": "handleKeyUp"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-modal:**/"; }
 }

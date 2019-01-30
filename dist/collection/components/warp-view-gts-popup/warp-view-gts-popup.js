@@ -1,18 +1,16 @@
 import { DataModel } from "../../model/dataModel";
-import { ColorLib } from "../../utils/color-lib";
 import { GTSLib } from "../../utils/gts.lib";
 import { Logger } from "../../utils/logger";
-import deepEqual from "deep-equal";
 export class WarpViewGtsPopup {
     constructor() {
         this.gtsList = new DataModel();
         this.maxToShow = 5;
         this.hiddenData = [];
         this.debug = false;
+        this.kbdLastKeyPressed = [];
         this.displayed = [];
         this.current = 0;
         this._gts = [];
-        this.chips = [];
         this.modalOpenned = false;
     }
     onWarpViewModalOpen() {
@@ -21,59 +19,45 @@ export class WarpViewGtsPopup {
     onWarpViewModalClose() {
         this.modalOpenned = false;
     }
-    onKeyDown(e) {
-        if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1) {
-            e.preventDefault();
-            return false;
+    handleKeyDown(key) {
+        if (key[0] === 's' && !this.modalOpenned) {
+            this.showPopup();
         }
-    }
-    onKeyUp(ev) {
-        this.LOG.debug(['document:keyup'], ev);
-        switch (ev.key) {
-            case 's':
-                ev.preventDefault();
-                this.showPopup();
-                break;
-            case 'ArrowUp':
-            case 'j':
-                ev.preventDefault();
-                this.showPopup();
-                this.current = Math.max(0, this.current - 1);
-                this.prepareData();
-                break;
-            case 'ArrowDown':
-            case 'k':
-                ev.preventDefault();
-                this.showPopup();
-                this.current = Math.min(this._gts.length - 1, this.current + 1);
-                this.prepareData();
-                break;
-            case ' ':
-                if (this.modalOpenned) {
-                    ev.preventDefault();
+        else if (this.modalOpenned) {
+            switch (key[0]) {
+                case 'ArrowUp':
+                case 'j':
+                    this.current = Math.max(0, this.current - 1);
+                    this.prepareData();
+                    break;
+                case 'ArrowDown':
+                case 'k':
+                    this.current = Math.min(this._gts.length - 1, this.current + 1);
+                    this.prepareData();
+                    break;
+                case ' ':
                     this.warpViewSelectedGTS.emit({
-                        gts: this.displayed[this.current],
+                        gts: this._gts[this.current],
                         selected: this.hiddenData.indexOf(this._gts[this.current].id) > -1
                     });
-                }
-                break;
-            default:
-                return true;
+                    break;
+                default:
+                    return true;
+            }
         }
-        return false;
+    }
+    isOpened() {
+        return new Promise(resolve => {
+            resolve(this.modal.isOpened());
+        });
     }
     onHideData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['hiddenData'], newValue);
-            this.prepareData();
-            this.colorizeChips();
-        }
+        this.LOG.debug(['hiddenData'], newValue);
+        this.prepareData();
     }
     onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.prepareData();
-        }
+        this.LOG.debug(['data'], newValue);
+        this.prepareData();
     }
     showPopup() {
         this.current = 0;
@@ -81,22 +65,11 @@ export class WarpViewGtsPopup {
         this.modal.open();
     }
     prepareData() {
-        if (this.gtsList) {
+        if (this.gtsList && this.gtsList.data) {
             this._gts = GTSLib.flatDeep([this.gtsList.data]);
             this.displayed = this._gts.slice(Math.max(0, Math.min(this.current - this.maxToShow, this._gts.length - 2 * this.maxToShow)), Math.min(this._gts.length, this.current + this.maxToShow + Math.abs(Math.min(this.current - this.maxToShow, 0))));
             this.LOG.debug(['prepareData'], this.displayed);
         }
-    }
-    colorizeChips() {
-        this.chips.map((chip, index) => {
-            if (this.hiddenData.indexOf(this.displayed[index].id) === -1) {
-                chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this.displayed[index].id)));
-                chip.style.setProperty('border-color', ColorLib.getColor(this.displayed[index].id));
-            }
-            else {
-                chip.style.setProperty('background-color', '#eeeeee');
-            }
-        });
     }
     componentWillLoad() {
         this.LOG = new Logger(WarpViewGtsPopup, this.debug);
@@ -105,20 +78,14 @@ export class WarpViewGtsPopup {
         this.prepareData();
     }
     render() {
-        return h("warp-view-modal", { modalTitle: "GTS Selector", ref: (el) => {
+        return h("warp-view-modal", { kbdLastKeyPressed: this.kbdLastKeyPressed, modalTitle: "GTS Selector", ref: (el) => {
                 this.modal = el;
             } },
             this.current > 0 ? h("div", { class: "up-arrow" }) : '',
-            h("ul", null, this._gts.map((gts, index) => gts
-                ? this.displayed.find(g => g.id === gts.id)
-                    ? h("li", { class: this.current === index ? 'selected' : '' },
-                        h("div", { class: "round", ref: (el) => this.chips[index] = el, style: {
-                                'background-color': ColorLib.transparentize(ColorLib.getColor(gts.id)),
-                                'border-color': ColorLib.getColor(gts.id)
-                            } }),
-                        h("span", { innerHTML: GTSLib.formatLabel(GTSLib.serializeGtsMetadata(gts)) }))
-                    : ''
-                : '')),
+            h("ul", null, this._gts.map((gts, index) => {
+                return h("li", { class: this.current == index ? 'selected' : '', style: this.displayed.find(g => g.id === gts.id) ? {} : { 'display': 'none' } },
+                    h("warp-view-chip", { node: { gts: gts }, name: gts.c, hiddenData: this.hiddenData }));
+            })),
             this.current < this._gts.length - 1 ? h("div", { class: "down-arrow" }) : '');
     }
     static get is() { return "warp-view-gts-popup"; }
@@ -144,6 +111,14 @@ export class WarpViewGtsPopup {
             "attr": "hidden-data",
             "watchCallbacks": ["onHideData"]
         },
+        "isOpened": {
+            "method": true
+        },
+        "kbdLastKeyPressed": {
+            "type": "Any",
+            "attr": "kbd-last-key-pressed",
+            "watchCallbacks": ["handleKeyDown"]
+        },
         "maxToShow": {
             "type": Number,
             "attr": "max-to-show"
@@ -162,12 +137,6 @@ export class WarpViewGtsPopup {
         }, {
             "name": "warpViewModalClose",
             "method": "onWarpViewModalClose"
-        }, {
-            "name": "document:keydown",
-            "method": "onKeyDown"
-        }, {
-            "name": "document:keyup",
-            "method": "onKeyUp"
         }]; }
     static get style() { return "/**style-placeholder:warp-view-gts-popup:**/"; }
 }

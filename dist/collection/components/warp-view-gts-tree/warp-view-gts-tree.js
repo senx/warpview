@@ -9,6 +9,7 @@ export class WarpViewGtsTree {
         this.options = new Param();
         this.hiddenData = [];
         this.debug = false;
+        this.kbdLastKeyPressed = [];
         this.hide = false;
         this.gtsList = [];
         this._options = new Param();
@@ -85,7 +86,7 @@ export class WarpViewGtsTree {
                 h("div", { class: "stack-level", onClick: () => this.toggleVisibility() },
                     h("span", { class: { 'expanded': !this.hide, 'collapsed': this.hide }, ref: el => this.root = el }),
                     " Stack"),
-                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, debug: this.debug, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter }))
+                h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, debug: this.debug, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter, kbdLastKeyPressed: this.kbdLastKeyPressed }))
             : '';
     }
     static get is() { return "warp-view-gts-tree"; }
@@ -111,6 +112,10 @@ export class WarpViewGtsTree {
         },
         "hide": {
             "state": true
+        },
+        "kbdLastKeyPressed": {
+            "type": "Any",
+            "attr": "kbd-last-key-pressed"
         },
         "options": {
             "type": "Any",
