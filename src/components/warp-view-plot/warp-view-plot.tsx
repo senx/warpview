@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Listen, Method, Prop, State, Watch} from '@stencil/core'
+import {Component, Listen, Method, Prop, State, Watch, Event, EventEmitter} from '@stencil/core'
 import {DataModel} from "../../model/dataModel";
 import {Param} from "../../model/param";
 import {Logger} from "../../utils/logger";
@@ -40,6 +40,7 @@ export class WarpViewPlot {
   @Prop() showLegend: boolean = false;
   @Prop({mutable: true}) gtsFilter = '';
   @Prop() debug = false;
+  @Prop() isalone: boolean = false;
 
   @State() private _options: Param = {
     showControls: true,
@@ -54,7 +55,9 @@ export class WarpViewPlot {
   @State() showMap = false;
   @State() chartType = 'line';
   @State() timeClipValue: string = '';
+  @State() kbdLastKeyPressed: string[] = [];
 
+  private mainPlotDiv:HTMLElement;
   private LOG: Logger;
   private line: HTMLDivElement;
   private main: HTMLDivElement;
@@ -68,6 +71,8 @@ export class WarpViewPlot {
   private timeClipElement: HTMLElement;
   private mouseOutTimer: number;
   private tzSelector: HTMLSelectElement;
+  private kbdCounter: number = 0;
+  private gtsPopupModal: HTMLWarpViewGtsPopupElement;
 
   componentDidLoad() {
     this.drawCharts(true);
@@ -102,23 +107,61 @@ export class WarpViewPlot {
     }
   }
 
-  @Listen('document:keyup')
-  handleKeyUp(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keyup'], ev);
-    ev.preventDefault();
+//two ways to capture keyboard events : 
+// - local level, click to get focus. 
+// - document level (only if isalone property is true)
+  @Listen('keydown')
+  handlelocalkeydown(ev:KeyboardEvent) {
+    if (!this.isalone) {
+      this.handleKeyDown(ev);
+    }
+  }
+  
+  @Listen('document:keydown')
+  handledockeydown(ev:KeyboardEvent) {
+    if (this.isalone) {
+      this.handleKeyDown(ev);
+    }
+  }
+
+
+  
+  //key event are trapped in plot component.
+  //if one of this key is pressed, default action is prevented.
+  private preventDefaultKeyList: string[] = ['Escape', '/'];
+  private preventDefaultKeyListInModals: string[] = ['Escape','ArrowUp', 'ArrowDown', ' ', '/'];
+  
+  private handleKeyDown(ev: KeyboardEvent) {
+    this.LOG.debug(['document:keydown'], ev);    
+    if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
+      ev.preventDefault();
+    }
+    if (this.timeClip.isOpened() || this.modal.isOpened() || this.gtsPopupModal.isOpened()) {
+      if (this.preventDefaultKeyListInModals.indexOf(ev.key) >= 0) {
+        ev.preventDefault();
+      }
+    }
     if (ev.key === '/') {
       this.modal.open();
       this.filterInput.focus();
       this.filterInput.select();
     }
-    if (ev.key === 't') {
+    else if (ev.key === 't') {
       this.chart.getTimeClip().then(tc => {
         this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
     }
-    return false;
+    else {
+      this.pushKbdEvent(ev.key);
+    }
+
+  }
+
+  private pushKbdEvent(key:string) {
+    this.kbdCounter++;
+    this.kbdLastKeyPressed=[key,this.kbdCounter.toString()];
   }
 
   @Listen('stateChange')
@@ -266,10 +309,18 @@ export class WarpViewPlot {
     this.LOG = new Logger(WarpViewPlot, this.debug);
   }
 
+  @Listen('warpViewModalClose')
+  onWarpViewModalClose() {
+    this.mainPlotDiv.focus();
+  }
+
   inputTextKeyboardEvents(e:KeyboardEvent) {
     e.stopImmediatePropagation();
     if (e.key === 'Enter'){
       this.applyFilter();
+    } 
+    else if (e.key === 'Escape') {
+      this.pushKbdEvent('Escape');
     }
   }
 
@@ -281,15 +332,19 @@ export class WarpViewPlot {
   }
 
   render() {
-    return <div>
-      <warp-view-modal modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
+    return <div tabindex="0" onClick={(e:any)=> {
+          if (!this.isalone && e.path[0].nodeName != 'SELECT') {this.mainPlotDiv.focus();} //prevent stoling focus of the timezone selector.
+        }
+      }  ref={(el) => this.mainPlotDiv = el}>
+
+      <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
         <pre><code ref={(el) => this.timeClipElement = el}
                    innerHTML={this.timeClipValue}/></pre>
       </warp-view-modal>
-      <warp-view-modal modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
+      <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter}/>
-        <button type="button" class={this._options.popupButtonValidateClass}
+        <input tabindex="1" type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter}/>
+        <button tabindex="2" type="button" class={this._options.popupButtonValidateClass}
                 onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
       </warp-view-modal>
@@ -310,7 +365,7 @@ export class WarpViewPlot {
       {this._options.showGTSTree
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
                               debug={this.debug}
-                              hiddenData={this._toHide} options={this._options}/>
+                              hiddenData={this._toHide} options={this._options} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
         : ''}
       {this.showChart
         ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
@@ -327,7 +382,7 @@ export class WarpViewPlot {
                                   hiddenData={this._toHide} options={this._options}/>
           </div>
           <div style={{width: '100%', height: '768px'}} ref={el => this.chartContainer = el}>
-            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data}/>
+            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el}/>
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                              ref={(el: HTMLWarpViewChartElement) => this.chart = el}
                              debug={this.debug}

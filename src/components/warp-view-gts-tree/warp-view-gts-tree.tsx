@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Prop, State, Watch} from "@stencil/core";
+import {Component, Prop, State, Watch, Listen} from "@stencil/core";
 import {GTSLib} from "../../utils/gts.lib";
 import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
@@ -34,6 +34,7 @@ export class WarpViewGtsTree {
   @Prop() options: Param = new Param();
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
+  @Prop() kbdLastKeyPressed:string[] = [];
 
   @State() hide = false;
 
@@ -128,7 +129,7 @@ export class WarpViewGtsTree {
         </div>
         <warp-view-tree-view gtsList={this.gtsList} branch={false} hidden={this.hide}
                              debug={this.debug}
-                             hiddenData={this.hiddenData} gtsFilter={this.gtsFilter}/>
+                             hiddenData={this.hiddenData} gtsFilter={this.gtsFilter} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
       </div>
       : '';
   }

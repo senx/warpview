@@ -168,7 +168,7 @@
               <a class="nav-link" id="v-pills-6-tab" data-toggle="pill" href="#v-pills-6" role="tab" aria-controls="v-pills-6"
                 aria-selected="false">annotation span greater than plottables</a>
               <a class="nav-link" id="v-pills-7-tab" data-toggle="pill" href="#v-pills-7" role="tab" aria-controls="v-pills-7"
-                aria-selected="false">chart and annotation ts</a>
+                aria-selected="false">lots of annotation</a>
               <a class="nav-link" id="v-pills-8-tab" data-toggle="pill" href="#v-pills-8" role="tab" aria-controls="v-pills-8"
                 aria-selected="false">chart 2M points</a>
               <a class="nav-link" id="v-pills-9-tab" data-toggle="pill" href="#v-pills-9" role="tab" aria-controls="v-pills-9"
@@ -189,6 +189,8 @@
                 aria-selected="false">gts in the past (Asterix)</a>
                 <a class="nav-link" id="v-pills-17-tab" data-toggle="pill" href="#v-pills-17" role="tab" aria-controls="v-pills-17"
                 aria-selected="false">boat data in st Barth</a>
+                <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-18" role="tab" aria-controls="v-pills-18"
+                aria-selected="false">keyboard events propagation</a>
 
               <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
                aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
@@ -417,7 +419,7 @@
                 <div class="card mb-4 shadow-sm">
                   <div class="card-body">
                     <p>
-                      On another endpoint, some annotation and plottable gts.
+                      On another endpoint, some annotation gts. Test the GTS selector to see if everything is normal.
                     </p>
                     <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
                       debug="true" chart-title="Plot">
@@ -794,6 +796,90 @@
                   </div>
                 </div>
               </div>
+
+
+
+              <div class="tab-pane fade" id="v-pills-18" role="tabpanel" aria-labelledby="v-pills-18">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      The plot element below has focus false. So, keyboard events must not be stolen. Place the focus in the text area then test all the shortcut a n / s j k t arrowUp arrowdown space (gts selector, regexp selector).
+                      No shortcut should ever trigger an action. The 'r' key should trigger a refresh of every tiles (catch at document level).
+                    </p>
+                    <textarea name="test" cols="40" rows="5">TEST HERE</textarea>
+                    <div style="width: 100%">
+                      <div id="leftone" style="width: 49%; display: inline-block;">
+                         <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false" hasfocus="true"
+                          chart-title="Plot LEFT">
+                
+                          NEWGTS 'divLEFT' RENAME
+                          -10 10
+                          <%
+              's' STORE  
+              NOW $s s + $s 0.0 NaN $s 2 % 0 == ADDVALUE
+            %>
+                          FOR
+
+                          NEWGTS 'divLEFTstringone' RENAME
+                          -10 10
+                          <%
+              's' STORE  
+              NOW $s s + 0.0 $s NaN 
+              $s ADDVALUE
+            
+            %>
+                          FOR
+
+                          NEWGTS 'divLEFT 2h ago' RENAME
+                          NOW 2 h - NaN NaN NaN 12 ADDVALUE
+                          NOW 2 h + NaN NaN NaN -12 ADDVALUE
+                          
+
+                        </warp-view-tile>
+                      </div>
+                      <div id="rightone" style="width: 49%; display: inline-block;">
+                          <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false" hasfocus="true"
+                          chart-title="Plot RIGHT">
+                
+                          NEWGTS 'divRIGHT' RENAME
+                          -10 10
+                          <%
+              's' STORE  
+              NOW $s s + $s 0.0 NaN $s 2 % 0 == ADDVALUE
+            %>
+                          FOR
+
+                          NEWGTS 'divRIGHTstringone' RENAME
+                          -10 10
+                          <%
+              's' STORE  
+              NOW $s s + 0.0 $s NaN 
+              $s ADDVALUE
+            
+            %>
+                          FOR
+
+                          NEWGTS 'divRIGHT 2h ago' RENAME
+                          NOW 2 h - NaN NaN NaN -12 ADDVALUE
+                          NOW 2 h + NaN NaN NaN 12 ADDVALUE
+                          
+
+                        </warp-view-tile>
+                      </div>
+                                
+                    </div>
+
+
+
+
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
 
             </div>
           </div>
