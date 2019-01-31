@@ -356,9 +356,11 @@ export class WarpViewPlot {
                             checked={this.showChart}/>
           <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
                             checked={this.showMap}/>
-          <select id="tzSelector" ref={(el)=>this.tzSelector = el} onChange={() => this.tzSelected()}>
+          <div class="tzcontainer">
+            <select id="tzSelector" ref={(el)=>this.tzSelector = el} onChange={() => this.tzSelected()}>
             {moment.tz.names().map((z) => <option value={z} selected={z==='UTC'} class={z==='UTC' ? 'defaulttz':'customtz'} >{z}</option>)} 
           </select>
+          </div>
         </div>
         : ''}
       {this._options.showGTSTree
