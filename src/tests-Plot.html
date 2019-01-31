@@ -191,6 +191,8 @@
                 aria-selected="false">boat data in st Barth</a>
                 <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-18" role="tab" aria-controls="v-pills-18"
                 aria-selected="false">keyboard events propagation</a>
+                <a class="nav-link" id="v-pills-19-tab" data-toggle="pill" href="#v-pills-19" role="tab" aria-controls="v-pills-19"
+                aria-selected="false">nested plot no annotations</a>
 
               <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
                aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
@@ -423,7 +425,7 @@
                     </p>
                     <warp-view-tile url="https://warp.senx.io/standalone/api/v0/exec" responsive="true" type="plot"
                       debug="true" chart-title="Plot">
-                      {} NOW 96 h @senx/alerting/_fetch
+                      {} NOW 296 h @senx/alerting/_fetch
                     </warp-view-tile>
                   </div>
                 </div>
@@ -877,6 +879,46 @@
               </div>
 
 
+
+
+              <div class="tab-pane fade" id="v-pills-19" role="tabpanel" aria-labelledby="v-pills-19">
+                <div class="card mb-4 shadow-sm">
+                  <div class="card-body">
+                    <p>
+                      A few plot data nested in lists and sublist. The +/- expander from annotations should not appear. Check the gts popup selector functionnality.
+                    </p>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                      chart-title="Plotns">
+
+                      NEWGTS 'number1' RENAME
+                      -10 10
+                      <%
+                        's' STORE  
+                        NOW $s s + 0.0 $s NaN 
+                        $s ADDVALUE
+                      
+                      %>
+                      FOR { 'why' 'because' } SETATTRIBUTES 'gts' STORE
+                      
+                      [ [
+                        
+                        $gts 1 + CLONE 'number2' RENAME SWAP DROP
+                        $gts 2 + CLONE 'number3' RENAME SWAP DROP
+                        [
+                          $gts 3 + CLONE 'number4' RENAME SWAP DROP
+                        ]
+
+                      
+                      ] ]
+
+                      [ $gts ]
+
+        
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+              </div>
 
 
 

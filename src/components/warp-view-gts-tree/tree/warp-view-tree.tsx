@@ -126,7 +126,7 @@ export class WarpViewTreeView {
                           : ''}</small></span>
                   </div>}
                   <warp-view-tree-view gtsList={node} branch={true} hidden={this.isHidden(index)}
-                                       debug={this.debug} gtsFilter={this.gtsFilter} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
+                                       debug={this.debug} gtsFilter={this.gtsFilter} kbdLastKeyPressed={this.kbdLastKeyPressed}  hiddenData={this.hiddenData} />
                 </div>
                 : ''}
               </span>}
