@@ -106,6 +106,7 @@ export class WarpViewAnnotation {
         moment.tz.setDefault(this._options.timeZone);
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
         let gts = this.parseData(this.data);
+        this.displayExpander = (gts.length > 1);
         if (!gts || gts.length === 0) {
             return;
         }

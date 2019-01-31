@@ -244,7 +244,7 @@ export class WarpViewPlot {
         this.drawCharts();
     }
     render() {
-        return h("div", { tabindex: "0", onClick: (e) => {
+        return h("div", { id: "focusablePlotDiv", tabindex: "0", onClick: (e) => {
                 if (!this.isAlone && e.path[0].nodeName != 'SELECT') {
                     this.mainPlotDiv.focus();
                 }

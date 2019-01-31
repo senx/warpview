@@ -3946,7 +3946,7 @@ var lengthSum$1 = adder();
 var array$3 = Array.prototype;
 
 var map$2 = array$3.map;
-var slice$5 = array$3.slice;
+var slice$6 = array$3.slice;
 
 var implicit = {name: "implicit"};
 
@@ -3955,7 +3955,7 @@ function ordinal(range) {
       domain = [],
       unknown = implicit;
 
-  range = range == null ? [] : slice$5.call(range);
+  range = range == null ? [] : slice$6.call(range);
 
   function scale(d) {
     var key = d + "", i = index.get(key);
@@ -3975,7 +3975,7 @@ function ordinal(range) {
   };
 
   scale.range = function(_) {
-    return arguments.length ? (range = slice$5.call(_), scale) : range.slice();
+    return arguments.length ? (range = slice$6.call(_), scale) : range.slice();
   };
 
   scale.unknown = function(_) {
@@ -4173,11 +4173,11 @@ function continuous(deinterpolate, reinterpolate) {
   };
 
   scale.range = function(_) {
-    return arguments.length ? (range = slice$5.call(_), rescale()) : range.slice();
+    return arguments.length ? (range = slice$6.call(_), rescale()) : range.slice();
   };
 
   scale.rangeRound = function(_) {
-    return range = slice$5.call(_), interpolate$$1 = interpolateRound, rescale();
+    return range = slice$6.call(_), interpolate$$1 = interpolateRound, rescale();
   };
 
   scale.clamp = function(_) {

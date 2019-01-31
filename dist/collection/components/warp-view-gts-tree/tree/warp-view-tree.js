@@ -78,7 +78,7 @@ export class WarpViewTreeView {
                                     node.length > 1
                                         ? 's'
                                         : ''))),
-                    h("warp-view-tree-view", { gtsList: node, branch: true, hidden: this.isHidden(index), debug: this.debug, gtsFilter: this.gtsFilter, kbdLastKeyPressed: this.kbdLastKeyPressed }))
+                    h("warp-view-tree-view", { gtsList: node, branch: true, hidden: this.isHidden(index), debug: this.debug, gtsFilter: this.gtsFilter, kbdLastKeyPressed: this.kbdLastKeyPressed, hiddenData: this.hiddenData }))
                 : ''))))) : '');
     }
     static get is() { return "warp-view-tree-view"; }
