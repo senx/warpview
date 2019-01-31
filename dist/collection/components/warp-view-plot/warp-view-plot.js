@@ -241,6 +241,7 @@ export class WarpViewPlot {
         let timeZone = this.tzSelector.value;
         this.LOG.debug(["timezone", "tzselect"], timeZone);
         this._options.timeZone = timeZone;
+        this.tzSelector.setAttribute('class', timeZone === 'UTC' ? 'defaulttz' : 'customtz');
         this.drawCharts();
     }
     render() {
@@ -262,7 +263,8 @@ export class WarpViewPlot {
                     h("warp-view-toggle", { id: "typeSwitch", "text-1": "Line", "text-2": "Step" }),
                     h("warp-view-toggle", { id: "chartSwitch", "text-1": "Hide chart", "text-2": "Display chart", checked: this.showChart }),
                     h("warp-view-toggle", { id: "mapSwitch", "text-1": "Hide map", "text-2": "Display map", checked: this.showMap }),
-                    h("select", { id: "tzSelector", ref: (el) => this.tzSelector = el, onChange: () => this.tzSelected() }, moment.tz.names().map((z) => h("option", { value: z, selected: z === 'UTC' }, z))))
+                    h("div", { class: "tzcontainer" },
+                        h("select", { id: "tzSelector", class: "defaulttz", ref: (el) => this.tzSelector = el, onChange: () => this.tzSelected() }, moment.tz.names().map((z) => h("option", { value: z, selected: z === 'UTC', class: z === 'UTC' ? 'defaulttz' : 'customtz' }, z)))))
                 : '',
             this._options.showGTSTree
                 ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options, kbdLastKeyPressed: this.kbdLastKeyPressed })
