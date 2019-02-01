@@ -110,7 +110,7 @@ export class WarpViewChart {
       this.parentWidth = this.el.parentElement.clientWidth;
       this.initialResizeNeeded = false;
       if (this._chart) {
-        if (!this.initialHeight) {
+        if (!this.initialHeight || this.standalone) {
           this.initialHeight = this.el.parentElement.clientHeight;
         }
         clearTimeout(this.resizeTimer); //keep a timer to avoid too much refresh
@@ -662,10 +662,11 @@ export class WarpViewChart {
 
   componentDidLoad() {
     this.drawChart(true);
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {
-    return <div>
+    return <div id="chartContainer">
       <div id={this.uuid} class="chart"/>
     </div>;
   }

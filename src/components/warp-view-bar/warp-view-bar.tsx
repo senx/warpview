@@ -53,14 +53,15 @@ export class WarpViewBar {
   private _mapIndex = {};
   private resizeTimer;
   private parentWidth = -1;
+  private canvas: HTMLCanvasElement;
 
   @Listen('window:resize')
   onResize() {
     if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
         if (this.el.parentElement.clientWidth > 0) {
+          this.parentWidth = this.el.parentElement.clientWidth;
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           this.drawChart();
         } else {
@@ -72,10 +73,8 @@ export class WarpViewBar {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -88,7 +87,6 @@ export class WarpViewBar {
 
   private buildGraph() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let gts = this.gtsToData(this.data);
     if (!gts) {
       return;
@@ -132,7 +130,8 @@ export class WarpViewBar {
           }
         ]
       },
-      responsive: this.responsive
+      responsive: this.responsive,
+      maintainAspectRatio: false
     };
     if (this._options.timeMode === 'timestamp') {
       graphOpts.scales.xAxes[0].time = undefined;
@@ -157,7 +156,7 @@ export class WarpViewBar {
     if (this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart(ctx, {
+    this._chart = new Chart(this.canvas, {
       type: 'bar',
       data: {
         labels: gts.ticks,
@@ -166,6 +165,9 @@ export class WarpViewBar {
       options: graphOpts
     });
     this.onResize();
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
   }
 
   private drawChart() {
@@ -244,12 +246,13 @@ export class WarpViewBar {
 
   componentDidLoad() {
     this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {
     return <div>
-      <div class="chart-container">
-        <canvas id={this.uuid} width={this.width} height={this.height}/>
+      <div class="chart-container">  
+        <canvas ref={el => this.canvas = el} width={this.width} height={this.height}/>
       </div>
     </div>;
   }

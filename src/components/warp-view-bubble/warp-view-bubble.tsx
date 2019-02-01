@@ -71,10 +71,8 @@ export class WarpViewBubble {
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     this.LOG.debug(['onData'], newValue, oldValue);
-    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['onData'], newValue);
       this.drawChart();
-    }
   }
 
   @Watch('options')
@@ -149,7 +147,8 @@ export class WarpViewBubble {
           }
         ]
       },
-      responsive: this.responsive
+      responsive: this.responsive,
+      maintainAspectRatio: false
     };
 
     const dataSets = this.parseData(dataList);
@@ -170,7 +169,10 @@ export class WarpViewBubble {
       },
       options: options
     });
-    this.onResize();
+    this.onResize();      
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
   }
 
   private parseData(gts) {
@@ -207,6 +209,7 @@ export class WarpViewBubble {
 
   componentDidLoad() {
     this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

@@ -52,14 +52,15 @@ export class WarpViewScatter {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private resizeTimer;
   private parentWidth = -1;
+  private canvas: HTMLCanvasElement;
 
   @Listen('window:resize')
   onResize() {
     if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
         if (this.el.parentElement.clientWidth > 0) {
+          this.parentWidth = this.el.parentElement.clientWidth;
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           this.drawChart();
         } else {
@@ -71,10 +72,8 @@ export class WarpViewScatter {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -87,7 +86,6 @@ export class WarpViewScatter {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let dataList: any[];
     let data: any = this.data;
     if (!data) return;
@@ -143,6 +141,7 @@ export class WarpViewScatter {
           }
         }]
       },
+      maintainAspectRatio: false
     };
     if (this._options.timeMode === 'timestamp') {
       options.scales.xAxes[0].time = undefined;
@@ -167,8 +166,11 @@ export class WarpViewScatter {
     if (this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: options});
-    this.onResize();
+    this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: options});
+    this.onResize();    
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
     this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
   }
 
@@ -214,12 +216,13 @@ export class WarpViewScatter {
 
   componentDidLoad() {
     this.drawChart()
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {
     return <div>
       <div class="chart-container">
-        <canvas id={this.uuid} width={this.width} height={this.height}/>
+        <canvas ref={el => this.canvas = el} width={this.width} height={this.height}/>
       </div>
     </div>;
   }

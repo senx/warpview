@@ -69,10 +69,8 @@ export class WarpViewPolar {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -146,6 +144,7 @@ export class WarpViewPolar {
           },
           legend: {display: this.showLegend},
           responsive: this.responsive,
+          maintainAspectRatio: false,
           scale: {
             gridLines: {
               color: color,
@@ -166,6 +165,9 @@ export class WarpViewPolar {
         }
       });
       this.onResize();
+      setTimeout(() => {
+        this._chart.update();
+      }, 250);
     }
   }
 
@@ -174,7 +176,8 @@ export class WarpViewPolar {
   }
 
   componentDidLoad() {
-    this.drawChart()
+    this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

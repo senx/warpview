@@ -45,10 +45,8 @@ export class WarpViewGtsTree {
 
   @Watch("data")
   onData(newValue, oldValue) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['options'], newValue, oldValue);
-      this.doRender();
-    }
+    this.LOG.debug(['options'], newValue, oldValue);
+    this.doRender();
   }
 
   @Watch('options')

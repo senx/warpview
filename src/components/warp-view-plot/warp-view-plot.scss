@@ -17,13 +17,19 @@
 
 :host {
   position: relative;
+  height: 100%;
+
+  // #focusablePlotDiv {
+  //   height: var(--warp-view-tile-height, 100%);
+  // }
 
   .main-container {
     position: relative;
+//    height: var(--warp-view-tile-height, 100%);
   }
 
   .map-container {
-    height: 768px;
+    height: var(--warp-view-plot-map-height, 400px);
     width: calc(100% - 25px);
     margin-top: 20px;
     margin-right: 20px;
@@ -92,6 +98,10 @@
   }
   .tzcontainer {
     display: flex;
+  }
+  .chart-container {
+    height: var(--warp-view-plot-chart-height, 400px);
+    width: 100%;
   }
 
 }

@@ -1,3 +1,5 @@
+import { Timer } from "d3";
+
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -115,5 +117,18 @@ export class ChartLib {
     // 	myImage.src = "ripple.svg"
     img.src = "data:image/svg+xml;base64," + btoa(svg);
     return img;
+  }
+
+  /**
+   * Watch the parent resize of an element.
+   * @param el The component Element
+   * @param redrawfunction The resize or redraw function to call if container size change. don't forget to .bind(this)
+   * @param period Timer component By default, 2 s
+   */
+  static resizeWatchTimer(el:HTMLElement, redrawfunction:Function, period:number=2000):number{
+    let previouswidth = el.parentElement.clientWidth;
+    return window.setInterval(()=> {
+      if (el.parentElement.clientWidth !== previouswidth) {redrawfunction();}
+    },period)
   }
 }

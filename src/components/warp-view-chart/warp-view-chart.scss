@@ -15,7 +15,16 @@
  *
  */
 
+:host {
+  display:block;
+  height: 100%;
+}
+
 warp-view-chart {
+
+  #chartContainer {
+    height: 100%;
+  }
   .dygraph-legend, .tooltip {
     background-color: var(--warp-view-chart-legend-bg, #000000) !important;
     color: var(--warp-view-chart-legend-color, #ffffff) !important;

@@ -54,9 +54,9 @@ export class WarpViewPie {
   @Listen('window:resize')
   onResize() {
     if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
+        this.parentWidth = this.el.parentElement.clientWidth;
         if (this.el.parentElement.clientWidth > 0) {
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           this.drawChart();
@@ -69,10 +69,8 @@ export class WarpViewPie {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -155,6 +153,7 @@ export class WarpViewPie {
             duration: 0,
           },
           responsive: this.responsive,
+          maintainAspectRatio: false,
           tooltips: {
             mode: 'index',
             intersect: true,
@@ -164,6 +163,9 @@ export class WarpViewPie {
         }
       });
       this.onResize();
+      setTimeout(() => {
+        this._chart.update();
+      }, 250);
     }
   }
 
@@ -189,6 +191,7 @@ export class WarpViewPie {
 
   componentDidLoad() {
     this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

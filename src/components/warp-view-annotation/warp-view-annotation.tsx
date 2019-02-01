@@ -88,10 +88,8 @@ export class WarpViewAnnotation {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch("options")
@@ -390,6 +388,7 @@ export class WarpViewAnnotation {
 
   componentDidLoad() {
     this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

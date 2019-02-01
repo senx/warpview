@@ -40,26 +40,31 @@
     border-style: solid;
   }
   .wrapper {
-    min-height: var(--warp-view-tile-height, 400px);
+    //min-height: 200px;
     width: var(--warp-view-tile-width, 100%);
     height: var(--warp-view-tile-height, 100%);
+    .tilewrapper {
+      width: var(--warp-view-tile-width, 100%);
+      height: var(--warp-view-tile-height, 100%);
+      .tile {
+        width: 100%;
+        height:calc(var(--warp-view-tile-height, 100%) - 40px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .notitle {
+        height: 100%;
+      } 
+      h1 {
+        font-size: 20px;
+        padding: 5px;
+        margin: 0;
+        color: var(--warp-view-font-color, #000000);
 
-    .tile {
-      width: 100%;
-      height:calc(var(--warp-view-tile-height, 100%) - 40px);
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    h1 {
-      font-size: 20px;
-      padding: 5px;
-      margin: 0;
-      color: var(--warp-view-font-color, #000000);
-
-      small {
-        font-size: 10px;
-        margin-left: 10px;
+        small {
+          font-size: 10px;
+          margin-left: 10px;
+        }
       }
     }
   }

@@ -96,9 +96,9 @@ export class WarpViewMap {
   @Listen('window:resize')
   onResize() {
     if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
+        this.parentWidth = this.el.parentElement.clientWidth;
         if (this.el.parentElement.clientWidth > 0) {
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           this.drawMap();
@@ -508,6 +508,7 @@ export class WarpViewMap {
 
   componentDidLoad() {
     this.drawMap();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

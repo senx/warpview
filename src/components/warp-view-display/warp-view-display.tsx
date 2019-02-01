@@ -49,10 +49,8 @@ export class WarpViewDisplay {
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['onData'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['onData'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
