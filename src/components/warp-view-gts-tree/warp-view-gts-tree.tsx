@@ -30,7 +30,7 @@ import deepEqual from "deep-equal";
 })
 export class WarpViewGtsTree {
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
-  @Prop() gtsFilter = '';
+  @Prop() gtsFilter = 'x';
   @Prop() options: Param = new Param();
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;

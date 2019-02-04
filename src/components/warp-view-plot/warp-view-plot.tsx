@@ -38,9 +38,10 @@ export class WarpViewPlot {
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
-  @Prop({mutable: true}) gtsFilter = '';
+  @Prop({mutable: true}) gtsFilter = 'x';
   @Prop() debug = false;
   @Prop() isAlone: boolean = false;
+  @Prop() initialHeight:string = "400";
 
   @State() private _options: Param = {
     showControls: true,
@@ -73,6 +74,7 @@ export class WarpViewPlot {
   private tzSelector: HTMLSelectElement;
   private kbdCounter: number = 0;
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
+  private gtsFilterCount: number = 0 ;
 
   componentDidLoad() {
     this.drawCharts(true);
@@ -201,14 +203,6 @@ export class WarpViewPlot {
     this.line.style.left = '-100px';
   }
 
-  @Listen('warpViewChartResize')
-  onResize(event: CustomEvent) {
-    this.LOG.debug(['warpViewChartResize'], event.detail);
-    if (this.chartContainer) {
-      this.chartContainer.style.height = event.detail.h + 'px';
-    }
-  }
-
   @Listen('warpViewSelectedGTS')
   warpViewSelectedGTS(event: CustomEvent) {
     this.LOG.debug(['warpViewSelectedGTS'], event.detail);
@@ -297,7 +291,8 @@ export class WarpViewPlot {
   }
 
   private applyFilter() {
-    this.gtsFilter = this.filterInput.value;
+    this.gtsFilterCount++;
+    this.gtsFilter = this.gtsFilterCount.toString().slice(0,1) + this.filterInput.value;
     this.modal.close();
   }
 
@@ -342,7 +337,7 @@ export class WarpViewPlot {
       </warp-view-modal>
       <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input tabindex="1" type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter} />
+        <input tabindex="1" type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter.slice(1)} />
         <button tabindex="2" type="button" class={this._options.popupButtonValidateClass}
           onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
@@ -382,14 +377,14 @@ export class WarpViewPlot {
               timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
               hiddenData={this._toHide} options={this._options} />
           </div>
-          <div class="chart-container" ref={el => this.chartContainer = el}>
+          <warp-view-resize minHeight="100" initialHeight={this.initialHeight} >
             <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el} />
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
               ref={(el: HTMLWarpViewChartElement) => this.chart = el}
               debug={this.debug}
               hiddenData={this._toHide} type={this.chartType}
               options={this._options} />
-          </div>
+          </warp-view-resize>
         </div>
         : ''}
       {this.showMap ?

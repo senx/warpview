@@ -27,6 +27,8 @@ import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
 import Options = dygraphs.Options;
 
+type visibilityState = 'unknown'|'nothingPlottable' |'plottablesAllHidden' | 'plottableShown';
+
 /**
  * options :
  *  gridLineColor: 'red | #fff'
@@ -55,6 +57,7 @@ export class WarpViewChart {
   @Event() boundsDidChange: EventEmitter;
   @Event() pointHover: EventEmitter;
   @Event() warpViewChartResize: EventEmitter;
+  @Event() resizeMyParent: EventEmitter;
 
   private LOG: Logger;
   private static DEFAULT_WIDTH = 800;
@@ -69,8 +72,7 @@ export class WarpViewChart {
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private visibility: boolean[] = [];
-  private initialHeight: number;
-  private parentWidth = -1;
+
   /**
    * usefull for default zoom
    */
@@ -103,36 +105,62 @@ export class WarpViewChart {
    * put this to true before creating a new dygraph to force a resize in the drawCallback
    */
   private initialResizeNeeded = false;
+  private previousParentHeight = -1;
+  private previousParentWidth = -1;
+  
+  private visibilityStatus:visibilityState = 'unknown';
+  
+  private heightWithPlottableData = -1;
 
+  // if nothing to display, must reduce to 30px. 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
-      this.initialResizeNeeded = false;
-      if (this._chart) {
-        if (!this.initialHeight || this.standalone) {
-          this.initialHeight = this.el.parentElement.clientHeight;
-        }
-        clearTimeout(this.resizeTimer); //keep a timer to avoid too much refresh
-        this.resizeTimer = setTimeout(() => {
-          if (this.parentWidth > 0) {
-            this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
-            const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-            const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-            this._chart.resize(width, this.displayGraph() ? height : 30);
-            this.warpViewChartResize.emit({w: width, h: this.displayGraph() ? height : 30});
-          } else {
-            this.onResize();
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+      let parentWidth = this.el.parentElement.getBoundingClientRect().width;
+      let parentHeight = this.el.parentElement.getBoundingClientRect().height;
+      if (this.initialResizeNeeded || parentWidth !== this.previousParentWidth || parentHeight !== this.previousParentHeight) {
+        this.initialResizeNeeded = false;
+        if (this.standalone || this.displayGraph()) {
+          //there is something to show, adapt me to the parent bounding box
+          let width = parentWidth - 5;
+          if (this.visibilityStatus === 'plottablesAllHidden') {
+            //restore the previous height
+            parentHeight = this.heightWithPlottableData;
+            this.visibilityStatus = 'plottableShown';
+            this.resizeMyParent.emit({ h: parentHeight, w: parentWidth });
           }
-        }, 150);
+          let height = parentHeight - 20; //kind of padding.
+          if (this._chart) {
+            this.LOG.debug(['onResize', 'destroy'], width, height);
+            this._chart.resize(width, height);
+          }
+        } else {
+          //nothing to show, and integrated into plot component (not standalone)
+          //shrink to the minimum and send event to resize parent to me
+          if (this.visibilityStatus === 'plottableShown') // hide of all plottable data (but there is some)
+          {
+            this.visibilityStatus = 'plottablesAllHidden';
+            this.heightWithPlottableData = parentHeight; //store the height to restore it later
+          }
+          let height = 30;
+          let width = parentWidth;
+          if (this._chart) {
+            this.LOG.debug(['onResize', 'destroy'], width, height);
+            this._chart.resize(width, height);
+          }
+          parentHeight = height + 20; //margin to keep clear of the handle bar
+          this.resizeMyParent.emit({ h: parentHeight, w: width });
+        }
       }
-    }
+      this.previousParentHeight = parentHeight;
+      this.previousParentWidth = parentWidth;
+    }, 150);
   }
 
   @Watch('hiddenData')
   private onHideData(newValue: number[], oldValue: number[]) {
     if (newValue !== oldValue) {
-      this.parentWidth = 0;
       this.LOG.debug(['hiddenData'], newValue);
 
       let previousVisibility = JSON.stringify(this.visibility);
@@ -152,7 +180,7 @@ export class WarpViewChart {
       }
       let newVisibility = JSON.stringify(this.visibility);
       if (previousVisibility !== newVisibility) {
-        this.drawChart(false, previouslyAllHidden && this.displayGraph()); //the workaround...
+        this.drawChart(false, true); 
         this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
       }
     }
@@ -162,6 +190,7 @@ export class WarpViewChart {
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     if (newValue !== oldValue) {
       this.LOG.debug(['data'], newValue);
+      this.visibilityStatus='unknown';
       this.drawChart(true); //force reparse
       this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
     }
@@ -251,6 +280,10 @@ export class WarpViewChart {
       gtsList = gtsList.filter(g => {
         return (g.v && GTSLib.isGtsToPlot(g));
       });
+      //initialize visibility status
+      if (this.visibilityStatus === 'unknown') {
+        this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
+      }
 
       //first, add plotable data to the data hashset
       gtsList.forEach((g, i) => {
@@ -578,8 +611,8 @@ export class WarpViewChart {
       interactionModel.mousewheel = this.scroll.bind(this);
       interactionModel.mouseout = this.handleMouseOut.bind(this);
       let options: Options = {
-        height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
-        width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
+        height: this.displayGraph() ? (this.responsive ? this.el.parentElement.getBoundingClientRect().height : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
+        width: (this.responsive ? this.el.parentElement.getBoundingClientRect().width : WarpViewChart.DEFAULT_WIDTH) - 5,
         labels: this.dygraphLabels,
         showRoller: false,
         showRangeSelector: this.dygraphdataSets && this.dygraphdataSets.length > 0 && this._options.showRangeSelector,
