@@ -53,14 +53,17 @@ export class WarpViewScatter {
   private resizeTimer;
   private parentWidth = -1;
   private canvas: HTMLCanvasElement;
+  private parentHeight = -1;
+
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
+    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.clientHeight !== this.parentHeight) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
+        this.parentWidth = this.el.parentElement.clientWidth;
+        this.parentHeight = this.el.parentElement.clientHeight;
         if (this.el.parentElement.clientWidth > 0) {
-          this.parentWidth = this.el.parentElement.clientWidth;
           this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
           this.drawChart();
         } else {
