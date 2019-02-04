@@ -126,9 +126,16 @@ export class ChartLib {
    * @param period Timer component By default, 2 s
    */
   static resizeWatchTimer(el:HTMLElement, redrawfunction:Function, period:number=2000):number{
-    let previouswidth = el.parentElement.clientWidth;
+    let previousWidth = el.parentElement.getBoundingClientRect().width;
+    let previousHeight = el.parentElement.getBoundingClientRect().height;
     return window.setInterval(()=> {
-      if (el.parentElement.clientWidth !== previouswidth) {redrawfunction();}
+      console.warn("h/ph",el.parentElement.getBoundingClientRect().height,previousHeight);
+      if (el.parentElement.getBoundingClientRect().width !== previousWidth || el.parentElement.getBoundingClientRect().height !== previousHeight) {
+        previousHeight = el.parentElement.getBoundingClientRect().height;
+        previousWidth = el.parentElement.getBoundingClientRect().width;
+        console.warn("timer detected the need to resize")
+        redrawfunction();
+      }
     },period)
   }
 }
