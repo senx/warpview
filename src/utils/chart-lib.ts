@@ -129,11 +129,9 @@ export class ChartLib {
     let previousWidth = el.parentElement.getBoundingClientRect().width;
     let previousHeight = el.parentElement.getBoundingClientRect().height;
     return window.setInterval(()=> {
-      console.warn("h/ph",el.parentElement.getBoundingClientRect().height,previousHeight);
       if (el.parentElement.getBoundingClientRect().width !== previousWidth || el.parentElement.getBoundingClientRect().height !== previousHeight) {
         previousHeight = el.parentElement.getBoundingClientRect().height;
         previousWidth = el.parentElement.getBoundingClientRect().width;
-        console.warn("timer detected the need to resize")
         redrawfunction();
       }
     },period)
