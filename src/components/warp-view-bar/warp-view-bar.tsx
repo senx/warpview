@@ -59,13 +59,13 @@ export class WarpViewBar {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.clientHeight !== this.parentHeight) {
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.parentWidth = this.el.parentElement.clientWidth;
-        this.parentHeight = this.el.parentElement.clientHeight;
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+        this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawChart();
         } else {
           this.onResize();
@@ -175,8 +175,8 @@ export class WarpViewBar {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     if (!this.data) return;
     this.buildGraph();
   }

@@ -96,13 +96,13 @@ export class WarpViewMap {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.clientHeight !== this.parentHeight) {
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        this.parentWidth = this.el.parentElement.clientWidth;
-        this.parentHeight = this.el.parentElement.clientHeight;
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+        this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawMap();
         } else {
           this.onResize();
@@ -233,8 +233,8 @@ export class WarpViewMap {
       this._map.remove();
     }
     this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid) as HTMLElement;
-    const height = (this.responsive ? this.mapElement.parentElement.clientHeight : (this.height || WarpViewMap.DEFAULT_HEIGHT)) - 30;
-    const width = (this.responsive ? this.mapElement.parentElement.clientWidth : this.width || WarpViewMap.DEFAULT_WIDTH);
+    const height = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().height : (this.height || WarpViewMap.DEFAULT_HEIGHT)) - 30;
+    const width = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().width : this.width || WarpViewMap.DEFAULT_WIDTH);
     this.mapElement.style.width = width + 'px';
     this.mapElement.style.height = height + 'px';
 
@@ -496,8 +496,8 @@ export class WarpViewMap {
   resize(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid) as any;
-      const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-      const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
+      const height = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().height : WarpViewMap.DEFAULT_HEIGHT) - 30;
+      const width = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().width : WarpViewMap.DEFAULT_WIDTH);
       this.mapElement.style.width = width + 'px';
       this.mapElement.style.height = height + 'px';
       resolve(true);
