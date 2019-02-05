@@ -29,7 +29,7 @@
   }
 
   .map-container {
-    height: var(--warp-view-plot-map-height, 400px);
+    height: 100%;
     width: calc(100% - 25px);
     margin-top: 20px;
     margin-right: 20px;
@@ -104,4 +104,8 @@
     width: 100%;
   }
 
+  #bottomPlaceHolder {
+    height: 200px;
+    width: 100%;
+  }
 }

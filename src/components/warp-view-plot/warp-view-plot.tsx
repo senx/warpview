@@ -41,7 +41,9 @@ export class WarpViewPlot {
   @Prop({mutable: true}) gtsFilter = 'x';
   @Prop() debug = false;
   @Prop() isAlone: boolean = false;
-  @Prop() initialHeight:string = "400";
+  @Prop() initialChartHeight:string = "400";
+  @Prop() initialMapHeight:string = "500";
+  
 
   @State() private _options: Param = {
     showControls: true,
@@ -377,7 +379,7 @@ export class WarpViewPlot {
               timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
               hiddenData={this._toHide} options={this._options} />
           </div>
-          <warp-view-resize minHeight="100" initialHeight={this.initialHeight} >
+          <warp-view-resize minHeight="100" initialHeight={this.initialChartHeight} >
             <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el} />
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
               ref={(el: HTMLWarpViewChartElement) => this.chart = el}
@@ -388,13 +390,16 @@ export class WarpViewPlot {
         </div>
         : ''}
       {this.showMap ?
-        <div class="map-container">
-          <warp-view-map options={this._options}
-            ref={(el: HTMLWarpViewMapElement) => this.map = el} data={this._data as any}
-            debug={this.debug}
-            responsive={this.responsive} hiddenData={this._toHide} />
-        </div>
+        <warp-view-resize minHeight="100" initialHeight={this.initialMapHeight}>
+          <div class="map-container">
+            <warp-view-map options={this._options}
+                  ref={(el: HTMLWarpViewMapElement) => this.map = el} data={this._data as any}
+                  debug={this.debug}
+                  responsive={this.responsive} hiddenData={this._toHide} />
+          </div>     
+        </warp-view-resize> 
         : ''}
+        <div id="bottomPlaceHolder"/>
     </div>;
   }
 }
