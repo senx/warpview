@@ -51,15 +51,17 @@ export class WarpViewBubble {
   private _chart: Chart;
   private resizeTimer;
   private parentWidth = -1;
+  private parentHeight = -1;
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+        this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawChart();
         } else {
           this.onResize();
@@ -71,10 +73,8 @@ export class WarpViewBubble {
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
     this.LOG.debug(['onData'], newValue, oldValue);
-    if (!deepEqual(newValue, oldValue)) {
       this.LOG.debug(['onData'], newValue);
       this.drawChart();
-    }
   }
 
   @Watch('options')
@@ -88,8 +88,8 @@ export class WarpViewBubble {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     if (!this.data) return;
     let dataList: any[];
     let gts: any = this.data;
@@ -149,7 +149,8 @@ export class WarpViewBubble {
           }
         ]
       },
-      responsive: this.responsive
+      responsive: this.responsive,
+      maintainAspectRatio: false
     };
 
     const dataSets = this.parseData(dataList);
@@ -170,7 +171,10 @@ export class WarpViewBubble {
       },
       options: options
     });
-    this.onResize();
+    this.onResize();      
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
   }
 
   private parseData(gts) {
@@ -207,6 +211,7 @@ export class WarpViewBubble {
 
   componentDidLoad() {
     this.drawChart();
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {

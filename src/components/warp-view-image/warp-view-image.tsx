@@ -50,12 +50,12 @@ export class WarpViewImage {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0) {
+      this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawChart();
         } else {
           this.onResize();
@@ -66,10 +66,8 @@ export class WarpViewImage {
 
   @Watch('data')
   private onData(newValue: DataModel | any[] | string | number, oldValue: DataModel | any[] | string | number) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['onData'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['onData'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -87,8 +85,8 @@ export class WarpViewImage {
   private drawChart() {
     this.LOG.debug(['drawChart'], [this.options, this._options]);
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + 'px';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + 'px';
     this.toDisplay = [];
     if (!this.data) return;
     let gts: any = this.data;

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>dynamic warpscript on a line tile</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <script src="http://dygraphs.com/dist/dygraph.js"></script>
+
+  <script src="/build/warpview.js"></script>
+  <style>
+  
+  .card-body {
+    height: 350px;
+    width: 600px; 
+    border: 2px solid lightgray;
+    margin: 10px;
+
+  }
+  .movehandle {
+    height: 20px;
+    width: 20px;
+    top:0;
+    right: 0;
+    position: absolute;
+    background-color: lightgray;
+    border: none;
+    cursor:move;
+    background-image: url("https://image.flaticon.com/icons/svg/50/50685.svg");
+    background-size: 20px 20px ;
+  }
+  
+  </style>
+
+</head>
+
+<body>
+  <h2>Warpscript input dynamically changed</h2>
+  <p>Drawing on the first graph generate a warpscript to draw the same curve. The line component should update 1s later
+      at most.</p>
+      
+  <div id="draw_div" style="width: 600px; height: 300px;"></div>
+  <script language="javascript">
+    var maxvalue = 1.0;
+    var minvalue = -1.0;
+    $(document).ready(function () {
+      var start_date = 1000;
+      var end_date = 1511;
+      var data = [];
+      var step = 1;
+      for (var d = start_date; d < end_date; d += step) {
+        var millis = d;
+        data.push([new Date(Dygraph.dateString_(millis)), 0.0]);
+      }
+      var isDrawing = false;
+      var lastDrawRow = null, lastDrawValue = null;
+      var tool = 'pencil';
+      var valueRange = [-1.0, 1.0]; //[0, 100];
+      function setPoint(event, g, context) {
+        var graphPos = Dygraph.findPos(g.graphDiv);
+        var canvasx = Dygraph.pageX(event) - graphPos.x;
+        var canvasy = Dygraph.pageY(event) - graphPos.y;
+        var xy = g.toDataCoords(canvasx, canvasy);
+        var x = xy[0], value = xy[1];
+        var rows = g.numRows();
+        var closest_row = -1;
+        var smallest_diff = -1;
+        // TODO(danvk): binary search
+        for (var row = 0; row < rows; row++) {
+          var date = g.getValue(row, 0);  // millis
+          var diff = Math.abs(date - x);
+          if (smallest_diff < 0 || diff < smallest_diff) {
+            smallest_diff = diff;
+            closest_row = row;
+          }
+        }
+        if (closest_row != -1) {
+          if (lastDrawRow === null) {
+            lastDrawRow = closest_row;
+            lastDrawValue = value;
+          }
+          var coeff = (value - lastDrawValue) / (closest_row - lastDrawRow);
+          if (closest_row == lastDrawRow) coeff = 0.0;
+          var minRow = Math.min(lastDrawRow, closest_row);
+          var maxRow = Math.max(lastDrawRow, closest_row);
+          for (var row = minRow; row <= maxRow; row++) {
+            if (tool == 'pencil') {
+              var val = lastDrawValue + coeff * (row - lastDrawRow);
+              val = Math.max(valueRange[0], Math.min(val, valueRange[1]));
+              data[row][1] = val;
+              if (val === null || value === undefined || isNaN(val)) {
+                console.log(val);
+              }
+            } else if (tool == 'eraser') {
+              data[row][1] = null;
+            }
+          }
+          lastDrawRow = closest_row;
+          lastDrawValue = value;
+          g.updateOptions({ file: data });
+          g.setSelection(closest_row);  // prevents the dot from being finnicky.
+        }
+      }
+      function finishDraw() {
+        isDrawing = false;
+        lastDrawRow = null;
+        lastDrawValue = null;
+        warpscript = 'NEWGTS "pattern" RENAME 0 NaN NaN NaN 0.0 ADDVALUE 0 SHRINK \n'
+        for (var i = 0; i < data.length; i++) {
+          warpscript = warpscript + i + ' NaN NaN NaN ' + data[i][1] + ' ADDVALUE \n'
+        }
+        warpscript = warpscript + ' 1 ->LIST';
+        ws = document.getElementById("warpscript");
+        console.log('WarpScript=', warpscript);
+        ws.innerHTML = warpscript;
+      }
+
+      new Dygraph(document.getElementById("draw_div"), data,
+        {
+          valueRange: valueRange,
+          labels: ['Date', 'Value'],
+          interactionModel: {
+            mousedown: function (event, g, context) {
+              // prevents mouse drags from selecting page text.
+              if (event.preventDefault) {
+                event.preventDefault();  // Firefox, Chrome, etc.
+              } else {
+                event.returnValue = false;  // IE
+                event.cancelBubble = true;
+              }
+              isDrawing = true;
+              setPoint(event, g, context);
+            },
+            mousemove: function (event, g, context) {
+              if (!isDrawing) return;
+              setPoint(event, g, context);
+            },
+            mouseup: function (event, g, context) {
+              finishDraw();
+            },
+            mouseout: function (event, g, context) {
+
+            },
+            dblclick: function (event, g, context) {
+              Dygraph.defaultInteractionModel.dblclick(event, g, context);
+            },
+            mousewheel: function (event, g, context) {
+
+            }
+          },
+          strokeWidth: 1.5,
+          gridLineColor: 'rgb(196, 196, 196)',
+          axes: {
+            x: {
+              drawAxis: false
+            },
+            y: {
+              drawGrid: false
+            }
+          }
+        });
+      window.onmouseup = finishDraw;
+    }
+    );
+
+    $(function () {
+      $(".resizable").resizable().draggable({ handle : "div.movehandle"});
+    });
+
+  </script>
+
+
+  <div class="card-body resizable"> 
+    <warp-view-tile id="warpscript" url="https://warp.senx.io/api/v0/exec" responsive="true" show-legend="false" 
+      options="{&#34showControls&#34 : true , &#34showGTSTree&#34 : true , &#34timeMode&#34 : &#34timestamp&#34 }">
+
+    </warp-view-tile>
+  </div>
+
+
+  <h2>Responsive design test</h2>
+  <p>Every resize should refresh the component correctly</p>
+      
+
+  <div class="card-body resizable"> <div class="movehandle"></div> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="map" chart-title="Map">
+      <'
+      {"data":[{"c":"A","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"B","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"D","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"E","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"key":"Path
+      A"},{"key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"lodging"},{"key":"Annotations
+      (boolean)","baseRadius":5},{"key":"Test","render":"marker"},{"key":"points
+      2","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}
+      '>
+      JSON->
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="text" chart-title="Text">
+      { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }
+    </warp-view-tile>
+
+  </div>
+
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="bubble" show-legend="false"
+      chart-title="Bubbles">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -30 ] FETCH
+      false RESETS
+      [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
+      10 LTTB
+      <% DROP 'gts' STORE { $gts NAME $gts VALUES <% DROP 'val' STORE [ RAND 100 *
+      RAND 100 * RAND 100 * ]
+      %>
+      LMAP
+      }
+      %> LMAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" show-legend="false" chart-title="Default">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP mapper.delta 1 0 0 ] MAP
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="step" show-legend="false"
+      chart-title="Step">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="annotation" chart-title="Annotation">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP mapper.tostring 0 0 0 ] MAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="gts-tree" chart-title="GTS Tree">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="area" show-legend="false"
+      chart-title="Area">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="scatter" show-legend="false"
+      chart-title="Scatter">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="bar" show-legend="false"
+      chart-title="Bar">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+      false RESETS
+      [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
+      [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="gauge" show-legend="false"
+      chart-title="gauge">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+      <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="pie" show-legend="false"
+      chart-title="pie">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+      <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="doughnut" show-legend="false"
+      chart-title="doughnut">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+      <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="polar" show-legend="false"
+      chart-title="polar">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
+      <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" unit="°C" type="radar" show-legend="false"
+      chart-title="Radar">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -5 ] FETCH
+      'list' STORE
+      $list
+      <%
+      DROP 'gts' STORE
+      $gts LABELS 'rack' GET 'rack' STORE
+
+      {
+      $rack $gts VALUES <%
+      'index' STORE 'val' STORE
+      { $index TOSTRING $val 5 % }
+      %>
+      LMAP
+      }
+      %> LMAP
+      STOP 'values' STORE
+      { 'data' $values }
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="image" show-legend="false"
+      chart-title="Image">
+      //draw tangents along the curve
+      300 200 '2D3' PGraphics
+      120 Pbackground
+      16 PtextSize
+
+      50 'x1' STORE
+      50 'y1' STORE
+      200 'x2' STORE
+      130 'y2' STORE
+
+      100 'cx1' STORE
+      40 'cy1' STORE
+
+      110 'cx2' STORE
+      140 'cy2' STORE
+
+
+      4 PstrokeWeight
+      $x1 $y1 Ppoint //first anchor
+      $x2 $y2 Ppoint //second anchor
+
+      2 PstrokeWeight
+      $x1 $y1 $cx1 $cy1 Pline
+      $x2 $y2 $cx2 $cy2 Pline
+
+      2 PstrokeWeight
+      0xffff0000 Pstroke
+      $x1 $y1 $cx1 $cy1 $cx2 $cy2 $x2 $y2 Pbezier
+
+      0 10
+      <%
+      10.0 / 't' STORE
+
+      $x1 $cx1 $cx2 $x2 $t PbezierPoint 'x' STORE
+      $y1 $cy1 $cy2 $y2 $t PbezierPoint 'y' STORE
+      $x1 $cx1 $cx2 $x2 $t PbezierTangent 'tx' STORE
+      $y1 $cy1 $cy2 $y2 $t PbezierTangent 'ty' STORE
+      $ty $tx ATAN2 PI 2.0 / - 'angle' STORE
+      0xff009f00 Pstroke
+      $x
+      $y
+      $x $angle COS 12 * +
+      $y $angle SIN 12 * +
+      Pline
+
+      0x9f009f00 Pfill
+      PnoStroke
+      'CENTER' PellipseMode
+      $x $y 5 5 Pellipse
+      %>
+      FOR
+      Pencode
+      DUP
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="drilldown" chart-title="drilldown">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 700 d ] FETCH
+      false RESETS
+      [ SWAP mapper.delta 1 0 0 ] MAP
+      [ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE
+      [ NaN NaN NaN 0 ] FILLVALUE
+    </warp-view-tile>
+
+
+  </div>
+
+  <div class="card-body resizable"> <div class="movehandle"></div>
+    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="datagrid" chart-title="Datagrid">
+      @training/dataset0
+      [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 d ] FETCH
+      'data' STORE
+      { 'data' $data 'globalParams' { 'headers' [ 'A' 'B' ] } 'params' [ { 'headers' [ 'C' 'D' ] } ] }
+    </warp-view-tile>
+
+
+  </div>
+
+
+
+</body>
+
+</html>

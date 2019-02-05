@@ -32,7 +32,7 @@ import deepEqual from "deep-equal";
 export class WarpViewChip {
   @Prop() name: string;
   @Prop() node: any;
-  @Prop() gtsFilter = '';
+  @Prop() gtsFilter = 'x'; //the first character triggers change each filter apply to trigger events. it must be discarded.
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
   @Prop() kbdLastKeyPressed:string[] = [];
@@ -50,9 +50,11 @@ export class WarpViewChip {
 
   @Watch('gtsFilter')
   private onGtsFilter(newValue: string, oldValue: string) {
-    if (oldValue !== newValue) {
-      if (this.gtsFilter !== '') {
-        this.setState(new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+    if (oldValue != newValue) { //ref comparison, we could select a filter, press n, select the same again.
+      if (this.gtsFilter.slice(1) !== '') {
+        this.setState(new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+      } else {
+        this.setState(true);
       }
     }
   }
@@ -101,7 +103,7 @@ export class WarpViewChip {
    *
    */
   componentDidLoad() {
-    if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+    if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
       || this.hiddenData.indexOf(this._node.gts.id) > -1) {
       this.setState(false);
     }

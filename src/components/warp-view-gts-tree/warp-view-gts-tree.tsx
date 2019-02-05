@@ -30,7 +30,7 @@ import deepEqual from "deep-equal";
 })
 export class WarpViewGtsTree {
   @Prop() data: DataModel | DataModel[] | GTS[] | string;
-  @Prop() gtsFilter = '';
+  @Prop() gtsFilter = 'x';
   @Prop() options: Param = new Param();
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
@@ -45,10 +45,8 @@ export class WarpViewGtsTree {
 
   @Watch("data")
   onData(newValue, oldValue) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['options'], newValue, oldValue);
-      this.doRender();
-    }
+    this.LOG.debug(['options'], newValue, oldValue);
+    this.doRender();
   }
 
   @Watch('options')

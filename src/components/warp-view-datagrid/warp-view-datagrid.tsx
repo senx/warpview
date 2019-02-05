@@ -52,10 +52,8 @@ export class WarpViewDatagrid {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -69,8 +67,8 @@ export class WarpViewDatagrid {
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
     this.LOG.debug(['drawChart', '_options'], this._options);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     if (!this.data) return;
     let data: any = this.data;
     if (typeof data === 'string') {

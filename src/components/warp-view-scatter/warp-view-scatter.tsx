@@ -52,15 +52,19 @@ export class WarpViewScatter {
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private resizeTimer;
   private parentWidth = -1;
+  private canvas: HTMLCanvasElement;
+  private parentHeight = -1;
+
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+        this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawChart();
         } else {
           this.onResize();
@@ -71,10 +75,8 @@ export class WarpViewScatter {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -87,7 +89,6 @@ export class WarpViewScatter {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     let dataList: any[];
     let data: any = this.data;
     if (!data) return;
@@ -103,8 +104,8 @@ export class WarpViewScatter {
       dataList = data;
     }
     let gts = this.gtsToScatter(dataList);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     const color = this._options.gridLineColor;
     const options: any = {
       legend: {
@@ -143,6 +144,7 @@ export class WarpViewScatter {
           }
         }]
       },
+      maintainAspectRatio: false
     };
     if (this._options.timeMode === 'timestamp') {
       options.scales.xAxes[0].time = undefined;
@@ -167,8 +169,11 @@ export class WarpViewScatter {
     if (this._chart) {
       this._chart.destroy();
     }
-    this._chart = new Chart.Scatter(ctx, {data: {datasets: gts}, options: options});
-    this.onResize();
+    this._chart = new Chart.Scatter(this.canvas, {data: {datasets: gts}, options: options});
+    this.onResize();    
+    setTimeout(() => {
+      this._chart.update();
+    }, 250);
     this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
   }
 
@@ -214,12 +219,13 @@ export class WarpViewScatter {
 
   componentDidLoad() {
     this.drawChart()
+    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
   render() {
     return <div>
       <div class="chart-container">
-        <canvas id={this.uuid} width={this.width} height={this.height}/>
+        <canvas ref={el => this.canvas = el} width={this.width} height={this.height}/>
       </div>
     </div>;
   }

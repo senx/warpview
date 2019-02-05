@@ -29,7 +29,7 @@ export class WarpViewTreeView {
   @Prop() gtsList: any[];
   @Prop() branch = false;
   @Prop() hidden = false;
-  @Prop() gtsFilter = '';
+  @Prop() gtsFilter = 'x';
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
   @Prop() kbdLastKeyPressed:string[] = [];

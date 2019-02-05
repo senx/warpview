@@ -38,9 +38,12 @@ export class WarpViewPlot {
   @Prop({mutable: true}) height = "";
   @Prop() responsive: boolean = false;
   @Prop() showLegend: boolean = false;
-  @Prop({mutable: true}) gtsFilter = '';
+  @Prop({mutable: true}) gtsFilter = 'x';
   @Prop() debug = false;
   @Prop() isAlone: boolean = false;
+  @Prop() initialChartHeight:string = "400";
+  @Prop() initialMapHeight:string = "500";
+  
 
   @State() private _options: Param = {
     showControls: true,
@@ -73,6 +76,7 @@ export class WarpViewPlot {
   private tzSelector: HTMLSelectElement;
   private kbdCounter: number = 0;
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
+  private gtsFilterCount: number = 0 ;
 
   componentDidLoad() {
     this.drawCharts(true);
@@ -93,10 +97,8 @@ export class WarpViewPlot {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawCharts(true);
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawCharts(true);
   }
 
   @Watch('options')
@@ -203,14 +205,6 @@ export class WarpViewPlot {
     this.line.style.left = '-100px';
   }
 
-  @Listen('warpViewChartResize')
-  onResize(event: CustomEvent) {
-    this.LOG.debug(['warpViewChartResize'], event.detail);
-    if (this.chartContainer) {
-      this.chartContainer.style.height = event.detail.h + 'px';
-    }
-  }
-
   @Listen('warpViewSelectedGTS')
   warpViewSelectedGTS(event: CustomEvent) {
     this.LOG.debug(['warpViewSelectedGTS'], event.detail);
@@ -299,7 +293,8 @@ export class WarpViewPlot {
   }
 
   private applyFilter() {
-    this.gtsFilter = this.filterInput.value;
+    this.gtsFilterCount++;
+    this.gtsFilter = this.gtsFilterCount.toString().slice(0,1) + this.filterInput.value;
     this.modal.close();
   }
 
@@ -331,75 +326,80 @@ export class WarpViewPlot {
   }
 
   render() {
-    return <div id="focusablePlotDiv" tabindex="0" onClick={(e:any)=> {
-          if (!this.isAlone && e.path[0].nodeName != 'SELECT') {this.mainPlotDiv.focus();} //prevent stealing focus of the timezone selector.
-        }
-      }  ref={(el) => this.mainPlotDiv = el}>
+    return <div id="focusablePlotDiv" tabindex="0" onClick={(e: any) => {
+      let idListClicked = e.path.map(el => (el.id || '').slice(0, 4)) //read the first 4 letters of id of all elements in the click tree
+      //if not alone on the page, and click is not on the timezone selector and not on the map, force focus.
+      if (!this.isAlone && idListClicked.indexOf('tzSe') < 0 && idListClicked.indexOf('map-') < 0) { this.mainPlotDiv.focus(); } //prevent stealing focus of the timezone selector.
+    }
+    } ref={(el) => this.mainPlotDiv = el}>
 
       <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="TimeClip" ref={(el: HTMLWarpViewModalElement) => this.timeClip = el}>
         <pre><code ref={(el) => this.timeClipElement = el}
-                   innerHTML={this.timeClipValue}/></pre>
+          innerHTML={this.timeClipValue} /></pre>
       </warp-view-modal>
       <warp-view-modal kbdLastKeyPressed={this.kbdLastKeyPressed} modalTitle="GTS Filter" ref={(el: HTMLWarpViewModalElement) => this.modal = el}>
         <label>Enter a regular expression to filter GTS.</label>
-        <input tabindex="1" type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter}/>
+        <input tabindex="1" type="text" onKeyPress={(e) => this.inputTextKeyboardEvents(e)} onKeyDown={(e) => this.inputTextKeyboardEvents(e)} onKeyUp={(e) => this.inputTextKeyboardEvents(e)} ref={el => this.filterInput = el} value={this.gtsFilter.slice(1)} />
         <button tabindex="2" type="button" class={this._options.popupButtonValidateClass}
-                onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
+          onClick={() => this.applyFilter()} innerHTML={this._options.popupButtonValidateLabel || 'Apply'}>
         </button>
       </warp-view-modal>
-      {this._options.showControls
-        ? <div class="inline">
+      {this._options.showControls ? 
+        <div class="inline">
           <warp-view-toggle id="timeSwitch" text-1="Date" text-2="Timestamp"
-                            checked={this._options.timeMode == "timestamp"}/>
-          <warp-view-toggle id="typeSwitch" text-1="Line" text-2="Step"/>
+            checked={this._options.timeMode == "timestamp"} />
+          <warp-view-toggle id="typeSwitch" text-1="Line" text-2="Step" />
           <warp-view-toggle id="chartSwitch" text-1="Hide chart" text-2="Display chart"
-                            checked={this.showChart}/>
+            checked={this.showChart} />
           <warp-view-toggle id="mapSwitch" text-1="Hide map" text-2="Display map"
-                            checked={this.showMap}/>
+            checked={this.showMap} />
           <div class="tzcontainer">
-            <select id="tzSelector" class="defaulttz" ref={(el)=>this.tzSelector = el} onChange={() => this.tzSelected()}>
-            {moment.tz.names().map((z) => <option value={z} selected={z==='UTC'} class={z==='UTC' ? 'defaulttz':'customtz'} >{z}</option>)} 
-          </select>
+            <select id="tzSelector" class="defaulttz" ref={(el) => this.tzSelector = el} onChange={() => this.tzSelected()}>
+              {moment.tz.names().map((z) => <option value={z} selected={z === 'UTC'} class={z === 'UTC' ? 'defaulttz' : 'customtz'} >{z}</option>)}
+            </select>
           </div>
         </div>
         : ''}
       {this._options.showGTSTree
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
-                              debug={this.debug}
-                              hiddenData={this._toHide} options={this._options} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
+          debug={this.debug}
+          hiddenData={this._toHide} options={this._options} kbdLastKeyPressed={this.kbdLastKeyPressed} />
         : ''}
-      {this.showChart
-        ? <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
-               onMouseLeave={evt => this.handleMouseOut(evt)}
-               ref={el => this.main = el}
+      {this.showChart ?
+        <div class="main-container" onMouseMove={evt => this.handleMouseMove(evt)}
+          onMouseLeave={evt => this.handleMouseOut(evt)}
+          ref={el => this.main = el}
         >
-          <div class="bar" ref={el => this.line = el}/>
+          <div class="bar" ref={el => this.line = el} />
           <div class="annotation">
             <warp-view-annotation data={this._data} responsive={this.responsive} id="annotation"
-                                  showLegend={this.showLegend}
-                                  ref={(el: HTMLWarpViewAnnotationElement) => this.annotation = el}
-                                  debug={this.debug}
-                                  timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
-                                  hiddenData={this._toHide} options={this._options}/>
+              showLegend={this.showLegend}
+              ref={(el: HTMLWarpViewAnnotationElement) => this.annotation = el}
+              debug={this.debug}
+              timeMin={this._timeMin} timeMax={this._timeMax} standalone={false}
+              hiddenData={this._toHide} options={this._options} />
           </div>
-          <div style={{width: '100%', height: '768px'}} ref={el => this.chartContainer = el}>
-            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el}/>
+          <warp-view-resize minHeight="100" initialHeight={this.initialChartHeight} >
+            <warp-view-gts-popup maxToShow={5} hiddenData={this._toHide} gtsList={this._data} kbdLastKeyPressed={this.kbdLastKeyPressed} ref={(el: HTMLWarpViewGtsPopupElement) => this.gtsPopupModal = el} />
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
-                             ref={(el: HTMLWarpViewChartElement) => this.chart = el}
-                             debug={this.debug}
-                             hiddenData={this._toHide} type={this.chartType}
-                             options={this._options}/>
-          </div>
+              ref={(el: HTMLWarpViewChartElement) => this.chart = el}
+              debug={this.debug}
+              hiddenData={this._toHide} type={this.chartType}
+              options={this._options} />
+          </warp-view-resize>
         </div>
         : ''}
-      {this.showMap
-        ? <div class="map-container">
-          <warp-view-map options={this._options}
-                         ref={(el: HTMLWarpViewMapElement) => this.map = el} data={this._data as any}
-                         debug={this.debug}
-                         responsive={this.responsive} hiddenData={this._toHide}/>
-        </div>
+      {this.showMap ?
+        <warp-view-resize minHeight="100" initialHeight={this.initialMapHeight}>
+          <div class="map-container">
+            <warp-view-map options={this._options}
+                  ref={(el: HTMLWarpViewMapElement) => this.map = el} data={this._data as any}
+                  debug={this.debug}
+                  responsive={this.responsive} hiddenData={this._toHide} />
+          </div>     
+        </warp-view-resize> 
         : ''}
+        <div id="bottomPlaceHolder"/>
     </div>;
   }
 }

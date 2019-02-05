@@ -265,13 +265,17 @@ export class GTSLib {
    */
   static serializeGtsMetadata(gts) {
     let serializedLabels = [];
-    Object.keys(gts.l).forEach((key) => {
-      serializedLabels.push(key + "=" + gts.l[ key ]);
-    });
     let serializedAttributes = [];
-    Object.keys(gts.a).forEach((key) => {
-      serializedAttributes.push(key + "=" + gts.a[ key ]);
-    });
+    if (gts.l) {
+      Object.keys(gts.l).forEach((key) => {
+        serializedLabels.push(key + "=" + gts.l[key]);
+      });
+    }
+    if (gts.a) {
+      Object.keys(gts.a).forEach((key) => {
+        serializedAttributes.push(key + "=" + gts.a[key]);
+      });
+    }
     return gts.c + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
   }
 

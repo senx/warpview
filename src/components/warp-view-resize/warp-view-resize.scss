@@ -14,15 +14,27 @@
  *  limitations under the License.
  *
  */
+ 
+ :host {
 
-:host {
-  div {
-    height: var(--warp-view-chart-height, 100%);
-    width: var(--warp-view-chart-width, 100%);
+  .handle {
+    width: 100%;
+    height: var(--warp-view-resize-handle-height, 10px);
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+    background-color: var(--warp-view-resize-handle-color, grey);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    position: absolute;
+    bottom: 0; 
+    &:hover {
+      cursor: row-resize;
+    }
   }
-  .chart-container {
-    width: var(--warp-view-chart-width, 100%);
-    height: var(--warp-view-chart-height, 100%);
-    position: relative;
+
+  .wrapper {
+    width: 100%;
+    position: relative;    
+    margin-bottom: 0; 
   }
+
 }

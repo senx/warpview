@@ -54,12 +54,12 @@ export class WarpViewDrillDown {
 
   @Listen('window:resize')
   onResize() {
-    if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-      this.parentWidth = this.el.parentElement.clientWidth;
+    if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0) {
+      this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
       clearTimeout(this.resizeTimer);
       this.resizeTimer = setTimeout(() => {
-        if (this.el.parentElement.clientWidth > 0) {
-          this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+        if (this.el.parentElement.getBoundingClientRect().width > 0) {
+          this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
           this.drawChart();
         } else {
           this.onResize();
@@ -70,10 +70,8 @@ export class WarpViewDrillDown {
 
   @Watch('data')
   private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
-    if (!deepEqual(newValue, oldValue)) {
-      this.LOG.debug(['data'], newValue);
-      this.drawChart();
-    }
+    this.LOG.debug(['data'], newValue);
+    this.drawChart();
   }
 
   @Watch('options')
@@ -86,8 +84,8 @@ export class WarpViewDrillDown {
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-    this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+    this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+    this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     if (!this.data) return;
     let data: any = this.data;
     if (typeof data === 'string') {
