@@ -26,6 +26,7 @@ import {DataModel} from "../../model/dataModel";
 import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
 import Options = dygraphs.Options;
+import deepEqual from "deep-equal";
 
 type visibilityState = 'unknown'|'nothingPlottable' |'plottablesAllHidden' | 'plottableShown';
 
@@ -188,7 +189,7 @@ export class WarpViewChart {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (newValue !== oldValue) {
+    if (!deepEqual(newValue,oldValue)) { //needed. VSCode fire a data change each time you hide or show something.
       this.LOG.debug(['data'], newValue);
       this.visibilityStatus='unknown';
       this.drawChart(true); //force reparse
