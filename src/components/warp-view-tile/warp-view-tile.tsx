@@ -22,7 +22,6 @@ import {Logger} from "../../utils/logger";
 import {Param} from "../../model/param";
 import {ChartLib} from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
-import { Timer } from 'd3';
 
 @Component({
   tag: 'warp-view-tile',
@@ -32,7 +31,7 @@ import { Timer } from 'd3';
 export class WarpViewTile {
 
   @State() data: any;
-  @Prop() options:  string | Param;
+  @Prop() options: string | Param;
   @Prop() unit: string = '';
   @Prop() type: string = 'line';
   @Prop() chartTitle: string = '';
@@ -64,7 +63,7 @@ export class WarpViewTile {
   private gtsList: any;
   private _options: Param = new Param();
   private timer: any;
-  private watchWarpScriptTimer:any;
+  private watchWarpScriptTimer: any;
   private _autoRefresh;
 
   @Watch('options')
@@ -103,7 +102,7 @@ export class WarpViewTile {
     this.watchWarpScriptTimer = window.setInterval(() => {
       let currentWarpScript = this.wsElement.textContent;
       if (currentWarpScript != this.warpScript) { //reference comparison, not content. content could be huge.
-        this.LOG.debug(["watchSlotTimer"],"new warpscript detected");
+        this.LOG.debug(["watchSlotTimer"], "new warpscript detected");
         this.execute();
       }
     }, 1000);
@@ -235,8 +234,8 @@ export class WarpViewTile {
         {this.executionErrorText != '' ? <div class="executionErrorText"> {this.executionErrorText} </div> : ''}
         {this.graphs['scatter'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}</h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}</h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-scatter debug={this.debug} responsive={this.responsive} unit={this.unit} data={this.data}
                                  options={this._options} showLegend={this.showLegend}/>
             </div>
@@ -246,8 +245,8 @@ export class WarpViewTile {
         }
         {this.graphs['chart'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}</h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}</h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-chart debug={this.debug} type={this.type} responsive={this.responsive} unit={this.unit}
                                data={this.data} options={this._options} show-legend={this.showLegend}/>
             </div>
@@ -257,8 +256,10 @@ export class WarpViewTile {
         }
         {this.type == 'bubble' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-bubble debug={this.debug} showLegend={this.showLegend} responsive={true} unit={this.unit}
                                 data={this.data} options={this._options}/>
             </div>
@@ -267,8 +268,10 @@ export class WarpViewTile {
         }
         {this.type == 'map' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-map debug={this.debug} responsive={true} data={this.data} options={this._options}/>
             </div>
           </div>
@@ -276,8 +279,10 @@ export class WarpViewTile {
         }
         {this.graphs['pie'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-pie debug={this.debug} responsive={this.responsive} data={this.data} options={this._options}
                              showLegend={this.showLegend}/>
             </div>
@@ -286,8 +291,10 @@ export class WarpViewTile {
         }
         {this.graphs['polar'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-polar debug={this.debug} responsive={this.responsive} data={this.data}
                                showLegend={this.showLegend} options={this._options}/>
             </div>
@@ -296,8 +303,10 @@ export class WarpViewTile {
         }
         {this.graphs['radar'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-radar debug={this.debug} responsive={this.responsive} data={this.data}
                                showLegend={this.showLegend} options={this._options}/>
             </div>
@@ -306,8 +315,8 @@ export class WarpViewTile {
         }
         {this.graphs['bar'].indexOf(this.type) > -1 ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}</h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}</h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-bar debug={this.debug} responsive={this.responsive} unit={this.unit} data={this.data}
                              showLegend={this.showLegend} options={this._options}/>
             </div>
@@ -316,8 +325,8 @@ export class WarpViewTile {
         }
         {this.type == 'text' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}</h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}</h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-display debug={this.debug} responsive={this.responsive} unit={this.unit} data={this.data}
                                  options={this._options}/>
             </div>
@@ -326,8 +335,10 @@ export class WarpViewTile {
         }
         {this.type == 'image' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-image debug={this.debug} responsive={this.responsive} data={this.data}
                                options={this._options}/>
             </div>
@@ -336,18 +347,23 @@ export class WarpViewTile {
         }
         {this.type == 'plot' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-plot debug={this.debug} responsive={this.responsive} data={this.data}
-                              showLegend={this.showLegend} options={this._options} gtsFilter={this.gtsFilter} isAlone={this.isAlone}/>
+                              showLegend={this.showLegend} options={this._options} gtsFilter={this.gtsFilter}
+                              isAlone={this.isAlone}/>
             </div>
           </div>
           : ''
         }
         {this.type == 'annotation' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-annotation debug={this.debug} responsive={this.responsive} data={this.data}
                                     showLegend={this.showLegend} options={this._options}/>
             </div>
@@ -356,8 +372,10 @@ export class WarpViewTile {
         }
         {this.type == 'gts-tree' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-gts-tree debug={this.debug} data={this.data} options={this._options}/>
             </div>
           </div>
@@ -365,8 +383,10 @@ export class WarpViewTile {
         }
         {this.type == 'drilldown' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-drilldown debug={this.debug} data={this.data} options={this._options}/>
             </div>
           </div>
@@ -374,8 +394,10 @@ export class WarpViewTile {
         }
         {this.type == 'datagrid' ?
           <div class="tilewrapper">
-            {(this.chartTitle && this.chartTitle!=='') ? <h1>{this.chartTitle}<small>{this.unit}</small></h1> : '' }
-            <div class={(this.chartTitle && this.chartTitle!=='') ? 'tile': 'tile notitle'}>
+            {(this.chartTitle && this.chartTitle !== '') ? <h1>{this.chartTitle}
+              <small>{this.unit}</small>
+            </h1> : ''}
+            <div class={(this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle'}>
               <warp-view-datagrid debug={this.debug} data={this.data} options={this._options}/>
             </div>
           </div>

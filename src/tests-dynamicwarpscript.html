@@ -77,24 +77,24 @@
             closest_row = row;
           }
         }
-        if (closest_row != -1) {
+        if (closest_row !== -1) {
           if (lastDrawRow === null) {
             lastDrawRow = closest_row;
             lastDrawValue = value;
           }
           var coeff = (value - lastDrawValue) / (closest_row - lastDrawRow);
-          if (closest_row == lastDrawRow) coeff = 0.0;
+          if (closest_row === lastDrawRow) coeff = 0.0;
           var minRow = Math.min(lastDrawRow, closest_row);
           var maxRow = Math.max(lastDrawRow, closest_row);
           for (var row = minRow; row <= maxRow; row++) {
-            if (tool == 'pencil') {
+            if (tool === 'pencil') {
               var val = lastDrawValue + coeff * (row - lastDrawRow);
               val = Math.max(valueRange[0], Math.min(val, valueRange[1]));
               data[row][1] = val;
               if (val === null || value === undefined || isNaN(val)) {
                 console.log(val);
               }
-            } else if (tool == 'eraser') {
+            } else if (tool === 'eraser') {
               data[row][1] = null;
             }
           }

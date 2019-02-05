@@ -70,7 +70,7 @@ export class WarpViewPolar {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
+  private onData(newValue: DataModel | any[]) {
     this.LOG.debug(['data'], newValue);
     this.drawChart();
   }

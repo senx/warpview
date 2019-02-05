@@ -28,7 +28,7 @@ import moment from "moment-timezone";
 import Options = dygraphs.Options;
 import deepEqual from "deep-equal";
 
-type visibilityState = 'unknown'|'nothingPlottable' |'plottablesAllHidden' | 'plottableShown';
+type visibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
 /**
  * options :
@@ -108,9 +108,9 @@ export class WarpViewChart {
   private initialResizeNeeded = false;
   private previousParentHeight = -1;
   private previousParentWidth = -1;
-  
-  private visibilityStatus:visibilityState = 'unknown';
-  
+
+  private visibilityStatus: visibilityState = 'unknown';
+
   private heightWithPlottableData = -1;
 
   // if nothing to display, must reduce to 30px. 
@@ -129,7 +129,7 @@ export class WarpViewChart {
             //restore the previous height
             parentHeight = this.heightWithPlottableData;
             this.visibilityStatus = 'plottableShown';
-            this.resizeMyParent.emit({ h: parentHeight, w: parentWidth });
+            this.resizeMyParent.emit({h: parentHeight, w: parentWidth});
           }
           let height = parentHeight - 20; //kind of padding.
           if (this._chart) {
@@ -151,7 +151,7 @@ export class WarpViewChart {
             this._chart.resize(width, height);
           }
           parentHeight = height + 20; //margin to keep clear of the handle bar
-          this.resizeMyParent.emit({ h: parentHeight, w: width });
+          this.resizeMyParent.emit({h: parentHeight, w: width});
         }
       }
       this.previousParentHeight = parentHeight;
@@ -165,7 +165,6 @@ export class WarpViewChart {
       this.LOG.debug(['hiddenData'], newValue);
 
       let previousVisibility = JSON.stringify(this.visibility);
-      let previouslyAllHidden = !this.displayGraph();
       if (!!this._chart) {
         this.visibility = [];
         this.visibleGtsId.forEach(id => {
@@ -181,7 +180,7 @@ export class WarpViewChart {
       }
       let newVisibility = JSON.stringify(this.visibility);
       if (previousVisibility !== newVisibility) {
-        this.drawChart(false, true); 
+        this.drawChart(false, true);
         this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
       }
     }
@@ -189,9 +188,9 @@ export class WarpViewChart {
 
   @Watch('data')
   private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
-    if (!deepEqual(newValue,oldValue)) { //needed. VSCode fire a data change each time you hide or show something.
+    if (!deepEqual(newValue, oldValue)) { //needed. VSCode fire a data change each time you hide or show something.
       this.LOG.debug(['data'], newValue);
-      this.visibilityStatus='unknown';
+      this.visibilityStatus = 'unknown';
       this.drawChart(true); //force reparse
       this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
     }
@@ -214,7 +213,7 @@ export class WarpViewChart {
     this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
     if (optionChanged) {
       this.LOG.debug(['options'], newValue);
-      this.drawChart(false,true); //need to resize after.
+      this.drawChart(false, true); //need to resize after.
     }
   }
 
@@ -369,7 +368,7 @@ export class WarpViewChart {
     this.dygraphdataSets = [];
     //build the big matrix for dygraph from the data hashSet.
     const divider = GTSLib.getDivider(this._options.timeUnit);
-    this.LOG.debug(['chart','divider','timeunit'],divider, this._options.timeUnit);
+    this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
     Object.keys(this.dataHashset).forEach(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
@@ -470,7 +469,7 @@ export class WarpViewChart {
       html = `<b>${data.x}</b>`;
     } else {
       html = `<b>${moment.utc(parseInt(data.x)).toISOString()}</b>`; //data.x is already a date in millisecond, whatever the unit option
-    }     
+    }
     data.series.forEach(function (series) {
       if (series.isVisible && series.yHTML) {
         let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
@@ -599,7 +598,7 @@ export class WarpViewChart {
     if (reparseNewData) {
       this.gtsToData(dataList);
     } else {
-      if (previousTimeMode !== this._options.timeMode 
+      if (previousTimeMode !== this._options.timeMode
         || previousTimeUnit !== this._options.timeUnit
         || previousTimeZone !== this._options.timeZone) {
         this.rebuildDygraphDataSets();
@@ -696,7 +695,7 @@ export class WarpViewChart {
 
   componentDidLoad() {
     this.drawChart(true);
-    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
+    ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
   }
 
   render() {

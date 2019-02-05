@@ -87,7 +87,7 @@ export class WarpViewAnnotation {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  private onData(newValue: DataModel | GTS[]) {
     this.LOG.debug(['data'], newValue);
     this.drawChart();
   }

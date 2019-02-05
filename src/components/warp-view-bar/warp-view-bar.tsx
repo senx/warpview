@@ -48,7 +48,6 @@ export class WarpViewBar {
   private _options: Param = {
     gridLineColor: '#8e8e8e'
   };
-  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart: any;
   private _mapIndex = {};
   private resizeTimer;
@@ -75,7 +74,7 @@ export class WarpViewBar {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  private onData(newValue: DataModel | GTS[]) {
     this.LOG.debug(['data'], newValue);
     this.drawChart();
   }
@@ -249,12 +248,12 @@ export class WarpViewBar {
 
   componentDidLoad() {
     this.drawChart();
-    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
+    ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
   }
 
   render() {
     return <div>
-      <div class="chart-container">  
+      <div class="chart-container">
         <canvas ref={el => this.canvas = el} width={this.width} height={this.height}/>
       </div>
     </div>;

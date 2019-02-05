@@ -15,7 +15,7 @@
  *
  */
 
-import { Component, Prop, Listen } from '@stencil/core';
+import {Component, Prop, Listen} from '@stencil/core';
 
 
 @Component({
@@ -33,10 +33,9 @@ export class WcResize {
   /**
    * If set, force the initial height to the given value in px.
    */
-  @Prop() initialHeight : string = null;
+  @Prop() initialHeight: string = null;
 
-  private handlediv: HTMLElement;
-  private slotdiv: HTMLElement;
+  private handleDiv: HTMLElement;
   private dragging = false;
   private moveListener: EventListener = null;
   private clickUpListener: EventListener = null;
@@ -46,11 +45,11 @@ export class WcResize {
   onResize(event: CustomEvent) {
     event.stopPropagation();
     if (event.detail.h) {
-      this.handlediv.parentElement.style.height = event.detail.h + 'px';
+      this.handleDiv.parentElement.style.height = event.detail.h + 'px';
     }
   }
 
-  private handleDraggingEnd(ev: MouseEvent) {
+  private handleDraggingEnd() {
     this.dragging = false;
     //the mouseup detach mousemove and mouseup events from document.
     if (this.moveListener) {
@@ -66,36 +65,36 @@ export class WcResize {
   private handleDraggingMove(ev: MouseEvent) {
     ev.preventDefault();
     //compute Y of the parent div top relative to page
-    let yTopParent = this.handlediv.parentElement.getBoundingClientRect().top - document.body.getBoundingClientRect().top;
+    let yTopParent = this.handleDiv.parentElement.getBoundingClientRect().top - document.body.getBoundingClientRect().top;
     //compute new parent height 
-    let h = ev.pageY - yTopParent + this.handlediv.getBoundingClientRect().height / 2;
+    let h = ev.pageY - yTopParent + this.handleDiv.getBoundingClientRect().height / 2;
     if (h < parseInt(this.minHeight)) {
       h = parseInt(this.minHeight);
     }
     //apply new height
-    this.handlediv.parentElement.style.height = h + 'px';
+    this.handleDiv.parentElement.style.height = h + 'px';
   }
 
   componentDidLoad() {
     if (this.firstDraw && this.initialHeight) {
-      this.handlediv.parentElement.style.height = parseInt(this.initialHeight) + 'px';
+      this.handleDiv.parentElement.style.height = parseInt(this.initialHeight) + 'px';
     }
     //the click event on the handlebar attach mousemove and mouseup events to document.
-    this.handlediv.addEventListener('mousedown', (ev: MouseEvent) => {
-      if (1 == ev.which) { //keep left click only
+    this.handleDiv.addEventListener('mousedown', (ev: MouseEvent) => {
+      if (0 == ev.button) { //keep left click only
         this.moveListener = this.handleDraggingMove.bind(this);
         this.clickUpListener = this.handleDraggingEnd.bind(this);
         document.addEventListener('mousemove', this.moveListener, false);
         document.addEventListener('mouseup', this.clickUpListener, false)
-      };
+      }
     })
   }
 
 
   render() {
     return <div class='wrapper'>
-      <slot />
-      <div class="handle" ref={(el) => this.handlediv = el} />
+      <slot/>
+      <div class="handle" ref={(el) => this.handleDiv = el}/>
     </div>;
   }
 

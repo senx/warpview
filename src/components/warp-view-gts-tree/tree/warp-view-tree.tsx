@@ -19,7 +19,6 @@ import {Component, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../../utils/gts.lib";
 import {Logger} from "../../../utils/logger";
 import {ChartLib} from "../../../utils/chart-lib";
-import deepEqual from "deep-equal";
 
 @Component({
   tag: "warp-view-tree-view",
@@ -32,7 +31,7 @@ export class WarpViewTreeView {
   @Prop() gtsFilter = 'x';
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
-  @Prop() kbdLastKeyPressed:string[] = [];
+  @Prop() kbdLastKeyPressed: string[] = [];
 
   @State() ref: number = 0; //just to trigger the render
 
@@ -69,7 +68,7 @@ export class WarpViewTreeView {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[], oldValue: number[]) {
+  private onHideData(newValue: number[]) {
     this.LOG.debug(['hiddenData'], newValue);
     this.ref++;
   }
@@ -102,7 +101,8 @@ export class WarpViewTreeView {
           <li hidden={this.hidden}>
             {GTSLib.isGts(node)
               ? <warp-view-chip node={{gts: node}} name={node.c} gtsFilter={this.gtsFilter}
-                                debug={this.debug} hiddenData={this.hiddenData} kbdLastKeyPressed={this.kbdLastKeyPressed}/>
+                                debug={this.debug} hiddenData={this.hiddenData}
+                                kbdLastKeyPressed={this.kbdLastKeyPressed}/>
               : <span>{node
                 ? <div>{this.branch
                   ? <div>
@@ -126,7 +126,8 @@ export class WarpViewTreeView {
                           : ''}</small></span>
                   </div>}
                   <warp-view-tree-view gtsList={node} branch={true} hidden={this.isHidden(index)}
-                                       debug={this.debug} gtsFilter={this.gtsFilter} kbdLastKeyPressed={this.kbdLastKeyPressed}  hiddenData={this.hiddenData} />
+                                       debug={this.debug} gtsFilter={this.gtsFilter}
+                                       kbdLastKeyPressed={this.kbdLastKeyPressed} hiddenData={this.hiddenData}/>
                 </div>
                 : ''}
               </span>}

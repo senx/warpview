@@ -1,5 +1,3 @@
-import { Timer } from "d3";
-
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -74,6 +72,7 @@ export class ChartLib {
       }
     }
   };
+
   /**
    *
    * @param item
@@ -91,7 +90,7 @@ export class ChartLib {
       title: (tooltipItem) => {
         return tooltipItem[0].xLabel
       },
-      label: (tooltipItem, data)  => {
+      label: (tooltipItem, data) => {
         let label = data.datasets[tooltipItem.datasetIndex].label || '';
         if (label) {
           label += ': ';
@@ -125,15 +124,15 @@ export class ChartLib {
    * @param redrawfunction The resize or redraw function to call if container size change. don't forget to .bind(this)
    * @param period Timer component By default, 2 s
    */
-  static resizeWatchTimer(el:HTMLElement, redrawfunction:Function, period:number=1000):number{
+  static resizeWatchTimer(el: HTMLElement, redrawfunction: Function, period: number = 1000): number {
     let previousWidth = el.parentElement.getBoundingClientRect().width;
     let previousHeight = el.parentElement.getBoundingClientRect().height;
-    return window.setInterval(()=> {
+    return window.setInterval(() => {
       if (el.parentElement.getBoundingClientRect().width !== previousWidth || el.parentElement.getBoundingClientRect().height !== previousHeight) {
         previousHeight = el.parentElement.getBoundingClientRect().height;
         previousWidth = el.parentElement.getBoundingClientRect().width;
         redrawfunction();
       }
-    },period)
+    }, period)
   }
 }

@@ -120,13 +120,13 @@ export class WarpViewMap {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  private onData(newValue: DataModel | GTS[]) {
     this.LOG.debug(['data'], newValue);
     this.drawMap();
   }
 
   @Watch('options')
-  private onOptions(newValue: Param, oldValue: Param) {
+  private onOptions(newValue: Param) {
     let optionChanged = false;
     Object.keys(newValue).forEach(opt => {
       if (this._options.hasOwnProperty(opt)) {
@@ -351,52 +351,6 @@ export class WarpViewMap {
     });
   }
 
-  private updateAnnotation(gts) {
-    let positions = [];
-    let icon;
-    this.LOG.debug(['updateAnnotation'], gts);
-    switch (gts.render) {
-      case 'marker':
-        icon = this.icon(gts.color, gts.marker);
-        gts.path.map(pathItem => {
-          let date;
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            date = parseInt(pathItem.ts);
-          } else {
-            date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
-          }
-          let marker = Leaflet.marker(pathItem, {icon: icon, opacity: 1})
-            .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-
-          this.LOG.debug(['updateAnnotation', 'marker'], marker);
-          positions.push(marker);
-        });
-        break;
-      case 'dots':
-      default:
-        gts.path.map(pathItem => {
-          let marker = Leaflet.circleMarker(
-            pathItem, {
-              radius: gts.baseRadius,
-              color: gts.color,
-              fillColor: gts.color,
-              fillOpacity: 1
-            }
-          );
-          let date;
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            date = parseInt(pathItem.ts);
-          } else {
-            date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
-          }
-          marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-          positions.push(marker);
-        });
-        break;
-    }
-    return positions;
-  }
-
   private updatePositionArray(positionData: any) {
     let positions = [];
     let polyline;
@@ -510,7 +464,7 @@ export class WarpViewMap {
 
   componentDidLoad() {
     this.drawMap();
-    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
+    ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
   }
 
   render() {

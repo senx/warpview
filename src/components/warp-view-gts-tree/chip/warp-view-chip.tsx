@@ -15,12 +15,11 @@
  *
  */
 
-import {Component, Event, EventEmitter, Listen, Prop, State, Watch} from "@stencil/core";
+import {Component, Event, EventEmitter, Prop, State, Watch} from "@stencil/core";
 import {GTSLib} from "../../../utils/gts.lib";
 import {ColorLib} from "../../../utils/color-lib";
 import {GTS} from "../../../model/GTS";
 import {Logger} from "../../../utils/logger";
-import deepEqual from "deep-equal";
 
 @Component({
   tag: 'warp-view-chip',
@@ -35,7 +34,7 @@ export class WarpViewChip {
   @Prop() gtsFilter = 'x'; //the first character triggers change each filter apply to trigger events. it must be discarded.
   @Prop() hiddenData: number[] = [];
   @Prop() debug = false;
-  @Prop() kbdLastKeyPressed:string[] = [];
+  @Prop() kbdLastKeyPressed: string[] = [];
 
   @State() refreshCounter: number = 0;
 
@@ -60,7 +59,7 @@ export class WarpViewChip {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[], oldValue: number[]) {
+  private onHideData(newValue: number[]) {
     this.LOG.debug(['hiddenData'], newValue);
     this._node = {
       ...this._node,
@@ -72,7 +71,7 @@ export class WarpViewChip {
   }
 
   @Watch('kbdLastKeyPressed')
-  handleKeyDown(key:string[]) {
+  handleKeyDown(key: string[]) {
     if (key[0] === 'a') {
       this.setState(true);
     }

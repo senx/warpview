@@ -88,13 +88,13 @@ export class WarpViewGtsPopup {
   }
 
   @Watch('hiddenData')
-  private onHideData(newValue: number[], oldValue: number[]) {
+  private onHideData(newValue: number[]) {
     this.LOG.debug(['hiddenData'], newValue);
     this.prepareData();
   }
 
   @Watch('gtsList')
-  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  private onData(newValue: DataModel | GTS[]) {
     this.LOG.debug(['data'], newValue);
     this.prepareData();
   }

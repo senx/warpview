@@ -70,7 +70,7 @@ export class WarpViewRadar {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | any[], oldValue: DataModel | any[]) {
+  private onData(newValue: DataModel | any[]) {
     this.LOG.debug(['data'], newValue);
     this.drawChart();
   }
@@ -185,7 +185,7 @@ export class WarpViewRadar {
           }
         }
       });
-      this.onResize();      
+      this.onResize();
       setTimeout(() => {
         this._chart.update();
       }, 250);
@@ -198,7 +198,7 @@ export class WarpViewRadar {
 
   componentDidLoad() {
     this.drawChart();
-    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
+    ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
   }
 
   render() {

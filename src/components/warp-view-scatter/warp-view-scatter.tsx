@@ -49,7 +49,6 @@ export class WarpViewScatter {
     gridLineColor: '#8e8e8e'
   };
   private _chart: Chart;
-  private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private resizeTimer;
   private parentWidth = -1;
   private canvas: HTMLCanvasElement;
@@ -74,7 +73,7 @@ export class WarpViewScatter {
   }
 
   @Watch('data')
-  private onData(newValue: DataModel | GTS[], oldValue: DataModel | GTS[]) {
+  private onData(newValue: DataModel | GTS[]) {
     this.LOG.debug(['data'], newValue);
     this.drawChart();
   }
@@ -218,7 +217,7 @@ export class WarpViewScatter {
   }
 
   componentDidLoad() {
-    this.drawChart()
+    this.drawChart();
     ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
   }
 
