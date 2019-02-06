@@ -5,7 +5,7 @@ export class WarpViewTreeView {
     constructor() {
         this.branch = false;
         this.hidden = false;
-        this.gtsFilter = '';
+        this.gtsFilter = 'x';
         this.hiddenData = [];
         this.debug = false;
         this.kbdLastKeyPressed = [];
@@ -35,7 +35,7 @@ export class WarpViewTreeView {
             this.ref++;
         }
     }
-    onHideData(newValue, oldValue) {
+    onHideData(newValue) {
         this.LOG.debug(['hiddenData'], newValue);
         this.ref++;
     }

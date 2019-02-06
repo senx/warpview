@@ -19,14 +19,16 @@ export class WarpViewPolar {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
+        this.parentHeight = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+                this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -35,11 +37,9 @@ export class WarpViewPolar {
             }, 150);
         }
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['data'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -59,8 +59,8 @@ export class WarpViewPolar {
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         const color = this._options.gridLineColor;
         if (!this.data)
             return;
@@ -109,6 +109,7 @@ export class WarpViewPolar {
                     },
                     legend: { display: this.showLegend },
                     responsive: this.responsive,
+                    maintainAspectRatio: false,
                     scale: {
                         gridLines: {
                             color: color,
@@ -129,6 +130,9 @@ export class WarpViewPolar {
                 }
             });
             this.onResize();
+            setTimeout(() => {
+                this._chart.update();
+            }, 250);
         }
     }
     componentWillLoad() {
@@ -136,6 +140,7 @@ export class WarpViewPolar {
     }
     componentDidLoad() {
         this.drawChart();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return h("div", null,

@@ -4,7 +4,7 @@ import { GTS } from "../../../model/GTS";
 import { Logger } from "../../../utils/logger";
 export class WarpViewChip {
     constructor() {
-        this.gtsFilter = '';
+        this.gtsFilter = 'x';
         this.hiddenData = [];
         this.debug = false;
         this.kbdLastKeyPressed = [];
@@ -15,13 +15,16 @@ export class WarpViewChip {
         };
     }
     onGtsFilter(newValue, oldValue) {
-        if (oldValue !== newValue) {
-            if (this.gtsFilter !== '') {
-                this.setState(new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+        if (oldValue != newValue) {
+            if (this.gtsFilter.slice(1) !== '') {
+                this.setState(new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+            }
+            else {
+                this.setState(true);
             }
         }
     }
-    onHideData(newValue, oldValue) {
+    onHideData(newValue) {
         this.LOG.debug(['hiddenData'], newValue);
         this._node = Object.assign({}, this._node, { selected: this.hiddenData.indexOf(this._node.gts.id) === -1, label: GTSLib.serializeGtsMetadata(this._node.gts) });
         this.LOG.debug(['hiddenData'], this._node);
@@ -52,7 +55,7 @@ export class WarpViewChip {
         this._node = Object.assign({}, this.node, { selected: this.hiddenData.indexOf(this.node.gts.id) === -1 });
     }
     componentDidLoad() {
-        if (this.gtsFilter !== '' && new RegExp(this.gtsFilter, 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+        if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
             || this.hiddenData.indexOf(this._node.gts.id) > -1) {
             this.setState(false);
         }

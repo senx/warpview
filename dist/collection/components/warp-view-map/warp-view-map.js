@@ -39,14 +39,16 @@ export class WarpViewMap {
         this._iconAnchor = [20, 52];
         this._popupAnchor = [0, -50];
         this.parentWidth = -1;
+        this.parentHeight = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+                this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawMap();
                 }
                 else {
@@ -61,11 +63,11 @@ export class WarpViewMap {
             this.drawMap();
         }
     }
-    onData(newValue, oldValue) {
+    onData(newValue) {
         this.LOG.debug(['data'], newValue);
         this.drawMap();
     }
-    onOptions(newValue, oldValue) {
+    onOptions(newValue) {
         let optionChanged = false;
         Object.keys(newValue).forEach(opt => {
             if (this._options.hasOwnProperty(opt)) {
@@ -164,8 +166,8 @@ export class WarpViewMap {
             this._map.remove();
         }
         this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
-        const height = (this.responsive ? this.mapElement.parentElement.clientHeight : (this.height || WarpViewMap.DEFAULT_HEIGHT)) - 30;
-        const width = (this.responsive ? this.mapElement.parentElement.clientWidth : this.width || WarpViewMap.DEFAULT_WIDTH);
+        const height = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().height : (this.height || WarpViewMap.DEFAULT_HEIGHT)) - 30;
+        const width = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().width : this.width || WarpViewMap.DEFAULT_WIDTH);
         this.mapElement.style.width = width + 'px';
         this.mapElement.style.height = height + 'px';
         this._map = Leaflet.map(this.mapElement)
@@ -266,50 +268,6 @@ export class WarpViewMap {
             };
         });
     }
-    updateAnnotation(gts) {
-        let positions = [];
-        let icon;
-        this.LOG.debug(['updateAnnotation'], gts);
-        switch (gts.render) {
-            case 'marker':
-                icon = this.icon(gts.color, gts.marker);
-                gts.path.map(pathItem => {
-                    let date;
-                    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                        date = parseInt(pathItem.ts);
-                    }
-                    else {
-                        date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
-                    }
-                    let marker = Leaflet.marker(pathItem, { icon: icon, opacity: 1 })
-                        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-                    this.LOG.debug(['updateAnnotation', 'marker'], marker);
-                    positions.push(marker);
-                });
-                break;
-            case 'dots':
-            default:
-                gts.path.map(pathItem => {
-                    let marker = Leaflet.circleMarker(pathItem, {
-                        radius: gts.baseRadius,
-                        color: gts.color,
-                        fillColor: gts.color,
-                        fillOpacity: 1
-                    });
-                    let date;
-                    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                        date = parseInt(pathItem.ts);
-                    }
-                    else {
-                        date = moment(parseInt(pathItem.ts)).utc(true).toISOString();
-                    }
-                    marker.bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${pathItem.val.toString()}</p>`);
-                    positions.push(marker);
-                });
-                break;
-        }
-        return positions;
-    }
     updatePositionArray(positionData) {
         let positions = [];
         let polyline;
@@ -396,8 +354,8 @@ export class WarpViewMap {
     resize() {
         return new Promise(resolve => {
             this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);
-            const height = (this.responsive ? this.mapElement.parentElement.clientHeight : WarpViewMap.DEFAULT_HEIGHT) - 30;
-            const width = (this.responsive ? this.mapElement.parentElement.clientWidth : WarpViewMap.DEFAULT_WIDTH);
+            const height = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().height : WarpViewMap.DEFAULT_HEIGHT) - 30;
+            const width = (this.responsive ? this.mapElement.parentElement.getBoundingClientRect().width : WarpViewMap.DEFAULT_WIDTH);
             this.mapElement.style.width = width + 'px';
             this.mapElement.style.height = height + 'px';
             resolve(true);
@@ -408,6 +366,7 @@ export class WarpViewMap {
     }
     componentDidLoad() {
         this.drawMap();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return (h("div", { class: "wrapper" },

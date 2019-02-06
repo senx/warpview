@@ -5,6 +5,7 @@ export declare class MapLib {
      *
      * @param {any} data
      * @param {number[]} hiddenData
+     * @param {number} divider
      * @returns {any[]}
      */
     static toLeafletMapPaths(data: {
@@ -15,6 +16,7 @@ export declare class MapLib {
      *
      * @param {any} data
      * @param {number[]} hiddenData
+     * @param {number} divider
      * @returns {any[]}
      */
     static annotationsToLeafletPositions(data: {

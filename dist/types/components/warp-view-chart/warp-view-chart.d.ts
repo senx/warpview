@@ -24,6 +24,7 @@ export declare class WarpViewChart {
     boundsDidChange: EventEmitter;
     pointHover: EventEmitter;
     warpViewChartResize: EventEmitter;
+    resizeMyParent: EventEmitter;
     private LOG;
     private static DEFAULT_WIDTH;
     private static DEFAULT_HEIGHT;
@@ -32,8 +33,6 @@ export declare class WarpViewChart {
     private _options;
     private uuid;
     private visibility;
-    private initialHeight;
-    private parentWidth;
     /**
      * usefull for default zoom
      */
@@ -66,6 +65,10 @@ export declare class WarpViewChart {
      * put this to true before creating a new dygraph to force a resize in the drawCallback
      */
     private initialResizeNeeded;
+    private previousParentHeight;
+    private previousParentWidth;
+    private visibilityStatus;
+    private heightWithPlottableData;
     onResize(): void;
     private onHideData;
     private onData;

@@ -19,14 +19,16 @@ export class WarpViewBubble {
             gridLineColor: '#8e8e8e'
         };
         this.parentWidth = -1;
+        this.parentHeight = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+                this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -37,10 +39,8 @@ export class WarpViewBubble {
     }
     onData(newValue, oldValue) {
         this.LOG.debug(['onData'], newValue, oldValue);
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['onData'], newValue);
-            this.drawChart();
-        }
+        this.LOG.debug(['onData'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         this.LOG.debug(['onOptions'], newValue, oldValue);
@@ -51,8 +51,8 @@ export class WarpViewBubble {
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         if (!this.data)
             return;
         let dataList;
@@ -113,7 +113,8 @@ export class WarpViewBubble {
                     }
                 ]
             },
-            responsive: this.responsive
+            responsive: this.responsive,
+            maintainAspectRatio: false
         };
         const dataSets = this.parseData(dataList);
         this.LOG.debug(['drawChart'], [options, dataSets]);
@@ -133,6 +134,9 @@ export class WarpViewBubble {
             options: options
         });
         this.onResize();
+        setTimeout(() => {
+            this._chart.update();
+        }, 250);
     }
     parseData(gts) {
         if (!gts)
@@ -166,6 +170,7 @@ export class WarpViewBubble {
     }
     componentDidLoad() {
         this.drawChart();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return h("div", null,

@@ -19,11 +19,9 @@ export class WarpViewDatagrid {
         };
         this._data = [];
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['data'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -34,8 +32,8 @@ export class WarpViewDatagrid {
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
         this.LOG.debug(['drawChart', '_options'], this._options);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         if (!this.data)
             return;
         let data = this.data;

@@ -59,4 +59,15 @@ export class ChartLib {
         img.src = "data:image/svg+xml;base64," + btoa(svg);
         return img;
     }
+    static resizeWatchTimer(el, redrawfunction, period = 1000) {
+        let previousWidth = el.parentElement.getBoundingClientRect().width;
+        let previousHeight = el.parentElement.getBoundingClientRect().height;
+        return window.setInterval(() => {
+            if (el.parentElement.getBoundingClientRect().width !== previousWidth || el.parentElement.getBoundingClientRect().height !== previousHeight) {
+                previousHeight = el.parentElement.getBoundingClientRect().height;
+                previousWidth = el.parentElement.getBoundingClientRect().width;
+                redrawfunction();
+            }
+        }, period);
+    }
 }

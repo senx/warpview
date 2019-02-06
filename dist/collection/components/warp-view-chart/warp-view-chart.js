@@ -5,6 +5,7 @@ import { ChartLib } from "../../utils/chart-lib";
 import { ColorLib } from "../../utils/color-lib";
 import { Param } from "../../model/param";
 import moment from "moment-timezone";
+import deepEqual from "deep-equal";
 export class WarpViewChart {
     constructor() {
         this.options = new Param();
@@ -22,7 +23,6 @@ export class WarpViewChart {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
-        this.parentWidth = -1;
         this.maxTick = 0;
         this.minTick = 0;
         this.visibleGtsId = [];
@@ -31,37 +31,54 @@ export class WarpViewChart {
         this.dygraphLabels = [];
         this.dygraphColors = [];
         this.initialResizeNeeded = false;
+        this.previousParentHeight = -1;
+        this.previousParentWidth = -1;
+        this.visibilityStatus = 'unknown';
+        this.heightWithPlottableData = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.initialResizeNeeded || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
-            this.initialResizeNeeded = false;
-            if (this._chart) {
-                if (!this.initialHeight) {
-                    this.initialHeight = this.el.parentElement.clientHeight;
+        clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+            let parentWidth = this.el.parentElement.getBoundingClientRect().width;
+            let parentHeight = this.el.parentElement.getBoundingClientRect().height;
+            if (this.initialResizeNeeded || parentWidth !== this.previousParentWidth || parentHeight !== this.previousParentHeight) {
+                this.initialResizeNeeded = false;
+                if (this.standalone || this.displayGraph()) {
+                    let width = parentWidth - 5;
+                    if (this.visibilityStatus === 'plottablesAllHidden') {
+                        parentHeight = this.heightWithPlottableData;
+                        this.visibilityStatus = 'plottableShown';
+                        this.resizeMyParent.emit({ h: parentHeight, w: parentWidth });
+                    }
+                    let height = parentHeight - 20;
+                    if (this._chart) {
+                        this.LOG.debug(['onResize', 'destroy'], width, height);
+                        this._chart.resize(width, height);
+                    }
                 }
-                clearTimeout(this.resizeTimer);
-                this.resizeTimer = setTimeout(() => {
-                    if (this.parentWidth > 0) {
-                        this.LOG.debug(['onResize', 'destroy'], this.el.parentElement.clientWidth);
-                        const height = (this.responsive ? this.initialHeight : WarpViewChart.DEFAULT_HEIGHT) - 30;
-                        const width = (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5;
-                        this._chart.resize(width, this.displayGraph() ? height : 30);
-                        this.warpViewChartResize.emit({ w: width, h: this.displayGraph() ? height : 30 });
+                else {
+                    if (this.visibilityStatus === 'plottableShown') {
+                        this.visibilityStatus = 'plottablesAllHidden';
+                        this.heightWithPlottableData = parentHeight;
                     }
-                    else {
-                        this.onResize();
+                    let height = 30;
+                    let width = parentWidth;
+                    if (this._chart) {
+                        this.LOG.debug(['onResize', 'destroy'], width, height);
+                        this._chart.resize(width, height);
                     }
-                }, 150);
+                    parentHeight = height + 20;
+                    this.resizeMyParent.emit({ h: parentHeight, w: width });
+                }
             }
-        }
+            this.previousParentHeight = parentHeight;
+            this.previousParentWidth = parentWidth;
+        }, 150);
     }
     onHideData(newValue, oldValue) {
         if (newValue !== oldValue) {
-            this.parentWidth = 0;
             this.LOG.debug(['hiddenData'], newValue);
             let previousVisibility = JSON.stringify(this.visibility);
-            let previouslyAllHidden = !this.displayGraph();
             if (!!this._chart) {
                 this.visibility = [];
                 this.visibleGtsId.forEach(id => {
@@ -71,14 +88,15 @@ export class WarpViewChart {
             }
             let newVisibility = JSON.stringify(this.visibility);
             if (previousVisibility !== newVisibility) {
-                this.drawChart(false, previouslyAllHidden && this.displayGraph());
+                this.drawChart(false, true);
                 this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
             }
         }
     }
     onData(newValue, oldValue) {
-        if (newValue !== oldValue) {
+        if (!deepEqual(newValue, oldValue)) {
             this.LOG.debug(['data'], newValue);
+            this.visibilityStatus = 'unknown';
             this.drawChart(true);
             this.LOG.debug(['dataupdate', 'destroy'], 'redraw by data change');
         }
@@ -147,6 +165,9 @@ export class WarpViewChart {
             gtsList = gtsList.filter(g => {
                 return (g.v && GTSLib.isGtsToPlot(g));
             });
+            if (this.visibilityStatus === 'unknown') {
+                this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
+            }
             gtsList.forEach((g, i) => {
                 labels.push(GTSLib.serializeGtsMetadata(g) + g.id);
                 g.v.forEach(value => {
@@ -428,8 +449,8 @@ export class WarpViewChart {
             interactionModel.mousewheel = this.scroll.bind(this);
             interactionModel.mouseout = this.handleMouseOut.bind(this);
             let options = {
-                height: this.displayGraph() ? (this.responsive ? this.el.parentElement.clientHeight : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
-                width: (this.responsive ? this.el.parentElement.clientWidth : WarpViewChart.DEFAULT_WIDTH) - 5,
+                height: this.displayGraph() ? (this.responsive ? this.el.parentElement.getBoundingClientRect().height : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
+                width: (this.responsive ? this.el.parentElement.getBoundingClientRect().width : WarpViewChart.DEFAULT_WIDTH) - 5,
                 labels: this.dygraphLabels,
                 showRoller: false,
                 showRangeSelector: this.dygraphdataSets && this.dygraphdataSets.length > 0 && this._options.showRangeSelector,
@@ -504,9 +525,10 @@ export class WarpViewChart {
     }
     componentDidLoad() {
         this.drawChart(true);
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
-        return h("div", null,
+        return h("div", { id: "chartContainer" },
             h("div", { id: this.uuid, class: "chart" }));
     }
     static get is() { return "warp-view-chart"; }
@@ -570,6 +592,12 @@ export class WarpViewChart {
         }, {
             "name": "warpViewChartResize",
             "method": "warpViewChartResize",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true
+        }, {
+            "name": "resizeMyParent",
+            "method": "resizeMyParent",
             "bubbles": true,
             "cancelable": true,
             "composed": true

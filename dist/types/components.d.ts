@@ -111,6 +111,7 @@ export namespace Components {
     'hiddenData'?: number[];
     'onBoundsDidChange'?: (event: CustomEvent) => void;
     'onPointHover'?: (event: CustomEvent) => void;
+    'onResizeMyParent'?: (event: CustomEvent) => void;
     'onWarpViewChartResize'?: (event: CustomEvent) => void;
     'options'?: Param;
     'responsive'?: boolean;
@@ -379,6 +380,8 @@ export namespace Components {
     'getTimeClip': () => Promise<[number, number]>;
     'gtsFilter': string;
     'height': string;
+    'initialChartHeight': string;
+    'initialMapHeight': string;
     'isAlone': boolean;
     'options': string | Param;
     'responsive': boolean;
@@ -390,6 +393,8 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'height'?: string;
+    'initialChartHeight'?: string;
+    'initialMapHeight'?: string;
     'isAlone'?: boolean;
     'options'?: string | Param;
     'responsive'?: boolean;
@@ -435,6 +440,27 @@ export namespace Components {
     'width'?: string;
   }
 
+  interface WarpViewResize {
+    /**
+    * If set, force the initial height to the given value in px.
+    */
+    'initialHeight': string;
+    /**
+    * Minimum height in pixel. default 10px.
+    */
+    'minHeight': string;
+  }
+  interface WarpViewResizeAttributes extends StencilHTMLAttributes {
+    /**
+    * If set, force the initial height to the given value in px.
+    */
+    'initialHeight'?: string;
+    /**
+    * Minimum height in pixel. default 10px.
+    */
+    'minHeight'?: string;
+  }
+
   interface WarpViewScatter {
     'data': DataModel | GTS[] | string;
     'debug': boolean;
@@ -468,7 +494,7 @@ export namespace Components {
     'debug': boolean;
     'gtsFilter': string;
     'isAlone': boolean;
-    'options': Param;
+    'options': string | Param;
     'resize': () => void;
     'responsive': boolean;
     'showLegend': boolean;
@@ -481,7 +507,7 @@ export namespace Components {
     'debug'?: boolean;
     'gtsFilter'?: string;
     'isAlone'?: boolean;
-    'options'?: Param;
+    'options'?: string | Param;
     'responsive'?: boolean;
     'showLegend'?: boolean;
     'type'?: string;
@@ -525,6 +551,7 @@ declare global {
     'WarpViewPlot': Components.WarpViewPlot;
     'WarpViewPolar': Components.WarpViewPolar;
     'WarpViewRadar': Components.WarpViewRadar;
+    'WarpViewResize': Components.WarpViewResize;
     'WarpViewScatter': Components.WarpViewScatter;
     'WarpViewSpinner': Components.WarpViewSpinner;
     'WarpViewTile': Components.WarpViewTile;
@@ -553,6 +580,7 @@ declare global {
     'warp-view-plot': Components.WarpViewPlotAttributes;
     'warp-view-polar': Components.WarpViewPolarAttributes;
     'warp-view-radar': Components.WarpViewRadarAttributes;
+    'warp-view-resize': Components.WarpViewResizeAttributes;
     'warp-view-scatter': Components.WarpViewScatterAttributes;
     'warp-view-spinner': Components.WarpViewSpinnerAttributes;
     'warp-view-tile': Components.WarpViewTileAttributes;
@@ -686,6 +714,12 @@ declare global {
     new (): HTMLWarpViewRadarElement;
   };
 
+  interface HTMLWarpViewResizeElement extends Components.WarpViewResize, HTMLStencilElement {}
+  var HTMLWarpViewResizeElement: {
+    prototype: HTMLWarpViewResizeElement;
+    new (): HTMLWarpViewResizeElement;
+  };
+
   interface HTMLWarpViewScatterElement extends Components.WarpViewScatter, HTMLStencilElement {}
   var HTMLWarpViewScatterElement: {
     prototype: HTMLWarpViewScatterElement;
@@ -732,6 +766,7 @@ declare global {
     'warp-view-plot': HTMLWarpViewPlotElement
     'warp-view-polar': HTMLWarpViewPolarElement
     'warp-view-radar': HTMLWarpViewRadarElement
+    'warp-view-resize': HTMLWarpViewResizeElement
     'warp-view-scatter': HTMLWarpViewScatterElement
     'warp-view-spinner': HTMLWarpViewSpinnerElement
     'warp-view-tile': HTMLWarpViewTileElement
@@ -760,6 +795,7 @@ declare global {
     'warp-view-plot': HTMLWarpViewPlotElement;
     'warp-view-polar': HTMLWarpViewPolarElement;
     'warp-view-radar': HTMLWarpViewRadarElement;
+    'warp-view-resize': HTMLWarpViewResizeElement;
     'warp-view-scatter': HTMLWarpViewScatterElement;
     'warp-view-spinner': HTMLWarpViewSpinnerElement;
     'warp-view-tile': HTMLWarpViewTileElement;

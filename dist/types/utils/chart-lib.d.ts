@@ -38,4 +38,11 @@ export declare class ChartLib {
      * @returns {HTMLImageElement}
      */
     static buildImage(w: number, h: number, color: string): HTMLImageElement;
+    /**
+     * Watch the parent resize of an element.
+     * @param el The component Element
+     * @param redrawfunction The resize or redraw function to call if container size change. don't forget to .bind(this)
+     * @param period Timer component By default, 2 s
+     */
+    static resizeWatchTimer(el: HTMLElement, redrawfunction: Function, period?: number): number;
 }

@@ -33,6 +33,7 @@ export declare class WarpViewMap {
     private static DEFAULT_WIDTH;
     private parentWidth;
     private mapElement;
+    private parentHeight;
     onResize(): void;
     private onHideData;
     private onData;
@@ -44,7 +45,6 @@ export declare class WarpViewMap {
     private icon;
     private displayMap;
     private updateGtsPath;
-    private updateAnnotation;
     private updatePositionArray;
     /**
      *

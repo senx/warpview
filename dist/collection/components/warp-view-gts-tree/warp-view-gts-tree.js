@@ -5,7 +5,7 @@ import { ChartLib } from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
 export class WarpViewGtsTree {
     constructor() {
-        this.gtsFilter = '';
+        this.gtsFilter = 'x';
         this.options = new Param();
         this.hiddenData = [];
         this.debug = false;
@@ -15,10 +15,8 @@ export class WarpViewGtsTree {
         this._options = new Param();
     }
     onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['options'], newValue, oldValue);
-            this.doRender();
-        }
+        this.LOG.debug(['options'], newValue, oldValue);
+        this.doRender();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {

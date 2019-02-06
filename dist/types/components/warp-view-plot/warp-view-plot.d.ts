@@ -12,6 +12,8 @@ export declare class WarpViewPlot {
     gtsFilter: string;
     debug: boolean;
     isAlone: boolean;
+    initialChartHeight: string;
+    initialMapHeight: string;
     private _options;
     private _data;
     private _toHide;
@@ -26,7 +28,6 @@ export declare class WarpViewPlot {
     private LOG;
     private line;
     private main;
-    private chartContainer;
     private chart;
     private annotation;
     private modal;
@@ -38,6 +39,7 @@ export declare class WarpViewPlot {
     private tzSelector;
     private kbdCounter;
     private gtsPopupModal;
+    private gtsFilterCount;
     componentDidLoad(): void;
     getTimeClip(): Promise<[number, number]>;
     private onGtsFilter;
@@ -51,7 +53,6 @@ export declare class WarpViewPlot {
     private pushKbdEvent;
     stateChange(event: CustomEvent): void;
     boundsDidChange(event: CustomEvent): void;
-    onResize(event: CustomEvent): void;
     warpViewSelectedGTS(event: CustomEvent): void;
     private handleMouseMove;
     private handleMouseOut;

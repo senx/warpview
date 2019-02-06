@@ -15,11 +15,12 @@
  *
  */
 :host {
-  position: relative; }
+  position: relative;
+  height: 100%; }
   :host .main-container {
     position: relative; }
   :host .map-container {
-    height: 768px;
+    height: 100%;
     width: calc(100% - 25px);
     margin-top: 20px;
     margin-right: 20px;
@@ -71,3 +72,9 @@
     background: var(--warp-view-switch-inset-checked-color, #00cd00); }
   :host .tzcontainer {
     display: flex; }
+  :host .chart-container {
+    height: var(--warp-view-plot-chart-height, 100%);
+    width: 100%; }
+  :host #bottomPlaceHolder {
+    height: 200px;
+    width: 100%; }

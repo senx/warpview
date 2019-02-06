@@ -2,7 +2,7 @@ import '../../stencil.core';
 import { Param } from "../../model/param";
 export declare class WarpViewTile {
     data: any;
-    options: Param;
+    options: string | Param;
     unit: string;
     type: string;
     chartTitle: string;
@@ -23,12 +23,14 @@ export declare class WarpViewTile {
     private gtsList;
     private _options;
     private timer;
+    private watchWarpScriptTimer;
     private _autoRefresh;
     private onOptions;
     private onGtsFilter;
     resize(): void;
     handleKeyDown(ev: KeyboardEvent): void;
     componentDidLoad(): void;
+    componentDidUpdate(): void;
     private parseGTS;
     private detectWarpScriptSpecialComments;
     componentWillLoad(): void;

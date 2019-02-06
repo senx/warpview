@@ -15,16 +15,19 @@
  *
  */
 :host div {
-  height: var(--warp-view-chart-height, 100%); }
+  height: var(--warp-view-chart-height, 100%);
+  width: var(--warp-view-chart-width, 100%); }
 
 :host .chart-container {
   width: var(--warp-view-chart-width, 100%);
   height: var(--warp-view-chart-height, 100%);
-  position: relative; }
+  position: relative;
+  overflow: hidden; }
   :host .chart-container div {
-    font-size: 10rem;
-    height: 100%;
-    width: 100%; }
+    height: 99%;
+    width: 99%;
+    display: block; }
     :host .chart-container div .responsive {
-      width: calc(100% - 10px);
-      height: auto; }
+      width: 99%;
+      height: 99%;
+      object-fit: scale-down; }

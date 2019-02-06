@@ -27,12 +27,12 @@ export class WarpViewAnnotation {
         this.expanded = false;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0) {
+            this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -41,11 +41,9 @@ export class WarpViewAnnotation {
             }, 150);
         }
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['data'], newValue);
+        this.drawChart();
     }
     onOptions(newValue) {
         this.LOG.debug(['options'], newValue);
@@ -322,6 +320,7 @@ export class WarpViewAnnotation {
     }
     componentDidLoad() {
         this.drawChart();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return h("div", null,

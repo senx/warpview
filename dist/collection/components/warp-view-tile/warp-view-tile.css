@@ -34,19 +34,23 @@
     border-radius: 3px;
     border-style: solid; }
   :host .wrapper {
-    min-height: var(--warp-view-tile-height, 400px);
     width: var(--warp-view-tile-width, 100%);
     height: var(--warp-view-tile-height, 100%); }
-    :host .wrapper .tile {
-      width: 100%;
-      height: calc(var(--warp-view-tile-height, 100%) - 40px);
-      overflow-y: auto;
-      overflow-x: hidden; }
-    :host .wrapper h1 {
-      font-size: 20px;
-      padding: 5px;
-      margin: 0;
-      color: var(--warp-view-font-color, #000000); }
-      :host .wrapper h1 small {
-        font-size: 10px;
-        margin-left: 10px; }
+    :host .wrapper .tilewrapper {
+      width: var(--warp-view-tile-width, 100%);
+      height: var(--warp-view-tile-height, 100%); }
+      :host .wrapper .tilewrapper .tile {
+        width: 100%;
+        height: calc(var(--warp-view-tile-height, 100%) - 40px);
+        overflow-y: auto;
+        overflow-x: hidden; }
+      :host .wrapper .tilewrapper .notitle {
+        height: 100%; }
+      :host .wrapper .tilewrapper h1 {
+        font-size: 20px;
+        padding: 5px;
+        margin: 0;
+        color: var(--warp-view-font-color, #000000); }
+        :host .wrapper .tilewrapper h1 small {
+          font-size: 10px;
+          margin-left: 10px; }

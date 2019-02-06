@@ -18,19 +18,37 @@ export declare class GTSLib {
      * @returns {any | boolean}
      */
     static isArray(value: any): boolean;
+    /**
+     *
+     * @param data
+     * @returns {boolean}
+     */
     static isValidResponse(data: any): boolean;
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isEmbeddedImage(item: any): boolean;
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isEmbeddedImageObject(item: any): boolean;
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isPositionArray(item: any): boolean;
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isPositionsArrayWithValues(item: any): boolean;
     static isPositionsArrayWithTwoValues(item: any): boolean;
-    static metricFromJSON(json: any): {
-        ts: any;
-        value: any;
-        alt: any;
-        lon: any;
-        lat: any;
-    };
     static gtsFromJSON(json: any, id: any): {
         gts: {
             c: any;
@@ -74,6 +92,7 @@ export declare class GTSLib {
     /**
      *
      * @param gts
+     * @param {number} divider
      * @returns {any[]}
      */
     static gtsToPath(gts: any, divider?: number): any[];
@@ -101,24 +120,12 @@ export declare class GTSLib {
      * @param gts
      * @returns {boolean}
      */
-    static isBooleanGts(gts: any): boolean;
-    /**
-     *
-     * @param gts
-     * @returns {boolean}
-     */
     static isGtsToAnnotate(gts: any): boolean;
     /**
      *
      * @param gts
      */
     static gtsSort(gts: any): void;
-    /**
-     *
-     * @param gts
-     * @returns {any}
-     */
-    static gtsTimeRange(gts: any): any[];
     /**
      *
      * @param data

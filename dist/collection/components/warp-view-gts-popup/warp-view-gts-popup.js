@@ -49,11 +49,11 @@ export class WarpViewGtsPopup {
     isOpened() {
         return this.modal.isOpened();
     }
-    onHideData(newValue, oldValue) {
+    onHideData(newValue) {
         this.LOG.debug(['hiddenData'], newValue);
         this.prepareData();
     }
-    onData(newValue, oldValue) {
+    onData(newValue) {
         this.LOG.debug(['data'], newValue);
         this.prepareData();
     }

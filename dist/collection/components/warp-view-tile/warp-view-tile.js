@@ -54,6 +54,16 @@ export class WarpViewTile {
     componentDidLoad() {
         this.execute();
     }
+    componentDidUpdate() {
+        window.clearInterval(this.watchWarpScriptTimer);
+        this.watchWarpScriptTimer = window.setInterval(() => {
+            let currentWarpScript = this.wsElement.textContent;
+            if (currentWarpScript != this.warpScript) {
+                this.LOG.debug(["watchSlotTimer"], "new warpscript detected");
+                this.execute();
+            }
+        }, 1000);
+    }
     parseGTS() {
         let data = new DataModel();
         if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
@@ -75,7 +85,14 @@ export class WarpViewTile {
         }
         this.LOG.debug(['parseGTS', 'data'], data);
         this.data = data;
-        this._options = ChartLib.mergeDeep(this.options || {}, data.globalParams);
+        let opts = new Param();
+        if (typeof this.options === 'string') {
+            opts = JSON.parse(this.options);
+        }
+        else {
+            opts = this.options;
+        }
+        this._options = ChartLib.mergeDeep(opts, data.globalParams);
         this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
         if (this._autoRefresh !== this._options.autoRefresh) {
             this._autoRefresh = this._options.autoRefresh;
@@ -167,117 +184,117 @@ export class WarpViewTile {
                     this.executionErrorText,
                     " ") : '',
                 this.graphs['scatter'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null, this.chartTitle),
-                        h("div", { class: "tile" },
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null, this.chartTitle) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-scatter", { debug: this.debug, responsive: this.responsive, unit: this.unit, data: this.data, options: this._options, showLegend: this.showLegend })))
                     :
                         '',
                 this.graphs['chart'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null, this.chartTitle),
-                        h("div", { class: "tile" },
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null, this.chartTitle) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-chart", { debug: this.debug, type: this.type, responsive: this.responsive, unit: this.unit, data: this.data, options: this._options, "show-legend": this.showLegend })))
                     :
                         '',
                 this.type == 'bubble' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-bubble", { debug: this.debug, showLegend: this.showLegend, responsive: true, unit: this.unit, data: this.data, options: this._options })))
                     : '',
                 this.type == 'map' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-map", { debug: this.debug, responsive: true, data: this.data, options: this._options })))
                     : '',
                 this.graphs['pie'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-pie", { debug: this.debug, responsive: this.responsive, data: this.data, options: this._options, showLegend: this.showLegend })))
                     : '',
                 this.graphs['polar'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-polar", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                     : '',
                 this.graphs['radar'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-radar", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                     : '',
                 this.graphs['bar'].indexOf(this.type) > -1 ?
-                    h("div", null,
-                        h("h1", null, this.chartTitle),
-                        h("div", { class: "tile" },
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null, this.chartTitle) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-bar", { debug: this.debug, responsive: this.responsive, unit: this.unit, data: this.data, showLegend: this.showLegend, options: this._options })))
                     : '',
                 this.type == 'text' ?
-                    h("div", null,
-                        h("h1", null, this.chartTitle),
-                        h("div", { class: "tile" },
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null, this.chartTitle) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-display", { debug: this.debug, responsive: this.responsive, unit: this.unit, data: this.data, options: this._options })))
                     : '',
                 this.type == 'image' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-image", { debug: this.debug, responsive: this.responsive, data: this.data, options: this._options })))
                     : '',
                 this.type == 'plot' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-plot", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options, gtsFilter: this.gtsFilter, isAlone: this.isAlone })))
                     : '',
                 this.type == 'annotation' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-annotation", { debug: this.debug, responsive: this.responsive, data: this.data, showLegend: this.showLegend, options: this._options })))
                     : '',
                 this.type == 'gts-tree' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-gts-tree", { debug: this.debug, data: this.data, options: this._options })))
                     : '',
                 this.type == 'drilldown' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-drilldown", { debug: this.debug, data: this.data, options: this._options })))
                     : '',
                 this.type == 'datagrid' ?
-                    h("div", null,
-                        h("h1", null,
+                    h("div", { class: "tilewrapper" },
+                        (this.chartTitle && this.chartTitle !== '') ? h("h1", null,
                             this.chartTitle,
-                            h("small", null, this.unit)),
-                        h("div", { class: "tile" },
+                            h("small", null, this.unit)) : '',
+                        h("div", { class: (this.chartTitle && this.chartTitle !== '') ? 'tile' : 'tile notitle' },
                             h("warp-view-datagrid", { debug: this.debug, data: this.data, options: this._options })))
                     : '',
                 this.loading ? h("warp-view-spinner", null) : '');
@@ -307,7 +324,7 @@ export class WarpViewTile {
             "attr": "is-alone"
         },
         "options": {
-            "type": "Any",
+            "type": String,
             "attr": "options",
             "watchCallbacks": ["onOptions"]
         },

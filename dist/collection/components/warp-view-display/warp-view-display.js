@@ -15,11 +15,9 @@ export class WarpViewDisplay {
         this.toDisplay = '';
         this._options = new Param();
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['onData'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['onData'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -30,8 +28,8 @@ export class WarpViewDisplay {
     drawChart() {
         this.LOG.debug(['drawChart'], [this.options, this._options]);
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + 'px';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + 'px';
         let gts = this.data;
         if (!gts) {
             return;

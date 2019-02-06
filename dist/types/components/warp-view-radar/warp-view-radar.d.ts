@@ -16,6 +16,7 @@ export declare class WarpViewRadar {
     private _chart;
     private resizeTimer;
     private parentWidth;
+    private parentHeight;
     onResize(): void;
     private onData;
     private onOptions;

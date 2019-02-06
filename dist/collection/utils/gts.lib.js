@@ -91,35 +91,6 @@ export class GTSLib {
         }
         return true;
     }
-    static metricFromJSON(json) {
-        let metric = {
-            ts: json[0],
-            value: undefined,
-            alt: undefined,
-            lon: undefined,
-            lat: undefined
-        };
-        switch (json.length) {
-            case 2:
-                metric.value = json[1];
-                break;
-            case 3:
-                metric.alt = json[1];
-                metric.value = json[2];
-                break;
-            case 4:
-                metric.lat = json[1];
-                metric.lon = json[2];
-                metric.value = json[3];
-                break;
-            case 5:
-                metric.lat = json[1];
-                metric.lon = json[2];
-                metric.alt = json[3];
-                metric.value = json[4];
-        }
-        return metric;
-    }
     static gtsFromJSON(json, id) {
         return {
             gts: {
@@ -198,13 +169,17 @@ export class GTSLib {
     }
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];
-        Object.keys(gts.l).forEach((key) => {
-            serializedLabels.push(key + "=" + gts.l[key]);
-        });
         let serializedAttributes = [];
-        Object.keys(gts.a).forEach((key) => {
-            serializedAttributes.push(key + "=" + gts.a[key]);
-        });
+        if (gts.l) {
+            Object.keys(gts.l).forEach((key) => {
+                serializedLabels.push(key + "=" + gts.l[key]);
+            });
+        }
+        if (gts.a) {
+            Object.keys(gts.a).forEach((key) => {
+                serializedAttributes.push(key + "=" + gts.a[key]);
+            });
+        }
         return gts.c + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
     }
     static gtsToPath(gts, divider = 1000) {
@@ -268,20 +243,6 @@ export class GTSLib {
         }
         return false;
     }
-    static isBooleanGts(gts) {
-        if (!GTSLib.isGts(gts) || gts.v.length === 0) {
-            return false;
-        }
-        for (let i = 0; i < gts.v.length; i++) {
-            if (gts.v[i][gts.v[i].length - 1] !== null) {
-                if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'boolean') {
-                    return true;
-                }
-                break;
-            }
-        }
-        return false;
-    }
     static isGtsToAnnotate(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
@@ -307,13 +268,6 @@ export class GTSLib {
             return a[0] - b[0];
         });
         gts.isSorted = true;
-    }
-    static gtsTimeRange(gts) {
-        GTSLib.gtsSort(gts);
-        if (gts.v.length === 0) {
-            return null;
-        }
-        return [gts.v[0][0], gts.v[gts.v.length - 1][0]];
     }
     static getData(data) {
         if (typeof data === 'string') {

@@ -14,11 +14,12 @@ export declare class WarpViewBar {
     el: HTMLElement;
     private LOG;
     private _options;
-    private uuid;
     private _chart;
     private _mapIndex;
     private resizeTimer;
     private parentWidth;
+    private canvas;
+    private parentHeight;
     onResize(): void;
     private onData;
     private onOptions;

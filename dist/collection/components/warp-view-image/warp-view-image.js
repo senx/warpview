@@ -16,12 +16,12 @@ export class WarpViewImage {
         this.parentWidth = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0) {
+            this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -30,11 +30,9 @@ export class WarpViewImage {
             }, 150);
         }
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['onData'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['onData'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -48,8 +46,8 @@ export class WarpViewImage {
     drawChart() {
         this.LOG.debug(['drawChart'], [this.options, this._options]);
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + 'px';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + 'px';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + 'px';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + 'px';
         this.toDisplay = [];
         if (!this.data)
             return;

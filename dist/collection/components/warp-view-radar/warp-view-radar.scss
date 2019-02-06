@@ -17,7 +17,8 @@
 
 :host {
   div {
-    height: var(--warp-view-chart-height, 100%);
+    height: var(--warp-view-chart-height, 100%); 
+    width: var(--warp-view-chart-width, 100%);
   }
 
   .chart-container {

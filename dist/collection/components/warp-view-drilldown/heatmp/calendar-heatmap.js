@@ -59,7 +59,7 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         }
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth) {
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth) {
             this.calculateDimensions();
         }
     }
@@ -71,8 +71,8 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
     calculateDimensions() {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
-            if (this.el.parentElement.clientWidth != 0) {
-                this.width = this.chart.clientWidth < 1000 ? 1000 : this.chart.clientWidth;
+            if (this.el.parentElement.getBoundingClientRect().width != 0) {
+                this.width = this.chart.getBoundingClientRect().width < 1000 ? 1000 : this.chart.getBoundingClientRect().width;
                 this.item_size = ((this.width - this.label_padding) / CalendarHeatmap.getNumberOfWeeks() - this.gutter);
                 this.height = this.label_padding + 7 * (this.item_size + this.gutter);
                 this.svg.attr('width', this.width).attr('height', this.height);

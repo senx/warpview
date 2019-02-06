@@ -19,17 +19,18 @@ export class WarpViewBar {
         this._options = {
             gridLineColor: '#8e8e8e'
         };
-        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this._mapIndex = {};
         this.parentWidth = -1;
+        this.parentHeight = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+                this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -38,11 +39,9 @@ export class WarpViewBar {
             }, 150);
         }
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['data'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -52,7 +51,6 @@ export class WarpViewBar {
     }
     buildGraph() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let gts = this.gtsToData(this.data);
         if (!gts) {
             return;
@@ -96,7 +94,8 @@ export class WarpViewBar {
                     }
                 ]
             },
-            responsive: this.responsive
+            responsive: this.responsive,
+            maintainAspectRatio: false
         };
         if (this._options.timeMode === 'timestamp') {
             graphOpts.scales.xAxes[0].time = undefined;
@@ -122,7 +121,7 @@ export class WarpViewBar {
         if (this._chart) {
             this._chart.destroy();
         }
-        this._chart = new Chart(ctx, {
+        this._chart = new Chart(this.canvas, {
             type: 'bar',
             data: {
                 labels: gts.ticks,
@@ -131,11 +130,14 @@ export class WarpViewBar {
             options: graphOpts
         });
         this.onResize();
+        setTimeout(() => {
+            this._chart.update();
+        }, 250);
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         if (!this.data)
             return;
         this.buildGraph();
@@ -209,11 +211,12 @@ export class WarpViewBar {
     }
     componentDidLoad() {
         this.drawChart();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return h("div", null,
             h("div", { class: "chart-container" },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
+                h("canvas", { ref: el => this.canvas = el, width: this.width, height: this.height })));
     }
     static get is() { return "warp-view-bar"; }
     static get encapsulation() { return "shadow"; }

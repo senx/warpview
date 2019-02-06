@@ -593,6 +593,16 @@
           "required": false
         },
         {
+          "label": "initial-chart-height",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "initial-map-height",
+          "description": "",
+          "required": false
+        },
+        {
           "label": "is-alone",
           "description": "",
           "required": false
@@ -692,6 +702,22 @@
       ]
     },
     {
+      "label": "warp-view-resize",
+      "description": "",
+      "attributes": [
+        {
+          "label": "initial-height",
+          "description": "If set, force the initial height to the given value in px.",
+          "required": false
+        },
+        {
+          "label": "min-height",
+          "description": "Minimum height in pixel. default 10px.",
+          "required": false
+        }
+      ]
+    },
+    {
       "label": "warp-view-scatter",
       "description": "",
       "attributes": [
@@ -764,6 +790,11 @@
         },
         {
           "label": "is-alone",
+          "description": "",
+          "required": false
+        },
+        {
+          "label": "options",
           "description": "",
           "required": false
         },

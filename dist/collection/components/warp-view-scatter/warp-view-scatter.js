@@ -19,16 +19,17 @@ export class WarpViewScatter {
         this._options = {
             gridLineColor: '#8e8e8e'
         };
-        this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
+        this.parentHeight = -1;
     }
     onResize() {
-        if (this.el.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
-            this.parentWidth = this.el.parentElement.clientWidth;
+        if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0 || this.el.parentElement.getBoundingClientRect().height !== this.parentHeight) {
             clearTimeout(this.resizeTimer);
             this.resizeTimer = setTimeout(() => {
-                if (this.el.parentElement.clientWidth > 0) {
-                    this.LOG.debug(['onResize'], this.el.parentElement.clientWidth);
+                this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
+                this.parentHeight = this.el.parentElement.getBoundingClientRect().height;
+                if (this.el.parentElement.getBoundingClientRect().width > 0) {
+                    this.LOG.debug(['onResize'], this.el.parentElement.getBoundingClientRect().width);
                     this.drawChart();
                 }
                 else {
@@ -37,11 +38,9 @@ export class WarpViewScatter {
             }, 150);
         }
     }
-    onData(newValue, oldValue) {
-        if (!deepEqual(newValue, oldValue)) {
-            this.LOG.debug(['data'], newValue);
-            this.drawChart();
-        }
+    onData(newValue) {
+        this.LOG.debug(['data'], newValue);
+        this.drawChart();
     }
     onOptions(newValue, oldValue) {
         if (!deepEqual(newValue, oldValue)) {
@@ -51,7 +50,6 @@ export class WarpViewScatter {
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         let dataList;
         let data = this.data;
         if (!data)
@@ -69,8 +67,8 @@ export class WarpViewScatter {
             dataList = data;
         }
         let gts = this.gtsToScatter(dataList);
-        this.height = (this.responsive ? this.el.parentElement.clientHeight : this.height || 600) + '';
-        this.width = (this.responsive ? this.el.parentElement.clientWidth : this.width || 800) + '';
+        this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
+        this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         const color = this._options.gridLineColor;
         const options = {
             legend: {
@@ -109,6 +107,7 @@ export class WarpViewScatter {
                         }
                     }]
             },
+            maintainAspectRatio: false
         };
         if (this._options.timeMode === 'timestamp') {
             options.scales.xAxes[0].time = undefined;
@@ -134,8 +133,11 @@ export class WarpViewScatter {
         if (this._chart) {
             this._chart.destroy();
         }
-        this._chart = new Chart.Scatter(ctx, { data: { datasets: gts }, options: options });
+        this._chart = new Chart.Scatter(this.canvas, { data: { datasets: gts }, options: options });
         this.onResize();
+        setTimeout(() => {
+            this._chart.update();
+        }, 250);
         this.LOG.debug(['gtsToScatter', 'chart'], [gts, options]);
     }
     gtsToScatter(gts) {
@@ -178,11 +180,12 @@ export class WarpViewScatter {
     }
     componentDidLoad() {
         this.drawChart();
+        ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
     }
     render() {
         return h("div", null,
             h("div", { class: "chart-container" },
-                h("canvas", { id: this.uuid, width: this.width, height: this.height })));
+                h("canvas", { ref: el => this.canvas = el, width: this.width, height: this.height })));
     }
     static get is() { return "warp-view-scatter"; }
     static get encapsulation() { return "shadow"; }

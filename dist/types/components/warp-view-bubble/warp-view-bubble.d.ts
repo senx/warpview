@@ -18,6 +18,7 @@ export declare class WarpViewBubble {
     private _chart;
     private resizeTimer;
     private parentWidth;
+    private parentHeight;
     onResize(): void;
     private onData;
     private onOptions;
