@@ -24,6 +24,7 @@ import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
 import moment from "moment-timezone";
+import { ChartBounds } from '../../model/chartBounds';
 
 @Component({
   tag: 'warp-view-plot',
@@ -82,7 +83,7 @@ export class WarpViewPlot {
   }
 
   @Method()
-  async getTimeClip(): Promise<[number, number]> {
+  async getTimeClip(): Promise<ChartBounds> {
     this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
     return this.chart.getTimeClip();
   }
@@ -149,7 +150,10 @@ export class WarpViewPlot {
       this.filterInput.select();
     } else if (ev.key === 't') {
       this.chart.getTimeClip().then(tc => {
-        this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+        this.timeClipValue = `// keep data between ${moment.tz(tc.msmin,this._options.timeZone).toLocaleString()} and ` +
+                              `${moment.tz(tc.msmax,this._options.timeZone).toLocaleString()}<br/>` +
+                              `${this._options.timeUnit!=='us'? '// (for a ' + this._options.timeUnit + ' platform)<br/>':''}`+
+                              `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });

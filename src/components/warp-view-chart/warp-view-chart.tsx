@@ -27,7 +27,7 @@ import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
 import Options = dygraphs.Options;
 import deepEqual from "deep-equal";
-
+import {ChartBounds} from "../../model/chartBounds"; 
 type visibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
 /**
@@ -106,6 +106,11 @@ export class WarpViewChart {
    * put this to true before creating a new dygraph to force a resize in the drawCallback
    */
   private initialResizeNeeded = false;
+  /**
+ * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
+ */
+  private chartBounds: ChartBounds = new ChartBounds ();
+
   private previousParentHeight = -1;
   private previousParentWidth = -1;
 
@@ -234,10 +239,10 @@ export class WarpViewChart {
   }
 
   @Method()
-  async getTimeClip(): Promise<[number, number]> {
-    return new Promise<[number, number]>(resolve => {
-      this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
-      resolve(this._chart.xAxisRange());
+  async getTimeClip(): Promise<ChartBounds> {
+    return new Promise<ChartBounds>(resolve => {
+      this.LOG.debug(['getTimeClip'], this.chartBounds);
+      resolve(this.chartBounds);
     });
   }
 
@@ -559,27 +564,50 @@ export class WarpViewChart {
   private drawCallback(dygraph, is_initial) { //also called after a resize, be carefull.
     this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
     this._chart = dygraph; //usefull for the on resize, because into the callback, this._chart is still undefined.
-    if (dygraph.dateWindow_) {
-      this.boundsDidChange.emit({
-        bounds: {
-          min: dygraph.dateWindow_[0],
-          max: dygraph.dateWindow_[1]
-        }
-      });
-      this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0], dygraph.dateWindow_[1]]);
-    } else {
-      let divider = GTSLib.getDivider(this._options.timeUnit);
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        divider = 1;
+    let cmin = 0;
+    let cmax = 0;
+    let divider = GTSLib.getDivider(this._options.timeUnit);
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      // everything works in timestamp, no divider, no timezone.
+      if (dygraph.dateWindow_) { //if zoomed view
+        this.chartBounds.tsmin = Math.round(dygraph.dateWindow_[0]);
+        this.chartBounds.tsmax = Math.round(dygraph.dateWindow_[1]);
+      } else {
+        this.chartBounds.tsmin = this.minTick;
+        this.chartBounds.tsmax = this.maxTick;
       }
-      this.boundsDidChange.emit({
-        bounds: {
-          min: moment(this.minTick / divider).utc(true).valueOf(),
-          max: moment(this.maxTick / divider).utc(true).valueOf()
-        }
-      });
-      this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
+      cmin = this.chartBounds.tsmin;
+      cmax = this.chartBounds.tsmax;
     }
+    else {
+      //everything works in milliseconds with a timezone
+      if (dygraph.dateWindow_) { //if zoomed view
+        cmin = dygraph.dateWindow_[0];
+        cmax = dygraph.dateWindow_[1];
+        //find the original timestamp, have to reverse the timezone
+        let zoneOffset = moment.tz.zone(this._options.timeZone).utcOffset(0) * 60000;
+        //find the utc timestamp in platform unit from the timezoned one in millisecond.
+        this.chartBounds.tsmin = Math.floor((cmin + zoneOffset) * divider);
+        this.chartBounds.tsmax = Math.ceil((cmax + zoneOffset) * divider);
+      }
+      else {
+        cmin = moment(this.minTick / divider).utc(true).valueOf(); //manage the tz
+        cmax = moment(this.maxTick / divider).utc(true).valueOf();
+        this.chartBounds.tsmin = this.minTick;
+        this.chartBounds.tsmax = this.maxTick;
+      }
+    }
+    this.chartBounds.msmin = this.chartBounds.tsmin / divider;
+    this.chartBounds.msmax = this.chartBounds.tsmax / divider;
+    this.LOG.debug(['drawCallback', 'newBounds', 'platform unit'], this.chartBounds.tsmin, this.chartBounds.tsmax);
+    this.LOG.debug(['drawCallback', 'newBounds', 'for annotations'], cmin, cmax);
+    this.boundsDidChange.emit({
+      bounds: {
+        min: cmin,
+        max: cmax
+      }
+    });
+
     if (this.initialResizeNeeded) {
       this.onResize();
     }
