@@ -586,8 +586,9 @@ export class WarpViewChart {
       if (dygraph.dateWindow_) { //if zoomed view
         cmin = dygraph.dateWindow_[0];
         cmax = dygraph.dateWindow_[1];
-        //find the original timestamp, have to reverse the timezone
-        let zoneOffset = moment.tz.zone(this._options.timeZone).utcOffset(0) * 60000;
+        //find the original timestamp, have to reverse the timezone. 
+        //utc offset depends on current timestamp, let's take cmin. it may cause problems in case of years long series.
+        let zoneOffset = moment.tz.zone(this._options.timeZone).utcOffset(cmin) * 60000;
         //find the utc timestamp in platform unit from the timezoned one in millisecond.
         this.chartBounds.tsmin = Math.floor((cmin + zoneOffset) * divider);
         this.chartBounds.tsmax = Math.ceil((cmax + zoneOffset) * divider);
