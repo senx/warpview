@@ -36,6 +36,7 @@
     "devff": "stencil build --dev --watch --serve --es5",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
+    "lint": "mkdir -p ./out/lint && tslint --project tsconfig.json --formatters-dir ./node_modules/@vismalietuva/tslint-formatter-html/formatters --format html --out ./out/lint/tslint.html",
     "start": "yarn run dev "
   },
   "dependencies": {
@@ -66,7 +67,10 @@
     "@types/moment-timezone": "^0.5.10",
     "@types/prismjs": "^1.9.0",
     "jest": "^23.6.0",
-    "node-gyp": "^3.8.0"
+    "node-gyp": "^3.8.0",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.17.0",
+    "@vismalietuva/tslint-formatter-html": "^1.0.1"
   },
   "jest": {
     "transform": {

@@ -15,7 +15,9 @@ export class WarpViewPie {
         this.responsive = false;
         this.debug = false;
         this._options = {
-            type: 'pie'
+            type: 'pie',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;

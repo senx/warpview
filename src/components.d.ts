@@ -18,6 +18,9 @@ import {
   Param,
 } from './model/param';
 import {
+  ChartBounds,
+} from './model/chartBounds';
+import {
   Datum,
 } from './components/warp-view-drilldown/model/datum';
 
@@ -97,7 +100,7 @@ export namespace Components {
   interface WarpViewChart {
     'data': DataModel | GTS[] | string;
     'debug': boolean;
-    'getTimeClip': () => Promise<[number, number]>;
+    'getTimeClip': () => Promise<ChartBounds>;
     'hiddenData': number[];
     'options': Param;
     'responsive': boolean;
@@ -377,7 +380,7 @@ export namespace Components {
   interface WarpViewPlot {
     'data': string | GTS[] | DataModel;
     'debug': boolean;
-    'getTimeClip': () => Promise<[number, number]>;
+    'getTimeClip': () => Promise<ChartBounds>;
     'gtsFilter': string;
     'height': string;
     'initialChartHeight': string;

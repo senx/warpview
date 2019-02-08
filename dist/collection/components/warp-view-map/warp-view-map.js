@@ -18,7 +18,9 @@ export class WarpViewMap {
         this._options = {
             dotsLimit: 1000,
             heatControls: false,
-            mapType: 'DEFAULT'
+            mapType: 'DEFAULT',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this.mapTypes = {
             DEFAULT: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

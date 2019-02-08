@@ -15,7 +15,9 @@ export class WarpViewDrillDown {
         this.height = '';
         this.debug = false;
         this._options = {
-            gridLineColor: '#8e8e8e'
+            gridLineColor: '#8e8e8e',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this.parentWidth = -1;
     }

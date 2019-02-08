@@ -15,7 +15,9 @@ export class WarpViewDatagrid {
         this.debug = false;
         this.page = 0;
         this._options = {
-            timeMode: 'date'
+            timeMode: 'date',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this._data = [];
     }

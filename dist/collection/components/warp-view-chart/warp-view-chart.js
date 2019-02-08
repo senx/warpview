@@ -6,6 +6,7 @@ import { ColorLib } from "../../utils/color-lib";
 import { Param } from "../../model/param";
 import moment from "moment-timezone";
 import deepEqual from "deep-equal";
+import { ChartBounds } from "../../model/chartBounds";
 export class WarpViewChart {
     constructor() {
         this.options = new Param();
@@ -19,7 +20,9 @@ export class WarpViewChart {
             timeMode: 'date',
             showRangeSelector: true,
             gridLineColor: '#8e8e8e',
-            showDots: false
+            showDots: false,
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
@@ -31,6 +34,7 @@ export class WarpViewChart {
         this.dygraphLabels = [];
         this.dygraphColors = [];
         this.initialResizeNeeded = false;
+        this.chartBounds = new ChartBounds();
         this.previousParentHeight = -1;
         this.previousParentWidth = -1;
         this.visibilityStatus = 'unknown';
@@ -131,8 +135,8 @@ export class WarpViewChart {
     }
     async getTimeClip() {
         return new Promise(resolve => {
-            this.LOG.debug(['getTimeClip'], this._chart.xAxisRange());
-            resolve(this._chart.xAxisRange());
+            this.LOG.debug(['getTimeClip'], this.chartBounds);
+            resolve(this.chartBounds);
         });
     }
     handleMouseOut(evt) {
@@ -396,28 +400,46 @@ export class WarpViewChart {
     drawCallback(dygraph, is_initial) {
         this.LOG.debug(['drawCallback', 'destroy'], [dygraph.dateWindow_, is_initial]);
         this._chart = dygraph;
-        if (dygraph.dateWindow_) {
-            this.boundsDidChange.emit({
-                bounds: {
-                    min: dygraph.dateWindow_[0],
-                    max: dygraph.dateWindow_[1]
-                }
-            });
-            this.LOG.debug(['drawCallback', 'newBoundsBasedOnDateWindow'], [dygraph.dateWindow_[0], dygraph.dateWindow_[1]]);
+        let cmin = 0;
+        let cmax = 0;
+        let divider = GTSLib.getDivider(this._options.timeUnit);
+        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+            if (dygraph.dateWindow_) {
+                this.chartBounds.tsmin = Math.round(dygraph.dateWindow_[0]);
+                this.chartBounds.tsmax = Math.round(dygraph.dateWindow_[1]);
+            }
+            else {
+                this.chartBounds.tsmin = this.minTick;
+                this.chartBounds.tsmax = this.maxTick;
+            }
+            cmin = this.chartBounds.tsmin;
+            cmax = this.chartBounds.tsmax;
         }
         else {
-            let divider = GTSLib.getDivider(this._options.timeUnit);
-            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-                divider = 1;
+            if (dygraph.dateWindow_) {
+                cmin = dygraph.dateWindow_[0];
+                cmax = dygraph.dateWindow_[1];
+                let zoneOffset = moment.tz.zone(this._options.timeZone).utcOffset(cmin) * 60000;
+                this.chartBounds.tsmin = Math.floor((cmin + zoneOffset) * divider);
+                this.chartBounds.tsmax = Math.ceil((cmax + zoneOffset) * divider);
             }
-            this.boundsDidChange.emit({
-                bounds: {
-                    min: moment(this.minTick / divider).utc(true).valueOf(),
-                    max: moment(this.maxTick / divider).utc(true).valueOf()
-                }
-            });
-            this.LOG.debug(['drawCallback', 'newBoundsBasedOnMinMaxTicks'], [this.minTick, this.maxTick]);
+            else {
+                cmin = moment(this.minTick / divider).utc(true).valueOf();
+                cmax = moment(this.maxTick / divider).utc(true).valueOf();
+                this.chartBounds.tsmin = this.minTick;
+                this.chartBounds.tsmax = this.maxTick;
+            }
         }
+        this.chartBounds.msmin = this.chartBounds.tsmin / divider;
+        this.chartBounds.msmax = this.chartBounds.tsmax / divider;
+        this.LOG.debug(['drawCallback', 'newBounds', 'platform unit'], this.chartBounds.tsmin, this.chartBounds.tsmax);
+        this.LOG.debug(['drawCallback', 'newBounds', 'for annotations'], cmin, cmax);
+        this.boundsDidChange.emit({
+            bounds: {
+                min: cmin,
+                max: cmax
+            }
+        });
         if (this.initialResizeNeeded) {
             this.onResize();
         }
@@ -428,6 +450,7 @@ export class WarpViewChart {
         let previousTimeUnit = this._options.timeUnit || '';
         let previousTimeZone = this._options.timeZone || 'UTC';
         this._options = ChartLib.mergeDeep(this._options, this.options);
+        console.warn("tz=", this._options.timeZone);
         moment.tz.setDefault(this._options.timeZone);
         let data = GTSLib.getData(this.data);
         let dataList = data.data;

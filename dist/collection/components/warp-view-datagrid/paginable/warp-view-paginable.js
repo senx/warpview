@@ -12,7 +12,9 @@ export class WarpViewPaginable {
         this.pages = [];
         this.displayedValues = [];
         this._options = {
-            timeMode: 'date'
+            timeMode: 'date',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this.windowed = 5;
     }

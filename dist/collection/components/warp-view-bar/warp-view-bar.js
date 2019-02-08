@@ -17,7 +17,9 @@ export class WarpViewBar {
         this.height = '';
         this.debug = false;
         this._options = {
-            gridLineColor: '#8e8e8e'
+            gridLineColor: '#8e8e8e',
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this._mapIndex = {};
         this.parentWidth = -1;

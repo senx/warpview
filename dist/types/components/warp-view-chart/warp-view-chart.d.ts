@@ -3,6 +3,7 @@ import { EventEmitter } from '../../stencil.core';
 import { Param } from "../../model/param";
 import { DataModel } from "../../model/dataModel";
 import { GTS } from "../../model/GTS";
+import { ChartBounds } from "../../model/chartBounds";
 /**
  * options :
  *  gridLineColor: 'red | #fff'
@@ -65,6 +66,10 @@ export declare class WarpViewChart {
      * put this to true before creating a new dygraph to force a resize in the drawCallback
      */
     private initialResizeNeeded;
+    /**
+   * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
+   */
+    private chartBounds;
     private previousParentHeight;
     private previousParentWidth;
     private visibilityStatus;
@@ -75,7 +80,7 @@ export declare class WarpViewChart {
     private onOptions;
     private onTypeChange;
     private onUnitChange;
-    getTimeClip(): Promise<[number, number]>;
+    getTimeClip(): Promise<ChartBounds>;
     private handleMouseOut;
     /**
      * this function build this.dataHashset (high computing cost), then it build this.dygraphdataSets  (high computing cost too)

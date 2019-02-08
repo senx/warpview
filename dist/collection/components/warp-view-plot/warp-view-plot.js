@@ -19,7 +19,9 @@ export class WarpViewPlot {
         this._options = {
             showControls: true,
             showGTSTree: true,
-            showDots: true
+            showDots: true,
+            timeZone: 'UTC',
+            timeUnit: 'us'
         };
         this._data = new DataModel();
         this._toHide = [];
@@ -84,7 +86,10 @@ export class WarpViewPlot {
         }
         else if (ev.key === 't') {
             this.chart.getTimeClip().then(tc => {
-                this.timeClipValue = `${Math.round(tc[0]).toString()} ISO8601 ${Math.round(tc[1]).toString()} ISO8601 TIMECLIP`;
+                this.timeClipValue = `// keep data between ${moment.tz(tc.msmin, this._options.timeZone).toLocaleString()} and ` +
+                    `${moment.tz(tc.msmax, this._options.timeZone).toLocaleString()}<br/>` +
+                    `${this._options.timeUnit !== 'us' ? '// (for a ' + this._options.timeUnit + ' platform)<br/>' : ''}` +
+                    `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
                 this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
                 this.timeClip.open();
             });

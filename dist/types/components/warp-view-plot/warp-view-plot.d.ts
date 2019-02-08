@@ -2,6 +2,7 @@ import '../../stencil.core';
 import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { GTS } from "../../model/GTS";
+import { ChartBounds } from '../../model/chartBounds';
 export declare class WarpViewPlot {
     data: string | GTS[] | DataModel;
     options: string | Param;
@@ -41,7 +42,7 @@ export declare class WarpViewPlot {
     private gtsPopupModal;
     private gtsFilterCount;
     componentDidLoad(): void;
-    getTimeClip(): Promise<[number, number]>;
+    getTimeClip(): Promise<ChartBounds>;
     private onGtsFilter;
     private onData;
     private onOptions;

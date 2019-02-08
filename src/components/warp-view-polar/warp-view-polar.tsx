@@ -1,3 +1,4 @@
+
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -17,18 +18,18 @@
 
 import Chart from 'chart.js';
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {ChartLib} from "../../utils/chart-lib";
-import {ColorLib} from "../../utils/color-lib";
-import {Logger} from "../../utils/logger";
-import {Param} from "../../model/param";
-import {DataModel} from "../../model/dataModel";
-import {GTSLib} from "../../utils/gts.lib";
-import deepEqual from "deep-equal";
+import {ChartLib} from '../../utils/chart-lib';
+import {ColorLib} from '../../utils/color-lib';
+import {Logger} from '../../utils/logger';
+import {Param} from '../../model/param';
+import {DataModel} from '../../model/dataModel';
+import {GTSLib} from '../../utils/gts.lib';
+import deepEqual from 'deep-equal';
 
 @Component({
   tag: 'warp-view-polar',
   styleUrl: 'warp-view-polar.scss',
-  shadow: true
+  shadow: true,
 })
 export class WarpViewPolar {
   @Prop() responsive: boolean = false;
@@ -45,7 +46,7 @@ export class WarpViewPolar {
   private _options: Param = {
     gridLineColor: '#8e8e8e',
     timeZone: 'UTC',
-    timeUnit: 'us'
+    timeUnit: 'us',
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart: Chart;
@@ -86,22 +87,22 @@ export class WarpViewPolar {
   }
 
   private parseData(gts) {
-    let labels = [];
-    let data = [];
+    const labels = [];
+    const data = [];
     gts.forEach(d => {
       data.push(Math.abs(d[1]));
       labels.push(d[0]);
     });
-    return {labels: labels, data: data}
+    return {labels: labels, data: data};
   }
 
   private drawChart() {
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
+    const ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
     this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
     this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
     const color = this._options.gridLineColor;
-    if (!this.data) return;
+    if (!this.data) { return; }
 
     let data: any = this.data;
     if (typeof data === 'string') {
@@ -117,7 +118,7 @@ export class WarpViewPolar {
     } else {
       dataList = data;
     }
-    let gts = this.parseData(dataList);
+    const gts = this.parseData(dataList);
     if (this._chart) {
       this._chart.destroy();
       delete this._chart;
@@ -130,9 +131,9 @@ export class WarpViewPolar {
           datasets: [{
             data: gts.data,
             backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
-            borderColor: ColorLib.generateColors(gts.data.length)
+            borderColor: ColorLib.generateColors(gts.data.length),
           }],
-          labels: gts.labels
+          labels: gts.labels,
         },
         options: {
           layout: {
@@ -140,8 +141,8 @@ export class WarpViewPolar {
               left: 0,
               right: 0,
               top: 50,
-              bottom: 0
-            }
+              bottom: 0,
+            },
           },
           animation: {
             duration: 0,
@@ -152,21 +153,21 @@ export class WarpViewPolar {
           scale: {
             gridLines: {
               color: color,
-              zeroLineColor: color
+              zeroLineColor: color,
             },
             pointLabels: {
               fontColor: color,
             },
             ticks: {
               fontColor: color,
-              backdropColor: 'transparent'
-            }
+              backdropColor: 'transparent',
+            },
           },
           tooltips: {
             mode: 'index',
             intersect: true,
-          }
-        }
+          },
+        },
       });
       this.onResize();
       setTimeout(() => {
@@ -181,12 +182,12 @@ export class WarpViewPolar {
 
   componentDidLoad() {
     this.drawChart();
-    ChartLib.resizeWatchTimer(this.el,this.onResize.bind(this));
+    ChartLib.resizeWatchTimer(this.el, this.onResize.bind(this));
   }
 
   render() {
     return <div>
-      <div class="chart-container">
+      <div class='chart-container'>
         <canvas id={this.uuid} width={this.width} height={this.height}/>
       </div>
     </div>;
