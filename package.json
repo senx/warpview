@@ -1,7 +1,7 @@
 {
   "name": "@senx/warpview",
   "module": "dist/esm/index.js",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "keywords": [
     "web",
     "dataviz",
@@ -66,11 +66,11 @@
     "@types/leaflet.heat": "^0.2.0",
     "@types/moment-timezone": "^0.5.10",
     "@types/prismjs": "^1.9.0",
+    "@vismalietuva/tslint-formatter-html": "^1.0.1",
     "jest": "^23.6.0",
     "node-gyp": "^3.8.0",
     "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.17.0",
-    "@vismalietuva/tslint-formatter-html": "^1.0.1"
+    "tslint-config-prettier": "^1.17.0"
   },
   "jest": {
     "transform": {
