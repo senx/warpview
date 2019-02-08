@@ -45,7 +45,9 @@ export class WarpViewDatagrid {
 
   private LOG: Logger;
   private _options: Param = {
-    timeMode: 'date'
+    timeMode: 'date',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
 
   @State() _data: { name: string, values: any[], headers: string[] }[] = [];

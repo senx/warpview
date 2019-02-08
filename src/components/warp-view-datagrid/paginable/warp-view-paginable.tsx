@@ -41,7 +41,9 @@ export class WarpViewPaginable {
   private displayedValues: any[] = [];
   private LOG: Logger;
   private _options: Param = {
-    timeMode: 'date'
+    timeMode: 'date',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   private windowed: number = 5;
 

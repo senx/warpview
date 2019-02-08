@@ -56,7 +56,9 @@ export class WarpViewMap {
   private _options: Param = {
     dotsLimit: 1000,
     heatControls: false,
-    mapType: 'DEFAULT'
+    mapType: 'DEFAULT',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
 
   private mapTypes: any = {

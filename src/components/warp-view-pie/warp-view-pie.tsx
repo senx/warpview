@@ -43,7 +43,9 @@ export class WarpViewPie {
 
   private LOG: Logger;
   private _options: Param = {
-    type: 'pie'
+    type: 'pie',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private _chart: Chart;
