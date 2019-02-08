@@ -69,7 +69,9 @@ export class WarpViewChart {
     timeMode: 'date',
     showRangeSelector: true,
     gridLineColor: '#8e8e8e',
-    showDots: false
+    showDots: false,
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private visibility: boolean[] = [];
@@ -619,6 +621,7 @@ export class WarpViewChart {
     let previousTimeUnit = this._options.timeUnit || ''; //detect a timeUnit change
     let previousTimeZone = this._options.timeZone || 'UTC'; //detect a timeZone change
     this._options = ChartLib.mergeDeep(this._options, this.options);
+    console.warn("tz=",this._options.timeZone);
     moment.tz.setDefault(this._options.timeZone);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;

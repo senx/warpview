@@ -49,7 +49,9 @@ export class WarpViewPlot {
   @State() private _options: Param = {
     showControls: true,
     showGTSTree: true,
-    showDots: true
+    showDots: true,
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   @State() private _data: DataModel = new DataModel();
   @State() private _toHide: number[] = [];

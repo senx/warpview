@@ -46,7 +46,9 @@ export class WarpViewScatter {
 
   private LOG: Logger;
   private _options: Param = {
-    gridLineColor: '#8e8e8e'
+    gridLineColor: '#8e8e8e',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   private _chart: Chart;
   private resizeTimer;

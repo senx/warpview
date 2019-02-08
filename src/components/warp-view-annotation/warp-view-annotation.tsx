@@ -60,7 +60,9 @@ export class WarpViewAnnotation {
   private LOG: Logger;
   private _options: Param = {
     gridLineColor: '#000000',
-    timeMode: 'date'
+    timeMode: 'date',
+    timeZone: 'UTC',
+    timeUnit: 'us'
   };
   private canvas: HTMLCanvasElement;
   private tooltip: HTMLDivElement;
