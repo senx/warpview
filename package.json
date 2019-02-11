@@ -36,7 +36,7 @@
     "devff": "stencil build --dev --watch --serve --es5",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
-    "lint": "mkdir -p ./out/lint && tslint --project tsconfig.json --formatters-dir ./node_modules/@vismalietuva/tslint-formatter-html/formatters --format html --out ./out/lint/tslint.html",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start": "yarn run dev "
   },
   "dependencies": {
@@ -56,7 +56,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@stencil/core": "~0.17.0",
+    "@stencil/core": "~0.17.2",
     "@stencil/sass": "^0.1.1",
     "@types/chartjs": "0.0.31",
     "@types/d3": "^5.7.0",
@@ -70,7 +70,8 @@
     "jest": "^23.6.0",
     "node-gyp": "^3.8.0",
     "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.17.0"
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-stencil": "^1.0.0"
   },
   "jest": {
     "transform": {

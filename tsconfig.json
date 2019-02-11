@@ -3,6 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "declaration": false,
+    "allowJs": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": [

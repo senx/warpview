@@ -1,27 +1,9 @@
 {
-  "extends": "tslint:recommended",
+  "extends": [
+    "tslint-stencil/default"
+  ],
   "rules": {
-    "new-parens": true,
-    "no-arg": true,
-    "arrow-parens": false,
-    "member-access": false,
-    "member-ordering": false,
-    "no-bitwise": true,
-    "object-literal-shorthand": false,
-    "no-shadowed-variable": false,
-    "no-conditional-assignment": true,
-    "no-consecutive-blank-lines": false,
-    "ordered-imports": false,
-    "max-line-length": false,
-    "quotemark":  [true, "single"],
-    "no-console": {
-      "severity": "warning",
-      "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
-    }
-  },
-  "jsRules": {
-    "max-line-length": {
-      "options": [120]
-    }
+    "components-per-file": false,
+    "component-member-order": false
   }
 }
