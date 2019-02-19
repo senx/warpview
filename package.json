@@ -34,6 +34,7 @@
     "build": "stencil build --prod",
     "dev": "stencil build --dev --watch --serve",
     "devff": "stencil build --dev --watch --serve --es5",
+    "devprod": "stencil build --prod --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",

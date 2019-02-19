@@ -311,7 +311,10 @@ export class MapLib {
    */
   static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
     let pointsArray = [];
-    for (let i = 0; i < paths.length; i++) {
+    paths.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
+    positionsData.forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
+    annotationsData.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
+   /* for (let i = 0; i < paths.length; i++) {
       for (let j = 0; j < paths[i].path.length; j++) {
         pointsArray.push([parseFloat(paths[i].path[j].lat), paths[i].path[j].lon]);
       }
@@ -325,20 +328,20 @@ export class MapLib {
       for (let j = 0; j < annotationsData[i].path.length; j++) {
         pointsArray.push([annotationsData[i].path[j].lat, annotationsData[i].path[j].lon]);
       }
-    }
+    }*/
     geoJson.forEach(g => {
       switch (g.geometry.type) {
         case 'MultiPolygon':
-          g.geometry.coordinates.forEach(c => c.forEach(m => m.forEach(p => pointsArray.push(p.reverse()))));
+          g.geometry.coordinates.forEach(c => c.forEach(m => m.forEach(p => pointsArray.push([p[1], p[0]]))));
           break;
         case 'Polygon':
-          g.geometry.coordinates.forEach(c => c.forEach(p => pointsArray.push(p.reverse())));
+          g.geometry.coordinates.forEach(c => c.forEach(p => pointsArray.push([p[1], p[0]])));
           break;
         case 'LineString':
-          g.geometry.coordinates.forEach(p => pointsArray.push(p.reverse()));
+          g.geometry.coordinates.forEach(p => pointsArray.push([p[1], p[0]]));
           break;
         case 'Point':
-          pointsArray.push(g.geometry.coordinates.reverse());
+          pointsArray.push([g.geometry.coordinates[1], g.geometry.coordinates[0]]);
           break;
       }
     });
