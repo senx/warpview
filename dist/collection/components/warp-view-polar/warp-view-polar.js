@@ -1,11 +1,27 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import Chart from 'chart.js';
-import { ChartLib } from "../../utils/chart-lib";
-import { ColorLib } from "../../utils/color-lib";
-import { Logger } from "../../utils/logger";
-import { Param } from "../../model/param";
-import { DataModel } from "../../model/dataModel";
-import { GTSLib } from "../../utils/gts.lib";
-import deepEqual from "deep-equal";
+import { ChartLib } from '../../utils/chart-lib';
+import { ColorLib } from '../../utils/color-lib';
+import { Logger } from '../../utils/logger';
+import { Param } from '../../model/param';
+import { DataModel } from '../../model/dataModel';
+import { GTSLib } from '../../utils/gts.lib';
+import deepEqual from 'deep-equal';
 export class WarpViewPolar {
     constructor() {
         this.responsive = false;
@@ -17,7 +33,7 @@ export class WarpViewPolar {
         this._options = {
             gridLineColor: '#8e8e8e',
             timeZone: 'UTC',
-            timeUnit: 'us'
+            timeUnit: 'us',
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.parentWidth = -1;
@@ -50,8 +66,8 @@ export class WarpViewPolar {
         }
     }
     parseData(gts) {
-        let labels = [];
-        let data = [];
+        const labels = [];
+        const data = [];
         gts.forEach(d => {
             data.push(Math.abs(d[1]));
             labels.push(d[0]);
@@ -60,12 +76,13 @@ export class WarpViewPolar {
     }
     drawChart() {
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        let ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
+        const ctx = this.el.shadowRoot.querySelector('#' + this.uuid);
         this.height = (this.responsive ? this.el.parentElement.getBoundingClientRect().height : this.height || 600) + '';
         this.width = (this.responsive ? this.el.parentElement.getBoundingClientRect().width : this.width || 800) + '';
         const color = this._options.gridLineColor;
-        if (!this.data)
+        if (!this.data) {
             return;
+        }
         let data = this.data;
         if (typeof data === 'string') {
             data = JSON.parse(data);
@@ -80,7 +97,7 @@ export class WarpViewPolar {
         else {
             dataList = data;
         }
-        let gts = this.parseData(dataList);
+        const gts = this.parseData(dataList);
         if (this._chart) {
             this._chart.destroy();
             delete this._chart;
@@ -93,9 +110,9 @@ export class WarpViewPolar {
                     datasets: [{
                             data: gts.data,
                             backgroundColor: ColorLib.generateTransparentColors(gts.data.length),
-                            borderColor: ColorLib.generateColors(gts.data.length)
+                            borderColor: ColorLib.generateColors(gts.data.length),
                         }],
-                    labels: gts.labels
+                    labels: gts.labels,
                 },
                 options: {
                     layout: {
@@ -103,8 +120,8 @@ export class WarpViewPolar {
                             left: 0,
                             right: 0,
                             top: 50,
-                            bottom: 0
-                        }
+                            bottom: 0,
+                        },
                     },
                     animation: {
                         duration: 0,
@@ -115,21 +132,21 @@ export class WarpViewPolar {
                     scale: {
                         gridLines: {
                             color: color,
-                            zeroLineColor: color
+                            zeroLineColor: color,
                         },
                         pointLabels: {
                             fontColor: color,
                         },
                         ticks: {
                             fontColor: color,
-                            backdropColor: 'transparent'
-                        }
+                            backdropColor: 'transparent',
+                        },
                     },
                     tooltips: {
                         mode: 'index',
                         intersect: true,
-                    }
-                }
+                    },
+                },
             });
             this.onResize();
             setTimeout(() => {
@@ -146,7 +163,7 @@ export class WarpViewPolar {
     }
     render() {
         return h("div", null,
-            h("div", { class: "chart-container" },
+            h("div", { class: 'chart-container' },
                 h("canvas", { id: this.uuid, width: this.width, height: this.height })));
     }
     static get is() { return "warp-view-polar"; }

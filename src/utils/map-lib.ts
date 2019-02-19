@@ -18,6 +18,7 @@
 import {GTSLib} from "./gts.lib";
 import {ColorLib} from "./color-lib";
 import {Logger} from "./logger";
+import Leaflet from "leaflet";
 
 export class MapLib {
   static BASE_RADIUS: number = 2;
@@ -305,9 +306,10 @@ export class MapLib {
    * @param paths
    * @param positionsData
    * @param annotationsData
+   * @param geoJson
    * @returns {any}
    */
-  static getBoundsArray(paths, positionsData, annotationsData) {
+  static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
     let pointsArray = [];
     for (let i = 0; i < paths.length; i++) {
       for (let j = 0; j < paths[i].path.length; j++) {
@@ -324,6 +326,22 @@ export class MapLib {
         pointsArray.push([annotationsData[i].path[j].lat, annotationsData[i].path[j].lon]);
       }
     }
+    geoJson.forEach(g => {
+      switch (g.geometry.type) {
+        case 'MultiPolygon':
+          g.geometry.coordinates.forEach(c => c.forEach(m => m.forEach(p => pointsArray.push(p.reverse()))));
+          break;
+        case 'Polygon':
+          g.geometry.coordinates.forEach(c => c.forEach(p => pointsArray.push(p.reverse())));
+          break;
+        case 'LineString':
+          g.geometry.coordinates.forEach(p => pointsArray.push(p.reverse()));
+          break;
+        case 'Point':
+          pointsArray.push(g.geometry.coordinates.reverse());
+          break;
+      }
+    });
     if (pointsArray.length === 1) {
       return pointsArray;
     }
@@ -349,8 +367,7 @@ export class MapLib {
    * @returns {any[]}
    */
   static pathDataToLeaflet(pathData, options) {
-    let path = [];
-
+    const path = [];
     let firstIndex = ((options === undefined) ||
       (options.from === undefined) ||
       (options.from < 0)) ? 0 : options.from;
@@ -362,5 +379,18 @@ export class MapLib {
     }
 
     return path;
+  }
+
+  static toGeoJSON(data: { gts: any[]; params: any[] }) {
+    const defShapes = ['Point', 'LineString', 'Polygon', 'MultiPolygon'];
+    let geoJsons = [];
+    data.gts.forEach(d => {
+      if (d.type && d.type === 'Feature' && d.geometry && d.geometry.type && defShapes.indexOf(d.geometry.type) > -1) {
+        geoJsons.push(d);
+      } else if (d.type && defShapes.indexOf(d.type) > -1) {
+        geoJsons.push({type: 'Feature', geometry: d});
+      }
+    });
+    return geoJsons;
   }
 }

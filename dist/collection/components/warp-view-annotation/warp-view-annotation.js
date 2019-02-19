@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import Chart from 'chart.js';
 import { GTSLib } from '../../utils/gts.lib';
 import { ColorLib } from "../../utils/color-lib";
@@ -6,6 +22,10 @@ import { Param } from "../../model/param";
 import { ChartLib } from "../../utils/chart-lib";
 import moment from "moment-timezone";
 import deepEqual from "deep-equal";
+/**
+ * @prop --warp-view-chart-width: Fixed width if not responsive
+ * @prop --warp-view-chart-height: Fixed height if not responsive
+ */
 export class WarpViewAnnotation {
     constructor() {
         this.responsive = false;
@@ -72,10 +92,10 @@ export class WarpViewAnnotation {
             this._chart.options.animation.duration = 0;
             if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
                 if (this._options.timeMode === 'timestamp') {
-                    this._chart.options.scales.xAxes[0].ticks.min = (newValue == 0 && !this.standalone) ? 1 : newValue;
+                    this._chart.options.scales.xAxes[0].ticks.min = (newValue == 0 && !this.standalone) ? 1 : newValue; //clunky hack for issue #22
                 }
                 else {
-                    this._chart.options.scales.xAxes[0].time.min = (newValue == 0 && !this.standalone) ? 1 : newValue;
+                    this._chart.options.scales.xAxes[0].time.min = (newValue == 0 && !this.standalone) ? 1 : newValue; //clunky hack for issue #22
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
             }
@@ -87,23 +107,26 @@ export class WarpViewAnnotation {
             this._chart.options.animation.duration = 0;
             if (oldValue !== newValue && this._chart.options.scales.xAxes[0].time) {
                 if (this._options.timeMode === 'timestamp') {
-                    this._chart.options.scales.xAxes[0].ticks.max = (newValue == 0 && !this.standalone) ? 1 : newValue;
+                    this._chart.options.scales.xAxes[0].ticks.max = (newValue == 0 && !this.standalone) ? 1 : newValue; //clunky hack for issue #22
                 }
                 else {
-                    this._chart.options.scales.xAxes[0].time.max = (newValue == 0 && !this.standalone) ? 1 : newValue;
+                    this._chart.options.scales.xAxes[0].time.max = (newValue == 0 && !this.standalone) ? 1 : newValue; //clunky hack for issue #22
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
             }
             this._chart.update();
         }
     }
+    /**
+     *
+     */
     drawChart() {
         if (!this.data) {
             return;
         }
         this._options.timeMode = 'date';
         this._options = ChartLib.mergeDeep(this._options, this.options);
-        moment.tz.setDefault(this._options.timeZone);
+        moment.tz.setDefault(this._options.timeZone); //force X axis display in UTC
         this.LOG.debug(['drawChart', 'hiddenData'], this.hiddenData);
         let gts = this.parseData(this.data);
         this.displayExpander = (gts.length > 1);
@@ -124,7 +147,7 @@ export class WarpViewAnnotation {
         const chartOption = {
             layout: {
                 padding: {
-                    right: 26
+                    right: 26 //fine tuning, depends on chart element
                 }
             },
             legend: { display: this.showLegend },
@@ -207,7 +230,7 @@ export class WarpViewAnnotation {
                             display: false
                         },
                         afterFit: (scaleInstance) => {
-                            scaleInstance.width = 100;
+                            scaleInstance.width = 100; // sets the width to 100px
                         },
                         gridLines: {
                             color: color,
@@ -242,8 +265,8 @@ export class WarpViewAnnotation {
             };
         }
         else {
-            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin;
-            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax;
+            let tmin = (this.timeMin == 0 && !this.standalone) ? 1 : this.timeMin; //clunky hack for issue #22
+            let tmax = (this.timeMax == 0 && !this.standalone) ? 1 : this.timeMax; //clunky hack for issue #22. introduce a 1millisecond error.
             chartOption.scales.xAxes[0].time = {
                 min: tmin,
                 max: tmax,
@@ -270,7 +293,17 @@ export class WarpViewAnnotation {
         setTimeout(() => {
             this._chart.update();
         }, 250);
+        // not needed if managed in dataset. will be needed later when optimizing the parseData calls.
+        // Object.keys(this._mapIndex).forEach(key => {
+        //   this.LOG.debug(['drawChart', 'hide'], [key]);
+        //   this._chart.getDatasetMeta(this._mapIndex[key]).hidden = !!this.hiddenData.find(item => item + '' === key);
+        // });
     }
+    /**
+     *
+     * @param gts
+     * @returns {any[]}
+     */
     parseData(gts) {
         this.LOG.debug(['parseData'], gts);
         let dataList = GTSLib.getData(gts).data;

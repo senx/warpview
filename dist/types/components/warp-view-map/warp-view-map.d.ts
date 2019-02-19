@@ -28,6 +28,7 @@ export declare class WarpViewMap {
     private pathData;
     private annotationsData;
     private positionData;
+    private geoJson;
     private tiles;
     private static DEFAULT_HEIGHT;
     private static DEFAULT_WIDTH;

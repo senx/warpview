@@ -67,8 +67,8 @@ export declare class WarpViewChart {
      */
     private initialResizeNeeded;
     /**
-   * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
-   */
+     * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
+     */
     private chartBounds;
     private previousParentHeight;
     private previousParentWidth;

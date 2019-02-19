@@ -89,6 +89,7 @@ export class WarpViewMap {
   private pathData: any[];
   private annotationsData: any[];
   private positionData: any[];
+  private geoJson: any[];
   private tiles: any[];
   private static DEFAULT_HEIGHT: number = 600;
   private static DEFAULT_WIDTH: number = 800;
@@ -227,6 +228,7 @@ export class WarpViewMap {
     this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData, divider);
     this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData, divider);
     this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData);
+    this.geoJson = MapLib.toGeoJSON(data);
 
     if (!this.data) {
       return;
@@ -283,14 +285,40 @@ export class WarpViewMap {
     this.annotationsMarkers.forEach(m => {
       m.addTo(this._map);
     });
-    if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0) {
+
+    this.LOG.debug(['displayMap', 'geoJson'], this.geoJson);
+    this.geoJson.forEach((m, index) => {
+      const color = ColorLib.getColor(index)
+      const opts = {
+        style: () => ({
+          color: (data.params && data.params[index]) ? data.params[index].color || color : color,
+          fillColor: (data.params && data.params[index]) ? data.params[index].fillColor || ColorLib.transparentize(color) : ColorLib.transparentize(color),
+        })
+      } as any;
+      switch (m.geometry.type) {
+        case 'Point':
+          opts.pointToLayer = (geoJsonPoint, latlng) => Leaflet.marker(latlng, {
+            icon: this.icon(color, ''),
+            opacity: 1,
+          });
+          break;
+      }
+      let display = '';
+      const geoShape = Leaflet.geoJSON(m, opts);
+      if (m.properties) {
+        Object.keys(m.properties).forEach(k => display += `<b>${k}</b>: ${m.properties[k]}<br />`);
+        geoShape.bindPopup(display);
+      }
+      geoShape.addTo(this._map);
+    });
+
+    if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
-      let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData);
+      let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
       window.setTimeout(() => {
         this._options.startZoom = this._options.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
         this._map.invalidateSize();
-        //   this.resize();
         if (bounds.length > 1) {
           this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1]), {
             padding: [20, 20],

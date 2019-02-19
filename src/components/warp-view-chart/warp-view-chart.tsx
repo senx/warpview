@@ -27,7 +27,8 @@ import {GTS} from "../../model/GTS";
 import moment from "moment-timezone";
 import Options = dygraphs.Options;
 import deepEqual from "deep-equal";
-import {ChartBounds} from "../../model/chartBounds"; 
+import {ChartBounds} from "../../model/chartBounds";
+
 type visibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
 /**
@@ -109,9 +110,9 @@ export class WarpViewChart {
    */
   private initialResizeNeeded = false;
   /**
- * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
- */
-  private chartBounds: ChartBounds = new ChartBounds ();
+   * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
+   */
+  private chartBounds: ChartBounds = new ChartBounds();
 
   private previousParentHeight = -1;
   private previousParentWidth = -1;
@@ -580,8 +581,7 @@ export class WarpViewChart {
       }
       cmin = this.chartBounds.tsmin;
       cmax = this.chartBounds.tsmax;
-    }
-    else {
+    } else {
       //everything works in milliseconds with a timezone
       if (dygraph.dateWindow_) { //if zoomed view
         cmin = dygraph.dateWindow_[0];
@@ -592,8 +592,7 @@ export class WarpViewChart {
         //find the utc timestamp in platform unit from the timezoned one in millisecond.
         this.chartBounds.tsmin = Math.floor((cmin + zoneOffset) * divider);
         this.chartBounds.tsmax = Math.ceil((cmax + zoneOffset) * divider);
-      }
-      else {
+      } else {
         cmin = moment(this.minTick / divider).utc(true).valueOf(); //manage the tz
         cmax = moment(this.maxTick / divider).utc(true).valueOf();
         this.chartBounds.tsmin = this.minTick;
@@ -622,7 +621,7 @@ export class WarpViewChart {
     let previousTimeUnit = this._options.timeUnit || ''; //detect a timeUnit change
     let previousTimeZone = this._options.timeZone || 'UTC'; //detect a timeZone change
     this._options = ChartLib.mergeDeep(this._options, this.options);
-    console.warn("tz=",this._options.timeZone);
+    this.LOG.debug(['tz'], this._options.timeZone);
     moment.tz.setDefault(this._options.timeZone);
     let data: DataModel = GTSLib.getData(this.data);
     let dataList = data.data;

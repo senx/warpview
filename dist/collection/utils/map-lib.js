@@ -1,7 +1,30 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import { GTSLib } from "./gts.lib";
 import { ColorLib } from "./color-lib";
 import { Logger } from "./logger";
 export class MapLib {
+    /**
+     *
+     * @param {any} data
+     * @param {number[]} hiddenData
+     * @param {number} divider
+     * @returns {any[]}
+     */
     static toLeafletMapPaths(data, hiddenData, divider = 1000) {
         let paths = [];
         data.gts.map((gts, i) => {
@@ -25,6 +48,13 @@ export class MapLib {
         });
         return paths;
     }
+    /**
+     *
+     * @param {any} data
+     * @param {number[]} hiddenData
+     * @param {number} divider
+     * @returns {any[]}
+     */
     static annotationsToLeafletPositions(data, hiddenData, divider = 1000) {
         let annotations = [];
         data.gts.map((gts, i) => {
@@ -52,6 +82,12 @@ export class MapLib {
         });
         return annotations;
     }
+    /**
+     *
+     * @param obj
+     * @param params
+     * @param index
+     */
     static extractCommonParameters(obj, params, index) {
         obj.key = params.key || '';
         obj.color = params.color || ColorLib.getColor(index);
@@ -63,6 +99,12 @@ export class MapLib {
             obj.baseRadius = params.baseRadius;
         }
     }
+    /**
+     *
+     * @param posArray
+     * @param params
+     * @returns {boolean}
+     */
     static validateWeightedDotsPositionArray(posArray, params) {
         if (params.minValue === undefined || params.maxValue === undefined) {
             MapLib.LOG.error(['validateWeightedDotsPositionArray'], 'When using \'weightedDots\' or ' +
@@ -111,6 +153,12 @@ export class MapLib {
         });
         return true;
     }
+    /**
+     *
+     * @param {any} data
+     * @param {number[]} hiddenData
+     * @returns {any[]}
+     */
     static toLeafletMapPositionArray(data, hiddenData) {
         let positions = [];
         data.gts.map((gts, i) => {
@@ -137,6 +185,11 @@ export class MapLib {
         });
         return positions;
     }
+    /**
+     *
+     * @param posArray
+     * @param params
+     */
     static validateWeightedColoredDotsPositionArray(posArray, params) {
         if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
             return;
@@ -222,7 +275,15 @@ export class MapLib {
             }
         });
     }
-    static getBoundsArray(paths, positionsData, annotationsData) {
+    /**
+     *
+     * @param paths
+     * @param positionsData
+     * @param annotationsData
+     * @param geoJson
+     * @returns {any}
+     */
+    static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
         let pointsArray = [];
         for (let i = 0; i < paths.length; i++) {
             for (let j = 0; j < paths[i].path.length; j++) {
@@ -239,6 +300,23 @@ export class MapLib {
                 pointsArray.push([annotationsData[i].path[j].lat, annotationsData[i].path[j].lon]);
             }
         }
+        geoJson.forEach(g => {
+            switch (g.geometry.type) {
+                case 'MultiPolygon':
+                    g.geometry.coordinates.forEach(c => c.forEach(m => m.forEach(p => pointsArray.push(p.reverse()))));
+                    break;
+                case 'Polygon':
+                    g.geometry.coordinates.forEach(c => c.forEach(p => pointsArray.push(p.reverse())));
+                    break;
+                case 'LineString':
+                    g.geometry.coordinates.forEach(p => pointsArray.push(p.reverse()));
+                    break;
+                case 'Point':
+                    console.log('Point', g.geometry.coordinates);
+                    pointsArray.push(g.geometry.coordinates.reverse());
+                    break;
+            }
+        });
         if (pointsArray.length === 1) {
             return pointsArray;
         }
@@ -258,8 +336,14 @@ export class MapLib {
         });
         return [[south, west], [north, east]];
     }
+    /**
+     *
+     * @param pathData
+     * @param options
+     * @returns {any[]}
+     */
     static pathDataToLeaflet(pathData, options) {
-        let path = [];
+        const path = [];
         let firstIndex = ((options === undefined) ||
             (options.from === undefined) ||
             (options.from < 0)) ? 0 : options.from;
@@ -269,6 +353,20 @@ export class MapLib {
             path.push([pathData[i].lat, pathData[i].lon]);
         }
         return path;
+    }
+    static toGeoJSON(data) {
+        const defShapes = ['Point', 'LineString', 'Polygon', 'MultiPolygon'];
+        let geoJsons = [];
+        data.gts.forEach(d => {
+            console.log('toGeoJSON', d);
+            if (d.type && d.type === 'Feature' && d.geometry && d.geometry.type && defShapes.indexOf(d.geometry.type) > -1) {
+                geoJsons.push(d);
+            }
+            else if (d.type && defShapes.indexOf(d.type) > -1) {
+                geoJsons.push({ type: 'Feature', geometry: d });
+            }
+        });
+        return geoJsons;
     }
 }
 MapLib.BASE_RADIUS = 2;

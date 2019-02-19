@@ -58,9 +58,10 @@ export declare class MapLib {
      * @param paths
      * @param positionsData
      * @param annotationsData
+     * @param geoJson
      * @returns {any}
      */
-    static getBoundsArray(paths: any, positionsData: any, annotationsData: any): any[];
+    static getBoundsArray(paths: any, positionsData: any, annotationsData: any, geoJson: any): any[];
     /**
      *
      * @param pathData
@@ -68,4 +69,8 @@ export declare class MapLib {
      * @returns {any[]}
      */
     static pathDataToLeaflet(pathData: any, options: any): any[];
+    static toGeoJSON(data: {
+        gts: any[];
+        params: any[];
+    }): any[];
 }
