@@ -159,6 +159,30 @@
       ],
       "listeners": [
         {
+          "event": "document:keydown",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "document:keyup",
+          "method": "handleKeyup",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "keydown",
+          "method": "handleKeyDown",
+          "passive": false,
+          "capture": false
+        },
+        {
+          "event": "keyup",
+          "method": "handleKeyup",
+          "passive": false,
+          "capture": false
+        },
+        {
           "event": "window:resize",
           "method": "onResize",
           "capture": false

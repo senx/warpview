@@ -33,6 +33,9 @@ export declare class WarpViewAnnotation {
     private parentWidth;
     private _height;
     private expanded;
+    private trimmed;
+    handleKeyDown(ev: KeyboardEvent): void;
+    handleKeyup(ev: KeyboardEvent): void;
     onResize(): void;
     private onData;
     onOptions(newValue: Param): void;

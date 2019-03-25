@@ -41,15 +41,14 @@ export declare class WarpViewPlot {
     private kbdCounter;
     private gtsPopupModal;
     private gtsFilterCount;
-    componentDidLoad(): void;
+    private preventDefaultKeyList;
+    private preventDefaultKeyListInModals;
     getTimeClip(): Promise<ChartBounds>;
     private onGtsFilter;
     private onData;
     private onOptions;
     handleLocalKeydown(ev: KeyboardEvent): void;
     handleDocKeydown(ev: KeyboardEvent): void;
-    private preventDefaultKeyList;
-    private preventDefaultKeyListInModals;
     private handleKeyDown;
     private pushKbdEvent;
     stateChange(event: CustomEvent): void;
@@ -60,6 +59,7 @@ export declare class WarpViewPlot {
     private drawCharts;
     private applyFilter;
     componentWillLoad(): void;
+    componentDidLoad(): void;
     onWarpViewModalClose(): void;
     inputTextKeyboardEvents(e: KeyboardEvent): void;
     tzSelected(): void;

@@ -80,9 +80,11 @@ export class WarpViewPlot {
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
   private gtsFilterCount: number = 0;
 
-  componentDidLoad() {
-    this.drawCharts(true);
-  }
+
+  //key event are trapped in plot component.
+  //if one of this key is pressed, default action is prevented.
+  private preventDefaultKeyList: string[] = ['Escape', '/'];
+  private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
 
   @Method()
   async getTimeClip(): Promise<ChartBounds> {
@@ -130,12 +132,6 @@ export class WarpViewPlot {
     }
   }
 
-
-  //key event are trapped in plot component.
-  //if one of this key is pressed, default action is prevented.
-  private preventDefaultKeyList: string[] = ['Escape', '/'];
-  private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
-
   private async handleKeyDown(ev: KeyboardEvent) {
     this.LOG.debug(['document:keydown'], ev);
     if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
@@ -155,7 +151,7 @@ export class WarpViewPlot {
         this.timeClipValue = `// keep data between ${moment.tz(tc.msmin,this._options.timeZone).toLocaleString()} and ` +
                               `${moment.tz(tc.msmax,this._options.timeZone).toLocaleString()}<br/>` +
                               `${this._options.timeUnit!=='us'? '// (for a ' + this._options.timeUnit + ' platform)<br/>':''}`+
-                              `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`
+                              `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
@@ -306,6 +302,10 @@ export class WarpViewPlot {
 
   componentWillLoad() {
     this.LOG = new Logger(WarpViewPlot, this.debug);
+  }
+
+  componentDidLoad() {
+    this.drawCharts(true);
   }
 
   @Listen('warpViewModalClose')

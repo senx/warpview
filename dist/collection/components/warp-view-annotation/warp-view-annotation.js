@@ -48,6 +48,30 @@ export class WarpViewAnnotation {
         this._height = '0';
         this.expanded = false;
     }
+    //two ways to capture keyboard events :
+    // - local level, click to get focus.
+    // - document level (only if isalone property is true)
+    handleKeyDown(ev) {
+        if (ev.key === 'Control') {
+            this.LOG.debug(['document:keydown'], this.tooltip.querySelector('#tooltip-body'));
+            this.trimmed = setInterval(() => {
+                if (this.tooltip.querySelector('#tooltip-body')) {
+                    this.tooltip.querySelector('#tooltip-body').classList.remove('trimmed');
+                }
+            }, 100);
+        }
+    }
+    handleKeyup(ev) {
+        this.LOG.debug(['document:keyup'], ev);
+        if (ev.key === 'Control') {
+            if (this.tooltip.querySelector('#tooltip-body')) {
+                if (this.trimmed) {
+                    clearInterval(this.trimmed);
+                }
+                this.tooltip.querySelector('#tooltip-body').classList.add('trimmed');
+            }
+        }
+    }
     onResize() {
         if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth || this.parentWidth <= 0) {
             this.parentWidth = this.el.parentElement.getBoundingClientRect().width;
@@ -181,7 +205,7 @@ export class WarpViewAnnotation {
                         me.date.innerHTML = me._options.timeMode === 'timestamp'
                             ? tooltipModel.title[0].time
                             : moment(tooltipModel.title[0].time).utc().toISOString() || '';
-                        me.tooltip.innerHTML = `<div class="tooltip-body">
+                        me.tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
   <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
   <span class="value">${tooltipModel.body[0].lines[0].value}</span>
 </div>`;
@@ -444,6 +468,18 @@ export class WarpViewAnnotation {
             "composed": true
         }]; }
     static get listeners() { return [{
+            "name": "keydown",
+            "method": "handleKeyDown"
+        }, {
+            "name": "document:keydown",
+            "method": "handleKeyDown"
+        }, {
+            "name": "keyup",
+            "method": "handleKeyup"
+        }, {
+            "name": "document:keyup",
+            "method": "handleKeyup"
+        }, {
             "name": "window:resize",
             "method": "onResize",
             "passive": true

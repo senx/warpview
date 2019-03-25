@@ -53,9 +53,6 @@ export class WarpViewPlot {
         this.preventDefaultKeyList = ['Escape', '/'];
         this.preventDefaultKeyListInModals = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
     }
-    componentDidLoad() {
-        this.drawCharts(true);
-    }
     async getTimeClip() {
         this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
         return this.chart.getTimeClip();
@@ -250,6 +247,9 @@ export class WarpViewPlot {
     }
     componentWillLoad() {
         this.LOG = new Logger(WarpViewPlot, this.debug);
+    }
+    componentDidLoad() {
+        this.drawCharts(true);
     }
     onWarpViewModalClose() {
         this.mainPlotDiv.focus();

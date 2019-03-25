@@ -31,21 +31,23 @@
       position: absolute;
       width: calc(100% - 110px);
       z-index: 999;
-      height: 29px;
       margin-left: 90px;
       top: -1000px; }
       :host div .tooltip .tooltip-body {
         background-color: #ffffffcc;
         padding-left: 10px;
         padding-right: 10px;
-        max-width: 49%;
         width: auto;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        line-height: 29px;
-        vertical-align: middle;
+        max-width: 100%;
         color: var(--gts-separator-font-color, #bbbbbb); }
+        :host div .tooltip .tooltip-body.trimmed {
+          max-width: 49%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          line-height: 29px;
+          vertical-align: middle;
+          height: 29px; }
         :host div .tooltip .tooltip-body .timestamp {
           font-size: 1rem; }
         :host div .tooltip .tooltip-body .value {
