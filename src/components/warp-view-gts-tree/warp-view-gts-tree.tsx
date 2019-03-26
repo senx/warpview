@@ -123,7 +123,7 @@ export class WarpViewGtsTree {
     return this.gtsList
       ? <div>
         <div class="stack-level" onClick={() => this.toggleVisibility()}>
-          <span class={{'expanded': !this.hide, 'collapsed': this.hide}} ref={el => this.root = el}/> Stack
+          <span class={{'expanded': !this.hide, 'collapsed': this.hide}} ref={el => this.root = el}/> Results
         </div>
         <warp-view-tree-view gtsList={this.gtsList} branch={false} hidden={this.hide}
                              debug={this.debug}
