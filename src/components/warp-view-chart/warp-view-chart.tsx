@@ -476,7 +476,7 @@ export class WarpViewChart {
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       html = `<b>${data.x}</b>`;
     } else {
-      html = `<b>${moment.utc(parseInt(data.x)).toISOString()}</b>`; //data.x is already a date in millisecond, whatever the unit option
+      html = `<b>${(moment.utc(parseInt(data.x)).toISOString() || '').replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '')}</b>`; //data.x is already a date in millisecond, whatever the unit option
     }
     data.series.forEach(function (series) {
       if (series.isVisible && series.yHTML) {
