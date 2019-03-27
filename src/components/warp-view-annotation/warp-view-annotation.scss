@@ -45,15 +45,17 @@
         padding-right: 10px;
         width: auto;
         max-width: 100%;
+        vertical-align: middle;
+        line-height: 28px;
+        height: 28px;
+        overflow: visible;
+        margin-top: 1px;
         color: var(--gts-separator-font-color, #bbbbbb);
         &.trimmed {
           max-width: 49%;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          line-height: 29px;
-          vertical-align: middle;
-          height: 29px;
         }
         .timestamp {
           font-size: 1rem;
