@@ -1876,7 +1876,7 @@ var MapComponent = /** @class */ (function () {
         this.pico = pico;
         this.settings = new _model_settings__WEBPACK_IMPORTED_MODULE_1__["Settings"]();
         this.mapStyles = [
-            { val: 'DEFAULT', label: 'defalut' },
+            { val: 'DEFAULT', label: 'default' },
             { val: 'TOPO', label: 'Topographic' },
             { val: 'ESRI', label: 'ESRI' },
             { val: 'SATELLITE', label: 'Satellite' },
