@@ -367,7 +367,7 @@ export class WarpViewMap {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         date = parseInt(p.ts);
       } else {
-        date = moment(parseInt(p.ts)).utc(true).toISOString();
+        date = (moment(parseInt(p.ts)).utc(true).toISOString() || '' ).replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '');
       }
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
