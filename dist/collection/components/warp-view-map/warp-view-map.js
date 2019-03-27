@@ -285,7 +285,7 @@ export class WarpViewMap {
                 date = parseInt(p.ts);
             }
             else {
-                date = moment(parseInt(p.ts)).utc(true).toISOString();
+                date = (moment(parseInt(p.ts)).utc(true).toISOString() || '').replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '');
             }
             currentValue = Leaflet.circleMarker([p.lat, p.lon], { radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7 })
                 .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);

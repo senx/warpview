@@ -54,12 +54,6 @@ export class WarpViewPlot {
             this.drawCharts();
         }
     }
-    handleLocalKeydown(ev) {
-        if (!this.isAlone) {
-            this.handleKeyDown(ev).then(() => {
-            });
-        }
-    }
     handleDocKeydown(ev) {
         if (this.isAlone) {
             this.handleKeyDown(ev).then(() => {
@@ -378,7 +372,7 @@ export class WarpViewPlot {
     }; }
     static get listeners() { return [{
             "name": "keydown",
-            "method": "handleLocalKeydown"
+            "method": "handleDocKeydown"
         }, {
             "name": "document:keydown",
             "method": "handleDocKeydown"

@@ -329,7 +329,7 @@ export class WarpViewChart {
             html = `<b>${data.x}</b>`;
         }
         else {
-            html = `<b>${moment.utc(parseInt(data.x)).toISOString()}</b>`;
+            html = `<b>${(moment.utc(parseInt(data.x)).toISOString() || '').replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '')}</b>`;
         }
         data.series.forEach(function (series) {
             if (series.isVisible && series.yHTML) {

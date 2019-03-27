@@ -178,7 +178,7 @@ export class WarpViewAnnotation {
                         me.LOG.debug(['tooltip'], tooltipModel.title[0]);
                         me.date.innerHTML = me._options.timeMode === 'timestamp'
                             ? tooltipModel.title[0].time
-                            : moment(tooltipModel.title[0].time).utc().toISOString() || '';
+                            : (moment(tooltipModel.title[0].time).utc().toISOString() || '').replace('Z', me._options.timeZone == 'UTC' ? 'Z' : '');
                         me.tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
   <span>${GTSLib.formatLabel(tooltipModel.body[0].lines[0].gts)}: </span>
   <span class="value">${tooltipModel.body[0].lines[0].value}</span>

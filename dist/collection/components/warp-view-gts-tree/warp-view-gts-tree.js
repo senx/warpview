@@ -83,7 +83,7 @@ export class WarpViewGtsTree {
             ? h("div", null,
                 h("div", { class: "stack-level", onClick: () => this.toggleVisibility() },
                     h("span", { class: { 'expanded': !this.hide, 'collapsed': this.hide }, ref: el => this.root = el }),
-                    " Stack"),
+                    " Results"),
                 h("warp-view-tree-view", { gtsList: this.gtsList, branch: false, hidden: this.hide, debug: this.debug, hiddenData: this.hiddenData, gtsFilter: this.gtsFilter, kbdLastKeyPressed: this.kbdLastKeyPressed }))
             : '';
     }
