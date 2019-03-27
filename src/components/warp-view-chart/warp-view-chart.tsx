@@ -696,8 +696,8 @@ export class WarpViewChart {
           return WarpViewChart.toFixed(x as number);
         }
       }
-
-      this.initialResizeNeeded = reparseNewData || forceresize; //even on visibility change. setting this to reparseNewData is not a solution.
+      //even on visibility change. setting this to reparseNewData is not a solution.
+      this.initialResizeNeeded = reparseNewData || forceresize;
 
       if (!!this._chart) {
         this._chart.destroy();
