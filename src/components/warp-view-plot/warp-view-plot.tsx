@@ -117,10 +117,19 @@ export class WarpViewPlot {
 // - local level, click to get focus. 
 // - document level (only if isalone property is true)
   @Listen('keydown')
+  handleLocalKeydown(ev: KeyboardEvent) {
+    if (!this.isAlone) {
+      this.handleKeyDown(ev).then(() => {
+        // empty
+      });
+    }
+  }
+
   @Listen('document:keydown')
   handleDocKeydown(ev: KeyboardEvent) {
     if (this.isAlone) {
       this.handleKeyDown(ev).then(() => {
+        // empty
       });
     }
   }

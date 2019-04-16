@@ -1376,7 +1376,7 @@
         },
         {
           "event": "keydown",
-          "method": "handleDocKeydown",
+          "method": "handleLocalKeydown",
           "passive": false,
           "capture": false
         },

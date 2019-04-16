@@ -1,7 +1,33 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 export class ColorLib {
+    /**
+     * Get a color from index
+     * @param i
+     * @returns {string}
+     */
     static getColor(i) {
         return ColorLib.color[i % ColorLib.color.length];
     }
+    /**
+     * Convert hex to RGB
+     * @param hex
+     * @returns {number[]}
+     */
     static hexToRgb(hex) {
         let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? [
@@ -10,9 +36,18 @@ export class ColorLib {
             parseInt(result[3], 16)
         ] : null;
     }
+    /**
+     * Add an alpha channel
+     * @param color
+     * @returns {string}
+     */
     static transparentize(color) {
         return 'rgba(' + ColorLib.hexToRgb(color).concat(0.7).join(',') + ')';
     }
+    /**
+     *
+     * @param num
+     */
     static generateColors(num) {
         let color = [];
         for (let i = 0; i < num; i++) {
@@ -20,6 +55,10 @@ export class ColorLib {
         }
         return color;
     }
+    /**
+     *
+     * @param num
+     */
     static generateTransparentColors(num) {
         let color = [];
         for (let i = 0; i < num; i++) {
@@ -48,6 +87,7 @@ export class ColorLib {
         return gradient;
     }
     static rgb2hsv(r, g, b) {
+        // Normalize
         let normR = r / 255.0;
         let normG = g / 255.0;
         let normB = b / 255.0;
@@ -80,9 +120,12 @@ export class ColorLib {
     }
     static hsvGradient(c1, c2, steps) {
         let gradient = new Array(steps);
+        // determine clockwise and counter-clockwise distance between hues
         let distCCW = (c1.h >= c2.h) ? c1.h - c2.h : 1 + c1.h - c2.h;
         let distCW = (c1.h >= c2.h) ? 1 + c2.h - c1.h : c2.h - c1.h;
+        // make gradient for this part
         for (let i = 0; i < steps; i++) {
+            // interpolate h, s, b
             let h = (distCW <= distCCW) ? c1.h + (distCW * i / (steps - 1)) : c1.h - (distCCW * i / (steps - 1));
             if (h < 0) {
                 h = 1 + h;
@@ -92,6 +135,7 @@ export class ColorLib {
             }
             let s = (1 - i / (steps - 1)) * c1.s + i / (steps - 1) * c2.s;
             let v = (1 - i / (steps - 1)) * c1.v + i / (steps - 1) * c2.v;
+            // add to gradient array
             gradient[i] = { h: h, s: s, v: v };
         }
         return gradient;

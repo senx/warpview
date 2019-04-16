@@ -47,6 +47,7 @@ export declare class WarpViewPlot {
     private onGtsFilter;
     private onData;
     private onOptions;
+    handleLocalKeydown(ev: KeyboardEvent): void;
     handleDocKeydown(ev: KeyboardEvent): void;
     private handleKeyDown;
     private pushKbdEvent;
