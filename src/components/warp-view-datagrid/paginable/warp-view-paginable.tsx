@@ -99,7 +99,7 @@ export class WarpViewPaginable {
             <tbody>
             {this.displayedValues.map((value, index) =>
               <tr class={index % 2 === 0 ? 'odd' : 'even'}>
-                {value.map((v, index) => <td>{index === 0 ? this.formatDate(v) : v}</td>)}
+                {value.map((v, index) => <td>{index === 0 ? this.formatDate(v) : decodeURIComponent(v)}</td>)}
               </tr>)}
             </tbody>
           </table>
