@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
@@ -92,7 +76,7 @@ export class WarpViewMap {
                 optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
             }
             else {
-                optionChanged = true; //new unknown option
+                optionChanged = true;
             }
         });
         if (optionChanged) {
@@ -126,7 +110,6 @@ export class WarpViewMap {
                 gts = JSON.parse(gts);
             }
             catch (error) {
-                // empty
             }
         }
         if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
@@ -204,7 +187,6 @@ export class WarpViewMap {
             }
         });
         this.annotationsData.forEach(d => {
-            //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
             let plottedGts = this.updateGtsPath(d);
             if (plottedGts) {
                 this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
@@ -214,7 +196,6 @@ export class WarpViewMap {
         });
         this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
         this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
-        // Create the positions arrays
         this.positionData.forEach(d => {
             this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
         });
@@ -254,11 +235,9 @@ export class WarpViewMap {
             geoShape.addTo(this._map);
         });
         if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
-            // Fit map to curves
             let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
             window.setTimeout(() => {
                 this._options.startZoom = this._options.startZoom || 2;
-                // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
                 this._map.invalidateSize();
                 if (bounds.length > 1) {
                     this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1]), {
@@ -300,7 +279,6 @@ export class WarpViewMap {
             opacity: 0.7,
         }).addTo(this._map);
         let currentValue;
-        // Let's verify we have a path... No path, no marker
         gts.path.map(p => {
             let date;
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -401,10 +379,6 @@ export class WarpViewMap {
         }
         return positions;
     }
-    /**
-     *
-     * @returns {Promise<boolean>}
-     */
     resize() {
         return new Promise(resolve => {
             this.mapElement = this.el.shadowRoot.querySelector('#' + this.uuid);

@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { GTSLib } from "../../../utils/gts.lib";
 import { Logger } from "../../../utils/logger";
 import { ChartLib } from "../../../utils/chart-lib";
@@ -25,14 +9,9 @@ export class WarpViewTreeView {
         this.hiddenData = [];
         this.debug = false;
         this.kbdLastKeyPressed = [];
-        this.ref = 0; //just to trigger the render
+        this.ref = 0;
         this.hide = {};
     }
-    /**
-     *
-     * @param {UIEvent} event
-     * @param {number} index
-     */
     toggleVisibility(event, index) {
         let el;
         if (event.currentTarget.id) {
@@ -60,11 +39,6 @@ export class WarpViewTreeView {
         this.LOG.debug(['hiddenData'], newValue);
         this.ref++;
     }
-    /**
-     *
-     * @param {number} index
-     * @returns boolean
-     */
     isHidden(index) {
         if (this.hide.hasOwnProperty(index + '')) {
             return this.hide[index + ''];
@@ -76,10 +50,6 @@ export class WarpViewTreeView {
     componentWillLoad() {
         this.LOG = new Logger(WarpViewTreeView, this.debug);
     }
-    /**
-     *
-     * @returns {any}
-     */
     render() {
         return h("div", { class: "list" }, this.gtsList ? h("ul", null, this.gtsList.map((node, index) => (h("li", { hidden: this.hidden }, GTSLib.isGts(node)
             ? h("warp-view-chip", { node: { gts: node }, name: node.c, gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this.hiddenData, kbdLastKeyPressed: this.kbdLastKeyPressed })

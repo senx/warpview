@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { DataModel } from "../../model/dataModel";
 import { Param } from "../../model/param";
 import { Logger } from "../../utils/logger";
@@ -48,8 +32,6 @@ export class WarpViewPlot {
         this.kbdLastKeyPressed = [];
         this.kbdCounter = 0;
         this.gtsFilterCount = 0;
-        //key event are trapped in plot component.
-        //if one of this key is pressed, default action is prevented.
         this.preventDefaultKeyList = ['Escape', '/'];
         this.preventDefaultKeyListInModals = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
     }
@@ -72,20 +54,15 @@ export class WarpViewPlot {
             this.drawCharts();
         }
     }
-    //two ways to capture keyboard events : 
-    // - local level, click to get focus. 
-    // - document level (only if isalone property is true)
     handleLocalKeydown(ev) {
         if (!this.isAlone) {
             this.handleKeyDown(ev).then(() => {
-                // empty
             });
         }
     }
     handleDocKeydown(ev) {
         if (this.isAlone) {
             this.handleKeyDown(ev).then(() => {
-                // empty
             });
         }
     }
@@ -165,11 +142,11 @@ export class WarpViewPlot {
         this.LOG.debug(['warpViewSelectedGTS'], event.detail);
         if (!this._toHide.find(i => {
             return i === event.detail.gts.id;
-        }) && !event.detail.selected) { //if not in toHide and state false, put id in toHide
+        }) && !event.detail.selected) {
             this._toHide.push(event.detail.gts.id);
         }
         else {
-            if (event.detail.selected) { //if in toHide and state true, remove it from toHide
+            if (event.detail.selected) {
                 this._toHide = this._toHide.filter(i => {
                     return i !== event.detail.gts.id;
                 });
@@ -219,9 +196,7 @@ export class WarpViewPlot {
         }
         options = ChartLib.mergeDeep(options, opts);
         this.LOG.debug(['PPts'], 'firstdraw ', firstDraw);
-        if (firstDraw) { //on the first draw, we can set some default options.
-            //automatically switch to timestamp mode
-            //when the first tick and last tick of all the series are in the interval [-100ms 100ms]
+        if (firstDraw) {
             let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
             let dataList = this._data.data;
             if (dataList) {
@@ -229,7 +204,7 @@ export class WarpViewPlot {
                 gtsList = GTSLib.flatDeep(gtsList);
                 let timestampMode = true;
                 gtsList.forEach(g => {
-                    if (g.v.length > 0) { //if gts not empty
+                    if (g.v.length > 0) {
                         timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
                         timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
                     }
@@ -274,12 +249,10 @@ export class WarpViewPlot {
     }
     render() {
         return h("div", { id: "focusablePlotDiv", tabindex: "0", onClick: (e) => {
-                //read the first 4 letters of id of all elements in the click tree
                 let idListClicked = e.path.map(el => (el.id || '').slice(0, 4));
-                //if not alone on the page, and click is not on the timezone selector and not on the map, force focus.
                 if (!this.isAlone && idListClicked.indexOf('tzSe') < 0 && idListClicked.indexOf('map-') < 0) {
                     this.mainPlotDiv.focus();
-                } //prevent stealing focus of the timezone selector.
+                }
             }, ref: (el) => this.mainPlotDiv = el },
             h("warp-view-modal", { kbdLastKeyPressed: this.kbdLastKeyPressed, modalTitle: "TimeClip", ref: (el) => this.timeClip = el },
                 h("pre", null,

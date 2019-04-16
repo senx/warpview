@@ -1,26 +1,10 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { GTSLib } from "../../../utils/gts.lib";
 import { ColorLib } from "../../../utils/color-lib";
 import { GTS } from "../../../model/GTS";
 import { Logger } from "../../../utils/logger";
 export class WarpViewChip {
     constructor() {
-        this.gtsFilter = 'x'; //the first character triggers change each filter apply to trigger events. it must be discarded.
+        this.gtsFilter = 'x';
         this.hiddenData = [];
         this.debug = false;
         this.kbdLastKeyPressed = [];
@@ -31,7 +15,7 @@ export class WarpViewChip {
         };
     }
     onGtsFilter(newValue, oldValue) {
-        if (oldValue != newValue) { //ref comparison, we could select a filter, press n, select the same again.
+        if (oldValue != newValue) {
             if (this.gtsFilter.slice(1) !== '') {
                 this.setState(new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
             }
@@ -57,7 +41,7 @@ export class WarpViewChip {
     colorizeChip() {
         if (this.chip) {
             if (this._node.selected) {
-                this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id))); //ERROR TO FIX TypeError: Cannot read property 'style' of undefined
+                this.chip.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id)));
                 this.chip.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id));
             }
             else {
@@ -70,9 +54,6 @@ export class WarpViewChip {
         this.LOG = new Logger(WarpViewChip, this.debug);
         this._node = Object.assign({}, this.node, { selected: this.hiddenData.indexOf(this.node.gts.id) === -1 });
     }
-    /**
-     *
-     */
     componentDidLoad() {
         if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
             || this.hiddenData.indexOf(this._node.gts.id) > -1) {
@@ -80,23 +61,10 @@ export class WarpViewChip {
         }
         this.colorizeChip();
     }
-    /**
-     *
-     * @param index
-     * @param obj
-     * @returns {boolean}
-     * @private
-     */
     lastIndex(index, obj) {
         let array = this.toArray(obj);
         return (index === array.length - 1);
     }
-    /**
-     *
-     * @param obj
-     * @returns {any}
-     * @private
-     */
     toArray(obj) {
         if (obj === undefined) {
             return [];
@@ -108,10 +76,6 @@ export class WarpViewChip {
             };
         });
     }
-    /**
-     *
-     * @param {UIEvent} event
-     */
     switchPlotState(event) {
         event.preventDefault();
         this.setState(!this._node.selected);
