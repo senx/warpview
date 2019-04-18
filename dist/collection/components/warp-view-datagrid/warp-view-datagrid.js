@@ -81,13 +81,13 @@ export class WarpViewDatagrid {
                 dataSet.values = GTSLib.isArray(d) ? d : [d];
             }
             dataSet.headers = [this.getHeaderParam(i, 0, 'headers', 'Date')];
-            if (d.v.length > 0 && d.v[0].length > 2) {
+            if (d.v && d.v.length > 0 && d.v[0].length > 2) {
                 dataSet.headers.push(this.getHeaderParam(i, 1, 'headers', 'Latitude'));
             }
-            if (d.v.length > 0 && d.v[0].length > 3) {
+            if (d.v && d.v.length > 0 && d.v[0].length > 3) {
                 dataSet.headers.push(this.getHeaderParam(i, 2, 'headers', 'Longitude'));
             }
-            if (d.v.length > 0 && d.v[0].length > 4) {
+            if (d.v && d.v.length > 0 && d.v[0].length > 4) {
                 dataSet.headers.push(this.getHeaderParam(i, 3, 'headers', 'Elevation'));
             }
             dataSet.headers.push(this.getHeaderParam(i, d.v[0].length - 1, 'headers', 'Value'));
