@@ -83,6 +83,7 @@ export declare class GTSLib {
         res: any[];
         r: number;
     };
+    static sanitizeNames(input: string): string;
     /**
      *
      * @param gts

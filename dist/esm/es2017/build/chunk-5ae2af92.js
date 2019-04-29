@@ -1,6 +1,66 @@
-import { DataModel } from "../model/dataModel";
-import { Logger } from "./logger";
-export class GTSLib {
+import { h } from '../warpview.core.js';
+
+class Logger {
+    constructor(className, isDebug = false) {
+        this.isDebug = false;
+        this.className = className.name;
+        this.isDebug = isDebug;
+    }
+    log(level, methods, args) {
+        let logChain = [];
+        logChain.push(`[${this.className}] ${methods.join(' - ')}`);
+        logChain = logChain.concat(args);
+        switch (level) {
+            case LEVEL.DEBUG: {
+                if (this.isDebug) {
+                    console.debug(...logChain);
+                }
+                break;
+            }
+            case LEVEL.ERROR: {
+                console.error(...logChain);
+                break;
+            }
+            case LEVEL.INFO: {
+                console.log(...logChain);
+                break;
+            }
+            case LEVEL.WARN: {
+                console.warn(...logChain);
+                break;
+            }
+            default: {
+                if (this.isDebug) {
+                    console.log(...logChain);
+                }
+            }
+        }
+    }
+    debug(methods, ...args) {
+        this.log(LEVEL.DEBUG, methods, args);
+    }
+    error(methods, ...args) {
+        this.log(LEVEL.ERROR, methods, args);
+    }
+    warn(methods, ...args) {
+        this.log(LEVEL.WARN, methods, args);
+    }
+    info(methods, ...args) {
+        this.log(LEVEL.INFO, methods, args);
+    }
+}
+var LEVEL;
+(function (LEVEL) {
+    LEVEL[LEVEL["DEBUG"] = 0] = "DEBUG";
+    LEVEL[LEVEL["ERROR"] = 1] = "ERROR";
+    LEVEL[LEVEL["WARN"] = 2] = "WARN";
+    LEVEL[LEVEL["INFO"] = 3] = "INFO";
+})(LEVEL || (LEVEL = {}));
+
+class DataModel {
+}
+
+class GTSLib {
     static cleanArray(actual) {
         return actual.filter((i) => !!i);
     }
@@ -195,10 +255,8 @@ export class GTSLib {
         let path = [];
         for (let i = 0; i < gts.v.length; i++) {
             let metric = gts.v[i];
-            if (metric.length === 2) {
-            }
-            if (metric.length === 3) {
-            }
+            if (metric.length === 2) ;
+            if (metric.length === 3) ;
             if (metric.length === 4) {
                 path.push({ ts: Math.floor(metric[0] / divider), lat: metric[1], lon: metric[2], val: metric[3] });
             }
@@ -343,3 +401,5 @@ GTSLib.formatLabel = (data) => {
     display += '</span>';
     return display;
 };
+
+export { GTSLib as a, Logger as b, DataModel as c };

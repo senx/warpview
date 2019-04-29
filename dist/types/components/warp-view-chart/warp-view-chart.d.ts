@@ -100,8 +100,8 @@ export declare class WarpViewChart {
     private isStacked;
     private static toFixed;
     /**
-     *
-     * @param {string} data
+     * heavy link with GTSLib.serializeGtsMetadata() output. Check it first.
+     * @param {string} data  : serialized gts data + g.id in the same string. e.g: "class{labelA=xx,attrA=ee}47"
      * @returns {string}
      */
     private static formatLabel;
