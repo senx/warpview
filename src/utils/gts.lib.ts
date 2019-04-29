@@ -253,6 +253,12 @@ export class GTSLib {
     return {res: res, r: r};
   }
 
+  static sanitizeNames(input:string):string {
+    return input.replace(/{/g,'&#123;')
+    .replace(/}/g,'&#125;')
+    .replace(/,/g,'&#44;')
+  }
+
   /**
    *
    * @param gts
@@ -263,15 +269,15 @@ export class GTSLib {
     let serializedAttributes = [];
     if (gts.l) {
       Object.keys(gts.l).forEach((key) => {
-        serializedLabels.push(key + "=" + gts.l[key]);
+        serializedLabels.push(this.sanitizeNames(key + "=" + gts.l[key]));
       });
     }
     if (gts.a) {
       Object.keys(gts.a).forEach((key) => {
-        serializedAttributes.push(key + "=" + gts.a[key]);
+        serializedAttributes.push(this.sanitizeNames(key + "=" + gts.a[key]));
       });
     }
-    return gts.c + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
+    return this.sanitizeNames(gts.c) + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
   }
 
   /**

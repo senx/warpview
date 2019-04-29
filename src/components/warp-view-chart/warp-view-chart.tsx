@@ -417,37 +417,22 @@ export class WarpViewChart {
   }
 
   /**
-   *
-   * @param {string} data
+   * heavy link with GTSLib.serializeGtsMetadata() output. Check it first.
+   * @param {string} data  : serialized gts data + g.id in the same string. e.g: "class{labelA=xx,attrA=ee}47"
    * @returns {string}
    */
   private static formatLabel(data: string): string {
-    const serializedGTS = data.split('{');
-    let display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
-    if (serializedGTS.length > 1) {
+    let serializedGTS = data.split('}')[0].split('{'); //remove g.id, then cut [class labelA=xx,attrA=ee]
+    let display = '';
+    if (serializedGTS.length == 2) { //if there is a { in one label or classname, don't even try)
+      display = `<span class='gts-classname'>${serializedGTS[0]}</span>`;
       display += `<span class='gts-separator'> {</span>`;
-      const labels = serializedGTS[1].substr(0, serializedGTS[1].length - 1).split(',');
+      const labels = serializedGTS[1].split(',');
       if (labels.length > 0) {
         labels.forEach((l, i) => {
           const label = l.split('=');
           if (l.length > 1) {
             display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
-            if (i !== labels.length - 1) {
-              display += `<span>, </span>`;
-            }
-          }
-        });
-      }
-      display += `<span class='gts-separator'>}</span>`;
-    }
-    if (serializedGTS.length > 2) {
-      display += `<span class='gts-separator'>{</span>`;
-      const labels = serializedGTS[2].substr(0, serializedGTS[2].length - 1).split(',');
-      if (labels.length > 0) {
-        labels.forEach((l, i) => {
-          const label = l.split('=');
-          if (l.length > 1) {
-            display += `<span><span class='gts-attrname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-attrvalue'>${label[1]}</span>`;
             if (i !== labels.length - 1) {
               display += `<span>, </span>`;
             }
@@ -478,14 +463,13 @@ export class WarpViewChart {
     } else {
       html = `<b>${(moment.utc(parseInt(data.x)).toISOString() || '').replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '')}</b>`; //data.x is already a date in millisecond, whatever the unit option
     }
-    data.series.forEach(function (series) {
-      if (series.isVisible && series.yHTML) {
-        let labeledData = WarpViewChart.formatLabel(series.labelHTML) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
-        if (series.isHighlighted) {
-          labeledData = `<b>${labeledData}</b>`;
-        }
-        html += `<br>${series.dashHTML} ${labeledData}`;
+    //put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
+    data.series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1).filter(s => s.isVisible && s.yHTML).slice(0, 50).forEach(function (series) {
+      let labeledData = WarpViewChart.formatLabel(series.label) + ': ' + WarpViewChart.toFixed(parseFloat(series.yHTML));
+      if (series.isHighlighted) {
+        labeledData = `<b>${labeledData}</b>`;
       }
+      html += `<br>${series.dashHTML} ${labeledData}`;
     });
     return html;
   }
