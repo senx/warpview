@@ -257,6 +257,10 @@ export class GTSLib {
     return input.replace(/{/g,'&#123;')
     .replace(/}/g,'&#125;')
     .replace(/,/g,'&#44;')
+    .replace(/>/g,'&#62;')
+    .replace(/</g,'&#60;')
+    .replace(/"/g,'&#34;')
+    .replace(/'/g,'&#39;')
   }
 
   /**
