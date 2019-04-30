@@ -84,7 +84,7 @@ export class WarpViewMap {
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
 
-  private _heatLayer: Leaflet.HeatLayer;
+  private _heatLayer: any;
   private resizeTimer;
   private pathData: any[];
   private annotationsData: any[];
@@ -340,7 +340,7 @@ export class WarpViewMap {
 
     }
     if (this.heatData && this.heatData.length > 0) {
-      this._heatLayer = Leaflet.heatLayer(this.heatData, {
+      this._heatLayer = (Leaflet as any).heatLayer(this.heatData, {
         radius: this._options.heatRadius,
         blur: this._options.heatBlur,
         minOpacity: this._options.heatOpacity

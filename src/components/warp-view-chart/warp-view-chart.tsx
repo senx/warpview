@@ -60,6 +60,8 @@ export class WarpViewChart {
   @Event() pointHover: EventEmitter;
   @Event() warpViewChartResize: EventEmitter;
   @Event() resizeMyParent: EventEmitter;
+  @Event() chartDraw: EventEmitter;
+  @Event() zoom: EventEmitter;
 
   private LOG: Logger;
   private static DEFAULT_WIDTH = 800;
@@ -444,6 +446,11 @@ export class WarpViewChart {
     return display;
   }
 
+  private zoomCallback(minDate: number, maxDate: number, yRanges: [number, number][]) {
+    this.LOG.debug(['zoomCallback'], {minDate: minDate, maxDate: maxDate, yRanges: yRanges});
+    this.zoom.emit({minDate: minDate, maxDate: maxDate, yRanges: yRanges})
+  }
+
   private legendFormatter(data): string {
     if (data.x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
@@ -593,7 +600,7 @@ export class WarpViewChart {
         max: cmax
       }
     });
-
+    this.chartDraw.emit();
     if (this.initialResizeNeeded) {
       this.onResize();
     }
@@ -608,6 +615,19 @@ export class WarpViewChart {
     this.LOG.debug(['tz'], this._options.timeZone);
     moment.tz.setDefault(this._options.timeZone);
     let data: DataModel = GTSLib.getData(this.data);
+
+    if (this._options.bounds) {
+      data.bounds = {
+        xmin: this._options.bounds.minDate,
+        xmax: this._options.bounds.maxDate,
+        ymin: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 0
+          ? this._options.bounds.yRanges[0]
+          : undefined,
+        ymax: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 1
+          ? this._options.bounds.yRanges[1]
+          : undefined
+      };
+    }
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
     if (reparseNewData) {
@@ -656,8 +676,8 @@ export class WarpViewChart {
         drawGapEdgePoints: this._options.showDots,
         drawPoints: this._options.showDots,
         pointSize: 3,
-
         digitsAfterDecimal: 5,
+
         axes: {
           x: {
             drawAxis: this.displayGraph(),
@@ -666,6 +686,7 @@ export class WarpViewChart {
         legendFormatter: this.legendFormatter.bind(this),
         highlightCallback: this.highlightCallback.bind(this),
         drawCallback: this.drawCallback.bind(this),
+        zoomCallback: this.zoomCallback.bind(this),
         axisLabelWidth: this.standalone ? 50 : 94,
         rightGap: this.standalone ? 0 : 20,
         interactionModel: interactionModel
@@ -674,6 +695,10 @@ export class WarpViewChart {
         options.xAxisHeight = 30;
         options.rangeSelectorHeight = 30;
         chart.style.height = '30px';
+      }
+      if (data.bounds) {
+        options.dateWindow = [data.bounds.xmin, data.bounds.xmax];
+        options.valueRange = [data.bounds.ymin, data.bounds.ymax];
       }
       if (this._options.timeMode === 'timestamp') {
         options.axes.x.axisLabelFormatter = (x) => {

@@ -52,7 +52,6 @@
     "leaflet.markercluster": "^1.4.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
-    "prismjs": "^1.15.0",
     "rebuild": "^0.1.2",
     "whatwg-fetch": "^3.0.0"
   },

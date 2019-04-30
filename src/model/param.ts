@@ -46,4 +46,9 @@ export class Param {
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
   timeZone?: string = 'UTC';
+  bounds?: {
+    minDate?: number;
+    maxDate?: number;
+    yRanges?: [number, number];
+  }
 }
