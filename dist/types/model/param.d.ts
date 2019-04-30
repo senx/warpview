@@ -30,4 +30,9 @@ export declare class Param {
     popupButtonValidateClass?: string;
     popupButtonValidateLabel?: string;
     timeZone?: string;
+    bounds?: {
+        minDate?: number;
+        maxDate?: number;
+        yRanges?: [number, number];
+    };
 }

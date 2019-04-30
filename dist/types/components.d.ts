@@ -113,9 +113,11 @@ export namespace Components {
     'debug'?: boolean;
     'hiddenData'?: number[];
     'onBoundsDidChange'?: (event: CustomEvent) => void;
+    'onChartDraw'?: (event: CustomEvent) => void;
     'onPointHover'?: (event: CustomEvent) => void;
     'onResizeMyParent'?: (event: CustomEvent) => void;
     'onWarpViewChartResize'?: (event: CustomEvent) => void;
+    'onZoom'?: (event: CustomEvent) => void;
     'options'?: Param;
     'responsive'?: boolean;
     'standalone'?: boolean;

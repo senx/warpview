@@ -4,11 +4,11 @@
       "tag": "calendar-heatmap",
       "dependencies": [],
       "componentClass": "CalendarHeatmap",
-      "componentPath": "components/warp-view-drilldown/heatmp/calendar-heatmap.js",
+      "componentPath": "components/warp-view-drilldown/heatmap/calendar-heatmap.js",
       "styles": {
         "$": {
           "stylePaths": [
-            "components/warp-view-drilldown/heatmp/calendar-heatmap.scss"
+            "components/warp-view-drilldown/heatmap/calendar-heatmap.scss"
           ]
         }
       },
@@ -432,6 +432,9 @@
           "event": "boundsDidChange"
         },
         {
+          "event": "chartDraw"
+        },
+        {
           "event": "pointHover"
         },
         {
@@ -439,6 +442,9 @@
         },
         {
           "event": "warpViewChartResize"
+        },
+        {
+          "event": "zoom"
         }
       ]
     },

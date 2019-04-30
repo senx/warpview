@@ -26,6 +26,8 @@ export declare class WarpViewChart {
     pointHover: EventEmitter;
     warpViewChartResize: EventEmitter;
     resizeMyParent: EventEmitter;
+    chartDraw: EventEmitter;
+    zoom: EventEmitter;
     private LOG;
     private static DEFAULT_WIDTH;
     private static DEFAULT_HEIGHT;
@@ -105,6 +107,7 @@ export declare class WarpViewChart {
      * @returns {string}
      */
     private static formatLabel;
+    private zoomCallback;
     private legendFormatter;
     private highlightCallback;
     private scroll;
