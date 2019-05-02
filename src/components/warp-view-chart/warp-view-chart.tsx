@@ -215,12 +215,12 @@ export class WarpViewChart {
     let optionChanged = false;
     Object.keys(newValue).forEach(opt => {
       if (this._options.hasOwnProperty(opt)) {
-        optionChanged = optionChanged || (newValue[opt] !== (this._options[opt]));
+        optionChanged = optionChanged || !deepEqual(newValue[opt] !== this._options[opt]);
       } else {
         optionChanged = true; //new unknown option
       }
     });
-    this.LOG.debug(['optionsupdateOPTIONCHANGED'], optionChanged);
+    this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
     if (optionChanged) {
       this.LOG.debug(['options'], newValue);
       this.drawChart(false, true); //need to resize after.
@@ -384,7 +384,6 @@ export class WarpViewChart {
         this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
       } else {
         const ts = Math.floor(parseInt(timestamp) / divider);
-        //this.dygraphdataSets.push([moment.utc(ts).toDate()].concat(this.dataHashset[timestamp]));
         this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
       }
     });
@@ -607,7 +606,7 @@ export class WarpViewChart {
   }
 
   private drawChart(reparseNewData: boolean = false, forceresize: boolean = false) {
-    this.LOG.debug(['drawChart', 'this.data'], [this.data]);
+    this.LOG.debug(['drawChart', 'this.data'], this.data);
     let previousTimeMode = this._options.timeMode || ''; //detect a timemode change
     let previousTimeUnit = this._options.timeUnit || ''; //detect a timeUnit change
     let previousTimeZone = this._options.timeZone || 'UTC'; //detect a timeZone change
@@ -616,18 +615,20 @@ export class WarpViewChart {
     moment.tz.setDefault(this._options.timeZone);
     let data: DataModel = GTSLib.getData(this.data);
 
+    this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
     if (this._options.bounds) {
       data.bounds = {
-        xmin: this._options.bounds.minDate,
-        xmax: this._options.bounds.maxDate,
+        xmin: Math.floor(this._options.bounds.minDate),
+        xmax: Math.ceil(this._options.bounds.maxDate),
         ymin: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 0
-          ? this._options.bounds.yRanges[0]
+          ? Math.floor(this._options.bounds.yRanges[0])
           : undefined,
         ymax: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 1
-          ? this._options.bounds.yRanges[1]
+          ? Math.ceil(this._options.bounds.yRanges[1])
           : undefined
       };
     }
+    this.LOG.debug(['drawChart', "data"], data);
     let dataList = data.data;
     this._options = ChartLib.mergeDeep(this._options, data.globalParams);
     if (reparseNewData) {
@@ -640,7 +641,8 @@ export class WarpViewChart {
       }
     }
     const chart = this.el.querySelector('#' + this.uuid) as HTMLElement;
-    if (this.dygraphdataSets) {
+    this.LOG.debug(['drawChart', 'this.dygraphdataSets'], this.dygraphdataSets);
+    if (!!this.dygraphdataSets) {
       const color = this._options.gridLineColor;
       let interactionModel = Dygraph.defaultInteractionModel;
       interactionModel.mousewheel = this.scroll.bind(this);
@@ -696,7 +698,7 @@ export class WarpViewChart {
         options.rangeSelectorHeight = 30;
         chart.style.height = '30px';
       }
-      if (data.bounds) {
+      if (!!data.bounds) {
         options.dateWindow = [data.bounds.xmin, data.bounds.xmax];
         options.valueRange = [data.bounds.ymin, data.bounds.ymax];
       }
@@ -717,7 +719,6 @@ export class WarpViewChart {
       if (this.dygraphdataSets && this.dygraphdataSets.length > 0) {
         this._chart = new Dygraph(chart, this.dygraphdataSets, options);
       }
-
     }
   }
 
