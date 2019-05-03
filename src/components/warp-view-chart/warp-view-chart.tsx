@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, Listen, Method, Prop, Watch, State} from '@stencil/core';
 import {GTSLib} from '../../utils/gts.lib';
 import Dygraph from 'dygraphs';
 import {Logger} from "../../utils/logger";
@@ -78,7 +78,7 @@ export class WarpViewChart {
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private visibility: boolean[] = [];
-  private executionErrorText = "";
+  @State() executionErrorText: string = "";
 
   /**
    * usefull for default zoom
