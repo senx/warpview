@@ -10525,6 +10525,7 @@ class WarpViewChart {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
+        this.executionErrorText = "";
         this.maxTick = 0;
         this.minTick = 0;
         this.visibleGtsId = [];
@@ -10736,10 +10737,11 @@ class WarpViewChart {
         this.dygraphLabels = labels;
     }
     rebuildDygraphDataSets() {
+        this.executionErrorText = "";
         this.dygraphdataSets = [];
         const divider = GTSLib.getDivider(this._options.timeUnit);
         this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
-        Object.keys(this.dataHashset).forEach(timestamp => {
+        Object.keys(this.dataHashset).some(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
@@ -10747,6 +10749,12 @@ class WarpViewChart {
                 const ts = Math.floor(parseInt(timestamp) / divider);
                 this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
             }
+            if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
+                this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only.";
+                this.LOG.warn(['rebuildDygraphDataSets'], 'Dygraph matrix size > 4M, breaking here to save memory.');
+                return true;
+            }
+            return false;
         });
         this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
     }
@@ -11059,6 +11067,7 @@ class WarpViewChart {
     }
     render() {
         return h("div", { id: "chartContainer" },
+            this.executionErrorText !== "" ? h("div", { class: "executionErrorText" }, this.executionErrorText) : "",
             h("div", { id: this.uuid, class: "chart" }));
     }
     static get is() { return "warp-view-chart"; }
@@ -11074,6 +11083,9 @@ class WarpViewChart {
         },
         "el": {
             "elementRef": true
+        },
+        "executionErrorText": {
+            "state": true
         },
         "getTimeClip": {
             "method": true
@@ -11149,7 +11161,7 @@ class WarpViewChart {
             "method": "onResize",
             "passive": true
         }]; }
-    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10}.dygraph-title,.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}\n\n/*!\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n *\n */:host{display:block}:host,warp-view-chart #chartContainer{height:100%}warp-view-chart .dygraph-legend,warp-view-chart .tooltip{background-color:var(--warp-view-chart-legend-bg,#000)!important;color:var(--warp-view-chart-legend-color,#fff)!important;padding:10px;border:1px solid grey;border-radius:5px;-webkit-box-shadow:none;box-shadow:none;pointer-events:none;font-size:10px}warp-view-chart .dygraph-legend .gts-classname,warp-view-chart .tooltip .gts-classname{color:var(--gts-classname-font-color,#0074d9)}warp-view-chart .dygraph-legend .gts-labelname,warp-view-chart .tooltip .gts-labelname{color:var(--gts-labelname-font-color,#19a979)}warp-view-chart .dygraph-legend .gts-attrname,warp-view-chart .tooltip .gts-attrname{color:var(--gts-labelname-font-color,#ed4a7b)}warp-view-chart .dygraph-legend .gts-separator,warp-view-chart .tooltip .gts-separator{color:var(--gts-separator-font-color,#bbb)}warp-view-chart .dygraph-legend .gts-attrvalue,warp-view-chart .dygraph-legend .gts-labelvalue,warp-view-chart .tooltip .gts-attrvalue,warp-view-chart .tooltip .gts-labelvalue{color:var(--gts-labelvalue-font-color,#aaa);font-style:italic}warp-view-chart div.chart{width:var(--warp-view-chart-width,100%);height:var(--warp-view-chart-height,100%)}warp-view-chart div.chart .dygraph-axis-label,warp-view-chart div.chart .dygraph-label{color:var(--warp-view-chart-label-color,#8e8e8e)!important}"; }
+    static get style() { return ".dygraph-annotation,.dygraph-legend{overflow:hidden}.dygraph-legend{position:absolute;font-size:14px;z-index:10;width:250px;background:#fff;line-height:normal;text-align:left}.dygraph-legend-dash,.dygraph-legend-line{display:inline-block;position:relative;bottom:.5ex;height:1px;border-bottom-width:2px;border-bottom-style:solid}.dygraph-legend-line{padding-left:1em}.dygraph-annotation,.dygraph-roller{position:absolute;z-index:10}.dygraph-default-annotation{border:1px solid #000;background-color:#fff;text-align:center}.dygraph-axis-label{z-index:10;line-height:normal;overflow:hidden;color:#000}.dygraph-title{font-weight:700;z-index:10}.dygraph-title,.dygraph-xlabel{text-align:center}.dygraph-label-rotate-left{text-align:center;transform:rotate(90deg);-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-o-transform:rotate(90deg);-ms-transform:rotate(90deg)}.dygraph-label-rotate-right{text-align:center;transform:rotate(-90deg);-webkit-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg)}\n\n/*!\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under the Apache License, Version 2.0 (the \"License\");\n *  you may not use this file except in compliance with the License.\n *  You may obtain a copy of the License at\n *\n *    http://www.apache.org/licenses/LICENSE-2.0\n *\n *  Unless required by applicable law or agreed to in writing, software\n *  distributed under the License is distributed on an \"AS IS\" BASIS,\n *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n *  See the License for the specific language governing permissions and\n *  limitations under the License.\n *\n */:host{display:block}:host,warp-view-chart #chartContainer{height:100%}warp-view-chart .dygraph-legend,warp-view-chart .tooltip{background-color:var(--warp-view-chart-legend-bg,#000)!important;color:var(--warp-view-chart-legend-color,#fff)!important;padding:10px;border:1px solid grey;border-radius:5px;-webkit-box-shadow:none;box-shadow:none;pointer-events:none;font-size:10px}warp-view-chart .dygraph-legend .gts-classname,warp-view-chart .tooltip .gts-classname{color:var(--gts-classname-font-color,#0074d9)}warp-view-chart .dygraph-legend .gts-labelname,warp-view-chart .tooltip .gts-labelname{color:var(--gts-labelname-font-color,#19a979)}warp-view-chart .dygraph-legend .gts-attrname,warp-view-chart .tooltip .gts-attrname{color:var(--gts-labelname-font-color,#ed4a7b)}warp-view-chart .dygraph-legend .gts-separator,warp-view-chart .tooltip .gts-separator{color:var(--gts-separator-font-color,#bbb)}warp-view-chart .dygraph-legend .gts-attrvalue,warp-view-chart .dygraph-legend .gts-labelvalue,warp-view-chart .tooltip .gts-attrvalue,warp-view-chart .tooltip .gts-labelvalue{color:var(--gts-labelvalue-font-color,#aaa);font-style:italic}warp-view-chart div.chart{width:var(--warp-view-chart-width,100%);height:var(--warp-view-chart-height,100%)}warp-view-chart div.chart .dygraph-axis-label,warp-view-chart div.chart .dygraph-label{color:var(--warp-view-chart-label-color,#8e8e8e)!important}warp-view-chart .executionErrorText{color:red;padding:10px;border-color:red;border-width:2px;border-radius:3px;border-style:solid;background:#faebd7;position:absolute;top:-30px}"; }
 }
 WarpViewChart.DEFAULT_WIDTH = 800;
 WarpViewChart.DEFAULT_HEIGHT = 500;

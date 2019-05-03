@@ -412,6 +412,11 @@
           ]
         }
       ],
+      "states": [
+        {
+          "name": "executionErrorText"
+        }
+      ],
       "listeners": [
         {
           "event": "window:resize",
@@ -1365,6 +1370,9 @@
         },
         {
           "name": "timeClipValue"
+        },
+        {
+          "name": "warningMessage"
         }
       ],
       "listeners": [

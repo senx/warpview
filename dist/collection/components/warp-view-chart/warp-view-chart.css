@@ -54,3 +54,14 @@ warp-view-chart div.chart {
   height: var(--warp-view-chart-height, 100%); }
   warp-view-chart div.chart .dygraph-axis-label, warp-view-chart div.chart .dygraph-label {
     color: var(--warp-view-chart-label-color, #8e8e8e) !important; }
+
+warp-view-chart .executionErrorText {
+  color: red;
+  padding: 10px;
+  border-color: red;
+  border-width: 2px;
+  border-radius: 3px;
+  border-style: solid;
+  background: antiquewhite;
+  position: absolute;
+  top: -30px; }

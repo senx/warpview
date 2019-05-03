@@ -26,6 +26,7 @@ export class WarpViewChart {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
+        this.executionErrorText = "";
         this.maxTick = 0;
         this.minTick = 0;
         this.visibleGtsId = [];
@@ -237,10 +238,11 @@ export class WarpViewChart {
         this.dygraphLabels = labels;
     }
     rebuildDygraphDataSets() {
+        this.executionErrorText = "";
         this.dygraphdataSets = [];
         const divider = GTSLib.getDivider(this._options.timeUnit);
         this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
-        Object.keys(this.dataHashset).forEach(timestamp => {
+        Object.keys(this.dataHashset).some(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
@@ -248,6 +250,12 @@ export class WarpViewChart {
                 const ts = Math.floor(parseInt(timestamp) / divider);
                 this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
             }
+            if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
+                this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only.";
+                this.LOG.warn(['rebuildDygraphDataSets'], 'Dygraph matrix size > 4M, breaking here to save memory.');
+                return true;
+            }
+            return false;
         });
         this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
     }
@@ -560,6 +568,7 @@ export class WarpViewChart {
     }
     render() {
         return h("div", { id: "chartContainer" },
+            this.executionErrorText !== "" ? h("div", { class: "executionErrorText" }, this.executionErrorText) : "",
             h("div", { id: this.uuid, class: "chart" }));
     }
     static get is() { return "warp-view-chart"; }
@@ -575,6 +584,9 @@ export class WarpViewChart {
         },
         "el": {
             "elementRef": true
+        },
+        "executionErrorText": {
+            "state": true
         },
         "getTimeClip": {
             "method": true

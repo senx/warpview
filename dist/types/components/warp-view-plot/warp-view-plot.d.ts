@@ -41,6 +41,7 @@ export declare class WarpViewPlot {
     private kbdCounter;
     private gtsPopupModal;
     private gtsFilterCount;
+    warningMessage: string;
     private preventDefaultKeyList;
     private preventDefaultKeyListInModals;
     getTimeClip(): Promise<ChartBounds>;

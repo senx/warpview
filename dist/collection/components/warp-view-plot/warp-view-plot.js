@@ -32,6 +32,7 @@ export class WarpViewPlot {
         this.kbdLastKeyPressed = [];
         this.kbdCounter = 0;
         this.gtsFilterCount = 0;
+        this.warningMessage = '';
         this.preventDefaultKeyList = ['Escape', '/'];
         this.preventDefaultKeyListInModals = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
     }
@@ -203,14 +204,21 @@ export class WarpViewPlot {
                 let gtsList = GTSLib.flattenGtsIdArray(dataList, 0).res;
                 gtsList = GTSLib.flatDeep(gtsList);
                 let timestampMode = true;
+                let totalDatapoints = 0;
                 gtsList.forEach(g => {
                     if (g.v.length > 0) {
                         timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
                         timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
+                        totalDatapoints += g.v.length;
                     }
                 });
                 if (timestampMode) {
                     options.timeMode = 'timestamp';
+                }
+                if (gtsList.length > 1000 || totalDatapoints > 1000000) {
+                    this.LOG.warn(['firstdraw'], 'Lots of GTS or datapoint, hiding the graph...');
+                    this.showChart = false;
+                    this.warningMessage = `Warning : ${gtsList.length} series, ${totalDatapoints} points. Chart may be slow.`;
                 }
             }
         }
@@ -270,6 +278,7 @@ export class WarpViewPlot {
                     h("div", { class: "tzcontainer" },
                         h("select", { id: "tzSelector", class: "defaulttz", ref: (el) => this.tzSelector = el, onChange: () => this.tzSelected() }, moment.tz.names().map((z) => h("option", { value: z, selected: z === 'UTC', class: z === 'UTC' ? 'defaulttz' : 'customtz' }, z)))))
                 : '',
+            this.warningMessage !== '' ? h("div", { class: "warningMessage" }, this.warningMessage) : '',
             this._options.showGTSTree
                 ? h("warp-view-gts-tree", { data: this._data, id: "tree", gtsFilter: this.gtsFilter, debug: this.debug, hiddenData: this._toHide, options: this._options, kbdLastKeyPressed: this.kbdLastKeyPressed })
                 : '',
@@ -368,6 +377,9 @@ export class WarpViewPlot {
             "state": true
         },
         "timeClipValue": {
+            "state": true
+        },
+        "warningMessage": {
             "state": true
         },
         "width": {
