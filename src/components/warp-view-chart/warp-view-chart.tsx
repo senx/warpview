@@ -390,7 +390,7 @@ export class WarpViewChart {
       }
       //check matrix size. If too big, break and display a message.
       if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
-        this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying the first datapoints only."
+        this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only."
         this.LOG.warn(['rebuildDygraphDataSets'],'Dygraph matrix size > 4M, breaking here to save memory.')
         return true;
       } 
