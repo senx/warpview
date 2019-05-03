@@ -79,6 +79,7 @@ export class WarpViewPlot {
   private kbdCounter: number = 0;
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
   private gtsFilterCount: number = 0;
+  @State() warningMessage:string = '';
 
 
   //key event are trapped in plot component.
@@ -280,14 +281,22 @@ export class WarpViewPlot {
         let gtsList = GTSLib.flattenGtsIdArray(dataList as any, 0).res;
         gtsList = GTSLib.flatDeep(gtsList);
         let timestampMode = true;
+        let totalDatapoints = 0;
         gtsList.forEach(g => {
           if (g.v.length > 0) { //if gts not empty
             timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
             timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit)
+            totalDatapoints += g.v.length;
           }
         });
         if (timestampMode) {
           options.timeMode = 'timestamp';
+        }
+        //do not display the chart if there is obviously lots of data
+        if (gtsList.length > 1000 || totalDatapoints > 1000000) {
+          this.LOG.warn(['firstdraw'], 'Lots of GTS or datapoint, hiding the graph...');
+          this.showChart = false;
+          this.warningMessage = `Warning : ${gtsList.length} series, ${totalDatapoints} points. Chart may be slow.`;
         }
       }
     }
@@ -376,6 +385,7 @@ export class WarpViewPlot {
           </div>
         </div>
         : ''}
+      {this.warningMessage!=='' ? <div class="warningMessage">{this.warningMessage}</div> :''}
       {this._options.showGTSTree
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
                               debug={this.debug}
