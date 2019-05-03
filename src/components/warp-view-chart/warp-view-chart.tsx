@@ -78,6 +78,7 @@ export class WarpViewChart {
   };
   private uuid = 'chart-' + ChartLib.guid().split('-').join('');
   private visibility: boolean[] = [];
+  private executionErrorText = "";
 
   /**
    * usefull for default zoom
@@ -375,17 +376,25 @@ export class WarpViewChart {
    * It could be called independently from gtsToData, when only unit or timeMode change.
    */
   private rebuildDygraphDataSets() {
+    this.executionErrorText = ""; //reset error text
     this.dygraphdataSets = [];
     //build the big matrix for dygraph from the data hashSet.
     const divider = GTSLib.getDivider(this._options.timeUnit);
     this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
-    Object.keys(this.dataHashset).forEach(timestamp => {
+    Object.keys(this.dataHashset).some(timestamp => {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
       } else {
         const ts = Math.floor(parseInt(timestamp) / divider);
         this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
       }
+      //check matrix size. If too big, break and display a message.
+      if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
+        this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying the first datapoints only."
+        this.LOG.warn(['rebuildDygraphDataSets'],'Dygraph matrix size > 4M, breaking here to save memory.')
+        return true;
+      } 
+      return false;
     });
     //sort the big table. (needed, data is not a treeSet or sortedSet)
     this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
@@ -741,6 +750,7 @@ export class WarpViewChart {
 
   render() {
     return <div id="chartContainer">
+      {this.executionErrorText !== "" ? <div class="executionErrorText">{this.executionErrorText}</div> : ""}
       <div id={this.uuid} class="chart"/>
     </div>;
   }
