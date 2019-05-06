@@ -160,13 +160,19 @@ export class WarpViewPlot {
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
-    } else if (ev.key === 'b'){ //browse among all gts
-      if (this.gtsBrowserIndex < 0) { 
+    } else if (ev.key === 'b' || ev.key === 'B') { //browse among all gts
+      if (this.gtsBrowserIndex < 0) {
         this.gtsBrowserIndex = 0;
-      } else {
+      }
+      if (ev.key === 'b') { //increment index
         this.gtsBrowserIndex++;
         if (this.gtsBrowserIndex === this.gtsIdList.length) {
           this.gtsBrowserIndex = 0;
+        }
+      } else { //decrement index
+        this.gtsBrowserIndex--;
+        if (this.gtsBrowserIndex < 0) {
+          this.gtsBrowserIndex = this.gtsIdList.length - 1;
         }
       }
       this._toHide = this.gtsIdList.filter(v => v !== this.gtsIdList[this.gtsBrowserIndex]); // hide all but one
