@@ -250,6 +250,9 @@
             <a class="nav-link" id="v-pills-22-tab" data-toggle="pill" href="#v-pills-22" role="tab"
                aria-controls="v-pills-22"
                aria-selected="false">High cardinality problem</a>
+            <a class="nav-link" id="v-pills-23-tab" data-toggle="pill" href="#v-pills-23" role="tab"
+               aria-controls="v-pills-23"
+               aria-selected="false">Browse GTS shortcuts</a>
 
             <!-- <a class="nav-link" id="v-pills-18-tab" data-toggle="pill" href="#v-pills-gts-list" role="tab"
              aria-controls="v-pills-step" aria-selected="false">GS Tree</a>
@@ -1073,6 +1076,37 @@ The chart component implements a limit to stop when matrix reaches 4M points and
                 </div>
               </div>
             </div>
+
+
+
+            <div class="tab-pane fade" id="v-pills-23" role="tabpanel" aria-labelledby="v-pills-23">
+              <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                  <p>
+Browse GTS feature. Keyboard shorcut 'b' allow to browse GTS. This is very helpful to jump from one place to the other in the map.
+In the following example, display the map, then play with 'b' and 'B' for reverse browsing. It should select one GTS, then the next one, and loop to the beginning. The empty ones must be selected too.
+
+                  </p>
+                  <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" debug="false"
+                                  chart-title="Over 7200rpm">
+                    NEWGTS 'nodatainside' RENAME
+                    NEWGTS 'nodatainside' RENAME
+                    @renaultsport/over7200rpm
+                    NEWGTS 'nodatainside' RENAME
+                  </warp-view-tile>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
 
 
           </div>
