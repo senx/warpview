@@ -79,6 +79,8 @@ export class WarpViewPlot {
   private kbdCounter: number = 0;
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
   private gtsFilterCount: number = 0;
+  private gtsIdList:number[] = [];
+  private gtsBrowserIndex:number = -1;
   @State() warningMessage:string = '';
 
 
@@ -158,6 +160,16 @@ export class WarpViewPlot {
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
+    } else if (ev.key === 'b'){ //browse among all gts
+      if (this.gtsBrowserIndex < 0) { 
+        this.gtsBrowserIndex = 0;
+      } else {
+        this.gtsBrowserIndex++;
+        if (this.gtsBrowserIndex === this.gtsIdList.length) {
+          this.gtsBrowserIndex = 0;
+        }
+      }
+      this._toHide = this.gtsIdList.filter(v => v !== this.gtsIdList[this.gtsBrowserIndex]); // hide all but one
     } else {
       this.pushKbdEvent(ev.key);
     }
@@ -283,6 +295,7 @@ export class WarpViewPlot {
         let timestampMode = true;
         let totalDatapoints = 0;
         gtsList.forEach(g => {
+          this.gtsIdList.push(g.id); //usefull for gts browse shortcut
           if (g.v.length > 0) { //if gts not empty
             timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
             timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit)
