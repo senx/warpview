@@ -24,11 +24,12 @@ export const config: Config = {
     sass()
   ],
   copy: [
+    { src: 'test-small.html' },
     { src: 'tests-Plot.html' },
     { src: 'tests-Plot-2Mpoints.html' },
     { src: 'tests-Plot-200kpoints.html' }
   ],
-  enableCache: false,
+  enableCache: true,
   devServer: {
     openBrowser: false
   },

@@ -7,6 +7,7 @@ import { Param } from "../../model/param";
 import moment from "moment-timezone";
 import deepEqual from "deep-equal";
 import { ChartBounds } from "../../model/chartBounds";
+import DefaultHandler from 'dygraphs/src/datahandler/default';
 export class WarpViewChart {
     constructor() {
         this.options = new Param();
@@ -26,6 +27,7 @@ export class WarpViewChart {
         };
         this.uuid = 'chart-' + ChartLib.guid().split('-').join('');
         this.visibility = [];
+        this.rawData = [];
         this.executionErrorText = "";
         this.maxTick = 0;
         this.minTick = 0;
@@ -150,6 +152,8 @@ export class WarpViewChart {
     gtsToData(gtsList) {
         this.LOG.debug(['gtsToData'], gtsList);
         this.visibility = [];
+        const divider = GTSLib.getDivider(this._options.timeUnit);
+        this.rawData = [];
         this.dataHashset = {};
         let labels = [];
         let colors = [];
@@ -175,11 +179,17 @@ export class WarpViewChart {
             }
             gtsList.forEach((g, i) => {
                 labels.push(GTSLib.serializeGtsMetadata(g) + g.id);
+                const series = [];
                 g.v.forEach(value => {
                     const ts = value[0];
+                    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+                        series.push([parseInt(ts), value[value.length - 1]]);
+                    }
+                    else {
+                        series.push([moment(Math.floor(parseInt(ts) / divider)).utc(true).valueOf(), value[value.length - 1]]);
+                    }
                     if (!this.dataHashset[ts]) {
-                        this.dataHashset[ts] = new Array(gtsList.length);
-                        this.dataHashset[ts].fill(null);
+                        this.dataHashset[ts] = [];
                     }
                     this.dataHashset[ts][i] = value[value.length - 1];
                     if (ts < this.minTick) {
@@ -189,6 +199,8 @@ export class WarpViewChart {
                         this.maxTick = ts;
                     }
                 });
+                this.LOG.debug(['gtsToData', 'series'], series);
+                this.rawData.push(series);
                 this.LOG.debug(['gtsToData', 'gts'], g);
                 colors.push(ColorLib.getColor(g.id));
                 this.visibility.push(true);
@@ -221,12 +233,10 @@ export class WarpViewChart {
                 }
                 else {
                     if (!this.dataHashset[this.minTick]) {
-                        this.dataHashset[this.minTick] = new Array(gtsList.length);
-                        this.dataHashset[this.minTick].fill(null);
+                        this.dataHashset[this.minTick] = [];
                     }
                     if (!this.dataHashset[this.maxTick]) {
-                        this.dataHashset[this.maxTick] = new Array(gtsList.length);
-                        this.dataHashset[this.maxTick].fill(null);
+                        this.dataHashset[this.maxTick] = [];
                     }
                 }
             }
@@ -242,7 +252,8 @@ export class WarpViewChart {
         this.dygraphdataSets = [];
         const divider = GTSLib.getDivider(this._options.timeUnit);
         this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
-        Object.keys(this.dataHashset).some(timestamp => {
+        this.LOG.debug(['chart', 'this.dataHashset'], this.dataHashset);
+        Object.keys(this.dataHashset).forEach(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
@@ -250,12 +261,6 @@ export class WarpViewChart {
                 const ts = Math.floor(parseInt(timestamp) / divider);
                 this.dygraphdataSets.push([moment(ts).utc(true).toDate()].concat(this.dataHashset[timestamp]));
             }
-            if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
-                this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only.";
-                this.LOG.warn(['rebuildDygraphDataSets'], 'Dygraph matrix size > 4M, breaking here to save memory.');
-                return true;
-            }
-            return false;
         });
         this.dygraphdataSets.sort((a, b) => a[0] - b[0]);
     }
@@ -465,33 +470,99 @@ export class WarpViewChart {
         this.LOG.debug(['drawChart', "data"], data);
         let dataList = data.data;
         this._options = ChartLib.mergeDeep(this._options, data.globalParams);
-        if (reparseNewData) {
-            this.gtsToData(dataList);
-        }
-        else {
-            if (previousTimeMode !== this._options.timeMode
-                || previousTimeUnit !== this._options.timeUnit
-                || previousTimeZone !== this._options.timeZone) {
-                this.rebuildDygraphDataSets();
-            }
-        }
+        this.gtsToData(dataList);
         const chart = this.el.querySelector('#' + this.uuid);
         this.LOG.debug(['drawChart', 'this.dygraphdataSets'], this.dygraphdataSets);
-        if (!!this.dygraphdataSets) {
+        this.LOG.debug(['drawChart', 'this.rawData'], this.rawData);
+        const me = this;
+        Dygraph.prototype['parseArray_'] = function () {
+            console.log('dygraphs', 'this.optionsViewForAxis_', this.optionsViewForAxis_('x')('ticker'));
+            if (me.rawData.length === 0) {
+                console.error("Can't plot empty data set");
+                return null;
+            }
+            if (me.rawData[0].length === 0) {
+                console.error("Data set cannot contain an empty row");
+                return null;
+            }
+            let i;
+            if (this.attr_("labels") === null) {
+                console.warn("Using default labels. Set labels explicitly via 'labels' " +
+                    "in the options parameter");
+                this.attrs_.labels = ["X"];
+                for (i = 1; i < me.rawData[0].length; i++) {
+                    this.attrs_.labels.push("Y" + i);
+                }
+                this.attributes_.reparseSeries();
+            }
+            else {
+                const num_labels = this.attr_("labels");
+                console.log('num_labels', num_labels, me.rawData.length);
+            }
+            if (me._options.timeMode && me._options.timeMode === 'timestamp') {
+                this.attrs_.axes.x.valueFormatter = this.dateValueFormatter;
+                this.attrs_.axes.x.ticker = this.dateTicker;
+                this.attrs_.axes.x.axisLabelFormatter = this.dateAxisLabelFormatter;
+            }
+            else {
+                this.attrs_.axes.x.valueFormatter = x => x;
+                this.attrs_.axes.x.ticker = this.numericTicks;
+                this.attrs_.axes.x.axisLabelFormatter = this.numberAxisLabelFormatter;
+            }
+            return me.rawData;
+        };
+        if (!!this.rawData) {
             const color = this._options.gridLineColor;
             let interactionModel = Dygraph.defaultInteractionModel;
             interactionModel.mousewheel = this.scroll.bind(this);
             interactionModel.mouseout = this.handleMouseOut.bind(this);
+            const customDataHandler = function () {
+            };
+            customDataHandler.prototype = new DefaultHandler();
+            customDataHandler.prototype.extractSeries = (rawData, seriesIndex, options) => {
+                this.LOG.debug(['drawChart', 'dataHandler', 'extractSeries'], seriesIndex);
+                const series = [];
+                const logScale = options.get('logscale');
+                this.rawData[seriesIndex - 1].forEach(v => {
+                    this.LOG.debug(['drawChart', 'dataHandler', 'extractSeries'], v);
+                    const x = v[0];
+                    let point = v[1];
+                    if (logScale) {
+                        if (point <= 0) {
+                            point = null;
+                        }
+                    }
+                    series.push([x, point]);
+                });
+                this.LOG.debug(['drawChart', 'dataHandler', 'extractSeries'], series);
+                return series;
+            };
+            customDataHandler.prototype.seriesToPoints = (series, setName, boundaryIdStart) => {
+                this.LOG.debug(['drawChart', 'dataHandler', 'seriesToPoints'], series);
+                const points = [];
+                series.forEach((s, i) => {
+                    points.push({
+                        x: NaN,
+                        y: NaN,
+                        xval: s[0],
+                        yval: s[1],
+                        name: setName,
+                        idx: i + boundaryIdStart
+                    });
+                });
+                return points;
+            };
             let options = {
                 height: this.displayGraph() ? (this.responsive ? this.el.parentElement.getBoundingClientRect().height : WarpViewChart.DEFAULT_HEIGHT) - 30 : 30,
                 width: (this.responsive ? this.el.parentElement.getBoundingClientRect().width : WarpViewChart.DEFAULT_WIDTH) - 5,
                 labels: this.dygraphLabels,
                 showRoller: false,
-                showRangeSelector: this.dygraphdataSets && this.dygraphdataSets.length > 0 && this._options.showRangeSelector,
+                showRangeSelector: false,
                 showInRangeSelector: true,
                 connectSeparatedPoints: true,
                 colors: this.dygraphColors,
                 legend: 'follow',
+                dataHandler: customDataHandler,
                 stackedGraph: this.isStacked(),
                 strokeBorderWidth: this.isStacked() ? null : 0,
                 strokeWidth: 2,
@@ -505,7 +576,6 @@ export class WarpViewChart {
                     highlightCircleSize: 3,
                     showInRangeSelector: true
                 },
-                visibility: this.visibility,
                 labelsUTC: true,
                 gridLineColor: color,
                 axisLineColor: color,

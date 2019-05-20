@@ -36,6 +36,7 @@ export declare class WarpViewChart {
     private _options;
     private uuid;
     private visibility;
+    private rawData;
     executionErrorText: string;
     /**
      * usefull for default zoom

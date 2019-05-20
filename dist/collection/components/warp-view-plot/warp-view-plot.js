@@ -32,6 +32,8 @@ export class WarpViewPlot {
         this.kbdLastKeyPressed = [];
         this.kbdCounter = 0;
         this.gtsFilterCount = 0;
+        this.gtsIdList = [];
+        this.gtsBrowserIndex = -1;
         this.warningMessage = '';
         this.preventDefaultKeyList = ['Escape', '/'];
         this.preventDefaultKeyListInModals = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
@@ -91,6 +93,24 @@ export class WarpViewPlot {
                 this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
                 this.timeClip.open();
             });
+        }
+        else if (ev.key === 'b' || ev.key === 'B') {
+            if (this.gtsBrowserIndex < 0) {
+                this.gtsBrowserIndex = 0;
+            }
+            if (ev.key === 'b') {
+                this.gtsBrowserIndex++;
+                if (this.gtsBrowserIndex === this.gtsIdList.length) {
+                    this.gtsBrowserIndex = 0;
+                }
+            }
+            else {
+                this.gtsBrowserIndex--;
+                if (this.gtsBrowserIndex < 0) {
+                    this.gtsBrowserIndex = this.gtsIdList.length - 1;
+                }
+            }
+            this._toHide = this.gtsIdList.filter(v => v !== this.gtsIdList[this.gtsBrowserIndex]);
         }
         else {
             this.pushKbdEvent(ev.key);
@@ -206,6 +226,7 @@ export class WarpViewPlot {
                 let timestampMode = true;
                 let totalDatapoints = 0;
                 gtsList.forEach(g => {
+                    this.gtsIdList.push(g.id);
                     if (g.v.length > 0) {
                         timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
                         timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);

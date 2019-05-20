@@ -41,6 +41,8 @@ export declare class WarpViewPlot {
     private kbdCounter;
     private gtsPopupModal;
     private gtsFilterCount;
+    private gtsIdList;
+    private gtsBrowserIndex;
     warningMessage: string;
     private preventDefaultKeyList;
     private preventDefaultKeyListInModals;
