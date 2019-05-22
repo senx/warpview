@@ -1,19 +1,3 @@
-/*
- *  Copyright 2018  SenX S.A.S.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
 import { Logger } from "../../../utils/logger";
 import { ChartLib } from "../../../utils/chart-lib";
 import moment from 'moment';
@@ -29,7 +13,6 @@ export class CalendarHeatmap {
         this.maxColor = CalendarHeatmap.DEF_MAX_COLOR;
         this.overview = 'global';
         this.debug = false;
-        // Defaults
         this.gutter = 5;
         this.width = 1000;
         this.height = 200;
@@ -37,10 +20,8 @@ export class CalendarHeatmap {
         this.label_padding = 40;
         this.transition_duration = 250;
         this.in_transition = false;
-        // Tooltip defaults
         this.tooltip_width = 450;
         this.tooltip_padding = 15;
-        // Overview defaults
         this.history = ['global'];
         this.selected = new Datum();
         this.uuid = 'spectrum-' + ChartLib.guid().split('-').join('');
@@ -77,27 +58,16 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             this.drawChart();
         }
     }
-    /**
-     * Recalculate dimensions on window resize events
-     */
     onResize() {
         if (this.el.parentElement.getBoundingClientRect().width !== this.parentWidth) {
             this.calculateDimensions();
         }
     }
     ;
-    /**
-     * Utility function to get number of complete weeks in a year
-     *
-     * @returns {number}
-     */
     static getNumberOfWeeks() {
         const dayIndex = Math.round((+moment.utc() - +moment.utc().subtract(1, 'year').startOf('week')) / 86400000);
         return Math.trunc(dayIndex / 7) + 1;
     }
-    /**
-     * Utility function to calculate chart dimensions
-     */
     calculateDimensions() {
         clearTimeout(this.resizeTimer);
         this.resizeTimer = setTimeout(() => {
@@ -122,13 +92,7 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         }, {});
     }
     ;
-    /**
-     * Helper function to check for data summary
-     *
-     * @returns {any}
-     */
     updateDataSummary() {
-        // Get daily summary if that was not provided
         if (!this.data[0].summary) {
             this.data.map((d) => {
                 const summary = d['details'].reduce((uniques, project) => {
@@ -153,9 +117,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             });
         }
     }
-    /**
-     * Draw the chart based on the current overview type
-     */
     drawChart() {
         if (!this.svg || !this.data) {
             return;
@@ -206,18 +167,12 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 break;
         }
     }
-    /**
-     * Draw global overview (multiple years)
-     */
     drawGlobalOverview() {
-        // Add current overview to the history
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        // Define start and end of the dataset
         const start_period = moment.utc(this.data[0].date.startOf('y'));
         const end_period = moment.utc(this.data[this.data.length - 1].date.endOf('y'));
-        // Define array of years and total values
         const yData = this.data.filter((d) => d.date.isBetween(start_period, end_period, null, '[]'));
         yData.forEach((d) => {
             const summary = [];
@@ -280,10 +235,8 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 })(),
             };
         });
-        // Calculate max value of all the years in the dataset
         year_data = GTSLib.cleanArray(year_data);
         const max_value = max(year_data, (d) => d.total);
-        // Define year labels and axis
         const year_labels = scale.map((d) => d);
         const yearScale = scaleBand()
             .rangeRound([0, this.width])
@@ -292,7 +245,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         const color = scaleLinear()
             .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
             .domain([-0.15 * max_value, max_value]);
-        // Add global data items to the overview
         this.items.selectAll('.item-block-year').remove();
         this.items.selectAll('.item-block-year')
             .data(year_data)
@@ -307,15 +259,10 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Set in_transition flag
             this.in_transition = true;
-            // Set selected date to the one clicked on
             this.selected = d;
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all global overview related items and labels
             this.removeGlobalOverview();
-            // Redraw the chart
             this.overview = 'year';
             this.drawChart();
         })
@@ -324,13 +271,11 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Calculate tooltip position
             let x = yearScale(d.date.year().toString()) + this.tooltip_padding * 2;
             while (this.width - x < (this.tooltip_width + this.tooltip_padding * 5)) {
                 x -= 10;
             }
             const y = this.tooltip_padding * 4;
-            // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
                 .style('top', y + 'px')
@@ -361,7 +306,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 }
             });
         }, () => this.in_transition = false);
-        // Add year labels
         this.labels.selectAll('.label-year').remove();
         this.labels.selectAll('.label-year')
             .data(year_labels)
@@ -396,31 +340,20 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Set in_transition flag
             this.in_transition = true;
-            // Set selected year to the one clicked on
             this.selected = year_data[0];
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all global overview related items and labels
             this.removeGlobalOverview();
-            // Redraw the chart
             this.overview = 'year';
             this.drawChart();
         });
     }
-    /**
-     * Draw year overview
-     */
     drawYearOverview() {
-        // Add current overview to the history
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        // Define start and end date of the selected year
         const start_of_year = moment(this.selected.date).startOf('year');
         const end_of_year = moment(this.selected.date).endOf('year');
-        // Filter data down to the selected year
         let year_data = this.data.filter((d) => {
             return d.date.isBetween(start_of_year, end_of_year, null, '[]');
         });
@@ -440,7 +373,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             d.summary = summary;
         });
         year_data = GTSLib.cleanArray(year_data);
-        // Calculate max value of the year data
         const max_value = max(year_data, (d) => d.total);
         const color = scaleLinear()
             .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
@@ -462,18 +394,13 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Don't transition if there is no data to show
             if (d.total === 0) {
                 return;
             }
             this.in_transition = true;
-            // Set selected date to the one clicked on
             this.selected = d;
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all year overview related items and labels
             this.removeYearOverview();
-            // Redraw the chart
             this.overview = 'day';
             this.drawChart();
         })
@@ -481,7 +408,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Pulsating animation
             const circle = select(event.currentTarget);
             const repeat = () => {
                 circle.transition()
@@ -501,14 +427,11 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                     .on('end', repeat);
             };
             repeat();
-            // Construct tooltip
-            // Calculate tooltip position
             let x = this.calcItemX(d, start_of_year) + this.item_size / 2;
             if (this.width - x < (this.tooltip_width + this.tooltip_padding * 3)) {
                 x -= this.tooltip_width + this.tooltip_padding * 2;
             }
             const y = this.calcItemY(d) + this.item_size / 2;
-            // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
                 .style('top', y + 'px')
@@ -521,7 +444,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Set circle radius back to what it's supposed to be
             select(event.currentTarget).transition()
                 .duration(this.transition_duration / 2)
                 .ease(easeLinear)
@@ -529,7 +451,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .attr('y', (d) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
                 .attr('width', (d) => this.calcItemSize(d, max_value))
                 .attr('height', (d) => this.calcItemSize(d, max_value));
-            // Hide tooltip
             this.hideTooltip();
         })
             .transition()
@@ -548,7 +469,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 }
             });
         }, () => this.in_transition = false);
-        // Add month labels
         const duration = Math.ceil(moment.duration(end_of_year.diff(start_of_year)).asMonths());
         const month_labels = [];
         for (let i = 1; i < duration; i++) {
@@ -590,24 +510,17 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Check month data
             const month_data = this.data.filter((e) => e.date.isBetween(moment(d).startOf('month'), moment(d).endOf('month'), null, '[]'));
-            // Don't transition if there is no data to show
             if (!month_data.length) {
                 return;
             }
-            // Set selected month to the one clicked on
             this.selected = { date: d };
             this.in_transition = true;
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all year overview related items and labels
             this.removeYearOverview();
-            // Redraw the chart
             this.overview = 'month';
             this.drawChart();
         });
-        // Add day labels
         const day_labels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
         const dayScale = scaleBand()
             .rangeRound([this.label_padding, this.height])
@@ -644,22 +557,15 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add button to switch back to previous overview
         this.drawButton();
     }
     ;
-    /**
-     * Draw month overview
-     */
     drawMonthOverview() {
-        // Add current overview to the history
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        // Define beginning and end of the month
         const start_of_month = moment(this.selected.date).startOf('month');
         const end_of_month = moment(this.selected.date).endOf('month');
-        // Filter data down to the selected month
         let month_data = [];
         this.data.filter((d) => d.date.isBetween(start_of_month, end_of_month, null, '[]'))
             .map((d) => {
@@ -695,12 +601,10 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         month_data = GTSLib.cleanArray(month_data);
         this.LOG.debug(['drawMonthOverview'], [this.overview, this.selected, month_data]);
         const max_value = max(month_data, (d) => d.total);
-        // Define day labels and axis
         const day_labels = timeDays(moment(this.selected.date).startOf('week').toDate(), moment(this.selected.date).endOf('week').toDate());
         const dayScale = scaleBand()
             .rangeRound([this.label_padding, this.height])
             .domain(day_labels.map((d) => moment.utc(d).weekday().toString()));
-        // Define week labels and axis
         const week_labels = [start_of_month];
         const incWeek = moment(start_of_month);
         while (incWeek.week() !== end_of_month.week()) {
@@ -728,7 +632,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         const color = scaleLinear()
             .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
             .domain([-0.15 * max_value, max_value]);
-        // Add month data items to the overview
         this.items.selectAll('.item-block-month').remove();
         this.items.selectAll('.item-block-month')
             .data(month_data)
@@ -746,18 +649,13 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Don't transition if there is no data to show
             if (d.total === 0) {
                 return;
             }
             this.in_transition = true;
-            // Set selected date to the one clicked on
             this.selected = d;
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all month overview related items and labels
             this.removeMonthOverview();
-            // Redraw the chart
             this.overview = 'day';
             this.drawChart();
         })
@@ -765,14 +663,11 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Construct tooltip
-            // Calculate tooltip position
             let x = weekScale(d.date.week().toString()) + this.tooltip_padding;
             while (this.width - x < (this.tooltip_width + this.tooltip_padding * 3)) {
                 x -= 10;
             }
             const y = dayScale(d.date.weekday().toString()) + this.tooltip_padding;
-            // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
                 .style('top', y + 'px')
@@ -803,7 +698,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 }
             });
         }, () => this.in_transition = false);
-        // Add week labels
         this.labels.selectAll('.label-week').remove();
         this.labels.selectAll('.label-week')
             .data(week_labels)
@@ -841,17 +735,12 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 return;
             }
             this.in_transition = true;
-            // Set selected month to the one clicked on
             this.selected = { date: d };
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all year overview related items and labels
             this.removeMonthOverview();
-            // Redraw the chart
             this.overview = 'week';
             this.drawChart();
         });
-        // Add day labels
         this.labels.selectAll('.label-day').remove();
         this.labels.selectAll('.label-day')
             .data(day_labels)
@@ -884,22 +773,15 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add button to switch back to previous overview
         this.drawButton();
     }
     ;
-    /**
-     * Draw week overview
-     */
     drawWeekOverview() {
-        // Add current overview to the history
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        // Define beginning and end of the week
         const start_of_week = moment(this.selected.date).startOf('week');
         const end_of_week = moment(this.selected.date).endOf('week');
-        // Filter data down to the selected week
         let week_data = [];
         this.data.filter((d) => {
             return d.date.isBetween(start_of_week, end_of_week, null, '[]');
@@ -935,19 +817,16 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         });
         week_data = GTSLib.cleanArray(week_data);
         const max_value = max(week_data, (d) => d.total);
-        // Define day labels and axis
         const day_labels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
         const dayScale = scaleBand()
             .rangeRound([this.label_padding, this.height])
             .domain(day_labels.map((d) => moment.utc(d).weekday().toString()));
-        // Define hours labels and axis
         let hours_labels = [];
         range(0, 24).forEach(h => hours_labels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
         const hourScale = scaleBand().rangeRound([this.label_padding, this.width]).padding(0.01).domain(hours_labels);
         const color = scaleLinear()
             .range([this.minColor || CalendarHeatmap.DEF_MIN_COLOR, this.maxColor || CalendarHeatmap.DEF_MAX_COLOR])
             .domain([-0.15 * max_value, max_value]);
-        // Add week data items to the overview
         this.items.selectAll('.item-block-week').remove();
         this.items.selectAll('.item-block-week')
             .data(week_data)
@@ -966,31 +845,24 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Don't transition if there is no data to show
             if (d.total === 0) {
                 return;
             }
             this.in_transition = true;
-            // Set selected date to the one clicked on
             this.selected = d;
-            // Hide tooltip
             this.hideTooltip();
-            // Remove all week overview related items and labels
             this.removeWeekOverview();
-            // Redraw the chart
             this.overview = 'day';
             this.drawChart();
         }).on('mouseover', (d) => {
             if (this.in_transition) {
                 return;
             }
-            // Calculate tooltip position
             let x = hourScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltip_padding;
             while (this.width - x < (this.tooltip_width + this.tooltip_padding * 3)) {
                 x -= 10;
             }
             const y = dayScale(d.date.weekday().toString()) + this.tooltip_padding;
-            // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
                 .style('top', y + 'px')
@@ -1021,7 +893,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 }
             });
         }, () => this.in_transition = false);
-        // Add week labels
         this.labels.selectAll('.label-week').remove();
         this.labels.selectAll('.label-week')
             .data(hours_labels)
@@ -1052,7 +923,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add day labels
         this.labels.selectAll('.label-day').remove();
         this.labels.selectAll('.label-day')
             .data(day_labels)
@@ -1085,25 +955,18 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add button to switch back to previous overview
         this.drawButton();
     }
     ;
-    /**
-     * Draw day overview
-     */
     drawDayOverview() {
-        // Add current overview to the history
         if (this.history[this.history.length - 1] !== this.overview) {
             this.history.push(this.overview);
         }
-        // Initialize selected date to today if it was not set
         if (!Object.keys(this.selected).length) {
             this.selected = this.data[this.data.length - 1];
         }
         const start_of_day = moment(this.selected.date).startOf('day');
         const end_of_day = moment(this.selected.date).endOf('day');
-        // Filter data down to the selected month
         let day_data = [];
         this.data.filter((d) => {
             return d.date.isBetween(start_of_day, end_of_day, null, '[]');
@@ -1180,13 +1043,11 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Calculate tooltip position
             let x = dayScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltip_padding;
             while (this.width - x < (this.tooltip_width + this.tooltip_padding * 3)) {
                 x -= 10;
             }
             const y = gtsNameScale(d.name) + this.tooltip_padding;
-            // Show tooltip
             this.tooltip.html(this.getTooltip(d))
                 .style('left', x + 'px')
                 .style('top', y + 'px')
@@ -1222,7 +1083,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 }
             });
         }, () => this.in_transition = false);
-        // Add time labels
         this.labels.selectAll('.label-time').remove();
         this.labels.selectAll('.label-time')
             .data(hour_labels)
@@ -1238,7 +1098,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 return;
             }
             const selected = d;
-            // const selected = itemScale(moment.utc(d));
             this.items.selectAll('.item-block')
                 .transition()
                 .duration(this.transition_duration)
@@ -1255,7 +1114,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add project labels
         const label_padding = this.label_padding;
         this.labels.selectAll('.label-project').remove();
         this.labels.selectAll('.label-project')
@@ -1299,49 +1157,24 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
                 .ease(easeLinear)
                 .style('opacity', 1);
         });
-        // Add button to switch back to previous overview
         this.drawButton();
     }
-    /**
-     * Helper function to calculate item position on the x-axis
-     * @param {Datum} d
-     * @param {moment.Moment} start_of_year
-     * @returns {number}
-     */
     calcItemX(d, start_of_year) {
         const dayIndex = Math.round((+moment(d.date) - +start_of_year.startOf('week')) / 86400000);
         const colIndex = Math.trunc(dayIndex / 7);
         return colIndex * (this.item_size + this.gutter) + this.label_padding;
     }
     ;
-    /**
-     *
-     * @param {Datum} d
-     * @param {moment.Moment} start
-     * @param {number} offset
-     * @returns {number}
-     */
     calcItemXMonth(d, start, offset) {
         const hourIndex = moment(d.date).hours();
         const colIndex = Math.trunc(hourIndex / 3);
         return colIndex * (this.item_size + this.gutter) + offset;
     }
     ;
-    /**
-     * Helper function to calculate item position on the y-axis
-     * @param {Datum} d
-     * @returns {number}
-     */
     calcItemY(d) {
         return this.label_padding + d.date.weekday() * (this.item_size + this.gutter);
     }
     ;
-    /**
-     * Helper function to calculate item size
-     * @param {Datum | Summary} d
-     * @param {number} max
-     * @returns {number}
-     */
     calcItemSize(d, max) {
         if (max <= 0) {
             return this.item_size;
@@ -1349,9 +1182,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         return this.item_size * 0.75 + (this.item_size * d.total / max) * 0.25;
     }
     ;
-    /**
-     * Draw the button for navigation purposes
-     */
     drawButton() {
         this.buttons.selectAll('.button').remove();
         const button = this.buttons.append('g')
@@ -1361,9 +1191,7 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             if (this.in_transition) {
                 return;
             }
-            // Set transition boolean
             this.in_transition = true;
-            // Clean the canvas from whichever overview type was on
             if (this.overview === 'year') {
                 this.removeYearOverview();
             }
@@ -1376,7 +1204,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             else if (this.overview === 'day') {
                 this.removeDayOverview();
             }
-            // Redraw the chart
             this.history.pop();
             this.overview = this.history.pop();
             this.drawChart();
@@ -1401,9 +1228,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             .style('opacity', 1);
     }
     ;
-    /**
-     * Transition and remove items and labels related to global overview
-     */
     removeGlobalOverview() {
         this.items.selectAll('.item-block-year')
             .transition()
@@ -1414,9 +1238,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         this.labels.selectAll('.label-year').remove();
     }
     ;
-    /**
-     * Transition and remove items and labels related to year overview
-     */
     removeYearOverview() {
         this.items.selectAll('.item-circle')
             .transition()
@@ -1429,9 +1250,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         this.hideBackButton();
     }
     ;
-    /**
-     * Transition and remove items and labels related to month overview
-     */
     removeMonthOverview() {
         this.items.selectAll('.item-block-month')
             .transition()
@@ -1444,9 +1262,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         this.hideBackButton();
     }
     ;
-    /**
-     * Transition and remove items and labels related to week overview
-     */
     removeWeekOverview() {
         this.items.selectAll('.item-block-week')
             .transition()
@@ -1460,9 +1275,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         this.hideBackButton();
     }
     ;
-    /**
-     * Transition and remove items and labels related to daily overview
-     */
     removeDayOverview() {
         this.items.selectAll('.item-block')
             .transition()
@@ -1476,9 +1288,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
         this.hideBackButton();
     }
     ;
-    /**
-     * Helper function to hide the tooltip
-     */
     hideTooltip() {
         this.tooltip.transition()
             .duration(this.transition_duration / 2)
@@ -1486,9 +1295,6 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
             .style('opacity', 0);
     }
     ;
-    /**
-     * Helper function to hide the back button
-     */
     hideBackButton() {
         this.buttons.selectAll('.button')
             .transition()
@@ -1503,22 +1309,17 @@ ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
     }
     componentDidLoad() {
         this.chart = this.el.shadowRoot.querySelector('#' + this.uuid);
-        // Initialize svg element
         this.svg = select(this.chart).append('svg').attr('class', 'svg');
-        // Initialize main svg elements
         this.items = this.svg.append('g');
         this.labels = this.svg.append('g');
         this.buttons = this.svg.append('g');
-        // Add tooltip to the same element as main svg
         this.tooltip = select(this.chart)
             .append('div')
             .attr('class', 'heatmap-tooltip')
             .style('opacity', 0);
-        // Calculate chart dimensions
         this.calculateDimensions();
     }
     render() {
-        // noinspection CheckTagEmptyBody
         return h("div", { id: this.uuid });
     }
     static get is() { return "calendar-heatmap"; }
