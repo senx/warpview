@@ -242,7 +242,7 @@ export class WarpViewChart {
         this.dygraphdataSets = [];
         const divider = GTSLib.getDivider(this._options.timeUnit);
         this.LOG.debug(['chart', 'divider', 'timeunit'], divider, this._options.timeUnit);
-        Object.keys(this.dataHashset).forEach(timestamp => {
+        Object.keys(this.dataHashset).some(timestamp => {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
                 this.dygraphdataSets.push([parseInt(timestamp)].concat(this.dataHashset[timestamp]));
             }
