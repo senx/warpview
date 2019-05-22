@@ -1,7 +1,7 @@
 {
   "name": "@senx/warpview",
   "module": "dist/esm/index.js",
-  "version": "1.0.49",
+  "version": "1.0.50",
   "keywords": [
     "web",
     "dataviz",
