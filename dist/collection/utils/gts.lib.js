@@ -1,9 +1,34 @@
+/*
+ *  Copyright 2018  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
 import { DataModel } from "../model/dataModel";
 import { Logger } from "./logger";
 export class GTSLib {
+    /**
+     *
+     * @param actual
+     */
     static cleanArray(actual) {
         return actual.filter((i) => !!i);
     }
+    /**
+     * Return a Set
+     * @param arr
+     * @returns {any[]}
+     */
     static unique(arr) {
         let u = {}, a = [];
         for (let i = 0, l = arr.length; i < l; ++i) {
@@ -14,10 +39,20 @@ export class GTSLib {
         }
         return a;
     }
+    /**
+     * Test if value is an array
+     * @param value
+     * @returns {any | boolean}
+     */
     static isArray(value) {
         return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
             && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
     }
+    /**
+     *
+     * @param data
+     * @returns {boolean}
+     */
     static isValidResponse(data) {
         let response;
         try {
@@ -33,13 +68,28 @@ export class GTSLib {
         }
         return true;
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isEmbeddedImage(item) {
         return !(typeof item !== 'string' || !/^data:image/.test(item));
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isEmbeddedImageObject(item) {
         return !((item === null) || (item.image === null) ||
             (item.caption === null) || !GTSLib.isEmbeddedImage(item.image));
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isPositionArray(item) {
         if (!item || !item.positions) {
             return false;
@@ -59,6 +109,11 @@ export class GTSLib {
         }
         return true;
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isPositionsArrayWithValues(item) {
         if ((item === null) || (item.positions === null)) {
             return false;
@@ -102,6 +157,12 @@ export class GTSLib {
             },
         };
     }
+    /**
+     *
+     * @param jsonList
+     * @param prefixId
+     * @returns {{content: any[]}}
+     */
     static gtsFromJSONList(jsonList, prefixId) {
         let gtsList = [];
         let id;
@@ -141,6 +202,11 @@ export class GTSLib {
             content: gtsList || [],
         };
     }
+    /**
+     *
+     * @param {any[]} arr1
+     * @returns {any[]}
+     */
     static flatDeep(arr1) {
         if (!GTSLib.isArray(arr1)) {
             arr1 = [arr1];
@@ -148,6 +214,12 @@ export class GTSLib {
         return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
     }
     ;
+    /**
+     *
+     * @param {any[]} a
+     * @param {number} r
+     * @returns {{res: any[]; r: number}}
+     */
     static flattenGtsIdArray(a, r) {
         const res = [];
         if (GTSLib.isGts(a)) {
@@ -176,6 +248,11 @@ export class GTSLib {
             .replace(/"/g, '&#34;')
             .replace(/'/g, '&#39;');
     }
+    /**
+     *
+     * @param gts
+     * @returns {string}
+     */
     static serializeGtsMetadata(gts) {
         let serializedLabels = [];
         let serializedAttributes = [];
@@ -191,18 +268,32 @@ export class GTSLib {
         }
         return this.sanitizeNames(gts.c) + '{' + serializedLabels.join(',') + (serializedAttributes.length > 0 ? ',' : '') + serializedAttributes.join(',') + '}';
     }
+    /**
+     *
+     * @param gts
+     * @param {number} divider
+     * @returns {any[]}
+     */
     static gtsToPath(gts, divider = 1000) {
         let path = [];
+        // Sort values
+        /* gts.v = gts.v.sort(function(a, b) {
+           return a[ 0 ] - b[ 0 ];
+         });*/
         for (let i = 0; i < gts.v.length; i++) {
             let metric = gts.v[i];
             if (metric.length === 2) {
+                // timestamp, value
             }
             if (metric.length === 3) {
+                // timestamp, elevation, value
             }
             if (metric.length === 4) {
+                // timestamp, lat, lon, value
                 path.push({ ts: Math.floor(metric[0] / divider), lat: metric[1], lon: metric[2], val: metric[3] });
             }
             if (metric.length === 5) {
+                // timestamp, lat, lon, elevation, value
                 path.push({
                     ts: Math.floor(metric[0] / divider),
                     lat: metric[1],
@@ -214,6 +305,12 @@ export class GTSLib {
         }
         return path;
     }
+    /**
+     *
+     * @param a
+     * @param b
+     * @returns {boolean}
+     */
     static equalMetadata(a, b) {
         if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
             !(a.l instanceof Object) || !(b.l instanceof Object)) {
@@ -224,26 +321,42 @@ export class GTSLib {
             return false;
         }
         for (let p in a.l) {
+            // noinspection JSUnfilteredForInLoop
             if (!b.l.hasOwnProperty(p) || a.l[p] !== b.l[p])
                 return false;
         }
         for (let p in b.l) {
+            // noinspection JSUnfilteredForInLoop
             if (!a.l.hasOwnProperty(p))
                 return false;
         }
         return true;
     }
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     static isGts(item) {
         return !(!item || item.c === null || item.l === null ||
             item.a === null || item.v === null || !GTSLib.isArray(item.v));
     }
+    /**
+     *
+     * @param gts
+     * @returns {boolean}
+     */
     static isGtsToPlot(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
         }
+        // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
+        // if it's a number it's a GTS to plot
         for (let i = 0; i < gts.v.length; i++) {
             if (gts.v[i][gts.v[i].length - 1] !== null) {
+                // noinspection JSPotentiallyInvalidConstructorUsage
                 if (typeof (gts.v[i][gts.v[i].length - 1]) === 'number' ||
+                    // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
                     gts.v[i][gts.v[i].length - 1].constructor.prototype.toFixed !== undefined) {
                     return true;
                 }
@@ -252,12 +365,20 @@ export class GTSLib {
         }
         return false;
     }
+    /**
+     *
+     * @param gts
+     * @returns {boolean}
+     */
     static isGtsToAnnotate(gts) {
         if (!GTSLib.isGts(gts) || gts.v.length === 0) {
             return false;
         }
+        // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
+        // if it's a number it's a GTS to plot
         for (let i = 0; i < gts.v.length; i++) {
             if (gts.v[i][gts.v[i].length - 1] !== null) {
+                // noinspection JSPotentiallyInvalidConstructorUsage
                 if (typeof (gts.v[i][gts.v[i].length - 1]) !== 'number' &&
                     (!!gts.v[i][gts.v[i].length - 1].constructor &&
                         gts.v[i][gts.v[i].length - 1].constructor.name !== 'Big') &&
@@ -269,6 +390,10 @@ export class GTSLib {
         }
         return false;
     }
+    /**
+     *
+     * @param gts
+     */
     static gtsSort(gts) {
         if (gts.isSorted) {
             return;
@@ -278,6 +403,11 @@ export class GTSLib {
         });
         gts.isSorted = true;
     }
+    /**
+     *
+     * @param data
+     * @returns {DataModel}
+     */
     static getData(data) {
         if (typeof data === 'string') {
             return GTSLib.getData(JSON.parse(data));
@@ -293,8 +423,13 @@ export class GTSLib {
         }
         return new DataModel();
     }
+    /**
+     *
+     * @param {string} timeUnit
+     * @returns {number}
+     */
     static getDivider(timeUnit) {
-        let timestampdivider = 1000;
+        let timestampdivider = 1000; //default for µs timeunit
         if (timeUnit === 'ms') {
             timestampdivider = 1;
         }
@@ -305,6 +440,11 @@ export class GTSLib {
     }
 }
 GTSLib.LOG = new Logger(GTSLib);
+/**
+ *
+ * @param {string} data
+ * @returns {string}
+ */
 GTSLib.formatLabel = (data) => {
     const serializedGTS = data.split('{');
     let display = `<span class="gtsInfo"><span class='gts-classname'>${serializedGTS[0]}</span>`;
