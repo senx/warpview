@@ -294,7 +294,8 @@ export class WarpViewChart {
                 labels.forEach((l, i) => {
                     const label = l.split('=');
                     if (l.length > 1) {
-                        display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+                        display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span>
+<span class='gts-labelvalue'>${label[1]}</span>`;
                         if (i !== labels.length - 1) {
                             display += `<span>, </span>`;
                         }
@@ -306,8 +307,8 @@ export class WarpViewChart {
         return display;
     }
     zoomCallback(minDate, maxDate, yRanges) {
-        this.LOG.debug(['zoomCallback'], { minDate: minDate, maxDate: maxDate, yRanges: yRanges });
-        this.zoom.emit({ minDate: minDate, maxDate: maxDate, yRanges: yRanges });
+        this.LOG.debug(['zoomCallback'], { minDate: minDate, maxDate: maxDate, yRanges: yRanges[0] });
+        this.zoom.emit({ minDate: minDate, maxDate: maxDate, yRanges: yRanges[0] });
     }
     legendFormatter(data) {
         if (data.x === null) {
@@ -534,7 +535,9 @@ export class WarpViewChart {
             }
             if (data.bounds) {
                 options.dateWindow = [data.bounds.xmin, data.bounds.xmax];
-                options.valueRange = [data.bounds.ymin, data.bounds.ymax];
+                if (data.bounds.ymin && data.bounds.ymax) {
+                    options.valueRange = [data.bounds.ymin, data.bounds.ymax];
+                }
             }
             if (this._options.timeMode === 'timestamp') {
                 options.axes.x.axisLabelFormatter = (x) => {
@@ -546,7 +549,7 @@ export class WarpViewChart {
                 this._chart.destroy();
                 this.LOG.debug(['drawChart', 'dygraphdestroyed'], 'dygraph destroyed to reborn with reparseNewData=', reparseNewData, 'and forceresize=', forceresize);
             }
-            this.LOG.debug(['drawChart', 'dygraphdataSets'], this.dygraphdataSets);
+            this.LOG.debug(['drawChart', 'dygraphdataSets'], this.dygraphdataSets, options);
             if (this.dygraphdataSets && this.dygraphdataSets.length > 0) {
                 this._chart = new Dygraph(chart, this.dygraphdataSets, options);
             }

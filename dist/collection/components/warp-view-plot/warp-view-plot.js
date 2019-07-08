@@ -276,6 +276,9 @@ export class WarpViewPlot {
         this.tzSelector.setAttribute('class', timeZone === 'UTC' ? 'defaulttz' : 'customtz');
         this.drawCharts();
     }
+    updateZoom(evt) {
+        this._options.bounds = evt.detail;
+    }
     render() {
         return h("div", { id: "focusablePlotDiv", tabindex: "0", onClick: (e) => {
                 let idListClicked = e.path.map(el => (el.id || '').slice(0, 4));
@@ -310,7 +313,7 @@ export class WarpViewPlot {
                         h("warp-view-annotation", { data: this._data, responsive: this.responsive, id: "annotation", showLegend: this.showLegend, ref: (el) => this.annotation = el, debug: this.debug, timeMin: this._timeMin, timeMax: this._timeMax, standalone: false, hiddenData: this._toHide, options: this._options })),
                     h("warp-view-resize", { minHeight: "100", initialHeight: this.initialChartHeight },
                         h("warp-view-gts-popup", { maxToShow: 5, hiddenData: this._toHide, gtsList: this._data, kbdLastKeyPressed: this.kbdLastKeyPressed, ref: (el) => this.gtsPopupModal = el }),
-                        h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.chart = el, debug: this.debug, hiddenData: this._toHide, type: this.chartType, options: this._options })))
+                        h("warp-view-chart", { id: "chart", responsive: this.responsive, standalone: false, data: this._data, ref: (el) => this.chart = el, debug: this.debug, onZoom: evt => this.updateZoom(evt), hiddenData: this._toHide, type: this.chartType, options: this._options })))
                 : '',
             this.showMap ?
                 h("warp-view-resize", { minHeight: "100", initialHeight: this.initialMapHeight },

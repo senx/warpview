@@ -390,8 +390,8 @@ export class WarpViewChart {
       }
       //check matrix size. If too big, break and display a message.
       if (this.dataHashset[timestamp].length * this.dygraphdataSets.length > 4000000) {
-        this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only."
-        this.LOG.warn(['rebuildDygraphDataSets'], 'Dygraph matrix size > 4M, breaking here to save memory.')
+        this.executionErrorText = "High number of GTS with unaligned timestamps, or too much data. Displaying partial results only.";
+        this.LOG.warn(['rebuildDygraphDataSets'], 'Dygraph matrix size > 4M, breaking here to save memory.');
         return true;
       }
       return false;
@@ -442,7 +442,8 @@ export class WarpViewChart {
         labels.forEach((l, i) => {
           const label = l.split('=');
           if (l.length > 1) {
-            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span><span class='gts-labelvalue'>${label[1]}</span>`;
+            display += `<span><span class='gts-labelname'>${label[0]}</span><span class='gts-separator'>=</span>
+<span class='gts-labelvalue'>${label[1]}</span>`;
             if (i !== labels.length - 1) {
               display += `<span>, </span>`;
             }
@@ -455,8 +456,8 @@ export class WarpViewChart {
   }
 
   private zoomCallback(minDate: number, maxDate: number, yRanges: [number, number][]) {
-    this.LOG.debug(['zoomCallback'], {minDate: minDate, maxDate: maxDate, yRanges: yRanges});
-    this.zoom.emit({minDate: minDate, maxDate: maxDate, yRanges: yRanges})
+    this.LOG.debug(['zoomCallback'], {minDate: minDate, maxDate: maxDate, yRanges: yRanges[0]});
+    this.zoom.emit({minDate: minDate, maxDate: maxDate, yRanges: yRanges[0]})
   }
 
   private legendFormatter(data): string {
@@ -627,7 +628,7 @@ export class WarpViewChart {
     this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
     if (this._options.bounds) {
       data.bounds = {
-        xmin: this._options.bounds.minDate,
+        xmin: this._options.bounds.minDate ,
         xmax: this._options.bounds.maxDate,
         ymin: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 0
           ? this._options.bounds.yRanges[0]
@@ -688,7 +689,6 @@ export class WarpViewChart {
         drawPoints: this._options.showDots,
         pointSize: 3,
         digitsAfterDecimal: 5,
-
         axes: {
           x: {
             drawAxis: this.displayGraph(),
@@ -709,7 +709,9 @@ export class WarpViewChart {
       }
       if (data.bounds) {
         options.dateWindow = [data.bounds.xmin, data.bounds.xmax];
-        options.valueRange = [data.bounds.ymin, data.bounds.ymax];
+        if(data.bounds.ymin && data.bounds.ymax) {
+          options.valueRange = [data.bounds.ymin, data.bounds.ymax];
+        }
       }
       if (this._options.timeMode === 'timestamp') {
         options.axes.x.axisLabelFormatter = (x) => {
@@ -724,7 +726,7 @@ export class WarpViewChart {
         this.LOG.debug(['drawChart', 'dygraphdestroyed'], 'dygraph destroyed to reborn with reparseNewData=', reparseNewData, 'and forceresize=', forceresize);
       }
 
-      this.LOG.debug(['drawChart', 'dygraphdataSets'], this.dygraphdataSets);
+      this.LOG.debug(['drawChart', 'dygraphdataSets'], this.dygraphdataSets, options);
       if (this.dygraphdataSets && this.dygraphdataSets.length > 0) {
         this._chart = new Dygraph(chart, this.dygraphdataSets, options);
       }

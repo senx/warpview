@@ -24,7 +24,7 @@ import {GTSLib} from "../../utils/gts.lib";
 import {ChartLib} from "../../utils/chart-lib";
 import deepEqual from "deep-equal";
 import moment from "moment-timezone";
-import { ChartBounds } from '../../model/chartBounds';
+import {ChartBounds} from '../../model/chartBounds';
 
 @Component({
   tag: 'warp-view-plot',
@@ -79,9 +79,9 @@ export class WarpViewPlot {
   private kbdCounter: number = 0;
   private gtsPopupModal: HTMLWarpViewGtsPopupElement;
   private gtsFilterCount: number = 0;
-  private gtsIdList:number[] = [];
-  private gtsBrowserIndex:number = -1;
-  @State() warningMessage:string = '';
+  private gtsIdList: number[] = [];
+  private gtsBrowserIndex: number = -1;
+  @State() warningMessage: string = '';
 
 
   //key event are trapped in plot component.
@@ -153,10 +153,10 @@ export class WarpViewPlot {
       this.filterInput.select();
     } else if (ev.key === 't') {
       this.chart.getTimeClip().then(tc => {
-        this.timeClipValue = `// keep data between ${moment.tz(tc.msmin,this._options.timeZone).toLocaleString()} and ` +
-                              `${moment.tz(tc.msmax,this._options.timeZone).toLocaleString()}<br/>` +
-                              `${this._options.timeUnit!=='us'? '// (for a ' + this._options.timeUnit + ' platform)<br/>':''}`+
-                              `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
+        this.timeClipValue = `// keep data between ${moment.tz(tc.msmin, this._options.timeZone).toLocaleString()} and ` +
+          `${moment.tz(tc.msmax, this._options.timeZone).toLocaleString()}<br/>` +
+          `${this._options.timeUnit !== 'us' ? '// (for a ' + this._options.timeUnit + ' platform)<br/>' : ''}` +
+          `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
@@ -304,7 +304,7 @@ export class WarpViewPlot {
           this.gtsIdList.push(g.id); //usefull for gts browse shortcut
           if (g.v.length > 0) { //if gts not empty
             timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
-            timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit)
+            timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
             totalDatapoints += g.v.length;
           }
         });
@@ -360,6 +360,10 @@ export class WarpViewPlot {
     this.drawCharts();
   }
 
+  updateZoom(evt: CustomEvent) {
+    this._options.bounds = evt.detail;
+  }
+
   render() {
     return <div id="focusablePlotDiv" tabindex="0" onClick={(e: any) => {
       //read the first 4 letters of id of all elements in the click tree
@@ -404,7 +408,7 @@ export class WarpViewPlot {
           </div>
         </div>
         : ''}
-      {this.warningMessage!=='' ? <div class="warningMessage">{this.warningMessage}</div> :''}
+      {this.warningMessage !== '' ? <div class="warningMessage">{this.warningMessage}</div> : ''}
       {this._options.showGTSTree
         ? <warp-view-gts-tree data={this._data} id="tree" gtsFilter={this.gtsFilter}
                               debug={this.debug}
@@ -432,6 +436,7 @@ export class WarpViewPlot {
             <warp-view-chart id="chart" responsive={this.responsive} standalone={false} data={this._data}
                              ref={(el: HTMLWarpViewChartElement) => this.chart = el}
                              debug={this.debug}
+                             onZoom={evt => this.updateZoom(evt)}
                              hiddenData={this._toHide} type={this.chartType}
                              options={this._options}/>
           </warp-view-resize>

@@ -66,5 +66,6 @@ export declare class WarpViewPlot {
     onWarpViewModalClose(): void;
     inputTextKeyboardEvents(e: KeyboardEvent): void;
     tzSelected(): void;
+    updateZoom(evt: CustomEvent): void;
     render(): JSX.Element;
 }
