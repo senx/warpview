@@ -100,7 +100,10 @@ export class WarpViewAnnotation {
                 }
                 this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
             }
-            this._chart.update();
+            this.drawChart();
+            setTimeout(() => {
+                this._chart.update();
+            }, 250);
         }
     }
     maxBoundChange(newValue, oldValue) {
@@ -115,7 +118,10 @@ export class WarpViewAnnotation {
                 }
                 this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
             }
-            this._chart.update();
+            this.drawChart();
+            setTimeout(() => {
+                this._chart.update();
+            }, 250);
         }
     }
     drawChart() {

@@ -72,10 +72,10 @@ export class WarpViewAnnotation {
   private _height = '0';
   private expanded = false;
   private trimmed;
+
 //two ways to capture keyboard events :
 // - local level, click to get focus.
 // - document level (only if isalone property is true)
-
   @Listen('keydown')
   @Listen('document:keydown')
   handleKeyDown(ev: KeyboardEvent) {
@@ -162,7 +162,10 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['minBoundChange'], this._chart.options.scales.xAxes[0].time.min);
       }
-      this._chart.update();
+      this.drawChart();
+      setTimeout(() => {
+        this._chart.update();
+      }, 250);
     }
   }
 
@@ -178,7 +181,10 @@ export class WarpViewAnnotation {
         }
         this.LOG.debug(['maxBoundChange'], this._chart.options.scales.xAxes[0].time.max);
       }
-      this._chart.update();
+      this.drawChart();
+      setTimeout(() => {
+        this._chart.update();
+      }, 250);
     }
   }
 
