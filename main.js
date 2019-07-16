@@ -227,10 +227,10 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 var appRoutes = [
-    { path: '', component: _home_home_component__WEBPACK_IMPORTED_MODULE_10__["HomeComponent"] },
+    { path: ':component', component: _home_home_component__WEBPACK_IMPORTED_MODULE_10__["HomeComponent"] },
     {
         path: '',
-        redirectTo: '/',
+        redirectTo: 'getting-started',
         pathMatch: 'full'
     },
 ];
@@ -272,7 +272,7 @@ var AppModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_22__["FormsModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(appRoutes, {
                     scrollPositionRestoration: 'enabled',
-                    useHash: true,
+                    useHash: false,
                     onSameUrlNavigation: 'reload',
                     anchorScrolling: 'enabled'
                 }),
@@ -336,7 +336,7 @@ module.exports = "/*\n *  Copyright 2018  SenX S.A.S.\n *\n *  Licensed under th
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--\n  ~  Copyright 2018  SenX S.A.S.\n  ~\n  ~  Licensed under the Apache License, Version 2.0 (the \"License\");\n  ~  you may not use this file except in compliance with the License.\n  ~  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~  Unless required by applicable law or agreed to in writing, software\n  ~  distributed under the License is distributed on an \"AS IS\" BASIS,\n  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~  See the License for the specific language governing permissions and\n  ~  limitations under the License.\n  -->\n\n<header>\n  <div class=\"collapse bg-dark\" [ngbCollapse]=\"collapse\">\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n        <div class=\"col-sm-8 col-md-7 py-4\">\n          <h4 class=\"text-white\">About</h4>\n          <p class=\"text-muted\"><a href=\"https://www.warp10.io\" target=\"_blank\">Warp 10&trade;</a> dedicated\n            visualization components.</p>\n          <p class=\"lead text-muted\">Choose a main theme</p>\n          <div class=\"btn-group btn-group-toggle\" ngbRadioGroup name=\"radioBasic\" [(ngModel)]=\"settings.theme\"\n               (ngModelChange)=\"updateSettings($event)\">\n            <label ngbButtonLabel class=\"btn-primary\">\n              <input ngbButton type=\"radio\" value=\"light\"> Light\n            </label>\n            <label ngbButtonLabel class=\"btn-primary\">\n              <input ngbButton type=\"radio\" value=\"dark\"> Dark\n            </label>\n          </div>\n          <!--<p>\n            <label for=\"autoRefresh\" class=\"text-white\">Auto refresh:</label>\n            <select class=\"form-control\" id=\"autoRefresh\" [ngModelOptions]=\"{standalone: true}\"\n                    [(ngModel)]=\"settings.autorefresh\" (ngModelChange)=\"updateSettings($event)\">\n              <option *ngFor=\"let i of autoRefreshList\" [value]=\"i.val\">{{i.label}}</option>\n            </select>\n          </p>-->\n        </div>\n        <div class=\"col-sm-4 offset-md-1 py-4\">\n          <h4 class=\"text-white\">Contact</h4>\n          <ul class=\"list-unstyled\">\n            <li><a href=\"https://twitter.com/warp10\" class=\"text-white\">Follow on Twitter</a></li>\n            <li><a href=\"#\" class=\"text-white\">GitHub</a></li>\n          </ul>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"navbar navbar-dark bg-dark shadow-sm\">\n    <div class=\"container-fluid d-flex justify-content-between\">\n      <a href=\"/\" class=\"navbar-brand d-flex align-items-center pr-3\">\n        <img src=\"assets/img/warpView.png\" class=\"img-fluid\" height=\"30\" alt=\"Warp View\" style=\"max-height: 40px\">\n      </a>\n      <button class=\"navbar-toggler\" type=\"button\" (click)=\"collapse = !collapse\"\n              [attr.aria-expanded]=\"!collapse\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n    </div>\n  </div>\n</header>\n"
+module.exports = "<!--\n  ~  Copyright 2018  SenX S.A.S.\n  ~\n  ~  Licensed under the Apache License, Version 2.0 (the \"License\");\n  ~  you may not use this file except in compliance with the License.\n  ~  You may obtain a copy of the License at\n  ~\n  ~    http://www.apache.org/licenses/LICENSE-2.0\n  ~\n  ~  Unless required by applicable law or agreed to in writing, software\n  ~  distributed under the License is distributed on an \"AS IS\" BASIS,\n  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n  ~  See the License for the specific language governing permissions and\n  ~  limitations under the License.\n  -->\n\n<header>\n  <div class=\"collapse bg-dark\" [ngbCollapse]=\"collapse\">\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n        <div class=\"col-sm-8 col-md-7 py-4\">\n          <h4 class=\"text-white\">About</h4>\n          <p class=\"text-muted\"><a href=\"https://www.warp10.io\" target=\"_blank\">Warp 10&trade;</a> dedicated\n            visualization components.</p>\n          <p class=\"lead text-muted\">Choose a main theme</p>\n          <div class=\"btn-group btn-group-toggle\" ngbRadioGroup name=\"radioBasic\" [(ngModel)]=\"settings.theme\"\n               (ngModelChange)=\"updateSettings($event)\">\n            <label ngbButtonLabel class=\"btn-primary\">\n              <input ngbButton type=\"radio\" value=\"light\"> Light\n            </label>\n            <label ngbButtonLabel class=\"btn-primary\">\n              <input ngbButton type=\"radio\" value=\"dark\"> Dark\n            </label>\n          </div>\n          <!--<p>\n            <label for=\"autoRefresh\" class=\"text-white\">Auto refresh:</label>\n            <select class=\"form-control\" id=\"autoRefresh\" [ngModelOptions]=\"{standalone: true}\"\n                    [(ngModel)]=\"settings.autorefresh\" (ngModelChange)=\"updateSettings($event)\">\n              <option *ngFor=\"let i of autoRefreshList\" [value]=\"i.val\">{{i.label}}</option>\n            </select>\n          </p>-->\n        </div>\n        <div class=\"col-sm-4 offset-md-1 py-4\">\n          <h4 class=\"text-white\">Contact</h4>\n          <ul class=\"list-unstyled\">\n            <li><a href=\"https://twitter.com/warp10\" class=\"text-white\">Follow on Twitter</a></li>\n            <li><a href=\"#\" class=\"text-white\">GitHub</a></li>\n          </ul>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div class=\"navbar navbar-dark bg-dark shadow-sm\">\n    <div class=\"container-fluid d-flex justify-content-between\">\n      <a href=\"/\" class=\"navbar-brand d-flex align-items-center pr-3\">\n        <img src=\"/assets/img/warpView_blanc.png\" class=\"img-fluid\" height=\"30\" alt=\"Warp View\" style=\"max-height: 40px\">\n      </a>\n      <button class=\"navbar-toggler\" type=\"button\" (click)=\"collapse = !collapse\"\n              [attr.aria-expanded]=\"!collapse\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n    </div>\n  </div>\n</header>\n"
 
 /***/ }),
 
@@ -667,6 +667,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../tiles/gts-tree/gts-tree.component */ "./src/app/tiles/gts-tree/gts-tree.component.ts");
 /* harmony import */ var _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../tiles/drilldown/drilldown.component */ "./src/app/tiles/drilldown/drilldown.component.ts");
 /* harmony import */ var _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../tiles/datagrid/datagrid.component */ "./src/app/tiles/datagrid/datagrid.component.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /*
  *  Copyright 2018  SenX S.A.S.
  *
@@ -727,92 +729,117 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var HomeComponent = /** @class */ (function () {
-    function HomeComponent(pico) {
+    function HomeComponent(route, location, pico) {
+        this.route = route;
+        this.location = location;
         this.pico = pico;
         this.selected = 0;
         this.demo = [
             {
+                id: 'getting-started',
                 tabTitle: 'Getting Started',
                 component: _tiles_welcome_welcome_component__WEBPACK_IMPORTED_MODULE_1__["WelcomeComponent"]
             },
             {
+                id: 'tile',
                 tabTitle: 'Tile',
                 component: _tiles_tile_tile_component__WEBPACK_IMPORTED_MODULE_20__["TileComponent"]
             },
             {
+                id: 'plot',
                 tabTitle: 'Plot',
                 component: _tiles_plot_plot_component__WEBPACK_IMPORTED_MODULE_2__["PlotComponent"]
             },
             {
+                id: 'drill-down',
                 tabTitle: 'Drill Down',
                 component: _tiles_drilldown_drilldown_component__WEBPACK_IMPORTED_MODULE_23__["DrilldownComponent"]
             },
             {
+                id: 'datagrid',
                 tabTitle: 'Datagrid',
                 component: _tiles_datagrid_datagrid_component__WEBPACK_IMPORTED_MODULE_24__["DatagridComponent"]
             },
             {
+                id: 'annotation',
                 tabTitle: 'Annotation',
                 component: _tiles_annotation_annotation_component__WEBPACK_IMPORTED_MODULE_21__["AnnotationComponent"]
             },
             {
+                id: 'tree',
                 tabTitle: 'GTS Tree',
                 component: _tiles_gts_tree_gts_tree_component__WEBPACK_IMPORTED_MODULE_22__["GtsTreeComponent"]
             },
             {
+                id: 'line',
                 tabTitle: 'Line chart (default)',
                 component: _tiles_default_default_component__WEBPACK_IMPORTED_MODULE_6__["DefaultComponent"]
             },
             {
+                id: 'step',
                 tabTitle: 'Step chart',
                 component: _tiles_step_step_component__WEBPACK_IMPORTED_MODULE_10__["StepComponent"]
             },
             {
+                id: 'area',
                 tabTitle: 'Area chart',
                 component: _tiles_area_area_component__WEBPACK_IMPORTED_MODULE_11__["AreaComponent"]
             },
             {
+                id: 'bubble',
                 tabTitle: 'Bubbles chart',
                 component: _tiles_bubbles_bubbles_component__WEBPACK_IMPORTED_MODULE_5__["BubblesComponent"]
             },
             {
+                id: 'scatter',
                 tabTitle: 'Scatter chart',
                 component: _tiles_scatter_scatter_component__WEBPACK_IMPORTED_MODULE_12__["ScatterComponent"]
             },
             {
+                id: 'bar',
                 tabTitle: 'Bar chart',
                 component: _tiles_bar_bar_component__WEBPACK_IMPORTED_MODULE_13__["BarComponent"]
             },
             {
+                id: 'pie',
                 tabTitle: 'Pie chart',
                 component: _tiles_pie_pie_component__WEBPACK_IMPORTED_MODULE_15__["PieComponent"]
             },
             {
+                id: 'gauge',
                 tabTitle: 'Gauge chart',
                 component: _tiles_gauge_gauge_component__WEBPACK_IMPORTED_MODULE_14__["GaugeComponent"]
             },
             {
+                id: 'doughnut',
                 tabTitle: 'Doughnut chart',
                 component: _tiles_doughnut_doughnut_component__WEBPACK_IMPORTED_MODULE_16__["DoughnutComponent"]
             },
             {
+                id: 'polar',
                 tabTitle: 'Polar chart',
                 component: _tiles_polar_polar_component__WEBPACK_IMPORTED_MODULE_17__["PolarComponent"]
             },
             {
+                id: 'radar',
                 tabTitle: 'Radar chart',
                 component: _tiles_radar_radar_component__WEBPACK_IMPORTED_MODULE_18__["RadarComponent"]
             },
             {
+                id: 'map',
                 tabTitle: 'Map',
                 component: _tiles_map_map_component__WEBPACK_IMPORTED_MODULE_3__["MapComponent"]
             },
             {
+                id: 'display',
                 tabTitle: 'Display',
                 component: _tiles_text_text_component__WEBPACK_IMPORTED_MODULE_4__["TextComponent"]
             },
             {
+                id: 'image',
                 tabTitle: 'Image',
                 component: _tiles_image_image_component__WEBPACK_IMPORTED_MODULE_19__["ImageComponent"]
             },
@@ -830,6 +857,14 @@ var HomeComponent = /** @class */ (function () {
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.route.paramMap.subscribe(function (params) {
+            if (params.get('component')) {
+                var index = _this.demo.findIndex(function (d) { return d.id === params.get('component'); });
+                if (index >= 0) {
+                    _this.selected = index;
+                }
+            }
+        });
         this.channelSubscription = this.pico.listen(_model_settings_message__WEBPACK_IMPORTED_MODULE_8__["SettingsMessage"], function (evt) {
             if (evt.value) {
                 _this.settings = evt.value;
@@ -853,6 +888,7 @@ var HomeComponent = /** @class */ (function () {
     };
     HomeComponent.prototype.show = function (index) {
         this.selected = index;
+        this.location.replaceState(this.demo[index].id);
     };
     HomeComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -860,7 +896,9 @@ var HomeComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./home.component.html */ "./src/app/home/home.component.html"),
             styles: [__webpack_require__(/*! ./home.component.css */ "./src/app/home/home.component.css")]
         }),
-        __metadata("design:paramtypes", [picoevent__WEBPACK_IMPORTED_MODULE_7__["PicoEvent"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_25__["ActivatedRoute"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_26__["Location"],
+            picoevent__WEBPACK_IMPORTED_MODULE_7__["PicoEvent"]])
     ], HomeComponent);
     return HomeComponent;
 }());
