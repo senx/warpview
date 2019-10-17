@@ -1,0 +1,92 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div #mainPlotDiv tabindex="0" (click)="focus($event)">
+  <warpview-modal [kbdLastKeyPressed]="kbdLastKeyPressed" modalTitle="TimeClip" #timeClip
+                  (warpViewModalClose)="onWarpViewModalClose()"
+  >
+    <pre><code #timeClipElement [innerHTML]="timeClipValue"></code></pre>
+  </warpview-modal>
+  <warpview-modal [kbdLastKeyPressed]="kbdLastKeyPressed" modalTitle="GTS Filter" #modal
+                  (warpViewModalClose)="onWarpViewModalClose()"
+  >
+    <label for="filterInput">Enter a regular expression to filter GTS.</label>
+    <input tabindex="1" type="text" (keypress)="inputTextKeyboardEvents($event)" #filterInput id="filterInput"
+           (keydown)="inputTextKeyboardEvents($event)" (keyup)="inputTextKeyboardEvents($event)"
+           [value]="gtsFilter.slice(1)"/>
+    <button (click)="applyFilter()" [innerHTML]="_options.popupButtonValidateLabel || 'Apply'"
+            class="{{_options.popupButtonValidateClass}}" tabindex="2"
+            type="button">
+    </button>
+  </warpview-modal>
+  <div class="inline" *ngIf="_options.showControls">
+    <warpview-toggle id="timeSwitch" text1="Date" text2="Timestamp"
+                     (stateChange)="stateChange($event)"
+                     [checked]="_options.timeMode === 'timestamp'"></warpview-toggle>
+    <warpview-toggle id="typeSwitch" text1="Line" text2="Step"
+                     (stateChange)="stateChange($event)"></warpview-toggle>
+    <warpview-toggle id="chartSwitch" text1="Hide chart" text2="Display chart"
+                     (stateChange)="stateChange($event)"
+                     [checked]="showChart"></warpview-toggle>
+    <warpview-toggle id="mapSwitch" text1="Hide map" text2="Display map"
+                     (stateChange)="stateChange($event)" [checked]="showMap"></warpview-toggle>
+    <div class="tzcontainer">
+      <label for="tzSelector"></label>
+      <select id="tzSelector" class="defaulttz" #tzSelector (change)="tzSelected()">
+        <option *ngFor="let z of getTZ()" [value]="z" [selected]="z === 'UTC'"
+                [ngClass]="{'defaulttz' :z === 'UTC','customtz': z !== 'UTC'}">{{z}}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="warningMessage" class="warningMessage">{{warningMessage}}</div>
+  <warpview-gts-tree
+    *ngIf="_options.showGTSTree"
+    [data]="gtsList" id="tree" [gtsFilter]="gtsFilter" [debug]="debug"
+    [hiddenData]="_toHide" [options]="_options"
+    [kbdLastKeyPressed]="kbdLastKeyPressed"
+  ></warpview-gts-tree>
+  <div *ngIf="showChart" #main class="main-container" (mousemove)="handleMouseMove($event)"
+       (mouseleave)="handleMouseOut($event)">
+    <div class="bar" #line></div>
+    <div class="annotation">
+      <warpview-annotation #annotation
+                           [data]="gtsList" [responsive]="true"
+                           [showLegend]='showLegend' [debug]="debug" [standalone]="false"
+                           [hiddenData]="_toHide" [options]="_options"
+      ></warpview-annotation>
+    </div>
+    <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="debug"
+                     (resize)="resizeChart($event)">
+      <warpview-gts-popup [maxToShow]="5" [hiddenData]="_toHide" [gtsList]="gtsList"
+                          [kbdLastKeyPressed]="kbdLastKeyPressed"
+                          (warpViewModalClose)="onWarpViewModalClose()"
+                          (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
+                          #gtsPopupModal></warpview-gts-popup>
+      <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
+                      (boundsDidChange)="boundsDidChange($event)"
+                      #chart [debug]="debug" [hiddenData]="_toHide" [type]="_type" [options]="_options"
+      ></warpview-chart>
+    </warpview-resize>
+  </div>
+  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight">
+    <div class="map-container">
+      <warpview-map [options]="_options" #map [data]="gtsList" [debug]="debug" [responsive]="true"
+                    [hiddenData]="_toHide"
+      ></warpview-map>
+    </div>
+  </warpview-resize>
+  <!--<div id="bottomPlaceHolder"></div>-->
+</div>

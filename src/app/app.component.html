@@ -1,0 +1,75 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<header>
+  <div class="collapse bg-dark" id="navbarHeader">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">About</h4>
+          <p class="text-muted"><a href="https://www.warp10.io" target="_blank">Warp 10&trade;</a> dedicated
+            visualization components.</p>
+          <p class="lead text-muted">Choose a main theme</p>
+          <p>
+            <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true"
+                    (click)="setTheme('light')" id="light">Light
+            </button>
+            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false"
+                    (click)="setTheme('dark')" id="dark">Dark
+            </button>
+          </p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Contact</h4>
+          <ul class="list-unstyled">
+            <li><a href="https://twitter.com/warp10" class="text-white">Follow on Twitter</a></li>
+            <li><a href="#" class="text-white">GitHub</a></li>
+            <li><a href="/tests-Plot.html">Plot tests</a></li>
+            <li><a href="/tests-dynamicwarpscript.html">Responsive tests</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid d-flex justify-content-between">
+      <a href="/" class="navbar-brand d-flex align-items-center">
+        <img width="32" height="32" class="mr-3" alt="WarpView"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAAhXpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY5BDoUwCET3nMIjUKBDOY4xmvwb/ONLrdqVbwGTCUyG9v/voKVTWMiqNwTAiYWFrCkaD5S5CJe+cw7urSWVTJtUhkA0Z5uHdvsPVdFwuLmjYsMmmS676jXzh3oq9xoxQ94M/fCfFic/OCwP5MjXYQAACgJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4KIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzMiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjMyIgogICB0aWZmOkltYWdlV2lkdGg9IjMyIgogICB0aWZmOkltYWdlSGVpZ2h0PSIzMiIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIvPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DYV1NQAAAm1QTFRFAAAA/////////////////////////////////////////////////////////////////////////////////////v7+/v7+/////v7+/v7+/v7+/////v7+9/f39vb2/////f398/Pz9fX18vLy8/Pz6enp+Pj4+fn5////5+fn9fX1CwsLEBAQEhISFBQUFRUVFhYWFxcXGBgYICAgISEhLS0tLi4uLy8vMzMzNDQ0NTU1NjY2Pz8/QUFBSEhISUlJUlJSU1NTVFRUWlpaXFxcXl5eYmJiY2NjZGRka2trbm5ucHBwcXFxcnJydHR0dXV1eHh4eXl5enp6gICAgYGBhISEhYWFh4eHiYmJioqKj4+PlJSUlZWVmZmZmpqam5ubnJycnp6ep6enqKioqampqqqqsLCwtra2uLi4ubm5urq6v7+/w8PDxsbGx8fHyMjIycnJzc3N0NDQ0dHR0tLS2NjY4uLi4+Pj5+fn6Ojo6enp6urq7Ozs8PDw8vLy8/Pz9PT09vb29/f3+Pj4/f39/v7+/5kA/5kB/5oC/5oD/5wI/54N/58Q/6EV/6IW/6MZ/6Qd/6Yh/6Yi/6ko/6os/6ww/60z/600/641/642/684/685/7A7/7E+/7I//7ZJ/7hN/7hO/7xa/8Vw/8dz/8d1/8h2/8h3/8l5/8t+/86G/8+H/9CL/9GN/9KO/9OR/9SV/9ec/9mg/9mh/9qj/+O6/+W+/+W//+nJ/+nK/+rL/+rM/+vN/+zP//Db//Hc//Lf//Lg//Pi//Xm//bq//jv//nx//v2//v3//38//78//79//7+/////63IMwAAACx0Uk5TAAAJCgsPECQlJjEyM1laiYqMj5ucncvMzM3R09PU6erq7PT09fX5+fn5+vxJ4zjHAAACuUlEQVQYGV3BS28bVQCA0e/eGT/m4diOx5Mm4LZqLYEiItbAogskZFGIEItu+Fn8DliQzagL6JYd6oJS0qgJgdgl49jJPO54Xmbc1iFwjmBN6M26ZpnEKksXKWsabzU77r5tSCEa/fufTLVlzhuC12Rra/ekZpmGTq5UmN55dn5ZsiJYafRGv1iOZei6RpHnKvKjDx/7CyqCium8f7HdtS3d1EZ4ZZxF4WzS+d2PAAE0tu4tBl27tc/awVU4P60dv0pAA+nuxnd77e5Drr13JvTGxXYUL9Gg/eXx3V7n0ZAbhh+8RB9/dJyg0dy52HHbj/if3RdwaIS5FPau1bXb5AtuWORstLqtoY1Wc5Od3ubD5a/PugZr858Td/gyK060QDY/rVnWPqh8zLVxHkHdshsPDFk/tQwdhMO0BE5flFBMcWBUa9qndanNTd0EHBFPIXh+5MMsEg5g6sZck1Zs6BrQ2mQKk4JzmNLdAKRuKFOaS10bAcJhWmZ/CTlRpY8jgJGulQ3JmiPDmb+4tZ2/moeiT8UDljIWeeFRsRz8MW6fM5+ezUpeyFRXWyovqYje32fphivalwkOK2WhjHOZdVQes+LIlIEUAzLNYSXOVSeT6SBUGSuGS9MF18AxqXiZCgepXPy4V0YHVERf3K5D7Y7oCypZHCVPEq3Qvv0t0M+GQOsdRwDtd7sC8C7nZ1tHgST65lYRXbLSFFREUwDeVTALjkIkavL5PTf5jv/y4mA+3psoBMidHzi4aH/FDd5VMDsxno9zdCjPv/5+2q3zLy8Lgvmf+qGfg6Bi9XevPu7kX+Ax8ijjLA5n4/bhNAQEK83eZ09dc7NTZDp5kavID/Z+8hUVwWvaxvbwj4ZtGBqFUmFy+2hylbMieMuwOw9O56pEGp3Bk8tQ8YbgWs2oa2ZjmSZZmqSs/QPKgitkZ2DCugAAAABJRU5ErkJggg=="/>
+        <strong>Warp View</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+              aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
+<main role="main">
+
+  <div class="album">
+    <div class="container-fluid bg-{{theme}} {{theme === 'dark'?'text-white': ''}} pt-5">
+      <div class="row">
+        <div class="col-2">
+          <warpview-menu></warpview-menu>
+        </div>
+        <div class="col-10">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

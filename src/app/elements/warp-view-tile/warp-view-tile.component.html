@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
+  <div class="tilewrapper">
+    <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
+    <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
+      <warpview-spinner *ngIf="loading" message="Requesting data"></warpview-spinner>
+
+      <warpview-chart [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+                      [showLegend]="showLegend" [data]="gtsList"
+                      *ngIf="graphs['chart'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-chart>
+
+      <warpview-plot [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+                     [showLegend]="showLegend" [data]="gtsList"
+                     *ngIf="graphs['plot'].indexOf(type) > -1 && gtsList"
+                     [responsive]="true"></warpview-plot>
+
+      <warpview-bar [debug]="debug" [unit]="unit" [options]="_options"
+                    [showLegend]="showLegend" [data]="gtsList"
+                    *ngIf="graphs['bar'].indexOf(type) > -1 && gtsList"
+                    [responsive]="true"></warpview-bar>
+
+      <warpview-bubble [debug]="debug" [unit]="unit" [options]="_options"
+                       [showLegend]="showLegend" [data]="gtsList"
+                       *ngIf="graphs['bubble'].indexOf(type) > -1 && gtsList"
+                       [responsive]="true"></warpview-bubble>
+
+      <warpview-datagrid [debug]="debug" [options]="_options"
+                         [showLegend]="showLegend" [data]="gtsList"
+                         *ngIf="graphs['datagrid'].indexOf(type) > -1 && gtsList"
+                         [responsive]="true"></warpview-datagrid>
+
+      <warpview-display [debug]="debug" [options]="_options"
+                        [showLegend]="showLegend" [data]="gtsList" [unit]="unit"
+                        *ngIf="graphs['display'].indexOf(type) > -1 && gtsList"
+                        [responsive]="true"></warpview-display>
+
+      <warpview-drill-down [debug]="debug" [options]="_options"
+                           [showLegend]="showLegend" [data]="gtsList" [unit]="unit"
+                           *ngIf="graphs['drilldown'].indexOf(type) > -1 && gtsList"
+                           [responsive]="true"></warpview-drill-down>
+
+      <warpview-gts-tree *ngIf="graphs['gts-tree'].indexOf(type) > -1 && gtsList"
+                         [responsive]="true" [debug]="debug" [data]="gtsList" [options]="_options"></warpview-gts-tree>
+
+      <warpview-image *ngIf="graphs['image'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true" [debug]="debug" [data]="gtsList" [options]="_options"></warpview-image>
+
+      <warpview-map *ngIf="graphs['map'].indexOf(type) > -1 && gtsList" [responsive]="true" [debug]="debug"
+                    [data]="gtsList" [options]="_options"></warpview-map>
+
+      <warpview-pie [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+                    [showLegend]="showLegend" [data]="gtsList"
+                    *ngIf="graphs['pie'].indexOf(type) > -1 && gtsList"
+                    [responsive]="true"></warpview-pie>
+
+      <warpview-gauge [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+                      [showLegend]="showLegend" [data]="gtsList"
+                      *ngIf="graphs['gauge'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-gauge>
+
+      <warpview-annotation [debug]="debug" [unit]="unit" [options]="_options"
+                           [showLegend]="showLegend" [data]="gtsList"
+                           *ngIf="graphs['annotation'].indexOf(type) > -1 && gtsList"
+                           [responsive]="true"></warpview-annotation>
+
+      <warpview-polar [debug]="debug" [unit]="unit" [options]="_options"
+                      [showLegend]="showLegend" [data]="gtsList"
+                      *ngIf="graphs['polar'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-polar>
+
+      <warpview-radar [debug]="debug" [unit]="unit" [options]="_options"
+                      [showLegend]="showLegend" [data]="gtsList"
+                      *ngIf="graphs['radar'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-radar>
+
+    </div>
+  </div>
+</div>
+<div #warpRef style="display: none">
+  <ng-content></ng-content>
+</div>

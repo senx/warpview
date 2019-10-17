@@ -1,0 +1,79 @@
+/*!
+ * Copyright 2019 SenX S.A.S.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+:root {
+  // dimensions
+  --warp-view-chart-width: 100%;
+  --warp-view-chart-height: 100%;
+  --warp-view-datagrid-cell-padding: 5px;
+  --warp-view-map-margin: 15px;
+  --warp-view-switch-height: 30px;
+  --warp-view-switch-width: 100px;
+  --warp-view-switch-radius: 18px;
+  --warp-view-plot-chart-height: 100%;
+  --warp-view-slider-pointer-size: 65px;
+  --warp-view-resize-handle-height: 10px;
+  --warp-view-tile-width: 100%;
+  --warp-view-tile-height: 100%;
+
+  // colors
+  --warp-view-font-color: #000;
+  --warp-view-bar-color: red;
+  --warp-view-datagrid-odd-bg-color: #fff;
+  --warp-view-datagrid-odd-color: #000;
+  --warp-view-datagrid-even-bg-color: #ddd;
+  --warp-view-datagrid-even-color: #000;
+  --warp-view-pagination-border-color: #ddd;
+  --warp-view-pagination-bg-color: #fff;
+  --warp-view-pagination-active-bg-color: #4CAF50;
+  --warp-view-pagination-active-color: #fff;
+  --warp-view-pagination-active-border-color: #4CAF50;
+  --warp-view-pagination-hover-bg-color: #ddd;
+  --warp-view-pagination-hover-color: #000;
+  --warp-view-pagination-hover-border-color: #ddd;
+  --warp-view-pagination-disabled-color: #ddd;
+  --warp-view-switch-inset-color: #eceeef;
+  --warp-view-switch-inset-checked-color: #00cd00;
+  --warp-view-switch-handle-color: radial-gradient(#FFFFFF 15%, #f0f0f0 100%);
+  --warp-view-switch-handle-checked-color: radial-gradient(#ffffff 15%, #00cd00 100%);
+  --warp-view-resize-handle-color: #ddd;
+  --warp-view-spinner-color: #5899DA;
+  --warp-view-chart-legend-bg: #000000;
+  --warp-view-chart-legend-color: #ffffff;
+  --gts-classname-font-color: #0074D9;
+  --gts-labelname-font-color: #19A979;
+  --gts-attrname-font-color: #19A979;
+  --gts-separator-font-color: #bbbbbb;
+  --gts-labelvalue-font-color: #AAAAAA;
+  --gts-attrvalue-font-color: #AAAAAA;
+  --gts-stack-font-color: #000000;
+  --gts-tree-expanded-icon: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==);
+  --gts-tree-collapsed-icon: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA0UlEQVQ4T6WTUW7CQAxEPQdozxYb9Qb94Aj9gQSoVCp6lMr21doDZFCQiFCU3YDY//d2PeOFPHnwJC+zAlVdA/jp+/6YmZ+1S0qCPxF5HUAAO3fvSpKS4ENEvm6gfUS0c5JiBma2Ibm/QiQPmbmdSqohquoA7GqSxRaapmkBjBkAeHP336t0UWBmHcnb+VcR4XcJpjDJLjPHkS4tleqZubmNiDHU6gumDQDYuvvh7hpV9V9EXgaA5Ka2jbMjmNk7yZOIfEfE8eFVfuSDLda4JDsD3FNdEckTC0YAAAAASUVORK5CYII=);
+  --warp-view-popup-bg-color: #ffffff;
+  --warp-view-popup-border-color: rgba(0, 0, 0, .2);
+  --warp-view-popup-header-bg-color: #ddd;
+  --warp-view-popup-title-color: #888;
+  --warp-view-popup-close-color: #888;
+  --warp-view-popup-body-bg-color: #ffffff;
+  --warp-view-popup-body-color: #000;
+  --warp-view-annotationtooltip-value-font-color: #0074D9;
+  --warp-view-annotationtooltip-font-color: #bbbbbb;
+
+
+  --warp-slider-connect-color: #ff9900;
+  --warp-slider-handle-bg-color: #ffffff;
+  --warp-slider-handle-color: #1E88E5;
+  --warp-slider-handle-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
+}

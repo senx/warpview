@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div>
+  <div class="heading" [innerHTML]="formatLabel(this._data.name)"></div>
+  <table>
+    <thead>
+    <th *ngFor="let h of _data.headers">{{h}}</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let value of displayedValues; even as isEven; odd as isOdd" [ngClass]="{ odd: isOdd, even: isEven}">
+      <td *ngFor="let v of value; first as isFirst">
+        <span *ngIf="isFirst">{{formatDate(v)}}</span>
+        <span *ngIf="!isFirst">{{decodeURIComponent(v)}}</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="center">
+    <div class="pagination">
+      <div class="prev hoverable" (click)="prev()" *ngIf="page !== 0">&lt;</div>
+      <div class="index disabled" *ngIf="page - windowed > 0">...</div>
+      <span *ngFor="let c of pages">
+        <div *ngIf=" c >= page - windowed && c <= page + windowed"
+             [ngClass]="{ index: true, hoverable: page !== c, active: page === c}" (click)="goto(c)">{{c}}</div>
+      </span>
+      <div class="index disabled" *ngIf="page + windowed < pages.length">...</div>
+      <div class="next hoverable" (click)="next()" *ngIf="page !== _data.values.length - 1">&gt;</div>
+    </div>
+  </div>
+</div>

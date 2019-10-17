@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="wrapper">
+  <div class="map-container">
+    <div #mapDiv></div>
+    <div *ngIf="_options.map.showTimeSlider && !_options.map.showTimeRange" #timeSlider>
+      <warpview-slider
+        [min]="_options.map.timeSliderMin / divider" [max]="_options.map.timeSliderMax / divider"
+        [value]="minTimeValue / divider"
+        [step]="_options.map.timeSliderStep" [mode]="_options.map.timeSliderMode"
+        (change)="onSliderChange($event)"
+        [debug]="_debug"
+      ></warpview-slider>
+    </div>
+    <div *ngIf="_options.map.showTimeSlider && _options.map.showTimeRange" #timeRangeSlider>
+      <!--    <warpview-range-slider *ngIf="!_options.map.timeSpan && lowerTimeBound"
+                                  [min]="lowerTimeBound" [max]="upperTimeBound"
+                                  [minValue]="minTimeValue / divider"
+                                  [maxValue]="maxTimeValue / divider"
+                                  [step]="_options.map.timeSliderStep"
+                                  [mode]="_options.map.timeSliderMode"
+                                  [debug]="_debug"
+                                  (change)="onRangeSliderChange($event)"
+           ></warpview-range-slider>-->
+
+      <warpview-range-slider
+        [min]="(_options.map.timeSliderMin / divider)" [max]="(_options.map.timeSliderMax / divider)"
+        [minValue]="minTimeValue / divider"
+        [maxValue]="maxTimeValue / divider"
+        [mode]="_options.map.timeSliderMode"
+        [debug]="_debug"
+        (change)="onRangeSliderWindowChange($event)"
+      ></warpview-range-slider>
+      <warpview-slider *ngIf="_options.map.timeSpan && lowerTimeBound"
+                       [min]="lowerTimeBound" [max]="upperTimeBound"
+                       [step]="(this.timeSpan || this._options.map.timeSpan) / divider"
+                       [mode]="_options.map.timeSliderMode"
+                       [debug]="_debug"
+                       (change)="onSliderChange($event)"
+      ></warpview-slider>
+      <div *ngIf="_options.map?.timeSpan">
+        <label for="timeSpan">Timespan: </label>
+        <select id="timeSpan" (change)="updateTimeSpan($event)">
+          <option *ngFor="let ts of _options.map.timeSpanList" [value]="ts.value">{{ts.label}}</option>
+        </select>
+      </div>
+    </div>
+    <warpview-heatmap-sliders
+      *ngIf="_options.map.heatControls"
+      (heatRadiusDidChange)="heatRadiusDidChange($event)"
+      (heatBlurDidChange)="heatBlurDidChange($event)"
+      (heatOpacityDidChange)="heatOpacityDidChange($event)"
+    ></warpview-heatmap-sliders>
+  </div>
+
+</div>

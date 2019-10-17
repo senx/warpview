@@ -1,43 +1,18 @@
-# Warp View
-
-This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
-
-![WarpView](imgs/warpView.png)
-
-- [Demo & documentation](https://senx.github.io/warpview/)
-- [licence Apache 2](./LICENSE.md)
-- [Contribute](./CONTRIBUTING.md)
-
-## Getting started
-
-    npm i @senx/warpview --save
-    
-    yarn add @senx/warpview
-    
-    bower install senx-warpview --save
-
-```html
-<html>
-<head>
-  <title>Test</title>
-  <script src="https://unpkg.com/@senx/warpview@x.x.x/dist/warpview.js"></script>
-</head>
-<body>
-  <warp-view-spinner />
-</body>
-</html>
-```
-
-## Components
-
-[See wiki](https://github.com/senx/warpview/wiki/)
+# WarpviewElements
 
 
-## Integrations
+## Development server
 
-[See here](https://stenciljs.com/docs/framework-integration)
+Run `yarn dev` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## About
+## Code scaffolding
 
-- [Warp 10™](https://www.warp10.io)
-- [SenX](https://senx.io)
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+Run `yarn gen -- MyElementName` to generate new WebComponent
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+Run `yarn build:elements` to build and package web components

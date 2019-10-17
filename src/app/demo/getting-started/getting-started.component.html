@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright 2019 SenX S.A.S.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--<warpview-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
+                debug="true" chart-title="Plot">
+  [
+  NEWGTS 'Date' RENAME // Commenting that makes it work
+  1000 NaN NaN NaN 2.5 ADDVALUE
+  2000 NaN NaN NaN 2.5 ADDVALUE
+  3000 NaN NaN NaN 2.5 ADDVALUE
+  4000 NaN NaN NaN 2.5 ADDVALUE
+
+  NEWGTS '1' RENAME
+  1000 NaN NaN NaN 1 ADDVALUE
+  2000 NaN NaN NaN 2 ADDVALUE
+  3000 NaN NaN NaN 3 ADDVALUE
+  4000 NaN NaN NaN 4 ADDVALUE
+
+  NEWGTS '1' RENAME
+  1000 NaN NaN NaN 4 ADDVALUE
+  2000 NaN NaN NaN 3 ADDVALUE
+  3000 NaN NaN NaN 2 ADDVALUE
+  4000 NaN NaN NaN 1 ADDVALUE
+  ]
+</warpview-tile>-->
+<h1>Warp View</h1>
+<p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
+                                                                target="_blank">Warp 10™</a>
+</p>
+
+<warpview-toggle text1="Blue pill" text2="Red pill"></warpview-toggle>
+<warpview-slider [min]="min" [max]="max" [value]="min" [step]="-10" [mode]="'date'"
+                 [debug]="true"
+                 (change)="onSliderChange($event)"></warpview-slider>
+<warpview-range-slider [min]="min" [max]="max" [minValue]="min" [maxValue]="max" [step]="-10"
+                       (change)="onRangeSliderChange($event)"></warpview-range-slider>
+<h2>Usage</h2>
+<div id="welcome">
+  <h4>Code</h4>
+  <pre><code class="language-markup">
+&lt;html>
+  &lt;head>
+    &lt;title>Test&lt;/title>
+    &lt;script src="warpview-elements.js">&lt;/script>
+    <style>
+      warp-view-tile {
+        opacity: 0;
+      }
+      warp-view-tile >div {
+        opacity: 1;
+      }
+    </style>
+  &lt;/head>
+  &lt;body>
+    &lt;warp-view-spinner  message="Spinner sample" />
+  &lt;/body>
+&lt;/html>
+              </code></pre>
+  <h4>Result</h4>
+  <warpview-spinner message="Spinner sample"></warpview-spinner>
+</div>

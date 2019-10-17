@@ -1,1 +1,0 @@
-// warpview: CommonJS Main

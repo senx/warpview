@@ -1,0 +1,113 @@
+/*!
+ * Copyright 2019 SenX S.A.S.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import "../../../styles/vars";
+:host {
+  table {
+    width: 100%;
+    color: var(--warp-view-font-color);
+
+    td, th {
+      padding: var(--warp-view-datagrid-cell-padding);
+    }
+
+    .odd {
+      background-color: var(--warp-view-datagrid-odd-bg-color);
+      color: var(--warp-view-datagrid-odd-color);
+    }
+
+    .even {
+      background-color: var(--warp-view-datagrid-even-bg-color);
+      color: var(--warp-view-datagrid-even-color);
+    }
+  }
+
+  .center {
+    text-align: center;
+
+    .pagination {
+      display: inline-block;
+
+      .index, .next, .prev {
+        color: var(--warp-view-font-color);
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid var(--warp-view-pagination-border-color);
+        margin: 0;
+        cursor: pointer;
+        background-color: var(--warp-view-pagination-bg-color);
+
+        &.active {
+          background-color: var(--warp-view-pagination-active-bg-color);
+          color: var(--warp-view-pagination-active-color);
+          border: 1px solid var(--warp-view-pagination-active-border-color);
+        }
+
+        &.hoverable:hover {
+          background-color: var(--warp-view-pagination-hover-bg-color);
+          color: var(--warp-view-pagination-hover-color);
+          border: 1px solid var(--warp-view-pagination-hover-border-color);
+        }
+
+        &.disabled {
+          cursor: auto;
+          color: var(--warp-view-pagination-disabled-color);
+        }
+      }
+    }
+  }
+
+  .gts-classname {
+    color: var(--gts-classname-font-color, #0074D9);
+  }
+
+  .gts-labelname {
+    color: var(--gts-labelname-font-color, #19A979);
+  }
+
+  .gts-attrname {
+    color: var(--gts-labelname-font-color, #ED4A7B);
+  }
+
+  .gts-separator {
+    color: var(--gts-separator-font-color, #bbbbbb);
+  }
+
+  .gts-labelvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic;
+  }
+
+  .gts-attrvalue {
+    color: var(--gts-labelvalue-font-color, #AAAAAA);
+    font-style: italic;
+  }
+
+  .round {
+    border-radius: 50%;
+    background-color: #bbbbbb;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #454545;
+  }
+
+  ul {
+    list-style: none;
+  }
+}
