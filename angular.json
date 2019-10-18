@@ -27,6 +27,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/app/styles/vars.scss",
               "src/styles.scss"
             ],
             "scripts": [
@@ -160,6 +161,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/app/styles/vars.scss",
               "src/styles.scss"
             ],
             "scripts": [
