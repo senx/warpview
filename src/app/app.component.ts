@@ -25,7 +25,7 @@ import {ColorLib} from "./utils/color-lib";
 })
 export class AppComponent {
   theme = 'dark';
-  colorSchemes = Object.keys(ColorLib.color);
+  colorSchemes = Object.keys(ColorLib.color).sort();
   colorScheme = 'WARP10';
 
   constructor(private settingsService: SettingsService) {
