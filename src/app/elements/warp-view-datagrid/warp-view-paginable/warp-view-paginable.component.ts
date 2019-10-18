@@ -56,7 +56,7 @@ export class WarpViewPaginableComponent implements OnInit {
   }
 
   @Input() elemsCount = 15;
-  @Input() windowed: number = 5;
+  @Input() windowed = 5;
 
 
   page = 0;
@@ -73,19 +73,10 @@ export class WarpViewPaginableComponent implements OnInit {
     bounds: {}
   };
 
-  /**
-   *
-   * @param {number} date
-   * @returns {string}
-   */
   private formatDate(date: number): string {
     return this._options.timeMode === 'date' ? moment.utc(date / 1000).toISOString() : date.toString();
   }
 
-  /**
-   *
-   * @param {number} page
-   */
   private goto(page: number) {
     this.page = page;
     this.drawGridData();
@@ -120,31 +111,21 @@ export class WarpViewPaginableComponent implements OnInit {
     for (let i = 0; i < this._data.values.length / this.elemsCount; i++) {
       this.pages.push(i);
     }
-    this.displayedValues = this._data.values.slice(Math.max(0, this.elemsCount * this.page), Math.min(this.elemsCount * (this.page + 1), this._data.values.length));
+    this.displayedValues = this._data.values.slice(
+      Math.max(0, this.elemsCount * this.page),
+      Math.min(this.elemsCount * (this.page + 1), this._data.values.length)
+    );
     this.LOG.debug(['drawGridData', '_data'], this._data);
   }
 
-  /**
-   *
-   * @param {string} str
-   * @returns {string}
-   */
   private decodeURIComponent(str: string): string {
     return decodeURIComponent(str);
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.drawGridData();
   }
 
-  /**
-   *
-   * @param {string} name
-   * @returns {string}
-   */
   formatLabel(name: string) {
     return GTSLib.formatLabel(name);
   }

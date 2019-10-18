@@ -26,84 +26,80 @@ export class MenuComponent {
 
   menu = [
     {
-      'title': 'Getting Started',
-      'slug': '/getting-started'
+      title: 'Getting Started',
+      slug: '/getting-started'
     },
     {
-      'title': 'Default',
-      'slug': '/demo/default'
+      title: 'Default',
+      slug: '/demo/default'
     },
     {
-      'title': 'Plot',
-      'slug': '/demo/plot'
+      title: 'Plot',
+      slug: '/demo/plot'
     },
     {
-      'title': 'Line charts',
-      'slug': '/demo/chart'
+      title: 'Line charts',
+      slug: '/demo/chart'
     },
     {
-      'title': 'Bar chart',
-      'slug': '/demo/bar'
+      title: 'Bar chart',
+      slug: '/demo/bar'
     },
     {
-      'title': 'Bubble chart',
-      'slug': '/demo/bubble'
+      title: 'Bubble chart',
+      slug: '/demo/bubble'
     },
     {
-      'title': 'Data grid',
-      'slug': '/demo/datagrid'
+      title: 'Data grid',
+      slug: '/demo/datagrid'
     },
     {
-      'title': 'Data display',
-      'slug': '/demo/display'
+      title: 'Data display',
+      slug: '/demo/display'
     },
     {
-      'title': 'Data drilldown',
-      'slug': '/demo/drilldown'
+      title: 'Data drilldown',
+      slug: '/demo/drilldown'
     },
     {
-      'title': 'GTS tree',
-      'slug': '/demo/gts-tree'
+      title: 'GTS tree',
+      slug: '/demo/gts-tree'
     },
     {
-      'title': 'Images',
-      'slug': '/demo/image'
+      title: 'Images',
+      slug: '/demo/image'
     },
     {
-      'title': 'Map',
-      'slug': '/demo/map'
+      title: 'Map',
+      slug: '/demo/map'
     },
     {
-      'title': 'Pie / Donut chart',
-      'slug': '/demo/pie'
+      title: 'Pie / Donut chart',
+      slug: '/demo/pie'
     },
     {
-      'title': 'Gauge',
-      'slug': '/demo/gauge'
+      title: 'Gauge',
+      slug: '/demo/gauge'
     },
     {
-      'title': 'Annotation',
-      'slug': '/demo/annotation'
+      title: 'Annotation',
+      slug: '/demo/annotation'
     },
     {
-      'title': 'Polar',
-      'slug': '/demo/polar'
+      title: 'Polar',
+      slug: '/demo/polar'
     },
     {
-      'title': 'Radar',
-      'slug': '/demo/radar'
+      title: 'Radar',
+      slug: '/demo/radar'
     },
     {
-      'title': 'Small tests',
-      'slug': '/small'
+      title: 'Small tests',
+      slug: '/small'
     }
   ];
   theme = 'dark';
 
-  /**
-   *
-   * @param {SettingsService} settingsService
-   */
   constructor(private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {
       this.theme = evt.settings.theme;

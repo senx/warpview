@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
 import {Param} from '../../model/param';
@@ -40,11 +49,6 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     yaxis: {},
   };
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewBubbleComponent, this._debug);
@@ -60,32 +64,19 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   */
   update(options: Param): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
@@ -94,15 +85,10 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     this.buildGraph();
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
     const dataset = [];
     (data.data as any []).forEach((gts, i) => {
-      let label = Object.keys(gts)[0];
+      const label = Object.keys(gts)[0];
       const color = ColorLib.getColor(i, this._options.scheme);
       const series: Partial<any> = {
         type: 'scattergl',
@@ -115,7 +101,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
         marker: {
           color: ColorLib.transparentize(color),
           line: {
-            color: color
+            color
           },
           size: []
         }
@@ -130,9 +116,6 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     return dataset;
   }
 
-  /**
-   *
-   */
   private buildGraph() {
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);

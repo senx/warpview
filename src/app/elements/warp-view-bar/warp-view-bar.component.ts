@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
@@ -46,11 +55,6 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
     },
   };
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewBarComponent, this._debug);
@@ -66,33 +70,20 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   */
   update(options: Param): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
@@ -101,14 +92,9 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
     this.buildGraph();
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
-    let divider: number = 1000; //default for µs timeunit
+    const gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+    let divider = 1000; // default for µs timeunit
     if (this._options.timeUnit && this._options.timeUnit === 'ms') {
       divider = 1;
     }
@@ -131,7 +117,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
           marker: {
             color: ColorLib.transparentize(color),
             line: {
-              color: color
+              color
             }
           }
         };
@@ -151,9 +137,6 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
     return dataset;
   }
 
-  /**
-   *
-   */
   private buildGraph() {
     this.LOG.debug(['buildGraph', 'this.layout'], this.responsive);
     this.LOG.debug(['buildGraph', 'this.layout'], this.layout);

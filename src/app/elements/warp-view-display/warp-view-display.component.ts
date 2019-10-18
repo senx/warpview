@@ -33,36 +33,21 @@ import {DataModel} from '../../model/dataModel';
 })
 export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit {
 
-  toDisplay: string = '';
+  toDisplay = '';
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
     super();
     this.LOG = new Logger(WarpViewDisplayComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.drawChart();
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options: Param, refresh: boolean): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
@@ -70,11 +55,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     this.LOG.debug(['drawChart'], [this._data, this.toDisplay]);
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     if (this._data.data) {
       this.toDisplay = GTSLib.isArray(this._data.data) ? this._data.data[0] : this._data.data;
@@ -85,10 +65,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     return [];
   }
 
-  /**
-   *
-   * @returns
-   */
   getStyle() {
     this.LOG.debug(['getStyle'], this._options);
     if (!this._options) {

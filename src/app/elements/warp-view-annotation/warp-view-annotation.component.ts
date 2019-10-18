@@ -103,11 +103,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     },
   };
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
@@ -124,15 +119,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
   }
 
-  /**
-   *
-   */
   ngOnDestroy(): void {
     if (this._chart) {
       this._chart.removeAllListeners('plotly_hover');
@@ -142,11 +131,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
-
-  /**
-   *
-   * @param {KeyboardEvent} $event
-   */
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
   handleKeyDown($event: KeyboardEvent) {
@@ -159,10 +143,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
-  /**
-   *
-   * @param {KeyboardEvent} $event
-   */
   @HostListener('keyup', ['$event'])
   @HostListener('document:keyup', ['$event'])
   handleKeyup($event: KeyboardEvent) {
@@ -177,21 +157,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options: Param, refresh: boolean): void {
     this._options = ChartLib.mergeDeep(this._options, options) as Param;
     this.drawChart();
   }
 
-  /**
-   *
-   * @param min
-   * @param max
-   */
   updateBounds(min, max) {
     this.LOG.debug(['updateBounds'], min, max, this._options);
     this._options.bounds.minDate = min;
@@ -211,10 +181,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
-  /**
-   *
-   * @param {boolean} reparseNewData
-   */
   drawChart(reparseNewData: boolean = false) {
     if (!this.initiChart(this.el)) {
       return;
@@ -225,7 +191,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.displayExpander = (this.plotlyData.length > 1);
-    let calculatedHeight = (this.expanded ? 40 * this.plotlyData.length : 40) + this.layout.margin.t;
+    const calculatedHeight = (this.expanded ? 40 * this.plotlyData.length : 40) + this.layout.margin.t;
     this.height = calculatedHeight;
     this.LOG.debug(['drawChart', 'height'], this.height, this.plotlyData.length, calculatedHeight);
     this.layout.yaxis.range = [0, this.expanded ? this.plotlyData.length : 1];
@@ -259,7 +225,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
         this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
           ? data.xvals[0]
           : (moment(data.xvals[0]).utc().toISOString() || '')
-            .replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '');
+            .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
         tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
         <span>${GTSLib.formatLabel(data.points[0].data.name)}: </span>
         <span class="value">${data.yvals[0]}</span>
@@ -278,11 +244,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     });
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
     const divider = GTSLib.getDivider(this._options.timeUnit);
@@ -315,7 +276,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
           'line.color': color,
           marker: {
             symbol: 'line-ns-open',
-            color: color,
+            color,
             size: 20,
             width: 5,
           }
@@ -374,9 +335,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     return dataset;
   }
 
-  /**
-   *
-   */
   private toggle() {
     this.expanded = !this.expanded;
     this.drawChart();

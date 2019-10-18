@@ -20,9 +20,11 @@
 :host {
   display: block;
   height: 100%;
+
   .modebar-group path {
     fill: var(--warp-view-font-color);
   }
+
   #chartContainer {
     height: 100%;
   }

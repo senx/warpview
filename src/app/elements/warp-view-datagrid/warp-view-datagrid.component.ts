@@ -35,76 +35,43 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   _tabularData: { name: string, values: any[], headers: string[] }[] = [];
   page = 0;
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
     super();
     this.LOG = new Logger(WarpViewDatagridComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.drawChart();
   }
 
-  /**
-   *
-   * @param {Param} options
-   */
   update(options: Param): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
     }
   }
 
-  /**
-   *
-   * @param {number} i
-   * @param {number} j
-   * @param {string} key
-   * @param {string} def
-   * @returns {string}
-   */
   private getHeaderParam(i: number, j: number, key: string, def: string): string {
-    return this._data['params'] && this._data['params'][i] && this._data['params'][i][key] && this._data['params'][i][key][j]
-      ? this._data['params'][i][key][j]
-      : this._data['globalParams'] && this._data['globalParams'][key] && this._data['globalParams'][key][j]
-        ? this._data['globalParams'][key][j]
+    return this._data.params && this._data.params[i] && this._data.params[i][key] && this._data.params[i][key][j]
+      ? this._data.params[i][key][j]
+      : this._data.globalParams && this._data.globalParams[key] && this._data.globalParams[key][j]
+        ? this._data.globalParams[key][j]
         : def;
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     this._tabularData = this.parseData(GTSLib.flatDeep(this._data.data as any[]));
     return [];
   }
 
-  /**
-   *
-   * @param {[]} data
-   * @returns {{name: string; values: any[]; headers: string[]}[]}
-   */
   protected parseData(data: any[]): { name: string, values: any[], headers: string[] }[] {
     const flatData: { name: string, values: any[], headers: string[] }[] = [];
     this.LOG.debug(['parseData'], data);
-
     data.forEach((d, i) => {
-      let dataSet: { name: string, values: any[], headers: string[] } = {
+      const dataSet: { name: string, values: any[], headers: string[] } = {
         name: '',
         values: [],
         headers: []
@@ -135,5 +102,4 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
     this.LOG.debug(['parseData', 'flatData'], flatData);
     return flatData;
   }
-
 }
