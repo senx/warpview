@@ -22,15 +22,29 @@
           <h4 class="text-white">About</h4>
           <p class="text-muted"><a href="https://www.warp10.io" target="_blank">Warp 10&trade;</a> dedicated
             visualization components.</p>
-          <p class="lead text-muted">Choose a main theme</p>
-          <p>
-            <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true"
-                    (click)="setTheme('light')" id="light">Light
-            </button>
-            <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false"
-                    (click)="setTheme('dark')" id="dark">Dark
-            </button>
-          </p>
+
+          <div class="row">
+            <div class="col-auto">
+              <p class="lead text-muted">Main theme</p>
+              <p>
+                <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true"
+                        (click)="setTheme('light')" id="light">Light
+                </button>
+                <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false"
+                        (click)="setTheme('dark')" id="dark">Dark
+                </button>
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="lead text-muted">Color scheme</p>
+              <p>
+                <select class="custom-select" [(ngModel)]="colorScheme" (change)="updateSettings()">
+                  <option *ngFor="let c of colorSchemes" [value]="c">{{c}}</option>
+                </select>
+              </p>
+            </div>
+          </div>
         </div>
         <div class="col-sm-4 offset-md-1 py-4">
           <h4 class="text-white">Contact</h4>

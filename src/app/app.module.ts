@@ -25,9 +25,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {MainDemoComponent} from './demo/main-demo/main-demo.component';
 import {SettingsService} from './services/settings.service';
-import { SmallTestsComponent } from './demo/small-tests/small-tests.component';
+import {SmallTestsComponent} from './demo/small-tests/small-tests.component';
 import {AngularResizedEventModule} from 'angular-resize-event';
-import {HttpErrorHandler} from './services/http-error-handler.service';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,8 @@ import {HttpErrorHandler} from './services/http-error-handler.service';
     CommonModule,
     ElementsModule,
     AngularResizedEventModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [SettingsService],
   bootstrap: [AppComponent],

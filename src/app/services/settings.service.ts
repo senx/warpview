@@ -19,11 +19,8 @@ import {EventEmitter} from '@angular/core';
  *
  */
 export class Settings {
-  /**
-   *
-   * @param {{theme: string}} settings
-   */
-  constructor(public settings: { theme: string }) {
+
+  constructor(public settings: { theme: string, colorScheme: string }) {
   }
 }
 
@@ -41,10 +38,6 @@ export class SettingsService {
     this.settingsAdded$ = new EventEmitter();
   }
 
-  /**
-   *
-   * @param {Settings} settings
-   */
   public add(settings: Settings): void {
     this.settings = settings;
     this.settingsAdded$.emit(settings);

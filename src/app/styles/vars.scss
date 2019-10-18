@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 :root {
+  $w10-blue: #004eff;
+  $w10-orange: #ff9900;
+  $w10-black: #000000;
+  $w10-charcoal: #404040;
+  $w10-charcoal-trans: #404040cc;
+  $w10-grey: #a0a0a0;
+  $w10-lightgrey: #c0c0c0;
+  $w10-white: #ffffff;
   // dimensions
   --warp-view-chart-width: 100%;
   --warp-view-chart-height: 100%;
@@ -29,51 +37,51 @@
   --warp-view-tile-height: 100%;
 
   // colors
-  --warp-view-font-color: #000;
+  --warp-view-font-color: #{$w10-black};
   --warp-view-bar-color: red;
-  --warp-view-datagrid-odd-bg-color: #fff;
-  --warp-view-datagrid-odd-color: #000;
-  --warp-view-datagrid-even-bg-color: #ddd;
-  --warp-view-datagrid-even-color: #000;
-  --warp-view-pagination-border-color: #ddd;
-  --warp-view-pagination-bg-color: #fff;
+  --warp-view-datagrid-odd-bg-color: #{$w10-white};
+  --warp-view-datagrid-odd-color: #{$w10-white};
+  --warp-view-datagrid-even-bg-color: #{$w10-lightgrey};
+  --warp-view-datagrid-even-color: #{$w10-black};
+  --warp-view-pagination-border-color: #{$w10-lightgrey};
+  --warp-view-pagination-bg-color: #{$w10-white};
   --warp-view-pagination-active-bg-color: #4CAF50;
-  --warp-view-pagination-active-color: #fff;
+  --warp-view-pagination-active-color: #{$w10-white};
   --warp-view-pagination-active-border-color: #4CAF50;
-  --warp-view-pagination-hover-bg-color: #ddd;
-  --warp-view-pagination-hover-color: #000;
-  --warp-view-pagination-hover-border-color: #ddd;
-  --warp-view-pagination-disabled-color: #ddd;
-  --warp-view-switch-inset-color: #eceeef;
+  --warp-view-pagination-hover-bg-color: #{$w10-lightgrey};
+  --warp-view-pagination-hover-color: #{$w10-black};
+  --warp-view-pagination-hover-border-color: #{$w10-lightgrey};
+  --warp-view-pagination-disabled-color: #{$w10-lightgrey};
+  --warp-view-switch-inset-color: #{$w10-lightgrey};
   --warp-view-switch-inset-checked-color: #00cd00;
-  --warp-view-switch-handle-color: radial-gradient(#FFFFFF 15%, #f0f0f0 100%);
-  --warp-view-switch-handle-checked-color: radial-gradient(#ffffff 15%, #00cd00 100%);
-  --warp-view-resize-handle-color: #ddd;
-  --warp-view-chart-legend-bg: #000000;
-  --warp-view-chart-legend-color: #ffffff;
-  --gts-classname-font-color: #0074D9;
+  --warp-view-switch-handle-color: radial-gradient(#{$w10-white} 15%, #{$w10-lightgrey} 100%);
+  --warp-view-switch-handle-checked-color: radial-gradient(#{$w10-white} 15%, #00cd00 100%);
+  --warp-view-resize-handle-color: #{$w10-lightgrey};
+  --warp-view-chart-legend-bg: #{$w10-black};
+  --warp-view-chart-legend-color: #{$w10-white};
+  --gts-classname-font-color: #{$w10-blue};
   --gts-labelname-font-color: #19A979;
   --gts-attrname-font-color: #19A979;
-  --gts-separator-font-color: #bbbbbb;
-  --gts-labelvalue-font-color: #AAAAAA;
-  --gts-attrvalue-font-color: #AAAAAA;
-  --gts-stack-font-color: #000000;
+  --gts-separator-font-color: #{$w10-grey};
+  --gts-labelvalue-font-color: #{$w10-charcoal};
+  --gts-attrvalue-font-color: #{$w10-grey};
+  --gts-stack-font-color: #{$w10-black};
   --gts-tree-expanded-icon: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVQ4T82TMW7CQBBF/0g+QOpINEkVCmpaLoBm5COk5QYoaeAY3MDSei2LGu4QKakiBA1tCpTK8kS2sLVe2xSh8XSrnf9m/s4s4c6gO/UYGEBEXlT1bK396bFGIjIJguA7iqJLkVNbYOZXItoQ0QHAzBhz9CCFeAVgCeAjy7Jpmqa/NUBEEgDzktqGuOKKO47j+KsGhGH4lOf5HsDIg5ycyqVYVd+steuGheLAzM9EtPMgW1VdVGWJ6N0YU1gpozVGH+K+gy/uBHR1crXUqNzbQXXhduJ69sd7cxOZ+UFVH5Mk+exb+YGt8n9+5h8up1sReYC0WAAAAABJRU5ErkJggg==);
   --gts-tree-collapsed-icon: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA0UlEQVQ4T6WTUW7CQAxEPQdozxYb9Qb94Aj9gQSoVCp6lMr21doDZFCQiFCU3YDY//d2PeOFPHnwJC+zAlVdA/jp+/6YmZ+1S0qCPxF5HUAAO3fvSpKS4ENEvm6gfUS0c5JiBma2Ibm/QiQPmbmdSqohquoA7GqSxRaapmkBjBkAeHP336t0UWBmHcnb+VcR4XcJpjDJLjPHkS4tleqZubmNiDHU6gumDQDYuvvh7hpV9V9EXgaA5Ka2jbMjmNk7yZOIfEfE8eFVfuSDLda4JDsD3FNdEckTC0YAAAAASUVORK5CYII=);
-  --warp-view-popup-bg-color: #ffffff;
+  --warp-view-popup-bg-color: #{$w10-white};
   --warp-view-popup-border-color: rgba(0, 0, 0, .2);
-  --warp-view-popup-header-bg-color: #ddd;
-  --warp-view-popup-title-color: #888;
-  --warp-view-popup-close-color: #888;
-  --warp-view-popup-body-bg-color: #ffffff;
-  --warp-view-popup-body-color: #000;
-  --warp-view-annotationtooltip-value-font-color: #0074D9;
-  --warp-view-annotationtooltip-font-color: #bbbbbb;
-  --warp-view-spinner-color: #ff9900;
+  --warp-view-popup-header-bg-color: #{$w10-lightgrey};
+  --warp-view-popup-title-color: #{$w10-grey};
+  --warp-view-popup-close-color: #{$w10-grey};
+  --warp-view-popup-body-bg-color: #{$w10-white};
+  --warp-view-popup-body-color: #{$w10-black};
+  --warp-view-annotationtooltip-value-font-color: #{$w10-blue};
+  --warp-view-annotationtooltip-font-color: #{$w10-grey};
+  --warp-view-spinner-color: #{$w10-orange};
 
 
-  --warp-slider-connect-color: #ff9900;
-  --warp-slider-handle-bg-color: #ffffff;
-  --warp-slider-handle-color: #1E88E5;
-  --warp-slider-handle-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
+  --warp-slider-connect-color: #{$w10-orange};
+  --warp-slider-handle-bg-color: #{$w10-white};
+  --warp-slider-handle-color: #{$w10-blue};
+  --warp-slider-handle-shadow: inset 0 0 1px #{$w10-white}, inset 0 1px 7px #{$w10-lightgrey}, 0 3px 6px -3px #{$w10-grey};
 }

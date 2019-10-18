@@ -24,12 +24,11 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 })
 export class WarpViewSpinnerComponent implements OnInit {
 
-  @Input() message: string = 'Loading and parsing data...';
+  @Input() message = 'Loading and parsing data...';
 
   constructor() {
   }
 
   ngOnInit() {
   }
-
 }

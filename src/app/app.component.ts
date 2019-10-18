@@ -16,6 +16,7 @@
 
 import {Component} from '@angular/core';
 import {Settings, SettingsService} from './services/settings.service';
+import {ColorLib} from "./utils/color-lib";
 
 @Component({
   selector: 'warpview-root',
@@ -24,20 +25,18 @@ import {Settings, SettingsService} from './services/settings.service';
 })
 export class AppComponent {
   theme = 'dark';
+  colorSchemes = Object.keys(ColorLib.color);
+  colorScheme = 'WARP10';
 
-  /**
-   *
-   * @param {SettingsService} settingsService
-   */
   constructor(private settingsService: SettingsService) {
   }
 
-  /**
-   *
-   * @param {string} theme
-   */
   setTheme(theme: string) {
     this.theme = theme;
-    this.settingsService.add(new Settings({theme: theme}));
+    this.updateSettings();
+  }
+
+  updateSettings() {
+    this.settingsService.add(new Settings({theme: this.theme, colorScheme: this.colorScheme}));
   }
 }

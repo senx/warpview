@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
-import {Param} from '../../model/param';
 import {GTSLib} from '../../utils/gts.lib';
 import * as moment from 'moment-timezone';
 import {ChartBounds} from '../../model/chartBounds';
-import deepEqual from 'deep-equal';
 import {ColorLib} from '../../utils/color-lib';
 import {Logger} from '../../utils/logger';
 import {WarpViewComponent} from '../warp-view-component';
@@ -67,6 +75,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   @Output() warpViewChartResize = new EventEmitter<any>();
   @Output() chartDraw = new EventEmitter<any>();
 
+  // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
 
@@ -113,43 +122,33 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   private chartBounds: ChartBounds = new ChartBounds();
   private visibilityStatus: visibilityState = 'unknown';
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     this.drawChart(refresh);
-  /*  if (options) {
-      this.visibilityStatus = 'unknown';
-      let optionChanged = false;
-   /!*   Object.keys(options).forEach(opt => {
-        if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
-        } else {
-          optionChanged = true; // new unknown option
-        }
-      });*!/
-      if (this.LOG) {
-        this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
-      }
-    /!*  if (optionChanged) {
+    /*  if (options) {
+        this.visibilityStatus = 'unknown';
+        let optionChanged = false;
+     /!*   Object.keys(options).forEach(opt => {
+          if (this._options.hasOwnProperty(opt)) {
+            optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          } else {
+            optionChanged = true; // new unknown option
+          }
+        });*!/
         if (this.LOG) {
-          this.LOG.debug(['onOptions', 'options'], options);
-        }*!/
-        this._options = options;
-        this.drawChart(false);
-      //}
-    } else {
-      this.drawChart(refresh);
-    }*/
+          this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
+        }
+      /!*  if (optionChanged) {
+          if (this.LOG) {
+            this.LOG.debug(['onOptions', 'options'], options);
+          }*!/
+          this._options = options;
+          this.drawChart(false);
+        //}
+      } else {
+        this.drawChart(refresh);
+      }*/
   }
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewChartComponent, this._debug);
@@ -190,10 +189,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  /**
-   *
-   * @returns {Promise<ChartBounds>}
-   */
   public async getTimeClip(): Promise<ChartBounds> {
     return new Promise<ChartBounds>(resolve => {
       this.LOG.debug(['getTimeClip'], this.chartBounds);
@@ -201,10 +196,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {number} newHeight
-   */
   public resize(newHeight: number) {
     this.height = newHeight;
     this.layout.height = this.height;
@@ -219,10 +210,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {boolean} reparseNewData
-   */
   drawChart(reparseNewData: boolean = false) {
     if (!this.initiChart(this.el)) {
       return;
@@ -234,8 +221,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
       this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
     }
 
-    this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
-    this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
+    this.layout.yaxis.color = this.getLabelColor(this.el.nativeElement);
+    this.layout.xaxis.color = this.getLabelColor(this.el.nativeElement);
+    this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
+    this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
+    this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
+    this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     if (!this.responsive) {
       this.layout.width = this.width;
       this.layout.height = this.height;
@@ -266,19 +257,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param min
-   * @param max
-   */
   private emitNewBounds(min, max) {
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.boundsDidChange.emit({
-        bounds: {
-          min: min,
-          max: max,
-        }
-      });
+      this.boundsDidChange.emit({bounds: {min, max}});
     } else {
       this.boundsDidChange.emit({
         bounds: {
@@ -289,11 +270,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
@@ -322,7 +298,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
       if (gts.v && GTSLib.isGtsToPlot(gts)) {
         const label = GTSLib.serializeGtsMetadata(gts);
         const color = ColorLib.getColor(gts.id, this._options.scheme);
-        console.log(color)
         const series: Partial<any> = {
           type: 'scatter',
           mode: this._options.showDots ? 'lines+markers' : 'lines',
@@ -330,11 +305,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
           text: label,
           x: [],
           y: [],
-          line: {color: color},
+          line: {color},
           hoverinfo: 'none',
           connectgaps: false,
           visible: this._hiddenData.filter(h => h === gts.id).length >= 0,
-          // 'line.color': color,
         };
         switch (this._type) {
           case 'spline':

@@ -52,7 +52,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   @Input() set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
     this.parseGTS();
-  };
+  }
 
   private _gtsFilter = '';
   private warpScript = '';
@@ -80,46 +80,26 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private timer: any;
   private _autoRefresh;
 
-  /**
-   *
-   * @param {Warp10Service} warp10Service
-   * @param {ChangeDetectorRef} cdRef
-   * @param {SizeService} sizeService
-   */
   constructor(private warp10Service: Warp10Service, private cdRef: ChangeDetectorRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewTileComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngAfterViewInit() {
     this.warpScript = this.warpRef.nativeElement.textContent.trim();
     this.LOG.debug(['ngAfterViewInit', 'warpScript'], this.warpScript);
     this.execute();
   }
 
-  /**
-   *
-   * @param {Param} options
-   */
   update(options: Param): void {
     this._options = options;
     this.parseGTS();
   }
 
-  /**
-   *
-   * @param {ResizedEvent} event
-   */
   onResized(event: ResizedEvent) {
     this.width = event.newWidth;
     this.height = event.newHeight;
@@ -136,11 +116,8 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   */
   private parseGTS() {
-    let data: DataModel = new DataModel();
+    const data: DataModel = new DataModel();
     if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
       const dataLine = this.gtsList[0];
       if (dataLine.hasOwnProperty('data')) {
@@ -185,21 +162,20 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
    * warning : the first line is empty (to confirm with other browsers)
    */
   private detectWarpScriptSpecialComments() {
-    //
-    //analyse the first warpScript lines starting with //
-    //
-    let extraParamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
-    let warpscriptLines = this.warpScript.split('\n');
+    // analyse the first warpScript lines starting with //
+    const extraParamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
+    const warpscriptLines = this.warpScript.split('\n');
     for (let l = 1; l < warpscriptLines.length; l++) {
-      let currentLine = warpscriptLines[l];
-      if (currentLine == '' || currentLine.search('//') >= 0) {
-        //find and extract // @paramname parameters
+      const currentLine = warpscriptLines[l];
+      if (currentLine === '' || currentLine.search('//') >= 0) {
+        // find and extract // @paramname parameters
         let lineOnMatch: RegExpMatchArray | null;
-        let re = RegExp(extraParamsPattern);
+        const re = RegExp(extraParamsPattern);
         // noinspection JSAssignmentUsedAsCondition
+        // tslint:disable-next-line:no-conditional-assignment JSAssignmentUsedAsCondition
         while (lineOnMatch = re.exec(currentLine)) {
-          let parameterName = lineOnMatch[1];
-          let parameterValue = lineOnMatch[2];
+          const parameterName = lineOnMatch[1];
+          const parameterValue = lineOnMatch[2];
           switch (parameterName) {
             case 'endpoint':        //        // @endpoint http://mywarp10server/api/v0/exec
               this.execUrl = parameterValue;
@@ -212,14 +188,11 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
           }
         }
       } else {
-        break; //no more comments at the beginning of the file
+        break; // no more comments at the beginning of the file
       }
     }
   }
 
-  /**
-   *
-   */
   private execute() {
     if (this.warpScript && this.warpScript.trim() !== '') {
       this.loading = true;
@@ -239,11 +212,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     return [];
   }

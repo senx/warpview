@@ -81,20 +81,6 @@ export abstract class WarpViewComponent {
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
-  protected abstract update(options: Param, refresh: boolean): void;
-
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
-  protected abstract convert(data: DataModel): Partial<PlotData>[]
-
   _options: Param = new Param();
   protected LOG: Logger;
   protected defOptions = {
@@ -130,12 +116,10 @@ export abstract class WarpViewComponent {
   protected _hiddenData: number[] = [];
   protected divider: number;
 
-  /**
-   *
-   * @param x
-   * @param series
-   * @returns {string}
-   */
+  protected abstract update(options: Param, refresh: boolean): void;
+
+  protected abstract convert(data: DataModel): Partial<PlotData>[];
+
   protected legendFormatter(x, series): string {
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
@@ -153,11 +137,11 @@ export abstract class WarpViewComponent {
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       html = `<b>${x}</b>`;
     } else {
-      html = `<b>${(moment.utc(parseInt(x)).toISOString().replace('T', '').replace('Z', '') || '')
-        .replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '')}</b>`;
+      html = `<b>${(moment.utc(parseInt(x, 10)).toISOString().replace('T', '').replace('Z', '') || '')
+        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '')}</b>`;
       // data.x is already a date in millisecond, whatever the unit option
     }
-    //put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
+    // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
     //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
     //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)
     series.forEach(s => {
@@ -170,11 +154,6 @@ export abstract class WarpViewComponent {
     return html;
   }
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @returns {boolean}
-   */
   protected initiChart(el: ElementRef): boolean {
     this.LOG.debug(['initiChart', 'this._data'], this._data);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
@@ -224,11 +203,6 @@ export abstract class WarpViewComponent {
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
-  /**
-   *
-   * @param {HTMLDivElement} toolTip
-   * @param {HTMLDivElement} graph
-   */
   protected manageTooltip(toolTip: HTMLDivElement, graph: HTMLDivElement) {
     this._chart.on('plotly_hover', (data: any) => {
       this.LOG.debug(['plotly_hover'], data);
@@ -246,33 +220,16 @@ export abstract class WarpViewComponent {
     });
   }
 
-  /**
-   *
-   * @param {HTMLElement} el
-   * @returns {string}
-   */
   protected getLabelColor(el: HTMLElement) {
-    return this.getCSSColor(el, '--warp-view-chart-label-color', '#8e8e8e');
+    return this.getCSSColor(el, '--warp-view-chart-label-color', '#8e8e8e').trim();
   }
 
-  /**
-   *
-   * @param {HTMLElement} el
-   * @returns {string}
-   */
   protected getGridColor(el: HTMLElement) {
-    return this.getCSSColor(el, '--warp-view-chart-grid-color', '#8e8e8e');
+    return this.getCSSColor(el, '--warp-view-chart-grid-color', '#8e8e8e').trim();
   }
 
-  /**
-   *
-   * @param {HTMLElement} el
-   * @param {string} property
-   * @param {string} defColor
-   * @returns {string}
-   */
   protected getCSSColor(el: HTMLElement, property: string, defColor: string) {
-    const color = getComputedStyle(el).getPropertyValue(property);
+    const color = getComputedStyle(el).getPropertyValue(property).trim();
     return color === '' ? defColor : color;
   }
 }

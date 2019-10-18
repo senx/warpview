@@ -84,9 +84,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     return this._gtsFilter;
   }
 
-  @Input() isAlone: boolean = false;
-  @Input() initialChartHeight: string = '400';
-  @Input() initialMapHeight: string = '500';
+  @Input() isAlone = false;
+  @Input() initialChartHeight = '400';
+  @Input() initialMapHeight = '500';
 
   @Output() chartDraw = new EventEmitter<any>();
 
@@ -102,28 +102,24 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   _toHide: number[] = [];
   showChart = true;
   showMap = false;
-  timeClipValue: string = '';
+  timeClipValue = '';
   kbdLastKeyPressed: string[] = [];
-  warningMessage: string = '';
+  warningMessage = '';
   loading = false;
 
   private mouseOutTimer: number;
-  private kbdCounter: number = 0;
-  private gtsFilterCount: number = 0;
+  private kbdCounter = 0;
+  private gtsFilterCount = 0;
   private gtsIdList: number[] = [];
-  private gtsBrowserIndex: number = -1;
+  private gtsBrowserIndex = -1;
   private _gtsFilter = 'x';
   private _type = 'line';
-  //key event are trapped in plot component.
-  //if one of this key is pressed, default action is prevented.
+  // key event are trapped in plot component.
+  // if one of this key is pressed, default action is prevented.
   private preventDefaultKeyList: string[] = ['Escape', '/'];
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
   private gtsList: DataModel | GTS[] | string;
 
-  /**
-   *
-   * @param {KeyboardEvent} ev
-   */
   @HostListener('document:keydown', ['$event'])
   @HostListener('keydown', ['$event'])
   handleKeydown(ev: KeyboardEvent) {
@@ -135,10 +131,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   * @param event
-   */
   stateChange(event: any) {
     this.LOG.debug(['stateChange'], event);
     switch (event.id) {
@@ -171,10 +163,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   * @param event
-   */
   boundsDidChange(event) {
     this.LOG.debug(['boundsDidChange'], event);
     this._options.bounds.minDate = event.bounds.min;
@@ -183,25 +171,18 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.line.nativeElement.style.left = '-100px';
   }
 
-  /**
-   *
-   */
   onWarpViewModalClose() {
     this.mainPlotDiv.nativeElement.focus();
   }
 
-  /**
-   *
-   * @param event
-   */
   warpViewSelectedGTS(event) {
     this.LOG.debug(['warpViewSelectedGTS'], event.detail);
     if (!this._toHide.find(i => {
       return i === event.detail.gts.id;
-    }) && !event.detail.selected) { //if not in toHide and state false, put id in toHide
+    }) && !event.detail.selected) { // if not in toHide and state false, put id in toHide
       this._toHide.push(event.detail.gts.id);
     } else {
-      if (event.detail.selected) { //if in toHide and state true, remove it from toHide
+      if (event.detail.selected) { // if in toHide and state true, remove it from toHide
         this._toHide = this._toHide.filter(i => {
           return i !== event.detail.gts.id;
         });
@@ -212,10 +193,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.drawChart();
   }
 
-  /**
-   *
-   * @param {MouseEvent} evt
-   */
   private handleMouseMove(evt: MouseEvent) {
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
@@ -229,10 +206,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   * @param {MouseEvent} evt
-   */
   private handleMouseOut(evt: MouseEvent) {
     this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 100) + 'px';
     if (this.mouseOutTimer) {
@@ -247,11 +220,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     if (options) {
       let optionChanged = false;
@@ -277,25 +245,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   */
   constructor() {
     super();
     this.LOG = new Logger(WarpViewPlotComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   * @param {KeyboardEvent} e
-   */
   inputTextKeyboardEvents(e: KeyboardEvent) {
     e.stopImmediatePropagation();
     if (e.key === 'Enter') {
@@ -309,42 +267,27 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
    *
    */
   tzSelected() {
-    let timeZone = this.tzSelector.nativeElement.value;
+    const timeZone = this.tzSelector.nativeElement.value;
     this.LOG.debug(['timezone', 'tzselect'], timeZone);
     this._options.timeZone = timeZone;
     this.tzSelector.nativeElement.setAttribute('class', timeZone === 'UTC' ? 'defaulttz' : 'customtz');
     this.drawChart();
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.drawChart(true);
   }
 
-  /**
-   *
-   * @returns {Promise<ChartBounds>}
-   */
   public getTimeClip(): Promise<ChartBounds> {
     this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
     return this.chart.getTimeClip();
   }
 
-  /**
-   *
-   * @param event
-   */
   resizeChart(event) {
     this.chart.resize(event);
     this.LOG.debug(['resizeChart'], event);
   }
 
-  /**
-   *
-   * @param {boolean} firstDraw
-   */
   drawChart(firstDraw: boolean = false) {
     this.LOG.debug(['drawCharts'], [this._data, this._options]);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
@@ -357,19 +300,19 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.modal.close();
     }
     this.LOG.debug(['PPts'], 'firstdraw ', firstDraw);
-    if (firstDraw) { //on the first draw, we can set some default options.
-      //automatically switch to timestamp mode
-      //when the first tick and last tick of all the series are in the interval [-100ms 100ms]
-      let tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
-      let dataList = this._data.data;
+    if (firstDraw) { // on the first draw, we can set some default options.
+      // automatically switch to timestamp mode
+      // when the first tick and last tick of all the series are in the interval [-100ms 100ms]
+      const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+      const dataList = this._data.data;
       if (dataList) {
         let gtsList = GTSLib.flattenGtsIdArray(dataList as any, 0).res;
         gtsList = GTSLib.flatDeep(gtsList);
         let timestampMode = true;
         let totalDatapoints = 0;
         gtsList.forEach(g => {
-          this.gtsIdList.push(g.id); //usefull for gts browse shortcut
-          if (g.v.length > 0) { //if gts not empty
+          this.gtsIdList.push(g.id); // usefull for gts browse shortcut
+          if (g.v.length > 0) { // if gts not empty
             timestampMode = timestampMode && (g.v[0][0] > -tsLimit && g.v[0][0] < tsLimit);
             timestampMode = timestampMode && (g.v[g.v.length - 1][0] > -tsLimit && g.v[g.v.length - 1][0] < tsLimit);
             totalDatapoints += g.v.length;
@@ -378,7 +321,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         if (timestampMode) {
           this._options.timeMode = 'timestamp';
         }
-        //do not display the chart if there is obviously lots of data
+        // do not display the chart if there is obviously lots of data
         if (gtsList.length > 1000 || totalDatapoints > 1000000) {
           this.LOG.warn(['firstdraw'], 'Lots of GTS or datapoint, hiding the graph...');
           this.showChart = false;
@@ -392,24 +335,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 
-  /**
-   *
-   * @param event
-   */
   focus(event: any) {
-    //read the first 4 letters of id of all elements in the click tree
+    // read the first 4 letters of id of all elements in the click tree
     const idListClicked = event.path.map(el => (el.id || '').slice(0, 4));
-    //if not alone on the page, and click is not on the timezone selector and not on the map, force focus.
+    // if not alone on the page, and click is not on the timezone selector and not on the map, force focus.
     if (!this.isAlone && idListClicked.indexOf('tzSe') < 0 && idListClicked.indexOf('map-') < 0) {
       this.mainPlotDiv.nativeElement.focus();
-    } //prevent stealing focus of the timezone selector.
+    } // prevent stealing focus of the timezone selector.
   }
 
-  /**
-   *
-   * @param {KeyboardEvent} ev
-   * @returns {Promise<void>}
-   */
   private async handleKeyDown(ev: KeyboardEvent) {
     this.LOG.debug(['document:keydown'], ev);
     if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
@@ -433,16 +367,16 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
-    } else if (ev.key === 'b' || ev.key === 'B') { //browse among all gts
+    } else if (ev.key === 'b' || ev.key === 'B') { // browse among all gts
       if (this.gtsBrowserIndex < 0) {
         this.gtsBrowserIndex = 0;
       }
-      if (ev.key === 'b') { //increment index
+      if (ev.key === 'b') { // increment index
         this.gtsBrowserIndex++;
         if (this.gtsBrowserIndex === this.gtsIdList.length) {
           this.gtsBrowserIndex = 0;
         }
-      } else { //decrement index
+      } else { // decrement index
         this.gtsBrowserIndex--;
         if (this.gtsBrowserIndex < 0) {
           this.gtsBrowserIndex = this.gtsIdList.length - 1;
@@ -452,48 +386,27 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     } else {
       this.pushKbdEvent(ev.key);
     }
-
   }
 
-  /**
-   *
-   */
   applyFilter() {
     this.gtsFilterCount++;
     this.gtsFilter = this.gtsFilterCount.toString().slice(0, 1) + this.filterInput.nativeElement.value;
     this.modal.close();
   }
 
-  /**
-   *
-   * @param {string} key
-   */
   private pushKbdEvent(key: string) {
     this.kbdCounter++;
     this.kbdLastKeyPressed = [key, this.kbdCounter.toString()];
   }
 
-  /**
-   *
-   * @returns {}
-   */
   getTZ() {
     return moment.tz.names();
   }
 
-  /**
-   *
-   * @returns {DataModel | GTS[] | string}
-   */
   getData() {
     return this.data;
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     return [];
   }
