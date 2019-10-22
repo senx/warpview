@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import moment from 'moment';
 import {Logger} from '../../utils/logger';
 import * as noUiSlider from 'nouislider';
@@ -27,7 +27,7 @@ import * as noUiSlider from 'nouislider';
   styleUrls: ['./warp-view-slider.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewSliderComponent implements AfterViewInit, OnInit {
+export class WarpViewSliderComponent implements AfterViewInit {
   @ViewChild('slider') slider: ElementRef<HTMLDivElement>;
 
   @Input() set min(m) {
@@ -65,7 +65,7 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
     return this._step;
   }
 
-  @Input() mode: string = 'timestamp';
+  @Input() mode = 'timestamp';
 
   @Input() set debug(debug: boolean) {
     this._debug = debug;
@@ -82,37 +82,22 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
   _max: number;
   show = false;
   protected _uiSlider;
-  protected _step: number = 0;
+  protected _step = 0;
   protected LOG: Logger;
   loaded = false;
   protected manualRefresh: EventEmitter<void> = new EventEmitter<void>();
   protected _debug = false;
 
-  /**
-   *
-   */
   constructor() {
     this.LOG = new Logger(WarpViewSliderComponent, this.debug);
     this.LOG.debug(['constructor'], this.debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.loaded = false;
     this.setOptions();
   }
 
-  /**
-   *
-   */
-  ngOnInit(): void {
-  }
-
-  /**
-   *
-   */
   protected setOptions() {
     if (!this._min && !this._max) {
       return;
@@ -130,10 +115,7 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
         const opts = {
           start: [this.value + 1],
           tooltips: [this.getFormat()],
-          range: {
-            'min': [this._min],
-            'max': [this._max]
-          }
+          range: {min: [this._min], max: [this._max]}
         } as any;
         if (!!this._step && this._step > 0) {
           opts.step = Math.floor((this._max - this._min) / this._step);
@@ -141,8 +123,8 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
         this._uiSlider = noUiSlider.create(this.slider.nativeElement, opts);
         this._uiSlider.on('end', event => {
           this.LOG.debug(['onChange'], event);
-          this.value = parseInt(event[0]);
-          this.change.emit({value: parseInt(event[0])});
+          this.value = parseInt(event[0], 10);
+          this.change.emit({value: parseInt(event[0], 10)});
         });
       } else {
         this.updateSliderOptions();
@@ -150,28 +132,17 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   *
-   */
   protected updateSliderOptions() {
+    // tslint:disable-next-line:no-string-literal
     this.slider.nativeElement['noUiSlider'].set([this.value]);
-    const opts = {
-      range: {
-        'min': [this._min],
-        'max': [this._max]
-      }
-    } as any;
+    const opts = {range: {min: [this._min], max: [this._max]}} as any;
     if (!!this._step && this._step > 0) {
       opts.step = Math.floor((this._max - this._min) / this._step);
     }
+    // tslint:disable-next-line:no-string-literal
     this.slider.nativeElement['noUiSlider'].updateOptions(opts);
   }
 
-  /**
-   *
-   * @param {number} value
-   * @returns {string}
-   */
   protected format(value: number) {
     if (this.mode !== 'timestamp') {
       return moment(value).utc(true).format('YYYY/MM/DD hh:mm:ss');
@@ -180,10 +151,6 @@ export class WarpViewSliderComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   *
-   * @returns {{from: (value) => void; to: (value) => string}}
-   */
   protected getFormat() {
     return {
       to: value => this.format(value),

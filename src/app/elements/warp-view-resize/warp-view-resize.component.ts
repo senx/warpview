@@ -28,14 +28,7 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewResizeComponent implements AfterViewInit {
   @ViewChild('handleDiv') handleDiv: ElementRef;
-  /**
-   * Minimum height in pixel. default 10px.
-   */
-  @Input() minHeight: string = '10';
-
-  /**
-   * If set, force the initial height to the given value in px.
-   */
+  @Input() minHeight = '10';
   @Input() initialHeight: string = null;
 
   @Input() set debug(debug: boolean) {
@@ -56,23 +49,18 @@ export class WarpViewResizeComponent implements AfterViewInit {
   private LOG: Logger;
   private _debug = false;
 
-  /**
-   *
-   */
   constructor(private el: ElementRef) {
     this.LOG = new Logger(WarpViewResizeComponent, this.debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     if (this.firstDraw && this.initialHeight) {
-      this.el.nativeElement.style.height = parseInt(this.initialHeight) + 'px';
+      this.el.nativeElement.style.height = parseInt(this.initialHeight, 10) + 'px';
     }
-    //the click event on the handlebar attach mousemove and mouseup events to document.
+    // the click event on the handlebar attach mousemove and mouseup events to document.
     this.handleDiv.nativeElement.addEventListener('mousedown', (ev: MouseEvent) => {
-      if (0 == ev.button) { //keep left click only
+      if (0 === ev.button) {
+        // keep left click only
         this.moveListener = this.handleDraggingMove.bind(this);
         this.clickUpListener = this.handleDraggingEnd.bind(this);
         document.addEventListener('mousemove', this.moveListener, false);
@@ -81,10 +69,6 @@ export class WarpViewResizeComponent implements AfterViewInit {
     });
   }
 
-  /**
-   *
-   * @param {CustomEvent} event
-   */
   @HostListener('resizeMyParent', ['$event'])
   onResize(event: CustomEvent) {
     event.stopPropagation();
@@ -93,12 +77,9 @@ export class WarpViewResizeComponent implements AfterViewInit {
     }
   }
 
-  /**
-   *
-   */
   private handleDraggingEnd() {
     this.dragging = false;
-    //the mouseup detach mousemove and mouseup events from document.
+    // the mouseup detach mousemove and mouseup events from document.
     if (this.moveListener) {
       document.removeEventListener('mousemove', this.moveListener, false);
       this.moveListener = null;
@@ -109,22 +90,18 @@ export class WarpViewResizeComponent implements AfterViewInit {
     }
   }
 
-  /**
-   *
-   * @param {MouseEvent} ev
-   */
   private handleDraggingMove(ev: MouseEvent) {
     ev.preventDefault();
     this.LOG.debug(['handleDraggingMove'], ev);
-    //compute Y of the parent div top relative to page
-    let yTopParent = this.handleDiv.nativeElement.parentElement.getBoundingClientRect().top
+    // compute Y of the parent div top relative to page
+    const yTopParent = this.handleDiv.nativeElement.parentElement.getBoundingClientRect().top
       - document.body.getBoundingClientRect().top;
-    //compute new parent height
+    // compute new parent height
     let h = ev.pageY - yTopParent + this.handleDiv.nativeElement.getBoundingClientRect().height / 2;
-    if (h < parseInt(this.minHeight)) {
-      h = parseInt(this.minHeight);
+    if (h < parseInt(this.minHeight, 10)) {
+      h = parseInt(this.minHeight, 10);
     }
-    //apply new height
+    // apply new height
     this.handleDiv.nativeElement.parentElement.style.height = h + 'px';
     this.LOG.debug(['handleDraggingMove'], h);
     this.resize.emit(h);

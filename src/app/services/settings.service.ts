@@ -15,25 +15,16 @@
  */
 import {EventEmitter} from '@angular/core';
 
-/**
- *
- */
 export class Settings {
 
   constructor(public settings: { theme: string, colorScheme: string }) {
   }
 }
 
-/**
- *
- */
 export class SettingsService {
   public settingsAdded$: EventEmitter<Settings>;
   private settings: Settings;
 
-  /**
-   *
-   */
   constructor() {
     this.settingsAdded$ = new EventEmitter();
   }

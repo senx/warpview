@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'warpview-heatmap-sliders',
@@ -22,7 +22,7 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsul
   styleUrls: ['./warp-view-heatmap-sliders.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewHeatmapSlidersComponent implements OnInit {
+export class WarpViewHeatmapSlidersComponent {
 
   @Input() radiusValue: number;
   @Input() minRadiusValue: number;
@@ -34,16 +34,6 @@ export class WarpViewHeatmapSlidersComponent implements OnInit {
   @Output() heatRadiusDidChange = new EventEmitter<any>();
   @Output() heatBlurDidChange = new EventEmitter<any>();
   @Output() heatOpacityDidChange = new EventEmitter<any>();
-
-  /**
-   *
-   * @param {ElementRef} el
-   */
-  constructor(private el: ElementRef) {
-  }
-
-  ngOnInit() {
-  }
 
   radiusChanged(value) {
     this.heatRadiusDidChange.emit(value);

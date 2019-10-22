@@ -16,36 +16,19 @@
 
 import {EventEmitter} from '@angular/core';
 
-/**
- *
- */
 export class Size {
-  /**
-   *
-   * @param {number} width
-   * @param {number} height
-   */
   constructor(public width: number, public height: number) {
   }
 }
 
-/**
- *
- */
+
 export class SizeService {
   public sizeChanged$: EventEmitter<Size>;
 
-  /**
-   *
-   */
   constructor() {
     this.sizeChanged$ = new EventEmitter();
   }
 
-  /**
-   *
-   * @param {Size} size
-   */
   public change(size: Size): void {
     this.sizeChanged$.emit(size);
   }

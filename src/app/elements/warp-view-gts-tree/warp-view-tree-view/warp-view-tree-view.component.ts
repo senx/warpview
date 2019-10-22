@@ -44,8 +44,8 @@ export class WarpViewTreeViewComponent implements OnInit {
     return this._hiddenData;
   }
 
-  @Input() options : Param;
-  @Input() gtsFilter: string = 'x';
+  @Input() options: Param;
+  @Input() gtsFilter = 'x';
   @Input() gtsList: any[];
   @Input() branch = false;
   @Input() hidden = false;
@@ -67,21 +67,12 @@ export class WarpViewTreeViewComponent implements OnInit {
     });
   }
 
-  /**
-   *
-   * @param {number} index
-   */
   toggleVisibility(index: number) {
     this.LOG.debug(['toggleVisibility'], index, this.hide);
     this.hide[index + ''] = !this.hide[index + ''];
 
   }
 
-  /**
-   *
-   * @param {number} index
-   * @returns boolean
-   */
   isHidden(index: number) {
     if (!!this.hide[index + '']) {
       return this.hide[index + ''];
@@ -90,11 +81,6 @@ export class WarpViewTreeViewComponent implements OnInit {
     }
   }
 
-  /**
-   *
-   * @param node
-   * @returns {boolean}
-   */
   isGts(node) {
     return GTSLib.isGts(node);
   }

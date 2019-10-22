@@ -19,25 +19,17 @@ import {ColorLib} from './color-lib';
 import {Logger} from './logger';
 
 export class MapLib {
-  static BASE_RADIUS: number = 2;
+  static BASE_RADIUS = 2;
   private static LOG: Logger = new Logger(MapLib);
 
-  /**
-   *
-   * @param {} data
-   * @param {number[]} hiddenData
-   * @param {number} divider
-   * @param {string} scheme
-   * @returns {[]}
-   */
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
     if (!data.gts) {
       return;
     }
-    let paths = [];
+    const paths = [];
     (data.gts || []).map((gts, i) => {
-      if (GTSLib.isGtsToPlot(gts) && (hiddenData || []).filter((i) => i === gts.id).length === 0) {
-        let sl: any = {};
+      if (GTSLib.isGtsToPlot(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
+        const sl: any = {};
         sl.path = GTSLib.gtsToPath(gts, divider);
         if (data.params && data.params[i] && data.params[i].key) {
           sl.key = data.params[i].key;
@@ -55,23 +47,15 @@ export class MapLib {
     return paths;
   }
 
-  /**
-   *
-   * @param {} data
-   * @param {number[]} hiddenData
-   * @param {number} divider
-   * @param {string} scheme
-   * @returns {[]}
-   */
   static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
     if (!data.gts) {
       return;
     }
-    let annotations = [];
+    const annotations = [];
     (data.gts || []).map((gts, i) => {
-      if (GTSLib.isGtsToAnnotate(gts) && (hiddenData || []).filter((i) => i === gts.id).length === 0) {
+      if (GTSLib.isGtsToAnnotate(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['annotationsToLeafletPositions'], gts);
-        let annotation: any = {};
+        const annotation: any = {};
         let params = (data.params || [])[i];
         if (!params) {
           params = {};
@@ -95,30 +79,19 @@ export class MapLib {
     return annotations;
   }
 
-  /**
-   *
-   * @param obj
-   * @param params
-   * @param index
-   * @param scheme
-   */
   private static extractCommonParameters(obj, params, index, scheme: string) {
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
     obj.borderColor = params.borderColor || '#000';
-    if (params.baseRadius === undefined || isNaN(parseInt(params.baseRadius)) || parseInt(params.baseRadius) < 0) {
+    if (params.baseRadius === undefined
+      || isNaN(parseInt(params.baseRadius, 10))
+      || parseInt(params.baseRadius, 10) < 0) {
       obj.baseRadius = MapLib.BASE_RADIUS;
     } else {
       obj.baseRadius = params.baseRadius;
     }
   }
 
-  /**
-   *
-   * @param posArray
-   * @param params
-   * @returns {boolean}
-   */
   private static validateWeightedDotsPositionArray(posArray, params) {
     if (params.minValue === undefined || params.maxValue === undefined) {
       MapLib.LOG.error(['validateWeightedDotsPositionArray'], 'When using \'weightedDots\' or ' +
@@ -126,10 +99,8 @@ export class MapLib {
       posArray.render = undefined;
       return;
     }
-
     posArray.maxValue = params.maxValue;
     posArray.minValue = params.minValue;
-
     if (typeof posArray.minValue !== 'number' ||
       typeof posArray.maxValue !== 'number' ||
       posArray.minValue >= posArray.maxValue) {
@@ -146,21 +117,21 @@ export class MapLib {
       return;
     }
 
-    if (params.numSteps === undefined || isNaN(parseInt(params.numSteps)) || parseInt(params.numSteps) < 0) {
+    if (params.numSteps === undefined || isNaN(parseInt(params.numSteps, 10)) || parseInt(params.numSteps, 10) < 0) {
       posArray.numSteps = 5;
     } else {
       posArray.numSteps = params.numSteps;
     }
-    let step = (posArray.maxValue - posArray.minValue) / posArray.numSteps;
-    let steps = [];
+    const step = (posArray.maxValue - posArray.minValue) / posArray.numSteps;
+    const steps = [];
     for (let j = 0; j < posArray.numSteps - 1; j++) {
       steps[j] = posArray.minValue + (j + 1) * step;
     }
     steps[posArray.numSteps - 1] = posArray.maxValue;
     posArray.positions.forEach((pos) => {
-      let value = pos[2];
+      const value = pos[2];
       pos[4] = posArray.numSteps - 1;
-      for (let k in steps) {
+      for (const k in steps) {
         if (value <= steps[k]) {
           pos[4] = k;
           break;
@@ -170,20 +141,13 @@ export class MapLib {
     return true;
   }
 
-  /**
-   *
-   * @param {} data
-   * @param {number[]} hiddenData
-   * @param {string} scheme
-   * @returns {[]}
-   */
   static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }, hiddenData: number[], scheme: string) {
-    let positions = [];
+    const positions = [];
     data.gts.map((gts, i) => {
-      if (GTSLib.isPositionArray(gts) && (hiddenData || []).filter((i) => i === gts.id).length === 0) {
+      if (GTSLib.isPositionArray(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
-        let posArray = gts;
-        let params = data.params[i];
+        const posArray = gts;
+        const params = data.params[i];
         MapLib.extractCommonParameters(posArray, params, i, scheme);
         if (params.render !== undefined) {
           posArray.render = params.render;
@@ -204,11 +168,6 @@ export class MapLib {
     return positions;
   }
 
-  /**
-   *
-   * @param posArray
-   * @param params
-   */
   private static validateWeightedColoredDotsPositionArray(posArray: any, params: any) {
     if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
       return;
@@ -240,9 +199,7 @@ export class MapLib {
       posArray.render = undefined;
       return;
     }
-
-    let re = /^#(?:[0-9a-f]{3}){1,2}$/i;
-
+    const re = /^#(?:[0-9a-f]{3}){1,2}$/i;
     if (typeof params.startColor !== 'string'
       || typeof params.endColor !== 'string'
       || !re.test(params.startColor)
@@ -277,8 +234,8 @@ export class MapLib {
     };
 
     if (params.numColorSteps === undefined ||
-      isNaN(parseInt(params.numColorSteps)) ||
-      parseInt(params.numColorSteps) < 0) {
+      isNaN(parseInt(params.numColorSteps, 10)) ||
+      parseInt(params.numColorSteps, 10) < 0) {
       posArray.numColorSteps = 5;
     } else {
       posArray.numColorSteps = params.numColorSteps;
@@ -289,8 +246,8 @@ export class MapLib {
       posArray.endColor,
       posArray.numColorSteps);
 
-    let step = (posArray.maxColorValue - posArray.minColorValue) / posArray.numColorSteps;
-    let steps = [];
+    const step = (posArray.maxColorValue - posArray.minColorValue) / posArray.numColorSteps;
+    const steps = [];
     for (let j = 0; j < posArray.numColorSteps; j++) {
       steps[j] = posArray.minColorValue + (j + 1) * step;
     }
@@ -298,7 +255,7 @@ export class MapLib {
     posArray.steps = steps;
 
     posArray.positions.forEach(pos => {
-      let colorValue = pos[3];
+      const colorValue = pos[3];
       pos[5] = posArray.numColorSteps - 1;
       for (let k = 0; k < steps.length - 1; k++) {
         if (colorValue < steps[k]) {
@@ -309,16 +266,8 @@ export class MapLib {
     });
   }
 
-  /**
-   *
-   * @param paths
-   * @param positionsData
-   * @param annotationsData
-   * @param geoJson
-   * @returns {}
-   */
   static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
-    let pointsArray = [];
+    const pointsArray = [];
     paths.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
     positionsData.forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
     annotationsData.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
@@ -379,35 +328,22 @@ export class MapLib {
 
   }
 
-  /**
-   *
-   * @param pathData
-   * @param options
-   * @returns {[]}
-   */
   static pathDataToLeaflet(pathData, options) {
     const path = [];
-    let firstIndex = ((options === undefined) ||
+    const firstIndex = ((options === undefined) ||
       (options.from === undefined) ||
       (options.from < 0)) ? 0 : options.from;
-    let lastIndex = ((options === undefined) || (options.to === undefined) || (options.to >= pathData.length)) ?
+    const lastIndex = ((options === undefined) || (options.to === undefined) || (options.to >= pathData.length)) ?
       pathData.length - 1 : options.to;
-
     for (let i = firstIndex; i <= lastIndex; i++) {
       path.push([pathData[i].lat, pathData[i].lon]);
     }
-
     return path;
   }
 
-  /**
-   *
-   * @param { {gts: any[]; params: any[]} } data
-   * @returns {[]}
-   */
   static toGeoJSON(data: { gts: any[]; params: any[] }) {
     const defShapes = ['Point', 'LineString', 'Polygon', 'MultiPolygon'];
-    let geoJsons = [];
+    const geoJsons = [];
     data.gts.forEach(d => {
       if (d.type && d.type === 'Feature' && d.geometry && d.geometry.type && defShapes.indexOf(d.geometry.type) > -1) {
         geoJsons.push(d);

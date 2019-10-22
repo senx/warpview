@@ -16,7 +16,7 @@
 
 import {Component} from '@angular/core';
 import {Settings, SettingsService} from './services/settings.service';
-import {ColorLib} from "./utils/color-lib";
+import {ColorLib} from './utils/color-lib';
 
 @Component({
   selector: 'warpview-root',

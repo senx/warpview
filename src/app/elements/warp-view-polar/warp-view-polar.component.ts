@@ -18,7 +18,6 @@ import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChil
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
 import deepEqual from 'deep-equal';
-import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {GTS} from '../../model/GTS';
@@ -58,11 +57,6 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
     orientation: 270
   };
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewPolarComponent, this._debug);
@@ -78,11 +72,6 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     if (options) {
       let optionChanged = false;
@@ -108,25 +97,16 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
@@ -145,15 +125,10 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
     const divider = GTSLib.getDivider(this._options.timeUnit);
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+    const gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     let minVal = Number.MAX_VALUE;
     let maxVal = Number.MIN_VALUE;
@@ -163,10 +138,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
         r: [],
         theta: [],
         marker: {
-          line: {
-            color: color,
-            width: 1
-          },
+          line: {color, width: 1},
           color: ColorLib.transparentize(color),
         },
         fillcolor: ColorLib.transparentize(color),

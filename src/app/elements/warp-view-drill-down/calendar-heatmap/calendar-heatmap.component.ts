@@ -31,14 +31,6 @@ import moment, {Moment} from 'moment';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class CalendarHeatmapComponent implements AfterViewInit {
-  private static DEF_MIN_COLOR: string = '#ffffff';
-  private static DEF_MAX_COLOR: string = '#333333';
-
-  @ViewChild('chart') div: ElementRef;
-
-  @Input() width = ChartLib.DEFAULT_WIDTH;
-  @Input() height = ChartLib.DEFAULT_HEIGHT;
-  @Input() overview: string = 'global';
 
   @Input() set debug(debug: boolean) {
     this._debug = debug;
@@ -79,8 +71,21 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     return this._maxColor;
   }
 
+  constructor(private el: ElementRef) {
+    this.LOG = new Logger(CalendarHeatmapComponent, this.debug);
+  }
+
+  private static DEF_MIN_COLOR = '#ffffff';
+  private static DEF_MAX_COLOR = '#333333';
+
+  @ViewChild('chart') div: ElementRef;
+
+  @Input() width = ChartLib.DEFAULT_WIDTH;
+  @Input() height = ChartLib.DEFAULT_HEIGHT;
+  @Input() overview = 'global';
+
   @Output() handler = new EventEmitter<any>();
-  @Output() onChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
 
   private LOG: Logger;
   private _data: Datum[];
@@ -88,16 +93,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
   private _minColor: string = CalendarHeatmapComponent.DEF_MIN_COLOR;
   private _maxColor: string = CalendarHeatmapComponent.DEF_MAX_COLOR;
 // Defaults
-  private gutter: number = 5;
-  private gWidth: number = 1000;
-  private gHeight: number = 200;
-  private item_size: number = 10;
-  private label_padding: number = 40;
-  private transition_duration: number = 250;
-  private in_transition: boolean = false;
+  private gutter = 5;
+  private gWidth = 1000;
+  private gHeight = 200;
+  private itemSize = 10;
+  private labelPadding = 40;
+  private transitionDuration = 250;
+  private inTransition = false;
   // Tooltip defaults
-  private tooltip_width: number = 450;
-  private tooltip_padding: number = 15;
+  private tooltipWidth = 450;
+  private tooltipPadding = 15;
   // Overview defaults
   private history = ['global'];
   private selected: Datum = new Datum();
@@ -111,18 +116,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
   private chart: HTMLElement;
   private resizeTimer;
 
-  /**
-   * Recalculate dimensions on window resize events
-   */
+  static getNumberOfWeeks(): number {
+    const dayIndex = Math.round((+moment.utc() - +moment.utc().subtract(1, 'year').startOf('week')) / 86400000);
+    return Math.trunc(dayIndex / 7) + 1;
+  }
+
   @HostListener('window:resize')
   onResize() {
     if (this.el.nativeElement.parentElement.clientWidth !== this.parentWidth) {
       this.calculateDimensions();
     }
-  };
-
-  constructor(private el: ElementRef) {
-    this.LOG = new Logger(CalendarHeatmapComponent, this.debug);
   }
 
   ngAfterViewInit() {
@@ -143,30 +146,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     //  this.drawChart();
   }
 
-
-  /**
-   * Utility function to get number of complete weeks in a year
-   *
-   * @returns {number}
-   */
-  static getNumberOfWeeks(): number {
-    const dayIndex = Math.round((+moment.utc() - +moment.utc().subtract(1, 'year').startOf('week')) / 86400000);
-    return Math.trunc(dayIndex / 7) + 1;
-  }
-
-  /**
-   * Utility function to calculate chart dimensions
-   */
   calculateDimensions() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(() => {
-      if (this.el.nativeElement.parentElement.clientWidth != 0) {
+      if (this.el.nativeElement.parentElement.clientWidth !== 0) {
         this.gWidth = this.chart.clientWidth < 1000 ? 1000 : this.chart.clientWidth;
-        this.item_size = ((this.gWidth - this.label_padding) / CalendarHeatmapComponent.getNumberOfWeeks() - this.gutter);
-        this.gHeight = this.label_padding + 7 * (this.item_size + this.gutter);
+        this.itemSize = ((this.gWidth - this.labelPadding) / CalendarHeatmapComponent.getNumberOfWeeks() - this.gutter);
+        this.gHeight = this.labelPadding + 7 * (this.itemSize + this.gutter);
         this.svg.attr('width', this.gWidth).attr('height', this.gHeight);
-        this.LOG.debug(['calculateDimensions'], this.data);
-        if (!!this.data && !!this.data[0] && !!this.data[0].summary) {
+        this.LOG.debug(['calculateDimensions'], this._data);
+        if (!!this._data && !!this._data[0] && !!this._data[0].summary) {
           this.drawChart();
         }
       } else {
@@ -177,22 +166,17 @@ export class CalendarHeatmapComponent implements AfterViewInit {
 
 
   private groupBy(xs, key) {
-    return xs.reduce(function(rv, x) {
+    return xs.reduce((rv, x) => {
       (rv[x[key]] = rv[x[key]] || []).push(x);
       return rv;
     }, {});
-  };
+  }
 
-  /**
-   * Helper function to check for data summary
-   *
-   * @returns {}
-   */
   updateDataSummary() {
     // Get daily summary if that was not provided
-    if (!this.data[0].summary) {
-      this.data.map((d: Datum) => {
-        const summary = d['details'].reduce((uniques: any, project: any) => {
+    if (!this._data[0].summary) {
+      this._data.map((d: Datum) => {
+        const summary = d.details.reduce((uniques: any, project: any) => {
           if (!uniques[project.name]) {
             uniques[project.name] = {value: project.value};
           } else {
@@ -200,13 +184,13 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           }
           return uniques;
         }, {});
-        const unsorted_summary = Object.keys(summary).map((key) => {
+        const unsortedSummary = Object.keys(summary).map((key) => {
           return {
             name: key,
             total: summary[key].value
           };
         });
-        d.summary = unsorted_summary.sort((a, b) => {
+        d.summary = unsortedSummary.sort((a, b) => {
           return b.total - a.total;
         });
         return d;
@@ -214,26 +198,23 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     }
   }
 
-  /**
-   * Draw the chart based on the current overview type
-   */
   drawChart() {
-    if (!this.svg || !this.data) {
+    if (!this.svg || !this._data) {
       return;
     }
     this.LOG.debug(['drawChart'], [this.overview, this.selected]);
     switch (this.overview) {
       case 'global':
         this.drawGlobalOverview();
-        this.onChange.emit({
+        this.change.emit({
           overview: this.overview,
-          start: moment(this.data[0].date),
-          end: moment(this.data[this.data.length - 1].date),
+          start: moment(this._data[0].date),
+          end: moment(this._data[this._data.length - 1].date),
         });
         break;
       case 'year':
         this.drawYearOverview();
-        this.onChange.emit({
+        this.change.emit({
           overview: this.overview,
           start: moment(this.selected.date).startOf('year'),
           end: moment(this.selected.date).endOf('year'),
@@ -241,7 +222,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         break;
       case 'month':
         this.drawMonthOverview();
-        this.onChange.emit({
+        this.change.emit({
           overview: this.overview,
           start: moment(this.selected.date).startOf('month'),
           end: moment(this.selected.date).endOf('month'),
@@ -249,7 +230,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         break;
       case 'week':
         this.drawWeekOverview();
-        this.onChange.emit({
+        this.change.emit({
           overview: this.overview,
           start: moment(this.selected.date).startOf('week'),
           end: moment(this.selected.date).endOf('week'),
@@ -257,7 +238,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         break;
       case 'day':
         this.drawDayOverview();
-        this.onChange.emit({
+        this.change.emit({
           overview: this.overview,
           start: moment(this.selected.date).startOf('day'),
           end: moment(this.selected.date).endOf('day'),
@@ -268,19 +249,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     }
   }
 
-  /**
-   * Draw global overview (multiple years)
-   */
   drawGlobalOverview() {
     // Add current overview to the history
     if (this.history[this.history.length - 1] !== this.overview) {
       this.history.push(this.overview);
     }
     // Define start and end of the dataset
-    const start_period: Moment = moment.utc(this._data[0].date.startOf('y'));
-    const end_period: Moment = moment.utc(this.data[this.data.length - 1].date.endOf('y'));
+    const startPeriod: Moment = moment.utc(this._data[0].date.startOf('y'));
+    const endPeriod: Moment = moment.utc(this._data[this._data.length - 1].date.endOf('y'));
     // Define array of years and total values
-    const yData: Datum[] = this.data.filter((d: Datum) => d.date.isBetween(start_period, end_period, null, '[]'));
+    const yData: Datum[] = this._data.filter((d: Datum) => d.date.isBetween(startPeriod, endPeriod, null, '[]'));
     yData.forEach((d: Datum) => {
       const summary: Summary[] = [];
       const group = this.groupBy(d.details, 'name');
@@ -296,16 +274,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       });
       d.summary = summary;
     });
-    const duration = Math.ceil(moment.duration(end_period.diff(start_period)).asYears());
+    const duration = Math.ceil(moment.duration(endPeriod.diff(startPeriod)).asYears());
     const scale = [];
     for (let i = 0; i < duration; i++) {
-      const d = moment.utc().year(start_period.year() + i).month(0).date(1).startOf('y');
+      const d = moment.utc().year(startPeriod.year() + i).month(0).date(1).startOf('y');
       scale.push(d);
     }
-    let year_data: Datum[] = yData.map((d: Datum) => {
+    let yearData: Datum[] = yData.map((d: Datum) => {
       const date: Moment = d.date;
       return {
-        date: date,
+        date,
         total: yData.reduce((prev: number, current: any) => {
           if ((current.date as Moment).year() === date.year()) {
             prev += current.total;
@@ -313,64 +291,62 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           return prev;
         }, 0),
         summary: (() => {
-          const summary: Summary = yData.reduce((summary: any, d: any) => {
-            if ((d.date as Moment).year() === date.year()) {
-              for (let i = 0; i < d.summary.length; i++) {
-                if (!summary[d.summary[i].name]) {
-                  summary[d.summary[i].name] = {
-                    total: d.summary[i].total,
-                    color: d.summary[i].color,
+          const summary: Summary = yData.reduce((s: any, data: any) => {
+            if ((data.date as Moment).year() === date.year()) {
+              data.summary.forEach(_summary => {
+                if (!summary[_summary.name]) {
+                  summary[_summary.name] = {
+                    total: _summary.total,
+                    color: _summary.color,
                   };
                 } else {
-                  summary[d.summary[i].name].total += d.summary[i].total;
+                  summary[_summary.name].total += _summary.total;
                 }
-              }
+              });
             }
             return summary;
           }, {});
-          const unsorted_summary: Summary[] = Object.keys(summary).map((key) => {
+          const unsortedSummary: Summary[] = Object.keys(summary).map((key) => {
             return {
               name: key,
               total: summary[key].total,
               color: summary[key].color,
             };
           });
-          return unsorted_summary.sort((a, b) => {
-            return b.total - a.total;
-          });
+          return unsortedSummary.sort((a, b) => b.total - a.total);
         })(),
       };
     });
     // Calculate max value of all the years in the dataset
-    year_data = GTSLib.cleanArray(year_data);
-    const max_value = max(year_data, (d: Datum) => d.total);
+    yearData = GTSLib.cleanArray(yearData);
+    const maxValue = max(yearData, (d: Datum) => d.total);
     // Define year labels and axis
-    const year_labels = scale.map((d: Moment) => d);
+    const yearLabels = scale.map((d: Moment) => d);
     const yearScale = scaleBand()
       .rangeRound([0, this.gWidth])
       .padding(0.05)
-      .domain(year_labels.map((d: Moment) => d.year().toString()));
+      .domain(yearLabels.map((d: Moment) => d.year().toString()));
 
     const color = scaleLinear<string>()
       .range([this.minColor || CalendarHeatmapComponent.DEF_MIN_COLOR, this.maxColor || CalendarHeatmapComponent.DEF_MAX_COLOR])
-      .domain([-0.15 * max_value, max_value]);
+      .domain([-0.15 * maxValue, maxValue]);
     // Add global data items to the overview
     this.items.selectAll('.item-block-year').remove();
     this.items.selectAll('.item-block-year')
-      .data(year_data)
+      .data(yearData)
       .enter()
       .append('rect')
       .attr('class', 'item item-block-year')
-      .attr('width', () => (this.gWidth - this.label_padding) / year_labels.length - this.gutter * 5)
-      .attr('height', () => this.gHeight - this.label_padding)
-      .attr('transform', (d: Datum) => 'translate(' + yearScale((d.date as Moment).year().toString()) + ',' + this.tooltip_padding * 2 + ')')
+      .attr('width', () => (this.gWidth - this.labelPadding) / yearLabels.length - this.gutter * 5)
+      .attr('height', () => this.gHeight - this.labelPadding)
+      .attr('transform', (d: Datum) => 'translate(' + yearScale((d.date as Moment).year().toString()) + ',' + this.tooltipPadding * 2 + ')')
       .attr('fill', (d: Datum) => color(d.total) || CalendarHeatmapComponent.DEF_MAX_COLOR)
       .on('click', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Set in_transition flag
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected date to the one clicked on
         this.selected = d;
         // Hide tooltip
@@ -383,33 +359,33 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       })
       .style('opacity', 0)
       .on('mouseover', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Calculate tooltip position
-        let x = yearScale(d.date.year().toString()) + this.tooltip_padding * 2;
-        while (this.gWidth - x < (this.tooltip_width + this.tooltip_padding * 5)) {
+        let x = yearScale(d.date.year().toString()) + this.tooltipPadding * 2;
+        while (this.gWidth - x < (this.tooltipWidth + this.tooltipPadding * 5)) {
           x -= 10;
         }
-        const y = this.tooltip_padding * 4;
+        const y = this.tooltipPadding * 4;
         // Show tooltip
         this.tooltip.html(this.getTooltip(d))
           .style('left', x + 'px')
           .style('top', y + 'px')
           .transition()
-          .duration(this.transition_duration / 2)
+          .duration(this.transitionDuration / 2)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.hideTooltip();
       })
       .transition()
-      .delay((d: any, i: number) => this.transition_duration * (i + 1) / 10)
-      .duration(() => this.transition_duration)
+      .delay((d: any, i: number) => this.transitionDuration * (i + 1) / 10)
+      .duration(() => this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1)
       .call((transition: any, callback: any) => {
@@ -417,51 +393,51 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function() {
+        transition.each(() => ++n).on('end', function () {
           if (!--n) {
             callback.apply(this, arguments);
           }
         });
-      }, () => this.in_transition = false);
+      }, () => this.inTransition = false);
     // Add year labels
     this.labels.selectAll('.label-year').remove();
     this.labels.selectAll('.label-year')
-      .data(year_labels)
+      .data(yearLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-year')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Moment) => d.year())
       .attr('x', (d: Moment) => yearScale(d.year().toString()))
-      .attr('y', this.label_padding / 2)
-      .on('mouseenter', (year_label: Moment) => {
-        if (this.in_transition) {
+      .attr('y', this.labelPadding / 2)
+      .on('mouseenter', (yearLabel: Moment) => {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-year')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: Datum) => (d.date.year() === year_label.year()) ? 1 : 0.1);
+          .style('opacity', (d: Datum) => (d.date.year() === yearLabel.year()) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-year')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('click', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Set in_transition flag
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected year to the one clicked on
-        this.selected = year_data[0];
+        this.selected = yearData[0];
         // Hide tooltip
         this.hideTooltip();
         // Remove all global overview related items and labels
@@ -482,13 +458,11 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       this.history.push(this.overview);
     }
     // Define start and end date of the selected year
-    const start_of_year: Moment = moment(this.selected.date).startOf('year');
-    const end_of_year: Moment = moment(this.selected.date).endOf('year');
+    const startOfYear: Moment = moment(this.selected.date).startOf('year');
+    const endOfYear: Moment = moment(this.selected.date).endOf('year');
     // Filter data down to the selected year
-    let year_data: Datum[] = this.data.filter((d: Datum) => {
-      return d.date.isBetween(start_of_year, end_of_year, null, '[]');
-    });
-    year_data.forEach((d: Datum) => {
+    let yearData: Datum[] = this._data.filter((d: Datum) => d.date.isBetween(startOfYear, endOfYear, null, '[]'));
+    yearData.forEach((d: Datum) => {
       const summary: Summary[] = [];
       const group = this.groupBy(d.details, 'name');
       Object.keys(group).forEach(k => {
@@ -503,34 +477,34 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       });
       d.summary = summary;
     });
-    year_data = GTSLib.cleanArray(year_data);
+    yearData = GTSLib.cleanArray(yearData);
     // Calculate max value of the year data
-    const max_value = max(year_data, (d: Datum) => d.total);
+    const maxValue = max(yearData, (d: Datum) => d.total);
     const color = scaleLinear<string>()
       .range([this.minColor || CalendarHeatmapComponent.DEF_MIN_COLOR, this.maxColor || CalendarHeatmapComponent.DEF_MAX_COLOR])
-      .domain([-0.15 * max_value, max_value]);
+      .domain([-0.15 * maxValue, maxValue]);
     this.items.selectAll('.item-circle').remove();
     this.items.selectAll('.item-circle')
-      .data(year_data)
+      .data(yearData)
       .enter()
       .append('rect')
       .attr('class', 'item item-circle').style('opacity', 0)
-      .attr('x', (d: Datum) => this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('rx', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('ry', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('width', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('height', (d: Datum) => this.calcItemSize(d, max_value))
+      .attr('x', (d: Datum) => this.calcItemX(d, startOfYear) + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('y', (d: Datum) => this.calcItemY(d) + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('rx', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('ry', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('width', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('height', (d: Datum) => this.calcItemSize(d, maxValue))
       .attr('fill', (d: Datum) => (d.total > 0) ? color(d.total) : 'transparent')
       .on('click', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Don't transition if there is no data to show
         if (d.total === 0) {
           return;
         }
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected date to the one clicked on
         this.selected = d;
         // Hide tooltip
@@ -542,63 +516,63 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         this.drawChart();
       })
       .on('mouseover', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Pulsating animation
         const circle = select(event.currentTarget);
         const repeat = () => {
           circle.transition()
-            .duration(this.transition_duration)
+            .duration(this.transitionDuration)
             .ease(easeLinear)
-            .attr('x', (d: Datum) => this.calcItemX(d, start_of_year) - (this.item_size * 1.1 - this.item_size) / 2)
-            .attr('y', (d: Datum) => this.calcItemY(d) - (this.item_size * 1.1 - this.item_size) / 2)
-            .attr('width', this.item_size * 1.1)
-            .attr('height', this.item_size * 1.1)
+            .attr('x', (data: Datum) => this.calcItemX(data, startOfYear) - (this.itemSize * 1.1 - this.itemSize) / 2)
+            .attr('y', (data: Datum) => this.calcItemY(data) - (this.itemSize * 1.1 - this.itemSize) / 2)
+            .attr('width', this.itemSize * 1.1)
+            .attr('height', this.itemSize * 1.1)
             .transition()
-            .duration(this.transition_duration)
+            .duration(this.transitionDuration)
             .ease(easeLinear)
-            .attr('x', (d: Datum) => this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-            .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-            .attr('width', (d: Datum) => this.calcItemSize(d, max_value))
-            .attr('height', (d: Datum) => this.calcItemSize(d, max_value))
+            .attr('x', (data: Datum) => this.calcItemX(data, startOfYear) + (this.itemSize - this.calcItemSize(data, maxValue)) / 2)
+            .attr('y', (data: Datum) => this.calcItemY(data) + (this.itemSize - this.calcItemSize(data, maxValue)) / 2)
+            .attr('width', (data: Datum) => this.calcItemSize(data, maxValue))
+            .attr('height', (data: Datum) => this.calcItemSize(data, maxValue))
             .on('end', repeat);
         };
         repeat();
         // Construct tooltip
         // Calculate tooltip position
-        let x = this.calcItemX(d, start_of_year) + this.item_size / 2;
-        if (this.gWidth - x < (this.tooltip_width + this.tooltip_padding * 3)) {
-          x -= this.tooltip_width + this.tooltip_padding * 2;
+        let x = this.calcItemX(d, startOfYear) + this.itemSize / 2;
+        if (this.gWidth - x < (this.tooltipWidth + this.tooltipPadding * 3)) {
+          x -= this.tooltipWidth + this.tooltipPadding * 2;
         }
-        const y = this.calcItemY(d) + this.item_size / 2;
+        const y = this.calcItemY(d) + this.itemSize / 2;
         // Show tooltip
         this.tooltip.html(this.getTooltip(d))
           .style('left', x + 'px')
           .style('top', y + 'px')
           .transition()
-          .duration(this.transition_duration / 2)
+          .duration(this.transitionDuration / 2)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Set circle radius back to what it's supposed to be
         select(event.currentTarget).transition()
-          .duration(this.transition_duration / 2)
+          .duration(this.transitionDuration / 2)
           .ease(easeLinear)
-          .attr('x', (d: Datum) => this.calcItemX(d, start_of_year) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-          .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-          .attr('width', (d: Datum) => this.calcItemSize(d, max_value))
-          .attr('height', (d: Datum) => this.calcItemSize(d, max_value));
+          .attr('x', (d: Datum) => this.calcItemX(d, startOfYear) + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+          .attr('y', (d: Datum) => this.calcItemY(d) + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+          .attr('width', (d: Datum) => this.calcItemSize(d, maxValue))
+          .attr('height', (d: Datum) => this.calcItemSize(d, maxValue));
         // Hide tooltip
         this.hideTooltip();
       })
       .transition()
-      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration)
-      .duration(() => this.transition_duration)
+      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transitionDuration)
+      .duration(() => this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1)
       .call((transition: any, callback: any) => {
@@ -606,63 +580,67 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function() {
+        transition.each(() => ++n).on('end', function () {
           if (!--n) {
             callback.apply(this, arguments);
           }
         });
-      }, () => this.in_transition = false);
+      }, () => this.inTransition = false);
     // Add month labels
-    const duration = Math.ceil(moment.duration(end_of_year.diff(start_of_year)).asMonths());
-    const month_labels: Moment[] = [];
+    const duration = Math.ceil(moment.duration(endOfYear.diff(startOfYear)).asMonths());
+    const monthLabels: Moment[] = [];
     for (let i = 1; i < duration; i++) {
-      month_labels.push(moment(this.selected.date).month((start_of_year.month() + i) % 12).startOf('month'));
+      monthLabels.push(moment(this.selected.date).month((startOfYear.month() + i) % 12).startOf('month'));
     }
-    const monthScale = scaleLinear().range([0, this.gWidth]).domain([0, month_labels.length]);
+    const monthScale = scaleLinear().range([0, this.gWidth]).domain([0, monthLabels.length]);
     this.labels.selectAll('.label-month').remove();
     this.labels.selectAll('.label-month')
-      .data(month_labels)
+      .data(monthLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-month')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Moment) => d.format('MMM'))
       .attr('x', (d: Moment, i: number) => monthScale(i) + (monthScale(i) - monthScale(i - 1)) / 2)
-      .attr('y', this.label_padding / 2)
+      .attr('y', this.labelPadding / 2)
       .on('mouseenter', (d: Moment) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
-        const selected_month = moment(d);
+        const selectedMonth = moment(d);
         this.items.selectAll('.item-circle')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: Datum) => moment(d.date).isSame(selected_month, 'month') ? 1 : 0.1);
+          .style('opacity', (data: Datum) => moment(data.date).isSame(selectedMonth, 'month') ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-circle')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('click', (d: Moment) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Check month data
-        const month_data = this.data.filter((e: Datum) => e.date.isBetween(moment(d).startOf('month'), moment(d).endOf('month'), null, '[]'));
+        const monthData = this._data.filter((e: Datum) => e.date.isBetween(
+          moment(d).startOf('month'),
+          moment(d).endOf('month'),
+          null, '[]'
+        ));
         // Don't transition if there is no data to show
-        if (!month_data.length) {
+        if (!monthData.length) {
           return;
         }
         // Set selected month to the one clicked on
         this.selected = {date: d};
-        this.in_transition = true;
+        this.inTransition = true;
         // Hide tooltip
         this.hideTooltip();
         // Remove all year overview related items and labels
@@ -673,62 +651,62 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       });
 
     // Add day labels
-    const day_labels: Date[] = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
+    const dayLabels: Date[] = timeDays(
+      moment.utc().startOf('week').toDate(),
+      moment.utc().endOf('week').toDate()
+    );
     const dayScale = scaleBand()
-      .rangeRound([this.label_padding, this.gHeight])
-      .domain(day_labels.map((d: Date) => moment.utc(d).weekday().toString()));
+      .rangeRound([this.labelPadding, this.gHeight])
+      .domain(dayLabels.map((d: Date) => moment.utc(d).weekday().toString()));
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-day')
-      .data(day_labels)
+      .data(dayLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-day')
-      .attr('x', this.label_padding / 3)
+      .attr('x', this.labelPadding / 3)
       .attr('y', (d: Date, i: number) => dayScale(i.toString()) + dayScale.bandwidth() / 1.75)
       .style('text-anchor', 'left')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Date) => moment.utc(d).format('dddd')[0])
       .on('mouseenter', (d: Date) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
-        const selected_day = moment.utc(d);
+        const selectedDay = moment.utc(d);
         this.items.selectAll('.item-circle')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: Datum) => (moment(d.date).day() === selected_day.day()) ? 1 : 0.1);
+          .style('opacity', (data: Datum) => (moment(data.date).day() === selectedDay.day()) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-circle')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
     // Add button to switch back to previous overview
     this.drawButton();
-  };
+  }
 
-  /**
-   * Draw month overview
-   */
   drawMonthOverview() {
     // Add current overview to the history
     if (this.history[this.history.length - 1] !== this.overview) {
       this.history.push(this.overview);
     }
     // Define beginning and end of the month
-    const start_of_month: Moment = moment(this.selected.date).startOf('month');
-    const end_of_month: Moment = moment(this.selected.date).endOf('month');
+    const startOfMonth: Moment = moment(this.selected.date).startOf('month');
+    const endOfMonth: Moment = moment(this.selected.date).endOf('month');
     // Filter data down to the selected month
-    let month_data: Datum[] = [];
-    this.data.filter((d: Datum) => d.date.isBetween(start_of_month, end_of_month, null, '[]'))
+    let monthData: Datum[] = [];
+    this._data.filter((data: Datum) => data.date.isBetween(startOfMonth, endOfMonth, null, '[]'))
       .map((d: Datum) => {
-        let scale: Datum[] = [];
+        const scale: Datum[] = [];
         d.details.forEach((det: Detail) => {
           const date: Moment = moment.utc(det.date);
           const i = Math.floor(date.hours() / 3);
@@ -748,39 +726,38 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           Object.keys(group).forEach((k: string) => {
             s.summary.push({
               name: k,
-              total: sum(group[k], (d: any) => {
-                return d.total;
-              }),
+              total: sum(group[k], (data: any) => data.total),
               color: group[k][0].color
             });
           });
         });
-        month_data = month_data.concat(scale);
+        monthData = monthData.concat(scale);
       });
-    month_data = GTSLib.cleanArray(month_data);
-    this.LOG.debug(['drawMonthOverview'], [this.overview, this.selected, month_data]);
-    const max_value: number = max(month_data, (d: any) => d.total);
+    monthData = GTSLib.cleanArray(monthData);
+    this.LOG.debug(['drawMonthOverview'], [this.overview, this.selected, monthData]);
+    const maxValue: number = max(monthData, (d: any) => d.total);
     // Define day labels and axis
-    const day_labels: Date[] = timeDays(moment(this.selected.date).startOf('week').toDate(), moment(this.selected.date).endOf('week').toDate());
+    const dayLabels: Date[] = timeDays(
+      moment(this.selected.date).startOf('week').toDate(),
+      moment(this.selected.date).endOf('week').toDate()
+    );
     const dayScale = scaleBand()
-      .rangeRound([this.label_padding, this.gHeight])
-      .domain(day_labels.map((d: Date) => moment.utc(d).weekday().toString()));
+      .rangeRound([this.labelPadding, this.gHeight])
+      .domain(dayLabels.map((d: Date) => moment.utc(d).weekday().toString()));
 
     // Define week labels and axis
-    const week_labels: Moment[] = [start_of_month];
-    const incWeek = moment(start_of_month);
-    while (incWeek.week() !== end_of_month.week()) {
-      week_labels.push(moment(incWeek.add(1, 'week')));
+    const weekLabels: Moment[] = [startOfMonth];
+    const incWeek = moment(startOfMonth);
+    while (incWeek.week() !== endOfMonth.week()) {
+      weekLabels.push(moment(incWeek.add(1, 'week')));
     }
-    month_data.forEach((d: Datum) => {
+    monthData.forEach((d: Datum) => {
       const summary = [];
       const group = this.groupBy(d.details, 'name');
       Object.keys(group).forEach((k: string) => {
         summary.push({
           name: k,
-          total: group[k].reduce((acc, o) => {
-            return acc + o.value;
-          }, 0),
+          total: group[k].reduce((acc, o) => acc + o.value, 0),
           color: group[k][0].color,
           id: group[k][0].id,
         });
@@ -788,35 +765,37 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       d.summary = summary;
     });
     const weekScale = scaleBand()
-      .rangeRound([this.label_padding, this.gWidth])
+      .rangeRound([this.labelPadding, this.gWidth])
       .padding(0.05)
-      .domain(week_labels.map((weekday) => weekday.week() + ''));
+      .domain(weekLabels.map((weekday) => weekday.week() + ''));
     const color = scaleLinear<string>()
       .range([this.minColor || CalendarHeatmapComponent.DEF_MIN_COLOR, this.maxColor || CalendarHeatmapComponent.DEF_MAX_COLOR])
-      .domain([-0.15 * max_value, max_value]);
+      .domain([-0.15 * maxValue, maxValue]);
     // Add month data items to the overview
     this.items.selectAll('.item-block-month').remove();
     this.items.selectAll('.item-block-month')
-      .data(month_data)
+      .data(monthData)
       .enter().append('rect')
       .style('opacity', 0)
       .attr('class', 'item item-block-month')
-      .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('x', (d: Datum) => this.calcItemXMonth(d, start_of_month, weekScale(d.date.week().toString())) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('rx', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('ry', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('width', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('height', (d: Datum) => this.calcItemSize(d, max_value))
+      .attr('y', (d: Datum) => this.calcItemY(d)
+        + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('x', (d: Datum) => this.calcItemXMonth(d, startOfMonth, weekScale(d.date.week().toString()))
+        + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('rx', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('ry', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('width', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('height', (d: Datum) => this.calcItemSize(d, maxValue))
       .attr('fill', (d: Datum) => (d.total > 0) ? color(d.total) : 'transparent')
       .on('click', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Don't transition if there is no data to show
         if (d.total === 0) {
           return;
         }
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected date to the one clicked on
         this.selected = d;
         // Hide tooltip
@@ -828,34 +807,34 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         this.drawChart();
       })
       .on('mouseover', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Construct tooltip
         // Calculate tooltip position
-        let x = weekScale(d.date.week().toString()) + this.tooltip_padding;
-        while (this.gWidth - x < (this.tooltip_width + this.tooltip_padding * 3)) {
+        let x = weekScale(d.date.week().toString()) + this.tooltipPadding;
+        while (this.gWidth - x < (this.tooltipWidth + this.tooltipPadding * 3)) {
           x -= 10;
         }
-        const y = dayScale(d.date.weekday().toString()) + this.tooltip_padding;
+        const y = dayScale(d.date.weekday().toString()) + this.tooltipPadding;
         // Show tooltip
         this.tooltip.html(this.getTooltip(d))
           .style('left', x + 'px')
           .style('top', y + 'px')
           .transition()
-          .duration(this.transition_duration / 2)
+          .duration(this.transitionDuration / 2)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.hideTooltip();
       })
       .transition()
-      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration)
-      .duration(() => this.transition_duration)
+      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transitionDuration)
+      .duration(() => this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1)
       .call((transition: any, callback: any) => {
@@ -863,50 +842,50 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function() {
+        transition.each(() => ++n).on('end', function () {
           if (!--n) {
             callback.apply(this, arguments);
           }
         });
-      }, () => this.in_transition = false);
+      }, () => this.inTransition = false);
     // Add week labels
     this.labels.selectAll('.label-week').remove();
     this.labels.selectAll('.label-week')
-      .data(week_labels)
+      .data(weekLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-week')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Moment) => 'Week ' + d.week())
       .attr('x', (d: Moment) => weekScale(d.week().toString()))
-      .attr('y', this.label_padding / 2)
+      .attr('y', this.labelPadding / 2)
       .on('mouseenter', (weekday: Moment) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-month')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', (d: Datum) => {
             return (moment(d.date).week() === weekday.week()) ? 1 : 0.1;
           });
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-month')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('click', (d: Moment) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected month to the one clicked on
         this.selected = {date: d};
         // Hide tooltip
@@ -920,58 +899,54 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     // Add day labels
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-day')
-      .data(day_labels)
+      .data(dayLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-day')
-      .attr('x', this.label_padding / 3)
+      .attr('x', this.labelPadding / 3)
       .attr('y', (d: Date, i: any) => dayScale(i) + dayScale.bandwidth() / 1.75)
       .style('text-anchor', 'left')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Date) => moment.utc(d).format('dddd')[0])
       .on('mouseenter', (d: Date) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
-        const selected_day = moment.utc(d);
+        const selectedDay = moment.utc(d);
         this.items.selectAll('.item-block-month')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: Datum) => (moment(d.date).day() === selected_day.day()) ? 1 : 0.1);
+          .style('opacity', (data: Datum) => (moment(data.date).day() === selectedDay.day()) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-month')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
     // Add button to switch back to previous overview
     this.drawButton();
-  };
+  }
 
-
-  /**
-   * Draw week overview
-   */
   drawWeekOverview() {
     // Add current overview to the history
     if (this.history[this.history.length - 1] !== this.overview) {
       this.history.push(this.overview);
     }
     // Define beginning and end of the week
-    const start_of_week: Moment = moment(this.selected.date).startOf('week');
-    const end_of_week: Moment = moment(this.selected.date).endOf('week');
+    const startOfWeek: Moment = moment(this.selected.date).startOf('week');
+    const endOfWeek: Moment = moment(this.selected.date).endOf('week');
     // Filter data down to the selected week
-    let week_data: Datum[] = [];
-    this.data.filter((d: Datum) => {
-      return d.date.isBetween(start_of_week, end_of_week, null, '[]');
+    let weekData: Datum[] = [];
+    this._data.filter((d: Datum) => {
+      return d.date.isBetween(startOfWeek, endOfWeek, null, '[]');
     }).map((d: Datum) => {
-      let scale: Datum[] = [];
+      const scale: Datum[] = [];
       d.details.forEach((det: Detail) => {
         const date: Moment = moment(det.date);
         const i = date.hours();
@@ -988,56 +963,56 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       });
       scale.forEach(s => {
         const group = this.groupBy(s.details, 'name');
-        Object.keys(group).forEach(k => {
+        Object.keys(group).forEach(k =>
           s.summary.push({
             name: k,
-            total: sum(group[k], (d: any) => {
-              return d.value;
-            }),
+            total: sum(group[k], (data: any) => data.value),
             color: group[k][0].color
-          });
-        });
+          }));
       });
-      week_data = week_data.concat(scale);
+      weekData = weekData.concat(scale);
     });
-    week_data = GTSLib.cleanArray(week_data);
-    const max_value: number = max(week_data, (d: Datum) => d.total);
+    weekData = GTSLib.cleanArray(weekData);
+    const maxValue: number = max(weekData, (d: Datum) => d.total);
     // Define day labels and axis
-    const day_labels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
+    const dayLabels = timeDays(moment.utc().startOf('week').toDate(), moment.utc().endOf('week').toDate());
     const dayScale = scaleBand()
-      .rangeRound([this.label_padding, this.gHeight])
-      .domain(day_labels.map((d: Date) => moment.utc(d).weekday().toString()));
+      .rangeRound([this.labelPadding, this.gHeight])
+      .domain(dayLabels.map((d: Date) => moment.utc(d).weekday().toString()));
     // Define hours labels and axis
-    let hours_labels: string[] = [];
-    range(0, 24).forEach(h => hours_labels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
-    const hourScale = scaleBand().rangeRound([this.label_padding, this.gWidth]).padding(0.01).domain(hours_labels);
+    const hoursLabels: string[] = [];
+    range(0, 24).forEach(h => hoursLabels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
+    const hourScale = scaleBand().rangeRound([this.labelPadding, this.gWidth]).padding(0.01).domain(hoursLabels);
     const color = scaleLinear<string>()
       .range([this.minColor || CalendarHeatmapComponent.DEF_MIN_COLOR, this.maxColor || CalendarHeatmapComponent.DEF_MAX_COLOR])
-      .domain([-0.15 * max_value, max_value]);
+      .domain([-0.15 * maxValue, maxValue]);
     // Add week data items to the overview
     this.items.selectAll('.item-block-week').remove();
     this.items.selectAll('.item-block-week')
-      .data(week_data)
+      .data(weekData)
       .enter()
       .append('rect')
       .style('opacity', 0)
       .attr('class', 'item item-block-week')
-      .attr('y', (d: Datum) => this.calcItemY(d) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('x', (d: Datum) => this.gutter + hourScale(moment(d.date).startOf('hour').format('HH:mm')) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
-      .attr('rx', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('ry', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('width', (d: Datum) => this.calcItemSize(d, max_value))
-      .attr('height', (d: Datum) => this.calcItemSize(d, max_value))
+      .attr('y', (d: Datum) => this.calcItemY(d)
+        + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('x', (d: Datum) => this.gutter
+        + hourScale(moment(d.date).startOf('hour').format('HH:mm'))
+        + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
+      .attr('rx', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('ry', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('width', (d: Datum) => this.calcItemSize(d, maxValue))
+      .attr('height', (d: Datum) => this.calcItemSize(d, maxValue))
       .attr('fill', (d: Datum) => (d.total > 0) ? color(d.total) : 'transparent')
       .on('click', (d: Datum) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Don't transition if there is no data to show
         if (d.total === 0) {
           return;
         }
-        this.in_transition = true;
+        this.inTransition = true;
         // Set selected date to the one clicked on
         this.selected = d;
         // Hide tooltip
@@ -1048,33 +1023,33 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         this.overview = 'day';
         this.drawChart();
       }).on('mouseover', (d: Datum) => {
-      if (this.in_transition) {
+      if (this.inTransition) {
         return;
       }
       // Calculate tooltip position
-      let x = hourScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltip_padding;
-      while (this.gWidth - x < (this.tooltip_width + this.tooltip_padding * 3)) {
+      let x = hourScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltipPadding;
+      while (this.gWidth - x < (this.tooltipWidth + this.tooltipPadding * 3)) {
         x -= 10;
       }
-      const y = dayScale(d.date.weekday().toString()) + this.tooltip_padding;
+      const y = dayScale(d.date.weekday().toString()) + this.tooltipPadding;
       // Show tooltip
       this.tooltip.html(this.getTooltip(d))
         .style('left', x + 'px')
         .style('top', y + 'px')
         .transition()
-        .duration(this.transition_duration / 2)
+        .duration(this.transitionDuration / 2)
         .ease(easeLinear)
         .style('opacity', 1);
     })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.hideTooltip();
       })
       .transition()
-      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration)
-      .duration(() => this.transition_duration)
+      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transitionDuration)
+      .duration(() => this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1)
       .call((transition: any, callback: any) => {
@@ -1082,86 +1057,82 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function() {
+        transition.each(() => ++n).on('end', function () {
           if (!--n) {
             callback.apply(this, arguments);
           }
         });
-      }, () => this.in_transition = false);
+      }, () => this.inTransition = false);
 
     // Add week labels
     this.labels.selectAll('.label-week').remove();
     this.labels.selectAll('.label-week')
-      .data(hours_labels)
+      .data(hoursLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-week')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: string) => d)
       .attr('x', (d: string) => hourScale(d))
-      .attr('y', this.label_padding / 2)
+      .attr('y', this.labelPadding / 2)
       .on('mouseenter', (hour: string) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-week')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', (d: Datum) => (moment(d.date).startOf('hour').format('HH:mm') === hour) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-week')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
     // Add day labels
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-day')
-      .data(day_labels)
+      .data(dayLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-day')
-      .attr('x', this.label_padding / 3)
+      .attr('x', this.labelPadding / 3)
       .attr('y', (d: Date, i: number) => dayScale(i.toString()) + dayScale.bandwidth() / 1.75)
       .style('text-anchor', 'left')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: Date) => moment.utc(d).format('dddd')[0])
       .on('mouseenter', (d: Date) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
-        const selected_day = moment.utc(d);
+        const selectedDay = moment.utc(d);
         this.items.selectAll('.item-block-week')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: Datum) => (moment(d.date).day() === selected_day.day()) ? 1 : 0.1);
+          .style('opacity', (data: Datum) => (moment(data.date).day() === selectedDay.day()) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block-week')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
 
     // Add button to switch back to previous overview
     this.drawButton();
-  };
+  }
 
-
-  /**
-   * Draw day overview
-   */
   drawDayOverview() {
     // Add current overview to the history
     if (this.history[this.history.length - 1] !== this.overview) {
@@ -1169,16 +1140,16 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     }
     // Initialize selected date to today if it was not set
     if (!Object.keys(this.selected).length) {
-      this.selected = this.data[this.data.length - 1];
+      this.selected = this._data[this._data.length - 1];
     }
-    const start_of_day: Moment = moment(this.selected.date).startOf('day');
-    const end_of_day: Moment = moment(this.selected.date).endOf('day');
+    const startOfDay: Moment = moment(this.selected.date).startOf('day');
+    const endOfDay: Moment = moment(this.selected.date).endOf('day');
     // Filter data down to the selected month
-    let day_data: Datum[] = [];
-    this.data.filter((d: Datum) => {
-      return d.date.isBetween(start_of_day, end_of_day, null, '[]');
+    let dayData: Datum[] = [];
+    this._data.filter((d: Datum) => {
+      return d.date.isBetween(startOfDay, endOfDay, null, '[]');
     }).map((d: Datum) => {
-      let scale = [];
+      const scale = [];
       d.details.forEach((det: Detail) => {
         const date: Moment = moment(det.date);
         const i = date.hours();
@@ -1198,75 +1169,75 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         Object.keys(group).forEach(k => {
           s.summary.push({
             name: k,
-            total: sum(group[k], (d: any) => {
-              return d.value;
-            }),
+            total: sum(group[k], (item: any) => item.value),
             color: group[k][0].color
           });
         });
       });
-      day_data = day_data.concat(scale);
+      dayData = dayData.concat(scale);
     });
     const data: Summary[] = [];
-    day_data.forEach((d: Datum) => {
+    dayData.forEach((d: Datum) => {
       const date = d.date;
       d.summary.forEach((s: Summary) => {
         s.date = date;
         data.push(s);
       });
     });
-    day_data = GTSLib.cleanArray(day_data);
-    const max_value: number = max(data, (d: Summary) => d.total);
+    dayData = GTSLib.cleanArray(dayData);
+    const maxValue: number = max(data, (d: Summary) => d.total);
     const gtsNames = this.selected.summary.map((summary: Summary) => summary.name);
-    const gtsNameScale = scaleBand().rangeRound([this.label_padding, this.gHeight]).domain(gtsNames);
-    let hour_labels: string[] = [];
-    range(0, 24).forEach(h => hour_labels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
+    const gtsNameScale = scaleBand().rangeRound([this.labelPadding, this.gHeight]).domain(gtsNames);
+    const hourLabels: string[] = [];
+    range(0, 24).forEach(h => hourLabels.push(moment.utc().hours(h).startOf('hour').format('HH:mm')));
     const dayScale = scaleBand()
-      .rangeRound([this.label_padding, this.gWidth])
+      .rangeRound([this.labelPadding, this.gWidth])
       .padding(0.01)
-      .domain(hour_labels);
+      .domain(hourLabels);
     this.items.selectAll('.item-block').remove();
     this.items.selectAll('.item-block')
       .data(data)
       .enter()
       .append('rect')
       .attr('class', 'item item-block')
-      .attr('x', (d: Summary) => this.gutter + dayScale(moment(d.date).startOf('hour').format('HH:mm')) + (this.item_size - this.calcItemSize(d, max_value)) / 2)
+      .attr('x', (d: Summary) => this.gutter
+        + dayScale(moment(d.date).startOf('hour').format('HH:mm'))
+        + (this.itemSize - this.calcItemSize(d, maxValue)) / 2)
       .attr('y', (d: Summary) => {
-        return (gtsNameScale(d.name) || 1) - (this.item_size - this.calcItemSize(d, max_value)) / 2;
+        return (gtsNameScale(d.name) || 1) - (this.itemSize - this.calcItemSize(d, maxValue)) / 2;
       })
-      .attr('rx', (d: Summary) => this.calcItemSize(d, max_value))
-      .attr('ry', (d: Summary) => this.calcItemSize(d, max_value))
-      .attr('width', (d: Summary) => this.calcItemSize(d, max_value))
-      .attr('height', (d: Summary) => this.calcItemSize(d, max_value))
+      .attr('rx', (d: Summary) => this.calcItemSize(d, maxValue))
+      .attr('ry', (d: Summary) => this.calcItemSize(d, maxValue))
+      .attr('width', (d: Summary) => this.calcItemSize(d, maxValue))
+      .attr('height', (d: Summary) => this.calcItemSize(d, maxValue))
       .attr('fill', (d: Summary) => {
         const color = scaleLinear<string>()
           .range(['#ffffff', d.color || CalendarHeatmapComponent.DEF_MIN_COLOR])
-          .domain([-0.5 * max_value, max_value]);
+          .domain([-0.5 * maxValue, maxValue]);
         return color(d.total);
       })
       .style('opacity', 0)
       .on('mouseover', (d: Summary) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Calculate tooltip position
-        let x = dayScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltip_padding;
-        while (this.gWidth - x < (this.tooltip_width + this.tooltip_padding * 3)) {
+        let x = dayScale(moment(d.date).startOf('hour').format('HH:mm')) + this.tooltipPadding;
+        while (this.gWidth - x < (this.tooltipWidth + this.tooltipPadding * 3)) {
           x -= 10;
         }
-        const y = gtsNameScale(d.name) + this.tooltip_padding;
+        const y = gtsNameScale(d.name) + this.tooltipPadding;
         // Show tooltip
         this.tooltip.html(this.getTooltip(d))
           .style('left', x + 'px')
           .style('top', y + 'px')
           .transition()
-          .duration(this.transition_duration / 2)
+          .duration(this.transitionDuration / 2)
           .ease(easeLinear)
           .style('opacity', 1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.hideTooltip();
@@ -1277,8 +1248,8 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         }
       })
       .transition()
-      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transition_duration)
-      .duration(() => this.transition_duration)
+      .delay(() => (Math.cos(Math.PI * Math.random()) + 1) * this.transitionDuration)
+      .duration(() => this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1)
       .call((transition: any, callback: any) => {
@@ -1286,48 +1257,48 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function() {
+        transition.each(() => ++n).on('end', function () {
           if (!--n) {
             callback.apply(this, arguments);
           }
         });
-      }, () => this.in_transition = false);
+      }, () => this.inTransition = false);
 
     // Add time labels
     this.labels.selectAll('.label-time').remove();
     this.labels.selectAll('.label-time')
-      .data(hour_labels)
+      .data(hourLabels)
       .enter()
       .append('text')
       .attr('class', 'label label-time')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: string) => d)
       .attr('x', (d: string) => dayScale(d))
-      .attr('y', this.label_padding / 2)
+      .attr('y', this.labelPadding / 2)
       .on('mouseenter', (d: string) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         const selected = d;
         // const selected = itemScale(moment.utc(d));
         this.items.selectAll('.item-block')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
-          .style('opacity', (d: any) => (d.date.format('HH:mm') === selected) ? 1 : 0.1);
+          .style('opacity', (item: any) => (item.date.format('HH:mm') === selected) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
     // Add project labels
-    const label_padding = this.label_padding;
+    const labelPadding = this.labelPadding;
     this.labels.selectAll('.label-project').remove();
     this.labels.selectAll('.label-project')
       .data(gtsNames)
@@ -1335,38 +1306,38 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       .append('text')
       .attr('class', 'label label-project')
       .attr('x', this.gutter)
-      .attr('y', (d: string) => gtsNameScale(d) + this.item_size / 2)
+      .attr('y', (d: string) => gtsNameScale(d) + this.itemSize / 2)
       .attr('min-height', () => gtsNameScale.bandwidth())
       .style('text-anchor', 'left')
-      .attr('font-size', () => Math.floor(this.label_padding / 3) + 'px')
+      .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: string) => d)
-      .each(function() {
+      .each(function () {
         const obj = select(this);
-        let text_length = obj.node().getComputedTextLength();
+        let textLength = obj.node().getComputedTextLength();
         let text = obj.text();
-        while (text_length > (label_padding * 1.5) && text.length > 0) {
+        while (textLength > (labelPadding * 1.5) && text.length > 0) {
           text = text.slice(0, -1);
           obj.text(text + '...');
-          text_length = obj.node().getComputedTextLength();
+          textLength = obj.node().getComputedTextLength();
         }
       })
       .on('mouseenter', (gtsName: string) => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', (d: Summary) => (d.name === gtsName) ? 1 : 0.1);
       })
       .on('mouseout', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         this.items.selectAll('.item-block')
           .transition()
-          .duration(this.transition_duration)
+          .duration(this.transitionDuration)
           .ease(easeLinear)
           .style('opacity', 1);
       });
@@ -1374,69 +1345,40 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     this.drawButton();
   }
 
-  /**
-   * Helper function to calculate item position on the x-axis
-   * @param {Datum} d
-   * @param {moment.Moment} start_of_year
-   * @returns {number}
-   */
-  private calcItemX(d: Datum, start_of_year: Moment) {
-    const dayIndex = Math.round((+moment(d.date) - +start_of_year.startOf('week')) / 86400000);
+  private calcItemX(d: Datum, startOfYear: Moment) {
+    const dayIndex = Math.round((+moment(d.date) - +startOfYear.startOf('week')) / 86400000);
     const colIndex = Math.trunc(dayIndex / 7);
-    return colIndex * (this.item_size + this.gutter) + this.label_padding;
-  };
+    return colIndex * (this.itemSize + this.gutter) + this.labelPadding;
+  }
 
-  /**
-   *
-   * @param {Datum} d
-   * @param {moment.Moment} start
-   * @param {number} offset
-   * @returns {number}
-   */
   private calcItemXMonth(d: Datum, start: Moment, offset: number) {
     const hourIndex = moment(d.date).hours();
     const colIndex = Math.trunc(hourIndex / 3);
-    return colIndex * (this.item_size + this.gutter) + offset;
-  };
+    return colIndex * (this.itemSize + this.gutter) + offset;
+  }
 
-  /**
-   * Helper function to calculate item position on the y-axis
-   * @param {Datum} d
-   * @returns {number}
-   */
   private calcItemY(d: Datum) {
-    return this.label_padding + d.date.weekday() * (this.item_size + this.gutter);
-  };
+    return this.labelPadding + d.date.weekday() * (this.itemSize + this.gutter);
+  }
 
-
-  /**
-   * Helper function to calculate item size
-   * @param {Datum | Summary} d
-   * @param {number} max
-   * @returns {number}
-   */
-  private calcItemSize(d: Datum | Summary, max: number) {
-    if (max <= 0) {
-      return this.item_size;
+  private calcItemSize(d: Datum | Summary, m: number) {
+    if (m <= 0) {
+      return this.itemSize;
     }
-    return this.item_size * 0.75 + (this.item_size * d.total / max) * 0.25;
-  };
+    return this.itemSize * 0.75 + (this.itemSize * d.total / m) * 0.25;
+  }
 
-
-  /**
-   * Draw the button for navigation purposes
-   */
   private drawButton() {
     this.buttons.selectAll('.button').remove();
     const button = this.buttons.append('g')
       .attr('class', 'button button-back')
       .style('opacity', 0)
       .on('click', () => {
-        if (this.in_transition) {
+        if (this.inTransition) {
           return;
         }
         // Set transition boolean
-        this.in_transition = true;
+        this.inTransition = true;
         // Clean the canvas from whichever overview type was on
         if (this.overview === 'year') {
           this.removeYearOverview();
@@ -1453,79 +1395,63 @@ export class CalendarHeatmapComponent implements AfterViewInit {
         this.drawChart();
       });
     button.append('circle')
-      .attr('cx', this.label_padding / 2.25)
-      .attr('cy', this.label_padding / 2.5)
-      .attr('r', this.item_size / 2);
+      .attr('cx', this.labelPadding / 2.25)
+      .attr('cy', this.labelPadding / 2.5)
+      .attr('r', this.itemSize / 2);
     button.append('text')
-      .attr('x', this.label_padding / 2.25)
-      .attr('y', this.label_padding / 2.5)
+      .attr('x', this.labelPadding / 2.25)
+      .attr('y', this.labelPadding / 2.5)
       .attr('dy', () => {
         return Math.floor(this.gWidth / 100) / 3;
       })
       .attr('font-size', () => {
-        return Math.floor(this.label_padding / 3) + 'px';
+        return Math.floor(this.labelPadding / 3) + 'px';
       })
       .html('&#x2190;');
     button.transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 1);
-  };
+  }
 
-
-  /**
-   * Transition and remove items and labels related to global overview
-   */
   private removeGlobalOverview() {
     this.items.selectAll('.item-block-year')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .remove();
     this.labels.selectAll('.label-year').remove();
-  };
+  }
 
-
-  /**
-   * Transition and remove items and labels related to year overview
-   */
   private removeYearOverview() {
     this.items.selectAll('.item-circle')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .remove();
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-month').remove();
     this.hideBackButton();
-  };
+  }
 
-
-  /**
-   * Transition and remove items and labels related to month overview
-   */
   private removeMonthOverview() {
     this.items.selectAll('.item-block-month')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .remove();
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-week').remove();
     this.hideBackButton();
-  };
+  }
 
-
-  /**
-   * Transition and remove items and labels related to week overview
-   */
   private removeWeekOverview() {
     this.items.selectAll('.item-block-week')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .attr('x', (d: any, i: number) => (i % 2 === 0) ? -this.gWidth / 3 : this.gWidth / 3)
@@ -1533,16 +1459,12 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     this.labels.selectAll('.label-day').remove();
     this.labels.selectAll('.label-week').remove();
     this.hideBackButton();
-  };
+  }
 
-
-  /**
-   * Transition and remove items and labels related to daily overview
-   */
   private removeDayOverview() {
     this.items.selectAll('.item-block')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .attr('x', (d: any, i: number) => (i % 2 === 0) ? -this.gWidth / 3 : this.gWidth / 3)
@@ -1550,19 +1472,14 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     this.labels.selectAll('.label-time').remove();
     this.labels.selectAll('.label-project').remove();
     this.hideBackButton();
-  };
+  }
 
-
-  /**
-   * Helper function to hide the tooltip
-   */
   private hideTooltip() {
     this.tooltip.transition()
-      .duration(this.transition_duration / 2)
+      .duration(this.transitionDuration / 2)
       .ease(easeLinear)
       .style('opacity', 0);
-  };
-
+  }
 
   /**
    * Helper function to hide the back button
@@ -1570,23 +1487,25 @@ export class CalendarHeatmapComponent implements AfterViewInit {
   private hideBackButton() {
     this.buttons.selectAll('.button')
       .transition()
-      .duration(this.transition_duration)
+      .duration(this.transitionDuration)
       .ease(easeLinear)
       .style('opacity', 0)
       .remove();
-  };
+  }
 
-  private getTooltip = (d: Datum | Summary) => {
-    let tooltip_html = '<div class="header"><strong>' + d.date.format('dddd, MMM Do YYYY HH:mm') + '</strong></div><ul>';
-    (d['summary'] || []).forEach(s => {
-      tooltip_html += `<li>
-  <div class="round" style="background-color:${ColorLib.transparentize(s.color)}; border-color:${s.color}"></div> 
+  private getTooltip = (d: any) => {
+    let tooltipHtml = '<div class="header"><strong>' + d.date.format('dddd, MMM Do YYYY HH:mm') + '</strong></div><ul>';
+    (d.summary || []).forEach(s => {
+      tooltipHtml += `<li>
+  <div class="round" style="background-color:${ColorLib.transparentize(s.color)}; border-color:${s.color}"></div>
 ${GTSLib.formatLabel(s.name)}: ${s.total}</li>`;
     });
-    if (d.total !== undefined && d['name']) {
-      tooltip_html += `<li><div class="round" style="background-color: ${ColorLib.transparentize(d['color'])}; border-color: ${d['color']}" ></div> ${GTSLib.formatLabel(d['name'])}: ${d.total}</li>`;
+    if (d.total !== undefined && d.name) {
+      tooltipHtml += `<li><div class="round"
+style="background-color: ${ColorLib.transparentize(d.color)}; border-color: ${d.color}"
+></div> ${GTSLib.formatLabel(d.name)}: ${d.total}</li>`;
     }
-    tooltip_html += '</ul>';
-    return tooltip_html;
-  };
+    tooltipHtml += '</ul>';
+    return tooltipHtml;
+  }
 }

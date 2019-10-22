@@ -32,42 +32,27 @@ import {GTSLib} from '../../utils/gts.lib';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewImageComponent extends WarpViewComponent implements AfterViewInit {
-  @Input() imageTitle: string = '';
+  @Input() imageTitle = '';
 
   toDisplay: string[];
 
   private resizeTimer;
   private parentWidth = -1;
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
     super();
     this.LOG = new Logger(WarpViewImageComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.LOG.debug(['ngAfterViewInit'], this._options);
     this.drawChart();
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options: Param, refresh: boolean): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   @HostListener('window:resize')
   onResize() {
     if (this.el.nativeElement.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
@@ -84,9 +69,6 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     }
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return;
@@ -111,10 +93,6 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     this.LOG.debug(['drawChart', 'this.data', 'this.toDisplay'], this.data, this.toDisplay);
   }
 
-  /**
-   *
-   * @returns {}
-   */
   private getStyle() {
     this.LOG.debug(['getStyle'], this._options);
     if (!this._options) {
@@ -129,11 +107,6 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     }
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     return [];
   }

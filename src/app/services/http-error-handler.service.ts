@@ -38,6 +38,7 @@ export class HttpErrorHandler {
 
   /** Create curried handleError function that already knows the service name */
   createHandleError = (serviceName = '') =>
+    // tslint:disable-next-line:semicolon
     <T>(operation = 'operation', result = {} as T) => this.handleError(serviceName, operation, result);
 
   /**

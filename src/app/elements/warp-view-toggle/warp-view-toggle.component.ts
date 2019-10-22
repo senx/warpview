@@ -33,30 +33,20 @@ export class WarpViewToggleComponent implements OnInit {
     return this.state;
   }
 
-  @Input() text1: string = '';
-  @Input() text2: string = '';
+  @Input() text1 = '';
+  @Input() text2 = '';
 
   @Output() stateChange = new EventEmitter<any>();
 
-  state: boolean = false;
+  state = false;
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.state = this.checked;
   }
 
-  /**
-   *
-   */
   switched() {
     this.state = !this.state;
     this.stateChange.emit({state: this.state, id: this.el.nativeElement.id});

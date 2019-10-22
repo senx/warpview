@@ -91,8 +91,9 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   @Output() warpViewSelectedGTS = new EventEmitter<any>();
 
   private LOG: Logger;
-  private refreshCounter: number = 0;
-  private _gtsFilter = 'x'; //the first character triggers change each filter apply to trigger events. it must be discarded.
+  private refreshCounter = 0;
+  // the first character triggers change each filter apply to trigger events. it must be discarded.
+  private _gtsFilter = 'x';
   private _debug = false;
   private _kbdLastKeyPressed: string[] = [];
   private _hiddenData: number[] = [];
@@ -106,10 +107,12 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
    */
   private colorizeChip() {
     if (this.chip) {
-      if (this._node.selected) {
-        this.chip.nativeElement.style.setProperty('background-color', ColorLib.transparentize(ColorLib.getColor(this._node.gts.id, this.options.scheme)));
+      if (this._node.selected && this.chip.nativeElement) {
+        this.chip.nativeElement.style.setProperty('background-color',
+          ColorLib.transparentize(ColorLib.getColor(this._node.gts.id, this.options.scheme)));
         // FIXME TypeError: Cannot read property 'style' of undefined
-        this.chip.nativeElement.style.setProperty('border-color', ColorLib.getColor(this._node.gts.id, this.options.scheme));
+        this.chip.nativeElement.style.setProperty('border-color',
+          ColorLib.getColor(this._node.gts.id, this.options.scheme));
       } else {
         this.chip.nativeElement.style.setProperty('background-color', '#eeeeee');
       }
@@ -142,38 +145,19 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     this.colorizeChip();
   }
 
-  /**
-   *
-   * @param obj
-   * @returns {}
-   * @private
-   */
   private toArray(obj) {
     if (obj === undefined) {
       return [];
     }
-    return Object.keys(obj).map(function(key) {
-      return {
-        name: key,
-        value: obj[key],
-      };
-    });
+    return Object.keys(obj).map(key => ({name: key, value: obj[key]}));
   }
 
-  /**
-   *
-   * @param {UIEvent} event
-   */
   switchPlotState(event: UIEvent) {
     event.preventDefault();
     this.setState(!this._node.selected);
     return false;
   }
 
-  /**
-   *
-   * @param {boolean} state
-   */
   private setState(state: boolean) {
     if (this._node && this._node.gts && this._node.gts.c) {
       this._node = {

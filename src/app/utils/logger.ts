@@ -1,3 +1,5 @@
+/* tslint:disable:no-console */
+
 /*
  * Copyright 2019 SenX S.A.S.
  *
@@ -17,13 +19,8 @@
 export class Logger {
 
   className: string;
-  isDebug: boolean = false;
+  isDebug = false;
 
-  /**
-   *
-   * @param className
-   * @param {boolean} isDebug
-   */
   constructor(className: any, isDebug: boolean = false) {
     this.className = className.name;
     this.isDebug = isDebug;
@@ -33,12 +30,6 @@ export class Logger {
     this.isDebug = debug;
   }
 
-  /**
-   *
-   * @param {LEVEL} level
-   * @param {[]} methods
-   * @param {[]} args
-   */
   log(level: LEVEL, methods: any[], args: any[]) {
     let logChain = [];
     logChain.push(`[${this.className}] ${methods.join(' - ')}`);
@@ -70,46 +61,23 @@ export class Logger {
     }
   }
 
-  /**
-   *
-   * @param {[]} methods
-   * @param args
-   */
   debug(methods: any[], ...args: any[]) {
     this.log(LEVEL.DEBUG, methods, args);
   }
 
-  /**
-   *
-   * @param {[]} methods
-   * @param args
-   */
   error(methods: any[], ...args: any[]) {
     this.log(LEVEL.ERROR, methods, args);
   }
 
-  /**
-   *
-   * @param {[]} methods
-   * @param args
-   */
   warn(methods: any[], ...args: any[]) {
     this.log(LEVEL.WARN, methods, args);
   }
 
-  /**
-   *
-   * @param {[]} methods
-   * @param args
-   */
   info(methods: any[], ...args: any[]) {
     this.log(LEVEL.INFO, methods, args);
   }
 }
 
-/**
- *
- */
 export enum LEVEL {
   DEBUG, ERROR, WARN, INFO
 }

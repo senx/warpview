@@ -71,7 +71,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     return this._hiddenData;
   }
 
-  @Input() maxToShow: number = 5;
+  @Input() maxToShow = 5;
 
   @Input() set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
     this._kbdLastKeyPressed = kbdLastKeyPressed;
@@ -109,7 +109,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   @Output() warpViewModalOpen = new EventEmitter<any>();
   @Output() warpViewModalClose = new EventEmitter<any>();
 
-  current: number = 0;
+  current = 0;
   _gts: any[] = [];
 
   private _kbdLastKeyPressed: string[] = [];
@@ -118,59 +118,37 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   private _gtsList: DataModel;
   private _data: DataModel;
   private displayed: any[] = [];
-  private modalOpenned: boolean = false;
+  private modalOpenned = false;
   private LOG: Logger;
 
-  /**
-   *
-   */
   constructor() {
     this.LOG = new Logger(WarpViewGtsPopupComponent, this.debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.prepareData();
   }
 
-  /**
-   *
-   */
   onWarpViewModalOpen() {
     this.modalOpenned = true;
     this.warpViewModalOpen.emit({});
   }
 
-  /**
-   *
-   */
   onWarpViewModalClose() {
     this.modalOpenned = false;
     this.warpViewModalClose.emit({});
   }
 
-  /**
-   *
-   * @returns {Promise<boolean>}
-   */
   public isOpened(): Promise<boolean> {
     return this.modal.isOpened();
   }
 
-  /**
-   *
-   */
   private showPopup() {
     this.current = 0;
     this.prepareData();
     this.modal.open();
   }
 
-  /**
-   *
-   */
   private prepareData() {
     if (this.gtsList && this.gtsList.data) {
       this._gts = GTSLib.flatDeep([this.gtsList.data]);
@@ -182,13 +160,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     }
   }
 
-  /**
-   *
-   * @param gts
-   * @returns {boolean}
-   */
   private isHidden(gts) {
     return !this.displayed.find(g => gts.id === g.id);
   }
-
 }

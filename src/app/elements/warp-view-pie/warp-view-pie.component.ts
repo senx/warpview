@@ -17,7 +17,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
-import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import deepEqual from 'deep-equal';
@@ -50,11 +49,6 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
     orientation: 270
   };
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     if (options) {
       let optionChanged = false;
@@ -73,18 +67,13 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
           this.LOG.debug(['onOptions', 'options'], options);
         }
         this._options = options;
-        this.drawChart(false);
+        this.drawChart();
       }
     } else {
-      this.drawChart(refresh);
+      this.drawChart();
     }
   }
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewPieComponent, this._debug);
@@ -100,27 +89,17 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   * @param {boolean} reparseNewData
-   */
-  drawChart(reparseNewData: boolean = false) {
+  drawChart() {
     if (!this.initiChart(this.el)) {
       return;
     }
@@ -140,13 +119,8 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
     });
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {Partial<>[]}
-   */
   protected convert(data: DataModel): Partial<any>[] {
-    let gtsList = data.data as any[];
+    const gtsList = data.data as any[];
     const plotData = [] as Partial<any>[];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     const pieData = {

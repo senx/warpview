@@ -21,20 +21,12 @@ import {Observable} from 'rxjs/Observable';
 import {HandleError, HttpErrorHandler} from './http-error-handler.service';
 import {Logger} from '../utils/logger';
 
-/**
- *
- */
 @Injectable({providedIn: 'root'})
 export class Warp10Service {
 
   private LOG: Logger;
   private readonly handleError: HandleError;
 
-  /**
-   *
-   * @param {HttpClient} http
-   * @param {HttpErrorHandler} httpErrorHandler
-   */
   constructor(
     private http: HttpClient,
     private httpErrorHandler: HttpErrorHandler) {
@@ -42,12 +34,6 @@ export class Warp10Service {
     this.handleError = httpErrorHandler.createHandleError('Warp10Service');
   }
 
-  /**
-   *
-   * @param {string} warpScript
-   * @param {string} url
-   * @return {Observable<[]>}
-   */
   exec(warpScript: string, url: string): Observable<any[]> {
     this.LOG.debug(['exec', 'warpScript'], url, warpScript);
     return this.http.post<any[]>(url + '/exec', warpScript)

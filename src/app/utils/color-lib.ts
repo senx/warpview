@@ -193,16 +193,6 @@ export class ColorLib {
     T_MAX_400_FILM: ['#F6F6F8', '#A4A8B6', '#545667']
   };
 
-// Chronograf Colors
-
-
-  /**
-   * Get a color from index
-   *
-   * @param {number} i
-   * @param {string} scheme
-   * @returns {string}
-   */
   static getColor(i: number, scheme: string) {
     console.log(scheme);
     return ColorLib.color[scheme][i % ColorLib.color[scheme].length];
@@ -213,13 +203,8 @@ export class ColorLib {
     return [[0.0, '#00000000'], [1.0, ColorLib.transparentize(ColorLib.getColor(i, scheme))]];
   }
 
-  /**
-   * Convert hex to RGB
-   * @param hex
-   * @returns {number[]}
-   */
   static hexToRgb(hex) {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [
       parseInt(result[1], 16),
       parseInt(result[2], 16),
@@ -227,39 +212,20 @@ export class ColorLib {
     ] : null;
   }
 
-  /**
-   * Add an alpha channel
-   *
-   * @param color
-   * @param {number} alpha
-   * @returns {string}
-   */
   static transparentize(color, alpha = 0.7): string {
     return 'rgba(' + ColorLib.hexToRgb(color).concat(alpha).join(',') + ')';
   }
 
-  /**
-   *
-   * @param num
-   * @param scheme
-   * @returns {[]}
-   */
   static generateColors(num, scheme) {
-    let color = [];
+    const color = [];
     for (let i = 0; i < num; i++) {
       color.push(ColorLib.getColor(i, scheme));
     }
     return color;
   }
 
-  /**
-   *
-   * @param num
-   * @param scheme
-   * @returns {[]}
-   */
   static generateTransparentColors(num, scheme) {
-    let color = [];
+    const color = [];
     for (let i = 0; i < num; i++) {
       color.push(ColorLib.transparentize(ColorLib.getColor(i, scheme)));
     }
@@ -267,18 +233,16 @@ export class ColorLib {
   }
 
   static hsvGradientFromRgbColors(c1, c2, steps) {
-    let c1hsv = ColorLib.rgb2hsv(c1.r, c1.g, c1.b);
-    let c2hsv = ColorLib.rgb2hsv(c2.r, c2.g, c2.b);
-
+    const c1hsv = ColorLib.rgb2hsv(c1.r, c1.g, c1.b);
+    const c2hsv = ColorLib.rgb2hsv(c2.r, c2.g, c2.b);
     c1.h = c1hsv[0];
     c1.s = c1hsv[1];
     c1.v = c1hsv[2];
     c2.h = c2hsv[0];
     c2.s = c2hsv[1];
     c2.v = c2hsv[2];
-
-    let gradient = ColorLib.hsvGradient(c1, c2, steps);
-    for (let i in gradient) {
+    const gradient = ColorLib.hsvGradient(c1, c2, steps);
+    for (const i in gradient) {
       if (gradient[i]) {
         gradient[i].rgb = ColorLib.hsv2rgb(gradient[i].h, gradient[i].s, gradient[i].v);
         gradient[i].r = Math.floor(gradient[i].rgb[0]);
@@ -291,19 +255,15 @@ export class ColorLib {
 
   private static rgb2hsv(r: number, g: number, b: number) {
     // Normalize
-    let normR = r / 255.0;
-    let normG = g / 255.0;
-    let normB = b / 255.0;
-
-
-    let M = Math.max(normR, normG, normB);
-    let m = Math.min(normR, normG, normB);
-    let d = M - m;
-
+    const normR = r / 255.0;
+    const normG = g / 255.0;
+    const normB = b / 255.0;
+    const M = Math.max(normR, normG, normB);
+    const m = Math.min(normR, normG, normB);
+    const d = M - m;
     let h;
     let s;
     let v;
-
     v = M;
     if (d === 0) {
       h = 0;
@@ -326,12 +286,10 @@ export class ColorLib {
   }
 
   private static hsvGradient(c1: any, c2: any, steps: any) {
-    let gradient = new Array(steps);
-
+    const gradient = new Array(steps);
     // determine clockwise and counter-clockwise distance between hues
-    let distCCW = (c1.h >= c2.h) ? c1.h - c2.h : 1 + c1.h - c2.h;
-    let distCW = (c1.h >= c2.h) ? 1 + c2.h - c1.h : c2.h - c1.h;
-
+    const distCCW = (c1.h >= c2.h) ? c1.h - c2.h : 1 + c1.h - c2.h;
+    const distCW = (c1.h >= c2.h) ? 1 + c2.h - c1.h : c2.h - c1.h;
     // make gradient for this part
     for (let i = 0; i < steps; i++) {
       // interpolate h, s, b
@@ -342,10 +300,10 @@ export class ColorLib {
       if (h > 1) {
         h = h - 1;
       }
-      let s = (1 - i / (steps - 1)) * c1.s + i / (steps - 1) * c2.s;
-      let v = (1 - i / (steps - 1)) * c1.v + i / (steps - 1) * c2.v;
+      const s = (1 - i / (steps - 1)) * c1.s + i / (steps - 1) * c2.s;
+      const v = (1 - i / (steps - 1)) * c1.v + i / (steps - 1) * c2.v;
       // add to gradient array
-      gradient[i] = {h: h, s: s, v: v};
+      gradient[i] = {h, s, v};
     }
     return gradient;
   }
@@ -354,13 +312,11 @@ export class ColorLib {
     let r;
     let g;
     let b;
-
-    let i = Math.floor(h * 6);
-    let f = h * 6 - i;
-    let p = v * (1 - s);
-    let q = v * (1 - f * s);
-    let t = v * (1 - (1 - f) * s);
-
+    const i = Math.floor(h * 6);
+    const f = h * 6 - i;
+    const p = v * (1 - s);
+    const q = v * (1 - f * s);
+    const t = v * (1 - (1 - f) * s);
     switch (i % 6) {
       case 0:
         r = v;
@@ -393,13 +349,12 @@ export class ColorLib {
         b = q;
         break;
     }
-
     return [r * 255, g * 255, b * 255];
   }
 
   static rgb2hex(r, g, b) {
     function componentToHex(c) {
-      let hex = c.toString(16);
+      const hex = c.toString(16);
       return hex.length === 1 ? '0' + hex : hex;
     }
 

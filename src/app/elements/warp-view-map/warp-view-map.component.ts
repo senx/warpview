@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 
@@ -52,7 +62,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   @Input() heatData: any[] = [];
   @Input() responsive = false;
-  @Input() showLegend: boolean = true;
+  @Input() showLegend = true;
   @Input() width = ChartLib.DEFAULT_WIDTH;
   @Input() height = ChartLib.DEFAULT_HEIGHT;
 
@@ -101,7 +111,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   currentLong: number;
   minTimeValue: number;
   maxTimeValue: number;
-  divider: number = 1;
+  divider = 1;
   lowerTimeBound: number;
   upperTimeBound: number;
   timeSpan: number;
@@ -131,50 +141,66 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     },
     HOT: {
       link: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles
+ style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by
+ <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>`
     },
     TOPO: {
       link: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+      attribution: `Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
+ <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>
+  (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)`
     },
     TOPO2: {
       link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+      attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN,
+       GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community`
     },
     SURFER: {
       link: 'https://maps.heigit.org/openmapsurfer/tiles/roads/webmercator/{z}/{x}/{y}.png',
-      attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: `Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of
+ Heidelberg</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
     },
     HYDRA: {
       link: 'https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png',
-      attribution: 'iles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
+ &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
     },
     HYDRA2: {
       link: 'https://{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png',
-      attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
+ &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
     },
     TONER: {
       link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png',
-      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
       subdomains: 'abcd'
     },
     TONER_LITE: {
       link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png',
-      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
       subdomains: 'abcd',
     },
     TERRAIN: {
       link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png',
-      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+ <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
       subdomains: 'abcd',
     },
     ESRI: {
       link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+      attribution: `Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan,
+ METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012`
     },
     SATELLITE: {
       link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+      attribution: `Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN,
+ IGP, UPR-EGP, and the GIS User Community`
     },
     OCEANS: {
       link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
@@ -190,20 +216,25 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     },
     WATERCOLOR: {
       link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
       subdomains: 'abcd',
     },
     CARTODB: {
       link: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
+ <a href="https://carto.com/attributions">CARTO</a>`,
       subdomains: 'abcd',
     },
     CARTODB_DARK: {
       link: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
+ <a href="https://carto.com/attributions">CARTO</a>`,
       subdomains: 'abcd',
     },
   };
+
   private _map: Leaflet.Map;
   private _hiddenData: number[];
   private polylinesBeforeCurrentValue = [];
@@ -214,7 +245,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
   private _heatLayer: any;
-  private resizeTimer;
+  // private resizeTimer;
   private pathData: any[] = [];
   private annotationsData: any[] = [];
   private positionData: any[] = [];
@@ -225,31 +256,20 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private firstDraw = true;
   private finalHeight = 0;
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     this.LOG = new Logger(WarpViewMapComponent, this.debug);
     this.LOG.debug(['constructor'], this.debug);
-    this.sizeService.sizeChanged$.subscribe(evt => {
+    this.sizeService.sizeChanged$.subscribe(() => {
       if (this._map) {
         this.resizeMe();
       }
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
   }
 
-  /**
-   *
-   */
   ngAfterViewInit() {
     this.LOG.debug(['ngAfterViewInit'], this._data);
     console.log('Etape 1', this.el.nativeElement.parentElement.getBoundingClientRect().height);
@@ -260,7 +280,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     let height = this.el.nativeElement.parentElement.getBoundingClientRect().height === 0
       ? ChartLib.DEFAULT_HEIGHT
       : this.el.nativeElement.parentElement.getBoundingClientRect().height;
-    let width = this.el.nativeElement.parentElement.getBoundingClientRect().width === 0
+    const width = this.el.nativeElement.parentElement.getBoundingClientRect().width === 0
       ? ChartLib.DEFAULT_WIDTH
       : this.el.nativeElement.parentElement.getBoundingClientRect().width;
     if (this._options.map.showTimeSlider && this.timeSlider && this.timeSlider.nativeElement) {
@@ -276,37 +296,22 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.height = height;
   }
 
-  /**
-   *
-   * @param event
-   */
   heatRadiusDidChange(event) {
     this._heatLayer.setOptions({radius: event.detail.valueAsNumber});
     this.LOG.debug(['heatRadiusDidChange'], event.detail.valueAsNumber);
   }
 
-  /**
-   *
-   * @param event
-   */
   heatBlurDidChange(event) {
     this._heatLayer.setOptions({blur: event.detail.valueAsNumber});
     this.LOG.debug(['heatBlurDidChange'], event.detail.valueAsNumber);
   }
 
-  /**
-   *
-   * @param event
-   */
   heatOpacityDidChange(event) {
-    let minOpacity = event.detail.valueAsNumber / 100;
-    this._heatLayer.setOptions({minOpacity: minOpacity});
+    const minOpacity = event.detail.valueAsNumber / 100;
+    this._heatLayer.setOptions({minOpacity});
     this.LOG.debug(['heatOpacityDidChange'], event.detail.valueAsNumber);
   }
 
-  /**
-   *
-   */
   private drawMap() {
     this.LOG.debug(['drawMap'], this.data);
     this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
@@ -334,7 +339,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     if (gts.data) {
       dataList = gts.data as any[];
       this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {}) as Param;
-
       this.timeSpan = this.timeSpan || this._options.map.timeSpan;
       params = gts.params;
     } else {
@@ -354,20 +358,13 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       }
     });
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
-
-    this.displayMap({gts: flattenGTS, params: params});
+    this.displayMap({gts: flattenGTS, params});
     this.LOG.debug(['onResize', 'postDisplayMap'], 'resizeTimer', this.el.nativeElement.parentElement.clientWidth, this.parentWidth);
   }
 
-  /**
-   *
-   * @param {string} color
-   * @param {string} marker
-   * @returns {Icon}
-   */
   private icon(color: string, marker = '') {
-    let c = `+${color.slice(1)}`;
-    let m = marker !== '' ? '-' + marker : '';
+    const c = `+${color.slice(1)}`;
+    const m = marker !== '' ? '-' + marker : '';
     return Leaflet.icon({
       iconUrl: 'https://api.mapbox.com/v3/marker/pin-s' + m + c + '@2x.png',
       iconAnchor: this._iconAnchor,
@@ -375,10 +372,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
   }
 
-  /**
-   *
-   * @param { gts: any[], params: any[] } data
-   */
   private displayMap(data: { gts: any[], params: any[] }) {
     this.LOG.debug(['drawMap'], data, this._options, this.hiddenData || []);
     this.divider = GTSLib.getDivider(this._options.timeUnit);
@@ -388,9 +381,9 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     }
     this.LOG.debug(['displayMap'], moment(this.timeStart).toISOString(), moment(this.timeEnd).toISOString());
     let height = this.height || ChartLib.DEFAULT_HEIGHT;
-    let width = this.width || ChartLib.DEFAULT_WIDTH;
+    const width = this.width || ChartLib.DEFAULT_WIDTH;
     if (this.responsive && this.finalHeight === 0) {
-     this.resizeMe();
+      this.resizeMe();
     } else {
       if (this._options.map.showTimeSlider && this.timeSlider && this.timeSlider.nativeElement) {
         height -= this.timeSlider.nativeElement.getBoundingClientRect().height;
@@ -451,7 +444,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       Leaflet.tileLayer(map.link, mapOpts).addTo(this._map);
     }
     (this.pathData || []).forEach(d => {
-      let plottedGts: any = this.updateGtsPath(d);
+      const plottedGts: any = this.updateGtsPath(d);
       if (plottedGts) {
         this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
         this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
@@ -461,7 +454,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
     (this.annotationsData || []).forEach(d => {
       //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
-      let plottedGts: any = this.updateGtsPath(d);
+      const plottedGts: any = this.updateGtsPath(d);
       if (plottedGts) {
         this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
         this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
@@ -510,7 +503,9 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       const opts = {
         style: () => ({
           color: (data.params && data.params[index]) ? data.params[index].color || color : color,
-          fillColor: (data.params && data.params[index]) ? ColorLib.transparentize(data.params[index].fillColor || color) : ColorLib.transparentize(color),
+          fillColor: (data.params && data.params[index])
+            ? ColorLib.transparentize(data.params[index].fillColor || color)
+            : ColorLib.transparentize(color),
         })
       } as any;
       if (m.geometry.type === 'Point') {
@@ -530,7 +525,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
-      let bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
+      const bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
       window.setTimeout(() => {
         this._options.startZoom = this.currentZoom || this._options.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
@@ -581,21 +576,15 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       });
       this._heatLayer.addTo(this._map);
     }
-
-
   }
 
-  /**
-   *
-   * @param gts
-   */
   private updateGtsPath(gts: any) {
-    let beforeCurrentValue = Leaflet.polyline(
+    const beforeCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
         color: gts.color,
         opacity: 1,
       }).addTo(this._map);
-    let afterCurrentValue = Leaflet.polyline(
+    const afterCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
         color: gts.color,
         opacity: 0.7,
@@ -605,29 +594,25 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     gts.path.map(p => {
       let date;
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        date = parseInt(p.ts);
+        date = parseInt(p.ts, 10);
       } else {
-        date = (moment(parseInt(p.ts)).utc(true).toISOString() || '').replace('Z', this._options.timeZone == 'UTC' ? 'Z' : '');
+        date = (moment(parseInt(p.ts, 10))
+          .utc(true).toISOString() || '')
+          .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
       }
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
-
       return {
-        beforeCurrentValue: beforeCurrentValue,
-        afterCurrentValue: afterCurrentValue,
-        currentValue: currentValue,
+        beforeCurrentValue,
+        afterCurrentValue,
+        currentValue,
       };
     });
   }
 
-  /**
-   *
-   * @param positionData
-   * @returns any[]
-   */
   private updatePositionArray(positionData: any) {
-    let positions = [];
+    const positions = [];
     let polyline;
     let icon;
     let result;
@@ -640,20 +625,14 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         break;
       case 'marker':
         icon = this.icon(positionData.color, positionData.marker);
-        for (let j = 0; j < positionData.positions.length; j++) {
+        positionData.positions.forEach(p => {
           if ((this.hiddenData || []).filter((i) => i === positionData.key).length === 0) {
-            let marker = Leaflet.marker({
-              lat: positionData.positions[j][0],
-              lng: positionData.positions[j][1]
-            }, {
-              icon: icon,
-              opacity: 1,
-            });
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            const marker = Leaflet.marker({lat: p[0], lng: p[1]}, {icon, opacity: 1});
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
             positions.push(marker);
           }
           this.LOG.debug(['updatePositionArray', 'build marker'], icon);
-        }
+        });
         break;
       case 'coloredWeightedDots':
         this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
@@ -663,64 +642,60 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
           result[j] = 0;
           inStep[j] = 0;
         }
-        for (let j = 0; j < positionData.positions.length; j++) {
+        positionData.positions.forEach(p => {
           if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
-            this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * positionData.positions[j][4]);
-            let marker = Leaflet.circleMarker(
-              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]},
+            this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * p[4]);
+            const marker = Leaflet.circleMarker(
+              {lat: p[0], lng: p[1]},
               {
-                radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+                radius: positionData.baseRadius * (parseInt(p[4], 10) + 1),
                 color: positionData.borderColor,
                 fillColor: ColorLib.rgb2hex(
-                  positionData.colorGradient[positionData.positions[j][5]].r,
-                  positionData.colorGradient[positionData.positions[j][5]].g,
-                  positionData.colorGradient[positionData.positions[j][5]].b),
+                  positionData.colorGradient[p[5]].r,
+                  positionData.colorGradient[p[5]].g,
+                  positionData.colorGradient[p[5]].b),
                 fillOpacity: 0.7,
               });
             this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
             positions.push(marker);
           }
-        }
+        });
         break;
       case 'weightedDots':
-        for (let j = 0; j < positionData.positions.length; j++) {
+        positionData.positions.forEach(p => {
           if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
-            let marker = Leaflet.circleMarker(
-              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
-                radius: positionData.baseRadius * (parseInt(positionData.positions[j][4]) + 1),
+            const marker = Leaflet.circleMarker(
+              {lat: p[0], lng: p[1]}, {
+                radius: positionData.baseRadius * (parseInt(p[4], 10) + 1),
                 color: positionData.borderColor,
                 fillColor: positionData.color, fillOpacity: 0.7,
               });
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
             positions.push(marker);
           }
-        }
+        });
         break;
       case 'dots':
       default:
-        for (let j = 0; j < positionData.positions.length; j++) {
+        positionData.positions.forEach(p => {
           if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
-            let marker = Leaflet.circleMarker(
-              {lat: positionData.positions[j][0], lng: positionData.positions[j][1]}, {
+            const marker = Leaflet.circleMarker(
+              {lat: p[0], lng: p[1]}, {
                 radius: positionData.baseRadius,
                 color: positionData.borderColor,
                 fillColor: positionData.color,
                 fillOpacity: 1,
               });
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${positionData.positions[j][2] || ''}</p>`);
+            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
             positions.push(marker);
           }
-        }
+        });
         break;
     }
     return positions;
   }
 
-  /**
-   *
-   * @returns {Promise<boolean>}
-   */
   public resize(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       this.resizeMe();
@@ -728,10 +703,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
   }
 
-  /**
-   *
-   * @param event
-   */
   onRangeSliderChange(event) {
     this.LOG.debug(['onRangeSliderChange'], event);
     this.timeStart = event.value || moment().valueOf();
@@ -739,10 +710,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.drawMap();
   }
 
-  /**
-   *
-   * @param event
-   */
   onRangeSliderWindowChange(event) {
     this.LOG.debug(['onRangeSliderWindowChange'], event);
     if (this.lowerTimeBound !== event.min || this.upperTimeBound !== event.max) {
@@ -751,10 +718,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   *
-   * @param event
-   */
   onSliderChange(event) {
     this.LOG.debug(['onSliderChange'], event, moment(event.value).toISOString());
     this._firstDraw = false;
@@ -768,10 +731,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   *
-   * @param event
-   */
   updateTimeSpan(event) {
     this.LOG.debug(['updateTimeSpan'], event.target.value);
     if (this.timeSpan !== event.target.value) {

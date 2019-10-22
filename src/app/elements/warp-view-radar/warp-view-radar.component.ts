@@ -17,7 +17,6 @@
 import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
-import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
@@ -49,20 +48,11 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     font: {size: 12},
     polar: {
       bgcolor: 'transparent',
-      angularaxis: {
-        type: 'category'
-      },
-      radialaxis: {
-        visible: true,
-      }
+      angularaxis: {type: 'category'},
+      radialaxis: {visible: true}
     }
   };
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     if (options) {
       let optionChanged = false;
@@ -88,15 +78,10 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewRadarComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(evt => {
+    this.sizeService.sizeChanged$.subscribe(() => {
       if (this._chart) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
         this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
@@ -108,25 +93,16 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
@@ -145,15 +121,10 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     const dataset: any[] = [];
     const divider = GTSLib.getDivider(this._options.timeUnit);
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+    const gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     let minVal = Number.MAX_VALUE;
     let maxVal = Number.MIN_VALUE;
@@ -162,14 +133,9 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
       const series: any = {
         r: [],
         theta: [],
-        line: {
-          color: color,
-        },
+        line: {color},
         marker: {
-          line: {
-            color: color,
-            width: 1
-          },
+          line: {color, width: 1},
           color: ColorLib.transparentize(color)
         },
         fillcolor: ColorLib.transparentize(color),

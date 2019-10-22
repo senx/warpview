@@ -25,17 +25,14 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input,
 export class WarpViewModalComponent implements AfterViewInit {
 
 
-  @Input() modalTitle: string = '';
+  @Input() modalTitle = '';
   @Input() kbdLastKeyPressed: string[] = [];
 
   @Output() warpViewModalOpen = new EventEmitter<any>();
   @Output() warpViewModalClose = new EventEmitter<any>();
 
-  private opened: boolean = false;
+  private opened = false;
 
-  /**
-   *
-   */
   public open() {
     this.el.nativeElement.style.display = 'block';
     this.el.nativeElement.style.zIndex = '999999';
@@ -43,9 +40,6 @@ export class WarpViewModalComponent implements AfterViewInit {
     this.warpViewModalOpen.emit({});
   }
 
-  /**
-   *
-   */
   public close() {
     this.el.nativeElement.style.display = 'none';
     this.el.nativeElement.style.zIndex = '-1';
@@ -53,20 +47,12 @@ export class WarpViewModalComponent implements AfterViewInit {
     this.warpViewModalClose.emit({});
   }
 
-  /**
-   *
-   * @returns {Promise<boolean>}
-   */
   public isOpened(): Promise<boolean> {
     return new Promise<boolean>(resolve => {
       resolve(this.opened);
     });
   }
 
-  /**
-   *
-   * @param {string[]} $event
-   */
   @HostListener('kbdLastKeyPressed', ['$event'])
   handleKeyDown($event: string[]) {
     if ('Escape' === $event[0]) {
@@ -74,16 +60,9 @@ export class WarpViewModalComponent implements AfterViewInit {
     }
   }
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.el.nativeElement.addEventListener('click', (event: any) => {
       if (event.path[0].nodeName === 'WARP-VIEW-MODAL') {
@@ -91,5 +70,4 @@ export class WarpViewModalComponent implements AfterViewInit {
       }
     });
   }
-
 }

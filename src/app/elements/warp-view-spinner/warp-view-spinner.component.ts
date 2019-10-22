@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'warpview-spinner',
@@ -22,13 +22,6 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
   styleUrls: ['./warp-view-spinner.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewSpinnerComponent implements OnInit {
-
+export class WarpViewSpinnerComponent {
   @Input() message = 'Loading and parsing data...';
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
 }

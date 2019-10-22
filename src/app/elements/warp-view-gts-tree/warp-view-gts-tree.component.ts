@@ -57,9 +57,6 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     this.LOG = new Logger(WarpViewGtsTreeComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.LOG.debug(['componentDidLoad', 'data'], this.data);
     if (this.data) {
@@ -70,11 +67,6 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options: Param, refresh: boolean): void {
     this.doRender();
     if (!!this._options.foldGTSTree && !this.expand) {
@@ -82,16 +74,13 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     }
   }
 
-  /**
-   *
-   */
   private doRender() {
     this.LOG.debug(['doRender', 'gtsList'], this._data);
     this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
     if (!this._data) {
       return;
     }
-    let dataList = GTSLib.getData(this._data).data;
+    const dataList = GTSLib.getData(this._data).data;
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);
     if (!dataList) {
       return;
@@ -100,9 +89,6 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this.expand);
   }
 
-  /**
-   *
-   */
   private foldAll() {
     if (!this.root) {
       window.setTimeout(() => {
@@ -113,18 +99,10 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     }
   }
 
-  /**
-   *
-   */
   toggleVisibility() {
     this.expand = !this.expand;
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
     return [];
   }

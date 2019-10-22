@@ -71,6 +71,7 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
+    "space-before-function-paren": false,
     "variable-name": [
       true,
       "ban-keywords",

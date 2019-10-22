@@ -38,34 +38,19 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
   heatMapData: any;
   private resizeTimer;
 
-  /**
-   *
-   * @param {ElementRef} el
-   */
   constructor(private el: ElementRef) {
     super();
     this.LOG = new Logger(WarpViewDrillDownComponent, this._debug);
   }
 
-  /**
-   *
-   */
   ngAfterViewInit() {
     this.drawChart();
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options: Param, refresh: boolean): void {
     this.drawChart();
   }
 
-  /**
-   *
-   */
   @HostListener('window:resize')
   onResize() {
     if (this.el.nativeElement.parentElement.clientWidth !== this.parentWidth || this.parentWidth <= 0) {
@@ -82,37 +67,24 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
     }
   }
 
-  /**
-   *
-   */
   private drawChart() {
     if (!this.initiChart(this.el)) {
       return;
     }
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}
-   */
   protected convert(data: DataModel): any[] {
-    let dataList = this._data.data as any[];
+    const dataList = this._data.data as any[];
     this.heatMapData = this.parseData(GTSLib.flatDeep(dataList));
     return [];
   }
 
-  /**
-   *
-   * @param {[]} dataList
-   * @returns {[]}
-   */
   private parseData(dataList: any[]) {
     const details = [];
-    let values = [];
+    const values = [];
     const dates = [];
     const data = {};
-    const reducer = (accumulator, currentValue) => accumulator + parseInt(currentValue);
+    const reducer = (accumulator, currentValue) => accumulator + parseInt(currentValue, 10);
     this.LOG.debug(['parseData'], dataList);
     dataList.forEach((gts, i) => {
       const name = GTSLib.serializeGtsMetadata(gts);
@@ -127,7 +99,7 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
         dates.push(v[0] / 1000);
         values[refDate].push(v[v.length - 1]);
         data[refDate].push({
-          name: name,
+          name,
           date: v[0] / 1000,
           value: v[v.length - 1],
           color: ColorLib.getColor(i, this._options.scheme),

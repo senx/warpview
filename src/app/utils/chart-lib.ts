@@ -19,31 +19,26 @@ export class ChartLib {
   static DEFAULT_WIDTH = 640;
   static DEFAULT_HEIGHT = 480;
 
-  /**
-   * Generate a guid
-   * @returns {string}
-   */
   static guid() {
-    let uuid = '', i, random;
+    let uuid = '';
+    let i;
+    let random;
     for (i = 0; i < 32; i++) {
+      // tslint:disable-next-line:no-bitwise
       random = Math.random() * 16 | 0;
-      if (i == 8 || i == 12 || i == 16 || i == 20) {
+      if (i === 8 || i === 12 || i === 16 || i === 20) {
         uuid += '-';
       }
-      uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+      // tslint:disable-next-line:no-bitwise
+      uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
     }
     return uuid;
   }
 
-  /**
-   *
-   * @param sources
-   * @returns {{}}
-   */
   static mergeDeep(...sources) {
     // Variables
-    let extended = {};
-    let deep = true;
+    const extended = {};
+    const deep = true;
     let i = 0;
     // Merge the object into the extended object
     // Loop through each object and conduct a merge
@@ -51,16 +46,9 @@ export class ChartLib {
       const obj = arguments[i];
       ChartLib.merge(obj, extended, deep);
     }
-
     return extended;
   }
 
-  /**
-   *
-   * @param obj
-   * @param extended
-   * @param deep
-   */
   static merge(obj, extended, deep) {
     for (const prop in obj) {
       if (obj.hasOwnProperty(prop)) {
@@ -72,20 +60,12 @@ export class ChartLib {
         }
       }
     }
-  };
+  }
 
-  /**
-   *
-   * @param item
-   */
   static isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
   }
 
-  /**
-   *
-   * @returns {{title: (tooltipItem) => any; label: (tooltipItem, data) => string}}
-   */
   static getTooltipCallbacks() {
     return {
       title: (tooltipItem) => {
@@ -102,16 +82,10 @@ export class ChartLib {
     };
   }
 
-  /**
-   *
-   * @param {number} w
-   * @param {number} h
-   * @param {string} color
-   * @returns {HTMLImageElement}
-   */
   static buildImage(w: number, h: number, color: string) {
     const img = new Image(w, h);
-    const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">
+    const svg = `<svg width="${w}px" height="${h}px" xmlns="http://www.w3.org/2000/svg"
+ viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid">
 <rect width="${w}" height="${h}" style="fill:${color};" ></rect>
 </svg>`;
     // 	myImage.src = "ripple.svg"
@@ -122,17 +96,20 @@ export class ChartLib {
   /**
    * Watch the parent resize of an element.
    * @param el The component Element
-   * @param redrawfunction The resize or redraw function to call if container size change. don't forget to .bind(this)
+   * @param redrawFunction The resize or redraw function to call if container size change. don't forget to .bind(this)
    * @param period Timer component By default, 2 s
    */
-  static resizeWatchTimer(el: HTMLElement, redrawfunction: Function, period: number = 1000): number {
+  static resizeWatchTimer(el: HTMLElement, redrawFunction: () => void, period: number = 1000): number {
     let previousWidth = el.parentElement.getBoundingClientRect().width;
     let previousHeight = el.parentElement.getBoundingClientRect().height;
     return window.setInterval(() => {
-      if (el.parentElement.getBoundingClientRect().width !== previousWidth || el.parentElement.getBoundingClientRect().height !== previousHeight) {
+      if (
+        el.parentElement.getBoundingClientRect().width !== previousWidth
+        || el.parentElement.getBoundingClientRect().height !== previousHeight
+      ) {
         previousHeight = el.parentElement.getBoundingClientRect().height;
         previousWidth = el.parentElement.getBoundingClientRect().width;
-        redrawfunction();
+        redrawFunction();
       }
     }, period);
   }

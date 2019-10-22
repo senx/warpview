@@ -17,7 +17,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
-import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import deepEqual from 'deep-equal';
 import * as gauge from 'canvas-gauges';
@@ -43,11 +42,6 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
   private CHART_MARGIN = 0.05;
   private _type = 'gauge'; // gauge or bullet
 
-  /**
-   *
-   * @param {ElementRef} el
-   * @param {SizeService} sizeService
-   */
   constructor(private el: ElementRef, private sizeService: SizeService) {
     super();
     this.LOG = new Logger(WarpViewGaugeComponent, this._debug);
@@ -63,27 +57,16 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       Plotly.purge(this._chart);
     }
   }
 
-  /**
-   *
-   * @param {Param} options
-   * @param {boolean} refresh
-   */
   update(options, refresh): void {
     if (options) {
       let optionChanged = false;
@@ -109,14 +92,10 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  /**
-   *
-   */
   drawChart() {
     if (!this.initiChart(this.el)) {
       return;
     }
-
     this.LOG.debug(['drawChart', 'plotlyData'], this.plotlyData, this._type);
     this.layout.autosize = true;
     this.layout.grid = {rows: Math.ceil(this.plotlyData.length / 2), columns: 2, pattern: 'independent', xgap: 0.2, ygap: 0.2};
@@ -137,13 +116,8 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   * @param {DataModel} data
-   * @returns {[]}, this._options.scheme
-   */
   protected convert(data: DataModel): any[] {
-    let gtsList = data.data as any[];
+    const gtsList = data.data as any[];
     const dataList = [];
     let max = Number.MIN_VALUE;
     gtsList.forEach(d => max = Math.max(max, d[1]));
@@ -172,7 +146,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
       }
       dataList.push(
         {
-          domain: domain,
+          domain,
           align: 'left',
           value: d[1],
           delta: {
@@ -202,7 +176,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
               color: ColorLib.transparentize(color),
               line: {
                 width: 1,
-                color: color
+                color
               }
             }
           }

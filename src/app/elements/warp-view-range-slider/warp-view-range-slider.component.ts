@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewSliderComponent} from '../warp-view-slider/warp-view-slider.component';
 import {Logger} from '../../utils/logger';
 import * as noUiSlider from 'nouislider';
@@ -27,49 +27,33 @@ import * as noUiSlider from 'nouislider';
   styleUrls: ['./warp-view-range-slider.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewRangeSliderComponent extends WarpViewSliderComponent {
+export class WarpViewRangeSliderComponent extends WarpViewSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('slider') slider: ElementRef<HTMLDivElement>;
   @Input() minValue: number;
   @Input() maxValue: number;
 
-  /**
-   *
-   */
   constructor() {
     super();
     this.LOG = new Logger(WarpViewRangeSliderComponent, this.debug);
     this.LOG.debug(['constructor'], this.debug);
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this.setOptions();
     this.minValue = this.minValue || this._min;
     this.maxValue = this.maxValue || this._max;
   }
 
-  /**
-   *
-   */
   ngAfterViewInit(): void {
     this.loaded = false;
     this.setOptions();
   }
 
-  /**
-   *
-   * @param val
-   */
   onChange(val) {
     this.change.emit({value: this.minValue, highValue: this.maxValue});
-    this.LOG.debug(['onChange'], {value: this.minValue, highValue: this.maxValue});
+    this.LOG.debug(['onChange'], val, {value: this.minValue, highValue: this.maxValue});
   }
 
-  /**
-   *
-   */
   protected setOptions() {
     this.LOG.debug(['setOptions'], this._min, this._max);
     if (!this._min && !this._max) {
@@ -84,10 +68,7 @@ export class WarpViewRangeSliderComponent extends WarpViewSliderComponent {
           start: [this.minValue, this.maxValue],
           connect: true,
           tooltips: [this.getFormat(), this.getFormat()],
-          range: {
-            'min': [this._min],
-            'max': [this._max]
-          }
+          range: {min: [this._min], max: [this._max]}
         } as any;
         if (!!this._step && this._step > 0) {
           opts.step = Math.floor((this._max - this._min) / this._step);
@@ -96,8 +77,8 @@ export class WarpViewRangeSliderComponent extends WarpViewSliderComponent {
         uiSlider.on('end', event => {
           this.LOG.debug(['onChange'], event);
           this.change.emit({
-            min: parseInt(event[0]),
-            max: parseInt(event[1])
+            min: parseInt(event[0], 10),
+            max: parseInt(event[1], 10)
           });
         });
       } else {
