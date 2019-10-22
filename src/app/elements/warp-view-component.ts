@@ -164,6 +164,7 @@ export abstract class WarpViewComponent {
     this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep(this._data.globalParams, this._options) as Param;
+    this.LOG.debug(['initiChart', 'this._options'], this._options);
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
@@ -196,6 +197,7 @@ export abstract class WarpViewComponent {
           moment.tz(dataModel.bounds.xmax, this._options.timeZone).toISOString(true)];
       }
     }
+    this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     if (this.plotlyData.length === 0) {
       this.loading = false;
       return false;

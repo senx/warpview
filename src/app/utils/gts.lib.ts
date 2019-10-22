@@ -270,17 +270,14 @@ export class GTSLib {
     }
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
     // if it's a number it's a GTS to plot
-    (gts.v || []).forEach(v => {
+    return (gts.v || []).some(v => {
       if (v[v.length - 1] !== null) {
         // noinspection JSPotentiallyInvalidConstructorUsage
-        if (typeof (v[v.length - 1]) === 'number' ||
+        return typeof v[v.length - 1] === 'number' ||
           // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
-          v[v.length - 1].constructor.prototype.toFixed !== undefined) {
-          return true;
-        }
+          !!v[v.length - 1].constructor.prototype.toFixed;
       }
     });
-    return false;
   }
 
   static isGtsToAnnotate(gts) {
@@ -289,17 +286,14 @@ export class GTSLib {
     }
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
     // if it's a number it's a GTS to plot
-    (gts.v || []).forEach(v => {
+    return (gts.v || []).some(v => {
       if (v[v.length - 1] !== null) {
         // noinspection JSPotentiallyInvalidConstructorUsage
-        if (typeof (v[v.length - 1]) !== 'number' &&
+        return typeof (v[v.length - 1]) !== 'number' &&
           (!!v[v.length - 1].constructor && v[v.length - 1].constructor.name !== 'Big') &&
-          v[v.length - 1].constructor.prototype.toFixed === undefined) {
-          return true;
-        }
+          v[v.length - 1].constructor.prototype.toFixed === undefined;
       }
     });
-    return false;
   }
 
   static gtsSort(gts) {
@@ -373,5 +367,5 @@ export class GTSLib {
     }
     display += '</span>';
     return display;
-  };
+  }
 }

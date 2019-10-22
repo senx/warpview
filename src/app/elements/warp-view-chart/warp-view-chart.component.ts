@@ -100,25 +100,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     },
   };
 
-  /**
-   * usefull for default zoom
-   */
   private maxTick = 0;
-  /**
-   * usefull for default zoom
-   */
   private minTick = 0;
-  /**
-   * table of gts id displayed in dygraph. array order is the one of dygraph series
-   */
   private visibleGtsId = [];
-  /**
-   * key = timestamp. values = table of available points, filled by null.
-   */
   private dataHashset = {};
-  /**
-   * contains the bounds of current graph, in timestamp (platform time unit), and in millisecond.
-   */
   private chartBounds: ChartBounds = new ChartBounds();
   private visibilityStatus: visibilityState = 'unknown';
 
@@ -170,16 +155,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._chart) {
       this._chart.removeAllListeners('plotly_hover');
@@ -279,11 +258,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     this.minTick = Number.POSITIVE_INFINITY;
     this.visibleGtsId = [];
     const nonPlottable = gtsList.filter(g => {
+      this.LOG.debug(['convert'], GTSLib.isGtsToPlot(g));
       return (g.v && !GTSLib.isGtsToPlot(g));
     });
     gtsList = gtsList.filter(g => {
       return (g.v && GTSLib.isGtsToPlot(g));
     });
+  //  this.LOG.debug(['convert'], gtsList);
     // initialize visibility status
     if (this.visibilityStatus === 'unknown') {
       this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
