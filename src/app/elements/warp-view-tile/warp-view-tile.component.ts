@@ -59,8 +59,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private execUrl = '';
   private timeUnit = 'us';
   graphs = {
-    scatter: ['scatter'],
-    chart: ['line', 'spline', 'step', 'area'],
+    chart: ['line', 'spline', 'step', 'area', 'scatter'],
     pie: ['pie', 'donut'],
     polar: ['polar'],
     radar: ['radar'],

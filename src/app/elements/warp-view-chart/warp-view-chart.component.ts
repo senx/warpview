@@ -300,7 +300,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
         const color = ColorLib.getColor(gts.id, this._options.scheme);
         const series: Partial<any> = {
           type: 'scatter',
-          mode: this._options.showDots ? 'lines+markers' : 'lines',
+          mode: this._type === 'scatter' ? 'markers' : this._options.showDots ? 'lines+markers' : 'lines',
           name: label,
           text: label,
           x: [],

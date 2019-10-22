@@ -64,6 +64,13 @@ false RESETS
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP`
+      }, {
+        title: 'Scatter chart',
+        type: 'scatter',
+        warpscript: `@training/dataset0
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+false RESETS
+[ SWAP mapper.delta 1 0 0 ] MAP`
       }],
     bar: [{
       title: 'Bar chart',
