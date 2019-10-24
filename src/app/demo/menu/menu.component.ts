@@ -42,6 +42,10 @@ export class MenuComponent {
       slug: '/demo/chart'
     },
     {
+      title: 'Spectrum charts',
+      slug: '/demo/spectrum'
+    },
+    {
       title: 'Bar chart',
       slug: '/demo/bar'
     },

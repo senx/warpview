@@ -51,6 +51,7 @@ import {WarpViewRangeSliderComponent} from './warp-view-range-slider/warp-view-r
 import {FormsModule} from '@angular/forms';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {SizeService} from '../services/resize.service';
+import { WarpViewSpectrumComponent } from './warp-view-spectrum/warp-view-spectrum.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import {SizeService} from '../services/resize.service';
     WarpViewPlotComponent,
     WarpViewResizeComponent,
     WarpViewSliderComponent,
-    WarpViewRangeSliderComponent
+    WarpViewRangeSliderComponent,
+    WarpViewSpectrumComponent
   ],
   imports: [
     CommonModule,
@@ -118,7 +120,8 @@ import {SizeService} from '../services/resize.service';
     WarpViewPlotComponent,
     WarpViewResizeComponent,
     WarpViewSliderComponent,
-    WarpViewRangeSliderComponent
+    WarpViewRangeSliderComponent,
+    WarpViewSpectrumComponent
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [
@@ -149,7 +152,8 @@ import {SizeService} from '../services/resize.service';
     WarpViewPlotComponent,
     WarpViewResizeComponent,
     WarpViewSliderComponent,
-    WarpViewRangeSliderComponent
+    WarpViewRangeSliderComponent,
+    WarpViewSpectrumComponent
   ]
 })
 export class ElementsModule {
@@ -175,6 +179,7 @@ export class ElementsModule {
       {name: 'warp-view-polar', component: WarpViewPolarComponent},
       {name: 'warp-view-radar', component: WarpViewRadarComponent},
       {name: 'warp-view-plot', component: WarpViewPlotComponent},
+      {name: 'warp-view-spectrum', component: WarpViewSpectrumComponent},
     ].forEach(wc => {
       if (!customElements.get(wc.name)) {
         customElements.define(wc.name, createCustomElement(wc.component, {injector: this.injector}));

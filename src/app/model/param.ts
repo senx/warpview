@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 export class Param {
-  scheme?: string = 'WARP10';
+  scheme = 'WARP10';
   bgColor?: string;
   fontColor?: string;
   borderColor?: string;
@@ -30,18 +30,18 @@ export class Param {
   startZoom?: number;
   dotsLimit?: number;
   autoRefresh?: number;
-  showControls?: boolean = true;
+  showControls = true;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: string;
-  showDots? = false;
+  showDots = false;
   delta?: number;
-  timeUnit? = 'us';
+  timeUnit = 'us';
   minColor?: string;
   maxColor?: string;
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
-  timeZone? = 'UTC';
+  timeZone = 'UTC';
   map?: {
     tiles?: string[];
     heatRadius?: number;
@@ -69,4 +69,8 @@ export class Param {
     maxDate?: number;
     yRanges?: [number, number];
   } = {};
+  histo?: {
+    histnorm: 'percent' | 'probability' | 'density' | 'probability density';
+    histfunc: 'count' | 'sum' | 'avg' | 'min' | 'max';
+  };
 }

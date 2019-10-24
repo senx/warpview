@@ -40,14 +40,14 @@ false RESETS
         title: 'Line chart',
         type: 'line',
         warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -20 ] FETCH
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP`
       }, {
         title: 'Area chart',
         type: 'area',
         warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -20 ] FETCH
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP`
       }, {
@@ -98,6 +98,58 @@ LMAP
 %> LMAP 'values' STORE
 { 'data' $values }`
     }],
+    spectrum: [
+      {
+        title: 'Spectrum chart / contour by density',
+        type: 'histogram2dcontour',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH 'data' STORE
+{
+  'data' $data
+  'globalParams' {
+    'histo' {
+      'histnorm' 'density'
+      'histfunc' 'count'
+    }
+  }
+}`
+      },
+      {
+        title: 'Spectrum chart / contour by percent',
+        type: 'histogram2dcontour',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH MERGE 'data' STORE
+{ 'data' $data 'globalParams' { 'histo' { 'histnorm' 'percent' 'histfunc' 'avg' } } }`
+      },
+      {
+        title: 'Spectrum chart / contour by probability',
+        type: 'histogram2dcontour',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH MERGE 'data' STORE
+{ 'data' $data 'globalParams' { 'histo' { 'histnorm' 'probability' 'histfunc' 'max' } } }`
+      },
+      {
+        title: 'Spectrum chart / histogram by density',
+        type: 'histogram2d',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH MERGE 'data' STORE
+{ 'data' $data 'globalParams' { 'histo' { 'histnorm' 'density' 'histfunc' 'count' } } }`
+      },
+      {
+        title: 'Spectrum chart / histogram by percent',
+        type: 'histogram2d',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH MERGE 'data' STORE
+{ 'data' $data 'globalParams' { 'histo' { 'histnorm' 'percent' 'histfunc' 'avg' } } }`
+      },
+      {
+        title: 'Spectrum chart / histogram by probability',
+        type: 'histogram2d',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH MERGE 'data' STORE
+{ 'data' $data 'globalParams' { 'histo' { 'histnorm' 'probability' 'histfunc' 'max' } } }`
+      },
+    ],
     datagrid: [{
       title: 'Data grid',
       type: 'datagrid',
@@ -376,7 +428,7 @@ $res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
       type: 'bullet',
       warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-[ $res  
+[ $res
 $res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
 { 'data' $values }`
     }

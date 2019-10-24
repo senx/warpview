@@ -25,6 +25,7 @@ import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
 import {Config, PlotData, PlotlyHTMLElement} from 'plotly.js';
 
+export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 // noinspection AngularMissingOrInvalidDeclarationInModule
 export abstract class WarpViewComponent {
   @Input() responsive: boolean;
@@ -83,7 +84,7 @@ export abstract class WarpViewComponent {
 
   _options: Param = new Param();
   protected LOG: Logger;
-  protected defOptions = {
+  protected defOptions =  ChartLib.mergeDeep(this._options, {
     dotsLimit: 1000,
     heatControls: false,
     timeMode: 'date',
@@ -94,7 +95,7 @@ export abstract class WarpViewComponent {
     timeUnit: 'us',
     showControls: true,
     bounds: {}
-  } as Param;
+  }) as Param;
 
   protected _debug = false;
   private _unit = '';

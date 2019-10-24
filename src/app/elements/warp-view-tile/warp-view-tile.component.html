@@ -20,6 +20,11 @@
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
       <warpview-spinner *ngIf="loading" message="Requesting data"></warpview-spinner>
 
+      <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+                      [showLegend]="showLegend" [data]="gtsList"
+                      *ngIf="graphs['spectrum'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-spectrum>
+
       <warpview-chart [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                       [showLegend]="showLegend" [data]="gtsList"
                       *ngIf="graphs['chart'].indexOf(type) > -1 && gtsList"

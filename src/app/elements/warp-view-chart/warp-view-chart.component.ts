@@ -32,10 +32,10 @@ import * as moment from 'moment-timezone';
 import {ChartBounds} from '../../model/chartBounds';
 import {ColorLib} from '../../utils/color-lib';
 import {Logger} from '../../utils/logger';
-import {WarpViewComponent} from '../warp-view-component';
+import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 
-type visibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
+
 
 @Component({
   selector: 'warpview-chart',
@@ -105,7 +105,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   private visibleGtsId = [];
   private dataHashset = {};
   private chartBounds: ChartBounds = new ChartBounds();
-  private visibilityStatus: visibilityState = 'unknown';
+  private visibilityStatus: VisibilityState = 'unknown';
 
   update(options, refresh): void {
     this.drawChart(refresh);
@@ -264,7 +264,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     gtsList = gtsList.filter(g => {
       return (g.v && GTSLib.isGtsToPlot(g));
     });
-  //  this.LOG.debug(['convert'], gtsList);
     // initialize visibility status
     if (this.visibilityStatus === 'unknown') {
       this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
@@ -297,6 +296,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
             break;
           case 'area':
             series.fill = 'tozeroy';
+            series.fillcolor = ColorLib.transparentize(color, 0.3);
             break;
           case 'step':
             series.line.shape = 'hvh';
