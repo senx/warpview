@@ -23,8 +23,6 @@
     "url": "https://github.com/senx/warpview/issues"
   },
   "homepage": "https://www.warp10.io",
-  "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
   "files": [
     "elements"
   ],
@@ -37,7 +35,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:elements": "node --max_old_space_size=4096 --optimize_for_size --stack_size=4096 ./node_modules/@angular/cli/bin/ng build elements --prod && node scripts/build-elements.js",
-    "gen": "cd src/app/elements/ && ng g component --module=elements.module.ts --entryComponent=true --skipTests=true --style=scss --viewEncapsulation=ShadowDom --export=true"
+    "gen": "cd src/app/elements/ && ng g component --module=elements.module.ts --entryComponent=true --skipTests=true --style=scss --viewEncapsulation=ShadowDom --export=true",
+    "prepublishOnly": "npm run build:elements"
   },
   "private": true,
   "dependencies": {
