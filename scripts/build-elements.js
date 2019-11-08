@@ -7,9 +7,10 @@ const concat = require('concat');
     './dist/elements/es2015-polyfills.js',
     './dist/elements/scripts.js',
     './dist/elements/main.js',
+    './scripts/loader.js'
   ];
   await fs.ensureDir('elements');
-  await concat(files, 'elements/warpview-elements.js');
+  await concat( files, 'elements/warpview-elements.js');
   await fs.copyFile('./dist/elements/styles.css', 'elements/warpview-styles.css');
   try {
     await fs.copy('./dist/elements/assets/', 'elements/assets/')
