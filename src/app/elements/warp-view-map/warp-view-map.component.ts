@@ -121,18 +121,20 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private LOG: Logger;
   private _data: any;
   private _debug = false;
-  private defOptions = {
-    dotsLimit: 1000,
-    heatControls: false,
-    timeMode: 'date',
-    showRangeSelector: true,
-    gridLineColor: '#8e8e8e',
-    tiles: [],
-    showDots: false,
-    timeZone: 'UTC',
-    timeUnit: 'us',
-    bounds: {}
-  } as Param;
+  private defOptions: Param = {
+    ...new Param(), ...{
+      dotsLimit: 1000,
+      heatControls: false,
+      timeMode: 'date',
+      showRangeSelector: true,
+      gridLineColor: '#8e8e8e',
+      tiles: [],
+      showDots: false,
+      timeZone: 'UTC',
+      timeUnit: 'us',
+      bounds: {}
+    }
+  };
   private mapTypes: any = {
     NONE: undefined,
     DEFAULT: {
