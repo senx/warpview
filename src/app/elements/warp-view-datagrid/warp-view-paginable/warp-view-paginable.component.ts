@@ -67,10 +67,12 @@ export class WarpViewPaginableComponent implements OnInit {
   private LOG: Logger;
   private _debug = false;
   private _options: Param = {
-    timeMode: 'date',
-    timeZone: 'UTC',
-    timeUnit: 'us',
-    bounds: {}
+    ...new Param(), ...{
+      timeMode: 'date',
+      timeZone: 'UTC',
+      timeUnit: 'us',
+      bounds: {}
+    }
   };
 
   private formatDate(date: number): string {

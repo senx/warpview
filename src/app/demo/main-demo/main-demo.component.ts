@@ -1,3 +1,4 @@
+/* tslint:disable:max-line-length */
 /*
  * Copyright 2019 SenX S.A.S.
  *
@@ -521,7 +522,7 @@ ZIP // merge into a list of GTS
   };
 
   currentChart: { title: string, warpscript: string, type: string, unit?: string }[];
-  options: Param = {
+  options: Param = {... new Param(), ...{
     gridLineColor: '#000000',
     fontColor: '#000000',
     map: {mapType: 'DEFAULT'},
@@ -529,7 +530,7 @@ ZIP // merge into a list of GTS
     showGTSTree: true,
     foldGTSTree: true,
     autoRefresh: -1
-  };
+  }};
   theme = 'dark';
 
   constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {

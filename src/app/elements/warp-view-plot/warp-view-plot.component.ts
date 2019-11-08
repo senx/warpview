@@ -91,13 +91,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @Output() chartDraw = new EventEmitter<any>();
 
   _options: Param = {
-    showControls: true,
-    showGTSTree: true,
-    showDots: true,
-    timeZone: 'UTC',
-    timeUnit: 'us',
-    timeMode: 'date',
-    bounds: {}
+    ...new Param(), ...{
+      showControls: true,
+      showGTSTree: true,
+      showDots: true,
+      timeZone: 'UTC',
+      timeUnit: 'us',
+      timeMode: 'date',
+      bounds: {}
+    }
   };
   _toHide: number[] = [];
   showChart = true;

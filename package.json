@@ -1,6 +1,34 @@
 {
-  "name": "warpview-elements",
-  "version": "0.0.0",
+  "name": "@senx/warpview",
+  "version": "2.0.0-rc1",
+  "keywords": [
+    "web",
+    "dataviz",
+    "web components",
+    "time series",
+    "warp10",
+    "Warp 10",
+    "WarpScript",
+    "Geo Times Series",
+    "Times Series"
+  ],
+  "description": "WarpView Elements",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/senx/warpview.git"
+  },
+  "author": "SenX <contact@senx.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/senx/warpview/issues"
+  },
+  "homepage": "https://www.warp10.io",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
