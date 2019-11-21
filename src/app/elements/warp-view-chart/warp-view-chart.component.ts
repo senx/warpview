@@ -28,7 +28,7 @@ import {
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import {ChartBounds} from '../../model/chartBounds';
 import {ColorLib} from '../../utils/color-lib';
 import {Logger} from '../../utils/logger';

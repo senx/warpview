@@ -522,21 +522,29 @@ ZIP // merge into a list of GTS
   };
 
   currentChart: { title: string, warpscript: string, type: string, unit?: string }[];
-  options: Param = {... new Param(), ...{
-    gridLineColor: '#000000',
-    fontColor: '#000000',
-    map: {mapType: 'DEFAULT'},
-    showControls: true,
-    showGTSTree: true,
-    foldGTSTree: true,
-    autoRefresh: -1
-  }};
+  options: Param = {
+    ...new Param(), ...{
+      gridLineColor: '#000000',
+      fontColor: '#000000',
+      map: {mapType: 'CARTODB_DARK'},
+      showControls: true,
+      showGTSTree: true,
+      foldGTSTree: true,
+      autoRefresh: -1
+    }
+  };
   theme = 'dark';
 
   constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {
       this.theme = evt.settings.theme;
       this.options.scheme = evt.settings.colorScheme;
+      if (this.theme === 'dark') {
+        this.options.map.mapType = 'CARTODB_DARK';
+      } else {
+        this.options.map.mapType = 'DEFAULT';
+      }
+      console.log('main', this.options.map.mapType);
       this.options = {...this.options};
     });
     router.events.subscribe(r => {
@@ -548,7 +556,7 @@ ZIP // merge into a list of GTS
 
 
   ngOnInit() {
-    this.options.map.mapType = 'DEFAULT';
+    console.log('main - ngOnInit', this.options.map.mapType);
     this.route.paramMap.subscribe(params => {
       if (params.get('component')) {
         this.currentChart = this.demo[params.get('component')];

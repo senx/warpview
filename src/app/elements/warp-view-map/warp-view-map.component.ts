@@ -56,9 +56,9 @@ import {SizeService} from '../../services/resize.service';
 })
 export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
-  @ViewChild('mapDiv', { static: true }) mapDiv: ElementRef<HTMLDivElement>;
-  @ViewChild('timeSlider', { static: false }) timeSlider: ElementRef<HTMLDivElement>;
-  @ViewChild('timeRangeSlider', { static: false }) timeRangeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('mapDiv', {static: true}) mapDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('timeSlider', {static: false}) timeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('timeRangeSlider', {static: false}) timeRangeSlider: ElementRef<HTMLDivElement>;
 
   @Input() heatData: any[] = [];
   @Input() responsive = false;
@@ -77,7 +77,8 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   @Input() set options(options: Param) {
     this.LOG.debug(['onOptions'], options);
-    if (!deepEqual(options, this._options)) {
+    if (!deepEqual(this._options, options)) {
+      this._options = options;
       this.divider = GTSLib.getDivider(this._options.timeUnit);
       this.drawMap();
     }
@@ -274,7 +275,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.LOG.debug(['ngAfterViewInit'], this._data);
-    console.log('Etape 1', this.el.nativeElement.parentElement.getBoundingClientRect().height);
     this.drawMap();
   }
 
@@ -316,7 +316,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   private drawMap() {
     this.LOG.debug(['drawMap'], this.data);
-    this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
+    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
     this.timeStart = this._options.map.timeStart;
     moment.tz.setDefault(this._options.timeZone);
     let gts: any = this.data;
@@ -340,7 +340,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     let params: any[];
     if (gts.data) {
       dataList = gts.data as any[];
-      this._options = ChartLib.mergeDeep(this._options, gts.globalParams || {}) as Param;
+      this._options = ChartLib.mergeDeep(gts.globalParams || {}, this._options) as Param;
       this.timeSpan = this.timeSpan || this._options.map.timeSpan;
       params = gts.params;
     } else {
@@ -435,6 +435,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       }
     });
     if (this._options.map.mapType !== 'NONE') {
+      console.log(this._options.map.mapType);
       const map = this.mapTypes[this._options.map.mapType || 'DEFAULT'];
       const mapOpts: any = {};
       if (map.attribution) {

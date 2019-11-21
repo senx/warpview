@@ -30,7 +30,7 @@ import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';

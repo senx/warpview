@@ -30,7 +30,7 @@ import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {ColorLib} from '../../utils/color-lib';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import {SizeService} from '../../services/resize.service';
 
 @Component({

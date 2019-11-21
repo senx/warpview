@@ -20,7 +20,7 @@ import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {GTS} from '../../model/GTS';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';

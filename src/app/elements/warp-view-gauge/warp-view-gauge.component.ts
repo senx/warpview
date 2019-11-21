@@ -18,7 +18,7 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, V
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
-import * as gauge from 'canvas-gauges';
+import gauge from 'canvas-gauges';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';

@@ -22,8 +22,8 @@ import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
 import {Config, PlotData, PlotlyHTMLElement} from 'plotly.js';
-import deepEqual from 'deep-equal';
 import {ElementRef, Input} from '@angular/core';
+import deepEqual from 'deep-equal';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 // noinspection AngularMissingOrInvalidDeclarationInModule

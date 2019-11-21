@@ -7,7 +7,7 @@ import {Param} from '../../model/param';
 import {ColorLib} from '../../utils/color-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-spectrum',
