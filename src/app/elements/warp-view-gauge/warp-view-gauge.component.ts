@@ -18,10 +18,10 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, V
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
-import deepEqual from 'deep-equal';
 import * as gauge from 'canvas-gauges';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
+import deepEqual from 'deep-equal';
 
 @Component({
   selector: 'warpview-gauge',
@@ -30,7 +30,7 @@ import {SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('graph') graph: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
 
   @Input() set type(type: string) {
     this._type = type;
@@ -72,7 +72,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
       let optionChanged = false;
       Object.keys(options).forEach(opt => {
         if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
         } else {
           optionChanged = true; // new unknown option
         }

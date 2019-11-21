@@ -27,7 +27,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import deepEqual from 'deep-equal';
 import {Logger} from '../../utils/logger';
 import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.component';
 import {Param} from '../../model/param';
@@ -40,6 +39,7 @@ import moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {DataModel} from '../../model/dataModel';
+import deepEqual from 'deep-equal';
 
 /**
  *
@@ -52,19 +52,19 @@ import {DataModel} from '../../model/dataModel';
 })
 export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('mainPlotDiv') mainPlotDiv: ElementRef;
-  @ViewChild('timeClip') timeClip: WarpViewModalComponent;
-  @ViewChild('modal') modal: WarpViewModalComponent;
-  @ViewChild('chart') chart: WarpViewChartComponent;
-  @ViewChild('gtsPopupModal') gtsPopupModal: WarpViewGtsPopupComponent;
-  @ViewChild('annotation') annotation: WarpViewAnnotationComponent;
-  @ViewChild('map') map: WarpViewMapComponent;
-  @ViewChild('timeClipElement') timeClipElement: ElementRef;
-  @ViewChild('filterInput') filterInput: ElementRef;
-  @ViewChild('tzSelector') tzSelector: ElementRef;
-  @ViewChild('line') line: ElementRef;
-  @ViewChild('main') main: ElementRef;
+  @ViewChild('graph', {static: false}) graph: ElementRef;
+  @ViewChild('mainPlotDiv', {static: true}) mainPlotDiv: ElementRef;
+  @ViewChild('timeClip', {static: true}) timeClip: WarpViewModalComponent;
+  @ViewChild('modal', {static: true}) modal: WarpViewModalComponent;
+  @ViewChild('chart', {static: false}) chart: WarpViewChartComponent;
+  @ViewChild('gtsPopupModal', {static: false}) gtsPopupModal: WarpViewGtsPopupComponent;
+  @ViewChild('annotation', {static: false}) annotation: WarpViewAnnotationComponent;
+  @ViewChild('map', {static: false}) map: WarpViewMapComponent;
+  @ViewChild('timeClipElement', {static: true}) timeClipElement: ElementRef;
+  @ViewChild('filterInput', {static: true}) filterInput: ElementRef;
+  @ViewChild('tzSelector', {static: false}) tzSelector: ElementRef;
+  @ViewChild('line', {static: false}) line: ElementRef;
+  @ViewChild('main', {static: false}) main: ElementRef;
 
   @Input() set type(type: string) {
     this._type = type;
@@ -227,7 +227,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       let optionChanged = false;
       Object.keys(options).forEach(opt => {
         if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
         } else {
           optionChanged = true; // new unknown option
         }

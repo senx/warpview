@@ -44,7 +44,7 @@ import {Size, SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
-  @ViewChild('warpRef') warpRef: ElementRef;
+  @ViewChild('warpRef', { static: true }) warpRef: ElementRef;
   @Input() type = 'line';
   @Input() chartTitle;
   @Input() url = '';

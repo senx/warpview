@@ -39,8 +39,8 @@ import {SizeService} from '../../services/resize.service';
 })
 export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit, OnDestroy {
 
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('toolTip') toolTip: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
+  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
   @Output() chartDraw = new EventEmitter<any>();
 
   protected layout: Partial<any> = {

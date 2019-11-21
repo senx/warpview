@@ -22,8 +22,8 @@ import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
 import * as moment from 'moment-timezone';
-import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
+import deepEqual from 'deep-equal';
 
 @Component({
   selector: 'warpview-radar',
@@ -36,8 +36,8 @@ import {SizeService} from '../../services/resize.service';
  */
 export class WarpViewRadarComponent extends WarpViewComponent implements OnInit, OnDestroy {
 
-  @ViewChild('toolTip') toolTip: ElementRef;
-  @ViewChild('graph') graph: ElementRef;
+  @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
+  @ViewChild('graph', {static: true}) graph: ElementRef;
 
   @Output() chartDraw = new EventEmitter<any>();
 
@@ -58,7 +58,7 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
       let optionChanged = false;
       Object.keys(options).forEach(opt => {
         if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
         } else {
           optionChanged = true; // new unknown option
         }

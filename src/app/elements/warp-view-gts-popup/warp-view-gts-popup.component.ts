@@ -30,7 +30,7 @@ import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.compone
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewGtsPopupComponent implements AfterViewInit {
-  @ViewChild('modal') modal: WarpViewModalComponent;
+  @ViewChild('modal', { static: true }) modal: WarpViewModalComponent;
 
   @Input() set gtsList(gtsList: DataModel) {
     this._gtsList = gtsList;

@@ -32,7 +32,7 @@ import {Param} from '../../../model/param';
 })
 export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('chip') chip: ElementRef;
+  @ViewChild('chip', { static: false }) chip: ElementRef;
 
   @Input() name: string;
   @Input() node: any;

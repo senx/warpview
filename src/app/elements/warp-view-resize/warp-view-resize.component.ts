@@ -27,7 +27,7 @@ import {Logger} from '../../utils/logger';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewResizeComponent implements AfterViewInit {
-  @ViewChild('handleDiv') handleDiv: ElementRef;
+  @ViewChild('handleDiv', { static: true }) handleDiv: ElementRef;
   @Input() minHeight = '10';
   @Input() initialHeight: string = null;
 

@@ -44,8 +44,8 @@ import {SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('toolTip') toolTip: ElementRef;
-  @ViewChild('graph') graph: ElementRef;
+  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
 
   @Input() set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);

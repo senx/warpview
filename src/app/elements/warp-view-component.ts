@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {ElementRef, Input} from '@angular/core';
 import {ChartLib} from '../utils/chart-lib';
 import {Param} from '../model/param';
-import deepEqual from 'deep-equal';
 import {Logger} from '../utils/logger';
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
 import {Config, PlotData, PlotlyHTMLElement} from 'plotly.js';
+import deepEqual from 'deep-equal';
+import {ElementRef, Input} from '@angular/core';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 // noinspection AngularMissingOrInvalidDeclarationInModule

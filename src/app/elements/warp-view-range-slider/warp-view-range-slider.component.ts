@@ -28,7 +28,7 @@ import * as noUiSlider from 'nouislider';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewRangeSliderComponent extends WarpViewSliderComponent implements OnInit, AfterViewInit {
-  @ViewChild('slider') slider: ElementRef<HTMLDivElement>;
+  @ViewChild('slider', { static: false }) slider: ElementRef<HTMLDivElement>;
   @Input() minValue: number;
   @Input() maxValue: number;
 

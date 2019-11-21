@@ -32,7 +32,7 @@ import {DataModel} from '../../model/dataModel';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewGtsTreeComponent extends WarpViewComponent implements AfterViewInit {
-  @ViewChild('root') root: ElementRef;
+  @ViewChild('root', { static: true }) root: ElementRef;
 
   @Input() kbdLastKeyPressed: string[] = [];
 

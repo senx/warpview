@@ -28,7 +28,7 @@ import * as noUiSlider from 'nouislider';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewSliderComponent implements AfterViewInit {
-  @ViewChild('slider') slider: ElementRef<HTMLDivElement>;
+  @ViewChild('slider', { static: false }) slider: ElementRef<HTMLDivElement>;
 
   @Input() set min(m) {
     this.LOG.debug(['min'], m);

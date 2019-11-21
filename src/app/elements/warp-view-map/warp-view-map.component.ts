@@ -56,9 +56,9 @@ import {SizeService} from '../../services/resize.service';
 })
 export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
-  @ViewChild('mapDiv') mapDiv: ElementRef<HTMLDivElement>;
-  @ViewChild('timeSlider') timeSlider: ElementRef<HTMLDivElement>;
-  @ViewChild('timeRangeSlider') timeRangeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('mapDiv', { static: true }) mapDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('timeSlider', { static: false }) timeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('timeRangeSlider', { static: false }) timeRangeSlider: ElementRef<HTMLDivElement>;
 
   @Input() heatData: any[] = [];
   @Input() responsive = false;
@@ -226,13 +226,13 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     CARTODB: {
       link: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
       attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
- <a href="https://carto.com/attributions">CARTO</a>`,
+ <a href="https://carto.com/attributions">CartoDB</a>`,
       subdomains: 'abcd',
     },
     CARTODB_DARK: {
-      link: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      link: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
       attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
- <a href="https://carto.com/attributions">CARTO</a>`,
+ <a href="https://carto.com/attributions">CartoDB</a>`,
       subdomains: 'abcd',
     },
   };

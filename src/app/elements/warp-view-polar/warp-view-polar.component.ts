@@ -17,13 +17,13 @@
 import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
-import deepEqual from 'deep-equal';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {GTS} from '../../model/GTS';
 import * as moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {SizeService} from '../../services/resize.service';
+import deepEqual from 'deep-equal';
 
 @Component({
   selector: 'warpview-polar',
@@ -35,8 +35,8 @@ import {SizeService} from '../../services/resize.service';
  *
  */
 export class WarpViewPolarComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('toolTip') toolTip: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
+  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
 
   @Output() chartDraw = new EventEmitter<any>();
 
@@ -77,7 +77,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
       let optionChanged = false;
       Object.keys(options).forEach(opt => {
         if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
         } else {
           optionChanged = true; // new unknown option
         }

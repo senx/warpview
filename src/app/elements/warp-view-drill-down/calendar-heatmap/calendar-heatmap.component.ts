@@ -78,7 +78,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
   private static DEF_MIN_COLOR = '#ffffff';
   private static DEF_MAX_COLOR = '#333333';
 
-  @ViewChild('chart') div: ElementRef;
+  @ViewChild('chart', { static: true }) div: ElementRef;
 
   @Input() width = ChartLib.DEFAULT_WIDTH;
   @Input() height = ChartLib.DEFAULT_HEIGHT;

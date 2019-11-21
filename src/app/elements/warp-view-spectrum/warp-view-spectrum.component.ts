@@ -17,8 +17,8 @@ import * as moment from 'moment-timezone';
 })
 export class WarpViewSpectrumComponent extends WarpViewComponent implements OnInit, OnDestroy {
 
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('toolTip') toolTip: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
+  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
   @Output() chartDraw = new EventEmitter<any>();
 
   @Input() set type(type: string) {

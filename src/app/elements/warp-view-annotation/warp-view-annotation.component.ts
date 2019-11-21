@@ -44,9 +44,9 @@ import {SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('toolTip') toolTip: ElementRef;
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('date') date: ElementRef;
+  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
+  @ViewChild('graph', { static: true }) graph: ElementRef;
+  @ViewChild('date', { static: true }) date: ElementRef;
 
   @Input() set hiddenData(hiddenData: number[]) {
     if (this._chart && hiddenData) {

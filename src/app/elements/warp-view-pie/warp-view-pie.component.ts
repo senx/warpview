@@ -19,8 +19,8 @@ import {WarpViewComponent} from '../warp-view-component';
 import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
-import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
+import deepEqual from 'deep-equal';
 
 @Component({
   selector: 'warpview-pie',
@@ -29,8 +29,8 @@ import {SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewPieComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('graph') graph: ElementRef;
-  @ViewChild('toolTip') toolTip: ElementRef;
+  @ViewChild('graph', {static: true}) graph: ElementRef;
+  @ViewChild('toolTip', {static: false}) toolTip: ElementRef;
 
   @Input() set type(type: string) {
     this._type = type;
@@ -54,7 +54,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
       let optionChanged = false;
       Object.keys(options).forEach(opt => {
         if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
+          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
         } else {
           optionChanged = true; // new unknown option
         }
