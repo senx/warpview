@@ -25,11 +25,11 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input,
 export class WarpViewModalComponent implements AfterViewInit {
 
 
-  @Input() modalTitle = '';
-  @Input() kbdLastKeyPressed: string[] = [];
+  @Input('modalTitle') modalTitle = '';
+  @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
 
-  @Output() warpViewModalOpen = new EventEmitter<any>();
-  @Output() warpViewModalClose = new EventEmitter<any>();
+  @Output('warpViewModalOpen') warpViewModalOpen = new EventEmitter<any>();
+  @Output('warpViewModalClose') warpViewModalClose = new EventEmitter<any>();
 
   private opened = false;
 

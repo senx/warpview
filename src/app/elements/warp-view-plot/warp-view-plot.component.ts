@@ -66,7 +66,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @ViewChild('line', {static: false}) line: ElementRef;
   @ViewChild('main', {static: false}) main: ElementRef;
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
@@ -75,7 +75,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     return this._type;
   }
 
-  @Input() set gtsFilter(gtsFilter) {
+  @Input('gtsFilter') set gtsFilter(gtsFilter) {
     this._gtsFilter = gtsFilter;
     this.drawChart();
   }
@@ -84,11 +84,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     return this._gtsFilter;
   }
 
-  @Input() isAlone = false;
-  @Input() initialChartHeight = '400';
-  @Input() initialMapHeight = '500';
+  @Input('isAlone') isAlone = false;
+  @Input('initialChartHeight') initialChartHeight = '400';
+  @Input('initialMapHeight') initialMapHeight = '500';
 
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   _options: Param = {
     ...new Param(), ...{

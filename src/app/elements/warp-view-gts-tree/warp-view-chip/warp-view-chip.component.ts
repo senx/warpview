@@ -34,11 +34,11 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
   @ViewChild('chip', { static: false }) chip: ElementRef;
 
-  @Input() name: string;
-  @Input() node: any;
-  @Input() options: Param;
+  @Input('name') name: string;
+  @Input('node') node: any;
+  @Input('options') options: Param;
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -47,7 +47,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     return this._debug;
   }
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
     this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
     if (this._node && this._node.gts && this._node.gts.c) {
@@ -65,7 +65,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     return this._hiddenData;
   }
 
-  @Input() set gtsFilter(gtsFilter: string) {
+  @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
     if (this._gtsFilter.slice(1) !== '') {
       this.setState(new RegExp(this._gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
@@ -78,7 +78,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     return this._gtsFilter;
   }
 
-  @Input() set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
+  @Input('kbdLastKeyPressed') set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
     this._kbdLastKeyPressed = kbdLastKeyPressed;
     if (kbdLastKeyPressed[0] === 'a') {
       this.setState(true);
@@ -88,7 +88,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     }
   }
 
-  @Output() warpViewSelectedGTS = new EventEmitter<any>();
+  @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private LOG: Logger;
   private refreshCounter = 0;

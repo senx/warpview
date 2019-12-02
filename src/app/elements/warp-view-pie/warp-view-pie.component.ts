@@ -21,6 +21,7 @@ import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-pie',
@@ -32,12 +33,12 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit, O
   @ViewChild('graph', {static: true}) graph: ElementRef;
   @ViewChild('toolTip', {static: false}) toolTip: ElementRef;
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
 
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   private _type = 'pie';
   protected layout: Partial<any> = {

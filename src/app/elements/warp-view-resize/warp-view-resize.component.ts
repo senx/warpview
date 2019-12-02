@@ -28,10 +28,10 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewResizeComponent implements AfterViewInit {
   @ViewChild('handleDiv', { static: true }) handleDiv: ElementRef;
-  @Input() minHeight = '10';
-  @Input() initialHeight: string = null;
+  @Input('minHeight') minHeight = '10';
+  @Input('initialHeight') initialHeight: string = null;
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -40,7 +40,7 @@ export class WarpViewResizeComponent implements AfterViewInit {
     return this._debug;
   }
 
-  @Output() resize = new EventEmitter();
+  @Output('resize') resize = new EventEmitter();
 
   private dragging = false;
   private firstDraw = true;

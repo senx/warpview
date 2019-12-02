@@ -25,18 +25,18 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angul
   styleUrls: ['./warp-view-toggle.component.scss']
 })
 export class WarpViewToggleComponent implements OnInit {
-  @Input() set checked(state: boolean) {
+  @Input('checked') set checked(state: boolean) {
     this.state = state;
-  };
+  }
 
   get checked(): boolean {
     return this.state;
   }
 
-  @Input() text1 = '';
-  @Input() text2 = '';
+  @Input('text1') text1 = '';
+  @Input('text2') text2 = '';
 
-  @Output() stateChange = new EventEmitter<any>();
+  @Output('stateChange') stateChange = new EventEmitter<any>();
 
   state = false;
 

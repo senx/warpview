@@ -29,13 +29,12 @@ import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
 import moment from 'moment-timezone';
+import Plotly from 'plotly.js';
 import {ChartBounds} from '../../model/chartBounds';
 import {ColorLib} from '../../utils/color-lib';
 import {Logger} from '../../utils/logger';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
-
-
 
 @Component({
   selector: 'warpview-chart',
@@ -47,7 +46,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
   @ViewChild('graph', { static: true }) graph: ElementRef;
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
     this._hiddenData = hiddenData;
     if (!!this._chart) {
@@ -64,16 +63,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
 
-  @Input() standalone = true;
-  @Output() boundsDidChange = new EventEmitter<any>();
-  @Output() pointHover = new EventEmitter<any>();
-  @Output() warpViewChartResize = new EventEmitter<any>();
-  @Output() chartDraw = new EventEmitter<any>();
+  @Input('standalone') standalone = true;
+  @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
+  @Output('pointHover') pointHover = new EventEmitter<any>();
+  @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   // tslint:disable-next-line:variable-name
   private _type = 'line';

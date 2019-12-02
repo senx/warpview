@@ -24,16 +24,16 @@ import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angula
 })
 export class WarpViewHeatmapSlidersComponent {
 
-  @Input() radiusValue: number;
-  @Input() minRadiusValue: number;
-  @Input() maxRadiusValue: number;
-  @Input() blurValue: number;
-  @Input() minBlurValue: number;
-  @Input() maxBlurValue: number;
+  @Input('radiusValue') radiusValue: number;
+  @Input('minRadiusValue') minRadiusValue: number;
+  @Input('maxRadiusValue') maxRadiusValue: number;
+  @Input('blurValue') blurValue: number;
+  @Input('minBlurValue') minBlurValue: number;
+  @Input('maxBlurValue') maxBlurValue: number;
 
-  @Output() heatRadiusDidChange = new EventEmitter<any>();
-  @Output() heatBlurDidChange = new EventEmitter<any>();
-  @Output() heatOpacityDidChange = new EventEmitter<any>();
+  @Output('heatRadiusDidChange') heatRadiusDidChange = new EventEmitter<any>();
+  @Output('heatBlurDidChange') heatBlurDidChange = new EventEmitter<any>();
+  @Output('heatOpacityDidChange') heatOpacityDidChange = new EventEmitter<any>();
 
   radiusChanged(value) {
     this.heatRadiusDidChange.emit(value);

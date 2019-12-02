@@ -17,9 +17,9 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {catchError, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs/Observable';
 import {HandleError, HttpErrorHandler} from './http-error-handler.service';
 import {Logger} from '../utils/logger';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class Warp10Service {

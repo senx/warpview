@@ -32,7 +32,7 @@ import {GTSLib} from '../../utils/gts.lib';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewImageComponent extends WarpViewComponent implements AfterViewInit {
-  @Input() imageTitle = '';
+  @Input('imageTitle') imageTitle = '';
 
   toDisplay: string[];
 

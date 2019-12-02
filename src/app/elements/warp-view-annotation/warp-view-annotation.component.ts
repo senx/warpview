@@ -36,6 +36,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-annotation',
@@ -48,7 +49,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
   @ViewChild('graph', { static: true }) graph: ElementRef;
   @ViewChild('date', { static: true }) date: ElementRef;
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     if (this._chart && hiddenData) {
       this.LOG.debug(['hiddenData'], hiddenData);
       this._hiddenData = hiddenData;
@@ -58,18 +59,19 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
 
-  @Input() standalone = true;
-  @Output() pointHover = new EventEmitter<any>();
-  @Output() warpViewChartResize = new EventEmitter<any>();
-  @Output() chartDraw = new EventEmitter<any>();
+  @Input('standalone') standalone = true;
+  @Output('pointHover') pointHover = new EventEmitter<any>();
+  @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   displayExpander = true;
 
+  // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
   private expanded = false;

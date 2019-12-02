@@ -23,5 +23,5 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewSpinnerComponent {
-  @Input() message = 'Loading and parsing data...';
+  @Input('message') message = 'Loading and parsing data...';
 }

@@ -27,7 +27,7 @@ import {Param} from '../../../model/param';
 })
 export class WarpViewTreeViewComponent implements OnInit {
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -36,7 +36,7 @@ export class WarpViewTreeViewComponent implements OnInit {
     return this._debug;
   }
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = [...hiddenData];
   }
 
@@ -44,12 +44,12 @@ export class WarpViewTreeViewComponent implements OnInit {
     return this._hiddenData;
   }
 
-  @Input() options: Param;
-  @Input() gtsFilter = 'x';
-  @Input() gtsList: any[];
-  @Input() branch = false;
-  @Input() hidden = false;
-  @Input() kbdLastKeyPressed: string[] = [];
+  @Input('options') options: Param;
+  @Input('gtsFilter') gtsFilter = 'x';
+  @Input('gtsList') gtsList: any[];
+  @Input('branch') branch = false;
+  @Input('hidden') hidden = false;
+  @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
 
   private hide: any = {};
   private LOG: Logger;

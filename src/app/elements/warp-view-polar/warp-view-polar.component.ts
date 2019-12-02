@@ -24,6 +24,7 @@ import moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-polar',
@@ -38,7 +39,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit,
   @ViewChild('graph', { static: true }) graph: ElementRef;
   @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
 
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   protected layout: Partial<any> = {
     paper_bgcolor: 'transparent',

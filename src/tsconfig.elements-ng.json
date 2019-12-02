@@ -1,0 +1,35 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "sourceRoot": "./app/elements",
+    "outDir": "../dist/warpview-ng",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "types": [],
+    "declaration": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableResourceInlining": true
+  },
+  "files": [
+    "../index.ts"
+  ],
+  "lib": [
+    "es2018",
+    "dom"
+  ],
+  "include": [
+    "./app/elements/*",
+    "./app/styles/*"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

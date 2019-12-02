@@ -32,7 +32,7 @@ import moment, {Moment} from 'moment';
 })
 export class CalendarHeatmapComponent implements AfterViewInit {
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -41,7 +41,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     return this._debug;
   }
 
-  @Input() set data(data: Datum[]) {
+  @Input('data') set data(data: Datum[]) {
     this.LOG.debug(['data'], data);
     if (data) {
       this._data = data;
@@ -53,7 +53,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     return this._data;
   }
 
-  @Input() set minColor(minColor: string) {
+  @Input('minColor') set minColor(minColor: string) {
     this._minColor = minColor;
     this.calculateDimensions();
   }
@@ -62,7 +62,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     return this._minColor;
   }
 
-  @Input() set maxColor(maxColor: string) {
+  @Input('maxColor') set maxColor(maxColor: string) {
     this._maxColor = maxColor;
     this.calculateDimensions();
   }
@@ -71,26 +71,30 @@ export class CalendarHeatmapComponent implements AfterViewInit {
     return this._maxColor;
   }
 
+  private static DEF_MIN_COLOR = '#ffffff';
+  private static DEF_MAX_COLOR = '#333333';
   constructor(private el: ElementRef) {
     this.LOG = new Logger(CalendarHeatmapComponent, this.debug);
   }
 
-  private static DEF_MIN_COLOR = '#ffffff';
-  private static DEF_MAX_COLOR = '#333333';
 
   @ViewChild('chart', { static: true }) div: ElementRef;
 
-  @Input() width = ChartLib.DEFAULT_WIDTH;
-  @Input() height = ChartLib.DEFAULT_HEIGHT;
-  @Input() overview = 'global';
+  @Input('width') width = ChartLib.DEFAULT_WIDTH;
+  @Input('height') height = ChartLib.DEFAULT_HEIGHT;
+  @Input('overview') overview = 'global';
 
-  @Output() handler = new EventEmitter<any>();
-  @Output() change = new EventEmitter<any>();
+  @Output('handler') handler = new EventEmitter<any>();
+  @Output('change') change = new EventEmitter<any>();
 
   private LOG: Logger;
+  // tslint:disable-next-line:variable-name
   private _data: Datum[];
+  // tslint:disable-next-line:variable-name
   private _debug = false;
+  // tslint:disable-next-line:variable-name
   private _minColor: string = CalendarHeatmapComponent.DEF_MIN_COLOR;
+  // tslint:disable-next-line:variable-name
   private _maxColor: string = CalendarHeatmapComponent.DEF_MAX_COLOR;
 // Defaults
   private gutter = 5;

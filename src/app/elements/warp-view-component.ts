@@ -28,12 +28,12 @@ import deepEqual from 'deep-equal';
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 // noinspection AngularMissingOrInvalidDeclarationInModule
 export abstract class WarpViewComponent {
-  @Input() responsive: boolean;
-  @Input() showLegend: boolean;
-  @Input() width = ChartLib.DEFAULT_WIDTH;
-  @Input() height = ChartLib.DEFAULT_HEIGHT;
+  @Input('responsive') responsive: boolean;
+  @Input('showLegend') showLegend: boolean;
+  @Input('width') width = ChartLib.DEFAULT_WIDTH;
+  @Input('height') height = ChartLib.DEFAULT_HEIGHT;
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
   }
 
@@ -41,7 +41,7 @@ export abstract class WarpViewComponent {
     return this._hiddenData;
   }
 
-  @Input() set unit(unit: string) {
+  @Input('unit') set unit(unit: string) {
     this._unit = unit;
     this.update(undefined, false);
   }
@@ -50,7 +50,7 @@ export abstract class WarpViewComponent {
     return this._unit;
   }
 
-  @Input() set debug(debug: boolean | string) {
+  @Input('debug') set debug(debug: boolean | string) {
     if (typeof debug === 'string') {
       debug = 'true' === debug;
     }
@@ -62,7 +62,7 @@ export abstract class WarpViewComponent {
     return this._debug;
   }
 
-  @Input() set options(options: Param | string) {
+  @Input('options') set options(options: Param | string) {
     this.LOG.debug(['onOptions'], options);
     if (typeof options === 'string') {
       options = JSON.parse(options);
@@ -74,7 +74,7 @@ export abstract class WarpViewComponent {
     }
   }
 
-  @Input() set data(data: DataModel | GTS[] | string) {
+  @Input('data') set data(data: DataModel | GTS[] | string) {
     this.LOG.debug(['onData'], data);
     if (data) {
       this._data = GTSLib.getData(data);

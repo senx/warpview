@@ -34,9 +34,9 @@ import {DataModel} from '../../model/dataModel';
 export class WarpViewGtsTreeComponent extends WarpViewComponent implements AfterViewInit {
   @ViewChild('root', { static: true }) root: ElementRef;
 
-  @Input() kbdLastKeyPressed: string[] = [];
+  @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
 
-  @Input() set gtsFilter(gtsFilter: string) {
+  @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
   }
 

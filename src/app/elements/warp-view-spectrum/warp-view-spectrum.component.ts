@@ -8,6 +8,7 @@ import {ColorLib} from '../../utils/color-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import moment from 'moment-timezone';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-spectrum',
@@ -19,9 +20,9 @@ export class WarpViewSpectrumComponent extends WarpViewComponent implements OnIn
 
   @ViewChild('graph', { static: true }) graph: ElementRef;
   @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }

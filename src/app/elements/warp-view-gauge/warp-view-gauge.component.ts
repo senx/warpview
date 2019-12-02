@@ -22,6 +22,7 @@ import gauge from 'canvas-gauges';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-gauge',
@@ -32,14 +33,15 @@ import deepEqual from 'deep-equal';
 export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit, OnDestroy {
   @ViewChild('graph', { static: true }) graph: ElementRef;
 
-  @Input() set type(type: string) {
+  @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
 
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   private CHART_MARGIN = 0.05;
+  // tslint:disable-next-line:variable-name
   private _type = 'gauge'; // gauge or bullet
 
   constructor(private el: ElementRef, private sizeService: SizeService) {

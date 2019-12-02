@@ -30,10 +30,10 @@ import {DataModel} from '../../model/dataModel';
 export class WarpViewDatagridComponent extends WarpViewComponent implements OnInit {
 
 
-  @Input() elemsCount = 15;
+  @Input('elemsCount') elemsCount = 15;
 
+  // tslint:disable-next-line:variable-name
   _tabularData: { name: string, values: any[], headers: string[] }[] = [];
-  page = 0;
 
   constructor(private el: ElementRef) {
     super();

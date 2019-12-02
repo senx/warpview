@@ -29,8 +29,8 @@ import * as noUiSlider from 'nouislider';
 })
 export class WarpViewRangeSliderComponent extends WarpViewSliderComponent implements OnInit, AfterViewInit {
   @ViewChild('slider', { static: false }) slider: ElementRef<HTMLDivElement>;
-  @Input() minValue: number;
-  @Input() maxValue: number;
+  @Input('minValue') minValue: number;
+  @Input('maxValue') maxValue: number;
 
   constructor() {
     super();

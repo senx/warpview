@@ -33,7 +33,7 @@ export class WarpViewPaginableComponent implements OnInit {
     this.LOG = new Logger(WarpViewPaginableComponent, this.debug);
   }
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -42,30 +42,31 @@ export class WarpViewPaginableComponent implements OnInit {
     return this._debug;
   }
 
-  @Input() set options(options: Param) {
+  @Input('options') set options(options: Param) {
     if (!deepEqual(options, this._options)) {
       this.drawGridData();
     }
   }
 
-  @Input() set data(data: { name: string, values: any[], headers: string[] }) {
+  @Input('data') set data(data: { name: string, values: any[], headers: string[] }) {
     if (data) {
       this._data = data;
       this.drawGridData();
     }
   }
 
-  @Input() elemsCount = 15;
-  @Input() windowed = 5;
-
+  @Input('elemsCount') elemsCount = 15;
+  @Input('windowed') windowed = 5;
 
   page = 0;
-
   pages: number[] = [];
+  // tslint:disable-next-line:variable-name
   _data: { name: string, values: any[], headers: string[] };
   displayedValues: any[] = [];
   private LOG: Logger;
+  // tslint:disable-next-line:variable-name
   private _debug = false;
+  // tslint:disable-next-line:variable-name
   private _options: Param = {
     ...new Param(), ...{
       timeMode: 'date',

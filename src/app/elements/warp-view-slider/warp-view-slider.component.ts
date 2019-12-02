@@ -30,7 +30,7 @@ import * as noUiSlider from 'nouislider';
 export class WarpViewSliderComponent implements AfterViewInit {
   @ViewChild('slider', { static: false }) slider: ElementRef<HTMLDivElement>;
 
-  @Input() set min(m) {
+  @Input('min') set min(m) {
     this.LOG.debug(['min'], m);
     this._min = m;
     this.setOptions();
@@ -40,7 +40,7 @@ export class WarpViewSliderComponent implements AfterViewInit {
     return this._min;
   }
 
-  @Input() set max(m) {
+  @Input('max') set max(m) {
     this.LOG.debug(['max'], m);
     this._max = m;
     this.setOptions();
@@ -51,9 +51,9 @@ export class WarpViewSliderComponent implements AfterViewInit {
   }
 
 
-  @Input() value: number;
+  @Input('value') value: number;
 
-  @Input() set step(step: number) {
+  @Input('step') set step(step: number) {
     this.LOG.debug(['step'], step);
     if (this._step !== step) {
       this._step = step;
@@ -65,9 +65,9 @@ export class WarpViewSliderComponent implements AfterViewInit {
     return this._step;
   }
 
-  @Input() mode = 'timestamp';
+  @Input('mode') mode = 'timestamp';
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -76,7 +76,7 @@ export class WarpViewSliderComponent implements AfterViewInit {
     return this._debug;
   }
 
-  @Output() change = new EventEmitter();
+  @Output('change') change = new EventEmitter();
 
   _min: number;
   _max: number;

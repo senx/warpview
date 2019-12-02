@@ -32,7 +32,7 @@ import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.compone
 export class WarpViewGtsPopupComponent implements AfterViewInit {
   @ViewChild('modal', { static: true }) modal: WarpViewModalComponent;
 
-  @Input() set gtsList(gtsList: DataModel) {
+  @Input('gtsList') set gtsList(gtsList: DataModel) {
     this._gtsList = gtsList;
     this.prepareData();
   }
@@ -41,7 +41,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     return this._gtsList;
   }
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -50,7 +50,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     return this._debug;
   }
 
-  @Input() set data(data: DataModel) {
+  @Input('data') set data(data: DataModel) {
     this.LOG.debug(['data'], data);
     if (data) {
       this._data = data;
@@ -62,7 +62,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   }
 
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
     this.prepareData();
   }
@@ -71,9 +71,9 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     return this._hiddenData;
   }
 
-  @Input() maxToShow = 5;
+  @Input('maxToShow') maxToShow = 5;
 
-  @Input() set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
+  @Input('kbdLastKeyPressed') set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
     this._kbdLastKeyPressed = kbdLastKeyPressed;
     if (kbdLastKeyPressed[0] === 's' && !this.modalOpenned) {
       this.showPopup();
@@ -105,17 +105,23 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     return this._kbdLastKeyPressed;
   }
 
-  @Output() warpViewSelectedGTS = new EventEmitter<any>();
-  @Output() warpViewModalOpen = new EventEmitter<any>();
-  @Output() warpViewModalClose = new EventEmitter<any>();
+  @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
+  @Output('warpViewModalOpen') warpViewModalOpen = new EventEmitter<any>();
+  @Output('warpViewModalClose') warpViewModalClose = new EventEmitter<any>();
 
   current = 0;
+  // tslint:disable-next-line:variable-name
   _gts: any[] = [];
 
+  // tslint:disable-next-line:variable-name
   private _kbdLastKeyPressed: string[] = [];
+  // tslint:disable-next-line:variable-name
   private _hiddenData: number[] = [];
+  // tslint:disable-next-line:variable-name
   private _debug = false;
+  // tslint:disable-next-line:variable-name
   private _gtsList: DataModel;
+  // tslint:disable-next-line:variable-name
   private _data: DataModel;
   private displayed: any[] = [];
   private modalOpenned = false;

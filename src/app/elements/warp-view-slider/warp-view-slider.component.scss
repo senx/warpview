@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import "../../styles/vars";
-@import "../../styles/uiSlider";
+@import "../../../../node_modules/nouislider/distribute/nouislider.min.css";
+@import "../../styles/vars.scss";
+@import "../../styles/uiSlider.scss";
 
 :host {
   .custom-slider {

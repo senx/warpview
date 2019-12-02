@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import "~plotly.js/src/css/style";
 @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+@import "../../../node_modules/plotly.js/src/css/_vars.scss";
 
+.js-plotly-plot .plotly {
+  @import "../../../node_modules/plotly.js/src/css/_mixins.scss";
+  @import "../../../node_modules/plotly.js/src/css/_base.scss";
+  @import "../../../node_modules/plotly.js/src/css/_cursor.scss";
+  @import "../../../node_modules/plotly.js/src/css/_modebar.scss";
+  @import "../../../node_modules/plotly.js/src/css/_tooltip.scss";
+  @import "../../../node_modules/plotly.js/src/css/_drag.scss";
+}
+@import "../../../node_modules/plotly.js/src/css/_notifier.scss";
 .modebar path {
   fill: var(--warp-view-font-color) !important;
 }

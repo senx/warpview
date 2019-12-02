@@ -24,6 +24,7 @@ import {ColorLib} from '../../utils/color-lib';
 import moment from 'moment-timezone';
 import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
+import Plotly from 'plotly.js';
 
 @Component({
   selector: 'warpview-radar',
@@ -39,7 +40,7 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
   @ViewChild('graph', {static: true}) graph: ElementRef;
 
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   protected layout: Partial<any> = {
     paper_bgcolor: 'transparent',

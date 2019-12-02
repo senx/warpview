@@ -17,14 +17,14 @@
 import {enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {ElementsModule} from './app/elements/elements.module';
+import {WarpViewElementsModule} from './app/elements/warp-view-elements.module';
 import {environment} from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(ElementsModule).then(ref => {
+platformBrowserDynamic().bootstrapModule(WarpViewElementsModule).then(ref => {
   // Ensure Angular destroys itself on hot reloads.
   if (window['ngRef']) {
     window['ngRef'].destroy();

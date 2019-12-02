@@ -156,11 +156,8 @@ import { WarpViewSpectrumComponent } from './warp-view-spectrum/warp-view-spectr
     WarpViewSpectrumComponent
   ]
 })
-export class ElementsModule {
+export class WarpViewElementsModule {
   constructor(private injector: Injector) {
-  }
-
-  ngDoBootstrap() {
     [
       {name: 'warp-view-chart', component: WarpViewChartComponent},
       {name: 'warp-view-tile', component: WarpViewTileComponent},
@@ -185,5 +182,8 @@ export class ElementsModule {
         customElements.define(wc.name, createCustomElement(wc.component, {injector: this.injector}));
       }
     });
+  }
+
+  ngDoBootstrap() {
   }
 }

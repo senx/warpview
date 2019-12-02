@@ -34,8 +34,8 @@ import {DataModel} from '../../model/dataModel';
 })
 export class WarpViewDrillDownComponent extends WarpViewComponent implements AfterViewInit {
 
-  private parentWidth = -1;
   heatMapData: any;
+  private parentWidth = -1;
   private resizeTimer;
 
   constructor(private el: ElementRef) {

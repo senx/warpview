@@ -60,13 +60,13 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   @ViewChild('timeSlider', {static: false}) timeSlider: ElementRef<HTMLDivElement>;
   @ViewChild('timeRangeSlider', {static: false}) timeRangeSlider: ElementRef<HTMLDivElement>;
 
-  @Input() heatData: any[] = [];
-  @Input() responsive = false;
-  @Input() showLegend = true;
-  @Input() width = ChartLib.DEFAULT_WIDTH;
-  @Input() height = ChartLib.DEFAULT_HEIGHT;
+  @Input('heatData') heatData: any[] = [];
+  @Input('responsive') responsive = false;
+  @Input('showLegend') showLegend = true;
+  @Input('width') width = ChartLib.DEFAULT_WIDTH;
+  @Input('height') height = ChartLib.DEFAULT_HEIGHT;
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
     this.LOG.setDebug(debug);
   }
@@ -75,7 +75,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     return this._debug;
   }
 
-  @Input() set options(options: Param) {
+  @Input('options') set options(options: Param) {
     this.LOG.debug(['onOptions'], options);
     if (!deepEqual(this._options, options)) {
       this._options = options;
@@ -84,7 +84,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     }
   }
 
-  @Input() set data(data: any) {
+  @Input('data') set data(data: any) {
     this.LOG.debug(['onData'], data);
     if (data) {
       this._data = data;
@@ -96,7 +96,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     return this._data;
   }
 
-  @Input() set hiddenData(hiddenData: number[]) {
+  @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
     this.drawMap();
   }
@@ -105,7 +105,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     return this._hiddenData;
   }
 
-  @Output() change = new EventEmitter();
+  @Output('change') change = new EventEmitter();
 
   currentZoom: number;
   currentLat: number;

@@ -31,6 +31,7 @@ import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {ColorLib} from '../../utils/color-lib';
 import moment from 'moment-timezone';
+import Plotly from 'plotly.js';
 import {SizeService} from '../../services/resize.service';
 
 @Component({
@@ -43,7 +44,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit, O
 
   @ViewChild('graph', { static: true }) graph: ElementRef;
   @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @Output() chartDraw = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   protected layout: Partial<any> = {
     showlegend: false,

@@ -45,11 +45,11 @@ import {Size, SizeService} from '../../services/resize.service';
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', { static: true }) warpRef: ElementRef;
-  @Input() type = 'line';
-  @Input() chartTitle;
-  @Input() url = '';
-  @Input() isAlone = false; // used by plot to manage its keyboard events
-  @Input() set gtsFilter(gtsFilter: string) {
+  @Input('type') type = 'line';
+  @Input('chartTitle') chartTitle;
+  @Input('url') url = '';
+  @Input('isAlone') isAlone = false; // used by plot to manage its keyboard events
+  @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
     this.parseGTS();
   }
