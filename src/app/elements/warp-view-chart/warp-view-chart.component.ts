@@ -1,30 +1,21 @@
 /*
- * Copyright 2019 SenX S.A.S.
+ *  Copyright 2020  SenX S.A.S.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
 
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
@@ -35,6 +26,7 @@ import {ColorLib} from '../../utils/color-lib';
 import {Logger} from '../../utils/logger';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
+import {PlotComponent} from 'angular-plotly.js';
 
 @Component({
   selector: 'warpview-chart',
@@ -43,8 +35,8 @@ import {SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @ViewChild('graph', { static: true }) graph: ElementRef;
+  @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
+  @ViewChild('graph', {static: true}) graph: PlotComponent;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
@@ -137,19 +129,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     super();
     this.LOG = new Logger(WarpViewChartComponent, this._debug);
     this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        this.layout.xaxis.rangeslider.thickness = 40 / this.layout.height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width,
-          xaxis: {
-            rangeslider: {
-              thickness: 40 / this.layout.height
-            }
-          }
-        });
+      if (this.graph) {
+        const layout = this.layout;
+        layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
+        layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        layout.xaxis.rangeslider.thickness = 40 / this.layout.height;
+        this.layout = layout;
       }
     });
   }
@@ -178,14 +163,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     this.height = newHeight;
     this.layout.height = this.height;
     this.layout.xaxis.rangeslider.thickness = 40 / this.layout.height;
-    Plotly.relayout(this.graph.nativeElement, {
-      height: this.layout.height,
-      xaxis: {
-        rangeslider: {
-          thickness: 40 / this.layout.height
-        }
-      }
-    });
   }
 
   drawChart(reparseNewData: boolean = false) {
@@ -212,27 +189,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    if (this._chart) {
+    if (this.graph) {
       this.ngOnDestroy();
     }
     this.layout.xaxis.rangeslider.thickness = 40 / this.height;
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this._chart = plot;
-      this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
-      this._chart.on('plotly_relayout', data => {
-        this.LOG.debug(['plotly_relayout'], data);
-        if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
-          this.emitNewBounds(data['xaxis.range'][0], data['xaxis.range'][1]);
-        } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
-          this.emitNewBounds(data['xaxis.range[0]'], data['xaxis.range[1]']);
-        } else if (data['xaxis.autorange']) {
-          this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
-        }
-      });
-      this.chartDraw.emit();
-      this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
-      this.loading = false;
-    });
   }
 
   private emitNewBounds(min, max) {
@@ -354,5 +314,40 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     }
 
     return dataset;
+  }
+
+  afterPlot() {
+    this.chartDraw.emit();
+    // @ts-ignore
+    //   this._chart = this.graph.plotlyInstance;
+    this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+    this.loading = false;
+  }
+
+  relayout(data: any) {
+    this.LOG.debug(['plotly_relayout'], data);
+    if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
+      this.emitNewBounds(data['xaxis.range'][0], data['xaxis.range'][1]);
+    } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
+      this.emitNewBounds(data['xaxis.range[0]'], data['xaxis.range[1]']);
+    } else if (data['xaxis.autorange']) {
+      this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+    }
+  }
+
+  hover(data: any) {
+    this.LOG.debug(['plotly_hover'], data);
+    this.toolTip.nativeElement.style.display = 'block';
+    this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
+    if (data.event.offsetX > this.graph.plotEl.nativeElement.clientWidth / 2) {
+      this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
+    } else {
+      this.toolTip.nativeElement.style.left = (data.event.offsetX + 20) + 'px';
+    }
+    this.toolTip.nativeElement.style.top = (data.event.offsetY + 20) + 'px';
+  }
+
+  unhover() {
+    this.toolTip.nativeElement.style.display = 'none';
   }
 }

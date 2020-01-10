@@ -1,41 +1,43 @@
 <!--
-  ~ Copyright 2019 SenX S.A.S.
+  ~  Copyright 2020  SenX S.A.S.
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
   ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~    http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
   -->
 
-<!--<warpview-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot"
+<warpview-tile url="http://195.220.224.29:8080/api/v0/exec" responsive="true" type="plot"
                 debug="true" chart-title="Plot">
+  '29'
+  '29240'
   [
-  NEWGTS 'Date' RENAME // Commenting that makes it work
-  1000 NaN NaN NaN 2.5 ADDVALUE
-  2000 NaN NaN NaN 2.5 ADDVALUE
-  3000 NaN NaN NaN 2.5 ADDVALUE
-  4000 NaN NaN NaN 2.5 ADDVALUE
-
-  NEWGTS '1' RENAME
-  1000 NaN NaN NaN 1 ADDVALUE
-  2000 NaN NaN NaN 2 ADDVALUE
-  3000 NaN NaN NaN 3 ADDVALUE
-  4000 NaN NaN NaN 4 ADDVALUE
-
-  NEWGTS '1' RENAME
-  1000 NaN NaN NaN 4 ADDVALUE
-  2000 NaN NaN NaN 3 ADDVALUE
-  3000 NaN NaN NaN 2 ADDVALUE
-  4000 NaN NaN NaN 1 ADDVALUE
+  'energie_produite_annuelle_photovoltaique_enedi_mwh'
+  'energie_produite_annuelle_eolien_enedis_mwh'
+  'energie_produite_annuelle_hydraulique_enedis_mwh'
   ]
-</warpview-tile>-->
+  NOW
+  5 365 d *
+  @pride/enedis.production
+  '29'
+  '29240'
+  [
+  'conso_totale_agriculture_mwh'
+  'conso_totale_industrie_mwh'
+  'conso_totale_tertiaire_mwh'
+  ]
+  NOW
+  5 365 d *
+  @pride/enedis.consommation
+</warpview-tile>
 <h1>Warp View</h1>
 <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
                                                                 target="_blank">Warp 10™</a>
