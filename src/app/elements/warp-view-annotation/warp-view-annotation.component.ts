@@ -95,9 +95,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       tickson: 'boundaries',
       //     ticks: 'inside',
       automargin: false,
-      //    showline: false,
+      showline: false,
       tickfont: {
-        //      color: 'transparent'
+        color: 'transparent'
       }
     },
     margin: {

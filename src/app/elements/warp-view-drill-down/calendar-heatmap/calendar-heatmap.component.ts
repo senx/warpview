@@ -299,17 +299,17 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           const summary: Summary = yData.reduce((s: any, data: any) => {
             if ((data.date as Moment).year() === date.year()) {
               data.summary.forEach(_summary => {
-                if (!summary[_summary.name]) {
-                  summary[_summary.name] = {
+                if (!s[_summary.name]) {
+                  s[_summary.name] = {
                     total: _summary.total,
                     color: _summary.color,
                   };
                 } else {
-                  summary[_summary.name].total += _summary.total;
+                  s[_summary.name].total += _summary.total;
                 }
               });
             }
-            return summary;
+            return s;
           }, {});
           const unsortedSummary: Summary[] = Object.keys(summary).map((key) => {
             return {
