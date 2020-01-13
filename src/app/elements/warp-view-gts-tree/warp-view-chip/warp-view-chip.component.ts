@@ -100,7 +100,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   private _hiddenData: number[] = [];
   _node: any = {
     selected: true,
-    gts: GTS
+    gts: GTS,
   };
 
   /**

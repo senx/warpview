@@ -100,6 +100,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
+    this.loading = false;
   }
 
   protected convert(data: DataModel): Partial<any>[] {

@@ -26,7 +26,7 @@
 
           <div class="row">
             <div class="col-auto">
-              <p class="lead text-muted">Main theme</p>
+              <label class="lead text-muted">Main theme</label>
               <p>
                 <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true"
                         (click)="setTheme('light')" id="light">Light
@@ -38,9 +38,9 @@
             </div>
 
             <div class="col-auto">
-              <p class="lead text-muted">Color scheme</p>
+              <label class="lead text-muted" for="scheme">Color scheme</label>
               <p>
-                <select class="custom-select" [(ngModel)]="colorScheme" (change)="updateSettings()">
+                <select class="custom-select" [(ngModel)]="colorScheme" (change)="updateSettings()" id="scheme">
                   <option *ngFor="let c of colorSchemes" [value]="c">{{c}}</option>
                 </select>
               </p>
@@ -52,8 +52,6 @@
           <ul class="list-unstyled">
             <li><a href="https://twitter.com/warp10" class="text-white">Follow on Twitter</a></li>
             <li><a href="#" class="text-white">GitHub</a></li>
-            <li><a href="/tests-Plot.html">Plot tests</a></li>
-            <li><a href="/tests-dynamicwarpscript.html">Responsive tests</a></li>
           </ul>
         </div>
       </div>
@@ -76,7 +74,7 @@
 <main role="main">
 
   <div class="album">
-    <div class="container-fluid bg-{{theme}} {{theme === 'dark'?'text-white': ''}} pt-5">
+    <div class="container-fluid bg-{{theme}} {{theme === 'dark'?'text-white': ''}} pt-5 full">
       <div class="row">
         <div class="col-2">
           <warpview-menu></warpview-menu>

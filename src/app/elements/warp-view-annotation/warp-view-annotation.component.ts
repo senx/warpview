@@ -36,14 +36,20 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent {
   @ViewChild('date', {static: true}) date: ElementRef;
+  @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
-    if (this.graph && hiddenData) {
-      this.LOG.debug(['hiddenData'], hiddenData);
-      this._hiddenData = hiddenData;
-      if (this.graph) {
-        this.drawChart();
-      }
+    const previousVisibility = JSON.stringify(this.visibility);
+    this.LOG.debug(['hiddenData', 'previousVisibility'], previousVisibility);
+    this._hiddenData = hiddenData;
+    this.visibility = [];
+    this.visibleGtsId.forEach(id => this.visibility.push(hiddenData.indexOf(id) < 0 && (id !== -1)));
+    this.LOG.debug(['hiddenData', 'hiddendygraphfullv'], this.visibility);
+    const newVisibility = JSON.stringify(this.visibility);
+    this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility);
+    if (previousVisibility !== newVisibility) {
+      this.drawChart(false);
+      this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
     }
   }
 
@@ -89,19 +95,17 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       tickson: 'boundaries',
       //     ticks: 'inside',
       automargin: false,
-      showline: false,
+      //    showline: false,
       tickfont: {
-        color: 'transparent'
+        //      color: 'transparent'
       }
-    },
-    padding: {
-      t: 0, b: 0, r: 0, l: 0
     },
     margin: {
       t: 30,
       b: 40,
       r: 0,
-      l: 50
+      l: 50,
+      pad: 0
     },
   };
 
@@ -141,7 +145,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   update(options: Param, refresh: boolean): void {
     this._options = ChartLib.mergeDeep(this._options, options) as Param;
-    this.drawChart();
+    if (refresh) {
+      this.drawChart();
+    }
   }
 
   updateBounds(min, max) {
@@ -162,26 +168,33 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   drawChart(reparseNewData: boolean = false) {
     if (!this.initChart(this.el)) {
+      this.el.nativeElement.style.display = 'none';
       return;
     }
+    this.el.nativeElement.style.display = 'block';
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
     this.LOG.debug(['drawChart', 'hiddenData'], this._hiddenData);
     this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
+    this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
+    this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
+    this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.displayExpander = (this.plotlyData.length > 1);
-    const calculatedHeight = (this.expanded ? this.lineHeight * this.plotlyData.length : this.lineHeight)
-      + this.layout.margin.t + this.layout.margin.b;
+    const count = this.plotlyData.filter(d => d.y.length > 0).length;
+    const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
+    this.el.nativeElement.style.height = calculatedHeight + 'px';
     this.height = calculatedHeight;
-    this.LOG.debug(['drawChart', 'height'], this.height, this.plotlyData.length, calculatedHeight);
-    this.layout.yaxis.range = [0, this.expanded ? this.plotlyData.length : 1];
     this.layout.height = this.height;
+    this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight);
+    this.layout.yaxis.range = [0, this.expanded ? count : 1];
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     if (this.standalone) {
       this.plotlyConfig.scrollZoom = true;
     }
+    this.loading = false;
   }
 
   hover(data: any) {
@@ -191,11 +204,13 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       x: data.event.offsetX,
       y: data.event.offsetY
     });
-    const layout = this.graph.plotlyInstance.getBoundingClientRect();
+
+    const layout = this.el.nativeElement.getBoundingClientRect();
+    const count = this.plotlyData.filter(d => d.y.length > 0).length;
     tooltip.style.opacity = '1';
     tooltip.style.display = 'block';
     tooltip.style.top = (
-      (this.expanded ? data.points[0].y + 0.5 : 0) * -1 * this.lineHeight + this.layout.margin.t + data.points[0].y + 0.5
+      (this.expanded ? count - (data.points[0].y + 0.5) : 0) * (this.lineHeight) + this.layout.margin.t
     ) + 'px';
     tooltip.classList.remove('right', 'left');
     this.LOG.debug(['tooltip'], data);
@@ -213,6 +228,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       tooltip.classList.add('right');
     }
     tooltip.style.pointerEvents = 'none';
+    this.LOG.debug(['plotly_hover'], tooltip.style.top);
   }
 
   unhover() {
@@ -228,17 +244,12 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
     const divider = GTSLib.getDivider(this._options.timeUnit);
-    this.visibility = [];
     let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;
     this.visibleGtsId = [];
-    const nonPlottable = gtsList.filter(g => {
-      return (g.v && GTSLib.isGtsToPlot(g));
-    });
-    gtsList = gtsList.filter(g => {
-      return (g.v && !GTSLib.isGtsToPlot(g));
-    });
+    const nonPlottable = gtsList.filter(g => g.v && GTSLib.isGtsToPlot(g));
+    gtsList = gtsList.filter(g => g.v && !GTSLib.isGtsToPlot(g));
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
@@ -250,11 +261,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           text: label,
           x: [],
           y: [],
-          line: {},
           hoverinfo: 'none',
           connectgaps: false,
-          visible: this._hiddenData.filter(h => h === gts.id).length >= 0,
-          'line.color': color,
+          visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
+          line: {color},
           marker: {
             symbol: 'line-ns-open',
             color,
@@ -262,7 +272,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
             width: 5,
           }
         };
-        this.visibility.push(true);
         this.visibleGtsId.push(gts.id);
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           this.layout.xaxis.type = 'linear';
@@ -277,7 +286,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           if (ts > this.maxTick) {
             this.maxTick = ts;
           }
-          (series.y as any[]).push((this.expanded ? i * -1 : 0) - 0.5);
+          (series.y as any[]).push((this.expanded ? i : 0) + 0.5);
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             (series.x as any[]).push(ts);
           } else {

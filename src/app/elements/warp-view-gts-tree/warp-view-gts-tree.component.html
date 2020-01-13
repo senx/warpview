@@ -20,7 +20,7 @@
     <span [ngClass]="{expanded: this.expand, collapsed: !this.expand}" #root></span> Results
   </div>
   <warpview-tree-view [gtsList]="gtsList" [branch]="false" *ngIf="expand"
-                      [options]="_options"
+                      [options]="_options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
                       [debug]="debug" [hiddenData]="hiddenData" [gtsFilter]="gtsFilter"
                       [kbdLastKeyPressed]="kbdLastKeyPressed"></warpview-tree-view>
 </div>

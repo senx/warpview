@@ -15,16 +15,19 @@
   ~
   -->
 
-<div class="date" #date></div>
-<button *ngIf="displayExpander && plotlyData && plotlyData.length > 1" class="expander" (click)="toggle()"
-        title="collapse/expand">+/-
-</button>
-<div id="chartContainer">
+<div id="chartContainer" #chartContainer>
+  <div class="date" #date></div>
+  <button *ngIf="displayExpander && plotlyData && plotlyData.length > 1" class="expander" (click)="toggle()"
+          title="collapse/expand">+/-
+  </button>
   <div #toolTip class="tooltip"></div>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <plotly-plot #graph
-               [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
-               className="chart" (hover)="hover($event)" (unhover)="unhover()"
-               [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
-               [style]="{position: 'relative'}"></plotly-plot>
+  <div *ngIf="!loading">
+    <div class="upperLine" [ngStyle]="{left: standalone? '50px': '0px'}"></div>
+    <plotly-plot #graph
+                 [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
+                 className="chart" (hover)="hover($event)" (unhover)="unhover()"
+                 [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
+                 [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
+  </div>
 </div>

@@ -99,11 +99,6 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
-    /*    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-          this._chart = plot;
-          this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
-          this.chartDraw.emit();
-          this.loading = false;
-        });*/
+    this.loading = false;
   }
 }

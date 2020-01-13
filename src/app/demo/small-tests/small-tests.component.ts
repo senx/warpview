@@ -15,8 +15,8 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {SettingsService} from '../../services/settings.service';
 
 @Component({
@@ -58,6 +58,8 @@ export class SmallTestsComponent implements OnInit {
         //48.0 -4.5 2000 @senx/geo/circle
         //0.01 false GEO.WKT 'area' STORE $area
         //'POLYGON((-4.6 48, -4.6 48.5, -4 48.5, -4 48, -4.6 48))' 0.01 false GEO.WKT
+        // tslint:disable-next-line:max-line-length
+        // tslint:disable-next-line:max-line-length
         'POLYGON((-1.56280517578125 51.90530737927636,-1.5655517578125 51.146617353835516, 0.60150146484375 51.163844261348224, 0.5740356445312499 51.91039070988962,  -1.56280517578125 51.90530737927636))' 0.01 false GEO.WKT
         'area' STORE $area
         8 GEO.OPTIMIZE 0 GEO.OPTIMIZE GEO.REGEXP '~(' SWAP + ')' + 're' STORE
@@ -102,13 +104,6 @@ export class SmallTestsComponent implements OnInit {
 
         5000 LOCATIONOFFSET`
     }];
-
-  /**
-   *
-   * @param {ActivatedRoute} route
-   * @param {Router} router
-   * @param {SettingsService} settingsService
-   */
   constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {
       this.theme = evt.settings.theme;
@@ -123,16 +118,9 @@ export class SmallTestsComponent implements OnInit {
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
   }
 
-  /**
-   *
-   * @returns {}
-   */
   manageTheme() {
     return {
       'text-white': (this.theme === 'dark'),

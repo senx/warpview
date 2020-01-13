@@ -14,7 +14,6 @@
  *  limitations under the License.
  *
  */
-"use strict";
 import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Logger} from '../../../utils/logger';
 import {Datum, Detail, Summary} from '../model/datum';
@@ -74,12 +73,13 @@ export class CalendarHeatmapComponent implements AfterViewInit {
 
   private static DEF_MIN_COLOR = '#ffffff';
   private static DEF_MAX_COLOR = '#333333';
+
   constructor(private el: ElementRef) {
     this.LOG = new Logger(CalendarHeatmapComponent, this.debug);
   }
 
 
-  @ViewChild('chart', { static: true }) div: ElementRef;
+  @ViewChild('chart', {static: true}) div: ElementRef;
 
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
@@ -398,7 +398,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function () {
+        transition.each(() => ++n).on('end', function() {
           if (!--n) {
             callback.apply(this, arguments);
           }
@@ -585,7 +585,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function () {
+        transition.each(() => ++n).on('end', function() {
           if (!--n) {
             callback.apply(this, arguments);
           }
@@ -847,7 +847,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function () {
+        transition.each(() => ++n).on('end', function() {
           if (!--n) {
             callback.apply(this, arguments);
           }
@@ -1062,7 +1062,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function () {
+        transition.each(() => ++n).on('end', function() {
           if (!--n) {
             callback.apply(this, arguments);
           }
@@ -1262,7 +1262,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
           callback();
         }
         let n = 0;
-        transition.each(() => ++n).on('end', function () {
+        transition.each(() => ++n).on('end', function() {
           if (!--n) {
             callback.apply(this, arguments);
           }
@@ -1316,7 +1316,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
       .style('text-anchor', 'left')
       .attr('font-size', () => Math.floor(this.labelPadding / 3) + 'px')
       .text((d: string) => d)
-      .each(function () {
+      .each(function() {
         const obj = select(this);
         let textLength = obj.node().getComputedTextLength();
         let text = obj.text();

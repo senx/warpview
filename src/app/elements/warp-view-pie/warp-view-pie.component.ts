@@ -98,6 +98,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
     this.layout.textfont = {
       color: this.getCSSColor(this.el.nativeElement, '--warp-view-font-color', '#000')
     };
+    this.loading = false;
   }
 
   protected convert(data: DataModel): Partial<any>[] {

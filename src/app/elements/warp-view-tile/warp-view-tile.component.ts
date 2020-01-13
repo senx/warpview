@@ -102,7 +102,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   }
 
   update(options: Param): void {
-    this._options = options;
+    this.LOG.debug(['update', 'options'], options);
     this.parseGTS();
   }
 
@@ -124,6 +124,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   private parseGTS() {
     const data: DataModel = new DataModel();
+    this.LOG.debug(['parseGTS', 'data'], data);
     if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
       const dataLine = this.gtsList[0];
       if (dataLine.hasOwnProperty('data')) {
@@ -141,7 +142,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     }
     this.LOG.debug(['parseGTS', 'data'], data);
     this._data = data;
-    let opts = new Param();
+    let opts: Param;
     if (typeof this._options === 'string') {
       opts = JSON.parse(this._options as string) as Param;
     } else {
@@ -179,6 +180,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
         const re = RegExp(extraParamsPattern);
         // noinspection JSAssignmentUsedAsCondition
         // tslint:disable-next-line:no-conditional-assignment JSAssignmentUsedAsCondition
+        // noinspection JSAssignmentUsedAsCondition
         while (lineOnMatch = re.exec(currentLine)) {
           const parameterName = lineOnMatch[1];
           const parameterValue = lineOnMatch[2];

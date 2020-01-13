@@ -15,11 +15,13 @@
   ~
   -->
 
-<div id="chartContainer">
+<div id="chartContainer" #chartContainer>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <plotly-plot #graph
-               [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
-               (relayout)="relayout($event)"
-               [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
-               [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
+  <div *ngIf="!loading">
+    <plotly-plot #graph *ngIf="plotlyData?.length > 0"
+                 [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
+                 (relayout)="relayout($event)"
+                 [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
+                 [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
+  </div>
 </div>

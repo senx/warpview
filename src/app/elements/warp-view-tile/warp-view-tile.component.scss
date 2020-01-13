@@ -19,19 +19,19 @@
 :host {
   opacity: 0;
   width: var(--warp-view-tile-width);
-  height: var(--warp-view-tile-height);
-  overflow: auto;
+  max-height: var(--warp-view-tile-height);
+ // overflow: auto;
 
   .wrapper {
     opacity: 1;
-    //min-height: 200px;
+    min-height: 200px;
     width: var(--warp-view-tile-width);
     height: var(--warp-view-tile-height);
 
     &.full {
       width: 100%;
       height: 100%;
-      overflow: auto;
+ //     overflow: auto;
     }
 
     .tilewrapper {

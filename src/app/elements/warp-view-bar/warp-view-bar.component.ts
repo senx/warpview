@@ -92,7 +92,8 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
           marker: {
             color: ColorLib.transparentize(color),
             line: {
-              color
+              color,
+              width: 1
             }
           }
         };
@@ -119,5 +120,6 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
+    this.loading = false;
   }
 }

@@ -166,21 +166,21 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   warpViewSelectedGTS(event) {
-    this.LOG.debug(['warpViewSelectedGTS'], event.detail);
+    this.LOG.debug(['warpViewSelectedGTS'], event);
     if (!this._toHide.find(i => {
-      return i === event.detail.gts.id;
-    }) && !event.detail.selected) { // if not in toHide and state false, put id in toHide
-      this._toHide.push(event.detail.gts.id);
+      return i === event.gts.id;
+    }) && !event.selected) { // if not in toHide and state false, put id in toHide
+      this._toHide.push(event.gts.id);
     } else {
-      if (event.detail.selected) { // if in toHide and state true, remove it from toHide
+      if (event.selected) { // if in toHide and state true, remove it from toHide
         this._toHide = this._toHide.filter(i => {
-          return i !== event.detail.gts.id;
+          return i !== event.gts.id;
         });
       }
     }
-    this.LOG.debug(['warpViewSelectedGTS'], this._toHide);
-    this._toHide = this._toHide.slice();
-    this.drawChart();
+    this.LOG.debug(['warpViewSelectedGTS', 'this._toHide'], this._toHide);
+ //   this.drawChart();
+    this._toHide = [... this._toHide];
   }
 
   private handleMouseMove(evt: MouseEvent) {
@@ -257,9 +257,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  /**
-   *
-   */
   tzSelected() {
     const timeZone = this.tzSelector.nativeElement.value;
     this.LOG.debug(['timezone', 'tzselect'], timeZone);

@@ -15,12 +15,14 @@
   ~
   -->
 
-<div id="chartContainer">
+<div id="chartContainer" #chartContainer>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <plotly-plot #graph
-               [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
-               (relayout)="relayout($event)" (hover)="hover($event)" (unhover)="unhover()"
-               [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
-               [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
+  <div *ngIf="!loading">
+    <plotly-plot #graph
+                 [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
+                 (relayout)="relayout($event)" (hover)="hover($event)" (unhover)="unhover()"
+                 [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
+                 [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
+  </div>
   <div #toolTip class="tooltip"></div>
 </div>

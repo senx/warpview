@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Logger} from '../../../utils/logger';
 import {GTSLib} from '../../../utils/gts.lib';
 import {Param} from '../../../model/param';
@@ -51,6 +51,7 @@ export class WarpViewTreeViewComponent implements OnInit {
   @Input('branch') branch = false;
   @Input('hidden') hidden = false;
   @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
+  @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private hide: any = {};
   private LOG: Logger;
@@ -84,5 +85,10 @@ export class WarpViewTreeViewComponent implements OnInit {
 
   isGts(node) {
     return GTSLib.isGts(node);
+  }
+
+  warpViewSelectedGTSHandler(event) {
+    this.LOG.debug(['warpViewSelectedGTS'], event);
+    this.warpViewSelectedGTS.emit(event);
   }
 }

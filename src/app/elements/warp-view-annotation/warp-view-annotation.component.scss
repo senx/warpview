@@ -20,11 +20,28 @@
 
 :host {
   display: block;
-  height: 100%;
+  //  height: 100%;
+
+  .expander {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35px;
+    z-index: 9;
+  }
 
   #chartContainer {
     height: auto;
     position: relative;
+
+    div.upperLine {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      height: 0;
+      border-bottom: 1px solid var(--warp-view-chart-grid-color, #8e8e8e);
+      right: 0;
+    }
   }
 
   .date {
@@ -33,9 +50,9 @@
     height: 20px;
     vertical-align: middle;
     line-height: 20px;
-    width: calc(100% - 110px);
-    margin-left: 90px;
-    padding-right: 10px;
+    position: absolute;
+    top: 0;
+    left: 40px;
   }
 
   .chart {

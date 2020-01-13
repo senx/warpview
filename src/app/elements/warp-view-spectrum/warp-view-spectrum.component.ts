@@ -156,5 +156,6 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
+    this.loading = false;
   }
 }

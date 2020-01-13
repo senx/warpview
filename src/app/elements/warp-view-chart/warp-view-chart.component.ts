@@ -36,15 +36,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
+    this.LOG.debug(['hiddenData', 'previousVisibility'], previousVisibility);
     this._hiddenData = hiddenData;
-    if (!!this.graph) {
-      this.visibility = [];
-      this.visibleGtsId.forEach(id => {
-        this.visibility.push(hiddenData.indexOf(id) < 0 && (id !== -1));
-      });
-      this.LOG.debug(['hiddenData', 'hiddendygraphfullv'], this.visibility);
-    }
+    this.visibility = [];
+    this.visibleGtsId.forEach(id => this.visibility.push(hiddenData.indexOf(id) < 0 && (id !== -1)));
+    this.LOG.debug(['hiddenData', 'hiddendygraphfullv'], this.visibility);
     const newVisibility = JSON.stringify(this.visibility);
+    this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility);
     if (previousVisibility !== newVisibility) {
       this.drawChart(false);
       this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
@@ -146,6 +144,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   drawChart(reparseNewData: boolean = false) {
+    this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (!this.initChart(this.el)) {
       return;
     }
@@ -170,6 +169,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.xaxis.rangeslider.thickness = 40 / this.height;
+    this.loading = false;
   }
 
   private emitNewBounds(min, max) {
@@ -188,7 +188,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
-    this.visibility = [];
+    this.LOG.debug(['convert', 'this._hiddenData'], this._hiddenData);
     let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;
@@ -224,7 +224,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           line: {color},
           hoverinfo: 'none',
           connectgaps: false,
-          visible: this._hiddenData.filter(h => h === gts.id).length >= 0,
+          visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
         };
         switch (this._type) {
           case 'spline':
@@ -244,7 +244,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             series.line.shape = 'hv';
             break;
         }
-        this.visibility.push(true);
         this.visibleGtsId.push(gts.id);
 
         gts.v.forEach(value => {
@@ -295,8 +294,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   afterPlot() {
     this.chartDraw.emit();
-    // @ts-ignore
-    //   this._chart = this.graph.plotlyInstance;
     this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
     this.loading = false;
   }
@@ -310,21 +307,5 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     } else if (data['xaxis.autorange']) {
       this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
     }
-  }
-
-  hover(data: any) {
-    this.LOG.debug(['plotly_hover'], data);
-    this.toolTip.nativeElement.style.display = 'block';
-    this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
-    if (data.event.offsetX > this.graph.plotEl.nativeElement.clientWidth / 2) {
-      this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
-    } else {
-      this.toolTip.nativeElement.style.left = (data.event.offsetX + 20) + 'px';
-    }
-    this.toolTip.nativeElement.style.top = (data.event.offsetY + 20) + 'px';
-  }
-
-  unhover() {
-    this.toolTip.nativeElement.style.display = 'none';
   }
 }

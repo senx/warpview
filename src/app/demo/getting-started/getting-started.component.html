@@ -15,29 +15,7 @@
   ~
   -->
 
-<warpview-tile url="http://195.220.224.29:8080/api/v0/exec" responsive="true" type="plot"
-                debug="true" chart-title="Plot">
-  '29'
-  '29240'
-  [
-  'energie_produite_annuelle_photovoltaique_enedi_mwh'
-  'energie_produite_annuelle_eolien_enedis_mwh'
-  'energie_produite_annuelle_hydraulique_enedis_mwh'
-  ]
-  NOW
-  5 365 d *
-  @pride/enedis.production
-  '29'
-  '29240'
-  [
-  'conso_totale_agriculture_mwh'
-  'conso_totale_industrie_mwh'
-  'conso_totale_tertiaire_mwh'
-  ]
-  NOW
-  5 365 d *
-  @pride/enedis.consommation
-</warpview-tile>
+<!--suppress HtmlUnknownTag -->
 <h1>Warp View</h1>
 <p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
                                                                 target="_blank">Warp 10™</a>

@@ -14,4 +14,8 @@
  *  limitations under the License.
  *
  */
-
+:host {
+  .full {
+    min-height: calc(100vh - 58px);
+  }
+}

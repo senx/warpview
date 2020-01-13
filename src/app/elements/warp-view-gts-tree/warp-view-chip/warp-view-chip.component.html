@@ -28,7 +28,6 @@
          <span [hidden]="last">, </span>
        </span>
        <span class="gts-separator"> &#x007D; </span>
-       <span *ngIf="toArray(this._node.gts.a).length > 0">
          <span class='gts-separator'>&#x007B; </span>
          <span *ngFor="let label of toArray(_node.gts.a); index as index; last as last">
            <span class='gts-attrname'>{{label.name}}</span>
@@ -36,7 +35,6 @@
            <span class='gts-attrvalue'>{{label.value}}</span>
            <span [hidden]="last">, </span>
          </span>
-       </span>
        <span class="gts-separator"> &#x007D;</span>
        </span>
    </span>

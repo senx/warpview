@@ -34,6 +34,7 @@ export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHid
 export abstract class WarpViewComponent {
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
   @ViewChild('graph', {static: true}) graph: PlotComponent;
+  @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('responsive') responsive: boolean;
   @Input('showLegend') showLegend: boolean;
@@ -109,7 +110,7 @@ export abstract class WarpViewComponent {
   protected _debug = false;
   private _unit = '';
   protected _data: DataModel;
-  loading = false;
+  loading = true;
   protected layout: Partial<any> = {};
   protected plotlyConfig: Partial<Config> = {
     responsive: this.responsive,
@@ -126,7 +127,7 @@ export abstract class WarpViewComponent {
   protected _hiddenData: number[] = [];
   protected divider: number;
 
-  constructor(protected el: ElementRef, protected sizeService: SizeService) {
+  protected constructor(protected el: ElementRef, protected sizeService: SizeService) {
     this.sizeService.sizeChanged$.subscribe(() => {
       if (this.graph) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
@@ -175,14 +176,15 @@ export abstract class WarpViewComponent {
 
   protected initChart(el: ElementRef): boolean {
     this.LOG.debug(['initiChart', 'this._data'], this._data);
-    if (!this._data || !this._data.data || this._data.data.length === 0) {
+    if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       return false;
     }
     moment.tz.setDefault(this._options.timeZone);
     this.loading = true;
-    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
+    this.LOG.debug(['initiChart', 'this._options'], this._options);
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
     const dataModel = this._data;
-    this._options = ChartLib.mergeDeep(this._data.globalParams, this._options) as Param;
+    this._options = ChartLib.mergeDeep(this._options, this._data.globalParams) as Param;
     this.LOG.debug(['initiChart', 'this._options'], this._options);
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
@@ -190,7 +192,6 @@ export abstract class WarpViewComponent {
     this.plotlyConfig.responsive = this.responsive;
     this.layout.paper_bgcolor = 'rgba(0,0,0,0)';
     this.layout.plot_bgcolor = 'rgba(0,0,0,0)';
-    this.layout.polar.bgcolor = 'rgba(0,0,0,0)';
     if (!this.responsive) {
       this.layout.width = this.width || ChartLib.DEFAULT_WIDTH;
       this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
@@ -238,7 +239,7 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['plotly_hover'], data);
     this.toolTip.nativeElement.style.display = 'block';
     this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
-    if (data.event.offsetX > this.graph.plotlyInstance.clientWidth / 2) {
+    if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
       this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
     } else {
       this.toolTip.nativeElement.style.left = (data.event.offsetX + 20) + 'px';

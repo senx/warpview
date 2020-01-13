@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -45,6 +45,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   get gtsFilter() {
     return this._gtsFilter;
   }
+  @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private _gtsFilter = 'x';
   private gtsList: any[] = [];
@@ -107,6 +108,11 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   protected convert(data: DataModel): any[] {
     return [];
+  }
+
+  warpViewSelectedGTSHandler(event) {
+    this.LOG.debug(['warpViewSelectedGTS'], event);
+    this.warpViewSelectedGTS.emit(event);
   }
 
 }
