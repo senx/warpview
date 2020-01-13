@@ -17,11 +17,12 @@
 
 import {AfterViewInit, Component, ElementRef, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 /**
  *
@@ -33,7 +34,7 @@ import {DataModel} from '../../model/dataModel';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewGtsTreeComponent extends WarpViewComponent implements AfterViewInit {
-  @ViewChild('root', { static: true }) root: ElementRef;
+  @ViewChild('root', {static: true}) root: ElementRef;
 
   @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
 
@@ -50,11 +51,11 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   expand = true;
 
-  /**
-   *
-   */
-  constructor() {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewGtsTreeComponent, this._debug);
   }
 

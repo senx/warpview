@@ -18,9 +18,10 @@
 import {Component, ElementRef, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
-import {Logger} from '../../utils/logger';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-datagrid',
@@ -36,8 +37,11 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   // tslint:disable-next-line:variable-name
   _tabularData: { name: string, values: any[], headers: string[] }[] = [];
 
-  constructor(private el: ElementRef) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewDatagridComponent, this._debug);
   }
 
@@ -50,7 +54,7 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   }
 
   private drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
   }

@@ -17,6 +17,10 @@
 
 <div id="chartContainer">
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <div #graph></div>
+  <plotly-plot #graph
+               [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
+               className="chart" (hover)="hover($event)" (unhover)="unhover()"
+               [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
+               [style]="{position: 'relative'}"></plotly-plot>
+  <div #toolTip class="tooltip"></div>
 </div>
-<div #toolTip class="tooltip"></div>

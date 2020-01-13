@@ -38,7 +38,7 @@
     padding-right: 10px;
   }
 
-  div.chart {
+  .chart {
     width: var(--warp-view-chart-width);
     height: var(--warp-view-chart-height);
   }
@@ -60,7 +60,7 @@
       line-height: 28px;
       height: 28px;
       overflow: visible;
-      margin-top: 1px;
+      margin: 1px;
       color: var(--warp-view-annotationtooltip-font-color);
 
       &.trimmed {

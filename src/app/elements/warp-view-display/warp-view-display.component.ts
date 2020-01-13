@@ -17,11 +17,12 @@
 
 import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 /**
  *
@@ -36,8 +37,11 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
 
   toDisplay = '';
 
-  constructor(private el: ElementRef) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewDisplayComponent, this._debug);
   }
 
@@ -50,7 +54,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   private drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.LOG.debug(['drawChart'], [this._data, this.toDisplay]);

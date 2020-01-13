@@ -15,17 +15,16 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
 import moment from 'moment-timezone';
-import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
-import Plotly from 'plotly.js';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-radar',
@@ -36,12 +35,7 @@ import Plotly from 'plotly.js';
 /**
  *
  */
-export class WarpViewRadarComponent extends WarpViewComponent implements OnInit, OnDestroy {
-
-  @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
-  @ViewChild('graph', {static: true}) graph: ElementRef;
-
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
+export class WarpViewRadarComponent extends WarpViewComponent implements OnInit {
 
   protected layout: Partial<any> = {
     paper_bgcolor: 'transparent',
@@ -80,33 +74,20 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     }
   }
 
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewRadarComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width
-        });
-      }
-    });
   }
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
 
-  ngOnDestroy() {
-    if (this._chart) {
-      Plotly.purge(this._chart);
-    }
-  }
-
   private drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.layout.polar.radialaxis.color = this.getGridColor(this.el.nativeElement);
@@ -115,12 +96,6 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit,
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this._chart = plot;
-      this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
-      this.chartDraw.emit();
-      this.loading = false;
-    });
   }
 
   protected convert(data: DataModel): any[] {

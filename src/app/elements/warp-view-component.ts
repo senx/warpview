@@ -22,13 +22,19 @@ import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
-import {Config, PlotData, PlotlyHTMLElement} from 'plotly.js';
-import {ElementRef, Input} from '@angular/core';
+import {Config, PlotData} from 'plotly.js';
+import {ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
+import {PlotComponent} from 'angular-plotly.js';
+import {SizeService} from '../services/resize.service';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
+
 // noinspection AngularMissingOrInvalidDeclarationInModule
 export abstract class WarpViewComponent {
+  @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
+  @ViewChild('graph', {static: true}) graph: PlotComponent;
+
   @Input('responsive') responsive: boolean;
   @Input('showLegend') showLegend: boolean;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
@@ -83,9 +89,11 @@ export abstract class WarpViewComponent {
     }
   }
 
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
+
   _options: Param = new Param();
   protected LOG: Logger;
-  protected defOptions =  ChartLib.mergeDeep(this._options, {
+  protected defOptions = ChartLib.mergeDeep(this._options, {
     dotsLimit: 1000,
     heatControls: false,
     timeMode: 'date',
@@ -102,10 +110,10 @@ export abstract class WarpViewComponent {
   private _unit = '';
   protected _data: DataModel;
   loading = false;
-  protected _chart: PlotlyHTMLElement;
   protected layout: Partial<any> = {};
   protected plotlyConfig: Partial<Config> = {
     responsive: this.responsive,
+    showAxisDragHandles: true,
     scrollZoom: false,
     displaylogo: false,
     modeBarButtonsToRemove: [
@@ -117,6 +125,15 @@ export abstract class WarpViewComponent {
   plotlyData: Partial<PlotData>[];
   protected _hiddenData: number[] = [];
   protected divider: number;
+
+  constructor(protected el: ElementRef, protected sizeService: SizeService) {
+    this.sizeService.sizeChanged$.subscribe(() => {
+      if (this.graph) {
+        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
+        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+      }
+    });
+  }
 
   protected abstract update(options: Param, refresh: boolean): void;
 
@@ -156,7 +173,7 @@ export abstract class WarpViewComponent {
     return html;
   }
 
-  protected initiChart(el: ElementRef): boolean {
+  protected initChart(el: ElementRef): boolean {
     this.LOG.debug(['initiChart', 'this._data'], this._data);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return false;
@@ -171,8 +188,9 @@ export abstract class WarpViewComponent {
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
     this.plotlyConfig.responsive = this.responsive;
-    this.layout.paper_bgcolor = 'transparent';
-    this.layout.plot_bgcolor = 'transparent';
+    this.layout.paper_bgcolor = 'rgba(0,0,0,0)';
+    this.layout.plot_bgcolor = 'rgba(0,0,0,0)';
+    this.layout.polar.bgcolor = 'rgba(0,0,0,0)';
     if (!this.responsive) {
       this.layout.width = this.width || ChartLib.DEFAULT_WIDTH;
       this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
@@ -207,21 +225,29 @@ export abstract class WarpViewComponent {
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
-  protected manageTooltip(toolTip: HTMLDivElement, graph: HTMLDivElement) {
-    this._chart.on('plotly_hover', (data: any) => {
-      this.LOG.debug(['plotly_hover'], data);
-      toolTip.style.display = 'block';
-      toolTip.innerHTML = this.legendFormatter(data.xvals[0], data.points);
-      if (data.event.offsetX > graph.clientWidth / 2) {
-        toolTip.style.left = Math.max(10, data.event.offsetX - toolTip.clientWidth) + 'px';
-      } else {
-        toolTip.style.left = (data.event.offsetX + 20) + 'px';
-      }
-      toolTip.style.top = (data.event.offsetY + 20) + 'px';
-    });
-    this._chart.on('plotly_unhover', () => {
-      toolTip.style.display = 'none';
-    });
+  protected afterPlot() {
+    this.chartDraw.emit();
+    this.loading = false;
+  }
+
+  protected unhover() {
+    this.toolTip.nativeElement.style.display = 'none';
+  }
+
+  protected hover(data: any) {
+    this.LOG.debug(['plotly_hover'], data);
+    this.toolTip.nativeElement.style.display = 'block';
+    this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
+    if (data.event.offsetX > this.graph.plotlyInstance.clientWidth / 2) {
+      this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
+    } else {
+      this.toolTip.nativeElement.style.left = (data.event.offsetX + 20) + 'px';
+    }
+    this.toolTip.nativeElement.style.top = (data.event.offsetY + 20) + 'px';
+  }
+
+  protected relayout($event: any) {
+
   }
 
   protected getLabelColor(el: HTMLElement) {

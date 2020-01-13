@@ -15,18 +15,16 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
 import moment from 'moment-timezone';
-import Plotly from 'plotly.js';
 import {ChartBounds} from '../../model/chartBounds';
 import {ColorLib} from '../../utils/color-lib';
-import {Logger} from '../../utils/logger';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
-import {PlotComponent} from 'angular-plotly.js';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-chart',
@@ -34,14 +32,12 @@ import {PlotComponent} from 'angular-plotly.js';
   styleUrls: ['./warp-view-chart.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewChartComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
-  @ViewChild('graph', {static: true}) graph: PlotComponent;
+export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
     this._hiddenData = hiddenData;
-    if (!!this._chart) {
+    if (!!this.graph) {
       this.visibility = [];
       this.visibleGtsId.forEach(id => {
         this.visibility.push(hiddenData.indexOf(id) < 0 && (id !== -1));
@@ -64,7 +60,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   // tslint:disable-next-line:variable-name
   private _type = 'line';
@@ -125,31 +120,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
       }*/
   }
 
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewChartComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this.graph) {
-        const layout = this.layout;
-        layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        layout.xaxis.rangeslider.thickness = 40 / this.layout.height;
-        this.layout = layout;
-      }
-    });
   }
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
-  }
-
-  ngOnDestroy() {
-    if (this._chart) {
-      this._chart.removeAllListeners('plotly_hover');
-      this._chart.removeAllListeners('plotly_unhover');
-      this._chart.removeAllListeners('plotly_relayout');
-      Plotly.purge(this._chart);
-    }
   }
 
   public async getTimeClip(): Promise<ChartBounds> {
@@ -166,7 +146,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
   }
 
   drawChart(reparseNewData: boolean = false) {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.plotlyConfig.scrollZoom = true;
@@ -189,9 +169,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit,
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    if (this.graph) {
-      this.ngOnDestroy();
-    }
     this.layout.xaxis.rangeslider.thickness = 40 / this.height;
   }
 

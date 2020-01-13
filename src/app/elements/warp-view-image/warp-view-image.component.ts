@@ -17,11 +17,12 @@
 
 import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 /**
  *
@@ -40,8 +41,11 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
   private resizeTimer;
   private parentWidth = -1;
 
-  constructor(private el: ElementRef) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewImageComponent, this._debug);
   }
 
@@ -74,7 +78,7 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return;
     }
-    this.initiChart(this.el);
+    this.initChart(this.el);
     this.toDisplay = [];
     let gts: DataModel = this._data;
     this.LOG.debug(['drawChart', 'gts'], gts);

@@ -27,8 +27,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {Param} from '../../model/param';
-import {Warp10Service} from '../../services/warp10.service';
-import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
@@ -36,6 +34,8 @@ import {HttpErrorHandler} from '../../services/http-error-handler.service';
 import {WarpViewComponent} from '../warp-view-component';
 import {ResizedEvent} from 'angular-resize-event';
 import {Size, SizeService} from '../../services/resize.service';
+import {Warp10Service} from '../../services/warp10.service';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-tile',
@@ -45,7 +45,7 @@ import {Size, SizeService} from '../../services/resize.service';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
-  @ViewChild('warpRef', { static: true }) warpRef: ElementRef;
+  @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
   @Input('type') type = 'line';
   @Input('chartTitle') chartTitle;
   @Input('url') url = '';
@@ -81,8 +81,13 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private timer: any;
   private _autoRefresh;
 
-  constructor(private warp10Service: Warp10Service, private cdRef: ChangeDetectorRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+    private warp10Service: Warp10Service,
+    private cdRef: ChangeDetectorRef
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewTileComponent, this._debug);
   }
 

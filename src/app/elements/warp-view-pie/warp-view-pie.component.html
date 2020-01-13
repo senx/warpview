@@ -17,5 +17,9 @@
 
 <div id="chartContainer">
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <div #graph></div>
+  <plotly-plot #graph
+               [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
+               (relayout)="relayout($event)"
+               [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
+               [style]="{position: 'relative', width: '100%', height: '100%'}"></plotly-plot>
 </div>

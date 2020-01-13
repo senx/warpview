@@ -15,17 +15,16 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, ViewEncapsulation} from '@angular/core';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
-import {SizeService} from '../../services/resize.service';
-import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import {Param} from '../../model/param';
 import {ColorLib} from '../../utils/color-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import moment from 'moment-timezone';
-import Plotly from 'plotly.js';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-spectrum',
@@ -33,11 +32,7 @@ import Plotly from 'plotly.js';
   styleUrls: ['./warp-view-spectrum.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewSpectrumComponent extends WarpViewComponent implements OnInit, OnDestroy {
-
-  @ViewChild('graph', { static: true }) graph: ElementRef;
-  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
+export class WarpViewSpectrumComponent extends WarpViewComponent {
 
   @Input('type') set type(type: string) {
     this._type = type;
@@ -56,28 +51,12 @@ export class WarpViewSpectrumComponent extends WarpViewComponent implements OnIn
   private minTick = 0;
   private visibleGtsId = [];
 
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewSpectrumComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width
-        });
-      }
-    });
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    if (this._chart) {
-      Plotly.purge(this._chart);
-    }
   }
 
   update(options: Param): void {
@@ -85,7 +64,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent implements OnIn
   }
 
   private drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.plotlyConfig.scrollZoom = true;
@@ -177,11 +156,5 @@ export class WarpViewSpectrumComponent extends WarpViewComponent implements OnIn
     this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this._chart = plot;
-      this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
-      this.chartDraw.emit();
-      this.loading = false;
-    });
   }
 }

@@ -15,29 +15,18 @@
  *
  */
 
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
-import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import moment from 'moment-timezone';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
+import {Plotly} from 'angular-plotly.js/src/app/shared/plotly.interface';
 import {SizeService} from '../../services/resize.service';
-import Plotly from 'plotly.js';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-annotation',
@@ -45,16 +34,14 @@ import Plotly from 'plotly.js';
   styleUrls: ['./warp-view-annotation.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewAnnotationComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @ViewChild('graph', { static: true }) graph: ElementRef;
-  @ViewChild('date', { static: true }) date: ElementRef;
+export class WarpViewAnnotationComponent extends WarpViewComponent {
+  @ViewChild('date', {static: true}) date: ElementRef;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
-    if (this._chart && hiddenData) {
+    if (this.graph && hiddenData) {
       this.LOG.debug(['hiddenData'], hiddenData);
       this._hiddenData = hiddenData;
-      if (this._chart) {
+      if (this.graph) {
         this.drawChart();
       }
     }
@@ -81,58 +68,42 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
   private minTick: number;
   private visibleGtsId = [];
   private dataHashset = {};
-
-  protected layout: Partial<any> = {
+  private lineHeight = 30;
+  protected layout: Partial<Plotly.Layout> = {
     showlegend: false,
     hovermode: 'closest',
-    xaxis: {},
+    xaxis: {
+      gridwidth: 1,
+      automargin: false
+    },
     autosize: false,
+    autoexpand: false,
     yaxis: {
       showticklabels: true,
       fixedrange: true,
       dtick: 1,
+      gridwidth: 1,
       tick0: 0,
+      nticks: 2,
+      rangemode: 'tozero',
+      tickson: 'boundaries',
+      //     ticks: 'inside',
       automargin: false,
       showline: false,
       tickfont: {
         color: 'transparent'
       }
     },
+    padding: {
+      t: 0, b: 0, r: 0, l: 0
+    },
     margin: {
-      t: 20,
-      b: 0,
+      t: 30,
+      b: 40,
       r: 0,
       l: 50
     },
   };
-
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
-    this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (this.el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.height = (this.expanded ? 40 * this.plotlyData.length : 40) + this.layout.margin.t;
-        this.layout.height = this.height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width
-        });
-      }
-    });
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy(): void {
-    if (this._chart) {
-      this._chart.removeAllListeners('plotly_hover');
-      this._chart.removeAllListeners('plotly_unhover');
-      this._chart.removeAllListeners('plotly_relayout');
-      Plotly.purge(this._chart);
-    }
-  }
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -160,6 +131,14 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     }
   }
 
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
+    this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
+  }
+
   update(options: Param, refresh: boolean): void {
     this._options = ChartLib.mergeDeep(this._options, options) as Param;
     this.drawChart();
@@ -169,7 +148,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     this.LOG.debug(['updateBounds'], min, max, this._options);
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
-    if (!!this._chart) {
+    if (!!this.graph) {
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         this.layout.xaxis.range = [min, max];
       } else {
@@ -178,14 +157,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
           moment.tz(max, this._options.timeZone).toISOString(true)
         ];
       }
-      Plotly.relayout(this.graph.nativeElement, {
-        'xaxis.range': this.layout.xaxis.range
-      });
     }
   }
 
   drawChart(reparseNewData: boolean = false) {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
@@ -194,7 +170,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.displayExpander = (this.plotlyData.length > 1);
-    const calculatedHeight = (this.expanded ? 40 * this.plotlyData.length : 40) + this.layout.margin.t;
+    const calculatedHeight = (this.expanded ? this.lineHeight * this.plotlyData.length : this.lineHeight)
+      + this.layout.margin.t + this.layout.margin.b;
     this.height = calculatedHeight;
     this.LOG.debug(['drawChart', 'height'], this.height, this.plotlyData.length, calculatedHeight);
     this.layout.yaxis.range = [0, this.expanded ? this.plotlyData.length : 1];
@@ -205,47 +182,48 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
     if (this.standalone) {
       this.plotlyConfig.scrollZoom = true;
     }
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this.loading = false;
-      this._chart = plot;
-      this.chartDraw.emit();
-      this._chart.on('plotly_hover', (data: any) => {
-        this.LOG.debug(['plotly_hover'], data);
-        const tooltip = this.toolTip.nativeElement;
-        this.pointHover.emit({
-          x: data.event.offsetX,
-          y: data.event.offsetY
-        });
-        const layout = this.graph.nativeElement.getBoundingClientRect();
-        tooltip.style.opacity = '1';
-        tooltip.style.display = 'block';
-        const lineHeight = (this.height - this.layout.margin.t) / (this.expanded ? this.plotlyData.length : 1);
-        tooltip.style.top =
-          ((this.expanded ? this.plotlyData.length - Math.floor(data.points[0].y + 0.5) + 1 : 1) *
-            lineHeight - lineHeight / 2 - 10 + this.layout.margin.t) + 'px';
-        tooltip.classList.remove('right', 'left');
-        this.LOG.debug(['tooltip'], data);
-        this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
-          ? data.xvals[0]
-          : (moment(data.xvals[0]).utc().toISOString() || '')
-            .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
-        tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
+  }
+
+  hover(data: any) {
+    this.LOG.debug(['plotly_hover'], data);
+    const tooltip = this.toolTip.nativeElement;
+    this.pointHover.emit({
+      x: data.event.offsetX,
+      y: data.event.offsetY
+    });
+    const layout = this.graph.plotlyInstance.getBoundingClientRect();
+    tooltip.style.opacity = '1';
+    tooltip.style.display = 'block';
+    tooltip.style.top = (
+      (this.expanded ? data.points[0].y + 0.5 : 0) * -1 * this.lineHeight + this.layout.margin.t + data.points[0].y + 0.5
+    ) + 'px';
+    tooltip.classList.remove('right', 'left');
+    this.LOG.debug(['tooltip'], data);
+    this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
+      ? data.xvals[0]
+      : (moment(data.xvals[0]).utc().toISOString() || '')
+        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
+    tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
         <span>${GTSLib.formatLabel(data.points[0].data.name)}: </span>
         <span class="value">${data.yvals[0]}</span>
       </div>`;
-        if (data.event.offsetX > layout.width / 2) {
-          tooltip.classList.add('left');
-        } else {
-          tooltip.classList.add('right');
-        }
-        tooltip.style.pointerEvents = 'none';
-        return;
-      });
-      this._chart.on('plotly_unhover', () => {
-        this.toolTip.nativeElement.style.display = 'none';
-      });
-    });
+    if (data.event.offsetX > layout.width / 2) {
+      tooltip.classList.add('left');
+    } else {
+      tooltip.classList.add('right');
+    }
+    tooltip.style.pointerEvents = 'none';
   }
+
+  unhover() {
+    this.toolTip.nativeElement.style.display = 'none';
+  }
+
+  afterPlot() {
+    this.loading = false;
+    this.chartDraw.emit();
+  }
+
 
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
@@ -299,7 +277,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent implements On
           if (ts > this.maxTick) {
             this.maxTick = ts;
           }
-          (series.y as any[]).push((this.expanded ? i : 0) + 0.5);
+          (series.y as any[]).push((this.expanded ? i * -1 : 0) - 0.5);
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             (series.x as any[]).push(ts);
           } else {

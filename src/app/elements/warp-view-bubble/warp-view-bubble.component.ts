@@ -15,23 +15,13 @@
  *
  */
 
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
-import Plotly from 'plotly.js';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-bubble',
@@ -39,11 +29,7 @@ import Plotly from 'plotly.js';
   styleUrls: ['./warp-view-bubble.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit, OnDestroy {
-
-  @ViewChild('graph', { static: true }) graph: ElementRef;
-  @ViewChild('toolTip', { static: true }) toolTip: ElementRef;
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
+export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit {
 
   protected layout: Partial<any> = {
     showlegend: false,
@@ -51,28 +37,16 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     yaxis: {},
   };
 
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewBubbleComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width
-        });
-      }
-    });
   }
 
   ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    if (this._chart) {
-      Plotly.purge(this._chart);
-    }
+    this.drawChart();
   }
 
   update(options: Param): void {
@@ -80,7 +54,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
   }
 
   private drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.plotlyConfig.scrollZoom = true;
@@ -125,11 +99,11 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this._chart = plot;
-      this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
-      this.chartDraw.emit();
-      this.loading = false;
-    });
+    /*    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
+          this._chart = plot;
+          this.manageTooltip(this.toolTip.nativeElement, this.graph.nativeElement);
+          this.chartDraw.emit();
+          this.loading = false;
+        });*/
   }
 }

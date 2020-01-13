@@ -15,15 +15,14 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {DataModel} from '../../model/dataModel';
 import gauge from 'canvas-gauges';
 import {ColorLib} from '../../utils/color-lib';
-import {SizeService} from '../../services/resize.service';
 import deepEqual from 'deep-equal';
-import Plotly from 'plotly.js';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 @Component({
   selector: 'warpview-gauge',
@@ -31,43 +30,26 @@ import Plotly from 'plotly.js';
   styleUrls: ['./warp-view-gauge.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit, OnDestroy {
-  @ViewChild('graph', { static: true }) graph: ElementRef;
-
+export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit {
   @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
   }
 
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
-
   private CHART_MARGIN = 0.05;
   // tslint:disable-next-line:variable-name
   private _type = 'gauge'; // gauge or bullet
 
-  constructor(private el: ElementRef, private sizeService: SizeService) {
-    super();
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewGaugeComponent, this._debug);
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this._chart) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        Plotly.relayout(this.graph.nativeElement, {
-          height: this.layout.height,
-          width: this.layout.width
-        });
-      }
-    });
   }
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
-  }
-
-  ngOnDestroy() {
-    if (this._chart) {
-      Plotly.purge(this._chart);
-    }
   }
 
   update(options, refresh): void {
@@ -96,7 +78,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
   }
 
   drawChart() {
-    if (!this.initiChart(this.el)) {
+    if (!this.initChart(this.el)) {
       return;
     }
     this.LOG.debug(['drawChart', 'plotlyData'], this.plotlyData, this._type);
@@ -112,11 +94,11 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit,
       };
       this.layout.grid = {rows: this.plotlyData.length, columns: 1, pattern: 'independent'};
     }
-    Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-      this.loading = false;
-      this._chart = plot;
-      this.chartDraw.emit();
-    });
+    /*  Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
+        this.loading = false;
+        this._chart = plot;
+        this.chartDraw.emit();
+      });*/
   }
 
   protected convert(data: DataModel): any[] {

@@ -15,20 +15,8 @@
  *
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
-import {Logger} from '../../utils/logger';
 import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.component';
 import {Param} from '../../model/param';
 import {WarpViewChartComponent} from '../warp-view-chart/warp-view-chart.component';
@@ -41,6 +29,8 @@ import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {DataModel} from '../../model/dataModel';
 import deepEqual from 'deep-equal';
+import {SizeService} from '../../services/resize.service';
+import {Logger} from '../../utils/logger';
 
 /**
  *
@@ -53,7 +43,6 @@ import deepEqual from 'deep-equal';
 })
 export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('graph', {static: false}) graph: ElementRef;
   @ViewChild('mainPlotDiv', {static: true}) mainPlotDiv: ElementRef;
   @ViewChild('timeClip', {static: true}) timeClip: WarpViewModalComponent;
   @ViewChild('modal', {static: true}) modal: WarpViewModalComponent;
@@ -88,8 +77,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @Input('isAlone') isAlone = false;
   @Input('initialChartHeight') initialChartHeight = '400';
   @Input('initialMapHeight') initialMapHeight = '500';
-
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
   _options: Param = {
     ...new Param(), ...{
@@ -248,8 +235,12 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  constructor() {
-    super();
+
+  constructor(
+    protected el: ElementRef,
+    protected sizeService: SizeService,
+  ) {
+    super(el, sizeService);
     this.LOG = new Logger(WarpViewPlotComponent, this._debug);
   }
 

@@ -225,7 +225,7 @@ export class ColorLib {
     ] : null;
   }
 
-  static transparentize(color, alpha = 0.7): string {
+  static transparentize(color, alpha = 0.5): string {
     return 'rgba(' + ColorLib.hexToRgb(color).concat(alpha).join(',') + ')';
   }
 
