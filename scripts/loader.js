@@ -17,15 +17,15 @@
 
 window.addEventListener('load', function() {
   console.log(scriptPath());
-  const es5 = document.createElement('script');
-  es5.src = scriptPath() + '/warpview-elements.js';
-  es5.setAttribute('nomodule', 'true');
-  es5.setAttribute('defer', 'true');
-  document.body.appendChild(es5);
+  const script = document.createElement('script');
+  script.src = scriptPath() + '/warpview-elements.js';
+  script.setAttribute('nomodule', 'true');
+  script.setAttribute('defer', 'true');
+  document.body.appendChild(script);
 
   const css = document.createElement('link');
   css.setAttribute('rel', 'stylesheet');
-  css.setAttribute('href', scriptPath() + '/warpview-styles.css');
+  css.setAttribute('href', scriptPath() + '/warpview-elements.css');
   document.head.appendChild(css);
 
 });

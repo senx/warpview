@@ -18,9 +18,9 @@
 
 :host {
   opacity: 0;
-  width: var(--warp-view-tile-width);
-  max-height: var(--warp-view-tile-height);
- // overflow: auto;
+  width: var(--warp-view-tile-width, 100%);
+  max-height: var(--warp-view-tile-height, 100%);
+  overflow: auto;
 
   .wrapper {
     opacity: 1;

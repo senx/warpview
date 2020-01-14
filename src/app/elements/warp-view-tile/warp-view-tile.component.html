@@ -82,6 +82,7 @@
 
       <warpview-annotation [debug]="debug" [unit]="unit" [options]="_options"
                            [showLegend]="showLegend" [data]="gtsList"
+                           [standalone]="true"
                            *ngIf="graphs['annotation'].indexOf(type) > -1 && gtsList"
                            [responsive]="true"></warpview-annotation>
 

@@ -19,23 +19,15 @@ const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
   await fs.ensureDir('elements');
-  const es2015 = [
-    './dist/elements/runtime-es2015.js',
-    './dist/elements/polyfills-es2015.js',
-    './dist/elements/main-es2015.js',
+  const files = [
+    './dist/elements/runtime.js',
+    './dist/elements/polyfills.js',
+    './dist/elements/scripts.js',
+    './dist/elements/main.js',
+    './scripts/loader.js'
   ];
-  const es5 = [
-    './dist/elements/runtime-es5.js',
-    './dist/elements/polyfills-es5.js',
-    './dist/elements/main-es5.js',
-  ];
-  await concat(es2015, 'elements/warpview-editor-es2015.js');
-  await concat(es5, 'elements/warpview-editor-es5.js');
-  await concat([
-    './scripts/loader.js',
-    './dist/elements/scripts.js'
-  ], 'elements/warpview-editor.js');
-  await fs.copyFile('./dist/elements/styles.css', 'elements/warpview-editor.css');
+  await concat( files, 'elements/warpview-elements.js');
+  await fs.copyFile('./dist/elements/styles.css', 'elements/warpview-elements.css');
   try {
     await fs.copy('./dist/elements/assets/', 'elements/assets/')
   } catch (e) {

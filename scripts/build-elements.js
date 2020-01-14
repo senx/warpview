@@ -21,7 +21,6 @@ const concat = require('concat');
   const files = [
     './dist/elements/runtime.js',
     './dist/elements/polyfills.js',
-    './dist/elements/es2015-polyfills.js',
     './dist/elements/scripts.js',
     './dist/elements/main.js',
     './scripts/loader.js'
