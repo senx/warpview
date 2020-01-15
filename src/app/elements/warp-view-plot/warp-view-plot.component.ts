@@ -108,7 +108,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   // if one of this key is pressed, default action is prevented.
   private preventDefaultKeyList: string[] = ['Escape', '/'];
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
-  private gtsList: DataModel | GTS[] | string;
+  gtsList: DataModel | GTS[] | string;
 
   @HostListener('keydown', ['$event'])
   handleKeydown(ev: KeyboardEvent) {
