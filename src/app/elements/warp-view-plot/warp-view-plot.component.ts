@@ -111,15 +111,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private gtsList: DataModel | GTS[] | string;
 
   @HostListener('document:keydown', ['$event'])
-  @HostListener('keydown', ['$event'])
   handleKeydown(ev: KeyboardEvent) {
     this.LOG.debug(['handleKeydown'], ev);
     if (!this.isAlone) {
-      this.handleKeyDown(ev).then(() => {
+      this.handleKeyPress(ev).then(() => {
         // empty
       });
     }
   }
+
 
   stateChange(event: any) {
     this.LOG.debug(['stateChange'], event);
@@ -179,8 +179,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       }
     }
     this.LOG.debug(['warpViewSelectedGTS', 'this._toHide'], this._toHide);
- //   this.drawChart();
-    this._toHide = [... this._toHide];
+    setTimeout(() => {
+      this._toHide = [...this._toHide];
+    }, 0);
   }
 
   private handleMouseMove(evt: MouseEvent) {
@@ -335,8 +336,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     } // prevent stealing focus of the timezone selector.
   }
 
-  private async handleKeyDown(ev: KeyboardEvent) {
-    this.LOG.debug(['document:keydown'], ev);
+  private async handleKeyPress(ev: KeyboardEvent) {
+    this.LOG.debug(['handleKeyPress'], ev);
     if (this.preventDefaultKeyList.indexOf(ev.key) >= 0) {
       ev.preventDefault();
     }
@@ -355,7 +356,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
           `${moment.tz(tc.msmax, this._options.timeZone).toLocaleString()}<br/>` +
           `${this._options.timeUnit !== 'us' ? '// (for a ' + this._options.timeUnit + ' platform)<br/>' : ''}` +
           `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
-        this.LOG.debug(['handleKeyUp', 't'], this.timeClipValue);
         this.timeClip.open();
       });
     } else if (ev.key === 'b' || ev.key === 'B') { // browse among all gts
@@ -374,9 +374,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         }
       }
       this._toHide = this.gtsIdList.filter(v => v !== this.gtsIdList[this.gtsBrowserIndex]); // hide all but one
+    } else if (ev.key === 'n') {
+      this._toHide = [...this.gtsIdList];
+      return false;
+    } else if (ev.key === 'a') {
+      this._toHide = [];
     } else {
       this.pushKbdEvent(ev.key);
     }
+    this.LOG.debug(['handleKeyPress', 'this.gtsIdList'], this._toHide, this.gtsBrowserIndex);
   }
 
   applyFilter() {

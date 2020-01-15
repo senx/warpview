@@ -15,7 +15,18 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {GTS} from '../../../model/GTS';
 import {Logger} from '../../../utils/logger';
 import {GTSLib} from '../../../utils/gts.lib';
@@ -33,7 +44,7 @@ import {Param} from '../../../model/param';
 })
 export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('chip', { static: false }) chip: ElementRef;
+  @ViewChild('chip', {static: false}) chip: ElementRef;
 
   @Input('name') name: string;
   @Input('node') node: any;
@@ -103,15 +114,27 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     gts: GTS,
   };
 
-  /**
-   *
-   */
+  constructor() {
+    this.LOG = new Logger(WarpViewChipComponent, this.debug);
+  }
+
+  ngOnInit(): void {
+    this._node = {...this.node, selected: this.hiddenData.indexOf(this.node.gts.id) === -1};
+  }
+
+  ngAfterViewInit() {
+    if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+      || this.hiddenData.indexOf(this._node.gts.id) > -1) {
+      this.setState(false);
+    }
+    this.colorizeChip();
+  }
+
   private colorizeChip() {
     if (this.chip) {
       if (this._node.selected && this.chip.nativeElement) {
         this.chip.nativeElement.style.setProperty('background-color',
           ColorLib.transparentize(ColorLib.getColor(this._node.gts.id, this.options.scheme)));
-        // FIXME TypeError: Cannot read property 'style' of undefined
         this.chip.nativeElement.style.setProperty('border-color',
           ColorLib.getColor(this._node.gts.id, this.options.scheme));
       } else {
@@ -119,31 +142,6 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
       }
       this.refreshCounter++;
     }
-  }
-
-  /**
-   *
-   */
-  constructor() {
-    this.LOG = new Logger(WarpViewChipComponent, this.debug);
-  }
-
-  /**
-   *
-   */
-  ngOnInit(): void {
-    this._node = {...this.node, selected: this.hiddenData.indexOf(this.node.gts.id) === -1};
-  }
-
-  /**
-   *
-   */
-  ngAfterViewInit() {
-    if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
-      || this.hiddenData.indexOf(this._node.gts.id) > -1) {
-      this.setState(false);
-    }
-    this.colorizeChip();
   }
 
   private toArray(obj) {
