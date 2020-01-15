@@ -20,6 +20,9 @@ import {DataModel} from '../../model/dataModel';
 import {Logger} from '../../utils/logger';
 import {GTSLib} from '../../utils/gts.lib';
 import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.component';
+import {Param} from '../../model/param';
+import deepEqual from 'deep-equal';
+import {ChartLib} from '../../utils/chart-lib';
 
 /**
  *
@@ -31,10 +34,24 @@ import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.compone
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewGtsPopupComponent implements AfterViewInit {
-  @ViewChild('modal', { static: true }) modal: WarpViewModalComponent;
+  @ViewChild('modal', {static: true}) modal: WarpViewModalComponent;
+
+  @Input('options') set options(options: Param | string) {
+    this.LOG.debug(['onOptions'], options);
+    if (typeof options === 'string') {
+      options = JSON.parse(options);
+    }
+    if (!deepEqual(options, this._options)) {
+      this.LOG.debug(['options', 'changed'], options);
+      this._options = ChartLib.mergeDeep(this._options, options as Param) as Param;
+      this.prepareData();
+    }
+  }
 
   @Input('gtsList') set gtsList(gtsList: DataModel) {
     this._gtsList = gtsList;
+    this.LOG.debug(['_gtsList'], this._gtsList);
+
     this.prepareData();
   }
 
@@ -113,6 +130,7 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   current = 0;
   // tslint:disable-next-line:variable-name
   _gts: any[] = [];
+  _options: Param = new Param();
 
   // tslint:disable-next-line:variable-name
   private _kbdLastKeyPressed: string[] = [];
@@ -157,8 +175,8 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   }
 
   private prepareData() {
-    if (this.gtsList && this.gtsList.data) {
-      this._gts = GTSLib.flatDeep([this.gtsList.data]);
+    if (this._gtsList && this._gtsList.data) {
+      this._gts = GTSLib.flatDeep([this._gtsList.data]);
       this.displayed = this._gts.slice(
         Math.max(0, Math.min(this.current - this.maxToShow, this._gts.length - 2 * this.maxToShow)),
         Math.min(this._gts.length, this.current + this.maxToShow + Math.abs(Math.min(this.current - this.maxToShow, 0)))

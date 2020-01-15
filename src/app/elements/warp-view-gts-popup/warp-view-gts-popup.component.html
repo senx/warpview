@@ -25,7 +25,7 @@
     <li *ngFor="let g of _gts; index as index"
         [ngClass]="{ selected: current == index, hidden: isHidden(g.id) }"
     >
-      <warpview-chip [node]="{gts: g}" [name]="g.c.toString()" [hiddenData]="hiddenData"></warpview-chip>
+      <warpview-chip [node]="{gts: g}" [name]="g.c.toString()" [hiddenData]="hiddenData" [options]="_options"></warpview-chip>
     </li>
   </ul>
   <div class="down-arrow" *ngIf="current < _gts.length - 1"></div>

@@ -33,6 +33,12 @@
             type="button">
     </button>
   </warpview-modal>
+  <warpview-gts-popup [maxToShow]="5" [hiddenData]="_toHide" [gtsList]="gtsList"
+                      [kbdLastKeyPressed]="kbdLastKeyPressed"
+                      [options]="_options" [debug]="debug"
+                      (warpViewModalClose)="onWarpViewModalClose()"
+                      (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
+                      #gtsPopupModal></warpview-gts-popup>
   <div class="inline" *ngIf="_options.showControls">
     <warpview-toggle id="timeSwitch" text1="Date" text2="Timestamp"
                      (stateChange)="stateChange($event)"
@@ -72,11 +78,6 @@
     </div>
     <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="debug"
                      (resize)="resizeChart($event)">
-      <warpview-gts-popup [maxToShow]="5" [hiddenData]="_toHide" [gtsList]="gtsList"
-                          [kbdLastKeyPressed]="kbdLastKeyPressed"
-                          (warpViewModalClose)="onWarpViewModalClose()"
-                          (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
-                          #gtsPopupModal></warpview-gts-popup>
       <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
                       (boundsDidChange)="boundsDidChange($event)"
                       #chart [debug]="debug" [hiddenData]="_toHide" [type]="_type" [options]="_options"

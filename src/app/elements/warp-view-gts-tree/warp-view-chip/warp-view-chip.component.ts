@@ -48,7 +48,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
   @Input('name') name: string;
   @Input('node') node: any;
-  @Input('options') options: Param;
+  @Input('options') options: Param = new Param();
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
