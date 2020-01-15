@@ -18,6 +18,6 @@
 export class ChartBounds {
   tsmin = 0;
   tsmax = 0;
-  msmin = 0;
-  msmax = 0;
+  msmin = '';
+  msmax = '';
 }

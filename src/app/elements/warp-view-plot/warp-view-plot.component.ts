@@ -110,7 +110,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
   private gtsList: DataModel | GTS[] | string;
 
-  @HostListener('document:keydown', ['$event'])
+  @HostListener('keydown', ['$event'])
   handleKeydown(ev: KeyboardEvent) {
     this.LOG.debug(['handleKeydown'], ev);
     if (!this.isAlone) {
