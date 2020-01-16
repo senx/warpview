@@ -47,7 +47,7 @@
     "build:lib": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "build-lib": "ng build warpview-lib",
+    "build-lib": "ng build warpview-lib --prod",
     "nvm": "nvm install 10.16.0"
   },
   "private": false,
