@@ -63,7 +63,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   private _type = 'line';
   private visibility: boolean[] = [];
 
-  protected layout: Partial<any> = {
+  layout: Partial<any> = {
     showlegend: false,
     autosize: true,
     xaxis: {

@@ -24,7 +24,7 @@
         [value]="minTimeValue / divider"
         [step]="_options.map.timeSliderStep" [mode]="_options.map.timeSliderMode"
         (change)="onSliderChange($event)"
-        [debug]="_debug"
+        [debug]="debug"
       ></warpview-slider>
     </div>
     <div *ngIf="_options.map.showTimeSlider && _options.map.showTimeRange" #timeRangeSlider>
@@ -43,14 +43,14 @@
         [minValue]="minTimeValue / divider"
         [maxValue]="maxTimeValue / divider"
         [mode]="_options.map.timeSliderMode"
-        [debug]="_debug"
+        [debug]="debug"
         (change)="onRangeSliderWindowChange($event)"
       ></warpview-range-slider>
       <warpview-slider *ngIf="_options.map.timeSpan && lowerTimeBound"
                        [min]="lowerTimeBound" [max]="upperTimeBound"
                        [step]="(this.timeSpan || this._options.map.timeSpan) / divider"
                        [mode]="_options.map.timeSliderMode"
-                       [debug]="_debug"
+                       [debug]="debug"
                        (change)="onSliderChange($event)"
       ></warpview-slider>
       <div *ngIf="_options.map?.timeSpan">

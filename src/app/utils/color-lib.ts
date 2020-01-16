@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-
+// @dynamic
 export class ColorLib {
   static color = {
     COHESIVE: [

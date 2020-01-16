@@ -144,7 +144,7 @@ export class WarpViewSliderComponent implements AfterViewInit {
     this.slider.nativeElement['noUiSlider'].updateOptions(opts);
   }
 
-  protected format(value: number) {
+  format(value: number) {
     if (this.mode !== 'timestamp') {
       return moment(value).utc(true).format('YYYY/MM/DD hh:mm:ss');
     } else {

@@ -20,7 +20,6 @@ import {CommonModule} from '@angular/common';
 import {WarpViewChartComponent} from './warp-view-chart/warp-view-chart.component';
 import {WarpViewTileComponent} from './warp-view-tile/warp-view-tile.component';
 import {WarpViewSpinnerComponent} from './warp-view-spinner/warp-view-spinner.component';
-import {BrowserModule} from '@angular/platform-browser';
 import {createCustomElement} from '@angular/elements';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpErrorHandler} from '../services/http-error-handler.service';
@@ -52,10 +51,11 @@ import {WarpViewRangeSliderComponent} from './warp-view-range-slider/warp-view-r
 import {FormsModule} from '@angular/forms';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {SizeService} from '../services/resize.service';
-import { WarpViewSpectrumComponent } from './warp-view-spectrum/warp-view-spectrum.component';
+import {WarpViewSpectrumComponent} from './warp-view-spectrum/warp-view-spectrum.component';
 
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
+import {PlotlyModule} from 'angular-plotly.js';
+
 PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -92,7 +92,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     HttpClientModule,
     AngularResizedEventModule,
     FormsModule,

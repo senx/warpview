@@ -18,7 +18,7 @@
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {Logger} from './logger';
-
+// @dynamic
 export class GTSLib {
   private static LOG: Logger = new Logger(GTSLib);
 

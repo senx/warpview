@@ -111,8 +111,8 @@ export abstract class WarpViewComponent {
   private _unit = '';
   protected _data: DataModel;
   loading = true;
-  protected layout: Partial<any> = {};
-  protected plotlyConfig: Partial<Config> = {
+  layout: Partial<any> = {};
+  plotlyConfig: Partial<Config> = {
     responsive: this.responsive,
     showAxisDragHandles: true,
     scrollZoom: false,
@@ -226,16 +226,16 @@ export abstract class WarpViewComponent {
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
-  protected afterPlot() {
+  afterPlot() {
     this.chartDraw.emit();
     this.loading = false;
   }
 
-  protected unhover() {
+  unhover() {
     this.toolTip.nativeElement.style.display = 'none';
   }
 
-  protected hover(data: any) {
+  hover(data: any) {
     this.LOG.debug(['plotly_hover'], data);
     this.toolTip.nativeElement.style.display = 'block';
     this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
@@ -247,7 +247,7 @@ export abstract class WarpViewComponent {
     this.toolTip.nativeElement.style.top = (data.event.offsetY + 20) + 'px';
   }
 
-  protected relayout($event: any) {
+  relayout($event: any) {
 
   }
 

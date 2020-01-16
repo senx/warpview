@@ -31,6 +31,7 @@
               "src/styles.scss"
             ],
             "scripts": [
+              "node_modules/plotly.js/dist/plotly.min.js",
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
@@ -141,8 +142,8 @@
       }
     },
     "warpview-lib": {
-      "root": "",
-      "sourceRoot": "src",
+      "root": "src/app/elements",
+      "sourceRoot": "src/app/elements",
       "projectType": "library",
       "prefix": "warpview",
       "schematics": {
@@ -152,105 +153,22 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "outputPath": "dist/warpview-ng",
-            "index": "src/elements-index.html",
-            "main": "src/elements.main.ts",
-            "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.elements-ng.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/app/styles/vars.scss",
-              "src/styles.scss"
-            ],
-            "scripts": [
-              "node_modules/plotly.js/dist/plotly.min.js",
-              {
-                "input": "node_modules/document-register-element/build/document-register-element.js"
-              }
-            ],
-            "es5BrowserSupport": true
+            "project": "ng-package.json"
           },
           "configurations": {
             "production": {
+              "project": "ng-package.prod.json",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "20mb",
-                  "maximumError": "50mb"
-                }
               ]
             }
           }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "warpview:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "warpview:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "warpview:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "deploy": {
-          "builder": "angular-cli-ghpages:deploy",
-          "options": {}
         }
       }
     },
@@ -389,5 +307,8 @@
       }
     }
   },
-  "defaultProject": "warpview"
+  "defaultProject": "warpview",
+  "cli": {
+    "packageManager": "yarn"
+  }
 }

@@ -53,7 +53,7 @@ export class WarpViewTreeViewComponent implements OnInit {
   @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
-  private hide: any = {};
+  hide: any = {};
   private LOG: Logger;
   private _debug = false;
   private _hiddenData: number[] = [];

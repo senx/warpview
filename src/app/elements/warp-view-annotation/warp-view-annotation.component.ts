@@ -75,7 +75,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   private visibleGtsId = [];
   private dataHashset = {};
   private lineHeight = 30;
-  protected layout: Partial<Plotly.Layout> = {
+  layout: Partial<Plotly.Layout> = {
     showlegend: false,
     hovermode: 'closest',
     xaxis: {
@@ -326,7 +326,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     return dataset;
   }
 
-  private toggle() {
+  toggle() {
     this.expanded = !this.expanded;
     this.drawChart();
   }

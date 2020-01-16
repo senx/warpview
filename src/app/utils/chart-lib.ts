@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-
+// @dynamic
 export class ChartLib {
 
   static DEFAULT_WIDTH = 640;

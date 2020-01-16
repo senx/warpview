@@ -98,7 +98,7 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     this.LOG.debug(['drawChart', 'this.data', 'this.toDisplay'], this.data, this.toDisplay);
   }
 
-  private getStyle() {
+  getStyle() {
     this.LOG.debug(['getStyle'], this._options);
     if (!this._options) {
       return {};

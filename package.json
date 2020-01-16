@@ -47,10 +47,13 @@
     "build:lib": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
+    "build-lib": "ng build warpview-lib",
     "nvm": "nvm install 10.16.0"
   },
   "private": false,
-  "dependencies": {
+
+  "dependencies": {},
+  "devDependencies": {
     "@angular/animations": "~8.2.9",
     "@angular/common": "~8.2.9",
     "@angular/compiler": "~8.2.9",
@@ -80,10 +83,9 @@
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
-    "zone.js": "~0.9.1"
-  },
-  "devDependencies": {
+    "zone.js": "~0.9.1",
     "@angular-devkit/build-angular": "~0.803.9",
+    "@angular-devkit/build-ng-packagr": "0.803.23",
     "@angular/cli": "~8.3.9",
     "@angular/compiler-cli": "~8.2.9",
     "@angular/language-service": "~8.2.9",
@@ -113,6 +115,8 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typedoc": "^0.15.0",
+    "ng-packagr": "5.7.1",
+    "tsickle": "0.35.0",
     "typescript": "~3.5.3"
   }
 }
