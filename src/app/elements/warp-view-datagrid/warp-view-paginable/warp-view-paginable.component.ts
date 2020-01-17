@@ -77,34 +77,25 @@ export class WarpViewPaginableComponent implements OnInit {
     }
   };
 
-  private formatDate(date: number): string {
+  formatDate(date: number): string {
     return this._options.timeMode === 'date' ? moment.utc(date / 1000).toISOString() : date.toString();
   }
 
-  private goto(page: number) {
+  goto(page: number) {
     this.page = page;
     this.drawGridData();
   }
 
-  /**
-   *
-   */
-  private next() {
+  next() {
     this.page = Math.min(this.page + 1, this._data.values.length - 1);
     this.drawGridData();
   }
 
-  /**
-   *
-   */
-  private prev() {
+  prev() {
     this.page = Math.max(this.page - 1, 0);
     this.drawGridData();
   }
 
-  /**
-   *
-   */
   private drawGridData() {
     this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
     this.LOG.debug(['drawGridData', '_options'], this._options);
@@ -122,7 +113,7 @@ export class WarpViewPaginableComponent implements OnInit {
     this.LOG.debug(['drawGridData', '_data'], this._data);
   }
 
-  private decodeURIComponent(str: string): string {
+  decodeURIComponent(str: string): string {
     return decodeURIComponent(str);
   }
 

@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "./dist/warpview-ng",
+  "lib": {
+    "cssUrl": "inline",
+    "entryFile": "test-lib.ts",
+    "styleIncludePaths": ["src/styles.scss"]
+  }
+}

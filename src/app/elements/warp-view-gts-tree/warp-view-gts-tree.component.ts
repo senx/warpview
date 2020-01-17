@@ -48,7 +48,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private _gtsFilter = 'x';
-  private gtsList: any[] = [];
+  gtsList: any[] = [];
 
   expand = true;
 

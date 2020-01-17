@@ -33,7 +33,7 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
 
-  protected layout: Partial<any> = {
+  layout: Partial<any> = {
     showlegend: false,
     xaxis: {},
     yaxis: {

@@ -100,7 +100,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private mouseOutTimer: number;
   private kbdCounter = 0;
   private gtsFilterCount = 0;
-  private gtsIdList: number[] = [];
+  gtsIdList: number[] = [];
   private gtsBrowserIndex = -1;
   private _gtsFilter = 'x';
   private _type = 'line';
@@ -184,7 +184,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }, 0);
   }
 
-  private handleMouseMove(evt: MouseEvent) {
+  handleMouseMove(evt: MouseEvent) {
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);
       delete this.mouseOutTimer;
@@ -197,7 +197,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  private handleMouseOut(evt: MouseEvent) {
+  handleMouseOut(evt: MouseEvent) {
     this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 100) + 'px';
     if (this.mouseOutTimer) {
       window.clearTimeout(this.mouseOutTimer);

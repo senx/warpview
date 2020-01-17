@@ -16,7 +16,7 @@
   -->
 
 <div>
-  <div class="heading" [innerHTML]="formatLabel(this._data.name)"></div>
+  <div class="heading" [innerHTML]="formatLabel(_data.name)"></div>
   <table>
     <thead>
     <th *ngFor="let h of _data.headers">{{h}}</th>

@@ -39,7 +39,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     this.drawChart();
   }
 
-  protected layout: Partial<any> = {
+  layout: Partial<any> = {
     showlegend: false,
     xaxis: {},
     yaxis: {},

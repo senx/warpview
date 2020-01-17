@@ -144,7 +144,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private toArray(obj) {
+  toArray(obj) {
     if (obj === undefined) {
       return [];
     }

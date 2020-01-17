@@ -36,7 +36,7 @@ import {Logger} from '../../utils/logger';
  *
  */
 export class WarpViewPolarComponent extends WarpViewComponent implements OnInit {
-  protected layout: Partial<any> = {
+  layout: Partial<any> = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     showlegend: true,
     legend: {orientation: 'h'},
