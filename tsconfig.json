@@ -16,7 +16,16 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "baseUrl": "/",
+    "paths": {
+      "warpview-ng": [
+        "dist/warpview-ng"
+      ],
+      "warpview-ng/*": [
+        "dist/warpview-ng/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules"

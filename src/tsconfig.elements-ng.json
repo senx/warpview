@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./warpview-ng",
-    "outDir": "../dist/warpview-ng",
+    "baseUrl": ".",
+    "outDir": "../dist",
+    "rootDir": "../projects/warpview-ng/src",
     "target": "es2015",
     "module": "esnext",
     "moduleResolution": "node",

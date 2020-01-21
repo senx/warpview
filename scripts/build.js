@@ -18,7 +18,7 @@
 const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
-  await fs.ensureDir('elements');
+ // await fs.ensureDir('elements');
   const files = [
     './dist/elements/runtime.js',
     './dist/elements/polyfills.js',
@@ -26,11 +26,11 @@ const concat = require('concat');
     './dist/elements/main.js',
     './scripts/loader.js'
   ];
-  await concat( files, 'elements/warpview-elements.js');
-  await fs.copyFile('./dist/elements/styles.css', 'elements/warpview-elements.css');
-  try {
-    await fs.copy('./dist/elements/assets/', 'elements/assets/')
+  await concat( files, './dist/elements/warpview-elements.js');
+  await fs.copyFile('./dist/elements/styles.css', './dist/elements/warpview-elements.css');
+ /* try {
+    await fs.copy('./dist/elements/assets/', './dist/elements/assets/')
   } catch (e) {
     // nothing
-  }
+  }*/
 })();

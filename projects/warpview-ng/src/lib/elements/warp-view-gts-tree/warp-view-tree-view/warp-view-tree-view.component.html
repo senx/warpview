@@ -1,0 +1,53 @@
+<!--
+  ~  Copyright 2020  SenX S.A.S.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<div class="list">
+  <ul *ngIf="gtsList">
+    <li *ngFor="let gts of gtsList; index as index; first as first">
+      <warpview-chip
+        *ngIf="isGts(gts)"
+        [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
+        [node]="{gts: gts}" [name]="gts.c" [gtsFilter]="gtsFilter" [debug]="debug" [hiddenData]="hiddenData"
+        [kbdLastKeyPressed]="kbdLastKeyPressed"></warpview-chip>
+      <span *ngIf="!isGts(gts)">
+        <span *ngIf="gts">
+          <span *ngIf="branch">
+            <span>
+            <span [ngClass]="{expanded:  hide[index + ''], collapsed: !hide[index + '']}"
+                  (click)="toggleVisibility(index)" [id]="'span-' + index"> </span>
+                    <small (click)="toggleVisibility(index)"> List of {{gts.length}}
+                      item{{gts.length > 1 ? 's' : ''}}</small>
+           </span>
+          </span>
+          <span *ngIf="!branch">
+            <span class="stack-level">
+              <span [ngClass]="{expanded: hide[index + ''], collapsed: !hide[index + '']}"
+                    (click)="toggleVisibility(index)" [id]="'span-' + index"></span>
+              <span (click)="toggleVisibility(index)">{{first ? '[TOP]' : '[' + (index + 1) + ']'}}&nbsp;
+    <small [id]="'inner-' + index">List of {{gts.length}} item{{gts.length > 1 ? 's' : ''}}</small>
+              </span>
+                  </span>
+          </span>
+    <warpview-tree-view [gtsList]="gts" [branch]="true" *ngIf="isHidden(index)"
+                        [debug]="debug" [gtsFilter]="gtsFilter"
+                        [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
+                        [kbdLastKeyPressed]="kbdLastKeyPressed" [hiddenData]="hiddenData"></warpview-tree-view>
+        </span>
+      </span>
+    </li>
+  </ul>
+</div>

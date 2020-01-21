@@ -17,7 +17,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SettingsService} from '../../services/settings.service';
+import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
 
 @Component({
   selector: 'warpview-small-tests',

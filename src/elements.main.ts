@@ -18,7 +18,7 @@
 import {enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {WarpViewElementsModule} from './app/elements/warp-view-elements.module';
+import {WarpViewElementsModule} from '../projects/warpview-ng/src/lib/warp-view-elements.module';
 import {environment} from './environments/environment';
 
 if (environment.production) {

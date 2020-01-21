@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "../../out-tsc/lib",
+    "rootDir": "../projects/warpview-ng/src",
+    "target": "es2015",
+    "declaration": true,
+    "paths": {
+      "@angular/*": ["../node_modules/@angular/*"]
+    },
+    "preserveSymlinks": true,
+    "inlineSources": true,
+    "types": [],
+    "lib": [
+      "dom",
+      "es2018"
+    ]
+  },
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "enableResourceInlining": true
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts"
+  ]
+}

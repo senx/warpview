@@ -19,19 +19,16 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {WarpViewElementsModule} from './elements/warp-view-elements.module';
 import {GettingStartedComponent} from './demo/getting-started/getting-started.component';
 import {MenuComponent} from './demo/menu/menu.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {MainDemoComponent} from './demo/main-demo/main-demo.component';
-import {SettingsService} from './services/settings.service';
+import {SettingsService} from '../../projects/warpview-ng/src/lib/services/settings.service';
 import {SmallTestsComponent} from './demo/small-tests/small-tests.component';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {FormsModule} from '@angular/forms';
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
-PlotlyModule.plotlyjs = PlotlyJS;
+import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-view-angular.module';
 
 @NgModule({
   declarations: [
@@ -47,9 +44,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AngularResizedEventModule,
     AppRoutingModule,
     FormsModule,
-    PlotlyModule,
-
-     WarpViewElementsModule,
+    WarpViewAngularModule
   ],
   providers: [SettingsService],
   bootstrap: [AppComponent],

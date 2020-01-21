@@ -1,0 +1,22 @@
+{
+  "name": "warpview-ng",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular-resize-event": "^1.1.1",
+    "canvas-gauges": "^2.1.5",
+    "concat": "^1.0.3",
+    "d3": "^5.15.0",
+    "deep-equal": "^1.1.1",
+    "leaflet": "1.4.0",
+    "leaflet.heat": "^0.2.0",
+    "leaflet.markercluster": "^1.4.1",
+    "moment": "^2.24.0",
+    "nouislider": "^14.0.3",
+    "plotly.js": "^1.52.1",
+    "moment-timezone": "^0.5.27"
+  },
+  "peerDependencies": {
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14"
+  }
+}

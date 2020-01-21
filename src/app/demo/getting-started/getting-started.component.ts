@@ -17,7 +17,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import moment from 'moment';
-import {Logger} from '../../utils/logger';
+import {Logger} from '../../../../projects/warpview-ng/src/lib/utils/logger';
 
 @Component({
   selector: 'warpview-getting-started',

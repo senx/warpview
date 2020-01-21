@@ -23,10 +23,10 @@ window.addEventListener('load', function() {
   script.setAttribute('defer', 'true');
   document.body.appendChild(script);
 
-  const css = document.createElement('link');
+ /* const css = document.createElement('link');
   css.setAttribute('rel', 'stylesheet');
   css.setAttribute('href', scriptPath() + '/warpview-elements.css');
-  document.head.appendChild(css);
+  document.head.appendChild(css);*/
 
 });
 const scriptPath = function () {
