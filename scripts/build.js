@@ -27,7 +27,7 @@ const concat = require('concat');
     './scripts/loader.js'
   ];
   await concat( files, './dist/elements/warpview-elements.js');
-  await fs.copyFile('./dist/elements/styles.css', './dist/elements/warpview-elements.css');
+ // await fs.copyFile('./dist/elements/styles.css', './dist/elements/warpview-elements.css');
  /* try {
     await fs.copy('./dist/elements/assets/', './dist/elements/assets/')
   } catch (e) {

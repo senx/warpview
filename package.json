@@ -44,10 +44,10 @@
     "gen": "cd projects/warpview-ng/src/lib/elements/ && ng g component --module=elements.module.ts --entryComponent=true --skipTests=true --style=scss --viewEncapsulation=ShadowDom --export=true",
     "gh": "yarn copy && ng build --prod --base-href /warpview/ && npx ngh --dir=dist/warpview-editor --repo=git@github.com:senx/warpview.git",
     "build:elements": "ng build elements --prod && node scripts/build.js",
-    "build:lib": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
+    "build:lib2": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "build-lib": "ng build warpview-ng",
+    "build:lib": "ng build warpview-ng",
     "nvm": "nvm install 10.16.0"
   },
   "private": false,
