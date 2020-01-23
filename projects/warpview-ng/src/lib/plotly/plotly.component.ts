@@ -17,7 +17,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {Config, Data, Layout, newPlot, PlotData, PlotlyHTMLElement, Plots, purge, update} from 'plotly.js';
+import {Config, Data, Layout, newPlot, PlotlyHTMLElement, Plots, purge} from 'plotly.js';
+import {Logger} from '../utils/logger';
 
 export interface Figure {
   data: Data[];
@@ -33,6 +34,7 @@ export interface Figure {
 })
 export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   protected defaultClassName = 'js-plotly-plot';
+  protected LOG: Logger;
 
   public plotlyInstance: PlotlyHTMLElement;
   public resizeHandler?: (instance: PlotlyHTMLElement) => void;
@@ -101,6 +103,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     public iterableDiffers: IterableDiffers,
     public keyValueDiffers: KeyValueDiffers
   ) {
+    this.LOG = new Logger(PlotlyComponent, this.debug);
   }
 
   ngOnInit() {
@@ -122,29 +125,19 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    let shouldUpdate = false;
+    this.LOG.info(['ngOnChanges'], changes);
     const revision: SimpleChange = changes.revision;
-    if (revision && !revision.isFirstChange()) {
-      shouldUpdate = true;
+    if (changes.debug) {
+      this.debug = changes.debug.currentValue;
     }
-
-    const debug: SimpleChange = changes.debug;
-    if (debug && !debug.isFirstChange()) {
-      shouldUpdate = true;
-    }
-    const data: SimpleChange = changes.data;
-    if (data) {
-      shouldUpdate = true;
-    }
-
-    if (shouldUpdate) {
+    if ((revision && !revision.isFirstChange()) || !!changes.layout || !!changes.data) {
       this.updatePlot();
     }
-
     this.updateWindowResizeHandler();
   }
 
   ngDoCheck() {
+    this.LOG.debug(['ngDoCheck']);
     if (this.updateOnlyWithRevision) {
       return false;
     }
@@ -198,6 +191,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   createPlot(): Promise<void> {
+    this.LOG.debug(['createPlot'], this.data, this.layout, this.config);
     return newPlot(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;
@@ -205,7 +199,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
       this.eventNames.forEach(name => {
         const eventName = `plotly_${name.toLowerCase()}`;
         // @ts-ignore
-        plotlyInstance.on(eventName, (data: any) => (this[name] as EventEmitter<void>).emit(data));
+        plotlyInstance.on(eventName, (data: any) => (this[name] as EventEmitter<any>).emit(data));
       });
 
       plotlyInstance.on('plotly_click', (data: any) => {

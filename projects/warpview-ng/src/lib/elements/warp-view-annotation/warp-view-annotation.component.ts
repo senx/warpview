@@ -156,12 +156,15 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['updateBounds'], min, max, this._options);
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
+    this.LOG.debug(['boundsDidChange'],
+      moment.tz(min, this._options.timeZone).toISOString(),
+      moment.tz(max, this._options.timeZone).toISOString());
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.range = [min, max];
     } else {
       this.layout.xaxis.range = [
-        moment.tz(min, this._options.timeZone).toDate(),
-        moment.tz(max, this._options.timeZone).toDate()
+        moment.tz(min, this._options.timeZone).toISOString(),
+        moment.tz(max, this._options.timeZone).toISOString()
       ];
     }
     this.layout = {...this.layout};

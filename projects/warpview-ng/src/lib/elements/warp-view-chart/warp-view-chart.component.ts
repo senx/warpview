@@ -302,26 +302,22 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   relayout(data: any) {
-    this.LOG.debug(['plotly_relayout'], data);
     if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
+      this.LOG.debug(['boundsDidChange', 'xaxis.range'], data['xaxis.range']);
       this.chartBounds.msmin = data['xaxis.range'][0];
       this.chartBounds.msmax = data['xaxis.range'][1];
-      this.chartBounds.tsmin = moment.tz(moment.utc(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
-      this.chartBounds.tsmax = moment.tz(moment.utc(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
-      this.emitNewBounds(moment.utc(this.chartBounds.msmin).valueOf(), moment.utc(this.chartBounds.msmax).valueOf());
     } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
+      this.LOG.debug(['boundsDidChange', 'xaxis.range[x]'], data['xaxis.range[0]']);
       this.chartBounds.msmin = data['xaxis.range[0]'];
       this.chartBounds.msmax = data['xaxis.range[1]'];
-      this.chartBounds.tsmin = moment.tz(moment.utc(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
-      this.chartBounds.tsmax = moment.tz(moment.utc(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
-      this.emitNewBounds(moment.utc(this.chartBounds.msmin).valueOf(), moment.utc(this.chartBounds.msmax).valueOf());
     } else if (data['xaxis.autorange']) {
+      this.LOG.debug(['boundsDidChange', 'autorange'], data);
       this.chartBounds.tsmin = this.minTick;
       this.chartBounds.tsmax = this.maxTick;
-      this.chartBounds.msmin = moment.tz(this.chartBounds.tsmin / this.divider, this._options.timeZone).toISOString();
-      this.chartBounds.msmax = moment.tz(this.chartBounds.tsmax / this.divider, this._options.timeZone).toISOString();
-      this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
     }
+    this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
+    this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
+    this.emitNewBounds(moment.utc(this.chartBounds.tsmin).valueOf(), moment.utc(this.chartBounds.msmax).valueOf());
   }
 
   sliderChange($event: any) {

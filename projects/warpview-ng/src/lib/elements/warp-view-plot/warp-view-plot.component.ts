@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.component';
 import {Param} from '../../model/param';
@@ -110,6 +110,23 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
   gtsList: DataModel | GTS[] | string;
 
+  constructor(
+    public el: ElementRef,
+    public sizeService: SizeService,
+    private zone: NgZone
+  ) {
+    super(el, sizeService);
+    this.LOG = new Logger(WarpViewPlotComponent, this._debug);
+  }
+
+  ngOnInit(): void {
+    this._options = this._options || this.defOptions;
+  }
+
+  ngAfterViewInit(): void {
+    this.drawChart(true);
+  }
+
   @HostListener('keydown', ['$event'])
   handleKeydown(ev: KeyboardEvent) {
     this.LOG.debug(['handleKeydown'], ev);
@@ -119,7 +136,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       });
     }
   }
-
 
   stateChange(event: any) {
     this.LOG.debug(['stateChange'], event);
@@ -154,10 +170,13 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   boundsDidChange(event) {
-    this.LOG.debug(['boundsDidChange'], event);
+    this.LOG.debug(['boundsDidChange'], event.bounds);
     this._options.bounds.minDate = event.bounds.min;
     this._options.bounds.maxDate = event.bounds.max;
     this.annotation.updateBounds(event.bounds.min, event.bounds.max);
+    this.LOG.debug(['boundsDidChange'],
+      moment.tz(event.bounds.min, this._options.timeZone).toDate(),
+      moment.tz(event.bounds.max, this._options.timeZone).toDate());
     this.line.nativeElement.style.left = '-100px';
   }
 
@@ -179,36 +198,32 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       }
     }
     this.LOG.debug(['warpViewSelectedGTS', 'this._toHide'], this._toHide);
-    setTimeout(() => {
+    this.zone.run(() => {
       this._toHide = [...this._toHide];
-    }, 0);
+    });
+  }
+
+  handleMouseEnter(evt: MouseEvent) {
+    evt.preventDefault();
+    this.line.nativeElement.style.display = 'block';
   }
 
   handleMouseMove(evt: MouseEvent) {
-    if (this.mouseOutTimer) {
-      window.clearTimeout(this.mouseOutTimer);
-      delete this.mouseOutTimer;
-    }
-    if (!this.mouseOutTimer) {
-      this.mouseOutTimer = window.setTimeout(() => {
-        this.line.nativeElement.style.display = 'block';
-        this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 100) + 'px';
-      }, 1);
-    }
+    this.LOG.debug(['handleMouseMove'], evt);
+    evt.preventDefault();
+    const x = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 50);
+    window.requestAnimationFrame((() => {
+      this.line.nativeElement.style.left = x + 'px';
+    }).bind(this));
   }
 
   handleMouseOut(evt: MouseEvent) {
-    this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 100) + 'px';
-    if (this.mouseOutTimer) {
-      window.clearTimeout(this.mouseOutTimer);
-      delete this.mouseOutTimer;
-    }
-    if (!this.mouseOutTimer) {
-      this.mouseOutTimer = window.setTimeout(() => {
-        this.line.nativeElement.style.left = '-100px';
-        this.line.nativeElement.style.display = 'none';
-      }, 500);
-    }
+    evt.preventDefault();
+    this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 50) + 'px';
+    window.requestAnimationFrame(() => {
+      this.line.nativeElement.style.left = '-100px';
+      this.line.nativeElement.style.display = 'none';
+    });
   }
 
   update(options, refresh): void {
@@ -236,19 +251,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-
-  constructor(
-    public el: ElementRef,
-    public sizeService: SizeService,
-  ) {
-    super(el, sizeService);
-    this.LOG = new Logger(WarpViewPlotComponent, this._debug);
-  }
-
-  ngOnInit(): void {
-    this._options = this._options || this.defOptions;
-  }
-
   inputTextKeyboardEvents(e: KeyboardEvent) {
     e.stopImmediatePropagation();
     if (e.key === 'Enter') {
@@ -266,10 +268,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.drawChart();
   }
 
-  ngAfterViewInit(): void {
-    this.drawChart(true);
-  }
-
   public getTimeClip(): Promise<ChartBounds> {
     this.LOG.debug(['getTimeClip'], this.chart.getTimeClip());
     return this.chart.getTimeClip();
@@ -281,6 +279,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   drawChart(firstDraw: boolean = false) {
+
     this.LOG.debug(['drawCharts'], [this._data, this._options]);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return;

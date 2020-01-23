@@ -37,11 +37,13 @@
     left: -100px;
     position: absolute;
     background-color: var(--warp-view-bar-color);
+    backface-visibility: hidden;
     top: 0;
     bottom: 55px;
     overflow: hidden;
     display: none;
     z-index: 0;
+    pointer-events: none;
   }
 
   .inline {
