@@ -297,7 +297,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.chartDraw.emit();
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
-    this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.emitNewBounds(this.minTick, this.maxTick);
+    } else {
+      this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+    }
     this.loading = false;
   }
 
