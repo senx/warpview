@@ -1,6 +1,6 @@
 {
   "name": "@senx/warpview",
-  "version": "2.0.0-rc6",
+  "version": "2.0.0-rc7",
   "keywords": [
     "web",
     "dataviz",
@@ -23,14 +23,15 @@
     "url": "https://github.com/senx/warpview/issues"
   },
   "homepage": "https://www.warp10.io",
-  "files": [
-    "dist/"
-  ],
-  "module": "dist/esm/index.js",
-  "main": "dist/warpview.js",
-  "typings": "./index.ts",
-  "types": "dist/types/components.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
+  "main": "dist/bundles/warpview-ng.umd.js",
+  "module": "dist/fesm5/warpview-ng.js",
+  "es2015": "dist/fesm2015/warpview-ng.js",
+  "esm5": "dist/esm5/warpview-ng.js",
+  "esm2015": "dist/esm2015/warpview-ng.js",
+  "fesm5": "dist/fesm5/warpview-ng.js",
+  "fesm2015": "dist/fesm2015/warpview-ng.js",
+  "typings": "dist/warpview-ng.d.ts",
+  "metadata": "dist/warpview-ng.metadata.json",
   "scripts": {
     "ng": "ng",
     "sass": "./node_modules/node-sass/bin/node-sass",
@@ -47,6 +48,7 @@
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
     "build:lib": "ng build warpview-ng",
+    "publish:lib": "yarn publish ./dist",
     "nvm": "nvm install 10.16.0"
   },
   "private": false,
