@@ -15,7 +15,7 @@
  *
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Settings, SettingsService} from '../../projects/warpview-ng/src/lib/services/settings.service';
 import {ColorLib} from '../../projects/warpview-ng/src/lib/utils/color-lib';
 
@@ -24,8 +24,8 @@ import {ColorLib} from '../../projects/warpview-ng/src/lib/utils/color-lib';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  theme = 'dark';
+export class AppComponent implements OnInit {
+  theme = 'light';
   colorSchemes = Object.keys(ColorLib.color).sort();
   colorScheme = 'WARP10';
 
@@ -39,5 +39,9 @@ export class AppComponent {
 
   updateSettings() {
     this.settingsService.add(new Settings({theme: this.theme, colorScheme: this.colorScheme}));
+  }
+
+  ngOnInit(): void {
+    this.setTheme(this.theme);
   }
 }

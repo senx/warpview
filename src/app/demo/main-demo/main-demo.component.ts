@@ -562,7 +562,7 @@ ZIP // merge into a list of GTS
       autoRefresh: -1
     }
   };
-  theme = 'dark';
+  theme: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {

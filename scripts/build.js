@@ -14,11 +14,10 @@
  *  limitations under the License.
  *
  */
-
+const sass = require('node-sass');
 const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
- // await fs.ensureDir('elements');
   const files = [
     './dist/elements/runtime.js',
     './dist/elements/polyfills.js',
@@ -26,11 +25,19 @@ const concat = require('concat');
     './dist/elements/main.js',
     './scripts/loader.js'
   ];
-  await concat( files, './dist/elements/warpview-elements.js');
- // await fs.copyFile('./dist/elements/styles.css', './dist/elements/warpview-elements.css');
- /* try {
-    await fs.copy('./dist/elements/assets/', './dist/elements/assets/')
-  } catch (e) {
-    // nothing
-  }*/
+  await concat(files, './dist/elements/warpview-elements.js');
+  fs.copy('./src/assets/fonts', './dist/elements/fonts')
+  sass.render({
+    file: './projects/warpview-ng/src/lib/styles/warpview.scss',
+    outFile: './dist/elements/warpview-elements.css',
+    outputStyle: 'compressed'
+  }, function(err, result) {
+    if (!err) {
+      let compiledScssCode = result.css.toString();
+      // remove comments from the css output
+      compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
+      compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
+      fs.writeFileSync('./dist/elements/warpview-elements.css', compiledScssCode);
+    }
+  });
 })();

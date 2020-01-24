@@ -15,7 +15,7 @@
  *
  */
 
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
 
 @Component({
@@ -24,7 +24,7 @@ import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
-
+  @Input() theme: string;
   menu = [
     {
       title: 'Getting Started',
@@ -103,7 +103,6 @@ export class MenuComponent {
       slug: '/small'
     }
   ];
-  theme = 'dark';
 
   constructor(private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {
