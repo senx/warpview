@@ -24,8 +24,7 @@
   },
   "homepage": "https://www.warp10.io",
   "files": [
-    "dist/warpview-ng",
-    "elements/"
+    "dist/"
   ],
   "module": "dist/esm/index.js",
   "main": "dist/warpview.js",
