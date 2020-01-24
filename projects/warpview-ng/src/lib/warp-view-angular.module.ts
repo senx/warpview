@@ -122,7 +122,7 @@ import { PlotlyComponent } from './plotly/plotly.component';
     WarpViewResizeComponent,
     WarpViewSliderComponent,
     WarpViewRangeSliderComponent,
-    WarpViewSpectrumComponent
+    WarpViewSpectrumComponent,
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [

@@ -16,6 +16,9 @@
     "canvas-gauges"
   ],
   "lib": {
-    "entryFile": "src/public-api.ts"
+    "flatModuleFile": "warpview",
+    "umdId": "warpview",
+    "amdId": "warpview",
+    "entryFile": "./public-api.ts"
   }
 }

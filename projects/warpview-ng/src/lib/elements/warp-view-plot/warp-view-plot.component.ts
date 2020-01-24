@@ -15,7 +15,18 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef, EventEmitter,
+  HostListener,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {WarpViewModalComponent} from '../warp-view-modal/warp-view-modal.component';
 import {Param} from '../../model/param';
@@ -77,6 +88,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @Input('isAlone') isAlone = false;
   @Input('initialChartHeight') initialChartHeight = '400';
   @Input('initialMapHeight') initialMapHeight = '500';
+  @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
 
   _options: Param = {
     ...new Param(), ...{
@@ -276,10 +288,10 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   resizeChart(event) {
     this.chart.resize(event);
     this.LOG.debug(['resizeChart'], event);
+    this.warpViewChartResize.emit(event);
   }
 
   drawChart(firstDraw: boolean = false) {
-
     this.LOG.debug(['drawCharts'], [this._data, this._options]);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return;

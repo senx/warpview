@@ -65,7 +65,7 @@ export class Param {
     showTimeRange: false,
     timeSliderMode: 'timestamp'
   };
-  bounds?: {
+  bounds: {
     minDate?: number;
     maxDate?: number;
     yRanges?: [number, number];
