@@ -23,6 +23,8 @@ import {ColorLib} from '../../utils/color-lib';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {ChartLib} from '../../utils/chart-lib';
+import {Param} from '../../model/param';
 
 @Component({
   selector: 'warpview-gauge',
@@ -51,30 +53,14 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
-
+  
   update(options, refresh): void {
-    if (options) {
-      let optionChanged = false;
-      Object.keys(options).forEach(opt => {
-        if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
-        } else {
-          optionChanged = true; // new unknown option
-        }
-      });
-      if (this.LOG) {
-        this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
-      }
-      if (optionChanged) {
-        if (this.LOG) {
-          this.LOG.debug(['onOptions', 'options'], options);
-        }
-        this._options = options;
-        this.drawChart();
-      }
-    } else {
-      this.drawChart();
+    this.LOG.debug(['onOptions', 'before'], this._options, options);
+    if (!deepEqual(options, this._options)) {
+      this.LOG.debug(['options', 'changed'], options);
+      this._options = ChartLib.mergeDeep(this._options, options as Param) as Param;
     }
+    this.drawChart();
   }
 
   drawChart() {
