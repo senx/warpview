@@ -34,6 +34,7 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
 
+
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
     this.LOG.debug(['hiddenData', 'previousVisibility'], previousVisibility);
@@ -90,32 +91,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   private dataHashset = {};
   private chartBounds: ChartBounds = new ChartBounds();
   private visibilityStatus: VisibilityState = 'unknown';
+  private afterBoundsUpdate = false;
 
   update(options, refresh): void {
     this.drawChart(refresh);
-    /*  if (options) {
-        this.visibilityStatus = 'unknown';
-        let optionChanged = false;
-     /!*   Object.keys(options).forEach(opt => {
-          if (this._options.hasOwnProperty(opt)) {
-            optionChanged = optionChanged || !deepEqual(options[opt] !== this._options[opt]);
-          } else {
-            optionChanged = true; // new unknown option
-          }
-        });*!/
-        if (this.LOG) {
-          this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
-        }
-      /!*  if (optionChanged) {
-          if (this.LOG) {
-            this.LOG.debug(['onOptions', 'options'], options);
-          }*!/
-          this._options = options;
-          this.drawChart(false);
-        //}
-      } else {
-        this.drawChart(refresh);
-      }*/
   }
 
   constructor(
@@ -174,13 +153,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   private emitNewBounds(min, max) {
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.boundsDidChange.emit({bounds: {min, max}});
+      this.boundsDidChange.emit({bounds: {min, max}, source: 'chart'});
     } else {
       this.boundsDidChange.emit({
         bounds: {
           min: moment.tz(min, this._options.timeZone).valueOf(),
           max: moment.tz(max, this._options.timeZone).valueOf()
-        }
+        }, source: 'chart'
       });
     }
   }
@@ -294,38 +273,73 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   afterPlot() {
     this.LOG.debug(['plotly_afterPlot']);
-    this.chartDraw.emit();
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.emitNewBounds(this.minTick, this.maxTick);
-    } else {
-      this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+    this.chartDraw.emit(this.chartBounds);
+    if (!this.afterBoundsUpdate) {
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        this.emitNewBounds(this.minTick, this.maxTick);
+      } else {
+        this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
+      }
+      this.loading = false;
+      this.afterBoundsUpdate = false;
     }
-    this.loading = false;
   }
 
   relayout(data: any) {
     if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
-      this.LOG.debug(['boundsDidChange', 'xaxis.range'], data['xaxis.range']);
+      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
       this.chartBounds.msmin = data['xaxis.range'][0];
       this.chartBounds.msmax = data['xaxis.range'][1];
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
     } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
-      this.LOG.debug(['boundsDidChange', 'xaxis.range[x]'], data['xaxis.range[0]']);
+      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range[x]'], data['xaxis.range[0]']);
       this.chartBounds.msmin = data['xaxis.range[0]'];
       this.chartBounds.msmax = data['xaxis.range[1]'];
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
     } else if (data['xaxis.autorange']) {
-      this.LOG.debug(['boundsDidChange', 'autorange'], data);
-      this.chartBounds.tsmin = this.minTick;
-      this.chartBounds.tsmax = this.maxTick;
+      this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data);
+      this.chartBounds.tsmin = this.minTick / this.divider;
+      this.chartBounds.tsmax = this.maxTick / this.divider;
     }
-    this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
-    this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
-    this.emitNewBounds(moment.utc(this.chartBounds.tsmin).valueOf(), moment.utc(this.chartBounds.msmax).valueOf());
+    this.emitNewBounds(moment.utc(this.chartBounds.tsmin).valueOf(), moment.utc(this.chartBounds.tsmax).valueOf());
+    this.afterBoundsUpdate = false;
   }
 
   sliderChange($event: any) {
     this.LOG.debug(['sliderChange'], $event);
     console.log($event);
+  }
+
+  updateBounds(min, max) {
+    this.LOG.debug(['updateBounds'], min, max, this._options);
+    min = min || this.minTick / this.divider;
+    max = max || this.maxTick / this.divider;
+    this.layout.xaxis.autorange = false;
+    this.LOG.debug(['updateBounds'],
+      moment.tz(min, this._options.timeZone).toISOString(),
+      moment.tz(max, this._options.timeZone).toISOString());
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.range = [min, max];
+      this.layout.xaxis.tick0 = min;
+    } else {
+      this.layout.xaxis.range = [
+        moment.tz(min, this._options.timeZone).toISOString(),
+        moment.tz(max, this._options.timeZone).toISOString()
+      ];
+      this.layout.xaxis.tick0 = moment.tz(min, this._options.timeZone).toISOString();
+    }
+    this.layout = {...this.layout};
+    this.LOG.debug(['updateBounds'], this.layout);
+    this.afterBoundsUpdate = true;
+  }
+
+
+  setRealBounds(chartBounds: ChartBounds) {
+    this.minTick = chartBounds.tsmin;
+    this.maxTick = chartBounds.tsmax;
   }
 }

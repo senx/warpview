@@ -26,6 +26,7 @@ import {ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core'
 import deepEqual from 'deep-equal';
 import {SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
+import {Config} from 'plotly.js';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -111,13 +112,17 @@ export abstract class WarpViewComponent {
   protected _data: DataModel;
   loading = true;
   layout: Partial<any> = {};
-  plotlyConfig: Partial<any> = {
+  plotlyConfig: Partial<Config> = {
     responsive: this.responsive,
     showAxisDragHandles: true,
-    scrollZoom: false,
+    scrollZoom: true,
+    doubleClick: 'reset+autosize',
+    showTips: true,
+    plotGlPixelRatio: 1,
+    staticPlot: false,
     displaylogo: false,
     modeBarButtonsToRemove: [
-      'lasso2d', 'select2d', 'toggleSpikelines', 'toggleHover', 'hoverClosest3d',
+      'lasso2d', 'select2d', 'toggleSpikelines', 'toggleHover', 'hoverClosest3d', 'autoScale2d',
       'hoverClosestGeo', 'hoverClosestGl2d', 'hoverClosestPie', 'toggleHover',
       'hoverClosestCartesian', 'hoverCompareCartesian'
     ]
@@ -235,7 +240,6 @@ export abstract class WarpViewComponent {
   }
 
   hover(data: any) {
-    this.LOG.debug(['plotly_hover'], data);
     this.toolTip.nativeElement.style.display = 'block';
     this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {

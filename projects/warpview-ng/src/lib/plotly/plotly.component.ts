@@ -45,7 +45,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   @Input() data?: Partial<any>[];
   @Input() layout?: Partial<any>;
-  @Input() config?: Partial<any>;
+  @Input() config?: Partial<Config>;
   @Input() frames?: Partial<any>[];
   @Input() style?: { [key: string]: string };
 
@@ -57,7 +57,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   @Input() updateOnLayoutChange = true;
   @Input() updateOnDataChange = true;
-  @Input() updateOnlyWithRevision = false;
+  @Input() updateOnlyWithRevision = true;
 
   @Output() initialized = new EventEmitter<PlotlyHTMLElement>();
   @Output() update = new EventEmitter<Figure>();
@@ -125,25 +125,26 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.LOG.info(['ngOnChanges'], changes);
+    this.LOG.debug(['ngOnChanges'], changes);
     const revision: SimpleChange = changes.revision;
     if (changes.debug) {
       this.debug = changes.debug.currentValue;
     }
-    if ((revision && !revision.isFirstChange()) || !!changes.layout || !!changes.data) {
+    if ((revision && !revision.isFirstChange()) || !!changes.layout || !!changes.data || !!changes.config) {
       this.updatePlot();
     }
+    if (!!changes.debug) {
+      this.LOG.setDebug(changes.debug.currentValue);
+    }
     this.updateWindowResizeHandler();
+    this.LOG.debug(['ngOnChanges'], changes);
   }
 
   ngDoCheck() {
-    this.LOG.debug(['ngDoCheck']);
     if (this.updateOnlyWithRevision) {
       return false;
     }
-
     let shouldUpdate = false;
-
     if (this.updateOnLayoutChange) {
       if (this.layoutDiffer) {
         const layoutHasDiff = this.layoutDiffer.diff(this.layout);
@@ -180,7 +181,6 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   getClassName(): string {
     let classes = [this.defaultClassName];
-
     if (Array.isArray(this.className)) {
       classes = classes.concat(this.className);
     } else if (this.className) {
@@ -192,6 +192,9 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   createPlot(): Promise<void> {
     this.LOG.debug(['createPlot'], this.data, this.layout, this.config);
+    if (this.plotlyInstance) {
+      this.remove(this.plotlyInstance);
+    }
     return newPlot(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;
@@ -199,7 +202,10 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
       this.eventNames.forEach(name => {
         const eventName = `plotly_${name.toLowerCase()}`;
         // @ts-ignore
-        plotlyInstance.on(eventName, (data: any) => (this[name] as EventEmitter<any>).emit(data));
+        plotlyInstance.on(eventName, (data: any) => {
+          this.LOG.debug([name], data);
+          (this[name] as EventEmitter<any>).emit(data);
+        });
       });
 
       plotlyInstance.on('plotly_click', (data: any) => {
@@ -225,6 +231,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   updatePlot() {
+    this.LOG.debug(['updatePlot'], this.data, this.layout, {...this.config});
     if (!this.plotlyInstance) {
       const error = new Error(`Plotly component wasn't initialized`);
       this.error.emit(error);

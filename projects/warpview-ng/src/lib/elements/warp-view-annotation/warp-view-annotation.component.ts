@@ -26,6 +26,7 @@ import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {ChartBounds} from '../../model/chartBounds';
 
 @Component({
   selector: 'warpview-annotation',
@@ -61,6 +62,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
+  @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
 
   displayExpander = true;
 
@@ -69,24 +71,26 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   private visibility: boolean[] = [];
   private expanded = false;
   private trimmed;
-  private maxTick: number;
-  private minTick: number;
+  private maxTick = Number.MIN_VALUE;
+  private minTick = Number.MAX_VALUE;
   private visibleGtsId = [];
   private dataHashset = {};
   private lineHeight = 30;
+  private chartBounds: ChartBounds = new ChartBounds();
   layout: Partial<any> = {
     showlegend: false,
     hovermode: 'closest',
     xaxis: {
       gridwidth: 1,
-      fixedrange: true,
+      fixedrange: false,
       autorange: false,
-      automargin: false
+      automargin: false,
+      showticklabels: false,
     },
     autosize: false,
     autoexpand: false,
     yaxis: {
-      showticklabels: true,
+      showticklabels: false,
       fixedrange: true,
       dtick: 1,
       gridwidth: 1,
@@ -94,20 +98,18 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       nticks: 2,
       rangemode: 'tozero',
       tickson: 'boundaries',
-      //     ticks: 'inside',
-      automargin: false,
+      automargin: true,
       showline: true,
       zeroline: true,
       tickfont: {
-        color: 'transparent'
+        //  color: 'transparent'
       }
     },
     margin: {
       t: 30,
-      b: 40,
+      b: 2,
       r: 0,
-      l: 0,
-      pad: 0
+      l: 0
     },
   };
 
@@ -154,7 +156,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['updateBounds'], min, max, this._options);
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
-    this.LOG.debug(['boundsDidChange'],
+    this.layout.xaxis.autorange = false;
+    this.LOG.debug(['updateBounds'],
       moment.tz(min, this._options.timeZone).toISOString(),
       moment.tz(max, this._options.timeZone).toISOString());
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -194,15 +197,44 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.margin.l = this.standalone ? 0 : 50;
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
-    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    if (this.standalone) {
-      this.plotlyConfig.scrollZoom = true;
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.tick0 = this.minTick / this.divider;
+      this.layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
+    } else {
+      this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      this.layout.xaxis.range = [
+        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+      ];
     }
+    this.plotlyConfig.scrollZoom = !!this.standalone;
+    this.plotlyConfig = {...this.plotlyConfig};
+    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.loading = false;
   }
 
+  relayout(data: any) {
+    if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
+      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
+      this.chartBounds.msmin = data['xaxis.range'][0];
+      this.chartBounds.msmax = data['xaxis.range'][1];
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
+    } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
+      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range[x]'], data['xaxis.range[0]']);
+      this.chartBounds.msmin = data['xaxis.range[0]'];
+      this.chartBounds.msmax = data['xaxis.range[1]'];
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
+    } else if (data['xaxis.autorange']) {
+      this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data);
+      this.chartBounds.tsmin = this.minTick / this.divider;
+      this.chartBounds.tsmax = this.maxTick / this.divider;
+    }
+    this.emitNewBounds(moment.utc(this.chartBounds.tsmin).valueOf(), moment.utc(this.chartBounds.msmax).valueOf());
+  }
+
   hover(data: any) {
-    this.LOG.debug(['plotly_hover'], data);
     const tooltip = this.toolTip.nativeElement;
     this.pointHover.emit({
       x: data.event.offsetX,
@@ -217,7 +249,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       (this.expanded ? count - (data.points[0].y + 0.5) : 0) * (this.lineHeight) + this.layout.margin.t
     ) + 'px';
     tooltip.classList.remove('right', 'left');
-    this.LOG.debug(['tooltip'], data);
     this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
       ? data.xvals[0]
       : (moment(data.xvals[0]).utc().toISOString() || '')
@@ -232,7 +263,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       tooltip.classList.add('right');
     }
     tooltip.style.pointerEvents = 'none';
-    this.LOG.debug(['plotly_hover'], tooltip.style.top);
   }
 
   unhover() {
@@ -241,9 +271,25 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   afterPlot() {
     this.loading = false;
-    this.chartDraw.emit();
+    this.chartBounds.tsmin = this.minTick;
+    this.chartBounds.tsmax = this.maxTick;
+    this.chartDraw.emit(this.chartBounds);
+    this.LOG.debug(['afterPlot'], this.chartBounds);
   }
 
+  private emitNewBounds(min, max) {
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.boundsDidChange.emit({bounds: {min, max}, source: 'annotation'});
+    } else {
+      this.boundsDidChange.emit({
+        bounds: {
+          min: moment.tz(min, this._options.timeZone).valueOf(),
+          max: moment.tz(max, this._options.timeZone).valueOf()
+        },
+        source: 'annotation'
+      });
+    }
+  }
 
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
@@ -325,12 +371,16 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         this.visibleGtsId.push(-1);
       }
     }
-
     return dataset;
   }
 
   toggle() {
     this.expanded = !this.expanded;
     this.drawChart();
+  }
+
+  setRealBounds(chartBounds: ChartBounds) {
+    this.minTick = chartBounds.tsmin;
+    this.maxTick = chartBounds.tsmax;
   }
 }

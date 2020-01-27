@@ -18,7 +18,8 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef, EventEmitter,
+  ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   NgZone,
@@ -108,14 +109,19 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   kbdLastKeyPressed: string[] = [];
   warningMessage = '';
   loading = false;
+  gtsIdList: number[] = [];
 
-  private mouseOutTimer: number;
   private kbdCounter = 0;
   private gtsFilterCount = 0;
-  gtsIdList: number[] = [];
   private gtsBrowserIndex = -1;
   private _gtsFilter = 'x';
   private _type = 'line';
+  private chartBounds: ChartBounds = {
+    tsmin: Number.MAX_VALUE,
+    tsmax: Number.MIN_VALUE,
+    msmax: '',
+    msmin: ''
+  };
   // key event are trapped in plot component.
   // if one of this key is pressed, default action is prevented.
   private preventDefaultKeyList: string[] = ['Escape', '/'];
@@ -182,11 +188,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   boundsDidChange(event) {
-    this.LOG.debug(['boundsDidChange'], event.bounds);
+    this.LOG.debug(['updateBounds'], event);
     this._options.bounds.minDate = event.bounds.min;
     this._options.bounds.maxDate = event.bounds.max;
-    this.annotation.updateBounds(event.bounds.min, event.bounds.max);
-    this.LOG.debug(['boundsDidChange'],
+    if (event.source === 'chart') {
+      this.annotation.updateBounds(event.bounds.min, event.bounds.max);
+    } else if (event.source === 'annotation') {
+      this.chart.updateBounds(event.bounds.min, event.bounds.max);
+    }
+    this.LOG.debug(['updateBounds'],
       moment.tz(event.bounds.min, this._options.timeZone).toDate(),
       moment.tz(event.bounds.max, this._options.timeZone).toDate());
     this.line.nativeElement.style.left = '-100px';
@@ -411,11 +421,15 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     return moment.tz.names();
   }
 
-  getData() {
-    return this.data;
-  }
-
   protected convert(data: DataModel): any[] {
     return [];
+  }
+
+  onChartDraw($event: any) {
+    this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, $event.tsmin);
+    this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
+    this.annotation.setRealBounds(this.chartBounds);
+    this.chart.setRealBounds(this.chartBounds);
+    this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
   }
 }
