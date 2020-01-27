@@ -40,6 +40,7 @@ export class Param {
   timeUnit = 'us';
   minColor?: string;
   maxColor?: string;
+  split?: 'Y' | 'M' | 'D' | 'h' | 'm' | 's';
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
   timeZone = 'UTC';

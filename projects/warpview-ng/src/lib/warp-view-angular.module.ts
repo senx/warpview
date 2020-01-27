@@ -52,7 +52,7 @@ import {AngularResizedEventModule} from 'angular-resize-event';
 import {SizeService} from './services/resize.service';
 import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view-spectrum.component';
 import { PlotlyComponent } from './plotly/plotly.component';
-
+import { WarpViewBoxComponent } from './elements/warp-view-box/warp-view-box.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +85,8 @@ import { PlotlyComponent } from './plotly/plotly.component';
     WarpViewSliderComponent,
     WarpViewRangeSliderComponent,
     WarpViewSpectrumComponent,
-    PlotlyComponent
+    PlotlyComponent,
+    WarpViewBoxComponent
   ],
   imports: [
     CommonModule,
@@ -123,6 +124,7 @@ import { PlotlyComponent } from './plotly/plotly.component';
     WarpViewSliderComponent,
     WarpViewRangeSliderComponent,
     WarpViewSpectrumComponent,
+    WarpViewBoxComponent,
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [
@@ -155,7 +157,8 @@ import { PlotlyComponent } from './plotly/plotly.component';
     WarpViewSliderComponent,
     WarpViewRangeSliderComponent,
     WarpViewSpectrumComponent,
-    PlotlyComponent
+    PlotlyComponent,
+    WarpViewBoxComponent
   ]
 })
 export class WarpViewAngularModule {

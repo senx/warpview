@@ -55,6 +55,10 @@ export class MenuComponent {
       slug: '/demo/bubble'
     },
     {
+      title: 'Box chart',
+      slug: '/demo/box'
+    },
+    {
       title: 'Data grid',
       slug: '/demo/datagrid'
     },

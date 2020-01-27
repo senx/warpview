@@ -102,6 +102,28 @@ false RESETS
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP`
       }],
+    box: [
+      {
+        title: 'Box chart',
+        type: 'box',
+        warpscript: `@training/dataset0
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' 'dc' 'rbx4' } $NOW 2 d ] FETCH
+false RESETS
+[ SWAP mapper.delta 1 0 0 ] MAP
+[ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE
+'data' STORE
+{ 'data' $data 'globalParams' { 'showDots' true } }`
+      }, {
+        title: 'Box chart by date',
+        type: 'box-date',
+        warpscript: `@training/dataset0
+[ $TOKEN '~warp.*committed' { 'cell' 'prod'  'dc' 'rbx4'  } $NOW 1 d ] FETCH
+false RESETS
+[ SWAP mapper.delta 1 0 0 ] MAP
+[ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE
+'data' STORE
+{ 'data' $data 'globalParams' { 'split' 'D' } }`
+      }],
     bar: [{
       title: 'Bar chart',
       type: 'bar',
