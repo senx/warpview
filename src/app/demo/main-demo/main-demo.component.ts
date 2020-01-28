@@ -134,6 +134,18 @@ false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
 { 'data' $values }`
     }],
+    line3d: [{
+      title: '3D line chart',
+      type: 'line3d',
+      warpscript: `0 5 <% 'j' STORE
+  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
+  0 10 <%
+    'i' STORE
+    $gts NOW $i 1000 * - 40 RAND - -4 RAND - 1000 RAND * T ADDVALUE DROP
+  %> FOR
+  $gts
+%> FOR`
+    }],
     bubble: [{
       title: 'Bubble chart',
       type: 'bubble',

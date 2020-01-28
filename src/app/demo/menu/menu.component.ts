@@ -43,6 +43,10 @@ export class MenuComponent {
       slug: '/demo/chart'
     },
     {
+      title: '3D line charts',
+      slug: '/demo/line3d'
+    },
+    {
       title: 'Spectrum charts',
       slug: '/demo/spectrum'
     },

@@ -17,7 +17,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {Config, Data, Layout, newPlot, PlotlyHTMLElement, Plots, purge} from 'plotly.js';
+import * as Plotlyjs from 'plotly.js/dist/plotly';
+import {Config, Data, Layout, PlotlyHTMLElement, Plots} from 'plotly.js';
 import {Logger} from '../utils/logger';
 
 export interface Figure {
@@ -195,7 +196,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     if (this.plotlyInstance) {
       this.remove(this.plotlyInstance);
     }
-    return newPlot(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
+    return Plotlyjs.newPlot(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;
 
@@ -236,7 +237,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
       this.error.emit(error);
       return;
     }
-    purge(this.plotlyInstance);
+    Plotlyjs.purge(this.plotlyInstance);
     this.createPlot().then(() => {
       const figure = this.createFigure();
       this.update.emit(figure);
@@ -266,6 +267,6 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   remove(div: PlotlyHTMLElement) {
-    purge(div);
+    Plotlyjs.purge(div);
   }
 }
