@@ -203,7 +203,6 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
         const eventName = `plotly_${name.toLowerCase()}`;
         // @ts-ignore
         plotlyInstance.on(eventName, (data: any) => {
-          this.LOG.debug([name], data);
           (this[name] as EventEmitter<any>).emit(data);
         });
       });

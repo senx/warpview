@@ -25,6 +25,7 @@ import {
   NgZone,
   OnInit,
   Output,
+  Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -67,6 +68,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @ViewChild('tzSelector', {static: false}) tzSelector: ElementRef;
   @ViewChild('line', {static: false}) line: ElementRef;
   @ViewChild('main', {static: false}) main: ElementRef;
+  private showLine = false;
+  private left: number;
 
   @Input('type') set type(type: string) {
     this._type = type;
@@ -131,7 +134,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   constructor(
     public el: ElementRef,
     public sizeService: SizeService,
-    private zone: NgZone
+    private zone: NgZone,
+    private renderer: Renderer2
   ) {
     super(el, sizeService);
     this.LOG = new Logger(WarpViewPlotComponent, this._debug);
@@ -225,27 +229,31 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     });
   }
 
-  handleMouseEnter(evt: MouseEvent) {
+  handleMouseMove(evt: MouseEvent) {
     evt.preventDefault();
-    this.line.nativeElement.style.display = 'block';
+    this.left = this.left || this.main.nativeElement.getBoundingClientRect().left;
+    if (this.showLine) {
+      if (this.line) {
+        this.renderer.setStyle(this.line.nativeElement, 'left', Math.max(evt.pageX - this.left, 50) + 'px');
+      }
+    }
   }
 
-  handleMouseMove(evt: MouseEvent) {
-    this.LOG.debug(['handleMouseMove'], evt);
+  handleMouseEnter(evt: MouseEvent) {
     evt.preventDefault();
-    const x = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 50);
-    window.requestAnimationFrame((() => {
-      this.line.nativeElement.style.left = x + 'px';
-    }).bind(this));
+    this.showLine = true;
+    if (this.line) {
+      this.renderer.setStyle(this.line.nativeElement, 'display', 'block');
+    }
   }
 
   handleMouseOut(evt: MouseEvent) {
     evt.preventDefault();
-    this.line.nativeElement.style.left = Math.max(evt.clientX - this.main.nativeElement.getBoundingClientRect().left, 50) + 'px';
-    window.requestAnimationFrame(() => {
-      this.line.nativeElement.style.left = '-100px';
-      this.line.nativeElement.style.display = 'none';
-    });
+    if (this.line) {
+      this.showLine = false;
+      this.renderer.setStyle(this.line.nativeElement, 'left', '-100px');
+      this.renderer.setStyle(this.line.nativeElement, 'display', 'none');
+    }
   }
 
   update(options, refresh): void {

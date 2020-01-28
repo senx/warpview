@@ -66,8 +66,9 @@
     [hiddenData]="_toHide" [options]="_options"
     [kbdLastKeyPressed]="kbdLastKeyPressed"
   ></warpview-gts-tree>
-  <div *ngIf="showChart" #main class="main-container" (mousemove)="handleMouseMove($event)"
-       (mouseleave)="handleMouseOut($event)" (mouseenter)="handleMouseEnter($event)">
+  <div *ngIf="showChart" #main class="main-container" (mouseleave)="handleMouseOut($event)"
+       (mousemove)="handleMouseMove($event)"
+       (mouseenter)="handleMouseEnter($event)">
     <div class="bar" #line></div>
     <div class="annotation">
       <warpview-annotation #annotation
