@@ -186,6 +186,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
+    this.layout.xaxis.autorange = this.standalone;
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
     const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
@@ -269,12 +270,26 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.toolTip.nativeElement.style.display = 'none';
   }
 
-  afterPlot() {
+  afterPlot2(div) {
     this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     this.chartDraw.emit(this.chartBounds);
-    this.LOG.debug(['afterPlot'], this.chartBounds);
+ /*   const layout = {
+      xaxis: {} as any
+    };
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      layout.xaxis.tick0 = this.minTick / this.divider;
+      layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
+    } else {
+      layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      layout.xaxis.range = [
+        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+      ];
+    }*/
+//    this.graph.updateData(undefined, layout);
+    this.LOG.debug(['afterPlot'], this.chartBounds, div);
   }
 
   private emitNewBounds(min, max) {

@@ -500,38 +500,14 @@ $res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
     annotation: [{
       title: 'Annotation chart',
       type: 'annotation',
-      warpscript: `   @training/dataset0
-// warp.store.hbase.puts.committed is the number of datapoints committed to
-// HBase since the restart of the Store daemon
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH
-[ SWAP mapper.rate 1 0 0 ] MAP
-// Keep only 1000 datapoints per GTS
-1000 LTTB DUP
-// Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test
-5 false ESDTEST
-// Convert the ticks identified by ESDTEST into an annotation GTS
-<%
-  DROP // excude element index
-  NEWGTS // create a new GTS
-  SWAP // get timestamp list
-  <% NaN NaN NaN 'anomaly' ADDVALUE %> FOREACH // for each timestamp
-%> LMAP 2 ->LIST // Put our GTS in a list
-ZIP // merge into a list of GTS
-// Now rename and relabel the anomaly GTS
-<%
-  DROP // exclude element index
-  LIST-> // flatten list
-  DROP // exclude number of elements of our list
-  SWAP // put our fetched GTS on the top
-  DUP // duplicate the GTS
-  NAME // get the className of the GTS
-  ':anomaly' + 'name' STORE // suffix the name
-  DUP LABELS 'labels' STORE // duplicate the GTS and get labels
-  SWAP // put the anomaly GTS on the top of the stack
-  $name RENAME // rename the GTS
-  $labels RELABEL // put labels
-  2 ->LIST // put both GTS in a list
-%> LMAP`
+      warpscript: `0 5 <% 'j' STORE
+  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
+  0 3 <%
+    'i' STORE
+    $gts NOW RAND 100000 * -  NaN NaN NaN "t" ADDVALUE DROP
+  %> FOR
+  $gts
+%> FOR`
     }
     ],
     polar: [{

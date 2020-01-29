@@ -82,6 +82,7 @@
     <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="debug"
                      (resize)="resizeChart($event)">
       <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
+                      [showLegend]="showLegend"
                       (boundsDidChange)="boundsDidChange($event)"
                       (chartDraw)="onChartDraw($event)"
                       #chart [debug]="debug" [hiddenData]="_toHide" [type]="type" [options]="_options"

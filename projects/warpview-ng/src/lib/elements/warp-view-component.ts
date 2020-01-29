@@ -33,7 +33,7 @@ export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHid
 // noinspection AngularMissingOrInvalidDeclarationInModule
 export abstract class WarpViewComponent {
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
-  @ViewChild('graph', {static: true}) graph: PlotlyComponent;
+  @ViewChild('graph', {static: false}) graph: PlotlyComponent;
   @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('responsive') responsive: boolean;
