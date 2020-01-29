@@ -73,11 +73,15 @@
       width: auto;
       max-width: 100%;
       vertical-align: middle;
-      line-height: 28px;
-      height: 28px;
+      line-height: 20px;
+      height: 56px;
       overflow: visible;
       margin: 1px;
       color: var(--warp-view-annotationtooltip-font-color);
+
+      ul {
+        list-style: none;
+      }
 
       &.trimmed {
         max-width: 49%;
@@ -101,6 +105,11 @@
         color: var(--warp-view-annotationtooltip-value-font-color)
       }
 
+      .tooltip-date {
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+
       .round {
         border-radius: 50%;
         background-color: #bbbbbb;
@@ -115,12 +124,12 @@
       }
     }
 
-    &.left div {
+    &.left .tooltip-body {
       text-align: left;
       float: left;
     }
 
-    &.right div {
+    &.right .tooltip-body {
       text-align: right;
       float: right;
     }

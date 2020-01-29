@@ -35,7 +35,6 @@ import {ChartBounds} from '../../model/chartBounds';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent {
-  @ViewChild('date', {static: true}) date: ElementRef;
   @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
@@ -247,16 +246,20 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     tooltip.style.opacity = '1';
     tooltip.style.display = 'block';
     tooltip.style.top = (
-      (this.expanded ? count - (data.points[0].y + 0.5) : 0) * (this.lineHeight) + this.layout.margin.t
+      (this.expanded ? count - 1 - (data.points[0].y + 0.5) : -1) * (this.lineHeight) + this.layout.margin.t
     ) + 'px';
     tooltip.classList.remove('right', 'left');
-    this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
+ /*   this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
       ? data.xvals[0]
       : (moment(data.xvals[0]).utc().toISOString() || '')
-        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
+        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');*/
     tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
-        <span>${GTSLib.formatLabel(data.points[0].data.name)}: </span>
-        <span class="value">${data.yvals[0]}</span>
+<ul>
+<li class="tooltip-date">${this._options.timeMode === 'timestamp'
+      ? data.xvals[0]
+      : (moment(data.xvals[0]).utc().toISOString() || '')}</li>
+<li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.yvals[0]}</span></li>
+</ul>
       </div>`;
     if (data.event.offsetX > layout.width / 2) {
       tooltip.classList.add('left');
@@ -275,19 +278,19 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     this.chartDraw.emit(this.chartBounds);
- /*   const layout = {
-      xaxis: {} as any
-    };
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      layout.xaxis.tick0 = this.minTick / this.divider;
-      layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
-    } else {
-      layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
-      layout.xaxis.range = [
-        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
-      ];
-    }*/
+    /*   const layout = {
+         xaxis: {} as any
+       };
+       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+         layout.xaxis.tick0 = this.minTick / this.divider;
+         layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
+       } else {
+         layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+         layout.xaxis.range = [
+           moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+           moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+         ];
+       }*/
 //    this.graph.updateData(undefined, layout);
     this.LOG.debug(['afterPlot'], this.chartBounds, div);
   }

@@ -500,7 +500,7 @@ $res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
     annotation: [{
       title: 'Annotation chart',
       type: 'annotation',
-      warpscript: `0 5 <% 'j' STORE
+      warpscript: `0 50 <% 'j' STORE
   NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
   0 3 <%
     'i' STORE
