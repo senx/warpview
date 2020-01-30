@@ -133,7 +133,7 @@ export abstract class WarpViewComponent {
 
   protected constructor(public el: ElementRef, public sizeService: SizeService) {
     this.sizeService.sizeChanged$.subscribe(() => {
-      if (this.graph) {
+      if (this.graph && this.responsive) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
         this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
         this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
