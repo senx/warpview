@@ -113,7 +113,7 @@ export abstract class WarpViewComponent {
   loading = true;
   layout: Partial<any> = {};
   plotlyConfig: Partial<Config> = {
-    responsive: this.responsive,
+    responsive: true,
     showAxisDragHandles: true,
     scrollZoom: true,
     doubleClick: 'reset+autosize',
@@ -136,6 +136,8 @@ export abstract class WarpViewComponent {
       if (this.graph) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
         this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
+        this.graph.updatePlot();
       }
     });
   }
