@@ -6,6 +6,7 @@
     "inlineSources": true
   },
   "angularCompilerOptions": {
+
   },
   "exclude": [
     "test.ts",

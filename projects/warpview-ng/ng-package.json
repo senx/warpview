@@ -8,9 +8,9 @@
     "d3",
     "nouislider",
     "plotly.js",
-    "leaflet",
     "moment",
     "moment-timezone",
+    "leaflet",
     "leaflet.markercluster",
     "leaflet.heat",
     "canvas-gauges"
@@ -19,6 +19,9 @@
     "flatModuleFile": "warpview",
     "umdId": "warpview",
     "amdId": "warpview",
-    "entryFile": "./public-api.ts"
+    "entryFile": "./public-api.ts",
+    "styleIncludePaths": [
+      "../node_modules/leaflet/dist/leaflet.css"
+    ]
   }
 }

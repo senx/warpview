@@ -15,7 +15,17 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 
@@ -38,7 +48,7 @@ import {SizeService} from '../../services/resize.service';
   selector: 'warpview-map',
   templateUrl: './warp-view-map.component.html',
   styleUrls: ['./warp-view-map.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.None
 })
 export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
