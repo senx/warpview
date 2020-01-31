@@ -15,9 +15,9 @@
  *
  */
 @import "../../styles/vars";
-@import '~leaflet/dist/leaflet.css';
-@import '~leaflet.markercluster/dist/MarkerCluster.css';
-@import '~leaflet.markercluster/dist/MarkerCluster.Default.css';
+@import '../../../../../../node_modules/leaflet/dist/leaflet.css';
+@import '../../../../../../node_modules/leaflet.markercluster/dist/MarkerCluster.css';
+@import '../../../../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 :host {
   width: 100%;

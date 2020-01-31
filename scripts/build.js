@@ -26,7 +26,7 @@ const concat = require('concat');
     './scripts/loader.js'
   ];
   await concat(files, './dist/elements/warpview-elements.js');
-  fs.copy('./src/assets/fonts', './dist/elements/fonts')
+  fs.copy('./src/assets/fonts', './dist/elements/fonts');
   sass.render({
     file: './projects/warpview-ng/src/lib/styles/warpview.scss',
     outFile: './dist/elements/warpview-elements.css',
