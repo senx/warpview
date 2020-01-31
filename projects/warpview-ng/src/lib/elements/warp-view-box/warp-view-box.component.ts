@@ -24,9 +24,17 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
 
   layout: Partial<any> = {
     showlegend: false,
-    xaxis: {},
+    xaxis: {
+      type: '-'
+    },
     yaxis: {zeroline: false},
-    boxmode: 'group'
+    boxmode: 'group',
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
   private _type = 'box';
 
@@ -61,7 +69,7 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
     gtsList = gtsList.filter(g => {
       return (g.v && GTSLib.isGtsToPlot(g));
     });
-    const pattern = 'YYYY MM DD hh:mm:ss';
+    const pattern = 'YYYY/MM/DD hh:mm:ss';
     const format = pattern.slice(0, pattern.lastIndexOf(this._options.split || 'D') + 1);
     gtsList.forEach((gts: GTS) => {
       if (gts.v) {
@@ -99,6 +107,7 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.showlegend = this.showLegend;
+    this.layout.xaxis.showticklabels = this._type === 'box-date';
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;

@@ -27,6 +27,12 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
     xaxis: {},
     yaxis: {},
     zaxis: {},
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
   private _type = 'line3d';
 

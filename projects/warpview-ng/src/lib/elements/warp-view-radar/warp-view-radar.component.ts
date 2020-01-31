@@ -48,6 +48,12 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
       bgcolor: 'transparent',
       angularaxis: {type: 'category'},
       radialaxis: {visible: true}
+    },
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
     }
   };
 

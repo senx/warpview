@@ -35,6 +35,12 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     showlegend: false,
     xaxis: {},
     yaxis: {},
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
 
   constructor(

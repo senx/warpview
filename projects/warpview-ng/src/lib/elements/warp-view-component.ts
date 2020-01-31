@@ -111,7 +111,14 @@ export abstract class WarpViewComponent {
   private _unit = '';
   protected _data: DataModel;
   loading = true;
-  layout: Partial<any> = {};
+  layout: Partial<any> = {
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
+  };
   plotlyConfig: Partial<Config> = {
     responsive: true,
     showAxisDragHandles: true,
