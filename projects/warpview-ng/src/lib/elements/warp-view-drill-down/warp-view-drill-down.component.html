@@ -16,6 +16,7 @@
   -->
 
 <div class="wrapper">
+  <p class="noData" *ngIf="noDAta">No data to display</p>
   <calendar-heatmap [data]="heatMapData" overview="global"
                     [debug]="debug"
                     [minColor]="_options.minColor"

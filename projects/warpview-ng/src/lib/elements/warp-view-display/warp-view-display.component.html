@@ -16,6 +16,7 @@
   -->
 
 <div class="chart-container" id="wrapper">
+  <p class="noData" *ngIf="noDAta">No data to display</p>
   <div [ngStyle]="getStyle()">
     <div class="value">{{toDisplay}}
       <small>{{unit}}</small>
