@@ -217,6 +217,7 @@ export abstract class WarpViewComponent {
       this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
       this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
     }
+    this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height);
     if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {
       dataModel.bounds = {
         xmin: Math.floor(this._options.bounds.minDate),

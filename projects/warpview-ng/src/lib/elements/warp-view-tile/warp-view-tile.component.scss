@@ -16,11 +16,12 @@
  */
 @import "../../styles/vars";
 
-:host {
-  opacity: 0;
+warp-view-tile, warpview-tile {
   width: var(--warp-view-tile-width, 100%);
   max-height: var(--warp-view-tile-height, 100%);
   overflow: auto;
+  min-width: var(--warp-view-tile-width, 100%);
+  min-height: var(--warp-view-tile-height, 100%);
 
   .wrapper {
     opacity: 1;

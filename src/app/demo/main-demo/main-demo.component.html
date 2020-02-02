@@ -20,7 +20,7 @@
     <div class="card-body">
       <div *ngFor="let d of currentChart">
         <h1>{{d.title}}</h1>
-        <div style="height: 600px;min-height: 600px;">
+        <div style="height: 200px;min-height: 200px; max-height: 200px;">
           <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true" [unit]="d.unit"
                          [showLegend]="false" [options]="options"
                          [type]="d.type">{{d.warpscript}}</warpview-tile>

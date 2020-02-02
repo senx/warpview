@@ -100,6 +100,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   ngAfterViewInit() {
     this.warpScript = this.warpRef.nativeElement.textContent.trim();
     this.LOG.debug(['ngAfterViewInit', 'warpScript'], this.warpScript);
+    this.el.nativeElement.style.opacity = '1';
     this.execute();
   }
 

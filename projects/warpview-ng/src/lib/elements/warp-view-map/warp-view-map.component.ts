@@ -40,6 +40,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import moment from 'moment-timezone';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
+import {ResizedEvent} from "angular-resize-event";
 
 /**
  *
@@ -275,12 +276,12 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   }
 
   private resizeMe() {
-    let height = this.el.nativeElement.parentElement.getBoundingClientRect().height === 0
+    let height = this.el.nativeElement.parentElement.getBoundingClientRect().height; /* === 0
       ? ChartLib.DEFAULT_HEIGHT
-      : this.el.nativeElement.parentElement.getBoundingClientRect().height;
-    const width = this.el.nativeElement.parentElement.getBoundingClientRect().width === 0
+      : this.el.nativeElement.parentElement.getBoundingClientRect().height; */
+    const width = this.el.nativeElement.parentElement.getBoundingClientRect().width /* === 0
       ? ChartLib.DEFAULT_WIDTH
-      : this.el.nativeElement.parentElement.getBoundingClientRect().width;
+      : this.el.nativeElement.parentElement.getBoundingClientRect().width; */
     if (this._options.map.showTimeSlider && this.timeSlider && this.timeSlider.nativeElement) {
       height -= this.timeSlider.nativeElement.getBoundingClientRect().height;
     }
@@ -358,6 +359,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
     this.displayMap({gts: flattenGTS, params});
     this.LOG.debug(['onResize', 'postDisplayMap'], 'resizeTimer', this.el.nativeElement.parentElement.clientWidth, this.parentWidth);
+    this.resizeMe();
   }
 
   private icon(color: string, marker = '') {

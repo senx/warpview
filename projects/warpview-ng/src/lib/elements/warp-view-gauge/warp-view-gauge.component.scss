@@ -21,10 +21,14 @@
 
   #chartContainer {
     height: 100%;
+
+    div {
+      height: 100%;
+    }
   }
 
   div.chart {
-    width: var(--warp-view-chart-width);
-    height: var(--warp-view-chart-height);
+    width: var(--warp-view-chart-width, 100%);
+    height: var(--warp-view-chart-height, 100%);
   }
 }
