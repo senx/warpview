@@ -23,13 +23,13 @@
   }
 
   .chart-container {
-    width: var(--warp-view-chart-width);
-    height: var(--warp-view-chart-height);
+    width: var(--warp-view-chart-width, 100%);
+    height: var(--warp-view-chart-height, 100%);
     position: relative;
     overflow: hidden;
 
     div {
-      height: 99%;
+      height: 99% !important;
       width: 99%;
       display: block;
 

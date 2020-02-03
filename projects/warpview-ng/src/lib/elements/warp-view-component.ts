@@ -111,9 +111,17 @@ export abstract class WarpViewComponent {
   private _unit = '';
   protected _data: DataModel;
   loading = true;
-  layout: Partial<any> = {};
+  noDAta = false;
+  layout: Partial<any> = {
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
+  };
   plotlyConfig: Partial<Config> = {
-    responsive: this.responsive,
+    responsive: true,
     showAxisDragHandles: true,
     scrollZoom: true,
     doubleClick: 'reset+autosize',
@@ -133,9 +141,11 @@ export abstract class WarpViewComponent {
 
   protected constructor(public el: ElementRef, public sizeService: SizeService) {
     this.sizeService.sizeChanged$.subscribe(() => {
-      if (this.graph) {
+      if (this.graph && this.responsive) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
         this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
+        this.graph.updatePlot();
       }
     });
   }
@@ -179,8 +189,12 @@ export abstract class WarpViewComponent {
   }
 
   protected initChart(el: ElementRef): boolean {
+    this.noDAta = false;
     this.LOG.debug(['initiChart', 'this._data'], this._data);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
+      this.loading = false;
+      this.LOG.debug(['initiChart', 'nodata']);
+      this.noDAta = true;
       return false;
     }
     moment.tz.setDefault(this._options.timeZone);
@@ -203,6 +217,7 @@ export abstract class WarpViewComponent {
       this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
       this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
     }
+    this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height);
     if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {
       dataModel.bounds = {
         xmin: Math.floor(this._options.bounds.minDate),

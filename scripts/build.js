@@ -25,19 +25,26 @@ const concat = require('concat');
     './dist/elements/main.js',
     './scripts/loader.js'
   ];
+  const css = [
+    './node_modules/leaflet/dist/leaflet.css',
+    './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
+    './node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css',
+    './dist/elements/style.css'
+  ];
   await concat(files, './dist/elements/warpview-elements.js');
-  fs.copy('./src/assets/fonts', './dist/elements/fonts')
+  fs.copy('./src/assets/fonts', './dist/elements/fonts');
   sass.render({
     file: './projects/warpview-ng/src/lib/styles/warpview.scss',
     outFile: './dist/elements/warpview-elements.css',
     outputStyle: 'compressed'
-  }, function(err, result) {
+  }, function (err, result) {
     if (!err) {
       let compiledScssCode = result.css.toString();
       // remove comments from the css output
       compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
       compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
       fs.writeFileSync('./dist/elements/warpview-elements.css', compiledScssCode);
+     // concat(css, './dist/elements/warpview-elements.css');
     }
   });
 })();

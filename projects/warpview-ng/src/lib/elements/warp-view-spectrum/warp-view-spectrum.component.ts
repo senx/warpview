@@ -43,6 +43,12 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     showlegend: false,
     xaxis: {},
     yaxis: {},
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
   private _type = 'histogram2d';
   private visibility: boolean[] = [];

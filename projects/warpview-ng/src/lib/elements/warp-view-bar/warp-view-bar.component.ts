@@ -41,6 +41,12 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       fixedrange: true,
       showline: true
     },
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
 
   constructor(

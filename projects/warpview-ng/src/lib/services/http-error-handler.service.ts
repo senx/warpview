@@ -31,6 +31,7 @@ export type HandleError = <T> (operation?: string, result?: T) => (error: HttpEr
 @Injectable()
 export class HttpErrorHandler {
   private LOG: Logger;
+
   /**
    */
   constructor() {
@@ -53,7 +54,9 @@ export class HttpErrorHandler {
     return (error: HttpErrorResponse): Observable<T> => {
       this.LOG.error(['serviceName'], error);
       this.LOG.error(['serviceName'], `${operation} failed: ${error.statusText}`);
-      this.LOG.error(['serviceName'], (error.error.message) ? error.error.message : error.status ? error.statusText : 'Server error');
+      this.LOG.error(['serviceName'], ((error.error || {}).message)
+        ? error.error.message
+        : error.status ? error.statusText : 'Server error');
       return of(result);
     };
   }

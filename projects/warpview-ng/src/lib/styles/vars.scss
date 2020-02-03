@@ -85,3 +85,10 @@
   --warp-slider-handle-color: #{$w10-blue};
   --warp-slider-handle-shadow: inset 0 0 1px #{$w10-white}, inset 0 1px 7px #{$w10-lightgrey}, 0 3px 6px -3px #{$w10-grey};
 }
+
+.noData {
+  width: 100%;
+  text-align: center;
+  color: var(--warp-view-chart-legend-color);
+  position: absolute;
+}

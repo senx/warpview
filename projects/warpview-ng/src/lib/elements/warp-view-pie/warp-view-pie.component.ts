@@ -47,7 +47,13 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
       orientation: 'h',
       bgcolor: 'transparent',
     },
-    orientation: 270
+    orientation: 270,
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
 
   update(options, refresh): void {

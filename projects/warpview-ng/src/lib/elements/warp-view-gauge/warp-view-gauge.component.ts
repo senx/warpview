@@ -53,7 +53,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
   }
-  
+
   update(options, refresh): void {
     this.LOG.debug(['onOptions', 'before'], this._options, options);
     if (!deepEqual(options, this._options)) {
@@ -69,7 +69,13 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     }
     this.LOG.debug(['drawChart', 'plotlyData'], this.plotlyData, this._type);
     this.layout.autosize = true;
-    this.layout.grid = {rows: Math.ceil(this.plotlyData.length / 2), columns: 2, pattern: 'independent', xgap: 0.2, ygap: 0.2};
+    this.layout.grid = {
+      rows: Math.ceil(this.plotlyData.length / 2),
+      columns: 2,
+      pattern: 'independent',
+      xgap: 0.2,
+      ygap: 0.2
+    };
     this.layout.margin = {t: 25, r: 25, l: 25, b: 25};
     if (this._type === 'bullet') {
       this.layout.height = this.plotlyData.length * 100;
@@ -80,11 +86,6 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       };
       this.layout.grid = {rows: this.plotlyData.length, columns: 1, pattern: 'independent'};
     }
-    /*  Plotly.newPlot(this.graph.nativeElement, this.plotlyData, this.layout, this.plotlyConfig).then(plot => {
-        this.loading = false;
-        this._chart = plot;
-        this.chartDraw.emit();
-      });*/
   }
 
   protected convert(data: DataModel): any[] {

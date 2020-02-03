@@ -16,6 +16,7 @@
   -->
 
 <div class="wrapper">
+  <p class="noData" *ngIf="noDAta">No data to display</p>
   <warpview-paginable
     *ngFor="let data of _tabularData"
     [data]="data" [options]="_options"

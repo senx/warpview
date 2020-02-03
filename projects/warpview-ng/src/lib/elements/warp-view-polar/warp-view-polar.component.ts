@@ -52,7 +52,13 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
         visible: true,
       }
     },
-    orientation: 270
+    orientation: 270,
+    margin: {
+      t: 0,
+      b: 25,
+      r: 0,
+      l: 0
+    }
   };
 
   constructor(

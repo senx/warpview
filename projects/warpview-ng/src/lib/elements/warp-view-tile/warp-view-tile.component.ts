@@ -42,7 +42,7 @@ import {Logger} from '../../utils/logger';
   templateUrl: './warp-view-tile.component.html',
   styleUrls: ['./warp-view-tile.component.scss'],
   providers: [HttpErrorHandler],
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.None
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
@@ -100,6 +100,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   ngAfterViewInit() {
     this.warpScript = this.warpRef.nativeElement.textContent.trim();
     this.LOG.debug(['ngAfterViewInit', 'warpScript'], this.warpScript);
+    this.el.nativeElement.style.opacity = '1';
     this.execute();
   }
 
@@ -211,13 +212,19 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this.warpScript);
       this.warp10Service.exec(this.warpScript, this.execUrl).subscribe(gtsStr => {
-        try {
-          this.gtsList = gtsStr;
-          this.parseGTS();
-        } catch (e) {
-          this.LOG.error(['execute'], e);
-        }
         this.loading = false;
+        this.LOG.debug(['execute'], gtsStr);
+        if (gtsStr) {
+          try {
+            this.gtsList = gtsStr;
+            this.parseGTS();
+          } catch (e) {
+            this.LOG.error(['execute'], e);
+          }
+        }
+      }, e => {
+        this.loading = false;
+        this.LOG.error(['execute'], e);
       });
     }
   }
