@@ -107,8 +107,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     margin: {
       t: 30,
       b: 2,
-      r: 0,
-      l: 0
+      r: 10,
+      l: 10
     },
   };
 
@@ -194,7 +194,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.height = this.height;
     this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
-    this.layout.margin.l = this.standalone ? 0 : 50;
+    this.layout.margin.l = this.standalone ? 10 : 50;
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {

@@ -30,8 +30,8 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
     margin: {
       t: 10,
       b: 25,
-      r: 0,
-      l: 0
+      r: 10,
+      l: 10
     }
   };
   private _type = 'line3d';

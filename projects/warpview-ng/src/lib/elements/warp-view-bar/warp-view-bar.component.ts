@@ -42,10 +42,10 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       showline: true
     },
     margin: {
-      t: 0,
+      t: 10,
       b: 25,
-      r: 0,
-      l: 0
+      r: 10,
+      l: 10
     }
   };
 

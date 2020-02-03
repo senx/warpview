@@ -116,8 +116,8 @@ export abstract class WarpViewComponent {
     margin: {
       t: 10,
       b: 25,
-      r: 0,
-      l: 0
+      r: 10,
+      l: 10
     }
   };
   plotlyConfig: Partial<Config> = {
@@ -238,7 +238,7 @@ export abstract class WarpViewComponent {
       }
     }
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
-    if (this.plotlyData.length === 0) {
+    if (!this.plotlyData || this.plotlyData.length === 0) {
       this.loading = false;
       return false;
     }

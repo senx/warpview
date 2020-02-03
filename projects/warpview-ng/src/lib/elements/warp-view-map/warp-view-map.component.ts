@@ -15,17 +15,7 @@
  *
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 
@@ -40,7 +30,6 @@ import {GTSLib} from '../../utils/gts.lib';
 import moment from 'moment-timezone';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
-import {ResizedEvent} from "angular-resize-event";
 
 /**
  *
@@ -54,6 +43,7 @@ import {ResizedEvent} from "angular-resize-event";
 export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   @ViewChild('mapDiv', {static: true}) mapDiv: ElementRef<HTMLDivElement>;
+  @ViewChild('wrapper', {static: true}) wrapper: ElementRef<HTMLDivElement>;
   @ViewChild('timeSlider', {static: false}) timeSlider: ElementRef<HTMLDivElement>;
   @ViewChild('timeRangeSlider', {static: false}) timeRangeSlider: ElementRef<HTMLDivElement>;
 
@@ -133,107 +123,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       bounds: {}
     }
   };
-  private mapTypes: any = {
-    NONE: undefined,
-    DEFAULT: {
-      link: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    },
-    HOT: {
-      link: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles
- style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by
- <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>`
-    },
-    TOPO: {
-      link: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-      attribution: `Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
- <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>
-  (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)`
-    },
-    TOPO2: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN,
-       GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community`
-    },
-    SURFER: {
-      link: 'https://maps.heigit.org/openmapsurfer/tiles/roads/webmercator/{z}/{x}/{y}.png',
-      attribution: `Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of
- Heidelberg</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
-    },
-    HYDRA: {
-      link: 'https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png',
-      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
- &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
-    },
-    HYDRA2: {
-      link: 'https://{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png',
-      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
- &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
-    },
-    TONER: {
-      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png',
-      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
- <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
-  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
-      subdomains: 'abcd'
-    },
-    TONER_LITE: {
-      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png',
-      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
- <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
-  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
-      subdomains: 'abcd',
-    },
-    TERRAIN: {
-      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png',
-      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
- <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
- <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
-      subdomains: 'abcd',
-    },
-    ESRI: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-      attribution: `Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan,
- METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012`
-    },
-    SATELLITE: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      attribution: `Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN,
- IGP, UPR-EGP, and the GIS User Community`
-    },
-    OCEANS: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
-    },
-    GRAY: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-      attibs: ''
-    },
-    GRAYSCALE: {
-      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    },
-    WATERCOLOR: {
-      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
- <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
-  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
-      subdomains: 'abcd',
-    },
-    CARTODB: {
-      link: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
- <a href="https://carto.com/attributions">CartoDB</a>`,
-      subdomains: 'abcd',
-    },
-    CARTODB_DARK: {
-      link: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
- <a href="https://carto.com/attributions">CartoDB</a>`,
-      subdomains: 'abcd',
-    },
-  };
 
   private _map: Leaflet.Map;
   private _hiddenData: number[];
@@ -276,10 +165,11 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   }
 
   private resizeMe() {
-    let height = this.el.nativeElement.parentElement.getBoundingClientRect().height; /* === 0
+    this.LOG.debug(['resizeMe'], this.wrapper.nativeElement.parentElement.getBoundingClientRect());
+    let height = this.wrapper.nativeElement.parentElement.getBoundingClientRect().height; /* === 0
       ? ChartLib.DEFAULT_HEIGHT
       : this.el.nativeElement.parentElement.getBoundingClientRect().height; */
-    const width = this.el.nativeElement.parentElement.getBoundingClientRect().width /* === 0
+    const width = this.wrapper.nativeElement.parentElement.getBoundingClientRect().width; /* === 0
       ? ChartLib.DEFAULT_WIDTH
       : this.el.nativeElement.parentElement.getBoundingClientRect().width; */
     if (this._options.map.showTimeSlider && this.timeSlider && this.timeSlider.nativeElement) {
@@ -289,10 +179,19 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       height -= this.timeRangeSlider.nativeElement.getBoundingClientRect().height;
     }
     this.finalHeight = height;
-    this.mapDiv.nativeElement.style.width = width + 'px';
-    this.mapDiv.nativeElement.style.height = height + 'px';
+    this.mapDiv.nativeElement.style.width = 'calc(' + width + 'px - '
+      + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
+      + ' - '
+      + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
+      + ')';
+    this.mapDiv.nativeElement.style.height = 'calc(' + height + 'px - '
+      + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
+      + ' - '
+      + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
+      + ')';
     this.width = width;
     this.height = height;
+    requestAnimationFrame(() => this._map.invalidateSize());
   }
 
   heatRadiusDidChange(event) {
@@ -392,8 +291,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         height -= this.timeRangeSlider.nativeElement.getBoundingClientRect().height;
       }
     }
-    this.mapDiv.nativeElement.style.width = width + 'px';
-    this.mapDiv.nativeElement.style.height = height + 'px';
     this.width = width;
     this.height = height;
     this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData || [], this.divider, this._options.scheme) || [];
@@ -433,8 +330,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       }
     });
     if (this._options.map.mapType !== 'NONE') {
-      console.log(this._options.map.mapType);
-      const map = this.mapTypes[this._options.map.mapType || 'DEFAULT'];
+      const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
       const mapOpts: any = {};
       if (map.attribution) {
         mapOpts.attribution = map.attribution;
@@ -577,6 +473,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       });
       this._heatLayer.addTo(this._map);
     }
+    this.resizeMe();
   }
 
   private updateGtsPath(gts: any) {

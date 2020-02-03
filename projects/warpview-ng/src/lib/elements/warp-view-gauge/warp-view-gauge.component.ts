@@ -89,9 +89,14 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   }
 
   protected convert(data: DataModel): any[] {
+    this.LOG.debug(['convert'], data);
     const gtsList = data.data as any[];
     const dataList = [];
     let max = Number.MIN_VALUE;
+    this.LOG.debug(['convert', 'gtsList'], gtsList);
+    if (!gtsList || gtsList.length === 0 || gtsList[0].length < 2) {
+      return;
+    }
     gtsList.forEach(d => max = Math.max(max, d[1]));
     let x = 0;
     let y = -1 / (gtsList.length / 2);
@@ -153,6 +158,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
             }
           }
         });
+      this.LOG.debug(['convert', 'dataList'], i);
     });
 
     this.LOG.debug(['convert', 'dataList'], dataList);

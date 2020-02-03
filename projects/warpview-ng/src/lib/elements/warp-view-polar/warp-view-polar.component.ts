@@ -56,8 +56,8 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
     margin: {
       t: 10,
       b: 25,
-      r: 0,
-      l: 0
+      r: 10,
+      l: 10
     }
   };
 

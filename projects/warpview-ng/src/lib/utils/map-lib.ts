@@ -23,6 +23,108 @@ export class MapLib {
   static BASE_RADIUS = 2;
   private static LOG: Logger = new Logger(MapLib);
 
+  static mapTypes: any = {
+    NONE: undefined,
+    DEFAULT: {
+      link: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    },
+    HOT: {
+      link: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles
+ style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by
+ <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>`
+    },
+    TOPO: {
+      link: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+      attribution: `Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
+ <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>
+  (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)`
+    },
+    TOPO2: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN,
+       GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community`
+    },
+    SURFER: {
+      link: 'https://maps.heigit.org/openmapsurfer/tiles/roads/webmercator/{z}/{x}/{y}.png',
+      attribution: `Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of
+ Heidelberg</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
+    },
+    HYDRA: {
+      link: 'https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png',
+      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
+ &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
+    },
+    HYDRA2: {
+      link: 'https://{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png',
+      attribution: `Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a>
+ &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`
+    },
+    TONER: {
+      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
+      subdomains: 'abcd'
+    },
+    TONER_LITE: {
+      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
+      subdomains: 'abcd',
+    },
+    TERRAIN: {
+      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+ <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
+      subdomains: 'abcd',
+    },
+    ESRI: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      attribution: `Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan,
+ METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012`
+    },
+    SATELLITE: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: `Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN,
+ IGP, UPR-EGP, and the GIS User Community`
+    },
+    OCEANS: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+    },
+    GRAY: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      attibs: ''
+    },
+    GRAYSCALE: {
+      link: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    },
+    WATERCOLOR: {
+      link: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
+      attribution: `Map tiles by <a href="http://stamen.com">Stamen Design</a>,
+ <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy;
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`,
+      subdomains: 'abcd',
+    },
+    CARTODB: {
+      link: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
+ <a href="https://carto.com/attributions">CartoDB</a>`,
+      subdomains: 'abcd',
+    },
+    CARTODB_DARK: {
+      link: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+      attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy;
+ <a href="https://carto.com/attributions">CartoDB</a>`,
+      subdomains: 'abcd',
+    },
+  };
+
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
     if (!data.gts) {
       return;

@@ -475,26 +475,23 @@ Pencode`
       type: 'gauge',
       warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-[ $res
-$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
-{ 'data' $values }`
+$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+LIST-> DROP`
     }, {
       title: 'Gauge chart',
       type: 'gauge',
       warpscript: `  @training/dataset0
-          [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-          [ $res 0 GET ] 'res' STORE
-          [ $res
-          $res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
-          { 'data' $values }`
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
+[ $res 0 GET ] 'res' STORE
+$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+LIST-> DROP`
     }, {
       title: 'Bullet chart',
       type: 'bullet',
       warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-[ $res
-$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP 'values' STORE
-{ 'data' $values }`
+$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
+LIST-> DROP`
     }
     ],
     annotation: [{

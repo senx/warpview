@@ -80,7 +80,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     margin: {
       t: 0,
       b: 25,
-      r: 0,
+      r: 10,
       l: 50
     },
   };
