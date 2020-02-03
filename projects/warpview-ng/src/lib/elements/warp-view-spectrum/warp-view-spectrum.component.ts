@@ -44,7 +44,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     xaxis: {},
     yaxis: {},
     margin: {
-      t: 0,
+      t: 10,
       b: 25,
       r: 0,
       l: 0

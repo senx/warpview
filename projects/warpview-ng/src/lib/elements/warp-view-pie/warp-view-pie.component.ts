@@ -49,7 +49,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
     },
     orientation: 270,
     margin: {
-      t: 0,
+      t: 10,
       b: 25,
       r: 0,
       l: 0

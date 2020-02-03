@@ -71,7 +71,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   getStyle() {
-    this.LOG.debug(['getStyle'], this._options);
     if (!this._options) {
       return {};
     } else {
@@ -79,7 +78,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
       if (this._options.fontColor) {
         style.color = this._options.fontColor;
       }
-      this.LOG.debug(['getStyle', 'style'], style);
       return style;
     }
   }

@@ -30,7 +30,7 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
     yaxis: {zeroline: false},
     boxmode: 'group',
     margin: {
-      t: 0,
+      t: 10,
       b: 25,
       r: 0,
       l: 0

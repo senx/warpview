@@ -36,7 +36,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     xaxis: {},
     yaxis: {},
     margin: {
-      t: 0,
+      t: 10,
       b: 25,
       r: 0,
       l: 0
