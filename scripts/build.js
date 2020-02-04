@@ -29,7 +29,7 @@ const concat = require('concat');
     './node_modules/leaflet/dist/leaflet.css',
     './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
     './node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css',
-    './dist/elements/style.css'
+    './dist/elements/warpview-elements.css'
   ];
   await concat(files, './dist/elements/warpview-elements.js');
   fs.copy('./src/assets/fonts', './dist/elements/fonts');
@@ -44,7 +44,7 @@ const concat = require('concat');
       compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
       compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
       fs.writeFileSync('./dist/elements/warpview-elements.css', compiledScssCode);
-     // concat(css, './dist/elements/warpview-elements.css');
+      concat(css, './dist/elements/warpview-elements.css');
     }
   });
 })();
