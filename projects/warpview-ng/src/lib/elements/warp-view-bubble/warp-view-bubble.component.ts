@@ -39,7 +39,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
       t: 10,
       b: 25,
       r: 10,
-      l: 10
+      l: 50
     }
   };
 
