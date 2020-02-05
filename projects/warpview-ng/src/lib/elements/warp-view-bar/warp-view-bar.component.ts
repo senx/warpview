@@ -74,7 +74,17 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    const gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+    let gtsList = [];
+    if (GTSLib.isArray(data.data)) {
+      if (data.data.length > 0 && GTSLib.isGts(data.data[0])) {
+        gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+      } else {
+        gtsList = data.data as any[];
+      }
+    } else {
+      gtsList = [data.data];
+    }
+    this.LOG.debug(['convert', 'gtsList'], gtsList);
     let divider = 1000; // default for µs timeunit
     if (this._options.timeUnit && this._options.timeUnit === 'ms') {
       divider = 1;
@@ -107,24 +117,52 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
         gts.v.forEach(value => {
           const ts = value[0];
           if (!this._options.horizontal) {
-            (series.y as any[]).push(value[value.length - 1]);
+            series.y.push(value[value.length - 1]);
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-              (series.x as any[]).push(ts);
+              series.x.push(ts);
             } else {
               const timestamp = Math.floor(ts / divider);
-              (series.x as any[]).push(moment(timestamp).utc(true).toDate());
+              series.x.push(moment(timestamp).utc(true).toDate());
             }
           } else {
-            (series.x as any[]).push(value[value.length - 1]);
+            series.x.push(value[value.length - 1]);
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-              (series.y as any[]).push(ts);
+              series.y.push(ts);
             } else {
               const timestamp = Math.floor(ts / divider);
-              (series.y as any[]).push(moment(timestamp).utc(true).toDate());
+              series.y.push(moment(timestamp).utc(true).toDate());
             }
           }
         });
         dataset.push(series);
+      } else {
+        this.LOG.debug(['convert', 'gts'], gts);
+        (gts.columns || []).forEach((c, i) => {
+          const label = c;
+          const color = ColorLib.getColor(i, this._options.scheme);
+          const series: Partial<any> = {
+            type: 'bar',
+            mode: 'lines+markers',
+            name: label,
+            text: label,
+            orientation: this._options.horizontal ? 'h' : 'v',
+            x: [],
+            y: [],
+            hoverinfo: 'none',
+            marker: {
+              color: ColorLib.transparentize(color),
+              line: {
+                color,
+                width: 1
+              }
+            }
+          };
+          (gts.rows || []).forEach(r => {
+            series.y.unshift(r[0]);
+            series.x.push(r[i + 1]);
+          });
+          dataset.push(series);
+        });
       }
     });
     return dataset;

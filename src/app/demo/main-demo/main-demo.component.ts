@@ -133,17 +133,28 @@ false RESETS
 [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
 [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
 { 'data' $values }`
-    },
-      {
-        title: 'Horizontal Stacked Bar chart',
-        type: 'bar',
-        warpscript: `@training/dataset0
+    }, {
+      title: 'Horizontal Stacked Bar chart',
+      type: 'bar',
+      warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
 false RESETS
 [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
 [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
 { 'data' $values 'globalParams' { 'horizontal' true 'stacked' true } }`
-      }],
+    }, {
+      title: 'Horizontal Stacked Bar chart With custom data',
+      type: 'bar',
+      warpscript: `{
+'columns'  [ 'A' 'B' 'C' 'D' ]
+'rows' [
+  [ 'label X' 15 56 44 22 ]
+  [ 'label Y' 1 5 4 2 ]
+  [ 'label Z' 14 45 78 12 ]
+]
+} 'values' STORE
+{ 'data' $values 'globalParams' { 'horizontal' true 'stacked' true } }`
+    }],
     line3d: [{
       title: '3D line chart',
       type: 'line3d',
