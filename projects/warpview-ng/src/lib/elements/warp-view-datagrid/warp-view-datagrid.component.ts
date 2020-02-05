@@ -22,6 +22,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-datagrid',
@@ -68,8 +69,30 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   }
 
   protected convert(data: DataModel): any[] {
-    this._tabularData = this.parseData(GTSLib.flatDeep(this._data.data as any[]));
+    if (GTSLib.isArray(data.data)) {
+      if (data.data.length > 0 && GTSLib.isGts(data.data[0])) {
+        this._tabularData = this.parseData(GTSLib.flatDeep(this._data.data as any[]));
+      } else {
+        this._tabularData = this.parseCustomData(data.data as any[]);
+      }
+    } else {
+      this._tabularData = this.parseCustomData([data.data as any]);
+    }
     return [];
+  }
+
+  private parseCustomData(data: any[]): { name: string, values: any[], headers: string[] }[] {
+    const flatData: { name: string, values: any[], headers: string[] }[] = [];
+    data.forEach((d, i) => {
+      const dataSet: { name: string, values: any[], headers: string[] } = {
+        name: d.title || '',
+        values: d.rows,
+        headers: ['Name'].concat(d.columns),
+      };
+      flatData.push(dataSet);
+    });
+    this.LOG.debug(['parseCustomData', 'flatData'], flatData);
+    return flatData;
   }
 
   protected parseData(data: any[]): { name: string, values: any[], headers: string[] }[] {
@@ -84,7 +107,7 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
       if (GTSLib.isGts(d)) {
         this.LOG.debug(['parseData', 'isGts'], d);
         dataSet.name = GTSLib.serializeGtsMetadata(d);
-        dataSet.values = d.v;
+        dataSet.values = d.v.map(v => [this.formatDate(v[0])].concat(v.slice(1, v.length)));
       } else {
         this.LOG.debug(['parseData', 'is not a Gts'], d);
         dataSet.values = GTSLib.isArray(d) ? d : [d];
@@ -104,7 +127,11 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
       }
       flatData.push(dataSet);
     });
-    this.LOG.debug(['parseData', 'flatData'], flatData);
+    this.LOG.debug(['parseData', 'flatData'], flatData, this._options.timeMode);
     return flatData;
+  }
+
+  formatDate(date: number): string {
+    return this._options.timeMode === 'date' ? moment.tz(date / this.divider, this._options.timeZone).toISOString() : date.toString();
   }
 }

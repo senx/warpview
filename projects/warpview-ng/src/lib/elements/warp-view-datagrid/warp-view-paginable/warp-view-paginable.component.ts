@@ -77,10 +77,6 @@ export class WarpViewPaginableComponent implements OnInit {
     }
   };
 
-  formatDate(date: number): string {
-    return this._options.timeMode === 'date' ? moment.utc(date / 1000).toISOString() : date.toString();
-  }
-
   goto(page: number) {
     this.page = page;
     this.drawGridData();

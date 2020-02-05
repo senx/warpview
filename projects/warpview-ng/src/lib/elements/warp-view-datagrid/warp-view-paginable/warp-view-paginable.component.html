@@ -23,9 +23,8 @@
     </thead>
     <tbody>
     <tr *ngFor="let value of displayedValues; even as isEven; odd as isOdd" [ngClass]="{ odd: isOdd, even: isEven}">
-      <td *ngFor="let v of value; first as isFirst">
-        <span *ngIf="isFirst">{{formatDate(v)}}</span>
-        <span *ngIf="!isFirst">{{decodeURIComponent(v)}}</span>
+      <td *ngFor="let v of value">
+        <span>{{v}}</span>
       </td>
     </tr>
     </tbody>
@@ -39,7 +38,7 @@
              [ngClass]="{ index: true, hoverable: page !== c, active: page === c}" (click)="goto(c)">{{c}}</span>
       </span>
       <div class="index disabled" *ngIf="page + windowed < pages.length">...</div>
-      <div class="next hoverable" (click)="next()" *ngIf="page !== _data.values.length - 1">&gt;</div>
+      <div class="next hoverable" (click)="next()" *ngIf="page + windowed < _data.values.length - 1">&gt;</div>
     </div>
   </div>
 </div>

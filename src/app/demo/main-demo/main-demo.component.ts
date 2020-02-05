@@ -146,6 +146,7 @@ false RESETS
       title: 'Horizontal Stacked Bar chart With custom data',
       type: 'bar',
       warpscript: `{
+'title' 'Test'
 'columns'  [ 'A' 'B' 'C' 'D' ]
 'rows' [
   [ 'label X' 15 56 44 22 ]
@@ -242,6 +243,19 @@ LMAP
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 1 d ] FETCH
 'data' STORE
 { 'data' $data 'globalParams' { 'headers' [ 'A' 'B' ] } 'params' [ { 'headers' [ 'C' 'D' ] } ] }`
+    }, {
+      title: 'Data grid custom data',
+      type: 'datagrid',
+      warpscript: `{
+'title' 'Test'
+'columns'  [ 'A' 'B' 'C' 'D' ]
+'rows' [
+  [ 'label X' 15 56 44 22 ]
+  [ 'label Y' 1 5 4 2 ]
+  [ 'label Z' 14 45 78 12 ]
+]
+} 'values' STORE
+{ 'data' $values }`
     }],
     display: [{
       title: 'Data display',
