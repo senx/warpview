@@ -30,14 +30,13 @@ import {Config} from 'plotly.js';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 export abstract class WarpViewComponent {
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
   @ViewChild('graph', {static: false}) graph: PlotlyComponent;
   @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
-  @Input('responsive') responsive: boolean;
-  @Input('showLegend') showLegend: boolean;
+  @Input('responsive') responsive = true;
+  @Input('showLegend') showLegend = false;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
 
