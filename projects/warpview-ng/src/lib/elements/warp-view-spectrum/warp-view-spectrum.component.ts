@@ -47,7 +47,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
       t: 10,
       b: 25,
       r: 10,
-      l: 10
+      l: 50
     }
   };
   private _type = 'histogram2d';
