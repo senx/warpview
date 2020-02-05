@@ -191,10 +191,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     } else {
       this.layout.xaxis.type = 'date';
     }
-    gtsList.forEach((gts: GTS) => {
+    gtsList.forEach((gts: GTS, i) => {
       if (gts.v && GTSLib.isGtsToPlot(gts)) {
         const label = GTSLib.serializeGtsMetadata(gts);
-        const color = ColorLib.getColor(gts.id, this._options.scheme);
+        const c = ColorLib.getColor(gts.id, this._options.scheme);
+        const color = (data.params[i] || {bgColor: c}).bgColor;
         const series: Partial<any> = {
           type: 'scatter',
           mode: this._type === 'scatter' ? 'markers' : this._options.showDots ? 'lines+markers' : 'lines',
