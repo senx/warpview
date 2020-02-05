@@ -135,7 +135,7 @@ false RESETS
 { 'data' $values }`
     },
       {
-        title: 'Horizontal Bar chart',
+        title: 'Horizontal Stacked Bar chart',
         type: 'bar',
         warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
