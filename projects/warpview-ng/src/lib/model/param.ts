@@ -22,6 +22,8 @@ export class Param {
   gridLineColor?: string;
   showLegend?: boolean;
   responsive?: boolean;
+  horizontal = false;
+  stacked = false;
   key?: string;
   interpolate?: string;
   type?: string;

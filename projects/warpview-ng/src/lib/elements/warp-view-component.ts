@@ -157,11 +157,13 @@ export abstract class WarpViewComponent {
   protected legendFormatter(x, series): string {
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
-      return `<br>${series.map(s => {
+      return `<br>
+      ${series.map(s => {
         // FIXME :  if (!s.isVisible) return;
-        let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + (s.y || s.r);
+        let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
         if (s.isHighlighted) {
-          labeledData = `<b>${labeledData}</b>`;
+          labeledData = `<b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
+${labeledData}</b>`;
         }
         return labeledData;
       }).join('<br>')}`;
@@ -179,11 +181,12 @@ export abstract class WarpViewComponent {
     //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
     //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)
     series.forEach(s => {
-      const labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + (s.y || s.r || '');
+      const labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
       /* if (series.isHighlighted) {
          labeledData = `<b>${labeledData}</b>`;
        }*/
-      html += `<br>${labeledData}`;
+      html += `<br><b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
+${labeledData}`;
     });
     return html;
   }
@@ -256,7 +259,7 @@ export abstract class WarpViewComponent {
 
   hover(data: any) {
     this.toolTip.nativeElement.style.display = 'block';
-    this.toolTip.nativeElement.innerHTML = this.legendFormatter(data.xvals[0], data.points);
+    this.toolTip.nativeElement.innerHTML = this.legendFormatter(this._options.horizontal ? data.yvals[0] : data.xvals[0], data.points);
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
       this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
     } else {

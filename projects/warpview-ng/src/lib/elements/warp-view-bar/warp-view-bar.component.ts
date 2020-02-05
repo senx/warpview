@@ -43,9 +43,9 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     },
     margin: {
       t: 10,
-      b: 25,
+      b: 40,
       r: 10,
-      l: 10
+      l: 50
     }
   };
 
@@ -92,6 +92,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
           mode: 'lines+markers',
           name: label,
           text: label,
+          orientation: this._options.horizontal ? 'h' : 'v',
           x: [],
           y: [],
           hoverinfo: 'none',
@@ -105,12 +106,22 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
         };
         gts.v.forEach(value => {
           const ts = value[0];
-          (series.y as any[]).push(value[value.length - 1]);
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            (series.x as any[]).push(ts);
+          if (!this._options.horizontal) {
+            (series.y as any[]).push(value[value.length - 1]);
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+              (series.x as any[]).push(ts);
+            } else {
+              const timestamp = Math.floor(ts / divider);
+              (series.x as any[]).push(moment(timestamp).utc(true).toDate());
+            }
           } else {
-            const timestamp = Math.floor(ts / divider);
-            (series.x as any[]).push(moment(timestamp).utc(true).toDate());
+            (series.x as any[]).push(value[value.length - 1]);
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+              (series.y as any[]).push(ts);
+            } else {
+              const timestamp = Math.floor(ts / divider);
+              (series.y as any[]).push(moment(timestamp).utc(true).toDate());
+            }
           }
         });
         dataset.push(series);
@@ -124,6 +135,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     this.LOG.debug(['buildGraph', 'this.layout'], this.layout);
     this.LOG.debug(['buildGraph', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.showlegend = this.showLegend;
+    this.layout.barmode = this._options.stacked ? 'stack' : 'group';
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;
