@@ -136,6 +136,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
         });
         dataset.push(series);
       } else {
+        this._options.timeMode = 'custom';
         this.LOG.debug(['convert', 'gts'], gts);
         (gts.columns || []).forEach((c, i) => {
           const label = c;

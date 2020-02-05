@@ -154,6 +154,7 @@ export abstract class WarpViewComponent {
   protected abstract convert(data: DataModel): Partial<any>[];
 
   protected legendFormatter(x, series): string {
+    console.log(x, series);
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return `<br>
@@ -161,8 +162,8 @@ export abstract class WarpViewComponent {
         // FIXME :  if (!s.isVisible) return;
         let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
         if (s.isHighlighted) {
-          labeledData = `<b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
-${labeledData}</b>`;
+          labeledData = `<b><i class="chip"
+    style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i> ${labeledData}</b>`;
         }
         return labeledData;
       }).join('<br>')}`;
@@ -171,7 +172,7 @@ ${labeledData}</b>`;
     let html = '';
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       html = `<b>${x}</b>`;
-    } else {
+    } else if (this._options.timeMode === 'date') {
       html = `<b>${(moment.utc(parseInt(x, 10)).toISOString().replace('T', '').replace('Z', '') || '')
         .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '')}</b>`;
       // data.x is already a date in millisecond, whatever the unit option
@@ -179,13 +180,16 @@ ${labeledData}</b>`;
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
     //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
     //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)
-    series.forEach(s => {
+    series.forEach((s, i) => {
       const labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
       /* if (series.isHighlighted) {
          labeledData = `<b>${labeledData}</b>`;
        }*/
-      html += `<br><b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
+      html += `<b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
 ${labeledData}`;
+      if (i < series.length) {
+        html += '<br>';
+      }
     });
     return html;
   }
