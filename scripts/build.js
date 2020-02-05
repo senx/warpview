@@ -33,6 +33,7 @@ const concat = require('concat');
   ];
   await concat(files, './dist/elements/warpview-elements.js');
   fs.copy('./src/assets/fonts', './dist/elements/fonts');
+  fs.copy('./node_modules/leaflet/dist/images', './dist/elements/images');
   sass.render({
     file: './projects/warpview-ng/src/lib/styles/warpview.scss',
     outFile: './dist/elements/warpview-elements.css',
