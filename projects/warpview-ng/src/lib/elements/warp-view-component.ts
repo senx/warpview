@@ -35,8 +35,6 @@ export abstract class WarpViewComponent {
   @ViewChild('graph', {static: false}) graph: PlotlyComponent;
   @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
-  @Input('responsive') responsive = true;
-  @Input('showLegend') showLegend = false;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
 
@@ -67,6 +65,28 @@ export abstract class WarpViewComponent {
 
   get debug() {
     return this._debug;
+  }
+
+  @Input('showLegend') set showLegend(showLegend: boolean | string) {
+    if (typeof showLegend === 'string') {
+      showLegend = 'true' === showLegend;
+    }
+    this._showLegend = showLegend;
+  }
+
+  get showLegend() {
+    return this._showLegend;
+  }
+
+  @Input('responsive') set responsive(responsive: boolean | string) {
+    if (typeof responsive === 'string') {
+      responsive = 'true' === responsive;
+    }
+    this._responsive = responsive;
+  }
+
+  get responsive() {
+    return this._responsive;
   }
 
   @Input('options') set options(options: Param | string) {
@@ -107,6 +127,8 @@ export abstract class WarpViewComponent {
   }) as Param;
 
   protected _debug = false;
+  protected _showLegend = false;
+  protected _responsive = true;
   private _unit = '';
   protected _data: DataModel;
   loading = true;
@@ -213,7 +235,7 @@ ${labeledData}`;
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
-    this.plotlyConfig.responsive = this.responsive;
+    this.plotlyConfig.responsive = this._responsive;
     this.layout.paper_bgcolor = 'rgba(0,0,0,0)';
     this.layout.plot_bgcolor = 'rgba(0,0,0,0)';
     if (!this.responsive) {
