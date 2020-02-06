@@ -193,10 +193,10 @@ export abstract class WarpViewComponent {
 
     let html = '';
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      html = `<b>${x}</b>`;
+      html = `<b>${x}</b><br />`;
     } else if (this._options.timeMode === 'date') {
       html = `<b>${(moment.utc(parseInt(x, 10)).toISOString().replace('T', '').replace('Z', '') || '')
-        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '')}</b>`;
+        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '')}</b><br />`;
       // data.x is already a date in millisecond, whatever the unit option
     }
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
@@ -207,7 +207,8 @@ export abstract class WarpViewComponent {
       /* if (series.isHighlighted) {
          labeledData = `<b>${labeledData}</b>`;
        }*/
-      html += `<b><i class="chip" style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i>
+      html += `<b><i class="chip"
+style="background-color: ${(s.data.marker || s.data.line).color};border: 2px solid ${(s.data.marker || s.data).line.color};"></i>
 ${labeledData}`;
       if (i < series.length) {
         html += '<br>';
