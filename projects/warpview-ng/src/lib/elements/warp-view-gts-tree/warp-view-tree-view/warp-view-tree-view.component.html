@@ -20,7 +20,7 @@
     <li *ngFor="let gts of gtsList; index as index; first as first">
       <warpview-chip
         *ngIf="isGts(gts)"
-        [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
+        [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)" [param]="params[gts.id]"
         [node]="{gts: gts}" [name]="gts.c" [gtsFilter]="gtsFilter" [debug]="debug" [hiddenData]="hiddenData"
         [kbdLastKeyPressed]="kbdLastKeyPressed"></warpview-chip>
       <span *ngIf="!isGts(gts)">
@@ -38,12 +38,12 @@
               <span [ngClass]="{expanded: hide[index + ''], collapsed: !hide[index + '']}"
                     (click)="toggleVisibility(index)" [id]="'span-' + index"></span>
               <span (click)="toggleVisibility(index)">{{first ? '[TOP]' : '[' + (index + 1) + ']'}}&nbsp;
-    <small [id]="'inner-' + index">List of {{gts.length}} item{{gts.length > 1 ? 's' : ''}}</small>
+                <small [id]="'inner-' + index">List of {{gts.length}} item{{gts.length > 1 ? 's' : ''}}</small>
               </span>
                   </span>
           </span>
     <warpview-tree-view [gtsList]="gts" [branch]="true" *ngIf="isHidden(index)"
-                        [debug]="debug" [gtsFilter]="gtsFilter"
+                        [debug]="debug" [gtsFilter]="gtsFilter" [params]="params"
                         [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
                         [kbdLastKeyPressed]="kbdLastKeyPressed" [hiddenData]="hiddenData"></warpview-tree-view>
         </span>

@@ -71,10 +71,11 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
     });
     const pattern = 'YYYY/MM/DD hh:mm:ss';
     const format = pattern.slice(0, pattern.lastIndexOf(this._options.split || 'D') + 1);
-    gtsList.forEach((gts: GTS) => {
+    gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
-        const color = ColorLib.getColor(gts.id, this._options.scheme);
+        const c = ColorLib.getColor(gts.id, this._options.scheme);
+        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
         const series: Partial<any> = {
           type: 'box',
           boxmean: 'sd',

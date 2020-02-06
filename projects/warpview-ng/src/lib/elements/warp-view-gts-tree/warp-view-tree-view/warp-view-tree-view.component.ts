@@ -48,6 +48,7 @@ export class WarpViewTreeViewComponent implements OnInit {
   @Input('options') options: Param;
   @Input('gtsFilter') gtsFilter = 'x';
   @Input('gtsList') gtsList: any[];
+  @Input('params') params: Param[];
   @Input('branch') branch = false;
   @Input('hidden') hidden = false;
   @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];

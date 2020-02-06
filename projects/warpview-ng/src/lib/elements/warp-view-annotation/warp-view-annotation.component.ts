@@ -278,20 +278,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     this.chartDraw.emit(this.chartBounds);
-    /*   const layout = {
-         xaxis: {} as any
-       };
-       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-         layout.xaxis.tick0 = this.minTick / this.divider;
-         layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
-       } else {
-         layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
-         layout.xaxis.range = [
-           moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-           moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
-         ];
-       }*/
-//    this.graph.updateData(undefined, layout);
     this.LOG.debug(['afterPlot'], this.chartBounds, div);
   }
 
@@ -321,7 +307,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
-        const color = ColorLib.getColor(gts.id, this._options.scheme);
+        const c = ColorLib.getColor(gts.id, this._options.scheme);
+        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
         const series: Partial<any> = {
           type: 'scatter',
           mode: 'markers',

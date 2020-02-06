@@ -15,18 +15,7 @@
  *
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {GTS} from '../../../model/GTS';
 import {Logger} from '../../../utils/logger';
 import {GTSLib} from '../../../utils/gts.lib';
@@ -48,6 +37,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
   @Input('name') name: string;
   @Input('node') node: any;
+  @Input('param') param: Param = new Param();
   @Input('options') options: Param = new Param();
 
   @Input('debug') set debug(debug: boolean) {
@@ -133,10 +123,10 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   private colorizeChip() {
     if (this.chip) {
       if (this._node.selected && this.chip.nativeElement) {
-        this.chip.nativeElement.style.setProperty('background-color',
-          ColorLib.transparentize(ColorLib.getColor(this._node.gts.id, this.options.scheme)));
-        this.chip.nativeElement.style.setProperty('border-color',
-          ColorLib.getColor(this._node.gts.id, this.options.scheme));
+        const c = ColorLib.getColor(this._node.gts.id, this.options.scheme);
+        const color = (this.param || {datasetColor: c}).datasetColor;
+        this.chip.nativeElement.style.setProperty('background-color', ColorLib.transparentize(color));
+        this.chip.nativeElement.style.setProperty('border-color', color);
       } else {
         this.chip.nativeElement.style.setProperty('background-color', '#eeeeee');
       }

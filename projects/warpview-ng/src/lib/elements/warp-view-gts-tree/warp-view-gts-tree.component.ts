@@ -23,6 +23,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {Params} from '@angular/router';
 
 /**
  *
@@ -49,7 +50,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   private _gtsFilter = 'x';
   gtsList: any[] = [];
-
+  params: Params[] = [];
   expand = true;
 
   constructor(
@@ -84,6 +85,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
       return;
     }
     const dataList = GTSLib.getData(this._data).data;
+    this.params = this._data.params || [];
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);
     if (!dataList) {
       return;

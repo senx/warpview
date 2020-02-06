@@ -103,10 +103,11 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     } else {
       this.layout.xaxis.type = 'date';
     }
-    gtsList.forEach((gts: GTS) => {
+    gtsList.forEach((gts: GTS, i) => {
       if (gts.v && GTSLib.isGtsToPlot(gts)) {
         const label = GTSLib.serializeGtsMetadata(gts);
-        const color = ColorLib.getColor(gts.id, this._options.scheme);
+        const c = ColorLib.getColor(i, this._options.scheme);
+        const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor;
         const series: Partial<any> = {
           type: this._type,
           histnorm: type.histnorm || 'density',

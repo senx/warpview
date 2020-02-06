@@ -17,6 +17,7 @@
 export class Param {
   scheme = 'WARP10';
   bgColor?: string;
+  datasetColor?: string;
   fontColor?: string;
   borderColor?: string;
   gridLineColor?: string;

@@ -69,10 +69,11 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
         console.log(g);
         return g;
       })
-      .forEach((gts: GTS) => {
+      .forEach((gts: GTS, i) => {
         if (gts.v) {
           const label = GTSLib.serializeGtsMetadata(gts);
-          const color = ColorLib.getColor(gts.id, this._options.scheme);
+          const c = ColorLib.getColor(gts.id, this._options.scheme);
+          const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
           const series: Partial<any> = {
             mode: 'line',
             type: 'scatter3d',

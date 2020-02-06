@@ -138,9 +138,9 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       } else {
         this._options.timeMode = 'custom';
         this.LOG.debug(['convert', 'gts'], gts);
-        (gts.columns || []).forEach((c, i) => {
-          const label = c;
-          const color = ColorLib.getColor(i, this._options.scheme);
+        (gts.columns || []).forEach((label, i) => {
+          const c = ColorLib.getColor(gts.id, this._options.scheme);
+          const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
           const series: Partial<any> = {
             type: 'bar',
             mode: 'lines+markers',

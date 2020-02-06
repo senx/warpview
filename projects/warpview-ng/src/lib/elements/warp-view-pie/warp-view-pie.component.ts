@@ -120,7 +120,8 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
       type: 'pie'
     } as any;
     gtsList.forEach((d: any, i) => {
-      const color = ColorLib.getColor(i, this._options.scheme);
+      const c = ColorLib.getColor(i, this._options.scheme);
+      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
       pieData.values.push(d[1]);
       pieData.labels.push(d[0]);
       pieData.marker.colors.push(ColorLib.transparentize(color));

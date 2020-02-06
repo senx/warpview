@@ -100,16 +100,15 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     gtsList.forEach(d => max = Math.max(max, d[1]));
     let x = 0;
     let y = -1 / (gtsList.length / 2);
-    gtsList.forEach((d, i) => {
+    gtsList.forEach((gts, i) => {
       if (i % 2 !== 0) {
         x = 0.5;
       } else {
         x = 0;
         y += 1 / (gtsList.length / 2);
       }
-      const color = !!data.params && !!data.params[i].bgColor
-        ? data.params[i].bgColor
-        : ColorLib.getColor(i, this._options.scheme);
+      const c = ColorLib.getColor(gts.id, this._options.scheme);
+      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
       const domain = gtsList.length > 1 ? {
         x: [x + this.CHART_MARGIN, x + 0.5 - this.CHART_MARGIN],
         y: [y + this.CHART_MARGIN, y + 1 / (gtsList.length / 2) - this.CHART_MARGIN * 2]
@@ -125,13 +124,13 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
         {
           domain,
           align: 'left',
-          value: d[1],
+          value: gts[1],
           delta: {
-            reference: !!data.params && !!data.params[i].delta ? data.params[i].delta + d[1] : 0,
+            reference: !!data.params && !!data.params[i].delta ? data.params[i].delta + gts[1] : 0,
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
           title: {
-            text: d[0],
+            text: gts[0],
             align: 'center',
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },

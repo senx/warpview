@@ -102,8 +102,9 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     let minVal = Number.MAX_VALUE;
     let maxVal = Number.MIN_VALUE;
-    gtsList.forEach((gts: GTS) => {
-      const color = ColorLib.getColor(gts.id, this._options.scheme);
+    gtsList.forEach((gts: GTS, i) => {
+      const c = ColorLib.getColor(i, this._options.scheme);
+      const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor;
       const series: any = {
         r: [],
         theta: [],
