@@ -14,6 +14,8 @@
  *  limitations under the License.
  *
  */
+
+
 :root {
   $w10-blue: #004eff;
   $w10-orange: #ff9900;
@@ -23,6 +25,9 @@
   $w10-grey: #a0a0a0;
   $w10-lightgrey: #c0c0c0;
   $w10-white: #ffffff;
+
+
+
   // dimensions
   --warp-view-chart-width: 100%;
   --warp-view-chart-height: 100%;
@@ -84,6 +89,7 @@
   --warp-slider-handle-bg-color: #{$w10-white};
   --warp-slider-handle-color: #{$w10-blue};
   --warp-slider-handle-shadow: inset 0 0 1px #{$w10-white}, inset 0 1px 7px #{$w10-lightgrey}, 0 3px 6px -3px #{$w10-grey};
+
 }
 
 .noData {

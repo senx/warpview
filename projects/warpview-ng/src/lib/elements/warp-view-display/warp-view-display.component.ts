@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -23,6 +23,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import fitty, {FittyInstance} from 'fitty';
 
 /**
  *
@@ -34,8 +35,9 @@ import {Logger} from '../../utils/logger';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit {
-
+  @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
   toDisplay = '';
+  private fitties: FittyInstance;
 
   constructor(
     public el: ElementRef,
@@ -46,6 +48,11 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   ngOnInit() {
+    this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
+      multiLine: true,
+      maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,
+      minSize: 12
+    });
     this.drawChart();
   }
 
@@ -80,5 +87,9 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
       }
       return style;
     }
+  }
+
+  flexFont() {
+    this.fitties.fit();
   }
 }

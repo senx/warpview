@@ -17,32 +17,27 @@
 @import "../../styles/vars";
 
 :host {
-  height: var(--warp-view-chart-height);
+  width: var(--warp-view-chart-width, 100%);
+  height: var(--warp-view-chart-height, 100%);
+  color: var(--warp-view-font-color);
+  position: relative;
+  overflow: hidden;
 
   .chart-container {
-    width: var(--warp-view-chart-width);
-    height: var(--warp-view-chart-height);
-    position: relative;
-    color: var(--warp-view-font-color);
+    text-align: center;
+    height: calc(100% - 20px);
+    width: 100%;
+    overflow: hidden;
 
-    div {
-      font-size: 10rem;
-      height: 100%;
-      width: 100%;
+    .value {
+      padding: 10px;
+      text-align: center;
+      display: inline-block;
+      white-space: nowrap;
       overflow: hidden;
 
-      .value {
-        position: relative;
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-        text-align: center;
-        height: fit-content;
-
-        small {
-          font-size: 3rem;
-        }
+      small {
+        font-size: 0.5em;
       }
     }
   }

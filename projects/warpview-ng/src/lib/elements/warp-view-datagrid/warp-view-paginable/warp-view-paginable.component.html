@@ -24,7 +24,7 @@
     <tbody>
     <tr *ngFor="let value of displayedValues; even as isEven; odd as isOdd" [ngClass]="{ odd: isOdd, even: isEven}">
       <td *ngFor="let v of value">
-        <span>{{v}}</span>
+        <span [innerHTML]="v"></span>
       </td>
     </tr>
     </tbody>
