@@ -262,10 +262,18 @@ LMAP
       type: 'display',
       warpscript: ` { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }`,
       unit: '°C'
-    },      {
-        title: 'Data display long text',
-        type: 'display',
-        warpscript: `{
+    }, {
+      title: 'Data display Date',
+      type: 'display',
+      warpscript: ` { 'data' NOW 'globalParams' { 'timeMode' 'date' } }`,
+    }, {
+      title: 'Data display Duration',
+      type: 'display',
+      warpscript: ` { 'data' NOW 5 s - 'globalParams' { 'timeMode' 'duration' } }`,
+    }, {
+      title: 'Data display long text',
+      type: 'display',
+      warpscript: `{
         'data'
         <'
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent iaculis dictum dolor sit amet dapibus. Vivamus mattis elit eu
@@ -274,14 +282,14 @@ LMAP
         Vestibulum vel nunc augue. Curabitur sagittis vitae justo non lobortis. Maecenas porttitor nisl id augue feugiat hendrerit.
         '>
         'globalParams' { 'bgColor' '#1e88e5' 'fontColor' 'white' } }`,
-      }, {
-        title: 'Data display HTML',
-        type: 'display',
-        warpscript: `{
+    }, {
+      title: 'Data display HTML',
+      type: 'display',
+      warpscript: `{
   'data' '<a href="https://warp10.io/" target="_blank">Warp 10</a>'
   'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' }
 }`,
-      }
+    }
     ],
     drilldown: [{
       title: 'Drill down',

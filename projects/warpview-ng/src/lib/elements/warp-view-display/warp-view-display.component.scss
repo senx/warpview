@@ -32,10 +32,13 @@
     .value {
       padding: 10px;
       text-align: center;
-      display: inline-block;
+  //    display: inline-block;
       white-space: nowrap;
       overflow: hidden;
-
+      min-height: 100%;
+      span {
+        min-height: 100%;
+      }
       small {
         font-size: 0.5em;
       }

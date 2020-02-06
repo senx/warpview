@@ -228,8 +228,7 @@ ${labeledData}`;
     }
     moment.tz.setDefault(this._options.timeZone);
     this.loading = true;
-    this.LOG.debug(['initiChart', 'this._options'], this._options);
-    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
+    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep(this._options, this._data.globalParams) as Param;
     this.LOG.debug(['initiChart', 'this._options'], this._options);

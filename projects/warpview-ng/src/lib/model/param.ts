@@ -37,10 +37,10 @@ export class Param {
   showControls = true;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
-  timeMode?: string;
+  timeMode?: 'timestamp' | 'date' | 'custom' | 'duration';
   showDots = false;
   delta?: number;
-  timeUnit = 'us';
+  timeUnit: 'us' | 'ms' | 'ns' = 'us';
   minColor?: string;
   maxColor?: string;
   split?: 'Y' | 'M' | 'D' | 'h' | 'm' | 's';
@@ -59,7 +59,7 @@ export class Param {
     timeSliderMin?: number;
     timeSliderMax?: number;
     timeSliderStep?: number;
-    timeSliderMode?: string;
+    timeSliderMode?: 'timestamp' | 'date' | 'custom';
     timeStart?: number,
     timeSpan?: number,
     timeSpanList?: any[]

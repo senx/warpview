@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -24,6 +24,7 @@ import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import fitty, {FittyInstance} from 'fitty';
+import moment from 'moment-timezone';
 
 /**
  *
@@ -34,9 +35,14 @@ import fitty, {FittyInstance} from 'fitty';
   styleUrls: ['./warp-view-display.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit {
+export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit, OnDestroy {
+
   @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
   toDisplay = '';
+  private timer;
+  defOptions = ChartLib.mergeDeep(this._options, {
+    timeMode: 'custom'
+  }) as Param;
   private fitties: FittyInstance;
 
   constructor(
@@ -51,9 +57,15 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
       multiLine: true,
       maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,
-      minSize: 12
+      minSize: 14
     });
     this.drawChart();
+  }
+
+  ngOnDestroy(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   }
 
   update(options: Param, refresh: boolean): void {
@@ -61,18 +73,34 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   private drawChart() {
+    this.LOG.debug(['drawChart'], this._options, this.defOptions);
     if (!this.initChart(this.el)) {
       return;
     }
-    this.LOG.debug(['drawChart'], [this._data, this.toDisplay]);
+    this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions);
+    this.LOG.debug(['drawChart'], this._data, this.toDisplay);
   }
 
   protected convert(data: DataModel): any[] {
+    this.LOG.debug(['convert'], this._options.timeMode);
+    let display = '';
     if (this._data.data) {
-      this.toDisplay = GTSLib.isArray(this._data.data) ? this._data.data[0] : this._data.data;
-      this._options = ChartLib.mergeDeep(this._options, this._data.globalParams || {}) as Param;
+      display = GTSLib.isArray(this._data.data) ? this._data.data[0] : this._data.data;
     } else {
-      this.toDisplay = GTSLib.isArray(this._data) ? this._data[0] : this._data;
+      display = GTSLib.isArray(this._data) ? this._data[0] : this._data;
+    }
+    console.log(this._options.timeMode);
+    switch (this._options.timeMode) {
+      case 'date':
+        this.toDisplay = moment.tz(parseInt(display, 10) / this.divider, this._options.timeZone).toISOString(true);
+        break;
+      case 'duration':
+        const start = moment.tz(parseInt(display, 10) / this.divider, this._options.timeZone);
+        this.displayDuration(start);
+        break;
+      case 'custom':
+      case 'timestamp':
+        this.toDisplay = display;
     }
     return [];
   }
@@ -91,5 +119,12 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
 
   flexFont() {
     this.fitties.fit();
+  }
+
+  private displayDuration(start: any) {
+    this.timer = setInterval(() => {
+      const now = moment();
+      this.toDisplay = moment.duration(start.diff(now)).humanize(true);
+    }, 1000);
   }
 }
