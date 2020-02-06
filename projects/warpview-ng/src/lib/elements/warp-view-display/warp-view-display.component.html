@@ -18,6 +18,6 @@
 <div class="chart-container" (resized)="flexFont()"  [ngStyle]="getStyle()">
   <p class="noData" *ngIf="noDAta">No data to display</p>
     <div class="value"  #wrapper>
-      <span [innerHTML]="toDisplay"></span><small>{{_unit}}</small>
+      <span [innerHTML]="toDisplay"></span><small>{{unit}}</small>
     </div>
 </div>
