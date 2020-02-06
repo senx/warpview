@@ -308,7 +308,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
         const c = ColorLib.getColor(gts.id, this._options.scheme);
-        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
+        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
         const series: Partial<any> = {
           type: 'scatter',
           mode: 'markers',

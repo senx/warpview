@@ -107,7 +107,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
       if (gts.v && GTSLib.isGtsToPlot(gts)) {
         const label = GTSLib.serializeGtsMetadata(gts);
         const c = ColorLib.getColor(i, this._options.scheme);
-        const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor;
+        const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor || c;
         const series: Partial<any> = {
           type: this._type,
           histnorm: type.histnorm || 'density',

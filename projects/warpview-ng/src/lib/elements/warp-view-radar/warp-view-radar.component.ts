@@ -100,7 +100,7 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
     let maxVal = Number.MIN_VALUE;
     gtsList.forEach((gts: GTS, i) => {
       const c = ColorLib.getColor(i, this._options.scheme);
-      const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor;
+      const color = ((data.params || [])[gts.id] || {datasetColor: c}).datasetColor || c;
       const series: any = {
         r: [],
         theta: [],

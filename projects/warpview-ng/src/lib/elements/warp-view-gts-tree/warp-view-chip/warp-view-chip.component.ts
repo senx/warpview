@@ -124,7 +124,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     if (this.chip) {
       if (this._node.selected && this.chip.nativeElement) {
         const c = ColorLib.getColor(this._node.gts.id, this.options.scheme);
-        const color = (this.param || {datasetColor: c}).datasetColor;
+        const color = (this.param || {datasetColor: c}).datasetColor || c;
         this.chip.nativeElement.style.setProperty('background-color', ColorLib.transparentize(color));
         this.chip.nativeElement.style.setProperty('border-color', color);
       } else {

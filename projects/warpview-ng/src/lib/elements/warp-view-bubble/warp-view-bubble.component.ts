@@ -72,7 +72,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     (data.data as any []).forEach((gts, i) => {
       const label = Object.keys(gts)[0];
       const c = ColorLib.getColor(gts.id, this._options.scheme);
-      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
+      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
       const series: Partial<any> = {
         type: 'scattergl',
         mode: 'markers',

@@ -108,7 +108,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
         y += 1 / (gtsList.length / 2);
       }
       const c = ColorLib.getColor(gts.id, this._options.scheme);
-      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor;
+      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
       const domain = gtsList.length > 1 ? {
         x: [x + this.CHART_MARGIN, x + 0.5 - this.CHART_MARGIN],
         y: [y + this.CHART_MARGIN, y + 1 / (gtsList.length / 2) - this.CHART_MARGIN * 2]
