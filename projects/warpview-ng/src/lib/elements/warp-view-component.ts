@@ -129,7 +129,7 @@ export abstract class WarpViewComponent {
   protected _debug = false;
   protected _showLegend = false;
   protected _responsive = true;
-  private _unit = '';
+  protected _unit = '';
   protected _data: DataModel;
   loading = true;
   noDAta = false;
