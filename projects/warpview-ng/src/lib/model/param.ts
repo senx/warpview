@@ -26,6 +26,7 @@ export class Param {
   horizontal = false;
   stacked = false;
   key?: string;
+  unit?: string;
   interpolate?: string;
   type?: string;
   showRangeSelector?: boolean;

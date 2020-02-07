@@ -152,7 +152,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       opts = this._options as Param;
     }
     this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, opts), data.globalParams) as Param;
-
+    this.unit = data.globalParams.unit || this.unit;
     this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
     if (this._autoRefresh !== this._options.autoRefresh) {
       this._autoRefresh = this._options.autoRefresh;
