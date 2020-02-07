@@ -157,7 +157,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         thickness: 40 / this.height
       };
     } else {
-      this.layout.margin.b = 50;
+      this.layout.margin.b = 30;
     }
     this.loading = false;
   }
