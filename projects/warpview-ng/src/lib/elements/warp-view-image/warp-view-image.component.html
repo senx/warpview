@@ -16,7 +16,7 @@
   -->
 
 <div>
-  <p class="noData" *ngIf="noDAta">No data to display</p>
+  <p class="noData" *ngIf="noData">No data to display</p>
   <div class="chart-container" id="wrapper" *ngIf="toDisplay">
     <div *ngFor="let img of toDisplay" [ngStyle]="getStyle()">
       <img [src]="img" class="responsive" alt="Result"/>

@@ -17,8 +17,8 @@
 
 <div id="chartContainer" #chartContainer>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <p class="noData" *ngIf="noDAta">No data to display</p>
-  <div *ngIf="!loading">
+  <p class="noData" *ngIf="noData">No data to display</p>
+  <div *ngIf="!loading && !noData">
     <warpview-plotly #graph *ngIf="plotlyData?.length > 0"
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot()"
                      className="chart" (hover)="hover($event)" (unhover)="unhover()"

@@ -132,7 +132,7 @@ export abstract class WarpViewComponent {
   protected _unit = '';
   protected _data: DataModel;
   loading = true;
-  noDAta = false;
+  noData = false;
   layout: Partial<any> = {
     margin: {
       t: 10,
@@ -217,12 +217,12 @@ ${labeledData}`;
   }
 
   protected initChart(el: ElementRef): boolean {
-    this.noDAta = false;
+    this.noData = false;
     this.LOG.debug(['initiChart', 'this._data'], this._data);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       this.loading = false;
       this.LOG.debug(['initiChart', 'nodata']);
-      this.noDAta = true;
+      this.noData = true;
       return false;
     }
     moment.tz.setDefault(this._options.timeZone);

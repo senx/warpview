@@ -15,9 +15,11 @@
   ~
   -->
 
-<div class="chart-container" (resized)="flexFont()"  [ngStyle]="getStyle()">
-  <p class="noData" *ngIf="noDAta">No data to display</p>
-    <div class="value"  #wrapper>
+<div class="chart-container" (resized)="flexFont()" [ngStyle]="getStyle()">
+  <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
+  <div class="value" #wrapper>
+    <div *ngIf="!loading">
       <span [innerHTML]="toDisplay"></span><small>{{unit}}</small>
     </div>
+  </div>
 </div>

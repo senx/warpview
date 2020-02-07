@@ -16,9 +16,12 @@
   -->
 
 <div class="wrapper">
-  <p class="noData" *ngIf="noDAta">No data to display</p>
-  <calendar-heatmap [data]="heatMapData" overview="global"
-                    [debug]="debug"
-                    [minColor]="_options.minColor"
-                    [maxColor]="_options.maxColor"></calendar-heatmap>
+  <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
+  <p class="noData" *ngIf="noData">No data to display</p>
+  <div *ngIf="!loading && !noData">
+    <calendar-heatmap [data]="heatMapData" overview="global"
+                      [debug]="debug"
+                      [minColor]="_options.minColor"
+                      [maxColor]="_options.maxColor"></calendar-heatmap>
+  </div>
 </div>
