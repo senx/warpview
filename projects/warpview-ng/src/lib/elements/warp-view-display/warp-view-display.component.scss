@@ -27,18 +27,25 @@
     text-align: center;
     height: calc(100% - 20px);
     width: 100%;
+    justify-items: stretch;
+    min-height: 100%;
+    justify-content: center;
+    display: flex;
     overflow: hidden;
 
     .value {
       padding: 10px;
       text-align: center;
-  //    display: inline-block;
       white-space: nowrap;
       overflow: hidden;
-      min-height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      align-self: center;
+
       span {
         min-height: 100%;
       }
+
       small {
         font-size: 0.5em;
       }

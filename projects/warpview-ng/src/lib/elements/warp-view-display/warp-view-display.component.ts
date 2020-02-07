@@ -36,14 +36,14 @@ import moment from 'moment-timezone';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit, OnDestroy {
-
   @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
   toDisplay = '';
-  private timer;
   defOptions = ChartLib.mergeDeep(this._options, {
     timeMode: 'custom'
   }) as Param;
+
   private fitties: FittyInstance;
+  private timer;
 
   constructor(
     public el: ElementRef,
@@ -54,11 +54,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   ngOnInit() {
-    this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
-      multiLine: true,
-      maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,
-      minSize: 14
-    });
     this.drawChart();
   }
 
@@ -70,15 +65,20 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
 
   update(options: Param, refresh: boolean): void {
     this.drawChart();
+    this.flexFont();
   }
 
   private drawChart() {
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
-    if (!this.initChart(this.el)) {
-      return;
-    }
+    this.initChart(this.el);
+    this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
+      multiLine: true,
+      maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,
+      minSize: 14
+    });
     this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions);
     this.LOG.debug(['drawChart'], this._data, this.toDisplay);
+    this.flexFont();
   }
 
   protected convert(data: DataModel): any[] {
@@ -89,7 +89,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     } else {
       display = GTSLib.isArray(this._data) ? this._data[0] : this._data;
     }
-    console.log(this._options.timeMode);
     switch (this._options.timeMode) {
       case 'date':
         this.toDisplay = moment.tz(parseInt(display, 10) / this.divider, this._options.timeZone).toISOString(true);
@@ -118,7 +117,11 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   flexFont() {
-    this.fitties.fit();
+    this.LOG.debug(['flexFont']);
+    if (this.fitties) {
+      this.LOG.debug(['flexFont'], 'ok');
+      this.fitties.fit();
+    }
   }
 
   private displayDuration(start: any) {
