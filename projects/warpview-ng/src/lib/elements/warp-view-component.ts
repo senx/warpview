@@ -176,7 +176,6 @@ export abstract class WarpViewComponent {
   protected abstract convert(data: DataModel): Partial<any>[];
 
   protected legendFormatter(x, series): string {
-    console.log(x, series);
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return `<br>

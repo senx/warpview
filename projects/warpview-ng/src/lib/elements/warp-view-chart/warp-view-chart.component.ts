@@ -170,107 +170,108 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
     this.LOG.debug(['convert', 'this._hiddenData'], this._hiddenData);
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
-    this.maxTick = Number.NEGATIVE_INFINITY;
-    this.minTick = Number.POSITIVE_INFINITY;
-    this.visibleGtsId = [];
-    const nonPlottable = gtsList.filter(g => {
-      this.LOG.debug(['convert'], GTSLib.isGtsToPlot(g));
-      return (g.v && !GTSLib.isGtsToPlot(g));
-    });
-    gtsList = gtsList.filter(g => {
-      return (g.v && GTSLib.isGtsToPlot(g));
-    });
-    // initialize visibility status
-    if (this.visibilityStatus === 'unknown') {
-      this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
-    }
-
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.layout.xaxis.type = 'linear';
-    } else {
-      this.layout.xaxis.type = 'date';
-    }
-    gtsList.forEach((gts: GTS, i) => {
-      if (gts.v && GTSLib.isGtsToPlot(gts)) {
-        const label = GTSLib.serializeGtsMetadata(gts);
-        const c = ColorLib.getColor(gts.id, this._options.scheme);
-        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-        const series: Partial<any> = {
-          type: 'scatter',
-          mode: this._type === 'scatter' ? 'markers' : this._options.showDots ? 'lines+markers' : 'lines',
-          name: label,
-          text: label,
-          x: [],
-          y: [],
-          line: {color},
-          hoverinfo: 'none',
-          connectgaps: false,
-          visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
-        };
-        switch (this._type) {
-          case 'spline':
-            series.line.shape = 'spline';
-            break;
-          case 'area':
-            series.fill = 'tozeroy';
-            series.fillcolor = ColorLib.transparentize(color, 0.3);
-            break;
-          case 'step':
-            series.line.shape = 'hvh';
-            break;
-          case 'step-before':
-            series.line.shape = 'vh';
-            break;
-          case 'step-after':
-            series.line.shape = 'hv';
-            break;
-        }
-        this.visibleGtsId.push(gts.id);
-
-        gts.v.forEach(value => {
-          const ts = value[0];
-          if (ts < this.minTick) {
-            this.minTick = ts;
-          }
-          if (ts > this.maxTick) {
-            this.maxTick = ts;
-          }
-          (series.y as any[]).push(value[value.length - 1]);
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            (series.x as any).push(ts);
-          } else {
-            (series.x as any).push(moment(Math.floor(ts / this.divider)).utc(true).toDate());
-          }
-        });
-        dataset.push(series);
-      }
-    });
-    if (nonPlottable.length > 0) { // && gtsList.length === 0) {
-      nonPlottable.forEach(g => {
-        g.v.forEach(value => {
-          const ts = value[0];
-          if (ts < this.minTick) {
-            this.minTick = ts;
-          }
-          if (ts > this.maxTick) {
-            this.maxTick = ts;
-          }
-        });
+    if (GTSLib.isArray(data.data)) {
+      let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+      this.maxTick = Number.NEGATIVE_INFINITY;
+      this.minTick = Number.POSITIVE_INFINITY;
+      this.visibleGtsId = [];
+      const nonPlottable = gtsList.filter(g => {
+        this.LOG.debug(['convert'], GTSLib.isGtsToPlot(g));
+        return (g.v && !GTSLib.isGtsToPlot(g));
       });
-      // if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
-      if (0 === gtsList.length) {
-        if (!this.dataHashset[this.minTick]) {
-          this.dataHashset[this.minTick] = [0];
+      gtsList = gtsList.filter(g => {
+        return (g.v && GTSLib.isGtsToPlot(g));
+      });
+      // initialize visibility status
+      if (this.visibilityStatus === 'unknown') {
+        this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
+      }
+
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        this.layout.xaxis.type = 'linear';
+      } else {
+        this.layout.xaxis.type = 'date';
+      }
+      gtsList.forEach((gts: GTS, i) => {
+        if (gts.v && GTSLib.isGtsToPlot(gts)) {
+          const label = GTSLib.serializeGtsMetadata(gts);
+          const c = ColorLib.getColor(gts.id, this._options.scheme);
+          const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
+          const series: Partial<any> = {
+            type: 'scatter',
+            mode: this._type === 'scatter' ? 'markers' : this._options.showDots ? 'lines+markers' : 'lines',
+            name: label,
+            text: label,
+            x: [],
+            y: [],
+            line: {color},
+            hoverinfo: 'none',
+            connectgaps: false,
+            visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
+          };
+          switch (this._type) {
+            case 'spline':
+              series.line.shape = 'spline';
+              break;
+            case 'area':
+              series.fill = 'tozeroy';
+              series.fillcolor = ColorLib.transparentize(color, 0.3);
+              break;
+            case 'step':
+              series.line.shape = 'hvh';
+              break;
+            case 'step-before':
+              series.line.shape = 'vh';
+              break;
+            case 'step-after':
+              series.line.shape = 'hv';
+              break;
+          }
+          this.visibleGtsId.push(gts.id);
+
+          gts.v.forEach(value => {
+            const ts = value[0];
+            if (ts < this.minTick) {
+              this.minTick = ts;
+            }
+            if (ts > this.maxTick) {
+              this.maxTick = ts;
+            }
+            (series.y as any[]).push(value[value.length - 1]);
+            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+              (series.x as any).push(ts);
+            } else {
+              (series.x as any).push(moment(Math.floor(ts / this.divider)).utc(true).toDate());
+            }
+          });
+          dataset.push(series);
         }
-        if (!this.dataHashset[this.maxTick]) {
-          this.dataHashset[this.maxTick] = [0];
+      });
+      if (nonPlottable.length > 0) { // && gtsList.length === 0) {
+        nonPlottable.forEach(g => {
+          g.v.forEach(value => {
+            const ts = value[0];
+            if (ts < this.minTick) {
+              this.minTick = ts;
+            }
+            if (ts > this.maxTick) {
+              this.maxTick = ts;
+            }
+          });
+        });
+        // if there is not any plottable data, we must add a fake one with id -1. This one will always be hidden.
+        if (0 === gtsList.length) {
+          if (!this.dataHashset[this.minTick]) {
+            this.dataHashset[this.minTick] = [0];
+          }
+          if (!this.dataHashset[this.maxTick]) {
+            this.dataHashset[this.maxTick] = [0];
+          }
+          this.visibility.push(false);
+          this.visibleGtsId.push(-1);
         }
-        this.visibility.push(false);
-        this.visibleGtsId.push(-1);
       }
     }
-
     return dataset;
   }
 
