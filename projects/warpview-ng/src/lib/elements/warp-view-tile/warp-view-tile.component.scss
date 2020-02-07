@@ -25,14 +25,13 @@ warp-view-tile, warpview-tile {
 
   .wrapper {
     opacity: 1;
-    min-height: 200px;
+    min-height: 50px;
     width: var(--warp-view-tile-width);
     height: var(--warp-view-tile-height);
 
     &.full {
       width: 100%;
       height: 100%;
- //     overflow: auto;
     }
 
     .tilewrapper {

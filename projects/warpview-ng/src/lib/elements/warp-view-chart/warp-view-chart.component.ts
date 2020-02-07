@@ -67,11 +67,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   layout: Partial<any> = {
     showlegend: false,
     autosize: true,
-    xaxis: {
-      rangeslider: {
-        bgcolor: 'transparent'
-      }
-    },
+    xaxis: {},
     yaxis: {
       exponentformat: 'none',
       fixedrange: true,
@@ -119,7 +115,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   public resize(newHeight: number) {
     this.height = newHeight;
     this.layout.height = this.height;
-    this.layout.xaxis.rangeslider.thickness = 40 / this.layout.height;
+
+    if (this._options.showRangeSelector) {
+      this.layout.xaxis.rangeslider = {
+        bgcolor: 'transparent',
+        thickness: 40 / this.height
+      };
+    }
   }
 
   drawChart(reparseNewData: boolean = false) {
@@ -149,7 +151,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    this.layout.xaxis.rangeslider.thickness = 40 / this.height;
+    if (this._options.showRangeSelector) {
+      this.layout.xaxis.rangeslider = {
+        bgcolor: 'transparent',
+        thickness: 40 / this.height
+      };
+    } else {
+      this.layout.margin.b = 50;
+    }
     this.loading = false;
   }
 

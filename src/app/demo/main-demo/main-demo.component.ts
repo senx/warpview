@@ -81,7 +81,11 @@ false RESETS
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -20 ] FETCH
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP 'data' STORE
-{ 'data' $data 'params' [ { 'datasetColor' '#d05ce3' } { 'datasetColor' '#ff80ab' } { 'datasetColor' '#4db6ac' } ] }`
+{
+  'data' $data
+  'params' [ { 'datasetColor' '#d05ce3' } { 'datasetColor' '#ff80ab' } { 'datasetColor' '#4db6ac' } ]
+  'globalParams' { 'showRangeSelector' false }
+}`
       }, {
         title: 'Smooth chart',
         type: 'spline',
