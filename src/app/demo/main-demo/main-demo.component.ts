@@ -20,6 +20,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
 import {Param} from '../../../../projects/warpview-ng/src/lib/model/param';
+import moment from 'moment';
 
 @Component({
   selector: 'warpview-main-demo',
@@ -79,7 +80,8 @@ false RESETS
         warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -20 ] FETCH
 false RESETS
-[ SWAP mapper.delta 1 0 0 ] MAP`
+[ SWAP mapper.delta 1 0 0 ] MAP 'data' STORE
+{ 'data' $data 'params' [ { 'datasetColor' '#d05ce3' } { 'datasetColor' '#ff80ab' } { 'datasetColor' '#4db6ac' } ] }`
       }, {
         title: 'Smooth chart',
         type: 'spline',
