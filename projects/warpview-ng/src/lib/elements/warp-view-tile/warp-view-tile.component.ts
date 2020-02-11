@@ -55,8 +55,20 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     this.parseGTS();
   }
 
+  @Input()
+  set warpscript(warpScript: string) {
+    if (!!warpScript) {
+      this._warpScript = warpScript;
+      this.execute();
+    }
+  }
+
+  get warpscript(): string {
+    return this._warpScript;
+  }
+
   private _gtsFilter = '';
-  private warpScript = '';
+  private _warpScript = '';
   private execUrl = '';
   private timeUnit = 'us';
   graphs = {
@@ -98,8 +110,8 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   }
 
   ngAfterViewInit() {
-    this.warpScript = this.warpRef.nativeElement.textContent.trim();
-    this.LOG.debug(['ngAfterViewInit', 'warpScript'], this.warpScript);
+    this._warpScript = this._warpScript || this.warpRef.nativeElement.textContent.trim();
+    this.LOG.debug(['ngAfterViewInit', 'warpScript'], this._warpScript);
     this.el.nativeElement.style.opacity = '1';
     this.execute();
   }
@@ -175,7 +187,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private detectWarpScriptSpecialComments() {
     // analyse the first warpScript lines starting with //
     const extraParamsPattern = /\s*\/\/\s*@(\w*)\s*(.*)$/g;
-    const warpscriptLines = this.warpScript.split('\n');
+    const warpscriptLines = this._warpScript.split('\n');
     for (let l = 1; l < warpscriptLines.length; l++) {
       const currentLine = warpscriptLines[l];
       if (currentLine === '' || currentLine.search('//') >= 0) {
@@ -206,13 +218,13 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   }
 
   private execute() {
-    if (this.warpScript && this.warpScript.trim() !== '') {
+    if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.loading = true;
       this.cdRef.detectChanges();
       this.execUrl = this.url;
       this.detectWarpScriptSpecialComments();
-      this.LOG.debug(['execute', 'warpScript'], this.warpScript);
-      this.warp10Service.exec(this.warpScript, this.execUrl).subscribe(gtsStr => {
+      this.LOG.debug(['execute', 'warpScript'], this._warpScript);
+      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(gtsStr => {
         this.loading = false;
         this.LOG.debug(['execute'], gtsStr);
         if (gtsStr) {
