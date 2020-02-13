@@ -313,7 +313,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   drawChart(firstDraw: boolean = false) {
-    this.LOG.debug(['drawCharts'], [this._data, this._options]);
+    this.LOG.debug(['drawCharts'], this._data, this._options);
     if (!this._data || !this._data.data || this._data.data.length === 0) {
       return;
     }
@@ -345,6 +345,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         if (timestampMode) {
           this._options.timeMode = 'timestamp';
         }
+        this.LOG.debug(['drawCharts', 'parsed', 'timestampMode'], timestampMode);
         // do not display the chart if there is obviously lots of data
         if (gtsList.length > 1000 || totalDatapoints > 1000000) {
           this.LOG.warn(['firstdraw'], 'Lots of GTS or datapoint, hiding the graph...');
@@ -353,9 +354,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         }
       }
     }
-
-    this._options = {...this._options};
     this.gtsList = this._data;
+    this._options = {... this._options};
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
   }
 

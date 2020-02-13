@@ -95,7 +95,7 @@ export abstract class WarpViewComponent {
       options = JSON.parse(options);
     }
     if (!deepEqual(options, this._options)) {
-      this.LOG.debug(['options', 'changed'], options);
+      this.LOG.debug(['onOptions', 'changed'], options);
       this._options = ChartLib.mergeDeep(this._options, options as Param) as Param;
       this.update(this._options, false);
     }
@@ -218,7 +218,7 @@ ${labeledData}`;
 
   protected initChart(el: ElementRef): boolean {
     this.noData = false;
-    this.LOG.debug(['initiChart', 'this._data'], this._data);
+    this.LOG.debug(['initiChart', 'this._data'], this._data, this._options);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       this.loading = false;
       this.LOG.debug(['initiChart', 'nodata']);
@@ -227,9 +227,9 @@ ${labeledData}`;
     }
     moment.tz.setDefault(this._options.timeZone);
     this.loading = true;
-    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options || {}) as Param;
     const dataModel = this._data;
-    this._options = ChartLib.mergeDeep(this._options, this._data.globalParams) as Param;
+    this._options = ChartLib.mergeDeep(this._options || {}, this._data.globalParams) as Param;
     this.LOG.debug(['initiChart', 'this._options'], this._options);
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
@@ -237,7 +237,7 @@ ${labeledData}`;
     this.plotlyConfig.responsive = this._responsive;
     this.layout.paper_bgcolor = 'rgba(0,0,0,0)';
     this.layout.plot_bgcolor = 'rgba(0,0,0,0)';
-    if (!this.responsive) {
+    if (!this._responsive) {
       this.layout.width = this.width || ChartLib.DEFAULT_WIDTH;
       this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
     } else {
@@ -256,12 +256,13 @@ ${labeledData}`;
           ? Math.ceil(this._options.bounds.yRanges[1])
           : undefined
       };
+      this.LOG.debug(['initChart', 'updateBounds'], dataModel.bounds.xmin, dataModel.bounds.xmax);
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         this.layout.xaxis.range = [dataModel.bounds.xmin, dataModel.bounds.xmax];
       } else {
         this.layout.xaxis.range = [
-          moment.tz(dataModel.bounds.xmin, this._options.timeZone).toISOString(true),
-          moment.tz(dataModel.bounds.xmax, this._options.timeZone).toISOString(true)];
+          moment.tz(dataModel.bounds.xmin / this.divider, this._options.timeZone).toISOString(true),
+          moment.tz(dataModel.bounds.xmax / this.divider, this._options.timeZone).toISOString(true)];
       }
     }
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);

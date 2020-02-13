@@ -193,10 +193,12 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   createPlot(): Promise<void> {
     this.LOG.debug(['createPlot'], this.data, this.layout, this.config);
+    let drawFn =  Plotlyjs.newPlot;
     if (this.plotlyInstance) {
-      this.remove(this.plotlyInstance);
+      drawFn = Plotlyjs.react;
+ //     this.remove(this.plotlyInstance);
     }
-    return Plotlyjs.newPlot(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
+    return drawFn(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;
 
@@ -268,5 +270,6 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   remove(div: PlotlyHTMLElement) {
     Plotlyjs.purge(div);
+    delete this.plotlyInstance;
   }
 }

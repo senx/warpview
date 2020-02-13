@@ -125,14 +125,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   drawChart(reparseNewData: boolean = false) {
-    this.LOG.debug(['drawChart', 'this.layout'], this.layout);
+    this.LOG.debug(['drawChart', 'this.layout', 'this.options'], this.layout, this._options);
     if (!this.initChart(this.el)) {
+      this.LOG.debug(['drawChart', 'initChart'], this._options);
       return;
     }
     this.plotlyConfig.scrollZoom = true;
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+    if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.type = 'linear';
       this.layout.xaxis.tick0 = this.minTick / this.divider;
     } else {
+      this.layout.xaxis.type = 'date';
       this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
     }
 
@@ -143,12 +146,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.margin.t = this.standalone ? 10 : 0;
-    this.layout.showlegend = this.showLegend;
-    if (!this.responsive) {
+    this.layout.showlegend = this._showLegend;
+    if (!this._responsive) {
       this.layout.width = this.width;
       this.layout.height = this.height;
     }
-    this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
+    this.LOG.debug(['drawChart', 'this.options'], this.layout, this._options);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     if (this._options.showRangeSelector) {
@@ -196,11 +199,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
       }
 
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        this.layout.xaxis.type = 'linear';
-      } else {
-        this.layout.xaxis.type = 'date';
-      }
+      this.LOG.debug(['convert'], this._options.timeMode);
       gtsList.forEach((gts: GTS, i) => {
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
           const label = GTSLib.serializeGtsMetadata(gts);
@@ -246,11 +245,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             if (ts > this.maxTick) {
               this.maxTick = ts;
             }
-            (series.y as any[]).push(value[value.length - 1]);
-            if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-              (series.x as any).push(ts);
+            series.y.push(value[value.length - 1]);
+            if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
+              series.x.push(ts);
             } else {
-              (series.x as any).push(moment(Math.floor(ts / this.divider)).utc(true).toDate());
+              series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
             }
           });
           dataset.push(series);
@@ -281,6 +280,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         }
       }
     }
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.type = 'linear';
+    } else {
+      this.layout.xaxis.type = 'date';
+    }
     return dataset;
   }
 
@@ -290,11 +294,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.chartBounds.tsmax = this.maxTick;
     this.chartDraw.emit(this.chartBounds);
     if (!this.afterBoundsUpdate) {
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        this.emitNewBounds(this.minTick, this.maxTick);
-      } else {
-        this.emitNewBounds(this.minTick / this.divider, this.maxTick / this.divider);
-      }
+
+      this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
+      this.emitNewBounds(this.minTick, this.maxTick);
       this.loading = false;
       this.afterBoundsUpdate = false;
     }
@@ -305,20 +307,20 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
       this.chartBounds.msmin = data['xaxis.range'][0];
       this.chartBounds.msmax = data['xaxis.range'][1];
-      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
-      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
     } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
       this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range[x]'], data['xaxis.range[0]']);
       this.chartBounds.msmin = data['xaxis.range[0]'];
       this.chartBounds.msmax = data['xaxis.range[1]'];
-      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf();
-      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf();
+      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
+      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
     } else if (data['xaxis.autorange']) {
-      this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data);
-      this.chartBounds.tsmin = this.minTick / this.divider;
-      this.chartBounds.tsmax = this.maxTick / this.divider;
+      this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data, this.minTick, this.maxTick);
+      this.chartBounds.tsmin = this.minTick;
+      this.chartBounds.tsmax = this.maxTick ;
     }
-    this.emitNewBounds(moment.utc(this.chartBounds.tsmin).valueOf(), moment.utc(this.chartBounds.tsmax).valueOf());
+    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
     this.afterBoundsUpdate = false;
   }
 

@@ -157,14 +157,14 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this._options.bounds.maxDate = max;
     this.layout.xaxis.autorange = false;
     this.LOG.debug(['updateBounds'],
-      moment.tz(min, this._options.timeZone).toISOString(),
-      moment.tz(max, this._options.timeZone).toISOString());
+      moment.tz(min / this.divider, this._options.timeZone).toISOString(),
+      moment.tz(max / this.divider, this._options.timeZone).toISOString());
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.range = [min, max];
     } else {
       this.layout.xaxis.range = [
-        moment.tz(min, this._options.timeZone).toISOString(),
-        moment.tz(max, this._options.timeZone).toISOString()
+        moment.tz(min / this.divider, this._options.timeZone).toISOString(),
+        moment.tz(max / this.divider, this._options.timeZone).toISOString()
       ];
     }
     this.layout = {...this.layout};
@@ -249,10 +249,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       (this.expanded ? count - 1 - (data.points[0].y + 0.5) : -1) * (this.lineHeight) + this.layout.margin.t
     ) + 'px';
     tooltip.classList.remove('right', 'left');
- /*   this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
-      ? data.xvals[0]
-      : (moment(data.xvals[0]).utc().toISOString() || '')
-        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');*/
+    /*   this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
+         ? data.xvals[0]
+         : (moment(data.xvals[0]).utc().toISOString() || '')
+           .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');*/
     tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
 <ul>
 <li class="tooltip-date">${this._options.timeMode === 'timestamp'
@@ -341,12 +341,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           if (ts > this.maxTick) {
             this.maxTick = ts;
           }
-          (series.y as any[]).push((this.expanded ? i : 0) + 0.5);
-          if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            (series.x as any[]).push(ts);
+          series.y.push((this.expanded ? i : 0) + 0.5);
+          if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
+            series.x.push(ts);
           } else {
-            const timestamp = Math.floor(ts / divider);
-            (series.x as any[]).push(moment(timestamp).utc(true).toDate());
+            series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
           }
         });
         dataset.push(series);
