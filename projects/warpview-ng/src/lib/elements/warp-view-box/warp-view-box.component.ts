@@ -83,23 +83,22 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
           name: label,
           x: this._type === 'box' ? undefined : [],
           y: [],
-        //  hoverinfo: 'none',
+          //  hoverinfo: 'none',
           boxpoints: false
         };
         if (!!this._options.showDots) {
           series.boxpoints = 'all';
         }
         gts.v.forEach(value => {
-          (series.y as any[]).push(value[value.length - 1]);
+          series.y.push(value[value.length - 1]);
           if (this._type === 'box-date') {
-            (series.x as any[]).push(moment(Math.floor(value[0] / this.divider)).utc(true).format(format));
+            series.x.push(moment.tz(moment.utc(value[0] / this.divider), this._options.timeZone).toISOString());
           }
         });
         dataset.push(series);
       }
     });
     this.LOG.debug(['convert', 'dataset'], dataset, format);
-
     return dataset;
   }
 

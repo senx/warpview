@@ -121,16 +121,14 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
               series.x.push(ts);
             } else {
-              const timestamp = Math.floor(ts / divider);
-              series.x.push(moment(timestamp).utc(true).toDate());
+              series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
             }
           } else {
             series.x.push(value[value.length - 1]);
             if (this._options.timeMode && this._options.timeMode === 'timestamp') {
               series.y.push(ts);
             } else {
-              const timestamp = Math.floor(ts / divider);
-              series.y.push(moment(timestamp).utc(true).toDate());
+              series.y.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
             }
           }
         });

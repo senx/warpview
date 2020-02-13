@@ -90,9 +90,9 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
         }
       };
       gts[label].forEach(value => {
-        (series.y as any[]).push(value[0]);
-        (series.x as any[]).push(value[1]);
-        (series.marker.size as any[]).push(value[2]);
+        series.y.push(value[0]);
+        series.x.push(value[1]);
+        series.marker.size.push(value[2]);
       });
       dataset.push(series);
     });

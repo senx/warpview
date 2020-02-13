@@ -127,8 +127,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           series.theta.push(ts.toString());
         } else {
-          const timestamp = Math.floor(ts / divider);
-          series.theta.push(moment(timestamp).utc(true).toISOString());
+          series.theta.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
         }
       });
       if (this.unit) {

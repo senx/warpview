@@ -141,11 +141,11 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
         };
         gts.v.forEach(value => {
           const ts = value[0];
-          (series.y as any[]).push(value[value.length - 1]);
+          series.y.push(value[value.length - 1]);
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-            (series.x as any).push(ts);
+            series.x.push(ts);
           } else {
-            (series.x as any).push(moment(Math.floor(ts / this.divider)).utc(true).toDate());
+            series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
           }
         });
         dataset.push(series);
