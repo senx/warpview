@@ -42,7 +42,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {DataModel} from '../../model/dataModel';
 import deepEqual from 'deep-equal';
-import {SizeService} from '../../services/resize.service';
+import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 
 /**
@@ -307,6 +307,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.chart.resize(event);
     this.LOG.debug(['resizeChart'], event);
     this.warpViewChartResize.emit(event);
+    window.requestAnimationFrame(() => {
+      this.sizeService.change(new Size(this.width, event));
+    });
   }
 
   drawChart(firstDraw: boolean = false) {
