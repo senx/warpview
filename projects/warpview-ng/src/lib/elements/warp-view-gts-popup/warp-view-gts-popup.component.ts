@@ -186,6 +186,6 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   }
 
   isHidden(gts) {
-    return !this.displayed.find(g => gts.id === g.id);
+    return !this.displayed.find(g => !!gts ? gts.id === g.id : false);
   }
 }

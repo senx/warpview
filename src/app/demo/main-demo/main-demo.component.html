@@ -15,7 +15,7 @@
   ~
   -->
 
-<div class="container" [ngClass]="manageTheme()">
+<div class="container-fluid" [ngClass]="manageTheme()">
   <div class="card" [ngClass]="manageTheme()" *ngIf="currentChart">
     <div class="card-body">
       <div *ngFor="let d of currentChart">

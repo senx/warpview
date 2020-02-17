@@ -146,6 +146,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.margin.t = this.standalone ? 10 : 0;
+    this.layout.automargin = this.standalone;
     this.layout.showlegend = this._showLegend;
     if (!this._responsive) {
       this.layout.width = this.width;

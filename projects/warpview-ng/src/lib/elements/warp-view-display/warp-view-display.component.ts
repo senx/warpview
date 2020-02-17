@@ -71,6 +71,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   private drawChart() {
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
     this.initChart(this.el);
+    this.defOptions = ChartLib.mergeDeep(this.defOptions, this._options);
     this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
       multiLine: true,
       maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,

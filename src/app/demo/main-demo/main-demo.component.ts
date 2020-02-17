@@ -68,6 +68,29 @@ ZIP // merge into a list of GTS
       }],
     chart: [
       {
+        title: 'Plot',
+        type: 'plot',
+        warpscript: `[
+  NEWGTS 'Date' RENAME // Commenting that makes it work
+  1000 NaN NaN NaN 2.5 ADDVALUE
+  2000 NaN NaN NaN 2.5 ADDVALUE
+  3000 NaN NaN NaN 2.5 ADDVALUE
+  4000 NaN NaN NaN 2.5 ADDVALUE
+
+  NEWGTS '1' RENAME
+  1000 NaN NaN NaN 1 ADDVALUE
+  2000 NaN NaN NaN 2 ADDVALUE
+  3000 NaN NaN NaN 3 ADDVALUE
+  4000 NaN NaN NaN 4 ADDVALUE
+
+  NEWGTS '1' RENAME
+  1000 NaN NaN NaN 4 ADDVALUE
+  2000 NaN NaN NaN 3 ADDVALUE
+  3000 NaN NaN NaN 2 ADDVALUE
+  4000 NaN NaN NaN 1 ADDVALUE
+]`
+      },
+      {
         title: 'Line chart',
         type: 'line',
         warpscript: `@training/dataset0
@@ -266,7 +289,11 @@ LMAP
     display: [{
       title: 'Data display',
       type: 'display',
-      warpscript: ` { 'data' 42 'globalParams' { 'bgColor' 'darkblue' 'fontColor' 'cyan' } }`,
+      warpscript: ` { 'data' 42 'globalParams' {
+  'timeMode' 'custom'
+  'bgColor' 'darkblue'
+  'fontColor' 'cyan'
+} }`,
       unit: '°C'
     }, {
       title: 'Data display Date',
@@ -287,13 +314,13 @@ LMAP
         Maecenas vitae felis a nisi mollis consectetur at et lectus. Nullam sit amet ex pellentesque, aliquet velit quis, tempus ex.
         Vestibulum vel nunc augue. Curabitur sagittis vitae justo non lobortis. Maecenas porttitor nisl id augue feugiat hendrerit.
         '>
-        'globalParams' { 'bgColor' '#1e88e5' 'fontColor' 'white' } }`,
+        'globalParams' { 'bgColor' '#1e88e5' 'fontColor' 'white' 'timeMode' 'custom' } }`,
     }, {
       title: 'Data display HTML',
       type: 'display',
       warpscript: `{
   'data' '<a href="https://warp10.io/" target="_blank">Warp 10</a>'
-  'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' }
+  'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' 'timeMode' 'custom' }
 }`,
     }
     ],
@@ -433,7 +460,7 @@ ZIP // merge into a list of GTS
   }
 '>
 JSON->`
-    }, {
+    },/* {
       title: 'Time Span',
       type: 'map',
       warpscript: `<'
@@ -467,7 +494,7 @@ JSON->`
   }
 '>
 JSON->`
-    }
+    } */
     ],
     image: [{
       title: 'Images',
