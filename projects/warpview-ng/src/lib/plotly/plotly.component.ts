@@ -110,6 +110,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   ngOnInit() {
     this.createPlot().then(() => {
       const figure = this.createFigure();
+      this.LOG.debug(['figure'], figure);
       this.initialized.emit(this.plotlyInstance);
     });
   }
@@ -196,16 +197,17 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     let drawFn =  Plotlyjs.newPlot;
     if (this.plotlyInstance) {
       drawFn = Plotlyjs.react;
- //     this.remove(this.plotlyInstance);
     }
     return drawFn(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
+      this.LOG.debug(['plotlyInstance'], plotlyInstance);
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;
 
       this.eventNames.forEach(name => {
         const eventName = `plotly_${name.toLowerCase()}`;
         // @ts-ignore
         plotlyInstance.on(eventName, (data: any) => {
+          this.LOG.debug(['plotlyEvent', eventName], data);
           (this[name] as EventEmitter<any>).emit(data);
         });
       });
