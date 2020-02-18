@@ -54,6 +54,7 @@ import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view
 import { PlotlyComponent } from './plotly/plotly.component';
 import { WarpViewBoxComponent } from './elements/warp-view-box/warp-view-box.component';
 import { WarpView3dLineComponent } from './elements/warp-view3-dline/warp-view-3d-line.component';
+import {AngularSplitModule} from 'angular-split';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { WarpView3dLineComponent } from './elements/warp-view3-dline/warp-view-3
     CommonModule,
     HttpClientModule,
     AngularResizedEventModule,
+    AngularSplitModule.forRoot(),
     FormsModule
   ],
   exports: [

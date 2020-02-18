@@ -15,7 +15,18 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  Renderer2,
+  RendererStyleFlags2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {Logger} from '../../utils/logger';
 
 /**
@@ -25,12 +36,13 @@ import {Logger} from '../../utils/logger';
   selector: 'warpview-resize',
   templateUrl: './warp-view-resize.component.html',
   styleUrls: ['./warp-view-resize.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.None
 })
 export class WarpViewResizeComponent implements AfterViewInit {
-  @ViewChild('handleDiv', { static: true }) handleDiv: ElementRef;
+  @ViewChild('handleDiv', {static: true}) handleDiv: ElementRef;
+  @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
   @Input('minHeight') minHeight = '10';
-  @Input('initialHeight') initialHeight: string = null;
+  @Input('initialHeight') initialHeight = 100;
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -44,20 +56,20 @@ export class WarpViewResizeComponent implements AfterViewInit {
   @Output('resize') resize = new EventEmitter();
 
   private dragging = false;
-  private firstDraw = true;
   private moveListener: EventListener;
   private clickUpListener: EventListener;
   private LOG: Logger;
   private _debug = false;
 
-  constructor(private el: ElementRef) {
+  constructor(private el: ElementRef, private renderer: Renderer2) {
     this.LOG = new Logger(WarpViewResizeComponent, this.debug);
   }
 
   ngAfterViewInit(): void {
-    if (this.firstDraw && this.initialHeight) {
-      this.el.nativeElement.style.height = parseInt(this.initialHeight, 10) + 'px';
-    }
+    // if (this.firstDraw && this.initialHeight) {
+    this.LOG.debug(['ngAfterViewInit'], this.initialHeight);
+    this.renderer.setStyle(this.wrapper.nativeElement, 'height', this.initialHeight + 'px', RendererStyleFlags2.Important);
+    //  }
     // the click event on the handlebar attach mousemove and mouseup events to document.
     this.handleDiv.nativeElement.addEventListener('mousedown', (ev: MouseEvent) => {
       if (0 === ev.button) {
@@ -68,14 +80,6 @@ export class WarpViewResizeComponent implements AfterViewInit {
         document.addEventListener('mouseup', this.clickUpListener, false);
       }
     });
-  }
-
-  @HostListener('resizeMyParent', ['$event'])
-  onResize(event: CustomEvent) {
-    event.stopPropagation();
-    if (event.detail.h) {
-      this.el.nativeElement.style.height = event.detail.h + 'px';
-    }
   }
 
   private handleDraggingEnd() {
@@ -103,7 +107,7 @@ export class WarpViewResizeComponent implements AfterViewInit {
       h = parseInt(this.minHeight, 10);
     }
     // apply new height
-    this.handleDiv.nativeElement.parentElement.style.height = h + 'px';
+    this.renderer.setStyle(this.handleDiv.nativeElement.parentElement, 'height', h + 'px');
     this.LOG.debug(['handleDraggingMove'], h);
     this.resize.emit(h);
   }

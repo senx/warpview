@@ -16,7 +16,7 @@
  */
 @import "../../styles/vars";
 
-:host {
+:host, warpview-plot {
   position: relative;
   height: 100%;
 
@@ -26,8 +26,7 @@
 
   .map-container {
     height: 100%;
-    width: calc(100% - 25px);
-    margin-top: 20px;
+    width: 100%;
     margin-right: 20px;
     position: relative;
   }

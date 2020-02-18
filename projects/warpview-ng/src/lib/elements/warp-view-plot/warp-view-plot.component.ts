@@ -64,6 +64,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @ViewChild('annotation', {static: false}) annotation: WarpViewAnnotationComponent;
   @ViewChild('map', {static: false}) map: WarpViewMapComponent;
   @ViewChild('timeClipElement', {static: true}) timeClipElement: ElementRef;
+  @ViewChild('GTSTree', {static: true}) GTSTree: ElementRef;
+  @ViewChild('controls', {static: true}) controls: ElementRef;
   @ViewChild('filterInput', {static: true}) filterInput: ElementRef;
   @ViewChild('tzSelector', {static: false}) tzSelector: ElementRef;
   @ViewChild('line', {static: false}) line: ElementRef;
@@ -90,8 +92,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   @Input('isAlone') isAlone = false;
-  @Input('initialChartHeight') initialChartHeight = '400';
-  @Input('initialMapHeight') initialMapHeight = '500';
+  @Input('initialChartHeight') initialChartHeight = 400;
+  @Input('initialMapHeight') initialMapHeight = 400;
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
 
   _options: Param = {
@@ -147,6 +149,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   ngAfterViewInit(): void {
     this.drawChart(true);
+    this.resizeArea();
   }
 
   @HostListener('keydown', ['$event'])
@@ -185,7 +188,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       case 'mapSwitch' :
         this.showMap = event.state;
         if (this.showMap) {
-          window.setTimeout(() => this.map.resize(), 500);
+          requestAnimationFrame(() => this.map.resize());
         }
         break;
     }
@@ -304,12 +307,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   resizeChart(event) {
-    this.chart.resize(event);
     this.LOG.debug(['resizeChart'], event);
-    this.warpViewChartResize.emit(event);
-    window.requestAnimationFrame(() => {
-      this.sizeService.change(new Size(this.width, event));
-    });
+    this.sizeService.change(new Size(this.width, event));
   }
 
   drawChart(firstDraw: boolean = false) {
@@ -355,8 +354,10 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       }
     }
     this.gtsList = this._data;
-    this._options = {... this._options};
+    this._options = {...this._options};
+
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
+    this.resizeArea();
   }
 
   focus(event: any) {
@@ -442,5 +443,16 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.annotation.setRealBounds(this.chartBounds);
     this.chart.setRealBounds(this.chartBounds);
     this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
+  }
+
+  private resizeArea() {
+    let h = this.el.nativeElement.getBoundingClientRect().height;
+    if (!!this.GTSTree) {
+      h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
+    }
+    if (!!this.controls) {
+      h -= this.controls.nativeElement.getBoundingClientRect().height;
+    }
+    this.initialChartHeight = h;
   }
 }

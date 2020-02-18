@@ -16,7 +16,7 @@
  */
 @import "../../styles/vars";
 
-:host {
+:host, warpview-resize {
 
   .handle {
     width: 100%;
@@ -36,6 +36,7 @@
   .wrapper {
     width: 100%;
     position: relative;
-    margin-bottom: 0;
+    padding-bottom: var(--warp-view-resize-handle-height);
+    height: 100%;
   }
 }

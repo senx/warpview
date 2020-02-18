@@ -39,7 +39,7 @@
                       (warpViewModalClose)="onWarpViewModalClose()"
                       (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
                       #gtsPopupModal></warpview-gts-popup>
-  <div class="inline" *ngIf="_options.showControls">
+  <div class="inline" *ngIf="_options.showControls" #controls>
     <warpview-toggle id="timeSwitch" text1="Date" text2="Timestamp"
                      (stateChange)="stateChange($event)"
                      [checked]="_options.timeMode === 'timestamp'"></warpview-toggle>
@@ -61,7 +61,7 @@
   <div *ngIf="warningMessage" class="warningMessage">{{warningMessage}}</div>
   <warpview-gts-tree
     *ngIf="_options.showGTSTree"
-    [data]="gtsList" id="tree" [gtsFilter]="gtsFilter" [debug]="debug"
+    [data]="gtsList" id="tree" [gtsFilter]="gtsFilter" [debug]="debug" #GTSTree
     (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
     [hiddenData]="_toHide" [options]="_options"
     [kbdLastKeyPressed]="kbdLastKeyPressed"
@@ -80,7 +80,8 @@
       ></warpview-annotation>
     </div>
     <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="debug"
-                     (resize)="resizeChart($event)">
+                     (resize)="resizeChart($event)"
+    >
       <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
                       [showLegend]="showLegend"
                       (boundsDidChange)="boundsDidChange($event)"
@@ -89,7 +90,7 @@
       ></warpview-chart>
     </warpview-resize>
   </div>
-  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight">
+  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight"  [debug]="debug">
     <div class="map-container">
       <warpview-map [options]="_options" #map [data]="gtsList" [debug]="debug" [responsive]="true"
                     [hiddenData]="_toHide"

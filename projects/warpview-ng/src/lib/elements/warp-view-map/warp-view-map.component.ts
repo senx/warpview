@@ -258,7 +258,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
     this.displayMap({gts: flattenGTS, params});
     this.LOG.debug(['onResize', 'postDisplayMap'], 'resizeTimer', this.el.nativeElement.parentElement.clientWidth, this.parentWidth);
-    this.resizeMe();
+    requestAnimationFrame(() => this.resizeMe());
   }
 
   private icon(color: string, marker = '') {
