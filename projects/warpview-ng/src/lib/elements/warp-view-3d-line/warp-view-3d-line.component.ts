@@ -7,7 +7,6 @@ import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
-import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-3d-line',
@@ -65,10 +64,6 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
     this.LOG.debug(['convert'], data, this._options, this._type);
     GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res)
       .filter(g => (g.v && GTSLib.isGts(g)))
-      .map(g => {
-        console.log(g);
-        return g;
-      })
       .forEach((gts: GTS, i) => {
         if (gts.v) {
           const label = GTSLib.serializeGtsMetadata(gts);
@@ -94,14 +89,14 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
             x: [],
             y: [],
             z: [],
-       //     hoverinfo: 'none',
+            //     hoverinfo: 'none',
           };
           gts.v.forEach(value => {
             if (value.length > 2) {
-              (series.x as any[]).push(value[1]);
-              (series.y as any[]).push(value[2]);
+              series.x.push(value[1]);
+              series.y.push(value[2]);
               if (value.length > 4) {
-                (series.z as any[]).push(value[3]);
+                series.z.push(value[3]);
               }
             }
           });

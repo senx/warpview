@@ -53,8 +53,9 @@ import {SizeService} from './services/resize.service';
 import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view-spectrum.component';
 import { PlotlyComponent } from './plotly/plotly.component';
 import { WarpViewBoxComponent } from './elements/warp-view-box/warp-view-box.component';
-import { WarpView3dLineComponent } from './elements/warp-view3-dline/warp-view-3d-line.component';
+import { WarpView3dLineComponent } from './elements/warp-view-3d-line/warp-view-3d-line.component';
 import {AngularSplitModule} from 'angular-split';
+import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-globe.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import {AngularSplitModule} from 'angular-split';
     WarpViewSpectrumComponent,
     PlotlyComponent,
     WarpViewBoxComponent,
-    WarpView3dLineComponent
+    WarpView3dLineComponent,
+    WarpViewGlobeComponent
   ],
   imports: [
     CommonModule,
@@ -130,6 +132,7 @@ import {AngularSplitModule} from 'angular-split';
     WarpViewSpectrumComponent,
     WarpViewBoxComponent,
     WarpView3dLineComponent,
+    WarpViewGlobeComponent,
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [
@@ -164,7 +167,8 @@ import {AngularSplitModule} from 'angular-split';
     WarpViewSpectrumComponent,
     PlotlyComponent,
     WarpViewBoxComponent,
-    WarpView3dLineComponent
+    WarpView3dLineComponent,
+    WarpViewGlobeComponent
   ]
 })
 export class WarpViewAngularModule {

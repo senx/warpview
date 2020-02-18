@@ -47,6 +47,10 @@ export class MenuComponent {
       slug: '/demo/line3d'
     },
     {
+      title: '3D globe',
+      slug: '/demo/globe'
+    },
+    {
       title: 'Spectrum charts',
       slug: '/demo/spectrum'
     },

@@ -90,6 +90,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     plot: ['plot'],
     box: ['box', 'box-date'],
     line3d: ['line3d'],
+    globe: ['globe'],
   };
   gtsList: any = [];
   private timer: any;

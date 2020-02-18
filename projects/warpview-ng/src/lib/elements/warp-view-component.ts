@@ -284,7 +284,7 @@ ${labeledData}`;
 
   hover(data: any) {
     this.toolTip.nativeElement.style.display = 'block';
-    this.toolTip.nativeElement.innerHTML = this.legendFormatter(this._options.horizontal ? data.yvals[0] : data.xvals[0], data.points);
+    this.toolTip.nativeElement.innerHTML = this.legendFormatter(this._options.horizontal ? (data.yvals || [''])[0] : (data.xvals || [''])[0], data.points);
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
       this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
     } else {

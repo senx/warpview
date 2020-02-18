@@ -15,7 +15,18 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 
@@ -145,7 +156,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private firstDraw = true;
   private finalHeight = 0;
 
-  constructor(public el: ElementRef, public sizeService: SizeService) {
+  constructor(public el: ElementRef, public sizeService: SizeService, private renderer: Renderer2) {
     this.LOG = new Logger(WarpViewMapComponent, this.debug);
     this.LOG.debug(['constructor'], this.debug);
     this.sizeService.sizeChanged$.subscribe(() => {
@@ -179,16 +190,16 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       height -= this.timeRangeSlider.nativeElement.getBoundingClientRect().height;
     }
     this.finalHeight = height;
-    this.mapDiv.nativeElement.style.width = 'calc(' + width + 'px - '
+    this.renderer.setStyle(this.mapDiv.nativeElement, 'width', 'calc(' + width + 'px - '
       + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
       + ' - '
       + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
-      + ')';
-    this.mapDiv.nativeElement.style.height = 'calc(' + height + 'px - '
+      + ')');
+    this.renderer.setStyle(this.mapDiv.nativeElement, 'height', 'calc(' + height + 'px - '
       + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
       + ' - '
       + getComputedStyle(this.wrapper.nativeElement).getPropertyValue('--warp-view-map-margin').trim()
-      + ')';
+      + ')');
     this.width = width;
     this.height = height;
     requestAnimationFrame(() => this._map.invalidateSize());

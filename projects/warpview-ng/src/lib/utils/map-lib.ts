@@ -374,21 +374,6 @@ export class MapLib {
     paths.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
     positionsData.forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
     annotationsData.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
-    /* for (let i = 0; i < paths.length; i++) {
-       for (let j = 0; j < paths[i].path.length; j++) {
-         pointsArray.push([parseFloat(paths[i].path[j].lat), paths[i].path[j].lon]);
-       }
-     }
-     for (let i = 0; i < positionsData.length; i++) {
-       for (let j = 0; j < positionsData[i].positions.length; j++) {
-         pointsArray.push([positionsData[i].positions[j][0], positionsData[i].positions[j][1]]);
-       }
-     }
-     for (let i = 0; i < annotationsData.length; i++) {
-       for (let j = 0; j < annotationsData[i].path.length; j++) {
-         pointsArray.push([annotationsData[i].path[j].lat, annotationsData[i].path[j].lon]);
-       }
-     }*/
     geoJson.forEach(g => {
       switch (g.geometry.type) {
         case 'MultiPolygon':

@@ -68,7 +68,7 @@ export class WarpViewResizeComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     // if (this.firstDraw && this.initialHeight) {
     this.LOG.debug(['ngAfterViewInit'], this.initialHeight);
-    this.renderer.setStyle(this.wrapper.nativeElement, 'height', this.initialHeight + 'px', RendererStyleFlags2.Important);
+    this.renderer.setStyle(this.wrapper.nativeElement, 'height', this.initialHeight + 'px');
     //  }
     // the click event on the handlebar attach mousemove and mouseup events to document.
     this.handleDiv.nativeElement.addEventListener('mousedown', (ev: MouseEvent) => {

@@ -203,6 +203,18 @@ false RESETS
   $gts
 %> FOR`
     }],
+    globe: [{
+      title: '3D globe',
+      type: 'globe',
+      warpscript: `0 5 <% 'j' STORE
+  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
+  0 10 <%
+    'i' STORE
+    $gts NOW $i 1000 * - 40 RAND 100 * - -4 RAND 100 * - 1000 RAND * T ADDVALUE DROP
+  %> FOR
+  $gts
+%> FOR`
+    }],
     bubble: [{
       title: 'Bubble chart',
       type: 'bubble',

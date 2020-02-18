@@ -39,7 +39,8 @@ import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view
 import {BrowserModule} from '@angular/platform-browser';
 import {WarpViewAngularModule} from './warp-view-angular.module';
 import {WarpViewBoxComponent} from './elements/warp-view-box/warp-view-box.component';
-import {WarpView3dLineComponent} from './elements/warp-view3-dline/warp-view-3d-line.component';
+import {WarpView3dLineComponent} from './elements/warp-view-3d-line/warp-view-3d-line.component';
+import {WarpViewGlobeComponent} from './elements/warp-view-globe/warp-view-globe.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import {WarpView3dLineComponent} from './elements/warp-view3-dline/warp-view-3d-
 export class WarpViewElementsModule {
   constructor(private injector: Injector) {
     [
+      {name: 'warp-view-globe', component: WarpViewGlobeComponent},
       {name: 'warp-view-3dline', component: WarpView3dLineComponent},
       {name: 'warp-view-box', component: WarpViewBoxComponent},
       {name: 'warp-view-chart', component: WarpViewChartComponent},
