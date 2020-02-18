@@ -164,7 +164,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.drawMap();
   }
 
-  private resizeMe() {
+  resizeMe() {
     this.LOG.debug(['resizeMe'], this.wrapper.nativeElement.parentElement.getBoundingClientRect());
     let height = this.wrapper.nativeElement.parentElement.getBoundingClientRect().height; /* === 0
       ? ChartLib.DEFAULT_HEIGHT
