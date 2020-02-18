@@ -52,7 +52,7 @@ import {Logger} from '../../utils/logger';
   selector: 'warpview-plot',
   templateUrl: './warp-view-plot.component.html',
   styleUrls: ['./warp-view-plot.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  encapsulation: ViewEncapsulation.None
 })
 export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, AfterViewInit {
 
