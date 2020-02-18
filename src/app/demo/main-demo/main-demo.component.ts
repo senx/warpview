@@ -374,7 +374,8 @@ ZIP // merge into a list of GTS
   $name RENAME // rename the GTS
   $labels RELABEL // put labels
   2 ->LIST // put both GTS in a list
-%> LMAP`
+%> LMAP 'data' STORE
+{ 'data' $data 'globalParams' { 'foldGTSTree' true } }`
     }],
     map: [{
       title: 'Map',

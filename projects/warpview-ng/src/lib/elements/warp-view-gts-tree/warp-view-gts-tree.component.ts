@@ -46,12 +46,13 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   get gtsFilter() {
     return this._gtsFilter;
   }
+
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private _gtsFilter = 'x';
   gtsList: any[] = [];
   params: Params[] = [];
-  expand = true;
+  expand = false;
 
   constructor(
     public el: ElementRef,
@@ -66,7 +67,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     if (this.data) {
       this.doRender();
     }
-    if (this._options.foldGTSTree !== undefined && !!this._options.foldGTSTree && !this.expand) {
+    if (!!this._options.foldGTSTree && !this.expand) {
       this.foldAll();
     }
   }
@@ -80,7 +81,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   private doRender() {
     this.LOG.debug(['doRender', 'gtsList'], this._data);
-    this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
     if (!this._data) {
       return;
     }
@@ -96,11 +97,9 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   private foldAll() {
     if (!this.root) {
-      window.setTimeout(() => {
-        this.foldAll();
-      }, 100);
+      requestAnimationFrame(() => this.foldAll());
     } else {
-      this.expand = true;
+      this.expand = false;
     }
   }
 
