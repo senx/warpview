@@ -93,10 +93,11 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       divider = 1000000;
     }
     const dataset = [];
-    gtsList.forEach(gts => {
+    gtsList.forEach((gts, i) => {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
-        const color = ColorLib.getColor(gts.id, this._options.scheme);
+        const c = ColorLib.getColor(gts.id || i, this._options.scheme);
+        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
         const series: Partial<any> = {
           type: 'bar',
           mode: 'lines+markers',
