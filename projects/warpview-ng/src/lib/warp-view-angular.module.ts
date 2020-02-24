@@ -51,11 +51,11 @@ import {FormsModule} from '@angular/forms';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {SizeService} from './services/resize.service';
 import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view-spectrum.component';
-import { PlotlyComponent } from './plotly/plotly.component';
-import { WarpViewBoxComponent } from './elements/warp-view-box/warp-view-box.component';
-import { WarpView3dLineComponent } from './elements/warp-view-3d-line/warp-view-3d-line.component';
-import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-globe.component';
-import { WarpViewEventDropComponent } from './elements/warp-view-event-drop/warp-view-event-drop.component';
+import {PlotlyComponent} from './plotly/plotly.component';
+import {WarpViewBoxComponent} from './elements/warp-view-box/warp-view-box.component';
+import {WarpView3dLineComponent} from './elements/warp-view-3d-line/warp-view-3d-line.component';
+import {WarpViewGlobeComponent} from './elements/warp-view-globe/warp-view-globe.component';
+import {WarpViewEventDropComponent} from './elements/warp-view-event-drop/warp-view-event-drop.component';
 
 @NgModule({
   declarations: [
@@ -133,7 +133,7 @@ import { WarpViewEventDropComponent } from './elements/warp-view-event-drop/warp
     WarpViewBoxComponent,
     WarpView3dLineComponent,
     WarpViewGlobeComponent,
-    WarpViewEventDropComponent,
+    WarpViewEventDropComponent
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [

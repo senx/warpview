@@ -193,6 +193,7 @@ export class GTSLib {
   }
 
   static serializeGtsMetadata(gts) {
+    console.log(gts)
     const serializedLabels = [];
     const serializedAttributes = [];
     if (gts.l) {

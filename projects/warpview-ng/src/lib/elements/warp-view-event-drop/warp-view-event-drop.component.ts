@@ -49,7 +49,6 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
 
   private visibility: boolean[] = [];
-  private expanded = false;
   private maxTick = Number.MIN_VALUE;
   private minTick = Number.MAX_VALUE;
   private visibleGtsId = [];
@@ -66,7 +65,6 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
       color: d => d.color,
       onMouseOver: g => {
         this.LOG.debug(['onMouseOver'], g);
-        const tooltip = this.toolTip.nativeElement;
         this.pointHover.emit({
           x: d3.event.offsetX,
           y: d3.event.offsetY
@@ -196,10 +194,5 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
       end: moment.tz(moment.utc(this.maxTick / this.divider), this._options.timeZone).toDate(),
     };
     return dataList;
-  }
-
-  toggle() {
-    this.expanded = !this.expanded;
-    this.drawChart();
   }
 }

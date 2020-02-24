@@ -478,7 +478,7 @@ ZIP // merge into a list of GTS
   }
 '>
 JSON->`
-    },/* {
+    }, {
       title: 'Time Span',
       type: 'map',
       warpscript: `<'
@@ -512,7 +512,7 @@ JSON->`
   }
 '>
 JSON->`
-    } */
+    }
     ],
     image: [{
       title: 'Images',
@@ -620,7 +620,8 @@ LIST-> DROP`
   $gts
 %> FOR`
     }
-    ], drops: [{
+    ],
+    drops: [{
       title: 'Drops chart',
       type: 'drops',
       warpscript: `0 5 <% 'j' STORE
@@ -631,7 +632,17 @@ LIST-> DROP`
   %> FOR
   $gts
 %> FOR`
-    }
+    },
+      {
+        title: 'Drops chart',
+        type: 'drops',
+        warpscript: `@training/dataset0
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 700 d ] FETCH
+false RESETS
+[ SWAP mapper.delta 1 0 0 ] MAP
+[ SWAP bucketizer.mean $NOW 1 h 0 ] BUCKETIZE
+[ NaN NaN NaN 0 ] FILLVALUE`
+      }
     ],
     polar: [{
       title: 'Polar chart',
