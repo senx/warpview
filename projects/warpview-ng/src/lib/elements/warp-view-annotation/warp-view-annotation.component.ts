@@ -297,7 +297,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   protected convert(data: DataModel): Partial<any>[] {
     const dataset: Partial<any>[] = [];
-    const divider = GTSLib.getDivider(this._options.timeUnit);
     let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;

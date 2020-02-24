@@ -99,6 +99,12 @@
                            *ngIf="graphs['annotation'].indexOf(type) > -1 && gtsList"
                            [responsive]="true"></warpview-annotation>
 
+      <warpview-event-drop [debug]="debug" [unit]="unit" [options]="_options"
+                           [hidden]="loading"
+                           [showLegend]="showLegend" [data]="gtsList" [type]="type"
+                           *ngIf="graphs['drops'].indexOf(type) > -1 && gtsList"
+                           [responsive]="true"></warpview-event-drop>
+
       <warpview-polar [debug]="debug" [unit]="unit" [options]="_options"
                       [hidden]="loading"
                       [showLegend]="showLegend" [data]="gtsList"
@@ -123,10 +129,10 @@
                         *ngIf="graphs['line3d'].indexOf(type) > -1 && gtsList"
                         [responsive]="true"></warpview-3d-line>
       <warpview-globe [debug]="debug" [unit]="unit" [options]="_options"
-                        [hidden]="loading"
-                        [showLegend]="showLegend" [data]="gtsList" [type]="type"
-                        *ngIf="graphs['globe'].indexOf(type) > -1 && gtsList"
-                        [responsive]="true"></warpview-globe>
+                      [hidden]="loading"
+                      [showLegend]="showLegend" [data]="gtsList" [type]="type"
+                      *ngIf="graphs['globe'].indexOf(type) > -1 && gtsList"
+                      [responsive]="true"></warpview-globe>
     </div>
   </div>
 </div>

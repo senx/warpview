@@ -103,6 +103,10 @@ export class MenuComponent {
       slug: '/demo/annotation'
     },
     {
+      title: 'Drops',
+      slug: '/demo/drops'
+    },
+    {
       title: 'Polar',
       slug: '/demo/polar'
     },

@@ -1784,13 +1784,6 @@ angular-resize-event@^1.1.1:
     css-element-queries "1.2.3"
     tslib "^1.9.0"
 
-angular-split@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/angular-split/-/angular-split-3.0.3.tgz#cd530dfbd580c3a28b0e0f40b75c6be37bda0ec9"
-  integrity sha512-5m5mCeISmytXnxKijo9PQDQviiDHNCjt/beTVeYeLTGZJbdB5AEk4lslxOV8b7zM7tcv1YN+8jW3xNK1XcApsA==
-  dependencies:
-    tslib "^1.9.0"
-
 ansi-align@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.0.tgz#b536b371cf687caaef236c18d3e21fe3797467cb"
@@ -3745,7 +3738,7 @@ d3-shape@1, d3-shape@^1.2.0:
   dependencies:
     d3-path "1"
 
-d3-time-format@2:
+d3-time-format@2, d3-time-format@^2.1.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.2.3.tgz#0c9a12ee28342b2037e5ea1cf0b9eb4dd75f29cb"
   integrity sha512-RAHNnD8+XvC4Zc4d2A56Uw0yJoM7bsvOlJR33bclxq399Rak/b9bhvu/InjxdWhPtkgU53JJcleJTGkNRnN6IA==
@@ -3847,10 +3840,20 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-fns@^1.29.0:
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
+  integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
+
 date-format@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-2.1.0.tgz#31d5b5ea211cf5fd764cd38baf9d033df7e125cf"
   integrity sha512-bYQuGLeFxhkxNOF3rcMtiZxvCBAquGzZm6oWA1oZ0g2THUzivaRhv8uOhdr19LmoobSOLoIAxeUK2RdbM8IFTA==
+
+debounce@^1.1.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
+  integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
 debug@*, debug@^4.1.0, debug@^4.1.1:
   version "4.1.1"
@@ -4557,6 +4560,17 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
+
+event-drops@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/event-drops/-/event-drops-1.3.0.tgz#949059f6379a78542d7feb46e0d0336074cbaef9"
+  integrity sha512-QQqtKvvLm9eUbL7wRewwfkMakdYtP5v+LC3k3+eHUKFIbgdAXEs7daNVgaeBfTXAJWhqN5DTEhBQg3cBkZMQlQ==
+  dependencies:
+    d3-time-format "^2.1.1"
+    date-fns "^1.29.0"
+    debounce "^1.1.0"
+    lodash.defaultsdeep "^4.6.0"
+    lodash.uniqby "^4.7.0"
 
 eventemitter3@^4.0.0:
   version "4.0.0"
@@ -7326,6 +7340,16 @@ lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
   integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
+
+lodash.defaultsdeep@^4.6.0:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
+  integrity sha512-3j8wdDzYuWO3lM3Reg03MuQR957t287Rpcxp1njpEa8oDrikb+FwGdW3n+FELh/A6qib6yPit0j/pv9G/yeAqA==
+
+lodash.uniqby@^4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/lodash.uniqby/-/lodash.uniqby-4.7.0.tgz#d99c07a669e9e6d24e1362dfe266c67616af1302"
+  integrity sha1-2ZwHpmnp5tJOE2Lf4mbGdhavEwI=
 
 lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.5, lodash@~4.17.10:
   version "4.17.15"

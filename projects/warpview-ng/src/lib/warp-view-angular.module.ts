@@ -54,8 +54,8 @@ import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view
 import { PlotlyComponent } from './plotly/plotly.component';
 import { WarpViewBoxComponent } from './elements/warp-view-box/warp-view-box.component';
 import { WarpView3dLineComponent } from './elements/warp-view-3d-line/warp-view-3d-line.component';
-import {AngularSplitModule} from 'angular-split';
 import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-globe.component';
+import { WarpViewEventDropComponent } from './elements/warp-view-event-drop/warp-view-event-drop.component';
 
 @NgModule({
   declarations: [
@@ -91,13 +91,13 @@ import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-glo
     PlotlyComponent,
     WarpViewBoxComponent,
     WarpView3dLineComponent,
-    WarpViewGlobeComponent
+    WarpViewGlobeComponent,
+    WarpViewEventDropComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     AngularResizedEventModule,
-    AngularSplitModule.forRoot(),
     FormsModule
   ],
   exports: [
@@ -133,6 +133,7 @@ import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-glo
     WarpViewBoxComponent,
     WarpView3dLineComponent,
     WarpViewGlobeComponent,
+    WarpViewEventDropComponent,
   ],
   providers: [HttpErrorHandler, SizeService],
   entryComponents: [
@@ -168,7 +169,8 @@ import { WarpViewGlobeComponent } from './elements/warp-view-globe/warp-view-glo
     PlotlyComponent,
     WarpViewBoxComponent,
     WarpView3dLineComponent,
-    WarpViewGlobeComponent
+    WarpViewGlobeComponent,
+    WarpViewEventDropComponent
   ]
 })
 export class WarpViewAngularModule {
