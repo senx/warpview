@@ -159,7 +159,7 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 
   protected convert(data: DataModel): any[] {
     this.LOG.debug(['convert'], data);
-    const gtsList = data.data as any[];
+    const gtsList = GTSLib.flatDeep(data.data as any[]);
     const dataList = [];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     if (!gtsList || gtsList.length === 0 || gtsList[0].length < 2) {
