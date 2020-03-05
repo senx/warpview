@@ -186,6 +186,7 @@ export class MapLib {
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
     obj.borderColor = params.borderColor || '#000';
+    obj.properties = params.properties;
     if (params.baseRadius === undefined
       || isNaN(parseInt(params.baseRadius, 10))
       || parseInt(params.baseRadius, 10) < 0) {
@@ -371,9 +372,12 @@ export class MapLib {
 
   static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
     const pointsArray = [];
-    paths.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
-    positionsData.forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
-    annotationsData.forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
+    this.LOG.debug(['getBoundsArray', 'positionsData'], positionsData);
+    (paths || []).forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
+    this.LOG.debug(['getBoundsArray', 'positionsData'], positionsData);
+    (positionsData || []).forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
+    this.LOG.debug(['getBoundsArray', 'pointsArray'], pointsArray);
+    (annotationsData || []).forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
     geoJson.forEach(g => {
       switch (g.geometry.type) {
         case 'MultiPolygon':
@@ -397,6 +401,7 @@ export class MapLib {
     let west = -180;
     let north = -90;
     let east = 180;
+    this.LOG.debug(['getBoundsArray'], pointsArray);
     pointsArray.forEach((point) => {
       if (point[0] > north) {
         north = point[0];

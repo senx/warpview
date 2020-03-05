@@ -63,6 +63,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   @Input('showLegend') showLegend = true;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
+  private bounds: any[];
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -322,9 +323,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this._map = Leaflet.map(this.mapDiv.nativeElement);
 
     this._map.on('load', () => {
-      /*     this.currentZoom = this._map.getZoom();
-           this.currentLat = this._map.getCenter().lat;
-           this.currentLong = this._map.getCenter().lng;*/
       this.LOG.debug(['load'], this._map.getCenter().lng, this.currentLong);
       this.LOG.debug(['load'], this._map.getZoom());
     });
@@ -430,17 +428,16 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       }
       geoShape.addTo(this._map);
     });
-
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
-      const bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
-      window.setTimeout(() => {
+      this.bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
+      requestAnimationFrame(() => {
         this._options.startZoom = this.currentZoom || this._options.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
         this._map.invalidateSize();
-        if (bounds.length > 1) {
+        if (this.bounds.length > 1) {
           this.LOG.debug(['displayMap', 'setView'], 'fitBounds');
-          this._map.fitBounds(Leaflet.latLngBounds(bounds[0], bounds[1]), {
+          this._map.fitBounds(Leaflet.latLngBounds(this.bounds[0], this.bounds[1]), {
             padding: [20, 20],
             animate: false,
             duration: 0
@@ -454,11 +451,11 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         } else {
           this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
-            lat: this.currentLat,
-            lng: this.currentLong
+            lat: this.currentLat || this._options.startLat || 0,
+            lng: this.currentLong || this._options.startLong || 0
           }, this.currentZoom || this._options.startZoom || 10);
         }
-      }, 1000);
+      });
     } else {
       this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.startZoom);
       this._map.setView(
@@ -521,6 +518,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   }
 
   private addPopup(positionData: any, value: any, marker: any) {
+    this.LOG.debug(['addPopup'], positionData);
     let content = '';
     if (positionData.key) {
       content = `<p><b>${positionData.key}</b>: ${value || ''}</p>`;
@@ -610,17 +608,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
                 fillColor: positionData.color,
                 fillOpacity: 1,
               });
-            let content = '';
-            if (positionData.key) {
-              content = `<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`;
-            }
-            if (positionData.properties) {
-              content += '<ul>';
-              Object.keys(positionData.properties).forEach(k => {
-                content += `<li><b>${k}:</b> ${positionData.properties[k]}</li>`;
-              });
-            }
-            marker.bindPopup(content);
+            this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
         });

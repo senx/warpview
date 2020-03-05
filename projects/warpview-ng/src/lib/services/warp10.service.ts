@@ -15,12 +15,12 @@
  *
  */
 
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {catchError, tap} from 'rxjs/operators';
 import {HandleError, HttpErrorHandler} from './http-error-handler.service';
 import {Logger} from '../utils/logger';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class Warp10Service {
@@ -35,12 +35,17 @@ export class Warp10Service {
     this.handleError = httpErrorHandler.createHandleError('Warp10Service');
   }
 
-  exec(warpScript: string, url: string): Observable<any[]> {
+  exec(warpScript: string, url: string): Observable<HttpResponse<string>> {
     this.LOG.debug(['exec', 'warpScript'], url, warpScript);
-    return this.http.post<any[]>(url + '/exec', warpScript)
+    return this.http.post<string>(url + '/exec', warpScript, {
+      // @ts-ignore
+      observe: 'response',
+      // @ts-ignore
+      responseType: 'text'
+    })
       .pipe(
         tap(r => this.LOG.debug(['exec', 'result'], r)),
-        catchError(this.handleError<any[]>('exec', []))
+        catchError(this.handleError<string>('exec', '[]'))
       );
   }
 }

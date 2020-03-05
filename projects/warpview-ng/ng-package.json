@@ -14,7 +14,8 @@
     "leaflet.markercluster",
     "leaflet.heat",
     "canvas-gauges",
-    "fitty"
+    "fitty",
+    "angular-split"
   ],
   "lib": {
     "flatModuleFile": "warpview",

@@ -36,6 +36,7 @@ import {ResizedEvent} from 'angular-resize-event';
 import {Size, SizeService} from '../../services/resize.service';
 import {Warp10Service} from '../../services/warp10.service';
 import {Logger} from '../../utils/logger';
+import {JsonLib} from '../../utils/jsonLib';
 
 @Component({
   selector: 'warpview-tile',
@@ -226,12 +227,12 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.execUrl = this.url;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
-      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(gtsStr => {
+      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(response => {
         this.loading = false;
-        this.LOG.debug(['execute'], gtsStr);
-        if (gtsStr) {
+        this.LOG.debug(['execute'], response.body);
+        if (response.body) {
           try {
-            this.gtsList = gtsStr;
+            this.gtsList = new JsonLib().parse(response.body, undefined);
             this.parseGTS();
           } catch (e) {
             this.LOG.error(['execute'], e);
