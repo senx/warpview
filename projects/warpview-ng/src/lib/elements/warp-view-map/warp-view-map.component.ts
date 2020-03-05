@@ -523,13 +523,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     if (positionData.key) {
       content = `<p><b>${positionData.key}</b>: ${value || ''}</p>`;
     }
-    if (positionData.properties) {
-      content += '<ul>';
-      Object.keys(positionData.properties).forEach(k => {
-        content += `<li><b>${k}:</b> ${positionData.properties[k]}</li>`;
-      });
-      content += '</ul>';
-    }
+    Object.keys(positionData.properties || []).forEach(k => content += `<b>${k}</b>: ${positionData.properties[k]}<br />`);
     marker.bindPopup(content);
   }
 
