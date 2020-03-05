@@ -183,6 +183,7 @@ export class MapLib {
   }
 
   private static extractCommonParameters(obj, params, index, scheme: string) {
+    params = params ||{};
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
     obj.borderColor = params.borderColor || '#000';

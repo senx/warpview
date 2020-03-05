@@ -388,7 +388,94 @@ ZIP // merge into a list of GTS
 %> LMAP 'data' STORE
 { 'data' $data 'globalParams' { 'foldGTSTree' true } }`
     }],
-    map: [{
+    map: [
+      { title: 'Test', type: 'map', warpscript: `"AR2NCsBjdP3ZiKB5ppXxTa5s0a_exQRhlfKPJJ2g1_KbWHvSlXHK1yIGUcpshCaq55834_CmCn8nIOP5bQmtSf7JxEORGPYF82H0HCi6SaoOXWQ9FZ2tdydCFH.JTx6TdZHj.ceeQen2KqCpoeZn_KVkkSTZ9BGOa9yF.k6ZEcyMbcqF9ATdr." 'read' STORE
+LINEON
+[] 'res' STORE
+@apigeo/departements/29 'geometry' GET ->JSON  0.1 true GEO.JSON GEO.REGEXP 'loc' STORE
+[ 
+  $read 
+  'evse.events' { 'hhcode' '~(' $loc +  ')' + }
+  [ 2019 05 1 ] TSELEMENTS-> ISO8601
+  [ 2019 05 31 ] TSELEMENTS-> ISO8601
+] FETCH 
+<%
+  'g' STORE
+  $g ATTRIBUTES 'hhcode' GET  HHCODE-> [ 'lat' 'long' ] STORE
+  $g LABELS 'evse' GET 'evse' STORE
+  {} 'datum' STORE
+  $g { 0 'Availability' 1 'Busy' } MVTICKSPLIT ->GTS VALUELIST FLATTEN COMPACT
+  
+  // 2 series
+  <%
+    'g' STORE
+    $g NAME 'cName' STORE
+    $g VALUES UNIQUE <%
+      TOSTRING 'v' STORE
+      $cName ':' + $v + 'c' STORE
+      NEWGTS $c RENAME DUP $c STORE    
+    %> F LMAP 'state_gts' STORE
+
+    [
+      $g
+      <% 
+        'elt' STORE
+        $elt 0 GET 'timestamp' STORE
+        $elt 1 GET 0 GET 'cName' STORE
+        $elt 3 GET 'ts' STORE
+
+        <% $ts SIZE 2 == %> // Do we have a start and end timestamp?
+        <% $ts LIST-> DROP SWAP %> // Get start and end timestamp, put end before
+        <% $g LASTTICK $timestamp %> // We don't have an end timestamp, use LASTTICK instead
+        IFTE
+
+        - 'delta' STORE // Compute duration
+
+        $cName ':' + $elt 7 GET 0 GET TOSTRING + 'c' STORE
+        $c LOAD // get the GTS corresponding to the value
+        $timestamp $lat $long NaN $delta ADDVALUE // Add one duration
+        DROP // We don't need the GTS anymore
+
+        [ $timestamp  $lat $long NaN $delta ]
+      %>
+      MACROMAPPER
+      0 1 0 // Slidding window parameters
+    ] MAP DROP // 0 GET $g SWAP COPYGEO STOP
+    [ $state_gts bucketizer.sum NOW 0 1 ] BUCKETIZE 'gts' STORE
+    [ $gts [] reducer.sum ] REDUCE VALUES 0 GET 0 GET TODOUBLE 'sum' STORE 
+    {
+      'positions'  [ $lat $long ] 
+      'data' {
+          $gts  <% 'i' STORE
+            $i NAME  $i VALUES 0 GET $sum / 100 *
+          %> FOREACH 
+        }
+    }
+  %> FOREACH
+  2 ->LIST 'datum' STORE
+  $res {
+      'positions' $datum 0 GET 'positions' GET
+      'data' $datum 0 GET 'data' GET $datum 1 GET 'data' GET APPEND
+    }  +!  'res' STORE 
+%> FOREACH
+[] 'positions' STORE
+[] 'params' STORE
+
+$res <% 
+  'd' STORE
+  $positions $d 'positions' GET +!  'positions' STORE
+  $params { 
+    'key' $evse 
+    'render' 'dots' 
+    'color' '#ffa' 
+    'borderColor' '#f00' 
+    'baseRadius' 5 
+    'properties' $d 'data' GET
+  } +! 'params' STORE
+%> FOREACH
+{ 'data' [ { 'positions'  $positions } ] 'params' $params }
+`},
+      {
       title: 'Map',
       type: 'map',
       warpscript: `'{"data":[{"c":"A","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"B","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"D","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"E","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"key":"Path A"},{"key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"lodging"},{"key":"Annotations (boolean)","baseRadius":5},{"key":"Test","render":"marker"},{"key":"points 2","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}'
