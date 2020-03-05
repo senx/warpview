@@ -520,6 +520,21 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
   }
 
+  private addPopup(positionData: any, value: any, marker: any) {
+    let content = '';
+    if (positionData.key) {
+      content = `<p><b>${positionData.key}</b>: ${value || ''}</p>`;
+    }
+    if (positionData.properties) {
+      content += '<ul>';
+      Object.keys(positionData.properties).forEach(k => {
+        content += `<li><b>${k}:</b> ${positionData.properties[k]}</li>`;
+      });
+      content += '</ul>';
+    }
+    marker.bindPopup(content);
+  }
+
   private updatePositionArray(positionData: any) {
     const positions = [];
     let polyline;
@@ -537,7 +552,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         positionData.positions.forEach(p => {
           if ((this.hiddenData || []).filter((i) => i === positionData.key).length === 0) {
             const marker = Leaflet.marker({lat: p[0], lng: p[1]}, {icon, opacity: 1});
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
+            this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
           this.LOG.debug(['updatePositionArray', 'build marker'], icon);
@@ -565,8 +580,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
                   positionData.colorGradient[p[5]].b),
                 fillOpacity: 0.7,
               });
-            this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], marker);
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
+            this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
         });
@@ -580,7 +594,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
                 color: positionData.borderColor,
                 fillColor: positionData.color, fillOpacity: 0.7,
               });
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
+            this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
         });
@@ -596,7 +610,17 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
                 fillColor: positionData.color,
                 fillOpacity: 1,
               });
-            marker.bindPopup(`<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`);
+            let content = '';
+            if (positionData.key) {
+              content = `<p><b>${positionData.key}</b>: ${p[2] || ''}</p>`;
+            }
+            if (positionData.properties) {
+              content += '<ul>';
+              Object.keys(positionData.properties).forEach(k => {
+                content += `<li><b>${k}:</b> ${positionData.properties[k]}</li>`;
+              });
+            }
+            marker.bindPopup(content);
             positions.push(marker);
           }
         });

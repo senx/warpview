@@ -48,6 +48,7 @@ export class Param {
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
   timeZone = 'UTC';
+  properties?: any;
   map?: {
     tiles?: string[];
     heatRadius?: number;
