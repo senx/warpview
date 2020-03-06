@@ -274,10 +274,10 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   }
 
   private icon(color: string, marker = '') {
-    const c = `+${color.slice(1)}`;
-    const m = marker !== '' ? '-' + marker : '';
+    const c = `${color.slice(1)}`;
+    const m = marker !== '' ? marker : '';
     return Leaflet.icon({
-      iconUrl: 'https://api.mapbox.com/v3/marker/pin-s' + m + c + '@2x.png',
+      iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-${m}&size=50&hoffset=0&voffset=-1&background=${c}`,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
     });
@@ -369,6 +369,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
+    this.LOG.debug(['displayMap', 'this.positionData'], this.positionData);
     // Create the positions arrays
     this.positionData.forEach(d => {
       this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
