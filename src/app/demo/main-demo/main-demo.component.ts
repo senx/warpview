@@ -158,7 +158,8 @@ false RESETS
 'data' STORE
 { 'data' $data 'globalParams' { 'split' 'D' } }`
       }],
-    bar: [{
+    bar: [
+      {
       title: 'Bar chart',
       type: 'bar',
       warpscript: `@training/dataset0
@@ -229,7 +230,7 @@ LMAP
 }
 %> LMAP 'values' STORE
 { 'data' $values }`
-    }],
+    }  ],
     spectrum: [
       {
         title: 'Spectrum chart / contour by density',

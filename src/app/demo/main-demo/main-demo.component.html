@@ -21,7 +21,7 @@
       <div *ngFor="let d of currentChart">
         <h1>{{d.title}}</h1>
         <div style="height: 600px;min-height: 600px; resize: both; padding: 10px; overflow: hidden;">
-          <warpview-tile url="http://localhost:8080/api/v0" [responsive]="true" [debug]="true" [unit]="d.unit"
+          <warpview-tile url="https://warp.senx.io/api/v0" [responsive]="true" [debug]="true" [unit]="d.unit"
                          [showLegend]="false" [options]="options"
                          [type]="d.type">{{d.warpscript}}</warpview-tile>
         </div>

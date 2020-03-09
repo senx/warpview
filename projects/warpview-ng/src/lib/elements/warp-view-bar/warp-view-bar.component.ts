@@ -85,13 +85,6 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       gtsList = [data.data];
     }
     this.LOG.debug(['convert', 'gtsList'], gtsList);
-    let divider = 1000; // default for µs timeunit
-    if (this._options.timeUnit && this._options.timeUnit === 'ms') {
-      divider = 1;
-    }
-    if (this._options.timeUnit && this._options.timeUnit === 'ns') {
-      divider = 1000000;
-    }
     const dataset = [];
     gtsList.forEach((gts, i) => {
       if (gts.v) {
@@ -137,9 +130,9 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
       } else {
         this._options.timeMode = 'custom';
         this.LOG.debug(['convert', 'gts'], gts);
-        (gts.columns || []).forEach((label, i) => {
-          const c = ColorLib.getColor(gts.id, this._options.scheme);
-          const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
+        (gts.columns || []).forEach((label, index) => {
+          const c = ColorLib.getColor(gts.id || index, this._options.scheme);
+          const color = ((data.params || [])[index] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
             type: 'bar',
             mode: 'lines+markers',
@@ -157,14 +150,22 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
               }
             }
           };
-          (gts.rows || []).forEach(r => {
-            series.y.unshift(r[0]);
-            series.x.push(r[i + 1]);
-          });
+          if (this._options.horizontal) {
+            (gts.rows || []).forEach(r => {
+              series.y.unshift(r[0]);
+              series.x.push(r[index + 1]);
+            });
+          } else {
+            (gts.rows || []).forEach(r => {
+              series.x.push(r[0]);
+              series.y.push(r[index + 1]);
+            });
+          }
           dataset.push(series);
         });
       }
     });
+    this.LOG.debug(['convert', 'dataset'], dataset, this._options.horizontal);
     return dataset;
   }
 

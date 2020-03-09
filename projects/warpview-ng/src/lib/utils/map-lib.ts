@@ -21,7 +21,7 @@ import {Logger} from './logger';
 
 export class MapLib {
   static BASE_RADIUS = 2;
-  private static LOG: Logger = new Logger(MapLib);
+  private static LOG: Logger = new Logger(MapLib, true);
 
   static mapTypes: any = {
     NONE: undefined,
@@ -183,7 +183,7 @@ export class MapLib {
   }
 
   private static extractCommonParameters(obj, params, index, scheme: string) {
-    params = params ||{};
+    params = params || {};
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
     obj.borderColor = params.borderColor || '#000';
@@ -252,7 +252,7 @@ export class MapLib {
       if (GTSLib.isPositionArray(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
         const posArray = gts;
-        const params = data.params[i];
+        const params = data.params[i] || {};
         MapLib.extractCommonParameters(posArray, params, i, scheme);
         if (params.render !== undefined) {
           posArray.render = params.render;
