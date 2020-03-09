@@ -235,6 +235,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   hover(data: any) {
+
+    this.LOG.debug(['hover'], data);
     const tooltip = this.toolTip.nativeElement;
     this.pointHover.emit({
       x: data.event.offsetX,
@@ -258,7 +260,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 <li class="tooltip-date">${this._options.timeMode === 'timestamp'
       ? data.xvals[0]
       : (moment(data.xvals[0]).utc().toISOString() || '')}</li>
-<li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.yvals[0]}</span></li>
+<li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.points[0].text}</span></li>
 </ul>
       </div>`;
     if (data.event.offsetX > layout.width / 2) {
@@ -312,9 +314,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           type: 'scatter',
           mode: 'markers',
           name: label,
-          text: label,
           x: [],
           y: [],
+          text: [],
           hoverinfo: 'none',
           connectgaps: false,
           visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
@@ -340,6 +342,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           if (ts > this.maxTick) {
             this.maxTick = ts;
           }
+          series.text.push(value[value.length - 1]);
           series.y.push((this.expanded ? i : 0) + 0.5);
           if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
             series.x.push(ts);

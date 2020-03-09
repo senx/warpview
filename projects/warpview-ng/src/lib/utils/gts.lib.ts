@@ -168,7 +168,7 @@ export class GTSLib {
     if (GTSLib.isGts(a)) {
       a = [a];
     }
-    a.forEach(d => {
+    (a || []).forEach(d => {
       if (GTSLib.isArray(d)) {
         const walk = GTSLib.flattenGtsIdArray(d, r);
         res.push(walk.res);
