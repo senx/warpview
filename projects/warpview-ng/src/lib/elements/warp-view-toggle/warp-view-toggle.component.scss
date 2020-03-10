@@ -60,7 +60,7 @@
   }
 
   .switch-input:checked ~ .switch-handle {
-    left: calc(var(--warp-view-switch-width) - var(--warp-view-switch-height) + 4px);
+    left: calc(var(--warp-view-switch-width) - var(--warp-view-switch-height) - 2px);
     background: var(--warp-view-switch-handle-checked-color);
     box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
   }
