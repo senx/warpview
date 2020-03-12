@@ -192,9 +192,13 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     return classes.join(' ');
   }
 
+  restyleChart(propertie: string, value: any) {
+    Plotlyjs.restyle(this.plotlyInstance, propertie, value);
+  }
+
   createPlot(): Promise<void> {
     this.LOG.debug(['createPlot'], this.data, this.layout, this.config);
-    let drawFn =  Plotlyjs.newPlot;
+    let drawFn = Plotlyjs.newPlot;
     if (this.plotlyInstance) {
       drawFn = Plotlyjs.react;
     }
@@ -269,6 +273,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     const obj = Object.assign({}, item, {uid: ''});
     return JSON.stringify(obj);
   }
+
 
   remove(div: PlotlyHTMLElement) {
     Plotlyjs.purge(div);

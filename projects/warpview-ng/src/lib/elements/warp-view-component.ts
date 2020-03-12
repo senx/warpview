@@ -280,11 +280,28 @@ ${labeledData}`;
 
   unhover() {
     this.toolTip.nativeElement.style.display = 'none';
+    this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map(() => 1));
   }
 
   hover(data: any) {
     this.toolTip.nativeElement.style.display = 'block';
-    this.toolTip.nativeElement.innerHTML = this.legendFormatter(this._options.horizontal ? (data.yvals || [''])[0] : (data.xvals || [''])[0], data.points);
+    const x = (data.xvals || [''])[0];
+    const y = (data.yvals || [''])[0];
+    let delta = Number.MAX_VALUE;
+    let point;
+    data.points.forEach(p => {
+      const d = Math.abs(p.y - y);
+      if (d < delta) {
+        delta = d;
+        point = p;
+      }
+    });
+    this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map((_, i) => i === point.curveNumber ? 1 : 0.4));
+    this.toolTip.nativeElement.innerHTML = this.legendFormatter(
+      this._options.horizontal ?
+        (data.yvals || [''])[0] :
+        (data.xvals || [''])[0]
+      , data.points);
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
       this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
     } else {

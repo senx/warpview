@@ -67,6 +67,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   layout: Partial<any> = {
     showlegend: false,
     autosize: true,
+    hovermode: 'x',
     xaxis: {},
     yaxis: {
       exponentformat: 'none',
@@ -319,7 +320,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     } else if (data['xaxis.autorange']) {
       this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data, this.minTick, this.maxTick);
       this.chartBounds.tsmin = this.minTick;
-      this.chartBounds.tsmax = this.maxTick ;
+      this.chartBounds.tsmax = this.maxTick;
     }
     this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
     this.afterBoundsUpdate = false;
