@@ -82,7 +82,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options);
     this.visibility = [];
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res) || [];
+    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray([ data.data] as any[], 0).res) || [];
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;
     this.visibleGtsId = [];
