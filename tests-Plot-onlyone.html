@@ -1,0 +1,296 @@
+<!--
+  ~  Copyright 2018  SenX S.A.S.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
+
+<!DOCTYPE html>
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedLibraryURL, JSValidateTypes, JSUnresolvedFunction -->
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Warp View</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+    crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup.min.js"></script>
+  <!--suppress HtmlUnknownTarget -->
+
+  <style>
+
+    :root {
+      --jumbotron-padding-y: 3rem;
+    }
+
+    .card {
+      padding: 0;
+    }
+
+    .jumbotron p:last-child {
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    footer p {
+      margin-bottom: .25rem;
+    }
+
+    body {
+      --warp-view-tile-height: 100vh;
+      --warp-view-chart-legend-bg: #000;
+
+    }
+
+    body #welcome {
+      --warp-view-switch-width: 50px;
+      --warp-view-switch-height: 20px;
+      --warp-view-switch-radius: 10px;
+    }
+
+    body.dark {
+      --warp-view-font-color: #ffffff;
+      --warp-view-chart-label-color: #ffffff;
+      --gts-tree-expanded-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVGhD7djRCYAwDEXRLOCHWzqKe7lXawIZILQEQ7wH+hl4D5SUCgAA+IMxxjHnPCsdy+Tx4nTo0eFSLJPHi6NIotUiPf4RAAB26PK5dAndlY5l8nhxdh3Q4VIsk8eL61Skx6cFAMAOXT480GWxTB4vjiKJVovwQAcAAD4h8gJ93ZLCEjQrYQAAAABJRU5ErkJggg==');
+      --gts-stack-font-color: #ffffff;
+      --warp-view-switch-inset-color: #000000;
+      --warp-view-switch-inset-checked-color: darkgreen;
+      --warp-view-switch-handle-color: #8e8e8e;
+      --warp-view-switch-handle-checked-color: lime;
+      --gts-separator-font-color: #8e8e8e;
+ /*     --warp-view-chart-tile-transform: hue-rotate(180deg) invert(100%); */
+    }
+
+    #v-pills-image, #v-pills-plot {
+      --warp-view-tile-height: 100vh;
+    }
+
+
+    body { 
+        
+        padding: 0;
+        --warp-view-switch-width: 50px;
+        --warp-view-switch-height: 20px;
+        --warp-view-switch-radius: 10px;
+        --warp-view-switch-inset-checked-color: #00cd00;
+        --warp-view-switch-handle-checked-color: #28a745; 
+        padding-bottom: 20px;
+    }    
+    
+    body.dark {
+        background-color: #222; 
+        color: #cccccc;
+        --warp-view-font-color: #ffffff;
+        --warp-view-chart-label-color: #ffffff;
+        --gts-tree-expanded-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAhnpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY7BDcQwCAT/VHElYMCLKSeKYikdXPmHz7H8yjxgtYIFur53p8+gsJBVbwiAEwsLOVI0nihzES6jZ508XUsq2TapTIFozrYH7fEXVdHQ3dxRceKUTJdL9V9zh0Yqjzdih6wrrC/++uIHPv4sDZt0gnUAAAoCaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA0LjQuMC1FeGl2MiI+CiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIKICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICBleGlmOlBpeGVsWERpbWVuc2lvbj0iMTYiCiAgIGV4aWY6UGl4ZWxZRGltZW5zaW9uPSIxNiIKICAgdGlmZjpJbWFnZVdpZHRoPSIxNiIKICAgdGlmZjpJbWFnZUhlaWdodD0iMTYiCiAgIHRpZmY6T3JpZW50YXRpb249IjEiLz4KIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PvkekNoAAAAEc0JJVAgICAh8CGSIAAAAf0lEQVQ4y2NgGAUo4P///5q/f/8WwKOE8f////r////nwZD5/ft38n8IuPf//395HJpboGouffr0iQvd9o3/EQDdEGTNMKCJboDS////H2ExBJvmGlxhoIzFkMlommsJBSS6IcRrJmBILalRimxIDVnp4vfv3wI/fvzQGubJHwDuCeYQWCJWzwAAAABJRU5ErkJggg==');
+        --gts-tree-collapsed-icon: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAhnpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY7BDcQwCAT/VHElYMCLKSeKYikdXPmHz7H8yjxgtYIFur53p8+gsJBVbwiAEwsLOVI0nihzES6jZ508XUsq2TapTIFozrYH7fEXVdHQ3dxRceKUTJdL9V9zh0Yqjzdih6wrrC/++uIHPv4sDZt0gnUAAAoCaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA0LjQuMC1FeGl2MiI+CiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIKICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICBleGlmOlBpeGVsWERpbWVuc2lvbj0iMTYiCiAgIGV4aWY6UGl4ZWxZRGltZW5zaW9uPSIxNiIKICAgdGlmZjpJbWFnZVdpZHRoPSIxNiIKICAgdGlmZjpJbWFnZUhlaWdodD0iMTYiCiAgIHRpZmY6T3JpZW50YXRpb249IjEiLz4KIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PvkekNoAAAAEc0JJVAgICAh8CGSIAAAAZElEQVQ4y82Ruw2AMAwFAzMyAgUjpMgPFkZB1BwlwRVxKHKdZb17km1MlwALcAJOK8g8JI3A8mbVSLyQbBpJ+EMShWQq9+MHxyDmq6Y9ifbYEg4tH/C1hzuKsNNcfgZ2wJruuQHPyrmaqCioTAAAAABJRU5ErkJggg==');
+        --gts-stack-font-color: #ffffff;
+        --warp-view-switch-inset-color: #545b62;
+        --warp-view-switch-handle-color: #6c757d;
+        --warp-view-spinner-color: #5899DA;
+        --gts-separator-font-color: #8e8e8e;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">About</h4>
+            <p class="text-muted"><a href="https://www.warp10.io" target="_blank">Warp 10&trade;</a> dedicated
+              visualization components.</p>
+            <p class="lead text-muted">Choose a main theme</p>
+            <p>
+              <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="true" autocomplete="off"
+                id="light">Light
+              </button>
+              <button type="button" class="btn btn-dark" data-toggle="button" aria-pressed="false" autocomplete="off"
+                id="dark">Dark
+              </button>
+            </p>
+            <p>
+              <label for="autoRefresh" class="text-white">Auto refresh:</label>
+              <select class="form-control col-2" id="autoRefresh">
+                <option value="-1">off</option>
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+                <option value="30">30s</option>
+                <option value="60">1m</option>
+                <option value="300">5m</option>
+                <option value="600">10m</option>
+              </select>
+            </p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact</h4>
+            <ul class="list-unstyled">
+              <li><a href="https://twitter.com/warp10" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container-fluid d-flex justify-content-between">
+        <a href="/" class="navbar-brand d-flex align-items-center">
+          <img width="32" height="32" class="mr-3" alt="WarpView" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAAhXpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjadY5BDoUwCET3nMIjUKBDOY4xmvwb/ONLrdqVbwGTCUyG9v/voKVTWMiqNwTAiYWFrCkaD5S5CJe+cw7urSWVTJtUhkA0Z5uHdvsPVdFwuLmjYsMmmS676jXzh3oq9xoxQ94M/fCfFic/OCwP5MjXYQAACgJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4KIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzMiIKICAgZXhpZjpQaXhlbFlEaW1lbnNpb249IjMyIgogICB0aWZmOkltYWdlV2lkdGg9IjMyIgogICB0aWZmOkltYWdlSGVpZ2h0PSIzMiIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIvPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSJ3Ij8+DYV1NQAAAm1QTFRFAAAA/////////////////////////////////////////////////////////////////////////////////////v7+/v7+/////v7+/v7+/v7+/////v7+9/f39vb2/////f398/Pz9fX18vLy8/Pz6enp+Pj4+fn5////5+fn9fX1CwsLEBAQEhISFBQUFRUVFhYWFxcXGBgYICAgISEhLS0tLi4uLy8vMzMzNDQ0NTU1NjY2Pz8/QUFBSEhISUlJUlJSU1NTVFRUWlpaXFxcXl5eYmJiY2NjZGRka2trbm5ucHBwcXFxcnJydHR0dXV1eHh4eXl5enp6gICAgYGBhISEhYWFh4eHiYmJioqKj4+PlJSUlZWVmZmZmpqam5ubnJycnp6ep6enqKioqampqqqqsLCwtra2uLi4ubm5urq6v7+/w8PDxsbGx8fHyMjIycnJzc3N0NDQ0dHR0tLS2NjY4uLi4+Pj5+fn6Ojo6enp6urq7Ozs8PDw8vLy8/Pz9PT09vb29/f3+Pj4/f39/v7+/5kA/5kB/5oC/5oD/5wI/54N/58Q/6EV/6IW/6MZ/6Qd/6Yh/6Yi/6ko/6os/6ww/60z/600/641/642/684/685/7A7/7E+/7I//7ZJ/7hN/7hO/7xa/8Vw/8dz/8d1/8h2/8h3/8l5/8t+/86G/8+H/9CL/9GN/9KO/9OR/9SV/9ec/9mg/9mh/9qj/+O6/+W+/+W//+nJ/+nK/+rL/+rM/+vN/+zP//Db//Hc//Lf//Lg//Pi//Xm//bq//jv//nx//v2//v3//38//78//79//7+/////63IMwAAACx0Uk5TAAAJCgsPECQlJjEyM1laiYqMj5ucncvMzM3R09PU6erq7PT09fX5+fn5+vxJ4zjHAAACuUlEQVQYGV3BS28bVQCA0e/eGT/m4diOx5Mm4LZqLYEiItbAogskZFGIEItu+Fn8DliQzagL6JYd6oJS0qgJgdgl49jJPO54Xmbc1iFwjmBN6M26ZpnEKksXKWsabzU77r5tSCEa/fufTLVlzhuC12Rra/ekZpmGTq5UmN55dn5ZsiJYafRGv1iOZei6RpHnKvKjDx/7CyqCium8f7HdtS3d1EZ4ZZxF4WzS+d2PAAE0tu4tBl27tc/awVU4P60dv0pAA+nuxnd77e5Drr13JvTGxXYUL9Gg/eXx3V7n0ZAbhh+8RB9/dJyg0dy52HHbj/if3RdwaIS5FPau1bXb5AtuWORstLqtoY1Wc5Od3ubD5a/PugZr858Td/gyK060QDY/rVnWPqh8zLVxHkHdshsPDFk/tQwdhMO0BE5flFBMcWBUa9qndanNTd0EHBFPIXh+5MMsEg5g6sZck1Zs6BrQ2mQKk4JzmNLdAKRuKFOaS10bAcJhWmZ/CTlRpY8jgJGulQ3JmiPDmb+4tZ2/moeiT8UDljIWeeFRsRz8MW6fM5+ezUpeyFRXWyovqYje32fphivalwkOK2WhjHOZdVQes+LIlIEUAzLNYSXOVSeT6SBUGSuGS9MF18AxqXiZCgepXPy4V0YHVERf3K5D7Y7oCypZHCVPEq3Qvv0t0M+GQOsdRwDtd7sC8C7nZ1tHgST65lYRXbLSFFREUwDeVTALjkIkavL5PTf5jv/y4mA+3psoBMidHzi4aH/FDd5VMDsxno9zdCjPv/5+2q3zLy8Lgvmf+qGfg6Bi9XevPu7kX+Ax8ijjLA5n4/bhNAQEK83eZ09dc7NTZDp5kavID/Z+8hUVwWvaxvbwj4ZtGBqFUmFy+2hylbMieMuwOw9O56pEGp3Bk8tQ8YbgWs2oa2ZjmSZZmqSs/QPKgitkZ2DCugAAAABJRU5ErkJggg==" />
+          <strong>Plot tests</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main role="main">
+
+    <div class="album py-5">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab"
+                aria-controls="v-pills-main" aria-selected="true">annotations only</a>
+              <!-- <a class="nav-link" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2"
+                aria-selected="false">annotations only + empty</a> -->
+
+
+
+                
+            </div>
+          </div>
+          <div class="col-10">
+
+            <div class="tab-content" id="v-pills-tabContent">
+             
+                <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1">
+
+                  <div class="card-body">
+                    <p>
+                      The plot component is standalone, just one on the page.
+                      In this case, it should catch every key press, even if you're in the text area.
+                    </p>
+                    <textarea name="test" cols="40" rows="5">TEST HERE</textarea>
+                    <warp-view-tile url="https://warp.senx.io/api/v0/exec" responsive="true" type="plot" chart-title="Plot" is-alone="true"
+                      debug="true">
+
+                      "6sg7.........4rLGFvgLVs.o9qwqOh4NGX5aIaI942W1_OkxIzHKrSAUGSVLtOxUEzXN71ODjapKrA3Tck.RnOpgYHoFK.L49SbN50VGi66YgQ3lg9B0c.5V2J.c.P..HsHBDDHTFH10cF3.6zzy3QcoCPUjqxRLJP0VNiAbcuG_cDqVNu8aOLAbF_fD.AJoR55oVLJVGqK6mDNsph6PLXxc3kcziQh5OaODC_OLEYCAFXhcNBxeADWiPVCL_4_F6vEu6keLQIAevXbqT5KGh_g.2AyfNyOB6mf1T.z2xJKMsO_GynlZwnlmhN43Xb9ehJcsFut9kS8SW2Qp1mqyLG93IXIJYPbqRfAkBOd3rRwBaayctsOodFvTl2Om4Iyz2eeXq7O8bESzUQN6xzQfwRULyyGYv_0TlQBZVCPJpABSIhLhcPsZPig0UCbhGZ6W4UBLiiBEJPl9Jy839sy7jdOZzY6zyKURDNwh1IBBj02TVyKCf93s7Z36NgwbZpNefcKASPSX.caHCDI1.T58LzisSOueeYAMKNyN1IbZRbLTIVmgKf3UinpBrzZViUFxemIQWiPJb2sw7kdxc1YMzYmqeFFCXKx9iQXj5VBExFCPr.nV2YRaIyoVKL52NewFFG5NAN50gKjDPmkMIkkvFUbTZ5owipJRBX2KPt0v3TGcJrNidESXGo.ihRFNqti8j2O9N9O9GnQFhaD4h.o38O0oj08t9uJvJ9bUmiIR36VuMFlOyAodNrEwjZK1lyXRXnFxYc3YNi7mB7IbF3B.pUFnJznSw4Gx7Ndim9p4KdWb6iVhcC5FDwns5C_6tPVWX448jeN7BJ5ulJY9j64vwD29Wcq_fBAuUu97ulnRDw3t8oDKCeOmljuYMo.dlZPvP9tWm6ezBozYiAGkN8WOp6vfXf2HU6tXz33C8tEyxl3sBU52dWeCRbhdJkRjL4L3Kt5thiNOz52OzRT3FCDxK9E0q8RNQ4sa455.3rb5lCmtNPqBOwz9M.mh2InmWP0S1AfjcoB.acsNzJtg.NCO00RdAH47bVHJzayjg3grPtNK6LEIYvRryqDTmsEE2tSaZnlAJeJMm4nd7E4J3irzm.Um99cfPo0UkKoWaGIvEVORGNYCVQdPw5PSFsDinRnmo_qFV5Q6l03RMWtq.weW4iPrfBmZm.5lrkvMWjw1OHxgUokJ9rc3VuppHUf.h_4azI0xQiVNGckll8Pu1LSiOQjeMOHDGaAc_5DgN1ZzMXntRiy0_KqXsmaii30r4ubTpIClhbNv__6JVEVsHAOJ9xxU_IgNoGVKcKBptUq664yvvn3COm.DHcSmKcyYBHylB3YfID7YLT63CFd1nD4PZdUwliJ5USpw3FA6.XfaR48fU9CrCQoWUED61Yw05u41G5mGpxOh0t.lEznYq0_B95pDILopuFXkCuty4cPLXBc1sfYuliBY1mRf9yffr39FaScvvki5deQqe70jCQP..1yrgNV5Csox4z7F6GPJa633.EVcRLhaZ9XTauKuexiJamHfO9NCN7lR3paLO_AnJRX4Veihcak1A9HdfJcTqNJHauRG69LobQIh5YRtcvQtSAtl4jqE5CMEzCIjnWTJ3QtdNfxq5ethDVgUlE_RW_DZz5_YSSJDdibOTtv8Mtw2ZApyh2HCCpDiIeGpX_G82XDx9KR.TEDovHYPxN8TcOw_MVX3eCouYuWzF2sfuokkcJW2uXY4UynF3IZT9CJ68EZVRpWYRWQrCo3kyy.UuCQKlBJ8nwGH7GpIX.Hyair7sZOuaSBKInogR.sBbHKQcJtk4QJ6vH.Ow.D0AkDOu_1wN8GEpODblZnTBV0Em35lf2UZIAp1MODABtxwaB1Toh6Rc9Au7z.LhtcBYaUi7TS5WDmC2akGMZiyb.a5L3s_VeV0_yCkUEOlEL2nTgw7PRT1ZxaQ48IG68kwWM_OEmddJitAIoahkLODq26LX6VW6txU80_glo4zDhKPrwM7bNVp3vq70F.DoKhVKRMI1ck5dSPEwyXEQ2_27uSodWpuK5b4UtCnA2MqYWjHnNiLBKOOVCbDu4T.uGWbTW38Nvyrf2KxxOBINkrTh58PyYcWzW85Z_Hhtyh58EA0hdl_p_6FOCm5DUc0EhVd_lUKm0IGtUvsGs5CIAcvJfYCn32be4Ma7FZtD9GU_dS1x04ulWrYfkDSyGgp.X6HyLVd3bHYYyG3XG8lSsdXVMLwQl1YaSbSc7voCTSf6R8eOYfPUck9wAZBpSKEmm8SR7yKg6K._9vMrWckmN_0ebQfnOc3YyTkHjP2EKB_n8yyool97XeuhmU9R2Rz1TPYTfpKZ5pOyDXpkPWNYkrco7A4z0h3jPkBE4hgCrhmlU2Jq7IoeMwICtJpBNf3IoRQ8XrFab7R6QspA1KBZ8kSotP5GxYBEgOIeA3w1uk86XLHIu9XmKY7Yd4yxIcDinbQdJ57SjbBeYuP6UiWlqEcNxi6aZ97cbVTz.IjTQarayq5voWLSe2ewbUyR9usclkssYmtvrMMvu6h1zs2hVTTccAK4koygEtUK86At13wRUBIpXpsI8bOfvpXa08UATolpiMUt37sb3D9AlUc_SCGEVUMEw.qx6z6G39..."
+                      OPB64-> UNGZIP 'utf8' BYTES-> EVAL
+
+                      DEPTH ->LIST 0.000001 TIMESCALE -1 TIMESCALE '+ flipped' RENAME
+                      456664666
+                      -545546668
+                      200 200 '2D' PGraphics
+                      Pencode 'an image here for fun'
+                      NEWGTS 'emptyone' RENAME
+                      'a string here for fun'
+
+                    </warp-view-tile>
+                  </div>
+                </div>
+
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+  <script language="JavaScript">
+    var defOpts = {
+      gridLineColor: '#000000',
+      fontColor: '#000000',
+      minColor: '#ffffff',
+      maxColor: '#333333',
+      mapType: 'DEFAULT',
+      showControls: true,
+      showGTSTree: true,
+      foldGTSTree: true,
+    };
+    $(function () {
+      var body = $('body');
+      $("#dark").click(function () {
+        defOpts.mapType = "DEFAULT";
+        body.addClass('bg-dark').addClass('dark').removeClass('light').removeClass('bg-light').addClass('text-white');
+        $('.card').addClass('bg-dark');
+        defOpts.gridLineColor = '#ffffff';
+        defOpts.minColor = '#b4cef7';
+        defOpts.maxColor = '#4286f4';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $("#light").button('toggle').click(function () {
+        defOpts.mapType = "WATERCOLOR";
+        body.addClass('bg-light').removeClass('bg-dark').removeClass('dark').addClass('light').removeClass('text-white');
+        $('.card').removeClass('bg-dark');
+        defOpts.gridLineColor = '#000000';
+        defOpts.minColor = '#ffffff';
+        defOpts.maxColor = '#333333';
+        document.querySelectorAll('warp-view-tile').forEach(el => {
+          el.options = { ...defOpts };
+        });
+      });
+      $('#autoRefresh').change(function () {
+        $("select option:selected").each(function () {
+          defOpts.autoRefresh = parseInt($(this).val());
+          document.querySelectorAll('warp-view-tile').forEach(el => {
+            el.options = { ...defOpts };
+          });
+        });
+      });
+      $('a[role="tab"]').on('shown.bs.tab', function (e) {
+        var id = e.target.href.replace(document.location, '');
+        var divs = $(id).find('warp-view-tile');
+        for (var i = 0; i < divs.length; i++) {
+          divs[i].options = { ...defOpts };
+          if ($(divs[i]).attr('tu')) {divs[i].options.timeUnit=$(divs[i]).attr('tu')};
+        }
+      });
+      var divs = $.find('warp-view-tile');
+      for (var i = 0; i < divs.length; i++) {
+        divs[i].options = { ...defOpts };
+        if ($(divs[i]).attr('tu')) {divs[i].options.timeUnit=$(divs[i]).attr('tu')};
+      }
+    });
+  </script>
+</body>
+<script src="./dist/elements/warpview-elements.js"></script>
+<!-- <script src="https://unpkg.com/@senx/warpview@1.0.49/dist/warpview.js"></script> -->
+
+</html>
