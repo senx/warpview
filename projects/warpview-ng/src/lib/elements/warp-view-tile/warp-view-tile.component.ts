@@ -58,7 +58,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   @Input()
   set warpscript(warpScript: string) {
-    if (!!warpScript) {
+    if (!!warpScript && this._warpScript !== warpScript) {
       this._warpScript = warpScript;
       this.execute();
     }
@@ -225,6 +225,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.loading = true;
       this.cdRef.detectChanges();
       this.execUrl = this.url;
+      this.gtsList = undefined;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(response => {

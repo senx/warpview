@@ -85,7 +85,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   @Input('data') set data(data: any) {
     this.LOG.debug(['onData'], data);
-    if (data) {
+    if (!!data) {
       this._data = data;
       this.drawMap();
     }
@@ -223,11 +223,11 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   }
 
   private drawMap() {
-    this.LOG.debug(['drawMap'], this.data);
+    this.LOG.debug(['drawMap'], this._data);
     this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
     this.timeStart = this._options.map.timeStart;
     moment.tz.setDefault(this._options.timeZone);
-    let gts: any = this.data;
+    let gts: any = this._data;
     if (!gts) {
       return;
     }
