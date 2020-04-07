@@ -246,6 +246,20 @@ LMAP
     }
   }
 }`
+      }, {
+        title: 'Spectrum chart / contour by density',
+        type: 'histogram2dcontour',
+        warpscript: `@training/dataset0
+[ $TOKEN '~linux.*running' { 'cell' 'prod' 'rack' '~55b.*' } $NOW 1 h ] FETCH 'data' STORE
+{
+  'data' $data
+  'globalParams' {
+    'histo' {
+      'histnorm' 'density'
+      'histfunc' 'count'
+    }
+  }
+}`
       },
       {
         title: 'Spectrum chart / contour by percent',

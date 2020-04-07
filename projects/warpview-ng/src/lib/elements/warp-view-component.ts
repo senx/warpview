@@ -24,7 +24,7 @@ import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
 import {ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
-import {SizeService} from '../services/resize.service';
+import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
 
@@ -161,11 +161,11 @@ export abstract class WarpViewComponent {
   protected divider: number;
 
   protected constructor(public el: ElementRef, public sizeService: SizeService) {
-    this.sizeService.sizeChanged$.subscribe(() => {
-      if (this.graph && this.responsive) {
+    this.sizeService.sizeChanged$.subscribe((size: Size) => {
+      if (!!this.graph && !!this._responsive) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
+        this.layout.height =  (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height, (el.nativeElement as HTMLElement).parentElement);
         this.graph.updatePlot();
       }
     });
