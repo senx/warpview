@@ -1,6 +1,6 @@
 {
   "name": "@senx/warpview",
-  "version": "2.0.0-rc36",
+  "version": "2.0.0-rc37",
   "keywords": [
     "web",
     "dataviz",
@@ -33,7 +33,7 @@
   "typings": "dist/warpview-ng.d.ts",
   "metadata": "dist/warpview-ng.metadata.json",
   "files": [
-    "dist"
+    "dist/"
   ],
   "scripts": {
     "ng": "ng",
