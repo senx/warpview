@@ -151,7 +151,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/elements",
+            "outputPath": "dist/warpview/elements",
             "index": "src/elements-index.html",
             "main": "src/elements.main.ts",
             "polyfills": "src/polyfills.ts",

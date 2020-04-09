@@ -19,24 +19,24 @@ const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
   const files = [
-    './dist/elements/runtime.js',
-    './dist/elements/polyfills.js',
-    './dist/elements/scripts.js',
-    './dist/elements/main.js',
+    './dist/warpview/elements/runtime.js',
+    './dist/warpview/elements/polyfills.js',
+    './dist/warpview/elements/scripts.js',
+    './dist/warpview/elements/main.js',
     './scripts/loader.js'
   ];
   const css = [
     './node_modules/leaflet/dist/leaflet.css',
     './node_modules/leaflet.markercluster/dist/MarkerCluster.css',
     './node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css',
-    './dist/elements/warpview-elements.css'
+    './dist/warpview/elements/warpview-elements.css'
   ];
-  await concat(files, './dist/elements/warpview-elements.js');
-  fs.copy('./src/assets/fonts', './dist/elements/fonts');
-  fs.copy('./node_modules/leaflet/dist/images', './dist/elements/images');
+  await concat(files, './dist/warpview/elements/warpview-elements.js');
+  fs.copy('./src/assets/fonts', './dist/warpview/elements/fonts');
+  fs.copy('./node_modules/leaflet/dist/images', './dist/warpview/elements/images');
   sass.render({
     file: './projects/warpview-ng/src/lib/styles/warpview.scss',
-    outFile: './dist/elements/warpview-elements.css',
+    outFile: './dist/warpview/elements/warpview-elements.css',
     outputStyle: 'compressed'
   }, function (err, result) {
     if (!err) {
@@ -44,8 +44,8 @@ const concat = require('concat');
       // remove comments from the css output
       compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
       compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
-      fs.writeFileSync('./dist/elements/warpview-elements.css', compiledScssCode);
-      concat(css, './dist/elements/warpview-elements.css');
+      fs.writeFileSync('./dist/warpview/elements/warpview-elements.css', compiledScssCode);
+      concat(css, './dist/warpview/elements/warpview-elements.css');
     }
   });
 })();

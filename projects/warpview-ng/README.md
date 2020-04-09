@@ -1,24 +1,52 @@
-# WarpviewNg
+# Warp View
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.14.
+This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
 
-## Code scaffolding
+![WarpView](imgs/warpView.png)
 
-Run `ng generate component component-name --project warpview-ng` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project warpview-ng`.
-> Note: Don't forget to add `--project warpview-ng` or else it will be added to the default project in your `angular.json` file. 
+- [Demo & documentation](https://senx.github.io/warpview/)
+- [licence Apache 2](./LICENSE.md)
+- [Contribute](./CONTRIBUTING.md)
 
-## Build
+## Getting started
 
-Run `ng build warpview-ng` to build the project. The build artifacts will be stored in the `dist/` directory.
+    npm i @senx/warpview@1.0.52 --save
+    
+    yarn add @senx/warpview@1.0.52
+    
+    bower install senx-warpview@1.0.52 --save
 
-## Publishing
+```html
+<html>
+<head>
+  <title>Test</title>
+  <script src="https://unpkg.com/@senx/warpview@1.0.52/dist/warpview.js"></script>
+</head>
+<body>
+  <warp-view-spinner />
+  
+  <div style="width: 100%; height: 800px;">
+    <warp-view-tile url="https:/warp10-backend/api/v0/exec" responsive="true" show-legend="false"
+      chart-title="">
+    
+      // WARPSCRIPT
+      
+    </warp-view-tile>
+  </div>
+</body>
+</html>
+```
 
-After building your library with `ng build warpview-ng`, go to the dist folder `cd dist/warpview-ng` and run `npm publish`.
+## Components
 
-## Running unit tests
+[See wiki](https://github.com/senx/warpview/wiki/)
 
-Run `ng test warpview-ng` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Further help
+## Integrations
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+[See here](https://stenciljs.com/docs/framework-integration)
+
+## About
+
+- [Warp 10™](https://www.warp10.io)
+- [SenX](https://senx.io)

@@ -1,5 +1,5 @@
 {
-  "name": "@senx/warpview",
+  "name": "warpview-ng",
   "version": "2.0.0-rc37",
   "keywords": [
     "web",
@@ -33,7 +33,7 @@
   "typings": "dist/warpview-ng.d.ts",
   "metadata": "dist/warpview-ng.metadata.json",
   "files": [
-    "dist/"
+    "dist"
   ],
   "scripts": {
     "ng": "ng",
@@ -50,7 +50,7 @@
     "build:lib2": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
-    "build:lib": "ng build warpview-ng",
+    "build:lib": "ng build  --project=warpview-ng",
     "nvm": "nvm install 10.16.0"
   },
   "private": false,

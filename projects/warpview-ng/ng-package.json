@@ -1,9 +1,8 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist",
+  "dest": "../../dist/warpview",
   "whitelistedNonPeerDependencies": [
     "angular-resize-event",
-    "concat",
     "deep-equal",
     "d3",
     "nouislider",
@@ -15,6 +14,7 @@
     "leaflet.heat",
     "canvas-gauges",
     "fitty",
+    "event-drops",
     "angular-split"
   ],
   "lib": {
@@ -22,6 +22,9 @@
     "umdId": "warpview",
     "amdId": "warpview",
     "entryFile": "./public-api.ts",
+    "umdModuleIds": {
+      "plotly.js": "plotly.js"
+    },
     "styleIncludePaths": [
       "../node_modules/leaflet/dist/leaflet.css"
     ]
