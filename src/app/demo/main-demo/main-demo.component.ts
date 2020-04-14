@@ -16,17 +16,18 @@
  */
 
 /* tslint:disable:max-line-length */
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
 import {Param} from '../../../../projects/warpview-ng/src/lib/model/param';
+import {HighlightService} from '../HighlightService';
 
 @Component({
   selector: 'warpview-main-demo',
   templateUrl: './main-demo.component.html',
   styleUrls: ['./main-demo.component.scss']
 })
-export class MainDemoComponent implements OnInit, OnDestroy {
+export class MainDemoComponent implements OnInit, OnDestroy, AfterViewChecked {
   demo = {
     default: [
       {
@@ -160,27 +161,27 @@ false RESETS
       }],
     bar: [
       {
-      title: 'Bar chart',
-      type: 'bar',
-      warpscript: `@training/dataset0
+        title: 'Bar chart',
+        type: 'bar',
+        warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
 false RESETS
 [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
 [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
 { 'data' $values }`
-    }, {
-      title: 'Horizontal Stacked Bar chart',
-      type: 'bar',
-      warpscript: `@training/dataset0
+      }, {
+        title: 'Horizontal Stacked Bar chart',
+        type: 'bar',
+        warpscript: `@training/dataset0
 [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
 false RESETS
 [ SWAP bucketizer.last $NOW 1 m 0 ] BUCKETIZE
 [ SWAP mapper.delta 1 0 0 ] MAP 'values' STORE
 { 'data' $values 'globalParams' { 'horizontal' true 'stacked' true } }`
-    }, {
-      title: 'Horizontal Stacked Bar chart With custom data',
-      type: 'bar',
-      warpscript: `{
+      }, {
+        title: 'Horizontal Stacked Bar chart With custom data',
+        type: 'bar',
+        warpscript: `{
 'title' 'Test'
 'columns'  [ 'A' 'B' 'C' 'D' ]
 'rows' [
@@ -190,7 +191,7 @@ false RESETS
 ]
 } 'values' STORE
 { 'data' $values 'globalParams' { 'horizontal' true 'stacked' true } }`
-    }],
+      }],
     line3d: [{
       title: '3D line chart',
       type: 'line3d',
@@ -230,7 +231,7 @@ LMAP
 }
 %> LMAP 'values' STORE
 { 'data' $values }`
-    }  ],
+    }],
     spectrum: [
       {
         title: 'Spectrum chart / contour by density',
@@ -404,16 +405,15 @@ ZIP // merge into a list of GTS
 { 'data' $data 'globalParams' { 'foldGTSTree' true } }`
     }],
     map: [
-,
       {
-      title: 'Map',
-      type: 'map',
-      warpscript: `'{"data":[{"c":"A","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"B","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"D","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"E","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"key":"Path A"},{"key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"lodging"},{"key":"Annotations (boolean)","baseRadius":5},{"key":"Test","render":"marker"},{"key":"points 2","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}'
+        title: 'Map',
+        type: 'map',
+        warpscript: `'{"data":[{"c":"A","l":{},"a":{},"v":[[1460540141224657,51.45877850241959,-0.01000002957880497,1000,8.090169943749475],[1460540131224657,51.49510562885553,-0.02000005915760994,1000,3.0901699437494745],[1460540121224657,51.49510562885553,-0.030000004917383194,1000,-3.0901699437494736],[1460540111224657,51.45877850241959,-0.040000034496188164,1000,-8.090169943749473],[1460540101224657,51.39999998733401,-0.050000064074993134,1000,-10.0],[1460540091224657,51.341221472248435,-0.06000000983476639,1000,-8.090169943749475],[1460540081224657,51.3048943458125,-0.07000003941357136,1000,-3.0901699437494754],[1460540071224657,51.3048943458125,-0.08000006899237633,1000,3.0901699437494723],[1460540061224657,51.341221472248435,-0.09000001475214958,1000,8.090169943749473],[1460540051224657,51.39999998733401,-0.10000004433095455,1000,10.0]]},{"c":"B","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,10],[1460540131224657,51.45999999716878,-0.09000001475214958,9],[1460540121224657,51.41999996267259,-0.08000006899237633,8],[1460540111224657,51.39999998733401,-0.07000003941357136,7],[1460540101224657,51.439999979920685,-0.06000000983476639,6],[1460540091224657,51.47999997250736,-0.050000064074993134,8],[1460540081224657,51.49999998975545,-0.030000004917383194,10],[1460540071224657,51.51999996509403,-0.02000005915760994,9],[1460540061224657,51.539999982342124,-0.01000002957880497,8],[1460540051224657,51.55999999959022,0.0,9]]},{"c":"D","l":{},"a":{},"v":[[1460540141224657,51.49999998975545,-0.10000004433095455,"a"],[1460540131224657,51.45999999716878,-0.09000001475214958,"b"],[1460540121224657,51.41999996267259,-0.08000006899237633,"c"],[1460540111224657,51.39999998733401,-0.07000003941357136,"d"]]},{"c":"E","l":{},"a":{},"v":[[1460540136224657,51.439999979920685,0.05999992601573467,true],[1460540116224657,51.47999997250736,0.04999998025596142,false],[1460540096224657,51.49999998975545,0.02999992109835148,true],[1460540076224657,51.51999996509403,0.019999975338578224,false],[1460540056224657,51.539999982342124,0.009999945759773254,true]]},{"positions":[[51.5,-0.22],[51.46,-0.3],[51.42,-0.2]]},{"positions":[[51.2,-0.12,42],[51.36,-0.0,21],[51.32,-0.2,84]]},{"positions":[[51.2,-0.52,42],[51.36,-0.4,21],[51.32,-0.6,84]]},{"positions":[[51.1,-0.52,42,10],[51.56,-0.4,21,30],[51.42,-0.6,84,40],[51.3,-0.82,42,1],[51.76,-0.7,21,20],[51.62,-0.9,84,45]]}],"params":[{"key":"Path A"},{"key":"Path B"},{"key":"Annotations (text)","render":"marker","marker":"lodging"},{"key":"Annotations (boolean)","baseRadius":5},{"key":"Test","render":"marker"},{"key":"points 2","render":"dots","color":"#ffa","borderColor":"#f00","baseRadius":5},{"key":"points","render":"weightedDots","color":"#aaf","borderColor":"#f00","maxValue":100,"minValue":0,"baseRadius":5,"numSteps":10},{"key":"coloredWeightedDots","render":"coloredWeightedDots","maxValue":100,"minValue":0,"baseRadius":5,"maxColorValue":50,"minColorValue":0,"numColorSteps":10,"startColor":"#ff0000","endColor":"#00ff00"}]}'
                     JSON->`
-    }, {
-      title: 'GeoJSON',
-      type: 'map',
-      warpscript: `<'
+      }, {
+        title: 'GeoJSON',
+        type: 'map',
+        warpscript: `<'
 {
 "data" : [
   {
@@ -495,10 +495,10 @@ ZIP // merge into a list of GTS
   }
 '>
 JSON->`
-    }, {
-      title: 'Time Span',
-      type: 'map',
-      warpscript: `<'
+      }, {
+        title: 'Time Span',
+        type: 'map',
+        warpscript: `<'
 {
 "data" : [],
     "params": [{"key":"Annotations (text)","render":"marker","marker":"lodging"} ],
@@ -529,7 +529,7 @@ JSON->`
   }
 '>
 JSON->`
-    }
+      }
     ],
     image: [{
       title: 'Images',
@@ -737,7 +737,6 @@ ZIP // merge into a list of GTS
     }
     ]
   };
-
   currentChart: { title: string, warpscript: string, type: string, unit?: string }[];
   options: Param = {
     ...new Param(), ...{
@@ -752,7 +751,14 @@ ZIP // merge into a list of GTS
   };
   theme: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {
+  private highlighted = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private highlightService: HighlightService,
+    private settingsService: SettingsService
+  ) {
     settingsService.settingsAdded$.subscribe(evt => {
       this.theme = evt.settings.theme;
       this.options.scheme = evt.settings.colorScheme;
@@ -777,12 +783,20 @@ ZIP // merge into a list of GTS
     this.route.paramMap.subscribe(params => {
       if (params.get('component')) {
         this.currentChart = this.demo[params.get('component')];
+        this.highlighted = false;
       }
     });
   }
 
   ngOnDestroy() {
     this.currentChart = undefined;
+  }
+
+  ngAfterViewChecked() {
+    if (!this.highlighted) {
+      this.highlightService.highlightAll();
+      this.highlighted = true;
+    }
   }
 
   manageTheme() {

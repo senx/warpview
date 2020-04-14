@@ -15,15 +15,14 @@
   ~
   -->
 
-<div class="container" [ngClass]="manageTheme()">
-  <div class="card" [ngClass]="manageTheme()">
-    <div class="card-body">
-      <div *ngFor="let d of tests">
-        <h1>{{d.title}}</h1>
-        <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true" [unit]="d.unit"
-                       [showLegend]="false" [options]="options"
-                       [type]="d.type">{{d.warpscript}}</warpview-tile>
-      </div>
+<div class="container-fluid" [ngClass]="manageTheme()">
+  <div *ngFor="let d of tests; let i = index" class="card mb-3" [ngClass]="manageTheme()">
+    <div class="card-body" [ngClass]="manageTheme()">
+      <h4>Test {{i + 1}}</h4>
+      <p [innerHTML]="d.description"></p>
+      <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true" [unit]="d.unit"
+                     [showLegend]="false" [options]="options"
+                     [type]="d.type">{{d.warpscript}}</warpview-tile>
     </div>
   </div>
 </div>

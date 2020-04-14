@@ -15,26 +15,32 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component} from '@angular/core';
 import moment from 'moment';
 import {Logger} from '../../../../projects/warpview-ng/src/lib/utils/logger';
+import {HighlightService} from '../HighlightService';
 
 @Component({
   selector: 'warpview-getting-started',
   templateUrl: './getting-started.component.html',
   styleUrls: ['./getting-started.component.scss']
 })
-export class GettingStartedComponent implements OnInit {
+export class GettingStartedComponent implements AfterViewChecked {
   private LOG: Logger;
+  private highlighted = false;
 
   max = moment().valueOf();
   min = moment().subtract(6, 'month').valueOf();
 
-  constructor() {
+  constructor(private highlightService: HighlightService) {
     this.LOG = new Logger(GettingStartedComponent, true);
   }
 
-  ngOnInit() {
+  ngAfterViewChecked() {
+    if (!this.highlighted) {
+      this.highlightService.highlightAll();
+      this.highlighted = true;
+    }
   }
 
   onSliderChange(event) {

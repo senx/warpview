@@ -29,6 +29,7 @@ import {SmallTestsComponent} from './demo/small-tests/small-tests.component';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {FormsModule} from '@angular/forms';
 import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-view-angular.module';
+import {HighlightService} from './demo/HighlightService';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-vie
     FormsModule,
     WarpViewAngularModule
   ],
-  providers: [SettingsService],
+  providers: [SettingsService, HighlightService],
   bootstrap: [AppComponent],
   entryComponents: [AppComponent]
 })
