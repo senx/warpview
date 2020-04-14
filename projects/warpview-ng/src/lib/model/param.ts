@@ -36,6 +36,7 @@ export class Param {
   dotsLimit?: number;
   autoRefresh?: number;
   showControls = true;
+  showErrors = true;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: 'timestamp' | 'date' | 'custom' | 'duration';

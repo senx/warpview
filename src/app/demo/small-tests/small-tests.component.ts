@@ -26,7 +26,7 @@ import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services
 })
 export class SmallTestsComponent implements OnInit {
 
-
+  currentTest = 0;
   theme = 'light';
   options: any = {
     gridLineColor: '#000000',
@@ -47,7 +47,6 @@ export class SmallTestsComponent implements OnInit {
                 another timezone.`,
       unit: '',
       warpscript: `"2000-01-01T00:00:00.0Z" TOTIMESTAMP 'start' STORE
-
                 NEWGTS 'booleanone' RENAME
                 0 24
                 <%

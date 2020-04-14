@@ -23,6 +23,12 @@ warp-view-tile, warpview-tile {
   min-width: var(--warp-view-tile-width, 100%);
   min-height: var(--warp-view-tile-height, 100%);
 
+  .error {
+    width: 100%;
+    text-align: center;
+    color: #{$w10-danger};
+    font-weight: bold;
+  }
   .wrapper {
     opacity: 1;
     min-height: 50px;

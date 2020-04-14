@@ -42,6 +42,22 @@ export class GTSLib {
     return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
       && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
   }
+  static formatElapsedTime(elapsed: number) {
+    if (elapsed < 1000) {
+      return elapsed.toFixed(3) + ' ns';
+    }
+    if (elapsed < 1000000) {
+      return (elapsed / 1000).toFixed(3) + ' μs';
+    }
+    if (elapsed < 1000000000) {
+      return (elapsed / 1000000).toFixed(3) + ' ms';
+    }
+    if (elapsed < 1000000000000) {
+      return (elapsed / 1000000000).toFixed(3) + ' s ';
+    }
+    // Max exec time for nice output: 999.999 minutes (should be OK, timeout should happen before that).
+    return (elapsed / 60000000000).toFixed(3) + ' m ';
+  }
 
   static isValidResponse(data) {
     let response;

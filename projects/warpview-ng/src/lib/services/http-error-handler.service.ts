@@ -24,7 +24,7 @@ import {Logger} from '../utils/logger';
 
 
 /** Type of the handleError function returned by HttpErrorHandler.createHandleError */
-export type HandleError = <T> (operation?: string, result?: T) => (error: HttpErrorResponse) => Observable<T>;
+export type HandleError = (operation?: string) => (error: HttpErrorResponse) => Observable<string>;
 
 // noinspection UnterminatedStatementJS
 /** Handles HttpClient errors */
@@ -38,26 +38,19 @@ export class HttpErrorHandler {
     this.LOG = new Logger(HttpErrorHandler, true);
   }
 
-  /** Create curried handleError function that already knows the service name */
   createHandleError = (serviceName = '') =>
     // tslint:disable-next-line:semicolon
-    <T>(operation = 'operation', result = {} as T) => this.handleError(serviceName, operation, result);
+    (operation = 'operation') => this.handleError(serviceName, operation);
 
-  /**
-   * Returns a function that handles Http operation failures.
-   * This error handler lets the app continue to run as if no error occurred.
-   * @param serviceName = name of the data service that attempted the operation
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  handleError<T>(serviceName = '', operation = 'operation', result = {} as T) {
-    return (error: HttpErrorResponse): Observable<T> => {
-      this.LOG.error(['serviceName'], error);
-      this.LOG.error(['serviceName'], `${operation} failed: ${error.statusText}`);
-      this.LOG.error(['serviceName'], ((error.error || {}).message)
+  handleError(serviceName = '', operation = 'operation') {
+    return (error: HttpErrorResponse): Observable<string> => {
+      this.LOG.error([serviceName], error);
+      this.LOG.error([serviceName], `${operation} failed: ${error.statusText}`);
+      const message = ((error.error || {}).message)
         ? error.error.message
-        : error.status ? error.statusText : 'Server error');
-      return of(result);
+        : error.status ? error.statusText : 'Server error';
+      this.LOG.error([serviceName], message);
+      return of(message);
     };
   }
 }

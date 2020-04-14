@@ -20,9 +20,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnInit,
+  Output,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -37,6 +39,7 @@ import {Size, SizeService} from '../../services/resize.service';
 import {Warp10Service} from '../../services/warp10.service';
 import {Logger} from '../../utils/logger';
 import {JsonLib} from '../../utils/jsonLib';
+import {HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'warpview-tile',
@@ -47,6 +50,10 @@ import {JsonLib} from '../../utils/jsonLib';
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
+  @Output('warpscriptResult') warpscriptResult = new EventEmitter<any>();
+  @Output('execStatus') execStatus = new EventEmitter<any>();
+  @Output('execError') execError = new EventEmitter<any>();
+
   @Input('type') type = 'line';
   @Input('chartTitle') chartTitle;
   @Input('url') url = '';
@@ -68,10 +75,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     return this._warpScript;
   }
 
-  private _gtsFilter = '';
-  private _warpScript = '';
-  private execUrl = '';
-  private timeUnit = 'us';
   graphs = {
     spectrum: ['histogram2dcontour', 'histogram2d'],
     chart: ['line', 'spline', 'step', 'area', 'scatter'],
@@ -95,8 +98,15 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     drops: ['drops']
   };
   gtsList: any = [];
+  loaderMessage = '';
+  error: any;
+
   private timer: any;
   private _autoRefresh;
+  private _gtsFilter = '';
+  private _warpScript = '';
+  private execUrl = '';
+  private timeUnit = 'us';
 
   constructor(
     public el: ElementRef,
@@ -142,6 +152,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   private parseGTS() {
     const data: DataModel = new DataModel();
+    this.loaderMessage = 'Parsing data';
     this.LOG.debug(['parseGTS', 'data'], data);
     if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
       const dataLine = this.gtsList[0];
@@ -222,25 +233,47 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   private execute() {
     if (!!this._warpScript && this._warpScript.trim() !== '') {
+      this.error = undefined;
       this.loading = true;
+      this.loaderMessage = 'Requesting data';
       this.cdRef.detectChanges();
       this.execUrl = this.url;
       this.gtsList = [];
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
-      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(response => {
-        this.loading = false;
-        this.LOG.debug(['execute'], response.body);
-        if (response.body) {
+      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
+        this.loaderMessage = 'Parsing data';
+        // this.loading = false;
+        this.LOG.debug(['execute'], response);
+        if ((response as HttpResponse<string>).body) {
           try {
-            this.gtsList = new JsonLib().parse(response.body, undefined);
+            const body = (response as HttpResponse<string>).body;
+            this.warpscriptResult.emit(body);
+            const headers = (response as HttpResponse<string>).headers;
+            this.execStatus.emit({
+              message: `Your script execution took
+ ${GTSLib.formatElapsedTime(parseInt(headers.get('x-warp10-elapsed'), 10))}
+ serverside, fetched
+ ${headers.get('x-warp10-fetched')} datapoints and performed
+ ${headers.get('x-warp10-ops')}  WarpScript operations.`,
+              ops: parseInt(headers.get('x-warp10-ops'), 10),
+              elapsed: parseInt(headers.get('x-warp10-elapsed'), 10),
+              fetched: parseInt(headers.get('x-warp10-fetched'), 10),
+            });
+            this.gtsList = new JsonLib().parse(body, undefined);
             this.parseGTS();
           } catch (e) {
             this.LOG.error(['execute'], e);
           }
+        } else {
+          this.LOG.error(['execute'], response);
+          this.loading = false;
+          this.error = response;
+          this.execError.emit(response);
         }
       }, e => {
         this.loading = false;
+        this.execError.emit(e);
         this.LOG.error(['execute'], e);
       });
     }

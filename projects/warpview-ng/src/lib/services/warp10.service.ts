@@ -45,7 +45,7 @@ export class Warp10Service {
     })
       .pipe(
         tap(r => this.LOG.debug(['exec', 'result'], r)),
-        catchError(this.handleError<string>('exec', '[]'))
+        catchError(this.handleError('exec'))
       );
   }
 }

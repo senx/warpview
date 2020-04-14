@@ -16,13 +16,19 @@
   -->
 
 <div class="container-fluid" [ngClass]="manageTheme()">
-  <div *ngFor="let d of tests; let i = index" class="card mb-3" [ngClass]="manageTheme()">
+  <nav class="nav nav-pills">
+    <button *ngFor="let d of tests; let i = index" class="btn btn-link nav-item nav-link"
+            [ngClass]="{'active': currentTest === i}" (click)="currentTest = i" [title]="d.description"
+    >Test {{i + 1}}</button>
+  </nav>
+  <div class="card mb-3" [ngClass]="manageTheme()">
     <div class="card-body" [ngClass]="manageTheme()">
-      <h4>Test {{i + 1}}</h4>
-      <p [innerHTML]="d.description"></p>
-      <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true" [unit]="d.unit"
+      <h4>Test {{currentTest + 1}}</h4>
+      <p [innerHTML]="tests[currentTest].description"></p>
+      <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
+                     [unit]="tests[currentTest].unit"
                      [showLegend]="false" [options]="options"
-                     [type]="d.type">{{d.warpscript}}</warpview-tile>
+                     [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
     </div>
   </div>
 </div>

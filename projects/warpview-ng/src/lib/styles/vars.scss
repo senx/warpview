@@ -15,19 +15,17 @@
  *
  */
 
+$w10-blue: #004eff;
+$w10-orange: #ff9900;
+$w10-black: #000000;
+$w10-charcoal: #404040;
+$w10-charcoal-trans: #404040cc;
+$w10-grey: #a0a0a0;
+$w10-lightgrey: #c0c0c0;
+$w10-white: #ffffff;
+$w10-danger: #dc3545;
 
 :root {
-  $w10-blue: #004eff;
-  $w10-orange: #ff9900;
-  $w10-black: #000000;
-  $w10-charcoal: #404040;
-  $w10-charcoal-trans: #404040cc;
-  $w10-grey: #a0a0a0;
-  $w10-lightgrey: #c0c0c0;
-  $w10-white: #ffffff;
-
-
-
   // dimensions
   --warp-view-chart-width: 100%;
   --warp-view-chart-height: 100%;
@@ -44,7 +42,7 @@
 
   // colors
   --warp-view-font-color: #{$w10-black};
-  --warp-view-bar-color: red;
+  --warp-view-bar-color: #{$w10-danger};
   --warp-view-datagrid-odd-bg-color: #{$w10-white};
   --warp-view-datagrid-odd-color: #{$w10-charcoal};
   --warp-view-datagrid-even-bg-color: #{$w10-lightgrey};
