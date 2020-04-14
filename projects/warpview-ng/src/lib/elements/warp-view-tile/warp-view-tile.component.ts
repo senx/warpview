@@ -225,7 +225,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.loading = true;
       this.cdRef.detectChanges();
       this.execUrl = this.url;
-      this.gtsList = undefined;
+      this.gtsList = [];
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe(response => {

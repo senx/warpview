@@ -446,15 +446,17 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   private resizeArea() {
-    let h = this.el.nativeElement.getBoundingClientRect().height;
-    if (h > 0) {
-      if (!!this.GTSTree) {
-        h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
+    setTimeout(() => {
+      let h = this.el.nativeElement.getBoundingClientRect().height;
+      if (h > 0) {
+        if (!!this.GTSTree) {
+          h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
+        }
+        if (!!this.controls) {
+          h -= this.controls.nativeElement.getBoundingClientRect().height;
+        }
+        this.initialChartHeight = h;
       }
-      if (!!this.controls) {
-        h -= this.controls.nativeElement.getBoundingClientRect().height;
-      }
-      this.initialChartHeight = h;
-    }
+    });
   }
 }
