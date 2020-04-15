@@ -243,23 +243,24 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       y: data.event.offsetY
     });
 
+    let x = data.xvals[0];
+    if (!!data.points[0]) {
+      x = data.points[0].x;
+    }
     const layout = this.el.nativeElement.getBoundingClientRect();
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
     tooltip.style.opacity = '1';
     tooltip.style.display = 'block';
+    tooltip.style.paddingLeft = (this.standalone ? 0 : 40) + 'px';
     tooltip.style.top = (
       (this.expanded ? count - 1 - (data.points[0].y + 0.5) : -1) * (this.lineHeight) + this.layout.margin.t
-    ) + 'px';
+    ) + 6 + 'px';
     tooltip.classList.remove('right', 'left');
-    /*   this.date.nativeElement.innerHTML = this._options.timeMode === 'timestamp'
-         ? data.xvals[0]
-         : (moment(data.xvals[0]).utc().toISOString() || '')
-           .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');*/
     tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
+<span class="tooltip-date">${this._options.timeMode === 'timestamp'
+      ? x
+      : (moment(x).utc().toISOString().replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '') || '')}</span>
 <ul>
-<li class="tooltip-date">${this._options.timeMode === 'timestamp'
-      ? data.xvals[0]
-      : (moment(data.xvals[0]).utc().toISOString() || '')}</li>
 <li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.points[0].text}</span></li>
 </ul>
       </div>`;

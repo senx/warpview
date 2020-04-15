@@ -41,6 +41,20 @@ export class SmallTestsComponent implements OnInit {
   tests = [
     {
       type: 'plot',
+      description: '',
+      warpscript: `
+      NEWGTS
+10 NaN NaN NaN 10000000000000 ADDVALUE
+20 NaN NaN NaN 10000000000001 ADDVALUE
+30 NaN NaN NaN 10000000000002 ADDVALUE
+      NEWGTS
+10 NaN NaN NaN T ADDVALUE
+20 NaN NaN NaN F ADDVALUE
+30 NaN NaN NaN T ADDVALUE
+      `
+    },
+    {
+      type: 'plot',
       description: ` Annotations only, from 1rst to 2nd of january 2000 0h UTC , every 1 hour.
                 The string one contains some strange utf8 characters "ïs fælse".
                 The cross of path on the map should be 2000/01/01 12:00:00.0000, even if you set your computer to

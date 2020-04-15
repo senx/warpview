@@ -164,7 +164,7 @@ export abstract class WarpViewComponent {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
       if (!!this.graph && !!this._responsive) {
         this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height =  (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
         this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height, (el.nativeElement as HTMLElement).parentElement);
         this.graph.updatePlot();
       }
@@ -191,6 +191,9 @@ export abstract class WarpViewComponent {
     }
 
     let html = '';
+    if (!!series[0]) {
+      x = series[0].x;
+    }
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       html = `<b>${x}</b><br />`;
     } else if (this._options.timeMode === 'date') {
