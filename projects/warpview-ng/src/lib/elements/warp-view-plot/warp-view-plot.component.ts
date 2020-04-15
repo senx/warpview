@@ -387,10 +387,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.filterInput.nativeElement.select();
     } else if (ev.key === 't') {
       this.chart.getTimeClip().then(tc => {
-        this.timeClipValue = `// keep data between ${moment.tz(tc.msmin, this._options.timeZone).toLocaleString()} and ` +
-          `${moment.tz(tc.msmax, this._options.timeZone).toLocaleString()}<br/>` +
-          `${this._options.timeUnit !== 'us' ? '// (for a ' + this._options.timeUnit + ' platform)<br/>' : ''}` +
-          `${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP`;
+        this.timeClipValue = `<p>keep data between
+          ${this._options.timeMode === 'timestamp' ? tc.tsmin : moment.tz(tc.tsmin, this._options.timeZone).toLocaleString()} and
+          ${this._options.timeMode === 'timestamp' ? tc.tsmax : moment.tz(tc.tsmax, this._options.timeZone).toLocaleString()}
+          ${this._options.timeUnit !== 'us' ? ' (for a ' + this._options.timeUnit + ' platform)' : ''}</p>
+          <pre><code>${Math.round(tc.tsmax)} ${Math.round(tc.tsmax - tc.tsmin)} TIMECLIP</code></pre>`;
         this.timeClip.open();
       });
     } else if (ev.key === 'b' || ev.key === 'B') { // browse among all gts

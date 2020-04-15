@@ -19,7 +19,7 @@
   <warpview-modal [kbdLastKeyPressed]="kbdLastKeyPressed" modalTitle="TimeClip" #timeClip
                   (warpViewModalClose)="onWarpViewModalClose()"
   >
-    <pre><code #timeClipElement [innerHTML]="timeClipValue"></code></pre>
+    <div #timeClipElement [innerHTML]="timeClipValue"></div>
   </warpview-modal>
   <warpview-modal [kbdLastKeyPressed]="kbdLastKeyPressed" modalTitle="GTS Filter" #modal
                   (warpViewModalClose)="onWarpViewModalClose()"
@@ -90,7 +90,7 @@
       ></warpview-chart>
     </warpview-resize>
   </div>
-  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight"  [debug]="_debug">
+  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="_debug">
     <div class="map-container">
       <warpview-map [options]="_options" #map [data]="gtsList" [debug]="_debug" [responsive]="true"
                     [hiddenData]="_toHide"
