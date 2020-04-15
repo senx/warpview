@@ -116,7 +116,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   public resize(newHeight: number) {
     this.height = newHeight;
     this.layout.height = this.height;
-
     if (this._options.showRangeSelector) {
       this.layout.xaxis.rangeslider = {
         bgcolor: 'transparent',
@@ -147,7 +146,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.margin.t = this.standalone ? 20 : 10;
-    this.layout.automargin = this.standalone;
+    this.layout.yaxis.automargin = this.standalone;
     this.layout.showlegend = this._showLegend;
     if (!this._responsive) {
       this.layout.width = this.width;
