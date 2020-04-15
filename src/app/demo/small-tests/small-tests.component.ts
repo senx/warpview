@@ -40,7 +40,7 @@ export class SmallTestsComponent implements OnInit {
 
   tests = [
     {
-      type: 'plot',
+      type: 'line',
       description: '',
       warpscript: `
       NEWGTS

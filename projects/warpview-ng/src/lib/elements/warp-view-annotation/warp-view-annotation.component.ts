@@ -186,6 +186,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.autorange = this.standalone;
+    this.layout.xaxis.showticklabels = this.standalone;
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
     const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
@@ -195,17 +196,20 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
     this.layout.margin.l = this.standalone ? 10 : 50;
+    this.layout.margin.b = this.standalone ? 30 : 10;
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.tick0 = this.minTick / this.divider;
       this.layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
+      this.layout.xaxis.type = 'linear';
     } else {
       this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
       this.layout.xaxis.range = [
         moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
         moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
       ];
+      this.layout.xaxis.type = 'date';
     }
     this.plotlyConfig.scrollZoom = !!this.standalone;
     this.plotlyConfig = {...this.plotlyConfig};
@@ -235,14 +239,12 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   hover(data: any) {
-
     this.LOG.debug(['hover'], data);
     const tooltip = this.toolTip.nativeElement;
     this.pointHover.emit({
       x: data.event.offsetX,
       y: data.event.offsetY
     });
-
     let x = data.xvals[0];
     if (!!data.points[0]) {
       x = data.points[0].x;
@@ -306,6 +308,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.visibleGtsId = [];
     const nonPlottable = gtsList.filter(g => g.v && GTSLib.isGtsToPlot(g));
     gtsList = gtsList.filter(g => g.v && !GTSLib.isGtsToPlot(g));
+    let timestampMode = true;
+    const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
@@ -350,7 +354,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           } else {
             series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
           }
+
         });
+        timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
+        timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
         dataset.push(series);
       }
     });
@@ -377,6 +384,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         this.visibility.push(false);
         this.visibleGtsId.push(-1);
       }
+    }
+    if (timestampMode) {
+      this._options.timeMode = 'timestamp';
     }
     return dataset;
   }

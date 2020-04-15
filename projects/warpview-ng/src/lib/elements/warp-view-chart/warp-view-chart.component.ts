@@ -202,6 +202,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       }
 
       this.LOG.debug(['convert'], this._options.timeMode);
+      let timestampMode = true;
+      const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
       gtsList.forEach((gts: GTS, i) => {
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
           const label = GTSLib.serializeGtsMetadata(gts);
@@ -254,9 +256,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
             }
           });
+          timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
+          timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
           dataset.push(series);
         }
       });
+      if (timestampMode) {
+        this._options.timeMode = 'timestamp';
+      }
       if (nonPlottable.length > 0) { // && gtsList.length === 0) {
         nonPlottable.forEach(g => {
           g.v.forEach(value => {
@@ -281,11 +288,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           this.visibleGtsId.push(-1);
         }
       }
-    }
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.layout.xaxis.type = 'linear';
-    } else {
-      this.layout.xaxis.type = 'date';
     }
     return dataset;
   }
