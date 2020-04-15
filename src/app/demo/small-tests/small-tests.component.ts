@@ -18,6 +18,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
+import {Param} from '../../../../projects/warpview-ng/src/lib/model/param';
 
 @Component({
   selector: 'warpview-small-tests',
@@ -28,14 +29,17 @@ export class SmallTestsComponent implements OnInit {
 
   currentTest = 0;
   theme = 'light';
-  options: any = {
-    gridLineColor: '#000000',
-    fontColor: '#000000',
-    mapType: 'DEFAULT',
-    showControls: true,
-    showGTSTree: true,
-    foldGTSTree: true,
-    autoRefresh: -1
+  options: Param = {
+    ...new Param(), ...{
+      gridLineColor: '#000000',
+      fontColor: '#000000',
+      map: {mapType: 'DEFAULT'},
+      showControls: true,
+      showGTSTree: true,
+      foldGTSTree: true,
+      showDots: false,
+      autoRefresh: -1
+    }
   };
 
   tests = [
@@ -534,15 +538,16 @@ NEWGTS 'withclosecurly}brace' RENAME { 'la}bel' 'val}ue' } RELABEL  { 'at}tr' 'v
 NEWGTS 'fun{{}}}ny,withcommastoo' RENAME { 'la{,}}bel' 'val},},{,ue' } RELABEL  { 'at}{{t,,r' 'va,l,}{}{}ue' } SETATTRIBUTES
 5 NaN NaN NaN true ADDVALUE`
     }
-    ];
+  ];
+
   constructor(private route: ActivatedRoute, private router: Router, private settingsService: SettingsService) {
     settingsService.settingsAdded$.subscribe(evt => {
       this.theme = evt.settings.theme;
       if (evt.settings.theme === 'dark') {
-        this.options.mapType = 'DEFAULT';
+        this.options.map.mapType = 'DEFAULT';
         this.options.gridLineColor = '#ffffff';
       } else {
-        this.options.mapType = 'DEFAULT';
+        this.options.map.mapType = 'DEFAULT';
         this.options.gridLineColor = '#000000';
       }
       this.options = {...this.options};

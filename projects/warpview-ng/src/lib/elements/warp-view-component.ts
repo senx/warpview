@@ -210,7 +210,7 @@ export abstract class WarpViewComponent {
          labeledData = `<b>${labeledData}</b>`;
        }*/
       html += `<b><i class="chip"
-style="background-color: ${(s.data.marker || s.data.line).color};border: 2px solid ${(s.data.marker || s.data).line.color};"></i>
+style="background-color: ${(s.data.marker || s.data.line).color};border: 2px solid ${(s.data.marker || s.data.line).color};"></i>
 ${labeledData}`;
       if (i < series.length) {
         html += '<br>';
@@ -281,14 +281,13 @@ ${labeledData}`;
     this.loading = false;
   }
 
-  unhover() {
+  unhover(data: any) {
     this.toolTip.nativeElement.style.display = 'none';
     this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map(() => 1));
   }
 
   hover(data: any) {
     this.toolTip.nativeElement.style.display = 'block';
-    const x = (data.xvals || [''])[0];
     const y = (data.yvals || [''])[0];
     let delta = Number.MAX_VALUE;
     let point;

@@ -211,13 +211,19 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const c = ColorLib.getColor(gts.id, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
-            type: 'scatter',
-            mode: this._type === 'scatter' ? 'markers' : this._options.showDots ? 'lines+markers' : 'lines',
+            type: 'scattergl',
+            mode: this._type === 'scatter' ? 'markers' : 'lines+markers',
             name: label,
             text: label,
             x: [],
             y: [],
             line: {color},
+            marker: {
+              size: 15,
+              color: [],
+              line: {color, width: 3},
+              opacity: []
+            },
             hoverinfo: 'none',
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
@@ -250,6 +256,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             if (ts > this.maxTick) {
               this.maxTick = ts;
             }
+            series.marker.opacity.push(this._options.showDots ? 1 : 0);
+            series.marker.color.push(color); // 'transparent');
             series.y.push(value[value.length - 1]);
             if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
               series.x.push(ts);
@@ -362,5 +370,63 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   setRealBounds(chartBounds: ChartBounds) {
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
+  }
+
+  hover(data: any) {
+    super.hover(data);
+    let pn = -1;
+    let tn = -1;
+    let color = [];
+    let line = {};
+    let opacity = [];
+    data.points.forEach(p => {
+      pn = p.pointNumber;
+      tn = p.curveNumber;
+      color = p.data.marker.color;
+      opacity = p.data.marker.opacity;
+      line = p.data.marker.line;
+      if (pn >= 0) {
+        color[pn] = 'transparent';
+        opacity[pn] = 1;
+        const update = {marker: {color, opacity, line, size: 15}};
+        this.graph.restyleChart(update, [tn]);
+      }
+    });
+  }
+
+  unhover(data: any) {
+    super.unhover(data);
+    let pn = -1;
+    let tn = -1;
+    let color = [];
+    let line = {};
+    let opacity = [];
+    data.points.forEach(p => {
+      pn = p.pointNumber;
+      tn = p.curveNumber;
+      color = p.data.marker.color;
+      opacity = p.data.marker.opacity;
+      line = p.data.marker.line;
+      if (pn >= 0) {
+        color[pn] = p.data.line.color;
+        opacity[pn] = this._options.showDots ? 1 : 0;
+        const update = {marker: {color, opacity, line, size: 15}};
+        this.graph.restyleChart(update, [tn]);
+      }
+    });
+    /*  let pn = '';
+      let tn = '';
+      let color = [];
+      let opacity = [];
+      data.points.forEach(p => {
+        pn = p.pointNumber;
+        tn = p.curveNumber;
+        color = p.data.marker.color;
+        opacity = p.data.marker.opacity;
+      });
+      color[pn] = 'transparent';
+      opacity[pn] = this._options.showDots ? 1 : 0;
+      const update = {marker: {color, opacity}};
+      this.graph.restyleChart(update, [tn]);*/
   }
 }

@@ -192,8 +192,8 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     return classes.join(' ');
   }
 
-  restyleChart(propertie: string, value: any) {
-    Plotlyjs.restyle(this.plotlyInstance, propertie, value);
+  restyleChart(propertie: any, curves: any[]) {
+    Plotlyjs.restyle(this.plotlyInstance, propertie, curves);
   }
 
   createPlot(): Promise<void> {
