@@ -37,6 +37,7 @@ export class Param {
   autoRefresh?: number;
   showControls = true;
   showErrors = true;
+  showStatus = true;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: 'timestamp' | 'date' | 'custom' | 'duration';

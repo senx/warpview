@@ -160,13 +160,21 @@ export abstract class WarpViewComponent {
   protected _hiddenData: number[] = [];
   protected divider: number;
 
-  protected constructor(public el: ElementRef, public sizeService: SizeService) {
+  protected constructor(
+    public el: ElementRef,
+    public sizeService: SizeService,
+  ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
       if (!!this.graph && !!this._responsive) {
-        this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
-        this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height, (el.nativeElement as HTMLElement).parentElement);
-        this.graph.updatePlot();
+        const layout = {
+          width: (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width,
+          height: (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height
+        };
+        if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
+          this.layout = {...this.layout, ...layout};
+          this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height, (el.nativeElement as HTMLElement).parentElement);
+          this.graph.updatePlot();
+        }
       }
     });
   }
@@ -276,12 +284,12 @@ ${labeledData}`;
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
-  afterPlot(plotlyInstance) {
+  afterPlot(plotlyInstance?: any) {
     this.chartDraw.emit();
     this.loading = false;
   }
 
-  unhover(data: any) {
+  unhover(data?: any) {
     this.toolTip.nativeElement.style.display = 'none';
     this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map(() => 1));
   }

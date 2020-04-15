@@ -100,6 +100,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   gtsList: any = [];
   loaderMessage = '';
   error: any;
+  status: string;
 
   private timer: any;
   private _autoRefresh;
@@ -126,7 +127,9 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     this._warpScript = this._warpScript || this.warpRef.nativeElement.textContent.trim();
     this.LOG.debug(['ngAfterViewInit', 'warpScript'], this._warpScript);
     this.el.nativeElement.style.opacity = '1';
-    this.execute();
+    if (this.warpRef.nativeElement.textContent.trim() !== '') {
+      this.execute();
+    }
   }
 
   update(options: Param): void {
@@ -242,7 +245,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
-        this.loaderMessage = 'Parsing data';
+
         // this.loading = false;
         this.LOG.debug(['execute'], response);
         if ((response as HttpResponse<string>).body) {
@@ -250,12 +253,13 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
             const body = (response as HttpResponse<string>).body;
             this.warpscriptResult.emit(body);
             const headers = (response as HttpResponse<string>).headers;
-            this.execStatus.emit({
-              message: `Your script execution took
+            this.status = `Your script execution took
  ${GTSLib.formatElapsedTime(parseInt(headers.get('x-warp10-elapsed'), 10))}
  serverside, fetched
  ${headers.get('x-warp10-fetched')} datapoints and performed
- ${headers.get('x-warp10-ops')}  WarpScript operations.`,
+ ${headers.get('x-warp10-ops')}  WarpScript operations.`;
+            this.execStatus.emit({
+              message: this.status,
               ops: parseInt(headers.get('x-warp10-ops'), 10),
               elapsed: parseInt(headers.get('x-warp10-elapsed'), 10),
               fetched: parseInt(headers.get('x-warp10-fetched'), 10),

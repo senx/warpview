@@ -46,16 +46,12 @@ export class SmallTestsComponent implements OnInit {
     {
       type: 'plot',
       description: '',
-      warpscript: `
-      NEWGTS
-10 NaN NaN NaN 10000000000000 ADDVALUE
-20 NaN NaN NaN 10000000000001 ADDVALUE
-30 NaN NaN NaN 10000000000002 ADDVALUE
-      NEWGTS
-10 NaN NaN NaN T ADDVALUE
-20 NaN NaN NaN F ADDVALUE
-30 NaN NaN NaN T ADDVALUE
-      `
+      warpscript: `@training/dataset0
+$TOKEN AUTHENTICATE
+100000000 MAXOPS
+NEWGTS 'g' STORE
+0 1000000 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g`
     },
     {
       type: 'plot',

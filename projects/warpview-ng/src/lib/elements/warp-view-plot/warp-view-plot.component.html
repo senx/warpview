@@ -35,7 +35,7 @@
   </warpview-modal>
   <warpview-gts-popup [maxToShow]="5" [hiddenData]="_toHide" [gtsList]="gtsList"
                       [kbdLastKeyPressed]="kbdLastKeyPressed"
-                      [options]="_options" [debug]="_debug"
+                      [options]="_options" [debug]="debug"
                       (warpViewModalClose)="onWarpViewModalClose()"
                       (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
                       #gtsPopupModal></warpview-gts-popup>
@@ -61,7 +61,7 @@
   <div *ngIf="warningMessage" class="warningMessage">{{warningMessage}}</div>
   <warpview-gts-tree
     *ngIf="_options.showGTSTree"
-    [data]="gtsList" id="tree" [gtsFilter]="_gtsFilter" [debug]="_debug" #GTSTree
+    [data]="gtsList" id="tree" [gtsFilter]="gtsFilter" [debug]="debug" #GTSTree
     (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
     [hiddenData]="_toHide" [options]="_options"
     [kbdLastKeyPressed]="kbdLastKeyPressed"
@@ -75,24 +75,24 @@
                            [data]="gtsList" [responsive]="true"
                            (boundsDidChange)="boundsDidChange($event)"
                            (chartDraw)="onChartDraw($event)"
-                           [showLegend]='_showLegend' [debug]="_debug" [standalone]="false"
+                           [showLegend]='showLegend' [debug]="debug" [standalone]="false"
                            [hiddenData]="_toHide" [options]="_options"
       ></warpview-annotation>
     </div>
-    <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="_debug"
+    <warpview-resize minHeight="100" [initialHeight]="initialChartHeight" [debug]="debug"
                      (resize)="resizeChart($event)"
     >
       <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
                       [showLegend]="showLegend"
                       (boundsDidChange)="boundsDidChange($event)"
                       (chartDraw)="onChartDraw($event)"
-                      #chart [debug]="_debug" [hiddenData]="_toHide" [type]="_type" [options]="_options"
+                      #chart [debug]="debug" [hiddenData]="_toHide" [type]="type" [options]="_options"
       ></warpview-chart>
     </warpview-resize>
   </div>
-  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="_debug">
+  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="debug">
     <div class="map-container">
-      <warpview-map [options]="_options" #map [data]="gtsList" [debug]="_debug" [responsive]="true"
+      <warpview-map [options]="_options" #map [data]="gtsList" [debug]="debug" [responsive]="true"
                     [hiddenData]="_toHide"
       ></warpview-map>
     </div>

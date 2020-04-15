@@ -348,11 +348,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         }
         this.LOG.debug(['drawCharts', 'parsed', 'timestampMode'], timestampMode);
         // do not display the chart if there is obviously lots of data
-        if (gtsList.length > 1000 || totalDatapoints > 1000000) {
+       /* if (gtsList.length > 1000 || totalDatapoints > 1000000) {
           this.LOG.warn(['firstdraw'], 'Lots of GTS or datapoint, hiding the graph...');
           this.showChart = false;
           this.warningMessage = `Warning : ${gtsList.length} series, ${totalDatapoints} points. Chart may be slow.`;
-        }
+        }*/
       }
     }
     this.gtsList = this._data;

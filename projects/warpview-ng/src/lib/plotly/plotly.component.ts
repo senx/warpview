@@ -197,7 +197,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   }
 
   createPlot(): Promise<void> {
-    this.LOG.debug(['createPlot'], this.data, this.layout, this.config);
+    this.LOG.debug(['createPlot'], this.data, this.layout, this.config, this.plotlyInstance);
     let drawFn = Plotlyjs.newPlot;
     if (this.plotlyInstance) {
       drawFn = Plotlyjs.react;

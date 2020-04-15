@@ -34,6 +34,7 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
   private marginLeft: number;
+  parsing = false;
 
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
@@ -182,6 +183,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   protected convert(data: DataModel): Partial<any>[] {
+    this.parsing = true;
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
     this.LOG.debug(['convert', 'this._hiddenData'], this._hiddenData);
@@ -205,15 +207,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.LOG.debug(['convert'], this._options.timeMode);
       let timestampMode = true;
       const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+      this.LOG.debug(['convert'], 'forEach GTS');
       gtsList.forEach((gts: GTS, i) => {
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
+          this.LOG.debug(['convert'], gts);
           const label = GTSLib.serializeGtsMetadata(gts);
           const c = ColorLib.getColor(gts.id, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
             type: 'scattergl',
             mode: this._type === 'scatter' ? 'markers' : 'lines+markers',
-            name: label,
+            // name: label,
             text: label,
             x: [],
             y: [],
@@ -247,8 +251,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               break;
           }
           this.visibleGtsId.push(gts.id);
-
-          gts.v.forEach(value => {
+          this.LOG.debug(['convert'], 'forEach value');
+          for (let v = 0, n = gts.v.length; v < n; v++) {
+            const value = gts.v[v];
             const ts = value[0];
             if (ts < this.minTick) {
               this.minTick = ts;
@@ -264,7 +269,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             } else {
               series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
             }
-          });
+          }
+          this.LOG.debug(['convert'], 'forEach value end');
           timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
           timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
           dataset.push(series);
@@ -298,6 +304,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         }
       }
     }
+    this.parsing = false;
+    this.LOG.debug(['convert'], 'end');
     return dataset;
   }
 

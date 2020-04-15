@@ -33,7 +33,7 @@ export class Logger {
 
   log(level: LEVEL, methods: any[], args: any[]) {
     let logChain = [];
-    logChain.push(`[${this.className}] ${methods.join(' - ')}`);
+    logChain.push(`[${new Date().toISOString()} - [${this.className}] ${methods.join(' - ')}`);
     logChain = logChain.concat(args);
     switch (level) {
       case LEVEL.DEBUG: {
