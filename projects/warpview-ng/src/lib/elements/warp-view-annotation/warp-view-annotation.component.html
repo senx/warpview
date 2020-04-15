@@ -22,7 +22,7 @@
   <div #toolTip class="tooltip"></div>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <div *ngIf="!loading && !noData">
-    <div class="upperLine" [ngStyle]="{left: !standalone? '50px': '0'}"></div>
+    <div class="upperLine" [ngStyle]="{left: standalone? '10px': marginLeft + 'px'}"></div>
     <warpview-plotly #graph
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot2($event)"
                      (relayout)="relayout($event)" className="chart" (hover)="hover($event)" (unhover)="unhover()"

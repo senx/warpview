@@ -111,6 +111,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       l: 10
     },
   };
+  marginLeft = 10;
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -151,7 +152,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.drawChart(refresh);
   }
 
-  updateBounds(min, max) {
+  updateBounds(min, max, marginLeft) {
     this.LOG.debug(['updateBounds'], min, max, this._options);
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
@@ -167,6 +168,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         moment.tz(max / this.divider, this._options.timeZone).toISOString()
       ];
     }
+    this.layout.margin.l = marginLeft;
+    this.marginLeft = marginLeft;
     this.layout = {...this.layout};
     this.LOG.debug(['updateBounds'], this.layout);
   }

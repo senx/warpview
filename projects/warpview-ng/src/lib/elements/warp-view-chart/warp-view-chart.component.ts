@@ -33,6 +33,7 @@ import {Logger} from '../../utils/logger';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
+  private marginLeft: number;
 
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
@@ -72,6 +73,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     yaxis: {
       exponentformat: 'none',
       fixedrange: true,
+      automargin: true,
       showline: true
     },
     margin: {
@@ -146,7 +148,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.margin.t = this.standalone ? 20 : 10;
-    this.layout.yaxis.automargin = this.standalone;
     this.layout.showlegend = this._showLegend;
     if (!this._responsive) {
       this.layout.width = this.width;
@@ -166,14 +167,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.loading = false;
   }
 
-  private emitNewBounds(min, max) {
+  private emitNewBounds(min, max, marginLeft) {
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.boundsDidChange.emit({bounds: {min, max}, source: 'chart'});
+      this.boundsDidChange.emit({bounds: {min, max, marginLeft}, source: 'chart'});
     } else {
       this.boundsDidChange.emit({
         bounds: {
           min: moment.tz(min, this._options.timeZone).valueOf(),
-          max: moment.tz(max, this._options.timeZone).valueOf()
+          max: moment.tz(max, this._options.timeZone).valueOf(),
+          marginLeft
         }, source: 'chart'
       });
     }
@@ -291,15 +293,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     return dataset;
   }
 
-  afterPlot() {
+  afterPlot(plotlyInstance) {
+    this.marginLeft = parseInt((this.graph.plotEl.nativeElement as HTMLElement).querySelector('g.bglayer > rect').getAttribute('x'), 10);
     this.LOG.debug(['plotly_afterPlot']);
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
+    this.chartBounds.marginLeft = this.marginLeft;
     this.chartDraw.emit(this.chartBounds);
     if (!this.afterBoundsUpdate) {
-
       this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
-      this.emitNewBounds(this.minTick, this.maxTick);
+      this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
       this.loading = false;
       this.afterBoundsUpdate = false;
     }
@@ -323,7 +326,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmin = this.minTick;
       this.chartBounds.tsmax = this.maxTick;
     }
-    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
+    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
     this.afterBoundsUpdate = false;
   }
 

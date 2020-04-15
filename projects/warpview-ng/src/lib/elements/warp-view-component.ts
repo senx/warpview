@@ -276,7 +276,7 @@ ${labeledData}`;
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
-  afterPlot() {
+  afterPlot(plotlyInstance) {
     this.chartDraw.emit();
     this.loading = false;
   }

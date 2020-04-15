@@ -125,7 +125,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     tsmin: Number.MAX_VALUE,
     tsmax: Number.MIN_VALUE,
     msmax: '',
-    msmin: ''
+    msmin: '',
+    marginLeft: 0
   };
   // key event are trapped in plot component.
   // if one of this key is pressed, default action is prevented.
@@ -199,7 +200,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this._options.bounds.minDate = event.bounds.min;
     this._options.bounds.maxDate = event.bounds.max;
     if (event.source === 'chart') {
-      this.annotation.updateBounds(event.bounds.min, event.bounds.max);
+      this.annotation.updateBounds(event.bounds.min, event.bounds.max, event.bounds.marginLeft);
     } else if (event.source === 'annotation') {
       this.chart.updateBounds(event.bounds.min, event.bounds.max);
     }

@@ -20,4 +20,5 @@ export class ChartBounds {
   tsmax = 0;
   msmin = '';
   msmax = '';
+  marginLeft = 0;
 }
