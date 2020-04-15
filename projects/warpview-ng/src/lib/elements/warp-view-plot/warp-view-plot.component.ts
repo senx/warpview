@@ -291,6 +291,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.applyFilter();
     } else if (e.key === 'Escape') {
       this.pushKbdEvent('Escape');
+      this.modal.close();
     }
   }
 
@@ -413,6 +414,22 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       return false;
     } else if (ev.key === 'a') {
       this._toHide = [];
+    } else if (ev.key === 'Escape') {
+      this.timeClip.isOpened().then(r => {
+        if (r) {
+          this.timeClip.close();
+        }
+      });
+      this.modal.isOpened().then(r => {
+        if (r) {
+          this.modal.close();
+        }
+      });
+      this.gtsPopupModal.isOpened().then(r => {
+        if (r) {
+          this.gtsPopupModal.close();
+        }
+      });
     } else {
       this.pushKbdEvent(ev.key);
     }

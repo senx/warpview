@@ -174,6 +174,10 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
     this.modal.open();
   }
 
+  public close() {
+    this.modal.close();
+  }
+
   private prepareData() {
     if (this._gtsList && this._gtsList.data) {
       this._gts = GTSLib.flatDeep([this._gtsList.data]);
