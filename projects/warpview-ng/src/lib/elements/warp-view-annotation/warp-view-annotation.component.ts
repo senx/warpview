@@ -99,10 +99,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       tickson: 'boundaries',
       automargin: true,
       showline: true,
-      zeroline: true,
-      tickfont: {
-        //  color: 'transparent'
-      }
+      zeroline: true
     },
     margin: {
       t: 30,
@@ -185,6 +182,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
+    this.layout.yaxis.showline = this.standalone;
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
@@ -357,10 +355,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           } else {
             series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
           }
-
+          timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
+          timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
         });
-        timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
-        timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
+
         dataset.push(series);
       }
     });

@@ -208,8 +208,20 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       let timestampMode = true;
       const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
       this.LOG.debug(['convert'], 'forEach GTS');
+      gtsList.forEach((gts: GTS) => {
+        const ticks = gts.v.map(t => t[0]);
+        const size = gts.v.length;
+        timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
+        timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
+      });
+      if (timestampMode || this._options.timeMode === 'timestamp') {
+        this.layout.xaxis.type = 'linear';
+      } else {
+        this.layout.xaxis.type = 'date';
+      }
       gtsList.forEach((gts: GTS, i) => {
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
+          const size = gts.v.length;
           this.LOG.debug(['convert'], gts);
           const label = GTSLib.serializeGtsMetadata(gts);
           const c = ColorLib.getColor(gts.id, this._options.scheme);
@@ -217,16 +229,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const series: Partial<any> = {
             type: 'scattergl',
             mode: this._type === 'scatter' ? 'markers' : 'lines+markers',
-            // name: label,
+            name: label,
             text: label,
             x: [],
             y: [],
             line: {color},
             marker: {
               size: 15,
-              color: [],
+              color: new Array(size).fill(color),
               line: {color, width: 3},
-              opacity: []
+              opacity: new Array(size).fill(this._options.showDots ? 1 : 0)
             },
             hoverinfo: 'none',
             connectgaps: false,
@@ -252,33 +264,32 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           }
           this.visibleGtsId.push(gts.id);
           this.LOG.debug(['convert'], 'forEach value');
-          for (let v = 0, n = gts.v.length; v < n; v++) {
-            const value = gts.v[v];
-            const ts = value[0];
-            if (ts < this.minTick) {
-              this.minTick = ts;
-            }
-            if (ts > this.maxTick) {
-              this.maxTick = ts;
-            }
-            series.marker.opacity.push(this._options.showDots ? 1 : 0);
-            series.marker.color.push(color); // 'transparent');
-            series.y.push(value[value.length - 1]);
-            if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
-              series.x.push(ts);
+          const ticks = gts.v.map(t => t[0]);
+          const values = gts.v.map(t => t[t.length - 1]);
+          let min = ticks[0];
+          let max = ticks[0];
+          for (let v = 1; v < size; v++) {
+            const val = ticks[i];
+            min = (val < min) ? val : min;
+            max = (val > max) ? val : max;
+          }
+          this.minTick = min;
+          this.maxTick = max;
+          if (timestampMode || this._options.timeMode === 'timestamp') {
+            series.x = ticks;
+          } else {
+            if(this._options.timeZone !== 'UTC') {
+              series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
             } else {
-              series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
+              series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
             }
           }
+          series.y = values;
           this.LOG.debug(['convert'], 'forEach value end');
-          timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
-          timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
           dataset.push(series);
         }
       });
-      if (timestampMode) {
-        this._options.timeMode = 'timestamp';
-      }
+
       if (nonPlottable.length > 0) { // && gtsList.length === 0) {
         nonPlottable.forEach(g => {
           g.v.forEach(value => {
