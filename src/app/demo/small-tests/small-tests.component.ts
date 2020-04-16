@@ -44,6 +44,16 @@ export class SmallTestsComponent implements OnInit {
 
   tests = [
     {
+      type: 'map',
+      description: '',
+      warpscript: `@training/dataset0
+$TOKEN AUTHENTICATE
+100000000 MAXOPS
+[] 'l' STORE
+0 10000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
+$l`
+    },
+    {
       type: 'plot',
       description: '',
       warpscript: `@training/dataset0
@@ -55,16 +65,6 @@ $g
 NEWGTS 'g' STORE
 0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
 $g`
-    },
-    {
-      type: 'map',
-      description: '',
-      warpscript: `@training/dataset0
-$TOKEN AUTHENTICATE
-100000000 MAXOPS
-[] 'l' STORE
-0 100000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
-$l`
     },
     {
       type: 'plot',

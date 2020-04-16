@@ -18,6 +18,7 @@
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {Logger} from './logger';
+
 // @dynamic
 export class GTSLib {
   private static LOG: Logger = new Logger(GTSLib);
@@ -42,6 +43,7 @@ export class GTSLib {
     return value && typeof value === 'object' && value instanceof Array && typeof value.length === 'number'
       && typeof value.splice === 'function' && !(value.propertyIsEnumerable('length'));
   }
+
   static formatElapsedTime(elapsed: number) {
     if (elapsed < 1000) {
       return elapsed.toFixed(3) + ' ns';
@@ -297,6 +299,13 @@ export class GTSLib {
     });
   }
 
+  static isSingletonGTS(gts) {
+    if (!GTSLib.isGts(gts) || gts.v.length === 0) {
+      return false;
+    }
+    return (gts.v || []).length === 1;
+  }
+
   static isGtsToAnnotate(gts) {
     if (!GTSLib.isGts(gts) || gts.v.length === 0) {
       return false;
@@ -384,5 +393,5 @@ export class GTSLib {
     }
     display += '</span>';
     return display;
-  }
+  };
 }

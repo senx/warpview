@@ -126,9 +126,6 @@ export class MapLib {
   };
 
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
-    if (!data.gts) {
-      return;
-    }
     const paths = [];
     (data.gts || []).map((gts, i) => {
       if (GTSLib.isGtsToPlot(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
@@ -151,12 +148,11 @@ export class MapLib {
   }
 
   static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
-    if (!data.gts) {
-      return;
-    }
     const annotations = [];
     (data.gts || []).map((gts, i) => {
-      if (GTSLib.isGtsToAnnotate(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
+      if (
+        (GTSLib.isGtsToAnnotate(gts) || GTSLib.isSingletonGTS(gts))
+        && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['annotationsToLeafletPositions'], gts);
         const annotation: any = {};
         let params = (data.params || [])[i];
@@ -187,7 +183,7 @@ export class MapLib {
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
     obj.borderColor = params.borderColor || '#000';
-    obj.properties = params.properties;
+    obj.properties = params.properties || {};
     if (params.baseRadius === undefined
       || isNaN(parseInt(params.baseRadius, 10))
       || parseInt(params.baseRadius, 10) < 0) {

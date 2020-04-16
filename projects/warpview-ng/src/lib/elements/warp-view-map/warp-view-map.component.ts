@@ -178,12 +178,8 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   resizeMe() {
     this.LOG.debug(['resizeMe'], this.wrapper.nativeElement.parentElement.getBoundingClientRect());
-    let height = this.wrapper.nativeElement.parentElement.getBoundingClientRect().height; /* === 0
-      ? ChartLib.DEFAULT_HEIGHT
-      : this.el.nativeElement.parentElement.getBoundingClientRect().height; */
-    const width = this.wrapper.nativeElement.parentElement.getBoundingClientRect().width; /* === 0
-      ? ChartLib.DEFAULT_WIDTH
-      : this.el.nativeElement.parentElement.getBoundingClientRect().width; */
+    let height = this.wrapper.nativeElement.parentElement.getBoundingClientRect().height;
+    const width = this.wrapper.nativeElement.parentElement.getBoundingClientRect().width;
     if (this._options.map.showTimeSlider && this.timeSlider && this.timeSlider.nativeElement) {
       height -= this.timeSlider.nativeElement.getBoundingClientRect().height;
     }
@@ -203,7 +199,9 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       + ')');
     this.width = width;
     this.height = height;
-    requestAnimationFrame(() => this._map.invalidateSize());
+    if (!!this._map) {
+      setTimeout(() => this._map.invalidateSize());
+    }
   }
 
   heatRadiusDidChange(event) {
@@ -241,7 +239,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
       gts = gts[0];
     }
-    if (this._map) {
+    if (!!this._map) {
       this._map.invalidateSize(true);
     }
     let dataList: any[];
@@ -270,7 +268,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
     this.displayMap({gts: flattenGTS, params});
     this.LOG.debug(['onResize', 'postDisplayMap'], 'resizeTimer', this.el.nativeElement.parentElement.clientWidth, this.parentWidth);
-    requestAnimationFrame(() => this.resizeMe());
+    setTimeout(() => this.resizeMe());
   }
 
   private icon(color: string, marker = '') {
@@ -305,13 +303,14 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     }
     this.width = width;
     this.height = height;
-    this.pathData = MapLib.toLeafletMapPaths(data, this.hiddenData || [], this.divider, this._options.scheme) || [];
-    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this.hiddenData, this.divider, this._options.scheme) || [];
-    this.positionData = MapLib.toLeafletMapPositionArray(data, this.hiddenData || [], this._options.scheme) || [];
-    this.geoJson = MapLib.toGeoJSON(data);
-    if (!this.data) {
+    if (data.gts.length === 0) {
       return;
     }
+    this.pathData = MapLib.toLeafletMapPaths(data, this._hiddenData || [], this.divider, this._options.scheme) || [];
+    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this._hiddenData, this.divider, this._options.scheme) || [];
+    this.positionData = MapLib.toLeafletMapPositionArray(data, this._hiddenData || [], this._options.scheme) || [];
+    this.geoJson = MapLib.toGeoJSON(data);
+
     if (this._map) {
       this._map.remove();
     }
@@ -350,16 +349,17 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       Leaflet.tileLayer(map.link, mapOpts).addTo(this._map);
     }
     (this.pathData || []).forEach(d => {
-      const plottedGts: any = this.updateGtsPath(d);
-      if (plottedGts) {
-        this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
-        this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
-        this.currentValuesMarkers.push(plottedGts.currentValue);
+      if (!!d) {
+        const plottedGts: any = this.updateGtsPath(d);
+        if (plottedGts) {
+          this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
+          this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+          this.currentValuesMarkers.push(plottedGts.currentValue);
+        }
       }
     });
 
     (this.annotationsData || []).forEach(d => {
-      //   this.annotationsMarkers = this.annotationsMarkers.concat(this.updateAnnotation(d));
       const plottedGts: any = this.updateGtsPath(d);
       if (plottedGts) {
         this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
@@ -371,9 +371,8 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
     this.LOG.debug(['displayMap', 'this.positionData'], this.positionData);
     // Create the positions arrays
-    this.positionData.forEach(d => {
-      this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
-    });
+    this.positionData.forEach(d => this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d)));
+    this.annotationsData.forEach(d => this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updateAnnotation(d)));
 
     (this._options.map.tiles || []).forEach((t) => {
       this.LOG.debug(['displayMap'], t);
@@ -396,14 +395,9 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
 
     this.LOG.debug(['displayMap', 'positionArraysMarkers'], this.positionArraysMarkers);
-    this.positionArraysMarkers.forEach(m => {
-      m.addTo(this._map);
-    });
-
-    this.annotationsMarkers.forEach(m => {
-      m.addTo(this._map);
-    });
-
+    this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
+    this.positionArraysMarkers.forEach(m => m.addTo(this._map));
+    this.annotationsMarkers.forEach(m => m.addTo(this._map));
     this.LOG.debug(['displayMap', 'geoJson'], this.geoJson);
     this.geoJson.forEach((m, index) => {
       const color = ColorLib.getColor(index, this._options.scheme);
@@ -432,7 +426,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
       this.bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         this._options.startZoom = this.currentZoom || this._options.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
         this._map.invalidateSize();
@@ -485,6 +479,37 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.resizeMe();
   }
 
+  updateAnnotation(gts) {
+    const positions = [];
+    let icon;
+    switch (gts.render) {
+      case 'marker':
+        icon = this.icon(gts.color, gts.marker);
+        gts.path.forEach(g => {
+          const marker = Leaflet.marker(g, {icon, opacity: 1});
+          marker.bindPopup(g.val.toString());
+          positions.push(marker);
+        });
+        break;
+      case 'dots':
+      default:
+        gts.path.forEach(g => {
+          const marker = Leaflet.circleMarker(
+            g, {
+              radius: gts.baseRadius,
+              color: gts.color,
+              fillColor: gts.color,
+              fillOpacity: 1
+            }
+          );
+          marker.bindPopup(g.val.toString());
+          positions.push(marker);
+        });
+        break;
+    }
+    return positions;
+  }
+
   private updateGtsPath(gts: any) {
     const beforeCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
@@ -510,12 +535,12 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
-      return {
-        beforeCurrentValue,
-        afterCurrentValue,
-        currentValue,
-      };
     });
+    return {
+      beforeCurrentValue,
+      afterCurrentValue,
+      currentValue,
+    };
   }
 
   private addPopup(positionData: any, value: any, marker: any) {
