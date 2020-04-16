@@ -311,8 +311,20 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     gtsList = gtsList.filter(g => g.v && !GTSLib.isGtsToPlot(g));
     let timestampMode = true;
     const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+    gtsList.forEach((gts: GTS) => {
+      const ticks = gts.v.map(t => t[0]);
+      const size = gts.v.length;
+      timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
+      timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
+    });
+    if (timestampMode || this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.type = 'linear';
+    } else {
+      this.layout.xaxis.type = 'date';
+    }
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
+        const size = gts.v.length;
         const label = GTSLib.serializeGtsMetadata(gts);
         const c = ColorLib.getColor(gts.id, this._options.scheme);
         const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
@@ -340,25 +352,27 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         } else {
           this.layout.xaxis.type = 'date';
         }
-        gts.v.forEach(value => {
-          const ts = value[0];
-          if (ts < this.minTick) {
-            this.minTick = ts;
-          }
-          if (ts > this.maxTick) {
-            this.maxTick = ts;
-          }
-          series.text.push(value[value.length - 1]);
-          series.y.push((this.expanded ? i : 0) + 0.5);
-          if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
-            series.x.push(ts);
+        const ticks = gts.v.map(t => t[0]);
+        const values = gts.v.map(t => t[t.length - 1]);
+        let min = ticks[0];
+        let max = ticks[0];
+        for (let v = 1; v < size; v++) {
+          const val = ticks[i];
+          min = (val < min) ? val : min;
+          max = (val > max) ? val : max;
+        }
+        this.minTick = min;
+        this.maxTick = max;
+        if (timestampMode || this._options.timeMode === 'timestamp') {
+          series.x = ticks;
+        } else {
+          if (this._options.timeZone !== 'UTC') {
+            series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
           } else {
-            series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
+            series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
           }
-          timestampMode = timestampMode && (gts.v[0][0] > -tsLimit && gts.v[0][0] < tsLimit);
-          timestampMode = timestampMode && (gts.v[gts.v.length - 1][0] > -tsLimit && gts.v[gts.v.length - 1][0] < tsLimit);
-        });
-
+        }
+        series.y = values;
         dataset.push(series);
       }
     });

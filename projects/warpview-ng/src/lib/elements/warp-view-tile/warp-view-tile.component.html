@@ -20,7 +20,7 @@
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
       <warpview-spinner *ngIf="loading" [message]="loaderMessage"></warpview-spinner>
       <p *ngIf="_options.showErrors && error" class="error">{{error}}</p>
-      <div *ngIf="!error">
+      <div *ngIf="!error" style="height: 100%">
         <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                            [hidden]="loading"
                            [showLegend]="showLegend" [data]="gtsList"
@@ -137,9 +137,9 @@
                         [responsive]="true"></warpview-globe>
       </div>
     </div>
-  </div>
+  </div><small *ngIf="_options.showStatus">{{status}}</small>
 </div>
 
 <div #warpRef style="display: none">
   <ng-content></ng-content>
-</div><small *ngIf="_options.showStatus">{{status}}</small>
+</div>

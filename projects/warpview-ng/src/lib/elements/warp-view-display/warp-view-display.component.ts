@@ -84,7 +84,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
 
   protected convert(data: DataModel): any[] {
     this.LOG.debug(['convert'], this._options.timeMode);
-    let display = '';
+    let display: string;
     if (this._data.data) {
       display = GTSLib.isArray(this._data.data) ? this._data.data[0] : this._data.data;
     } else {

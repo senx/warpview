@@ -278,7 +278,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           if (timestampMode || this._options.timeMode === 'timestamp') {
             series.x = ticks;
           } else {
-            if(this._options.timeZone !== 'UTC') {
+            if (this._options.timeZone !== 'UTC') {
               series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
             } else {
               series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
