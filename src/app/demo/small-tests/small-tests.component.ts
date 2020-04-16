@@ -50,8 +50,21 @@ export class SmallTestsComponent implements OnInit {
 $TOKEN AUTHENTICATE
 100000000 MAXOPS
 NEWGTS 'g' STORE
-0 1000000 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g
+NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
 $g`
+    },
+    {
+      type: 'map',
+      description: '',
+      warpscript: `@training/dataset0
+$TOKEN AUTHENTICATE
+100000000 MAXOPS
+[] 'l' STORE
+0 100000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
+$l`
     },
     {
       type: 'plot',

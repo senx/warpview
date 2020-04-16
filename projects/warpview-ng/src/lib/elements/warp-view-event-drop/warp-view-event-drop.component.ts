@@ -1,4 +1,15 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -98,9 +109,10 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewEventDropComponent, this._debug);
   }
 

@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {GTSLib} from '../../utils/gts.lib';
@@ -40,9 +40,10 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewDatagridComponent, this._debug);
   }
 

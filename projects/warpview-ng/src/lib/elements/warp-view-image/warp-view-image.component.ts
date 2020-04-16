@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -43,9 +43,10 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewImageComponent, this._debug);
   }
 

@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
@@ -63,9 +63,10 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewPolarComponent, this._debug);
   }
 

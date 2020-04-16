@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
@@ -67,9 +67,10 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewPieComponent, this._debug);
   }
 

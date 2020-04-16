@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, Input, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, Renderer2, ViewEncapsulation} from '@angular/core';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import {Param} from '../../model/param';
@@ -59,9 +59,10 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewSpectrumComponent, this._debug);
   }
 

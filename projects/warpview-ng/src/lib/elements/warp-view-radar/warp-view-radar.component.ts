@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
@@ -68,9 +68,10 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewRadarComponent, this._debug);
   }
 

@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
@@ -45,9 +45,10 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewBubbleComponent, this._debug);
   }
 

@@ -24,7 +24,7 @@ import {
   HostListener,
   Input,
   OnInit,
-  Output,
+  Output, Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -112,10 +112,11 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   constructor(
     public el: ElementRef,
     public sizeService: SizeService,
+    public renderer: Renderer2,
     private warp10Service: Warp10Service,
     private cdRef: ChangeDetectorRef
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewTileComponent, this._debug);
   }
 

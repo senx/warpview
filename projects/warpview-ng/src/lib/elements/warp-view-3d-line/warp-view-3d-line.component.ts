@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -37,9 +37,10 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpView3dLineComponent, this._debug);
   }
 

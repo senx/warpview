@@ -22,7 +22,7 @@ import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
-import {ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
@@ -162,6 +162,7 @@ export abstract class WarpViewComponent {
 
   protected constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
@@ -183,16 +184,24 @@ export abstract class WarpViewComponent {
 
   protected abstract convert(data: DataModel): Partial<any>[];
 
-  protected legendFormatter(x, series): string {
+  protected legendFormatter(x, series, highlighted = -1): string {
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return `<br>
       ${series.map(s => {
         // FIXME :  if (!s.isVisible) return;
         let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
-        if (s.isHighlighted) {
+        let color = s.data.line.color;
+        if (!!s.data.marker) {
+          if (GTSLib.isArray(s.data.marker.color)) {
+            color = s.data.marker.color[0];
+          } else {
+            color = s.data.marker.color;
+          }
+        }
+        if (s.curveNumber === highlighted) {
           labeledData = `<b><i class="chip"
-    style="background-color: ${s.data.marker.color};border: 2px solid ${s.data.marker.line.color};"></i> ${labeledData}</b>`;
+    style="background-color: ${color};border: 2px solid ${color};"></i> ${labeledData}</b>`;
         }
         return labeledData;
       }).join('<br>')}`;
@@ -213,12 +222,20 @@ export abstract class WarpViewComponent {
     //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
     //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)
     series.forEach((s, i) => {
-      const labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
-      /* if (series.isHighlighted) {
-         labeledData = `<b>${labeledData}</b>`;
-       }*/
+      let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
+      if (s.curveNumber === highlighted) {
+        labeledData = `<b>${labeledData}</b>`;
+      }
+      let color = s.data.line.color;
+      if (!!s.data.marker) {
+        if (GTSLib.isArray(s.data.marker.color)) {
+          color = s.data.marker.color[0];
+        } else {
+          color = s.data.marker.color;
+        }
+      }
       html += `<b><i class="chip"
-style="background-color: ${(s.data.marker || s.data.line).color};border: 2px solid ${(s.data.marker || s.data.line).color};"></i>
+style="background-color: ${color};border: 2px solid ${color};"></i>
 ${labeledData}`;
       if (i < series.length) {
         html += '<br>';
@@ -291,10 +308,11 @@ ${labeledData}`;
 
   unhover(data?: any) {
     this.toolTip.nativeElement.style.display = 'none';
-    this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map(() => 1));
+    this.graph.restyleChart({opacity: 1}, data.points.map(p => p.curveNumber));
   }
 
   hover(data: any) {
+    this.LOG.debug(['hover'], 'start');
     this.toolTip.nativeElement.style.display = 'block';
     const y = (data.yvals || [''])[0];
     let delta = Number.MAX_VALUE;
@@ -306,18 +324,24 @@ ${labeledData}`;
         point = p;
       }
     });
-    this.graph.restyleChart('opacity', (this.graph.plotlyInstance as any).data.map((_, i) => i === point.curveNumber ? 1 : 0.4));
+    this.graph.restyleChart({opacity: 0.4}, data.points.map(p => p.curveNumber));
+    this.graph.restyleChart({opacity: 1}, [point.curveNumber]);
+    this.LOG.debug(['hover'], 'restyleChart');
+
     this.toolTip.nativeElement.innerHTML = this.legendFormatter(
       this._options.horizontal ?
         (data.yvals || [''])[0] :
         (data.xvals || [''])[0]
-      , data.points);
+      , data.points, point.curveNumber);
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-      this.toolTip.nativeElement.style.left = Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px';
+      this.renderer.setStyle(this.toolTip.nativeElement,
+        'left',
+        Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px');
     } else {
-      this.toolTip.nativeElement.style.left = (data.event.offsetX + 20) + 'px';
+      this.renderer.setStyle(this.toolTip.nativeElement, 'left', (data.event.offsetX + 20) + 'px');
     }
-    this.toolTip.nativeElement.style.top = (data.event.offsetY + 20) + 'px';
+    this.renderer.setStyle(this.toolTip.nativeElement, 'top', (data.event.offsetY + 20) + 'px');
+    this.LOG.debug(['hover'], 'tooltip');
   }
 
   relayout($event: any) {

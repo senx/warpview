@@ -136,11 +136,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
-    private zone: NgZone,
-    private renderer: Renderer2
+    private zone: NgZone
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewPlotComponent, this._debug);
   }
 

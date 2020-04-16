@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, HostListener, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import moment from 'moment';
@@ -42,9 +42,10 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewDrillDownComponent, this._debug);
   }
 

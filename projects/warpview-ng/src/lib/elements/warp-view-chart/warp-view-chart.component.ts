@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewEncapsulation} from '@angular/core';
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
@@ -34,6 +34,7 @@ import {Logger} from '../../utils/logger';
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
   private marginLeft: number;
+  private maxPlottable = 10000;
   parsing = false;
 
 
@@ -99,9 +100,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   constructor(
     public el: ElementRef,
+    public renderer: Renderer2,
     public sizeService: SizeService,
   ) {
-    super(el, sizeService);
+    super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewChartComponent, this._debug);
   }
 
@@ -228,22 +230,24 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
             type: 'scattergl',
-            mode: this._type === 'scatter' ? 'markers' : 'lines+markers',
+            mode: this._type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             name: label,
             text: label,
             x: [],
             y: [],
             line: {color},
-            marker: {
-              size: 15,
-              color: new Array(size).fill(color),
-              line: {color, width: 3},
-              opacity: new Array(size).fill(this._options.showDots ? 1 : 0)
-            },
             hoverinfo: 'none',
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
           };
+          if (size < this.maxPlottable) {
+            series.marker = {
+              size: 15,
+              color: new Array(size).fill(color),
+              line: {color, width: 3},
+              opacity: new Array(size).fill(this._options.showDots ? 1 : 0)
+            };
+          }
           switch (this._type) {
             case 'spline':
               series.line.shape = 'spline';
@@ -399,16 +403,18 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     let line = {};
     let opacity = [];
     data.points.forEach(p => {
-      pn = p.pointNumber;
-      tn = p.curveNumber;
-      color = p.data.marker.color;
-      opacity = p.data.marker.opacity;
-      line = p.data.marker.line;
-      if (pn >= 0) {
-        color[pn] = 'transparent';
-        opacity[pn] = 1;
-        const update = {marker: {color, opacity, line, size: 15}};
-        this.graph.restyleChart(update, [tn]);
+      if (!!p.data.marker) {
+        color = p.data.marker.color;
+        opacity = p.data.marker.opacity;
+        line = p.data.marker.line;
+        pn = p.pointNumber;
+        tn = p.curveNumber;
+        if (pn >= 0) {
+          color[pn] = 'transparent';
+          opacity[pn] = 1;
+          const update = {marker: {color, opacity, line, size: 15}};
+          this.graph.restyleChart(update, [tn]);
+        }
       }
     });
   }
@@ -421,31 +427,19 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     let line = {};
     let opacity = [];
     data.points.forEach(p => {
-      pn = p.pointNumber;
-      tn = p.curveNumber;
-      color = p.data.marker.color;
-      opacity = p.data.marker.opacity;
-      line = p.data.marker.line;
-      if (pn >= 0) {
-        color[pn] = p.data.line.color;
-        opacity[pn] = this._options.showDots ? 1 : 0;
-        const update = {marker: {color, opacity, line, size: 15}};
-        this.graph.restyleChart(update, [tn]);
-      }
-    });
-    /*  let pn = '';
-      let tn = '';
-      let color = [];
-      let opacity = [];
-      data.points.forEach(p => {
+      if (!!p.data.marker) {
         pn = p.pointNumber;
         tn = p.curveNumber;
         color = p.data.marker.color;
         opacity = p.data.marker.opacity;
-      });
-      color[pn] = 'transparent';
-      opacity[pn] = this._options.showDots ? 1 : 0;
-      const update = {marker: {color, opacity}};
-      this.graph.restyleChart(update, [tn]);*/
+        line = p.data.marker.line;
+        if (pn >= 0) {
+          color[pn] = p.data.line.color;
+          opacity[pn] = this._options.showDots ? 1 : 0;
+          const update = {marker: {color, opacity, line, size: 15}};
+          this.graph.restyleChart(update, [tn]);
+        }
+      }
+    });
   }
 }
