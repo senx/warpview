@@ -30,10 +30,6 @@ export class Param {
   interpolate?: string;
   type?: string;
   showRangeSelector?: boolean;
-  startLat?: number;
-  startLong?: number;
-  startZoom?: number;
-  dotsLimit?: number;
   autoRefresh?: number;
   showControls = true;
   showErrors = true;
@@ -57,6 +53,7 @@ export class Param {
     heatBlur?: number;
     heatOpacity?: number;
     heatControls?: boolean;
+    dotsLimit?: number;
     mapType?: string;
     showTimeSlider?: boolean;
     showTimeRange?: boolean;
@@ -66,6 +63,9 @@ export class Param {
     timeSliderMode?: 'timestamp' | 'date' | 'custom';
     timeStart?: number,
     timeSpan?: number,
+    startLat?: number;
+    startLong?: number;
+    startZoom?: number;
     timeSpanList?: any[]
   } = {
     tiles: [],

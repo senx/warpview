@@ -127,39 +127,55 @@ export class MapLib {
 
   static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
     const paths = [];
-    (data.gts || []).map((gts, i) => {
+    const size = (data.gts || []).length;
+    for (let i = 0; i < size; i++) {
+      const gts = data.gts[i];
       if (GTSLib.isGtsToPlot(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
-        const sl: any = {};
-        sl.path = GTSLib.gtsToPath(gts, divider);
+        const path: any = {};
+        path.path = MapLib.gtsToPath(gts, divider);
         if (data.params && data.params[i] && data.params[i].key) {
-          sl.key = data.params[i].key;
+          path.key = data.params[i].key;
         } else {
-          sl.key = GTSLib.serializeGtsMetadata(gts);
+          path.key = GTSLib.serializeGtsMetadata(gts);
         }
         if (data.params && data.params[i] && data.params[i].color) {
-          sl.color = data.params[i].color;
+          path.color = data.params[i].color;
         } else {
-          sl.color = ColorLib.getColor(i, scheme);
+          path.color = ColorLib.getColor(i, scheme);
         }
-        paths.push(sl);
+        paths.push(path);
       }
-    });
+    }
     return paths;
+  }
+
+  static gtsToPath(gts, divider: number = 1000) {
+    const path = [];
+    const size = (gts.v || []).length;
+    for (let i = 0; i < size; i++) {
+      const v = gts.v[i];
+      const l = v.length;
+      if (l >= 4) {
+        // timestamp, lat, lon, elev?, value
+        path.push({ts: Math.floor(v[0] / divider), lat: v[1], lon: v[2], val: v[l - 1]});
+      }
+    }
+    return path;
   }
 
   static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
     const annotations = [];
-    (data.gts || []).map((gts, i) => {
-      if (
-        (GTSLib.isGtsToAnnotate(gts) || GTSLib.isSingletonGTS(gts))
-        && (hiddenData || []).filter(id => id === gts.id).length === 0) {
+    const size = (data.gts || []).length;
+    for (let i = 0; i < size; i++) {
+      const gts = data.gts[i];
+      if (GTSLib.isGtsToAnnotate(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['annotationsToLeafletPositions'], gts);
         const annotation: any = {};
         let params = (data.params || [])[i];
         if (!params) {
           params = {};
         }
-        annotation.path = GTSLib.gtsToPath(gts, divider);
+        annotation.path = MapLib.gtsToPath(gts, divider);
         MapLib.extractCommonParameters(annotation, params, i, scheme);
         if (params.render) {
           annotation.render = params.render;
@@ -170,11 +186,10 @@ export class MapLib {
         if (annotation.render === 'weightedDots') {
           MapLib.validateWeightedDotsPositionArray(annotation, params);
         }
-
         this.LOG.debug(['annotationsToLeafletPositions', 'annotations'], annotation);
         annotations.push(annotation);
       }
-    });
+    }
     return annotations;
   }
 
@@ -225,11 +240,14 @@ export class MapLib {
     }
     const step = (posArray.maxValue - posArray.minValue) / posArray.numSteps;
     const steps = [];
-    for (let j = 0; j < posArray.numSteps - 1; j++) {
-      steps[j] = posArray.minValue + (j + 1) * step;
+    for (let i = 0; i < posArray.numSteps - 1; i++) {
+      steps[i] = posArray.minValue + (i + 1) * step;
     }
     steps[posArray.numSteps - 1] = posArray.maxValue;
-    posArray.positions.forEach((pos) => {
+
+    const size = (posArray || []).length;
+    for (let i = 0; i < size; i++) {
+      const pos = posArray[i];
       const value = pos[2];
       pos[4] = posArray.numSteps - 1;
       for (const k in steps) {
@@ -238,13 +256,15 @@ export class MapLib {
           break;
         }
       }
-    });
+    }
     return true;
   }
 
   static toLeafletMapPositionArray(data: { gts: any[]; params: any[] }, hiddenData: number[], scheme: string) {
     const positions = [];
-    data.gts.map((gts, i) => {
+    const size = (data.gts || []).length;
+    for (let i = 0; i < size; i++) {
+      const gts = data.gts[i];
       if (GTSLib.isPositionArray(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
         const posArray = gts;
@@ -265,7 +285,7 @@ export class MapLib {
         this.LOG.debug(['toLeafletMapPositionArray', 'posArray'], posArray);
         positions.push(posArray);
       }
-    });
+    }
     return positions;
   }
 
@@ -273,7 +293,6 @@ export class MapLib {
     if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
       return;
     }
-
     if (params.minColorValue === undefined ||
       params.maxColorValue === undefined ||
       params.startColor === undefined ||
@@ -369,13 +388,40 @@ export class MapLib {
 
   static getBoundsArray(paths, positionsData, annotationsData, geoJson) {
     const pointsArray = [];
+    let size;
+    this.LOG.debug(['getBoundsArray', 'paths'], paths);
+    size = (paths || []).length;
+    for (let i = 0; i < size; i++) {
+      const path = paths[i];
+      const s = (path.path || []).length;
+      for (let j = 0; j < s; j++) {
+        const p = path.path[j];
+        pointsArray.push([p.lat, p.lon]);
+      }
+    }
     this.LOG.debug(['getBoundsArray', 'positionsData'], positionsData);
-    (paths || []).forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
-    this.LOG.debug(['getBoundsArray', 'positionsData'], positionsData);
-    (positionsData || []).forEach(i => i.positions.forEach(j => pointsArray.push([parseFloat(j[0]), j[1]])));
-    this.LOG.debug(['getBoundsArray', 'pointsArray'], pointsArray);
-    (annotationsData || []).forEach(i => i.path.forEach(j => pointsArray.push([parseFloat(j.lat), j.lon])));
-    geoJson.forEach(g => {
+    size = (positionsData || []).length;
+    for (let i = 0; i < size; i++) {
+      const position = positionsData[i];
+      const s = (position.positions || []).length;
+      for (let j = 0; j < s; j++) {
+        const p = position.positions[j];
+        pointsArray.push([p[0], p[1]]);
+      }
+    }
+    this.LOG.debug(['getBoundsArray', 'annotationsData'], annotationsData);
+    size = (annotationsData || []).length;
+    for (let i = 0; i < size; i++) {
+      const annotation = annotationsData[i];
+      const s = (annotation.path || []).length;
+      for (let j = 0; j < s; j++) {
+        const p = annotation.path[j];
+        pointsArray.push([p.lat, p.lon]);
+      }
+    }
+    size = (geoJson || []).length;
+    for (let i = 0; i < size; i++) {
+      const g = geoJson[i];
       switch (g.geometry.type) {
         case 'MultiPolygon':
           g.geometry.coordinates.forEach(c => c.forEach(m => m.forEach(p => pointsArray.push([p[1], p[0]]))));
@@ -390,7 +436,7 @@ export class MapLib {
           pointsArray.push([g.geometry.coordinates[1], g.geometry.coordinates[0]]);
           break;
       }
-    });
+    }
     if (pointsArray.length === 1) {
       return pointsArray;
     }
@@ -399,7 +445,9 @@ export class MapLib {
     let north = -90;
     let east = 180;
     this.LOG.debug(['getBoundsArray'], pointsArray);
-    pointsArray.forEach((point) => {
+    size = (pointsArray || []).length;
+    for (let i = 0; i < size; i++) {
+      const point = pointsArray[i];
       if (point[0] > north) {
         north = point[0];
       }
@@ -412,10 +460,8 @@ export class MapLib {
       if (point[1] < east) {
         east = point[1];
       }
-    });
-
+    }
     return [[south, west], [north, east]];
-
   }
 
   static pathDataToLeaflet(pathData, options) {

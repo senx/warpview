@@ -33,7 +33,7 @@ export class SmallTestsComponent implements OnInit {
     ...new Param(), ...{
       gridLineColor: '#000000',
       fontColor: '#000000',
-      map: {mapType: 'DEFAULT'},
+      // map: {mapType: 'CARTODB_DARK'},
       showControls: true,
       showGTSTree: true,
       foldGTSTree: true,
@@ -50,7 +50,7 @@ export class SmallTestsComponent implements OnInit {
 $TOKEN AUTHENTICATE
 100000000 MAXOPS
 [] 'l' STORE
-0 10000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
+0 4000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
 $l`
     },
     {

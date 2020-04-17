@@ -15,18 +15,7 @@
  *
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
 
@@ -41,6 +30,7 @@ import {GTSLib} from '../../utils/gts.lib';
 import moment from 'moment-timezone';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
+import {Timsort} from '../../utils/timsort';
 
 /**
  *
@@ -51,7 +41,7 @@ import {SizeService} from '../../services/resize.service';
   styleUrls: ['./warp-view-map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class WarpViewMapComponent implements AfterViewInit, OnInit {
+export class WarpViewMapComponent implements OnInit {
 
   @ViewChild('mapDiv', {static: true}) mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild('wrapper', {static: true}) wrapper: ElementRef<HTMLDivElement>;
@@ -63,7 +53,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   @Input('showLegend') showLegend = true;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
-  private bounds: any[];
+  private bounds: Leaflet.LatLngBounds;
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -77,9 +67,13 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   @Input('options') set options(options: Param) {
     this.LOG.debug(['onOptions'], options);
     if (!deepEqual(this._options, options)) {
+      const reZoom =
+        options.map.startZoom !== this._options.map.startZoom
+        || options.map.startLat !== this._options.map.startLat
+        || options.map.startLong !== this._options.map.startLong;
       this._options = options;
       this.divider = GTSLib.getDivider(this._options.timeUnit);
-      this.drawMap();
+      this.drawMap(reZoom);
     }
   }
 
@@ -87,7 +81,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['onData'], data);
     if (!!data) {
       this._data = data;
-      this.drawMap();
+      this.drawMap(true);
     }
   }
 
@@ -97,7 +91,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
-    this.drawMap();
+    this.drawMap(false);
   }
 
   get hiddenData(): number[] {
@@ -121,20 +115,21 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private LOG: Logger;
   private _data: any;
   private _debug = false;
-  private defOptions: Param = {
-    ...new Param(), ...{
-      dotsLimit: 1000,
-      heatControls: false,
+  private defOptions: Param = ChartLib.mergeDeep<Param>(
+    new Param(), {
+      map: {
+        heatControls: false,
+        tiles: [],
+        dotsLimit: 1000,
+      },
       timeMode: 'date',
       showRangeSelector: true,
       gridLineColor: '#8e8e8e',
-      tiles: [],
       showDots: false,
       timeZone: 'UTC',
       timeUnit: 'us',
       bounds: {}
-    }
-  };
+    });
 
   private _map: Leaflet.Map;
   private _hiddenData: number[];
@@ -146,16 +141,21 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   private _iconAnchor: Leaflet.PointExpression = [20, 52];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
   private _heatLayer: any;
-  // private resizeTimer;
   private pathData: any[] = [];
   private annotationsData: any[] = [];
   private positionData: any[] = [];
   private geoJson: any[] = [];
-  private parentWidth = -1;
   private timeStart: number;
   private timeEnd: number;
   private firstDraw = true;
   private finalHeight = 0;
+  // Layers
+  private pathDataLayer = Leaflet.featureGroup();
+  private annotationsDataLayer = Leaflet.featureGroup();
+  private positionDataLayer = Leaflet.featureGroup();
+  private tileLayerGroup = Leaflet.featureGroup();
+  private geoJsonLayer = Leaflet.featureGroup();
+  private tilesLayer: Leaflet.TileLayer;
 
   constructor(public el: ElementRef, public sizeService: SizeService, private renderer: Renderer2) {
     this.LOG = new Logger(WarpViewMapComponent, this.debug);
@@ -169,11 +169,6 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
-  }
-
-  ngAfterViewInit() {
-    this.LOG.debug(['ngAfterViewInit'], this._data);
-    this.drawMap();
   }
 
   resizeMe() {
@@ -220,9 +215,9 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['heatOpacityDidChange'], event.detail.valueAsNumber);
   }
 
-  private drawMap() {
+  private drawMap(reZoom: boolean) {
     this.LOG.debug(['drawMap'], this._data);
-    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
+    this._options = ChartLib.mergeDeep<Param>(this._options, this.defOptions);
     this.timeStart = this._options.map.timeStart;
     moment.tz.setDefault(this._options.timeZone);
     let gts: any = this._data;
@@ -233,7 +228,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       try {
         gts = JSON.parse(gts as string);
       } catch (error) {
-        // empty
+        return;
       }
     }
     if (GTSLib.isArray(gts) && gts[0] && (gts[0] instanceof DataModel || gts[0].hasOwnProperty('data'))) {
@@ -246,29 +241,28 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     let params: any[];
     if (gts.data) {
       dataList = gts.data as any[];
-      this._options = ChartLib.mergeDeep(gts.globalParams || {}, this._options) as Param;
+      this._options = ChartLib.mergeDeep<Param>(gts.globalParams || {}, this._options);
       this.timeSpan = this.timeSpan || this._options.map.timeSpan;
       params = gts.params;
     } else {
       dataList = gts;
       params = [];
     }
-    this.LOG.debug(['drawMap'], dataList);
-    this.LOG.debug(['drawMap'], this._options, gts.globalParams);
-
+    this.divider = GTSLib.getDivider(this._options.timeUnit);
+    this.LOG.debug(['drawMap'], dataList, this._options, gts.globalParams);
     const flattenGTS = GTSLib.flatDeep(dataList);
-    let i = 0;
-    flattenGTS.forEach(item => {
+
+    const size = flattenGTS.length;
+    for (let i = 0; i < size; i++) {
+      const item = flattenGTS[i];
       if (item.v) {
-        item.v.sort((a, b) => a[0] > b[0] ? 1 : -1);
+        Timsort.sort(item.v, (a, b) => a[0] - b[0]);
         item.i = i;
         i++;
       }
-    });
+    }
     this.LOG.debug(['GTSLib.flatDeep(dataList)'], flattenGTS);
-    this.displayMap({gts: flattenGTS, params});
-    this.LOG.debug(['onResize', 'postDisplayMap'], 'resizeTimer', this.el.nativeElement.parentElement.clientWidth, this.parentWidth);
-    setTimeout(() => this.resizeMe());
+    this.displayMap({gts: flattenGTS, params}, reZoom);
   }
 
   private icon(color: string, marker = '') {
@@ -281,14 +275,12 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     });
   }
 
-  private displayMap(data: { gts: any[], params: any[] }) {
-    this.LOG.debug(['drawMap'], data, this._options, this.hiddenData || []);
-    this.divider = GTSLib.getDivider(this._options.timeUnit);
+  private displayMap(data: { gts: any[], params: any[] }, reZoom = false) {
+    this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
       this.lowerTimeBound = this._options.map.timeSliderMin / this.divider;
       this.upperTimeBound = this._options.map.timeSliderMax / this.divider;
     }
-    this.LOG.debug(['displayMap'], moment(this.timeStart).toISOString(), moment(this.timeEnd).toISOString());
     let height = this.height || ChartLib.DEFAULT_HEIGHT;
     const width = this.width || ChartLib.DEFAULT_WIDTH;
     if (this.responsive && this.finalHeight === 0) {
@@ -310,33 +302,8 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.annotationsData = MapLib.annotationsToLeafletPositions(data, this._hiddenData, this.divider, this._options.scheme) || [];
     this.positionData = MapLib.toLeafletMapPositionArray(data, this._hiddenData || [], this._options.scheme) || [];
     this.geoJson = MapLib.toGeoJSON(data);
+    this.LOG.debug(['displayMap'], this.pathData, this.annotationsData, this.positionData);
 
-    if (this._map) {
-      this._map.remove();
-    }
-    this.LOG.debug(['displayMap'], {
-      lat: [this.currentLat, this._options.startLat],
-      long: [this.currentLong, this._options.startLong],
-      zoom: [this.currentZoom, this._options.startZoom]
-    });
-    this._map = Leaflet.map(this.mapDiv.nativeElement);
-
-    this._map.on('load', () => {
-      this.LOG.debug(['load'], this._map.getCenter().lng, this.currentLong);
-      this.LOG.debug(['load'], this._map.getZoom());
-    });
-    this._map.on('zoomend', () => {
-      if (!this.firstDraw) {
-        this.currentZoom = this._map.getZoom();
-      }
-    });
-    this._map.on('moveend', () => {
-      if (!this.firstDraw) {
-        this.LOG.debug(['moveend'], this._map.getCenter());
-        this.currentLat = this._map.getCenter().lat;
-        this.currentLong = this._map.getCenter().lng;
-      }
-    });
     if (this._options.map.mapType !== 'NONE') {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
       const mapOpts: any = {};
@@ -346,9 +313,49 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       if (map.subdomains) {
         mapOpts.subdomains = map.subdomains;
       }
-      Leaflet.tileLayer(map.link, mapOpts).addTo(this._map);
+      if (!!this.tilesLayer && !!this._map) {
+        this._map.removeLayer(this.tilesLayer);
+      }
+      this.tilesLayer = Leaflet.tileLayer(map.link, mapOpts);
     }
-    (this.pathData || []).forEach(d => {
+
+    if (!!this._map) {
+      this.LOG.debug(['displayMap'], 'map exists');
+      this._map.removeLayer(this.tilesLayer);
+      this.pathDataLayer.clearLayers();
+      this.annotationsDataLayer.clearLayers();
+      this.positionDataLayer.clearLayers();
+      this.geoJsonLayer.clearLayers();
+      this.tileLayerGroup.clearLayers();
+      this.tilesLayer.addTo(this._map);
+    } else {
+      this.LOG.debug(['displayMap'], 'build map');
+      this._map = Leaflet.map(this.mapDiv.nativeElement, {
+        layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.annotationsDataLayer, this.positionDataLayer],
+        zoomAnimation: true
+      }).setView([0, 0], 8);
+      this.tilesLayer.addTo(this._map);
+      this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
+      this.geoJsonLayer.bringToBack();
+      this.tilesLayer.bringToBack(); // TODO: tester
+      this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
+      this._map.on('zoomend', () => {
+        if (!this.firstDraw) {
+          this.currentZoom = this._map.getZoom();
+        }
+      });
+      this._map.on('moveend', () => {
+        if (!this.firstDraw) {
+          this.LOG.debug(['moveend'], this._map.getCenter());
+          this.currentLat = this._map.getCenter().lat;
+          this.currentLong = this._map.getCenter().lng;
+        }
+      });
+    }
+
+    let size = (this.pathData || []).length;
+    for (let i = 0; i < size; i++) {
+      const d = this.pathData[i];
       if (!!d) {
         const plottedGts: any = this.updateGtsPath(d);
         if (plottedGts) {
@@ -357,55 +364,77 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
           this.currentValuesMarkers.push(plottedGts.currentValue);
         }
       }
-    });
-
-    (this.annotationsData || []).forEach(d => {
+    }
+    size = (this.annotationsData || []).length;
+    for (let i = 0; i < size; i++) {
+      const d = this.annotationsData[i];
       const plottedGts: any = this.updateGtsPath(d);
       if (plottedGts) {
         this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
         this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
         this.currentValuesMarkers.push(plottedGts.currentValue);
       }
-    });
+    }
+
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
     this.LOG.debug(['displayMap', 'this.positionData'], this.positionData);
     // Create the positions arrays
-    this.positionData.forEach(d => this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d)));
-    this.annotationsData.forEach(d => this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updateAnnotation(d)));
+    size = (this.positionData || []).length;
+    for (let i = 0; i < size; i++) {
+      const d = this.positionData[i];
+      this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
+    }
+    size = (this.annotationsData || []).length;
+    for (let i = 0; i < size; i++) {
+      const d = this.annotationsData[i];
+      this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updateAnnotation(d));
+    }
 
-    (this._options.map.tiles || []).forEach((t) => {
+    (this._options.map.tiles || []).forEach((t) => { // TODO à tester
       this.LOG.debug(['displayMap'], t);
       if (this._options.map.showTimeRange) {
-        Leaflet.tileLayer(t
+        this.tileLayerGroup.addLayer(Leaflet.tileLayer(t
             .replace('{start}', moment(this.timeStart).toISOString())
             .replace('{end}', moment(this.timeEnd).toISOString()), {
             subdomains: 'abcd',
             maxNativeZoom: 19,
             maxZoom: 40
           }
-        ).addTo(this._map);
+        ));
       } else {
-        Leaflet.tileLayer(t, {
+        this.tileLayerGroup.addLayer(Leaflet.tileLayer(t, {
           subdomains: 'abcd',
           maxNativeZoom: 19,
           maxZoom: 40
-        }).addTo(this._map);
+        }));
       }
     });
 
     this.LOG.debug(['displayMap', 'positionArraysMarkers'], this.positionArraysMarkers);
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
-    this.positionArraysMarkers.forEach(m => m.addTo(this._map));
-    this.annotationsMarkers.forEach(m => m.addTo(this._map));
+
+    size = (this.positionArraysMarkers || []).length;
+    for (let i = 0; i < size; i++) {
+      const m = this.positionArraysMarkers[i];
+      m.addTo(this.positionDataLayer);
+    }
+    size = (this.annotationsMarkers || []).length;
+    for (let i = 0; i < size; i++) {
+      const m = this.annotationsMarkers[i];
+      m.addTo(this.annotationsDataLayer);
+    }
+
     this.LOG.debug(['displayMap', 'geoJson'], this.geoJson);
-    this.geoJson.forEach((m, index) => {
-      const color = ColorLib.getColor(index, this._options.scheme);
+    size = (this.geoJson || []).length;
+    for (let i = 0; i < size; i++) {
+      const m = this.geoJson[i];
+      const color = ColorLib.getColor(i, this._options.scheme);
       const opts = {
         style: () => ({
-          color: (data.params && data.params[index]) ? data.params[index].color || color : color,
-          fillColor: (data.params && data.params[index])
-            ? ColorLib.transparentize(data.params[index].fillColor || color)
+          color: (data.params && data.params[i]) ? data.params[i].color || color : color,
+          fillColor: (data.params && data.params[i])
+            ? ColorLib.transparentize(data.params[i].fillColor || color)
             : ColorLib.transparentize(color),
         })
       } as any;
@@ -421,23 +450,21 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         Object.keys(m.properties).forEach(k => display += `<b>${k}</b>: ${m.properties[k]}<br />`);
         geoShape.bindPopup(display);
       }
-      geoShape.addTo(this._map);
-    });
+      geoShape.addTo(this.geoJsonLayer);
+    }
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
-      this.bounds = MapLib.getBoundsArray(this.pathData, this.positionData, this.annotationsData, this.geoJson);
+      const group = Leaflet.featureGroup([this.geoJsonLayer, this.annotationsDataLayer, this.positionDataLayer, this.pathDataLayer]);
+      this.LOG.debug(['displayMap', 'setView'], 'fitBounds', group.getBounds());
+      this.bounds = group.getBounds();
       setTimeout(() => {
-        this._options.startZoom = this.currentZoom || this._options.startZoom || 2;
+        this._options.map.startZoom = this.currentZoom || this._options.map.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
         this._map.invalidateSize();
-        if (this.bounds.length > 1) {
-          this.LOG.debug(['displayMap', 'setView'], 'fitBounds');
-          this._map.fitBounds(Leaflet.latLngBounds(this.bounds[0], this.bounds[1]), {
+        if (this.bounds.isValid()) {
+          // FIXME
+          this._map.fitBounds(this.bounds, {
             padding: [20, 20],
-            animate: false,
-            duration: 0
-          });
-          this._map.setZoom(Math.max(this.currentZoom || this._options.startZoom, this._map.getZoom()), {
             animate: false,
             duration: 0
           });
@@ -446,19 +473,19 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         } else {
           this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
-            lat: this.currentLat || this._options.startLat || 0,
-            lng: this.currentLong || this._options.startLong || 0
-          }, this.currentZoom || this._options.startZoom || 10);
+            lat: this.currentLat || this._options.map.startLat || 0,
+            lng: this.currentLong || this._options.map.startLong || 0
+          }, this.currentZoom || this._options.map.startZoom || 10);
         }
       });
     } else {
-      this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.startZoom);
+      this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.map.startZoom);
       this._map.setView(
         [
-          this.currentLat || this._options.startLat || 0,
-          this.currentLong || this._options.startLong || 0
+          this.currentLat || this._options.map.startLat || 0,
+          this.currentLong || this._options.map.startLong || 0
         ],
-        this.currentZoom || this._options.startZoom || 2,
+        this.currentZoom || this._options.map.startZoom || 2,
         {
           animate: false,
           duration: 0
@@ -482,18 +509,23 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
   updateAnnotation(gts) {
     const positions = [];
     let icon;
+    let size;
     switch (gts.render) {
       case 'marker':
         icon = this.icon(gts.color, gts.marker);
-        gts.path.forEach(g => {
+        size = (gts.path || []).length;
+        for (let i = 0; i < size; i++) {
+          const g = gts.path[i];
           const marker = Leaflet.marker(g, {icon, opacity: 1});
           marker.bindPopup(g.val.toString());
           positions.push(marker);
-        });
+        }
         break;
       case 'dots':
       default:
-        gts.path.forEach(g => {
+        size = (gts.path || []).length;
+        for (let i = 0; i < size; i++) {
+          const g = gts.path[i];
           const marker = Leaflet.circleMarker(
             g, {
               radius: gts.baseRadius,
@@ -504,7 +536,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
           );
           marker.bindPopup(g.val.toString());
           positions.push(marker);
-        });
+        }
         break;
     }
     return positions;
@@ -515,15 +547,17 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
         color: gts.color,
         opacity: 1,
-      }).addTo(this._map);
+      }).addTo(this.pathDataLayer);
     const afterCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
         color: gts.color,
         opacity: 0.7,
-      }).addTo(this._map);
+      }).addTo(this.pathDataLayer);
     let currentValue;
     // Let's verify we have a path... No path, no marker
-    gts.path.map(p => {
+    const size = (gts.path || []).length;
+    for (let i = 0; i < size; i++) {
+      const p = gts.path[i];
       let date;
       if (this._options.timeMode && this._options.timeMode === 'timestamp') {
         date = parseInt(p.ts, 10);
@@ -535,7 +569,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
-    });
+    }
     return {
       beforeCurrentValue,
       afterCurrentValue,
@@ -561,6 +595,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     let icon;
     let result;
     let inStep;
+    let size;
     this.LOG.debug(['updatePositionArray'], positionData);
     switch (positionData.render) {
       case 'path':
@@ -569,14 +604,16 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
         break;
       case 'marker':
         icon = this.icon(positionData.color, positionData.marker);
-        positionData.positions.forEach(p => {
-          if ((this.hiddenData || []).filter((i) => i === positionData.key).length === 0) {
+        size = (positionData.positions || []).length;
+        for (let i = 0; i < size; i++) {
+          const p = positionData.positions[i];
+          if ((this.hiddenData || []).filter(h => h === positionData.key).length === 0) {
             const marker = Leaflet.marker({lat: p[0], lng: p[1]}, {icon, opacity: 1});
             this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
           this.LOG.debug(['updatePositionArray', 'build marker'], icon);
-        });
+        }
         break;
       case 'coloredWeightedDots':
         this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
@@ -586,8 +623,10 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
           result[j] = 0;
           inStep[j] = 0;
         }
-        positionData.positions.forEach(p => {
-          if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
+        size = (positionData.positions || []).length;
+        for (let i = 0; i < size; i++) {
+          const p = positionData.positions[i];
+          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
             this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * p[4]);
             const marker = Leaflet.circleMarker(
               {lat: p[0], lng: p[1]},
@@ -603,11 +642,13 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
             this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
-        });
+        }
         break;
       case 'weightedDots':
-        positionData.positions.forEach(p => {
-          if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
+        size = (positionData.positions || []).length;
+        for (let i = 0; i < size; i++) {
+          const p = positionData.positions[i];
+          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
             const marker = Leaflet.circleMarker(
               {lat: p[0], lng: p[1]}, {
                 radius: positionData.baseRadius * (parseInt(p[4], 10) + 1),
@@ -617,12 +658,14 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
             this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
-        });
+        }
         break;
       case 'dots':
       default:
-        positionData.positions.forEach(p => {
-          if ((this._hiddenData || []).filter((i) => i === positionData.key).length === 0) {
+        size = (positionData.positions || []).length;
+        for (let i = 0; i < size; i++) {
+          const p = positionData.positions[i];
+          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
             const marker = Leaflet.circleMarker(
               {lat: p[0], lng: p[1]}, {
                 radius: positionData.baseRadius,
@@ -633,7 +676,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
             this.addPopup(positionData, p[2], marker);
             positions.push(marker);
           }
-        });
+        }
         break;
     }
     return positions;
@@ -650,7 +693,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     this.LOG.debug(['onRangeSliderChange'], event);
     this.timeStart = event.value || moment().valueOf();
     this.timeEnd = event.highValue || moment().valueOf();
-    this.drawMap();
+    this.drawMap(true);
   }
 
   onRangeSliderWindowChange(event) {
@@ -670,7 +713,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
       this.timeStart = (event.value || moment().valueOf()) - this.timeSpan / this.divider;
       this.LOG.debug(['onSliderChange'], moment(this.timeStart).toISOString(), moment(this.timeEnd).toISOString());
       this.change.emit(this.timeStart);
-      this.drawMap();
+      this.drawMap(true);
     }
   }
 
@@ -679,7 +722,7 @@ export class WarpViewMapComponent implements AfterViewInit, OnInit {
     if (this.timeSpan !== event.target.value) {
       this.timeSpan = event.target.value;
       this.timeStart = (this.timeEnd || moment().valueOf()) - this.timeSpan / this.divider;
-      this.drawMap();
+      this.drawMap(true);
     }
   }
 }

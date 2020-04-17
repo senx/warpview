@@ -227,60 +227,8 @@ export class GTSLib {
     return `${this.sanitizeNames(gts.c)}{${serializedLabels.join(',')}${serializedAttributes.length > 0 ? ',' : ''}${serializedAttributes.join(',')}}`;
   }
 
-  static gtsToPath(gts, divider: number = 1000) {
-    const path = [];
-    (gts.v || []).forEach(metric => {
-      if (metric.length === 2) {
-        // timestamp, value
-      }
-      if (metric.length === 3) {
-        // timestamp, elevation, value
-      }
-      if (metric.length === 4) {
-        // timestamp, lat, lon, value
-        path.push({ts: Math.floor(metric[0] / divider), lat: metric[1], lon: metric[2], val: metric[3]});
-      }
-      if (metric.length === 5) {
-        // timestamp, lat, lon, elevation, value
-        path.push({
-          ts: Math.floor(metric[0] / divider),
-          lat: metric[1],
-          lon: metric[2],
-          elev: metric[3],
-          val: metric[4],
-        });
-      }
-    });
-    return path;
-  }
-
-  static equalMetadata(a, b) {
-    if (a.c === undefined || b.c === undefined || a.l === undefined || b.l === undefined ||
-      !(a.l instanceof Object) || !(b.l instanceof Object)) {
-      this.LOG.error(['equalMetadata'], 'Error in GTS, metadata is not well formed');
-      return false;
-    }
-    if (a.c !== b.c) {
-      return false;
-    }
-    for (const p in a.l) {
-      // noinspection JSUnfilteredForInLoop
-      if (!b.l.hasOwnProperty(p) || a.l[p] !== b.l[p]) {
-        return false;
-      }
-    }
-    for (const p in b.l) {
-      // noinspection JSUnfilteredForInLoop
-      if (!a.l.hasOwnProperty(p)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   static isGts(item) {
-    return !(!item || item.c === null || item.l === null ||
-      item.a === null || item.v === null || !GTSLib.isArray(item.v));
+    return !!item && (item.c === '' || !!item.c) && !!item.v && GTSLib.isArray(item.v);
   }
 
   static isGtsToPlot(gts) {
@@ -290,7 +238,7 @@ export class GTSLib {
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
     // if it's a number it's a GTS to plot
     return (gts.v || []).some(v => {
-      if (v[v.length - 1] !== null) {
+      if (!!v[v.length - 1]) {
         // noinspection JSPotentiallyInvalidConstructorUsage
         return typeof v[v.length - 1] === 'number' ||
           // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
