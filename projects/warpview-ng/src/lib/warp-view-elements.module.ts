@@ -42,6 +42,7 @@ import {WarpViewBoxComponent} from './elements/warp-view-box/warp-view-box.compo
 import {WarpView3dLineComponent} from './elements/warp-view-3d-line/warp-view-3d-line.component';
 import {WarpViewGlobeComponent} from './elements/warp-view-globe/warp-view-globe.component';
 import {WarpViewEventDropComponent} from './elements/warp-view-event-drop/warp-view-event-drop.component';
+import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp-view-result-tile.component';
 
 @NgModule({
   declarations: [],
@@ -56,6 +57,7 @@ import {WarpViewEventDropComponent} from './elements/warp-view-event-drop/warp-v
 export class WarpViewElementsModule {
   constructor(private injector: Injector) {
     [
+      {name: 'warp-view-result-tile', component: WarpViewResultTileComponent},
       {name: 'warp-view-event-drop', component: WarpViewEventDropComponent},
       {name: 'warp-view-globe', component: WarpViewGlobeComponent},
       {name: 'warp-view-3dline', component: WarpView3dLineComponent},

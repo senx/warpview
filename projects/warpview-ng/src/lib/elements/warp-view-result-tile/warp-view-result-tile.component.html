@@ -1,0 +1,118 @@
+<div class="wrapper" [ngClass]="{'full':  responsive}" >
+    <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
+    <div style="height: 100%" [hidden]="loading">
+      <warpview-spectrum [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
+                         [showLegend]="showLegend" [data]="_data" (chartDraw)="chartDrown()"
+                         *ngIf="graphs['spectrum'].indexOf(_type) > -1 && _data"
+                         [responsive]="true"></warpview-spectrum>
+
+      <warpview-chart [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
+                      (chartDraw)="chartDrown()"
+                      [showLegend]="showLegend" [data]="_data"
+                      *ngIf="graphs['chart'].indexOf(_type) > -1 && _data"
+                      [responsive]="true"></warpview-chart>
+
+      <warpview-plot [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
+                     (chartDraw)="chartDrown()"
+                     [showLegend]="showLegend" [data]="_data"
+                     *ngIf="graphs['plot'].indexOf(_type) > -1 && _data"
+                     [responsive]="true"></warpview-plot>
+
+      <warpview-bar [debug]="debug" [unit]="unit" [options]="_options"
+                    (chartDraw)="chartDrown()"
+                    [showLegend]="showLegend" [data]="_data"
+                    *ngIf="graphs['bar'].indexOf(_type) > -1 && _data"
+                    [responsive]="true"></warpview-bar>
+
+      <warpview-bubble [debug]="debug" [unit]="unit" [options]="_options"
+                       (chartDraw)="chartDrown()"
+                       [showLegend]="showLegend" [data]="_data"
+                       *ngIf="graphs['bubble'].indexOf(_type) > -1 && _data"
+                       [responsive]="true"></warpview-bubble>
+
+      <warpview-datagrid [debug]="debug" [options]="_options"
+                         (chartDraw)="chartDrown()"
+                         [showLegend]="showLegend" [data]="_data"
+                         *ngIf="graphs['datagrid'].indexOf(_type) > -1 && _data"
+                         [responsive]="true"></warpview-datagrid>
+
+      <warpview-display [debug]="debug" [options]="_options"
+                        (chartDraw)="chartDrown()"
+                        [showLegend]="showLegend" [data]="_data" [unit]="unit"
+                        *ngIf="graphs['display'].indexOf(_type) > -1 && _data"
+                        [responsive]="true"></warpview-display>
+
+      <warpview-drill-down [debug]="debug" [options]="_options"
+                           (chartDraw)="chartDrown()"
+                           [showLegend]="showLegend" [data]="_data" [unit]="unit"
+                           *ngIf="graphs['drilldown'].indexOf(_type) > -1 && _data"
+                           [responsive]="true"></warpview-drill-down>
+
+      <warpview-gts-tree *ngIf="graphs['gts-tree'].indexOf(_type) > -1 && _data"
+                         (chartDraw)="chartDrown()"
+                         [responsive]="true" [debug]="debug" [data]="_data"
+                         [options]="_options"></warpview-gts-tree>
+
+      <warpview-image *ngIf="graphs['image'].indexOf(_type) > -1 && _data"
+                      (chartDraw)="chartDrown()"
+                      [responsive]="true" [debug]="debug" [data]="_data" [options]="_options"></warpview-image>
+
+      <warpview-map *ngIf="graphs['map'].indexOf(_type) > -1 && _data" [responsive]="true" [debug]="debug"
+                    (chartDraw)="chartDrown()"
+                    [data]="_data" [options]="_options"></warpview-map>
+
+      <warpview-pie [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
+                    (chartDraw)="chartDrown()"
+                    [showLegend]="showLegend" [data]="_data"
+                    *ngIf="graphs['pie'].indexOf(_type) > -1 && _data"
+                    [responsive]="true"></warpview-pie>
+
+      <warpview-gauge [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
+                      (chartDraw)="chartDrown()"
+                      [showLegend]="showLegend" [data]="_data"
+                      *ngIf="graphs['gauge'].indexOf(_type) > -1 && _data"
+                      [responsive]="true"></warpview-gauge>
+
+      <warpview-annotation [debug]="debug" [unit]="unit" [options]="_options"
+                           (chartDraw)="chartDrown()"
+                           [showLegend]="showLegend" [data]="_data"
+                           [standalone]="true" [type]="_type"
+                           *ngIf="graphs['annotation'].indexOf(_type) > -1 && _data"
+                           [responsive]="true"></warpview-annotation>
+
+      <warpview-event-drop [debug]="debug" [unit]="unit" [options]="_options"
+                           (chartDraw)="chartDrown()"
+                           [showLegend]="showLegend" [data]="_data" [type]="_type"
+                           *ngIf="graphs['drops'].indexOf(_type) > -1 && _data"
+                           [responsive]="true"></warpview-event-drop>
+
+      <warpview-polar [debug]="debug" [unit]="unit" [options]="_options"
+                      (chartDraw)="chartDrown()"
+                      [showLegend]="showLegend" [data]="_data"
+                      *ngIf="graphs['polar'].indexOf(_type) > -1 && _data"
+                      [responsive]="true"></warpview-polar>
+
+      <warpview-radar [debug]="debug" [unit]="unit" [options]="_options"
+                      (chartDraw)="chartDrown()"
+                      [showLegend]="showLegend" [data]="_data"
+                      *ngIf="graphs['radar'].indexOf(_type) > -1 && _data"
+                      [responsive]="true"></warpview-radar>
+
+      <warpview-box [debug]="debug" [unit]="unit" [options]="_options"
+                    (chartDraw)="chartDrown()"
+                    [showLegend]="showLegend" [data]="_data" [type]="_type"
+                    *ngIf="graphs['box'].indexOf(_type) > -1 && _data"
+                    [responsive]="true"></warpview-box>
+
+      <warpview-3d-line [debug]="debug" [unit]="unit" [options]="_options"
+                        (chartDraw)="chartDrown()"
+                        [showLegend]="showLegend" [data]="_data" [type]="_type"
+                        *ngIf="graphs['line3d'].indexOf(_type) > -1 && _data"
+                        [responsive]="true"></warpview-3d-line>
+      <warpview-globe [debug]="debug" [unit]="unit" [options]="_options"
+                      (chartDraw)="chartDrown()"
+                      [showLegend]="showLegend" [data]="_data" [type]="_type"
+                      *ngIf="graphs['globe'].indexOf(_type) > -1 && _data"
+                      [responsive]="true"></warpview-globe>
+    </div>
+</div>

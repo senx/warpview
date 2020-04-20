@@ -98,6 +98,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   @Output('change') change = new EventEmitter();
+  @Output('chartDraw') chartDraw = new EventEmitter();
 
   currentZoom: number;
   currentLat: number;
@@ -510,6 +511,7 @@ export class WarpViewMapComponent implements OnInit {
       this._heatLayer.addTo(this._map);
     }
     this.resizeMe();
+    this.chartDraw.emit(true);
   }
 
   updateAnnotation(gts) {

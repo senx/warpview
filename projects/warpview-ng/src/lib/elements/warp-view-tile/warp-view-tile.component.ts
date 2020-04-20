@@ -17,19 +17,18 @@
 
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnInit,
-  Output, Renderer2,
+  Output,
+  Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {Param} from '../../model/param';
-import {ChartLib} from '../../utils/chart-lib';
 import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {HttpErrorHandler} from '../../services/http-error-handler.service';
@@ -38,7 +37,6 @@ import {ResizedEvent} from 'angular-resize-event';
 import {Size, SizeService} from '../../services/resize.service';
 import {Warp10Service} from '../../services/warp10.service';
 import {Logger} from '../../utils/logger';
-import {JsonLib} from '../../utils/jsonLib';
 import {HttpResponse} from '@angular/common/http';
 
 @Component({
@@ -46,7 +44,7 @@ import {HttpResponse} from '@angular/common/http';
   templateUrl: './warp-view-tile.component.html',
   styleUrls: ['./warp-view-tile.component.scss'],
   providers: [HttpErrorHandler],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
@@ -60,7 +58,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   @Input('isAlone') isAlone = false; // used by plot to manage its keyboard events
   @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
-    this.parseGTS();
   }
 
   @Input()
@@ -75,29 +72,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     return this._warpScript;
   }
 
-  graphs = {
-    spectrum: ['histogram2dcontour', 'histogram2d'],
-    chart: ['line', 'spline', 'step', 'area', 'scatter'],
-    pie: ['pie', 'donut'],
-    polar: ['polar'],
-    radar: ['radar'],
-    bar: ['bar'],
-    bubble: ['bubble'],
-    annotation: ['annotation'],
-    'gts-tree': ['gts-tree'],
-    datagrid: ['datagrid'],
-    display: ['display'],
-    drilldown: ['drilldown'],
-    image: ['image'],
-    map: ['map'],
-    gauge: ['gauge', 'bullet'],
-    plot: ['plot'],
-    box: ['box', 'box-date'],
-    line3d: ['line3d'],
-    globe: ['globe'],
-    drops: ['drops']
-  };
-  gtsList: any = [];
   loaderMessage = '';
   error: any;
   status: string;
@@ -108,13 +82,13 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private _warpScript = '';
   private execUrl = '';
   private timeUnit = 'us';
+  execResult: string;
 
   constructor(
     public el: ElementRef,
     public sizeService: SizeService,
     public renderer: Renderer2,
-    private warp10Service: Warp10Service,
-    private cdRef: ChangeDetectorRef
+    private warp10Service: Warp10Service
   ) {
     super(el, renderer, sizeService);
     this.LOG = new Logger(WarpViewTileComponent, this._debug);
@@ -135,7 +109,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   update(options: Param): void {
     this.LOG.debug(['update', 'options'], options);
-    this.parseGTS();
   }
 
   onResized(event: ResizedEvent) {
@@ -154,48 +127,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  private parseGTS() {
-    const data: DataModel = new DataModel();
-    this.loaderMessage = 'Parsing data';
-    this.LOG.debug(['parseGTS', 'data'], data);
-    if (GTSLib.isArray(this.gtsList) && this.gtsList.length === 1) {
-      const dataLine = this.gtsList[0];
-      if (dataLine.hasOwnProperty('data')) {
-        data.data = dataLine.data;
-        data.globalParams = dataLine.globalParams || {} as Param;
-        data.globalParams.type = data.globalParams.type || this.type;
-        data.params = dataLine.params;
-      } else {
-        data.data = dataLine;
-        data.globalParams = {type: this.type} as Param;
-      }
-    } else {
-      data.data = this.gtsList;
-      data.globalParams = {type: this.type} as Param;
-    }
-    this.LOG.debug(['parseGTS', 'data'], data);
-    this._data = data;
-    let opts: Param;
-    if (typeof this._options === 'string') {
-      opts = JSON.parse(this._options as string) as Param;
-    } else {
-      opts = this._options as Param;
-    }
-    this.LOG.debug(['parseGTS', 'data.globalParams'], [this.defOptions, data.globalParams]);
-    this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, opts), data.globalParams || {}) as Param;
-    this._unit = data.globalParams.unit || this._unit;
-    this.LOG.debug(['parseGTS', 'options'], [this.options, this._options]);
-    if (this._autoRefresh !== this._options.autoRefresh) {
-      this._autoRefresh = this._options.autoRefresh;
-      if (this.timer) {
-        window.clearInterval(this.timer);
-      }
-      if (this._autoRefresh && this._autoRefresh > 0) {
-        this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
-      }
-    }
-    this.loading = false;
-  }
 
   /** detect some VSCode special modifiers in the beginnig of the code:
    * @endpoint xxxURLxxx
@@ -239,15 +170,14 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.error = undefined;
       this.loading = true;
+      this.execResult = undefined;
       this.loaderMessage = 'Requesting data';
-      this.cdRef.detectChanges();
       this.execUrl = this.url;
-      this.gtsList = [];
+      //  this.execResult = undefined;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
-
-        // this.loading = false;
+        this.loading = false;
         this.LOG.debug(['execute'], response);
         if ((response as HttpResponse<string>).body) {
           try {
@@ -265,15 +195,25 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
               elapsed: parseInt(headers.get('x-warp10-elapsed'), 10),
               fetched: parseInt(headers.get('x-warp10-fetched'), 10),
             });
-            this.gtsList = new JsonLib().parse(body, undefined);
-            this.parseGTS();
+            if (this._autoRefresh !== this._options.autoRefresh) {
+              this._autoRefresh = this._options.autoRefresh;
+              if (this.timer) {
+                window.clearInterval(this.timer);
+              }
+              if (this._autoRefresh && this._autoRefresh > 0) {
+                this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
+              }
+            }
+            this.loading = false;
+            setTimeout(() => this.execResult = body);
           } catch (e) {
             this.LOG.error(['execute'], e);
+            this.loading = false;
           }
         } else {
           this.LOG.error(['execute'], response);
-          this.loading = false;
           this.error = response;
+          this.loading = false;
           this.execError.emit(response);
         }
       }, e => {
