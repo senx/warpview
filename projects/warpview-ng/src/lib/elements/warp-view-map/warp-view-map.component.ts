@@ -18,7 +18,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
-
 import Leaflet from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
@@ -133,8 +132,6 @@ export class WarpViewMapComponent implements OnInit {
 
   private _map: Leaflet.Map;
   private _hiddenData: number[];
-  private polylinesBeforeCurrentValue = [];
-  private polylinesAfterCurrentValue = [];
   private currentValuesMarkers = [];
   private annotationsMarkers = [];
   private positionArraysMarkers = [];
@@ -331,6 +328,7 @@ export class WarpViewMapComponent implements OnInit {
     } else {
       this.LOG.debug(['displayMap'], 'build map');
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
+        preferCanvas: true,
         layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.annotationsDataLayer, this.positionDataLayer],
         zoomAnimation: true
       }).setView([0, 0], 8);
@@ -354,27 +352,32 @@ export class WarpViewMapComponent implements OnInit {
     }
 
     let size = (this.pathData || []).length;
+    this.LOG.debug(['displayMap'], 'build map done', size);
     for (let i = 0; i < size; i++) {
       const d = this.pathData[i];
       if (!!d) {
         const plottedGts: any = this.updateGtsPath(d);
         if (plottedGts) {
-          this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
-          this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+          this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
+          this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
           this.currentValuesMarkers.push(plottedGts.currentValue);
         }
       }
     }
+    this.LOG.debug(['displayMap'], 'this.pathData');
     size = (this.annotationsData || []).length;
     for (let i = 0; i < size; i++) {
       const d = this.annotationsData[i];
       const plottedGts: any = this.updateGtsPath(d);
       if (plottedGts) {
-        this.polylinesBeforeCurrentValue.push(plottedGts.beforeCurrentValue);
-        this.polylinesAfterCurrentValue.push(plottedGts.afterCurrentValue);
+        this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
+        this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
         this.currentValuesMarkers.push(plottedGts.currentValue);
       }
     }
+
+    this.LOG.debug(['displayMap'], 'this.annotationsData');
+    this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers).addTo(this._map);
 
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
@@ -385,11 +388,13 @@ export class WarpViewMapComponent implements OnInit {
       const d = this.positionData[i];
       this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
     }
+    this.LOG.debug(['displayMap'], 'this.po sitionData');
     size = (this.annotationsData || []).length;
     for (let i = 0; i < size; i++) {
       const d = this.annotationsData[i];
       this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updateAnnotation(d));
     }
+    this.LOG.debug(['displayMap'], 'this.annotationsData');
 
     (this._options.map.tiles || []).forEach((t) => { // TODO à tester
       this.LOG.debug(['displayMap'], t);
@@ -410,6 +415,7 @@ export class WarpViewMapComponent implements OnInit {
         }));
       }
     });
+    this.LOG.debug(['displayMap'], 'this.tiles');
 
     this.LOG.debug(['displayMap', 'positionArraysMarkers'], this.positionArraysMarkers);
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
@@ -547,12 +553,12 @@ export class WarpViewMapComponent implements OnInit {
       MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
         color: gts.color,
         opacity: 1,
-      }).addTo(this.pathDataLayer);
+      });
     const afterCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
         color: gts.color,
         opacity: 0.7,
-      }).addTo(this.pathDataLayer);
+      });
     let currentValue;
     // Let's verify we have a path... No path, no marker
     const size = (gts.path || []).length;
@@ -568,7 +574,7 @@ export class WarpViewMapComponent implements OnInit {
       }
       currentValue = Leaflet.circleMarker([p.lat, p.lon],
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
-        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`).addTo(this._map);
+        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`);
     }
     return {
       beforeCurrentValue,
