@@ -461,6 +461,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
     this.annotation.setRealBounds(this.chartBounds);
     this.chart.setRealBounds(this.chartBounds);
+    this.chartDraw.emit();
     this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
   }
 

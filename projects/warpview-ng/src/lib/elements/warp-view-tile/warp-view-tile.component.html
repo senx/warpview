@@ -14,7 +14,7 @@
   ~  limitations under the License.
   ~
   -->
-<div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
+<div class="wrapper" [ngClass]="{'full':  responsive}" >
   <div class="tilewrapper">
     <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">

@@ -33,8 +33,7 @@ import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {HttpErrorHandler} from '../../services/http-error-handler.service';
 import {WarpViewComponent} from '../warp-view-component';
-import {ResizedEvent} from 'angular-resize-event';
-import {Size, SizeService} from '../../services/resize.service';
+import {SizeService} from '../../services/resize.service';
 import {Warp10Service} from '../../services/warp10.service';
 import {Logger} from '../../utils/logger';
 import {HttpResponse} from '@angular/common/http';
@@ -111,13 +110,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     this.LOG.debug(['update', 'options'], options);
   }
 
-  onResized(event: ResizedEvent) {
-    this.width = event.newWidth;
-    this.height = event.newHeight;
-    this.LOG.debug(['onResized'], event.newWidth, event.newHeight);
-    this.sizeService.change(new Size(this.width, this.height));
-  }
-
   /* Listeners */
   @HostListener('document:keyup', ['$event'])
   @HostListener('keydown', ['$event'])
@@ -126,7 +118,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.execute();
     }
   }
-
 
   /** detect some VSCode special modifiers in the beginnig of the code:
    * @endpoint xxxURLxxx

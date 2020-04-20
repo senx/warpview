@@ -1,4 +1,4 @@
-<div class="wrapper" [ngClass]="{'full':  responsive}" >
+<div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
     <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
     <div style="height: 100%" [hidden]="loading">
       <warpview-spectrum [debug]="debug" [type]="_type" [unit]="unit" [options]="_options"
