@@ -19,12 +19,17 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     this._type = type;
   }
 
+  get type(): string {
+    return this._type;
+  }
+
   @Input('standalone') standalone = true;
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
   loading = true;
+  dataModel: DataModel;
   private _type;
   graphs = {
     spectrum: ['histogram2dcontour', 'histogram2d'],
@@ -67,12 +72,13 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
         this._unit = this._data.globalParams.unit || this._unit;
       }
       this.LOG.debug(['parseGTS', 'data'], this._data);
-      //   this.loading = false;
+      this.dataModel = this._data;
     }
   }
 
   protected convert(data: DataModel): Partial<any>[] {
     this.loading = true;
+    this.dataModel = data;
     return [];
   }
 
