@@ -19,7 +19,10 @@
     <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
       <warpview-spinner *ngIf="loading" message="Requesting data"></warpview-spinner>
-      <p *ngIf="_options.showErrors && error" class="error">{{error}}</p>
+      <div *ngIf="_options.showErrors && error"  style="height: calc(100% - 30px)">
+        <warpview-display [responsive]="true" [debug]="debug" [options]="_options" [data]="{ data: error,  globalParams: {
+  timeMode:  'custom', bgColor: '#D32C2E', fontColor: '#ffffff'}}"></warpview-display>
+      </div>
       <div *ngIf="!error" style="height: calc(100% - 30px)" [hidden]="loading">
         <warpview-result-tile [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                               [showLegend]="showLegend" [data]="execResult"></warpview-result-tile>

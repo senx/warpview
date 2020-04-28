@@ -2,115 +2,115 @@
     <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
     <div style="height: 100%" [hidden]="loading">
       <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
-                         [showLegend]="showLegend" [data]="dataModel" (chartDraw)="chartDrown()"
+                         [showLegend]="showLegend" [data]="dataModel" (chartDraw)="chartDrawn()"
                          *ngIf="graphs['spectrum'].indexOf(type) > -1 && dataModel"
                          [responsive]="true"></warpview-spectrum>
 
       <warpview-chart [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [showLegend]="showLegend" [data]="dataModel"
                       *ngIf="graphs['chart'].indexOf(type) > -1 && dataModel"
                       [responsive]="true"></warpview-chart>
 
       <warpview-plot [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
-                     (chartDraw)="chartDrown()"
+                     (chartDraw)="chartDrawn()"
                      [showLegend]="showLegend" [data]="dataModel"
                      *ngIf="graphs['plot'].indexOf(type) > -1 && dataModel"
                      [responsive]="true"></warpview-plot>
 
       <warpview-bar [debug]="debug" [unit]="unit" [options]="_options"
-                    (chartDraw)="chartDrown()"
+                    (chartDraw)="chartDrawn()"
                     [showLegend]="showLegend" [data]="dataModel"
                     *ngIf="graphs['bar'].indexOf(type) > -1 && dataModel"
                     [responsive]="true"></warpview-bar>
 
       <warpview-bubble [debug]="debug" [unit]="unit" [options]="_options"
-                       (chartDraw)="chartDrown()"
+                       (chartDraw)="chartDrawn()"
                        [showLegend]="showLegend" [data]="dataModel"
                        *ngIf="graphs['bubble'].indexOf(type) > -1 && dataModel"
                        [responsive]="true"></warpview-bubble>
 
       <warpview-datagrid [debug]="debug" [options]="_options"
-                         (chartDraw)="chartDrown()"
+                         (chartDraw)="chartDrawn()"
                          [showLegend]="showLegend" [data]="dataModel"
                          *ngIf="graphs['datagrid'].indexOf(type) > -1 && dataModel"
                          [responsive]="true"></warpview-datagrid>
 
       <warpview-display [debug]="debug" [options]="_options"
-                        (chartDraw)="chartDrown()"
+                        (chartDraw)="chartDrawn()"
                         [showLegend]="showLegend" [data]="dataModel" [unit]="unit"
                         *ngIf="graphs['display'].indexOf(type) > -1 && dataModel"
                         [responsive]="true"></warpview-display>
 
       <warpview-drill-down [debug]="debug" [options]="_options"
-                           (chartDraw)="chartDrown()"
+                           (chartDraw)="chartDrawn()"
                            [showLegend]="showLegend" [data]="dataModel" [unit]="unit"
                            *ngIf="graphs['drilldown'].indexOf(type) > -1 && dataModel"
                            [responsive]="true"></warpview-drill-down>
 
       <warpview-gts-tree *ngIf="graphs['gts-tree'].indexOf(type) > -1 && dataModel"
-                         (chartDraw)="chartDrown()"
+                         (chartDraw)="chartDrawn()"
                          [responsive]="true" [debug]="debug" [data]="dataModel"
                          [options]="_options"></warpview-gts-tree>
 
       <warpview-image *ngIf="graphs['image'].indexOf(type) > -1 && dataModel"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [responsive]="true" [debug]="debug" [data]="dataModel" [options]="_options"></warpview-image>
 
       <warpview-map *ngIf="graphs['map'].indexOf(type) > -1 && dataModel" [responsive]="true" [debug]="debug"
-                    (chartDraw)="chartDrown()"
+                    (chartDraw)="chartDrawn()"
                     [data]="dataModel" [options]="_options"></warpview-map>
 
       <warpview-pie [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
-                    (chartDraw)="chartDrown()"
+                    (chartDraw)="chartDrawn()"
                     [showLegend]="showLegend" [data]="dataModel"
                     *ngIf="graphs['pie'].indexOf(type) > -1 && dataModel"
                     [responsive]="true"></warpview-pie>
 
       <warpview-gauge [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [showLegend]="showLegend" [data]="dataModel"
                       *ngIf="graphs['gauge'].indexOf(type) > -1 && dataModel"
                       [responsive]="true"></warpview-gauge>
 
       <warpview-annotation [debug]="debug" [unit]="unit" [options]="_options"
-                           (chartDraw)="chartDrown()"
+                           (chartDraw)="chartDrawn()"
                            [showLegend]="showLegend" [data]="dataModel"
                            [standalone]="true" [type]="type"
                            *ngIf="graphs['annotation'].indexOf(type) > -1 && dataModel"
                            [responsive]="true"></warpview-annotation>
 
       <warpview-event-drop [debug]="debug" [unit]="unit" [options]="_options"
-                           (chartDraw)="chartDrown()"
+                           (chartDraw)="chartDrawn()"
                            [showLegend]="showLegend" [data]="dataModel" [type]="type"
                            *ngIf="graphs['drops'].indexOf(type) > -1 && dataModel"
                            [responsive]="true"></warpview-event-drop>
 
       <warpview-polar [debug]="debug" [unit]="unit" [options]="_options"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [showLegend]="showLegend" [data]="dataModel"
                       *ngIf="graphs['polar'].indexOf(type) > -1 && dataModel"
                       [responsive]="true"></warpview-polar>
 
       <warpview-radar [debug]="debug" [unit]="unit" [options]="_options"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [showLegend]="showLegend" [data]="dataModel"
                       *ngIf="graphs['radar'].indexOf(type) > -1 && dataModel"
                       [responsive]="true"></warpview-radar>
 
       <warpview-box [debug]="debug" [unit]="unit" [options]="_options"
-                    (chartDraw)="chartDrown()"
+                    (chartDraw)="chartDrawn()"
                     [showLegend]="showLegend" [data]="dataModel" [type]="type"
                     *ngIf="graphs['box'].indexOf(type) > -1 && dataModel"
                     [responsive]="true"></warpview-box>
 
       <warpview-3d-line [debug]="debug" [unit]="unit" [options]="_options"
-                        (chartDraw)="chartDrown()"
+                        (chartDraw)="chartDrawn()"
                         [showLegend]="showLegend" [data]="dataModel" [type]="type"
                         *ngIf="graphs['line3d'].indexOf(type) > -1 && dataModel"
                         [responsive]="true"></warpview-3d-line>
       <warpview-globe [debug]="debug" [unit]="unit" [options]="_options"
-                      (chartDraw)="chartDrown()"
+                      (chartDraw)="chartDrawn()"
                       [showLegend]="showLegend" [data]="dataModel" [type]="type"
                       *ngIf="graphs['globe'].indexOf(type) > -1 && dataModel"
                       [responsive]="true"></warpview-globe>

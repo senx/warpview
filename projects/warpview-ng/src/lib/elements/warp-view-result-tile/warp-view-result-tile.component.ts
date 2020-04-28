@@ -89,7 +89,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     this.sizeService.change(new Size(this.width, this.height));
   }
 
-  chartDrown() {
+  chartDrawn() {
     this.loading = false;
   }
 }

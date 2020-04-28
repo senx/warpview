@@ -73,14 +73,11 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
     this.initChart(this.el);
     this.defOptions = ChartLib.mergeDeep(this.defOptions, this._options);
-    this.fitties = fitty(this.wrapper.nativeElement as HTMLElement, {
-      multiLine: true,
-      maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight / 1.5,
-      minSize: 14
-    });
-    this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions);
+
+    this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions, this.height);
     this.LOG.debug(['drawChart'], this._data, this.toDisplay);
     this.flexFont();
+    this.chartDraw.emit();
   }
 
   protected convert(data: DataModel): any[] {
@@ -119,10 +116,18 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   flexFont() {
-    this.LOG.debug(['flexFont']);
-    if (this.fitties) {
-      this.LOG.debug(['flexFont'], 'ok');
+    if (!!this.wrapper) {
+      this.LOG.debug(['flexFont'], this.height);
+      if (this.fitties) {
+        this.fitties.unsubscribe();
+      }
+      this.fitties = fitty(this.wrapper.nativeElement, {
+        maxSize: (this.el.nativeElement as HTMLElement).parentElement.clientHeight * 0.80,
+        minSize: 14
+      });
+      this.LOG.debug(['flexFont'], 'ok', (this.el.nativeElement as HTMLElement).parentElement.clientHeight);
       this.fitties.fit();
+      this.loading = false;
     }
   }
 

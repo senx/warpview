@@ -166,6 +166,10 @@ export abstract class WarpViewComponent {
     public sizeService: SizeService,
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
+      if (!!this._responsive) {
+        this.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
+        this.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
+      }
       if (!!this.graph && !!this._responsive) {
         const layout = {
           width: (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width,

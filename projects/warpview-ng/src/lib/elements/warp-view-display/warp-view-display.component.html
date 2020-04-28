@@ -17,9 +17,7 @@
 
 <div class="chart-container" (resized)="flexFont()" [ngStyle]="getStyle()">
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <div class="value" #wrapper>
-    <div *ngIf="!loading">
-      <span [innerHTML]="toDisplay"></span><small>{{unit}}</small>
-    </div>
+  <div class="value" #wrapper [hidden]="loading">
+    <span [innerHTML]="toDisplay"></span><small>{{unit}}</small>
   </div>
 </div>
