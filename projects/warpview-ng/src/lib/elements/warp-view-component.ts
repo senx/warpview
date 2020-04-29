@@ -312,7 +312,9 @@ ${labeledData}`;
 
   unhover(data?: any) {
     this.toolTip.nativeElement.style.display = 'none';
-    this.graph.restyleChart({opacity: 1}, data.points.map(p => p.curveNumber));
+    if (!!data) {
+      this.graph.restyleChart({opacity: 1}, data.points.map(p => p.curveNumber));
+    }
   }
 
   hover(data: any) {
