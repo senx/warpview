@@ -29,6 +29,7 @@ warp-view-tile, warpview-tile {
     color: #{$w10-danger};
     font-weight: bold;
   }
+
   .wrapper {
     opacity: 1;
     min-height: 50px;
@@ -49,10 +50,22 @@ warp-view-tile, warpview-tile {
         height: calc(var(--warp-view-tile-height) - 40px);
         overflow-y: auto;
         overflow-x: hidden;
+        position: relative;
+
+
+        .status {
+          position: absolute;
+          z-index: 999;
+          bottom: 0;
+          background-color: rgba(255, 255, 255, 0.7);
+          padding: 1px 5px;
+          font-size: 11px;
+          color: #000;
+        }
       }
 
       .notitle {
-        height: calc(100% - 20px);
+        height: 100%;
       }
 
       h1 {
