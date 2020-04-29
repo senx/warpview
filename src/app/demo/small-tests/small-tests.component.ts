@@ -50,7 +50,7 @@ export class SmallTestsComponent implements OnInit {
 $TOKEN AUTHENTICATE
 100000000 MAXOPS
 [] 'l' STORE
-0 33000 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
+0 33 <%  $l NEWGTS NOW RAND RAND RAND RAND ADDVALUE +! 'l' STORE %>  F FOR
 $l`
     },
     {

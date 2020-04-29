@@ -18,7 +18,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Param} from '../../model/param';
 import {Logger} from '../../utils/logger';
-import Leaflet from 'leaflet';
+import Leaflet, {TileLayerOptions} from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
 import {ColorLib} from '../../utils/color-lib';
@@ -304,7 +304,10 @@ export class WarpViewMapComponent implements OnInit {
 
     if (this._options.map.mapType !== 'NONE') {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
-      const mapOpts: any = {};
+      const mapOpts: TileLayerOptions = {
+        maxZoom: 24,
+        maxNativeZoom: 19,
+      };
       if (map.attribution) {
         mapOpts.attribution = map.attribution;
       }
@@ -331,7 +334,8 @@ export class WarpViewMapComponent implements OnInit {
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
         preferCanvas: true,
         layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.annotationsDataLayer, this.positionDataLayer],
-        zoomAnimation: true
+        zoomAnimation: true,
+        maxZoom: 24
       }).setView([0, 0], 8);
       this.tilesLayer.addTo(this._map);
       this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
@@ -468,10 +472,10 @@ export class WarpViewMapComponent implements OnInit {
         this._options.map.startZoom = this.currentZoom || this._options.map.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
         this._map.invalidateSize();
-        if (this.bounds.isValid()) {
+        if (!!this.bounds && this.bounds.isValid()) {
           // FIXME
           this._map.fitBounds(this.bounds, {
-            padding: [20, 20],
+            padding: [1, 1],
             animate: false,
             duration: 0
           });
@@ -484,7 +488,7 @@ export class WarpViewMapComponent implements OnInit {
             lng: this.currentLong || this._options.map.startLong || 0
           }, this.currentZoom || this._options.map.startZoom || 10);
         }
-      });
+      }, 10);
     } else {
       this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.map.startZoom);
       this._map.setView(
