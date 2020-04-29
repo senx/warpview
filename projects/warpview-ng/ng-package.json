@@ -10,6 +10,7 @@
     "moment",
     "moment-timezone",
     "leaflet",
+    "leaflet-easybutton",
     "leaflet.markercluster",
     "leaflet.heat",
     "canvas-gauges",
