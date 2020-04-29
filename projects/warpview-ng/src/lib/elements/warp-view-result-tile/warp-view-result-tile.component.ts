@@ -64,7 +64,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   protected update(options: Param, refresh: boolean): void {
-    this.loading = true;
+    setTimeout(() => this.loading = true);
     if (!!this._data) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
       this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options), this._data.globalParams || {}) as Param;
@@ -77,7 +77,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    this.loading = true;
+    setTimeout(() => this.loading = true);
     this.dataModel = data;
     return [];
   }
@@ -90,6 +90,6 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   chartDrawn() {
-    this.loading = false;
+    setTimeout(() => this.loading = false);
   }
 }

@@ -230,7 +230,7 @@ export abstract class WarpViewComponent {
       if (s.curveNumber === highlighted) {
         labeledData = `<b>${labeledData}</b>`;
       }
-      let color = s.data.line.color;
+      let color = s.data.line ? s.data.line.color : '';
       if (!!s.data.marker) {
         if (GTSLib.isArray(s.data.marker.color)) {
           color = s.data.marker.color[0];
