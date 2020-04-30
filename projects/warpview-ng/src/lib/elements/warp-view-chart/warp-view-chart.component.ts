@@ -226,7 +226,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const size = gts.v.length;
           this.LOG.debug(['convert'], gts);
           const label = GTSLib.serializeGtsMetadata(gts);
-          const c = ColorLib.getColor(gts.id, this._options.scheme);
+          const c = ColorLib.getColor(i, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
             type: 'scattergl',

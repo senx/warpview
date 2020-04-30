@@ -146,7 +146,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   update(options: Param, refresh: boolean): void {
-    this._options = ChartLib.mergeDeep(this._options, options) as Param;
+    if(!!options) {
+      this._options = ChartLib.mergeDeep(this._options, options) as Param;
+    }
     this.drawChart(refresh);
   }
 
@@ -215,7 +217,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.plotlyConfig.scrollZoom = !!this.standalone;
     this.plotlyConfig = {...this.plotlyConfig};
-    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
+    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
     this.loading = false;
   }
 

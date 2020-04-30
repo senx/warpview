@@ -166,18 +166,19 @@ export abstract class WarpViewComponent {
     public sizeService: SizeService,
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
-      if (!!this._responsive) {
-        this.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
-        this.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
+      const parentSize = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect();
+      if (this._responsive) {
+        this.height = parentSize.height;
+        this.width = parentSize.width;
       }
-      if (!!this.graph && !!this._responsive) {
+      if (!!this.graph && this._responsive && parentSize.height > 0) {
         const layout = {
-          width: (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width,
-          height: (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height
+          width: parentSize.width,
+          height: parentSize.height
         };
         if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
-          this.layout = {...this.layout, ...layout};
-          this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height, (el.nativeElement as HTMLElement).parentElement);
+          setTimeout(() => this.layout = {...this.layout, ...layout});
+          this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
           this.graph.updatePlot();
         }
       }
@@ -276,7 +277,7 @@ ${labeledData}`;
       this.layout.width = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().width;
       this.layout.height = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect().height;
     }
-    this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height);
+    this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height, this.width, this.height);
     if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {
       dataModel.bounds = {
         xmin: Math.floor(this._options.bounds.minDate),

@@ -238,12 +238,8 @@ export class GTSLib {
     // We look at the first non-null value, if it's a String or Boolean it's an annotation GTS,
     // if it's a number it's a GTS to plot
     return (gts.v || []).some(v => {
-      if (!!v[v.length - 1]) {
-        // noinspection JSPotentiallyInvalidConstructorUsage
-        return typeof v[v.length - 1] === 'number' ||
-          // gts.v[i][gts.v[i].length - 1].constructor.name === 'Big' ||
-          !!v[v.length - 1].constructor.prototype.toFixed;
-      }
+      // noinspection JSPotentiallyInvalidConstructorUsage
+      return typeof v[v.length - 1] === 'number' || !!v[v.length - 1].constructor.prototype.toFixed;
     });
   }
 

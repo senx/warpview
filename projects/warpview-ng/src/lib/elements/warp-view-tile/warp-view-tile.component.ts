@@ -63,7 +63,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   set warpscript(warpScript: string) {
     if (!!warpScript && this._warpScript !== warpScript) {
       this._warpScript = warpScript;
-      this.execute();
+      this.execute(false);
     }
   }
 
@@ -102,7 +102,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     this.LOG.debug(['ngAfterViewInit', 'warpScript'], this._warpScript);
     this.el.nativeElement.style.opacity = '1';
     if (this.warpRef.nativeElement.textContent.trim() !== '') {
-      this.execute();
+      this.execute(false);
     }
   }
 
@@ -115,7 +115,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   @HostListener('keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'r') {
-      this.execute();
+      this.execute(false);
     }
   }
 
@@ -157,10 +157,10 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  private execute() {
+  private execute(isRefresh: boolean) {
     if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.error = undefined;
-      this.loading = true;
+      this.loading = !isRefresh;
       this.execResult = undefined;
       this.loaderMessage = 'Requesting data';
       this.execUrl = this.url;
@@ -192,11 +192,11 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
                 window.clearInterval(this.timer);
               }
               if (this._autoRefresh && this._autoRefresh > 0) {
-                this.timer = window.setInterval(() => this.execute(), this._autoRefresh * 1000);
+                this.timer = window.setInterval(() => this.execute(true), this._autoRefresh * 1000);
               }
             }
             this.loading = false;
-            setTimeout(() => this.execResult = body);
+            this.execResult = body;
           } catch (e) {
             this.LOG.error(['execute'], e);
             this.loading = false;

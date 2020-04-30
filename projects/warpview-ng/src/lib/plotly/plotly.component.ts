@@ -258,7 +258,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   updateWindowResizeHandler() {
     if (this.useResizeHandler) {
       if (this.resizeHandler === undefined) {
-        this.resizeHandler = () => Plots.resize(this.plotlyInstance);
+        this.resizeHandler = () => setTimeout(() => Plots.resize(this.plotlyInstance));
         this.getWindow().addEventListener('resize', this.resizeHandler as any);
       }
     } else {
