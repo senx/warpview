@@ -21,7 +21,6 @@ import {Logger} from '../../utils/logger';
 import Leaflet, {TileLayerOptions} from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
-import 'leaflet-easybutton';
 import {ColorLib} from '../../utils/color-lib';
 import {ChartLib} from '../../utils/chart-lib';
 import {DataModel} from '../../model/dataModel';
@@ -339,13 +338,6 @@ export class WarpViewMapComponent implements OnInit {
         maxZoom: 24
       }).setView([0, 0], 8);
       this.tilesLayer.addTo(this._map);
-      Leaflet.easyButton('<span style="font-size: 16px" title="Fit to data">&#x2BD0;</span>', (btn, map) => {
-        this._map.fitBounds(this.bounds, {
-          padding: [1, 1],
-          animate: false,
-          duration: 0
-        });
-      }).addTo(this._map);
       this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
       this.geoJsonLayer.bringToBack();
       this.tilesLayer.bringToBack(); // TODO: tester
