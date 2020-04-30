@@ -339,7 +339,7 @@ export class WarpViewMapComponent implements OnInit {
         maxZoom: 24
       }).setView([0, 0], 8);
       this.tilesLayer.addTo(this._map);
-      Leaflet.easyButton('<span>&#9737;</span>', (btn, map) => {
+      Leaflet.easyButton('<span style="font-size: 16px" title="Fit to data">&#x2BD0;</span>', (btn, map) => {
         this._map.fitBounds(this.bounds, {
           padding: [1, 1],
           animate: false,
