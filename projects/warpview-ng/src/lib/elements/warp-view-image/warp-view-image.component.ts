@@ -97,6 +97,8 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
       this.toDisplay.push(gts.data as string);
     }
     this.LOG.debug(['drawChart', 'this.data', 'this.toDisplay'], this.data, this.toDisplay);
+    this.loading = false;
+    this.chartDraw.emit();
   }
 
   getStyle() {
