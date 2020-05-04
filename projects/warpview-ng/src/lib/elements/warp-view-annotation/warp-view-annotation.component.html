@@ -24,7 +24,7 @@
   <div *ngIf="!loading && !noData">
     <div class="upperLine" [ngStyle]="{left: standalone? '10px': marginLeft + 'px'}"></div>
     <warpview-plotly #graph
-                     [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot2($event)"
+                     [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot($event)"
                      (relayout)="relayout($event)" className="chart" (hover)="hover($event)" (unhover)="unhover()"
                      [updateOnLayoutChange]="true" [updateOnDataChange]="true" [debug]="debug"
                      [style]="{position: 'relative', width: '100%', height: '100%'}"></warpview-plotly>

@@ -68,7 +68,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
-  private expanded = false;
+  private expanded = true;
   private trimmed;
   private maxTick = Number.MIN_VALUE;
   private minTick = Number.MAX_VALUE;
@@ -147,7 +147,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   update(options: Param, refresh: boolean): void {
-    if(!!options) {
+    if (!!options) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
     }
     this.drawChart(refresh);
@@ -161,9 +161,13 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['updateBounds'],
       moment.tz(min / this.divider, this._options.timeZone).toISOString(),
       moment.tz(max / this.divider, this._options.timeZone).toISOString());
+    this.minTick = min;
+    this.maxTick = max;
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.layout.xaxis.range = [min, max];
+      this.layout.xaxis.tick0 = min / this.divider;
+      this.layout.xaxis.range = [min / this.divider, max / this.divider];
     } else {
+      this.layout.xaxis.tick0 = moment.tz(min / this.divider, this._options.timeZone).toISOString();
       this.layout.xaxis.range = [
         moment.tz(min / this.divider, this._options.timeZone).toISOString(),
         moment.tz(max / this.divider, this._options.timeZone).toISOString()
@@ -171,8 +175,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.layout.margin.l = marginLeft;
     this.marginLeft = marginLeft;
-    this.layout = {...this.layout};
-    this.LOG.debug(['updateBounds'], this.layout);
+    this.layout = {... this.layout};
+    this.LOG.debug(['updateBounds'], {... this.layout.xaxis.range });
   }
 
   drawChart(reparseNewData: boolean = false) {
@@ -218,6 +222,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.plotlyConfig.scrollZoom = !!this.standalone;
     this.plotlyConfig = {...this.plotlyConfig};
+    this.layout = {...this.layout};
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
     this.loading = false;
   }
@@ -283,7 +288,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.toolTip.nativeElement.style.display = 'none';
   }
 
-  afterPlot2(div) {
+  afterPlot(div) {
     this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
@@ -357,17 +362,17 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           this.layout.xaxis.type = 'date';
         }
         const ticks = gts.v.map(t => t[0]);
-        series.text = gts.v.map(t => t[t.length -1]);
+        series.text = gts.v.map(t => t[t.length - 1]);
         series.y = gts.v.map(() => (this.expanded ? i : 0) + 0.5);
-        let min = ticks[0];
-        let max = ticks[0];
-        for (let v = 1; v < size; v++) {
-          const val = ticks[i];
-          min = (val < min) ? val : min;
-          max = (val > max) ? val : max;
+        if (size > 0) {
+          this.minTick = ticks[0];
+          this.maxTick = ticks[0];
+          for (let v = 1; v < size; v++) {
+            const val = ticks[v];
+            this.minTick = (val < this.minTick) ? val : this.minTick;
+            this.maxTick = (val > this.maxTick) ? val : this.maxTick;
+          }
         }
-        this.minTick = min;
-        this.maxTick = max;
         if (timestampMode || this._options.timeMode === 'timestamp') {
           series.x = ticks;
         } else {
@@ -377,7 +382,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
             series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
           }
         }
-        dataset.push(series);
+        if (series.x.length > 0) {
+          dataset.push(series);
+        }
       }
     });
     if (nonPlottable.length > 0) {
@@ -418,5 +425,23 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   setRealBounds(chartBounds: ChartBounds) {
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
+    this._options.bounds.minDate = this.minTick;
+    this._options.bounds.maxDate = this.maxTick;
+    const x = {
+      tick0: undefined,
+      range: []
+    };
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      x.tick0 = this.minTick / this.divider;
+      x.range = [this.minTick / this.divider, this.maxTick / this.divider];
+    } else {
+      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.range = [
+        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+      ];
+    }
+    this.layout.xaxis = x;
+    this.layout = {...this.layout};
   }
 }

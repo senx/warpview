@@ -197,17 +197,19 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   boundsDidChange(event) {
     this.LOG.debug(['updateBounds'], event);
-    this._options.bounds.minDate = event.bounds.min;
-    this._options.bounds.maxDate = event.bounds.max;
-    if (event.source === 'chart') {
-      this.annotation.updateBounds(event.bounds.min, event.bounds.max, event.bounds.marginLeft);
-    } else if (event.source === 'annotation') {
-      this.chart.updateBounds(event.bounds.min, event.bounds.max);
+    if (this._options.bounds.minDate !== event.bounds.min && this._options.bounds.maxDate !== event.bounds.max) {
+      this._options.bounds.minDate = event.bounds.min;
+      this._options.bounds.maxDate = event.bounds.max;
+      if (event.source === 'chart') {
+        this.annotation.updateBounds(event.bounds.min, event.bounds.max, event.bounds.marginLeft);
+      } else if (event.source === 'annotation') {
+        this.chart.updateBounds(event.bounds.min, event.bounds.max);
+      }
+      this.LOG.debug(['updateBounds'],
+        moment.tz(event.bounds.min, this._options.timeZone).toDate(),
+        moment.tz(event.bounds.max, this._options.timeZone).toDate());
+      this.line.nativeElement.style.left = '-100px';
     }
-    this.LOG.debug(['updateBounds'],
-      moment.tz(event.bounds.min, this._options.timeZone).toDate(),
-      moment.tz(event.bounds.max, this._options.timeZone).toDate());
-    this.line.nativeElement.style.left = '-100px';
   }
 
   onWarpViewModalClose() {
@@ -451,12 +453,17 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   onChartDraw($event: any) {
-    this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, $event.tsmin);
-    this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
-    this.annotation.setRealBounds(this.chartBounds);
-    this.chart.setRealBounds(this.chartBounds);
-    this.chartDraw.emit();
-    this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
+    if (
+      this.chartBounds.tsmin !== Math.min(this.chartBounds.tsmin, $event.tsmin)
+      && this.chartBounds.tsmax !== Math.max(this.chartBounds.tsmax, $event.tsmax)
+    ) {
+      this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, $event.tsmin);
+      this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
+      this.annotation.setRealBounds(this.chartBounds);
+      this.chart.setRealBounds(this.chartBounds);
+      this.chartDraw.emit();
+      this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
+    }
   }
 
   private resizeArea() {

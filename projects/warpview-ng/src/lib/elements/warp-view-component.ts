@@ -217,13 +217,7 @@ export abstract class WarpViewComponent {
     if (!!series[0]) {
       x = series[0].x;
     }
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      html = `<b>${x}</b><br />`;
-    } else if (this._options.timeMode === 'date') {
-      html = `<b>${(moment.utc(parseInt(x, 10)).toISOString().replace('T', '').replace('Z', '') || '')
-        .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '')}</b><br />`;
-      // data.x is already a date in millisecond, whatever the unit option
-    }
+    html += `<b>${x}</b><br />`;
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
     //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
     //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)

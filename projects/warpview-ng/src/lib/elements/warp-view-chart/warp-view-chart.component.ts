@@ -270,15 +270,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           this.LOG.debug(['convert'], 'forEach value');
           const ticks = gts.v.map(t => t[0]);
           const values = gts.v.map(t => t[t.length - 1]);
-          let min = ticks[0];
-          let max = ticks[0];
-          for (let v = 1; v < size; v++) {
-            const val = ticks[i];
-            min = (val < min) ? val : min;
-            max = (val > max) ? val : max;
+
+          if (size > 0) {
+            this.minTick = ticks[0];
+            this.maxTick = ticks[0];
+            for (let v = 1; v < size; v++) {
+              const val = ticks[i];
+              this.minTick = (val < this.minTick) ? val : this.minTick;
+              this.maxTick = (val > this.maxTick) ? val : this.maxTick;
+            }
           }
-          this.minTick = min;
-          this.maxTick = max;
           if (timestampMode || this._options.timeMode === 'timestamp') {
             series.x = ticks;
           } else {
@@ -289,12 +290,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             }
           }
           series.y = values;
-          this.LOG.debug(['convert'], 'forEach value end');
+          this.LOG.debug(['convert'], 'forEach value end', this.minTick, this.maxTick);
           dataset.push(series);
         }
       });
-
-      if (nonPlottable.length > 0) { // && gtsList.length === 0) {
+      if (nonPlottable.length > 0 && gtsList.length === 0) {
         nonPlottable.forEach(g => {
           g.v.forEach(value => {
             const ts = value[0];
@@ -327,15 +327,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   afterPlot(plotlyInstance) {
     this.marginLeft = parseInt((this.graph.plotEl.nativeElement as HTMLElement).querySelector('g.bglayer > rect').getAttribute('x'), 10);
     this.LOG.debug(['plotly_afterPlot']);
-    this.chartBounds.tsmin = this.minTick;
-    this.chartBounds.tsmax = this.maxTick;
-    this.chartBounds.marginLeft = this.marginLeft;
-    this.chartDraw.emit(this.chartBounds);
-    if (!this.afterBoundsUpdate) {
-      this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
-      this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
-      this.loading = false;
-      this.afterBoundsUpdate = false;
+    if (this.chartBounds.tsmin !== this.minTick || this.chartBounds.tsmax !== this.maxTick) {
+      this.chartBounds.tsmin = this.minTick;
+      this.chartBounds.tsmax = this.maxTick;
+      this.chartBounds.marginLeft = this.marginLeft;
+      this.chartDraw.emit(this.chartBounds);
+      if (!this.afterBoundsUpdate) {
+        this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
+        this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
+        this.loading = false;
+        this.afterBoundsUpdate = false;
+      }
     }
   }
 
@@ -357,8 +359,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmin = this.minTick;
       this.chartBounds.tsmax = this.maxTick;
     }
-    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
+    this.LOG.debug(['relayout', 'updateBounds'], this.minTick, this.maxTick);
+    this.minTick =  this.chartBounds.tsmin;
+    this.maxTick =  this.chartBounds.tsmax;
+    this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
+    this.loading = false;
     this.afterBoundsUpdate = false;
+
   }
 
   sliderChange($event: any) {
@@ -393,6 +400,24 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   setRealBounds(chartBounds: ChartBounds) {
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
+    this._options.bounds.minDate = this.minTick;
+    this._options.bounds.maxDate = this.maxTick;
+    const x = {
+      tick0: undefined,
+      range: []
+    };
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      x.tick0 = this.minTick / this.divider;
+      x.range = [this.minTick / this.divider, this.maxTick / this.divider];
+    } else {
+      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.range = [
+        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+      ];
+    }
+    this.layout.xaxis = x;
+    this.layout = {...this.layout};
   }
 
   hover(data: any) {
