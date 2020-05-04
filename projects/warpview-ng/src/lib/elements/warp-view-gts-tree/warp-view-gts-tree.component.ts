@@ -94,6 +94,8 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     }
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
     this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this.expand);
+    this.loading = false;
+    this.chartDraw.emit();
   }
 
   private foldAll() {

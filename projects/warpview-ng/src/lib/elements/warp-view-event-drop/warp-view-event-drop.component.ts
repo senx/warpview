@@ -160,10 +160,9 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
     this.loading = false;
     this.LOG.debug(['drawChart', 'plotlyData'], this.plotlyData, this._type);
     if (this.elemChart.nativeElement) {
-      requestAnimationFrame(() =>
-        select(this.elemChart.nativeElement)
-          .data([this.plotlyData])
-          .call(eventDrops(this.eventConf)));
+      setTimeout(() => select(this.elemChart.nativeElement).data([this.plotlyData]).call(eventDrops(this.eventConf)));
+      this.loading = false;
+      this.chartDraw.emit();
     }
   }
 

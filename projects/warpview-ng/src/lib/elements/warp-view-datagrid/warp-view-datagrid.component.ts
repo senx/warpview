@@ -56,6 +56,8 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   }
 
   private drawChart() {
+    this.loading = false;
+    this.chartDraw.emit();
     if (!this.initChart(this.el)) {
       return;
     }

@@ -74,6 +74,8 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
   }
 
   private drawChart() {
+    this.loading = false;
+    this.chartDraw.emit();
     if (!this.initChart(this.el)) {
       return;
     }
