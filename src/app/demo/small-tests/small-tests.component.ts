@@ -38,18 +38,22 @@ export class SmallTestsComponent implements OnInit {
       showGTSTree: true,
       foldGTSTree: true,
       showDots: false,
-      autoRefresh: 5
+  //    autoRefresh: 5
     }
   };
 
   tests = [
     {
-      type: 'scatter',
+      type: 'annotation',
       description: '',
-      warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
-false RESETS
-[ SWAP mapper.delta 1 0 0 ] MAP`
+      warpscript: `  0 5 <% 'j' STORE
+  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
+  0 30 <%
+    'i' STORE
+    $gts NOW RAND 100000 * -  NaN NaN NaN T ADDVALUE DROP
+  %> FOR
+  $gts
+%> FOR`
     },
     {
       type: 'plot',

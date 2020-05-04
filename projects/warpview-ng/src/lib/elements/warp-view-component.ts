@@ -131,6 +131,7 @@ export abstract class WarpViewComponent {
   protected _responsive = true;
   protected _unit = '';
   protected _data: DataModel;
+  protected _autoResize = true;
   loading = true;
   noData = false;
   layout: Partial<any> = {
@@ -174,7 +175,7 @@ export abstract class WarpViewComponent {
       if (!!this.graph && this._responsive && parentSize.height > 0) {
         const layout = {
           width: parentSize.width,
-          height: parentSize.height
+          height: this._autoResize ? parentSize.height : this.layout.height
         };
         if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
           setTimeout(() => this.layout = {...this.layout, ...layout});

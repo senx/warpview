@@ -142,6 +142,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     public sizeService: SizeService,
   ) {
     super(el, renderer, sizeService);
+    this._autoResize = false;
     this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
   }
 
@@ -356,7 +357,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           this.layout.xaxis.type = 'date';
         }
         const ticks = gts.v.map(t => t[0]);
-        const values = gts.v.map(t => t[t.length - 1]);
+        series.text = gts.v.map(t => t[t.length -1]);
+        series.y = gts.v.map(() => (this.expanded ? i : 0) + 0.5);
         let min = ticks[0];
         let max = ticks[0];
         for (let v = 1; v < size; v++) {
@@ -375,7 +377,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
             series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
           }
         }
-        series.y = values;
         dataset.push(series);
       }
     });
