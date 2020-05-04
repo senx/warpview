@@ -1,6 +1,6 @@
 {
   "name": "@senx/warpview",
-  "version": "2.0.0-rc47",
+  "version": "2.0.0-rc48",
   "keywords": [
     "web",
     "dataviz",
@@ -33,7 +33,7 @@
   "typings": "dist/warpview-ng.d.ts",
   "metadata": "dist/warpview-ng.metadata.json",
   "files": [
-    "dist"
+    "./dist/warpview"
   ],
   "scripts": {
     "ng": "ng",
@@ -51,7 +51,9 @@
     "clean": "rm -fr ./elements && rm -fr ./dist",
     "prepublishOnly": "yarn clean && yarn build",
     "build:lib": "ng build  --project=warpview-ng",
-    "nvm": "nvm install 10.18.0"
+    "nvm": "nvm install 10.18.0",
+    "build:pack": "(cd dist/warpview && yarn pack)",
+    "build:publish": "yarn version $1 && (cd project/warpview-ng && yarn version $1 )  && yarn clean && yarn build && (cd dist/warpview && yarn publish)"
   },
   "private": false,
   "dependencies": {
