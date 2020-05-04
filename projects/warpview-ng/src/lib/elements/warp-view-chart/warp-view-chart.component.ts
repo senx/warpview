@@ -229,7 +229,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const c = ColorLib.getColor(i, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
-            type: 'scattergl',
+            type: this._type === 'spline' ? 'scatter' : 'scattergl',
             mode: this._type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             name: label,
             text: label,
@@ -240,12 +240,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
           };
-          if (size < this.maxPlottable) {
+          if (this._type === 'scatter' || size < this.maxPlottable) {
             series.marker = {
               size: 15,
               color: new Array(size).fill(color),
               line: {color, width: 3},
-              opacity: new Array(size).fill(this._options.showDots ? 1 : 0)
+              opacity: new Array(size).fill(this._type === 'scatter' || this._options.showDots ? 1 : 0)
             };
           }
           switch (this._type) {

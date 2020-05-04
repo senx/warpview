@@ -44,10 +44,10 @@ export class SmallTestsComponent implements OnInit {
 
   tests = [
     {
-      type: 'plot',
+      type: 'scatter',
       description: '',
       warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -20 ] FETCH
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -10 ] FETCH
 false RESETS
 [ SWAP mapper.delta 1 0 0 ] MAP`
     },

@@ -33,7 +33,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   private _type;
   graphs = {
     spectrum: ['histogram2dcontour', 'histogram2d'],
-    chart: ['line', 'spline', 'step', 'area', 'scatter'],
+    chart: ['line', 'spline', 'step', 'step-after', 'step-before', 'area', 'scatter'],
     pie: ['pie', 'donut'],
     polar: ['polar'],
     radar: ['radar'],
