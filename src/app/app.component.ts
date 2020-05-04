@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   theme = 'light';
   colorSchemes = Object.keys(ColorLib.color).sort();
   colorScheme = 'WARP10';
+  public isCollapsed = true;
 
   constructor(private settingsService: SettingsService) {
   }

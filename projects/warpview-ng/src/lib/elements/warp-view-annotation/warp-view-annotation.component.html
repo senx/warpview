@@ -17,8 +17,7 @@
 
 <div id="chartContainer" #chartContainer>
   <button *ngIf="displayExpander && plotlyData && plotlyData.length > 1" class="expander" (click)="toggle()"
-          title="collapse/expand">+/-
-  </button>
+          title="collapse/expand">+/-</button>
   <div #toolTip class="tooltip"></div>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <div *ngIf="!loading && !noData">

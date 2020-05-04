@@ -57,7 +57,17 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.drawChart();
   }
 
-  @Input('standalone') standalone = true;
+  @Input('standalone') set standalone(isStandalone: boolean) {
+    if(this._standalone !== isStandalone) {
+      this._standalone = isStandalone;
+      this.drawChart();
+    }
+  }
+
+  get standalone(): boolean {
+    return this._standalone;
+  }
+
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
@@ -68,7 +78,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
-  private expanded = true;
+  private expanded = false;
+  private _standalone = true;
   private trimmed;
   private maxTick = Number.MIN_VALUE;
   private minTick = Number.MAX_VALUE;
@@ -108,7 +119,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       l: 10
     },
   };
-  marginLeft = 10;
+  marginLeft = 50;
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -175,8 +186,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.layout.margin.l = marginLeft;
     this.marginLeft = marginLeft;
-    this.layout = {... this.layout};
-    this.LOG.debug(['updateBounds'], {... this.layout.xaxis.range });
+    this.layout = {...this.layout};
+    this.LOG.debug(['updateBounds'], {...this.layout.xaxis.range});
   }
 
   drawChart(reparseNewData: boolean = false) {
@@ -190,23 +201,22 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
-    this.layout.yaxis.showline = this.standalone;
+    this.layout.yaxis.showline = !!this._standalone;
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
-    this.layout.xaxis.autorange = this.standalone;
-    this.layout.xaxis.showticklabels = this.standalone;
+    this.layout.xaxis.autorange = !!this._standalone;
+    this.layout.xaxis.showticklabels = !!this._standalone;
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
+    this.layout.margin.l = !!this._standalone ? 10 : 50;
+    this.layout.margin.b = !!this._standalone ? 50 : 1;
     const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
     this.el.nativeElement.style.height = calculatedHeight + 'px';
     this.height = calculatedHeight;
     this.layout.height = this.height;
     this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
-    this.layout.margin.l = this.standalone ? 10 : 50;
-    this.layout.margin.b = this.standalone ? 30 : 10;
-    this.LOG.debug(['drawChart', 'this.layout'], this.responsive, reparseNewData);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.tick0 = this.minTick / this.divider;
@@ -220,7 +230,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       ];
       this.layout.xaxis.type = 'date';
     }
-    this.plotlyConfig.scrollZoom = !!this.standalone;
+    this.plotlyConfig.scrollZoom = true;
     this.plotlyConfig = {...this.plotlyConfig};
     this.layout = {...this.layout};
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
@@ -263,7 +273,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
     tooltip.style.opacity = '1';
     tooltip.style.display = 'block';
-    tooltip.style.paddingLeft = (this.standalone ? 0 : 40) + 'px';
+    tooltip.style.paddingLeft = (this._standalone ? 0 : 40) + 'px';
     tooltip.style.top = (
       (this.expanded ? count - 1 - (data.points[0].y + 0.5) : -1) * (this.lineHeight) + this.layout.margin.t
     ) + 6 + 'px';

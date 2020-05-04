@@ -16,7 +16,7 @@
   -->
 
 <header>
-  <div class="collapse bg-dark" id="navbarHeader">
+  <div class="bg-dark" id="navbarHeader" [hidden]="isCollapsed">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-8 col-md-7 py-4">
@@ -65,7 +65,8 @@
         <strong>Warp View</strong>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
-              aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+              (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
     </div>
