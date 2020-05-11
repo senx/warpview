@@ -58,7 +58,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   @Input('standalone') set standalone(isStandalone: boolean) {
-    if(this._standalone !== isStandalone) {
+    if (this._standalone !== isStandalone) {
       this._standalone = isStandalone;
       this.drawChart();
     }
@@ -435,6 +435,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   setRealBounds(chartBounds: ChartBounds) {
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
+    this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
     const x = {

@@ -360,8 +360,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmax = this.maxTick;
     }
     this.LOG.debug(['relayout', 'updateBounds'], this.minTick, this.maxTick);
-    this.minTick =  this.chartBounds.tsmin;
-    this.maxTick =  this.chartBounds.tsmax;
+    this.minTick = this.chartBounds.tsmin;
+    this.maxTick = this.chartBounds.tsmax;
     this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
     this.loading = false;
     this.afterBoundsUpdate = false;
@@ -400,6 +400,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   setRealBounds(chartBounds: ChartBounds) {
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
+    this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
     const x = {
