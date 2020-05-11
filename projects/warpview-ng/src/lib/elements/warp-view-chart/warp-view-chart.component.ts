@@ -403,13 +403,19 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
-    const x = {
+    const x: any = {
       tick0: undefined,
-      range: []
+      range: [],
     };
+    if (this._options.showRangeSelector) {
+      x.rangeslider = {
+        bgcolor: 'transparent',
+        thickness: 40 / this.height
+      };
+    }
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = this.minTick / this.divider;
-      x.range = [this.minTick / this.divider, this.maxTick / this.divider];
+      x.range = [this.minTick, this.maxTick];
     } else {
       x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
       x.range = [
