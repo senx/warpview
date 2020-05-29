@@ -33,10 +33,6 @@ import {Logger} from '../../utils/logger';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
-  private marginLeft: number;
-  private maxPlottable = 10000;
-  parsing = false;
-
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
@@ -46,9 +42,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.visibleGtsId.forEach(id => this.visibility.push(hiddenData.indexOf(id) < 0 && (id !== -1)));
     this.LOG.debug(['hiddenData', 'hiddendygraphfullv'], this.visibility);
     const newVisibility = JSON.stringify(this.visibility);
-    this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility);
+    this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility, this._hiddenData);
     if (previousVisibility !== newVisibility) {
-      this.drawChart(false);
+      this.gtsId.forEach((c, i) => {
+        const update = {line: {color: c}};
+        if (this._hiddenData.indexOf(i) > -1) {
+          update.line.color = 'transparent';
+        }
+        this.graph.restyleChart(update, [i]);
+      });
       this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
     }
   }
@@ -66,6 +68,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
+  private maxTick = 0;
+  private minTick = 0;
+  private visibleGtsId = [];
+  private gtsId = [];
+  private dataHashset = {};
+  private chartBounds: ChartBounds = new ChartBounds();
+  private visibilityStatus: VisibilityState = 'unknown';
+  private afterBoundsUpdate = false;
+  private marginLeft: number;
+  private maxPlottable = 10000;
+  parsing = false;
 
   layout: Partial<any> = {
     showlegend: false,
@@ -86,13 +99,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     },
   };
 
-  private maxTick = 0;
-  private minTick = 0;
-  private visibleGtsId = [];
-  private dataHashset = {};
-  private chartBounds: ChartBounds = new ChartBounds();
-  private visibilityStatus: VisibilityState = 'unknown';
-  private afterBoundsUpdate = false;
 
   update(options, refresh): void {
     this.drawChart(refresh);
@@ -167,6 +173,25 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     } else {
       this.layout.margin.b = 30;
     }
+    const x: any = {
+      tick0: undefined,
+      range: [],
+    };
+    this.LOG.debug(['drawChart', 'updateBounds'], this.chartBounds);
+    const min = this.chartBounds.tsmin || this.minTick;
+    const max = this.chartBounds.tsmax || this.maxTick;
+    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+      x.tick0 = min / this.divider;
+      x.range = [min, max];
+    } else {
+      x.tick0 = moment.tz(min / this.divider, this._options.timeZone).toISOString(true);
+      x.range = [
+        moment.tz(min / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(max / this.divider, this._options.timeZone).toISOString(true)
+      ];
+    }
+    this.layout.xaxis = x;
+    this.layout = {...this.layout};
     this.loading = false;
   }
 
@@ -177,7 +202,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.boundsDidChange.emit({
         bounds: {
           min: moment.tz(min, this._options.timeZone).valueOf(),
-          max: moment.tz(max, this._options.timeZone).valueOf(),
+          max: moment.tz(min, this._options.timeZone).valueOf(),
           marginLeft
         }, source: 'chart'
       });
@@ -194,6 +219,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.maxTick = Number.NEGATIVE_INFINITY;
       this.minTick = Number.POSITIVE_INFINITY;
       this.visibleGtsId = [];
+      this.gtsId = [];
       const nonPlottable = gtsList.filter(g => {
         this.LOG.debug(['convert'], GTSLib.isGtsToPlot(g));
         return (g.v && !GTSLib.isGtsToPlot(g));
@@ -267,6 +293,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               break;
           }
           this.visibleGtsId.push(gts.id);
+          this.gtsId.push(color);
           this.LOG.debug(['convert'], 'forEach value');
           const ticks = gts.v.map(t => t[0]);
           const values = gts.v.map(t => t[t.length - 1]);
@@ -332,7 +359,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmax = this.maxTick;
       this.chartBounds.marginLeft = this.marginLeft;
       this.chartDraw.emit(this.chartBounds);
-      if (!this.afterBoundsUpdate) {
+      if (this.afterBoundsUpdate) {
         this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
         this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
         this.loading = false;
@@ -359,10 +386,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmin = this.minTick;
       this.chartBounds.tsmax = this.maxTick;
     }
-    this.LOG.debug(['relayout', 'updateBounds'], this.minTick, this.maxTick);
-    this.minTick = this.chartBounds.tsmin;
-    this.maxTick = this.chartBounds.tsmax;
-    this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
+    this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
+    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
     this.loading = false;
     this.afterBoundsUpdate = false;
 
@@ -398,6 +423,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
 
   setRealBounds(chartBounds: ChartBounds) {
+    this.afterBoundsUpdate = true;
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
     this._options.bounds = this._options.bounds || {};
