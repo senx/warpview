@@ -69,7 +69,6 @@ export class ColorLib {
       '#EE6868',
       '#2F6497'
     ],
-
     VIRIDIS: [
       '#440154',
       '#481f70',
@@ -84,7 +83,6 @@ export class ColorLib {
       '#90d743',
       '#c8e020',
     ],
-
     MAGMA: [
       '#000004',
       '#100b2d',
@@ -99,7 +97,6 @@ export class ColorLib {
       '#feb078',
       '#fed799',
     ],
-
     INFERNO: [
       '#000004',
       '#110a30',
@@ -114,7 +111,6 @@ export class ColorLib {
       '#fbb61a',
       '#f4df53',
     ],
-
     PLASMA: [
       '#0d0887',
       '#3a049a',
