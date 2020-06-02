@@ -110,7 +110,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       fixedrange: false,
       autorange: false,
       automargin: false,
-      showticklabels: false,
+      showticklabels: true,
     },
     autosize: false,
     autoexpand: false,

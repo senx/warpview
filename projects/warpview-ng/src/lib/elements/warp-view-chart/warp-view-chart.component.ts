@@ -210,7 +210,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.boundsDidChange.emit({
         bounds: {
           min: moment.tz(min, this._options.timeZone).valueOf(),
-          max: moment.tz(min, this._options.timeZone).valueOf(),
+          max: moment.tz(max, this._options.timeZone).valueOf(),
           marginLeft
         }, source: 'chart'
       });
