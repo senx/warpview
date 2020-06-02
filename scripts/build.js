@@ -19,11 +19,9 @@ const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
   const files = [
-    './dist/warpview/elements/runtime.js',
-    './dist/warpview/elements/polyfills.js',
-    './dist/warpview/elements/scripts.js',
+    './scripts/header.js',
     './dist/warpview/elements/main.js',
-    './scripts/loader.js'
+    './scripts/loader.js',
   ];
   const css = [
     './node_modules/leaflet/dist/leaflet.css',

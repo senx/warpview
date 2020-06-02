@@ -75,14 +75,11 @@
   <div class="starter-template">
     <div style="height: 600px; width: 100%;">
       <warp-view-tile
-        url="https://warp.senx.io/api/v0/exec"
+        url="https://warp.senx.io/api/v0"
         responsive="true" debug="true"
         type="plot">
-        @training/dataset0
-        $TOKEN AUTHENTICATE
-        100000000 MAXOPS
         NEWGTS 'g' STORE
-        0 1000000 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+        0 100 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
         $g
       </warp-view-tile>
     </div>
@@ -90,7 +87,7 @@
 
 </main><!-- /.container --><!--
 <script src="https://unpkg.com/@giwisoft/warpview@2.0.0-rc1/elements/warpview-elements.js"></script>-->
-<script src="./dist/warpview/elements/warpview-elements.js"></script>
+<script src="./dist/warpview/elements/warpview-elements.js" defer></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

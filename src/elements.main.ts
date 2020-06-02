@@ -20,11 +20,12 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {WarpViewElementsModule} from '../projects/warpview-ng/src/lib/warp-view-elements.module';
 import {environment} from './environments/environment';
+import 'zone.js/dist/zone';
 
+window['global'] = window;
 if (environment.production) {
   enableProdMode();
 }
-
 platformBrowserDynamic().bootstrapModule(WarpViewElementsModule).then(ref => {
   // Ensure Angular destroys itself on hot reloads.
   if (window['ngRef']) {

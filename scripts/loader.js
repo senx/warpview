@@ -16,29 +16,21 @@
  */
 
 window.addEventListener('load', function() {
-  console.log(warpViewScriptPath());
-  const script = document.createElement('script');
-  script.src = warpViewScriptPath() + '/warpview-elements.js';
-  script.setAttribute('nomodule', 'true');
-  script.setAttribute('defer', 'true');
-  document.body.appendChild(script);
-
- /* const css = document.createElement('link');
-  css.setAttribute('rel', 'stylesheet');
-  css.setAttribute('href', scriptPath() + '/warpview-elements.css');
-  document.head.appendChild(css);*/
-
-});
-const warpViewScriptPath = function () {
-  let scripts = document.getElementsByTagName('SCRIPT');
-  let path = '';
-  if (scripts && scripts.length > 0) {
-    for (let i in scripts) {
-      if (scripts[i].src && scripts[i].src.match(/\/warpview-elements\.js$/)) {
-        path = scripts[i].src.replace(/(.*)\/warpview-elements\.js$/, '$1');
-        break;
+  const scriptPath = function () {
+    let scripts = document.getElementsByTagName('SCRIPT');
+    let path = '';
+    if (scripts && scripts.length > 0) {
+      for (let i in scripts) {
+        if (scripts[i].src && scripts[i].src.match(/\/warpview-elements\.js$/)) {
+          path = scripts[i].src.replace(/(.*)\/warpview-elements\.js$/, '$1');
+          break;
+        }
       }
     }
-  }
-  return path;
-};
+    return path;
+  };
+  const css = document.createElement('link');
+  css.setAttribute('rel', 'stylesheet');
+  css.setAttribute('href', scriptPath() + '/warpview-elements.css');
+  document.head.appendChild(css);
+});
