@@ -201,7 +201,7 @@ export class GTSLib {
   }
 
   static sanitizeNames(input: string): string {
-    return input.replace(/{/g, '&#123;')
+    return (input || '').replace(/{/g, '&#123;')
       .replace(/}/g, '&#125;')
       .replace(/,/g, '&#44;')
       .replace(/>/g, '&#62;')

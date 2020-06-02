@@ -148,7 +148,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   }
 
   private setState(state: boolean) {
-    if (this._node && this._node.gts && this._node.gts.c) {
+    if (this._node && this._node.gts) {
       this._node = {
         ...this._node,
         selected: state,
