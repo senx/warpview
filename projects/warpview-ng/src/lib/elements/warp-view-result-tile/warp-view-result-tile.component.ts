@@ -91,5 +91,6 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   chartDrawn() {
     setTimeout(() => this.loading = false);
+    this.chartDraw.emit();
   }
 }
