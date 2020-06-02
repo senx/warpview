@@ -44,14 +44,22 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const newVisibility = JSON.stringify(this.visibility);
     this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility, this._hiddenData);
     if (previousVisibility !== newVisibility) {
-      this.gtsId.forEach((c, i) => {
-        const update = {line: {color: c}};
-        if (this._hiddenData.indexOf(i) > -1) {
-          update.line.color = 'transparent';
+      const visible = [];
+      const hidden = [];
+      this.gtsId.forEach((id, i) => {
+        if (this._hiddenData.indexOf(id) > -1) {
+          hidden.push(i);
+        } else {
+          visible.push(i);
         }
-        this.graph.restyleChart(update, [i]);
       });
-      this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
+      if (visible.length > 0) {
+        this.graph.restyleChart({visible: true}, visible);
+      }
+      if (hidden.length > 0) {
+        this.graph.restyleChart({visible: false}, hidden);
+      }
+      this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change', visible, hidden);
     }
   }
 
@@ -251,8 +259,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
           const size = gts.v.length;
           this.LOG.debug(['convert'], gts);
-          const label = GTSLib.serializeGtsMetadata(gts);
-          const c = ColorLib.getColor(i, this._options.scheme);
+          const label = gts.id + ' - ' + GTSLib.serializeGtsMetadata(gts);
+          const c = ColorLib.getColor(gts.id, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const series: Partial<any> = {
             type: this._type === 'spline' ? 'scatter' : 'scattergl',
@@ -293,7 +301,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               break;
           }
           this.visibleGtsId.push(gts.id);
-          this.gtsId.push(color);
+          this.gtsId.push(gts.id);
           this.LOG.debug(['convert'], 'forEach value');
           const ticks = gts.v.map(t => t[0]);
           const values = gts.v.map(t => t[t.length - 1]);

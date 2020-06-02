@@ -47,7 +47,21 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     const newVisibility = JSON.stringify(this.visibility);
     this.LOG.debug(['hiddenData', 'json'], previousVisibility, newVisibility);
     if (previousVisibility !== newVisibility) {
-      this.drawChart(false);
+      const visible = [];
+      const hidden = [];
+      this.gtsId.forEach((id, i) => {
+        if (this._hiddenData.indexOf(id) > -1) {
+          hidden.push(i);
+        } else {
+          visible.push(i);
+        }
+      });
+      if (visible.length > 0) {
+        this.graph.restyleChart({visible: true}, visible);
+      }
+      if (hidden.length > 0) {
+        this.graph.restyleChart({visible: false}, hidden);
+      }
       this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
     }
   }
@@ -84,6 +98,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   private maxTick = Number.MIN_VALUE;
   private minTick = Number.MAX_VALUE;
   private visibleGtsId = [];
+  private gtsId = [];
   private dataHashset = {};
   private lineHeight = 30;
   private chartBounds: ChartBounds = new ChartBounds();
@@ -326,6 +341,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;
     this.visibleGtsId = [];
+    this.gtsId = [];
     const nonPlottable = gtsList.filter(g => g.v && GTSLib.isGtsToPlot(g));
     gtsList = gtsList.filter(g => g.v && !GTSLib.isGtsToPlot(g));
     let timestampMode = true;
@@ -366,6 +382,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
           }
         };
         this.visibleGtsId.push(gts.id);
+        this.gtsId.push(gts.id);
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           this.layout.xaxis.type = 'linear';
         } else {
