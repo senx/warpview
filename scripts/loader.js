@@ -16,9 +16,9 @@
  */
 
 window.addEventListener('load', function() {
-  console.log(scriptPath());
+  console.log(warpViewScriptPath());
   const script = document.createElement('script');
-  script.src = scriptPath() + '/warpview-elements.js';
+  script.src = warpViewScriptPath() + '/warpview-elements.js';
   script.setAttribute('nomodule', 'true');
   script.setAttribute('defer', 'true');
   document.body.appendChild(script);
@@ -29,7 +29,7 @@ window.addEventListener('load', function() {
   document.head.appendChild(css);*/
 
 });
-const scriptPath = function () {
+const warpViewScriptPath = function () {
   let scripts = document.getElementsByTagName('SCRIPT');
   let path = '';
   if (scripts && scripts.length > 0) {
