@@ -23,7 +23,8 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
-import {Params} from '@angular/router';
+import {WarpViewTreeViewComponent} from './warp-view-tree-view/warp-view-tree-view.component';
+import {Subject} from 'rxjs';
 
 /**
  *
@@ -51,9 +52,10 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   private _gtsFilter = 'x';
   gtsList: any[] = [];
-  params: Params[] = [];
+  params: Param[] = [] as Param[];
   expand = false;
 
+  initOpen: Subject<void> = new Subject<void>();
   constructor(
     public el: ElementRef,
     public renderer: Renderer2,
@@ -64,12 +66,15 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   }
 
   ngAfterViewInit(): void {
-    this.LOG.debug(['componentDidLoad', 'data'], this.data);
-    if (this.data) {
+    this.LOG.debug(['componentDidLoad', 'data'], this._data);
+    if (this._data) {
       this.doRender();
     }
     if (!!this._options.foldGTSTree && !this.expand) {
       this.foldAll();
+    }
+    if (!this._options.foldGTSTree) {
+      this.initOpen.next();
     }
   }
 
@@ -92,6 +97,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     if (!dataList) {
       return;
     }
+    this.expand = !this._options.foldGTSTree;
     this.gtsList = GTSLib.flattenGtsIdArray(dataList as any[], 0).res;
     this.LOG.debug(['doRender', 'gtsList'], this.gtsList, this._options.foldGTSTree, this.expand);
     this.loading = false;
@@ -100,7 +106,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   private foldAll() {
     if (!this.root) {
-      requestAnimationFrame(() => this.foldAll());
+      setTimeout(() => this.foldAll());
     } else {
       this.expand = false;
     }

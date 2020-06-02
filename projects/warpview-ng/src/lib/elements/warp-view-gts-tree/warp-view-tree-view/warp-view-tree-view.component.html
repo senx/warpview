@@ -44,6 +44,7 @@
           </span>
     <warpview-tree-view [gtsList]="gts" [branch]="true" *ngIf="isHidden(index)"
                         [debug]="debug" [gtsFilter]="gtsFilter" [params]="params"
+                        [events]="initOpen.asObservable()"
                         [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"
                         [kbdLastKeyPressed]="kbdLastKeyPressed" [hiddenData]="hiddenData"></warpview-tree-view>
         </span>
