@@ -37,7 +37,7 @@ export class Warp10Service {
 
   exec(warpScript: string, url: string): Observable<HttpResponse<string>> {
     this.LOG.debug(['exec', 'warpScript'], url, warpScript);
-    return this.http.post<string>(url + '/exec', warpScript, {
+    return this.http.post<string>(url, warpScript, {
       // @ts-ignore
       observe: 'response',
       // @ts-ignore

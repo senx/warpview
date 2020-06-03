@@ -27,7 +27,7 @@
       <p [innerHTML]="tests[currentTest].description"></p>
 
       <div style="height: 600px;min-height: 600px; resize: both; padding: 10px; overflow: hidden;">
-        <warpview-tile url="https://warp.senx.io/api/v0" [responsive]="true" [debug]="true"
+        <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
                        [showLegend]="false" [options]="options"
                        [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
       </div>
