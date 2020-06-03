@@ -26,12 +26,5 @@ window['global'] = window;
 if (environment.production) {
   enableProdMode();
 }
-platformBrowserDynamic().bootstrapModule(WarpViewElementsModule).then(ref => {
-  // Ensure Angular destroys itself on hot reloads.
-  if (window['ngRef']) {
-    window['ngRef'].destroy();
-  }
-  window['ngRef'] = ref;
-
-  // Otherise, log the boot error
+platformBrowserDynamic().bootstrapModule(WarpViewElementsModule).then(() => {
 }).catch(err => console.error(err));

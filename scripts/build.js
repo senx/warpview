@@ -20,8 +20,8 @@ const concat = require('concat');
 (async function build() {
   const files = [
     './scripts/header.js',
-    './dist/warpview/elements/main.js',
     './scripts/loader.js',
+    './dist/warpview/elements/main.js'
   ];
   const css = [
     './node_modules/leaflet/dist/leaflet.css',
