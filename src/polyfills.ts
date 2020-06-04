@@ -88,3 +88,4 @@ import 'web-animations-js';  // Run `npm install --save web-animations-js`.
  * Need to import at least one locale-data with intl.
  */
 // import 'intl/locale-data/jsonp/en';
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';

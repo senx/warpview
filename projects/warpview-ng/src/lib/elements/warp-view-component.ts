@@ -27,6 +27,7 @@ import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
+import * as Plotlyjs from 'plotly.js/dist/plotly';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -342,7 +343,9 @@ ${labeledData}`;
     } else {
       this.renderer.setStyle(this.toolTip.nativeElement, 'left', (data.event.offsetX + 20) + 'px');
     }
-    this.renderer.setStyle(this.toolTip.nativeElement, 'top', (data.event.offsetY + 20) + 'px');
+    this.renderer.setStyle(this.toolTip.nativeElement, 'top', Math.min(
+      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height,
+      data.event.offsetY + 20) + 'px');
     this.LOG.debug(['hover'], 'tooltip');
   }
 

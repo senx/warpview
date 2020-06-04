@@ -14,22 +14,23 @@
   ~  limitations under the License.
   ~
   -->
-<div class="wrapper" [ngClass]="{'full':  responsive}" >
+<div class="wrapper" [ngClass]="{'full':  responsive}">
   <div class="tilewrapper">
     <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
       <warpview-spinner *ngIf="loading" message="Requesting data"></warpview-spinner>
-      <div *ngIf="_options.showErrors && error"  style="height: calc(100% - 30px)">
-        <warpview-display [responsive]="true" [debug]="debug" [options]="_options" [data]="{ data: error,  globalParams: {
+      <div *ngIf="_options.showErrors && error" style="height: calc(100% - 30px)">
+        <warpview-display [responsive]="true" [debug]="debug" [options]="_options"
+                          [data]="{ data: error,  globalParams: {
   timeMode:  'custom', bgColor: '#D32C2E', fontColor: '#ffffff'}}"></warpview-display>
       </div>
       <div *ngIf="!error" style="height: 100%" [hidden]="loading">
         <warpview-result-tile [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                               [showLegend]="showLegend" [data]="execResult"></warpview-result-tile>
       </div>
-      <small *ngIf="_options.showStatus" class="status">{{status}}</small>
     </div>
   </div>
+  <small *ngIf="_options.showStatus" class="status">{{status}}</small>
 </div>
 
 <div #warpRef style="display: none">

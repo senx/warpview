@@ -20,6 +20,7 @@ const concat = require('concat');
 (async function build() {
   const files = [
     './scripts/header.js',
+    './node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
     './scripts/loader.js',
     './dist/warpview/elements/main.js'
   ];
