@@ -307,12 +307,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const values = gts.v.map(t => t[t.length - 1]);
 
           if (size > 0) {
-            this.minTick = ticks[0];
-            this.maxTick = ticks[0];
+            this.minTick = this.minTick || ticks[0];
+            this.maxTick = this.maxTick || ticks[0];
             for (let v = 1; v < size; v++) {
-              const val = ticks[i];
-              this.minTick = (val < this.minTick) ? val : this.minTick;
-              this.maxTick = (val > this.maxTick) ? val : this.maxTick;
+              const val = ticks[v];
+              this.minTick = val <= this.minTick ? val : this.minTick;
+              this.maxTick = val >= this.maxTick ? val : this.maxTick;
             }
           }
           if (timestampMode || this._options.timeMode === 'timestamp') {
@@ -367,12 +367,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.chartBounds.tsmax = this.maxTick;
       this.chartBounds.marginLeft = this.marginLeft;
       this.chartDraw.emit(this.chartBounds);
-      if (this.afterBoundsUpdate) {
+      if (this.afterBoundsUpdate || this.standalone) {
         this.LOG.debug(['afterPlot', 'updateBounds'], this.minTick, this.maxTick);
         this.emitNewBounds(this.minTick, this.maxTick, this.marginLeft);
         this.loading = false;
         this.afterBoundsUpdate = false;
       }
+    } else {
+
+      this.loading = false;
     }
   }
 

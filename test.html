@@ -75,9 +75,9 @@
   <div class="starter-template">
     <div style="height: 600px; width: 100%;">
       <warp-view-tile
-        url="https://warp.senx.io/api/v0"
+        url="https://warp.senx.io/api/v0/exec"
         responsive="true" debug="true"
-        type="plot">
+        type="line">
         NEWGTS 'g' STORE
         0 100 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
         $g
