@@ -27,7 +27,6 @@ import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
-import * as Plotlyjs from 'plotly.js/dist/plotly';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -106,7 +105,8 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['onData'], data);
     if (data) {
       this._data = GTSLib.getData(data);
-      this.update(undefined, true);
+      this.update(this._options, true);
+      this.LOG.debug(['onData'], this._data);
     }
   }
 

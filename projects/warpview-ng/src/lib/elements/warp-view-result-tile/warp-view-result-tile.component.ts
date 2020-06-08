@@ -65,20 +65,27 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   protected update(options: Param, refresh: boolean): void {
     setTimeout(() => this.loading = true);
-    if (!!this._data) {
+    this.dataModel = this._data;
+    if (!!this.dataModel) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
       this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options), this._data.globalParams || {}) as Param;
-      if (this._data.globalParams) {
-        this._unit = this._data.globalParams.unit || this._unit;
-      }
       this.LOG.debug(['parseGTS', 'data'], this._data);
       this.dataModel = this._data;
+      if (this.dataModel.globalParams) {
+        this._unit = this.dataModel.globalParams.unit || this._unit;
+        this._type = this.dataModel.globalParams.type || this._type || 'plot';
+      }
     }
   }
 
   protected convert(data: DataModel): Partial<any>[] {
     setTimeout(() => this.loading = true);
+    this.LOG.debug(['convert', 'data'], this._data, data);
     this.dataModel = data;
+    if (this.dataModel.globalParams) {
+      this._unit = this.dataModel.globalParams.unit || this._unit;
+      this._type = this.dataModel.globalParams.type || this._type || 'plot';
+    }
     return [];
   }
 
@@ -90,6 +97,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   chartDrawn() {
+    this.LOG.debug(['chartDrawn']);
     setTimeout(() => this.loading = false);
     this.chartDraw.emit();
   }
