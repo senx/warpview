@@ -316,38 +316,51 @@ ${labeledData}`;
   }
 
   hover(data: any) {
-    this.LOG.debug(['hover'], 'start');
-    this.toolTip.nativeElement.style.display = 'block';
-    const y = (data.yvals || [''])[0];
     let delta = Number.MAX_VALUE;
     let point;
-    data.points.forEach(p => {
-      const d = Math.abs(p.y - y);
-      if (d < delta) {
-        delta = d;
-        point = p;
-      }
-    });
-    this.graph.restyleChart({opacity: 0.4}, data.points.map(p => p.curveNumber));
-    this.graph.restyleChart({opacity: 1}, [point.curveNumber]);
-    this.LOG.debug(['hover'], 'restyleChart');
+    this.toolTip.nativeElement.style.display = 'block';
+    if (data.points[0] && data.points[0].data.orientation !== 'h') {
+      const y = (data.yvals || [''])[0];
+      data.points.forEach(p => {
+        const d = Math.abs(p.y - y);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
 
-    this.toolTip.nativeElement.innerHTML = this.legendFormatter(
-      this._options.horizontal ?
-        (data.yvals || [''])[0] :
-        (data.xvals || [''])[0]
-      , data.points, point.curveNumber);
-    if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-      this.renderer.setStyle(this.toolTip.nativeElement,
-        'left',
-        Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px');
     } else {
-      this.renderer.setStyle(this.toolTip.nativeElement, 'left', (data.event.offsetX + 20) + 'px');
+      const x = (data.xvals || [''])[0];
+      data.points.forEach(p => {
+        const d = Math.abs(p.x - x);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
     }
-    this.renderer.setStyle(this.toolTip.nativeElement, 'top', Math.min(
-      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height,
-      data.event.offsetY + 20) + 'px');
-    this.LOG.debug(['hover'], 'tooltip');
+    if (!!point) {
+      this.graph.restyleChart({opacity: 0.4}, data.points.map(p => p.curveNumber));
+      this.graph.restyleChart({opacity: 1}, [point.curveNumber]);
+      this.LOG.debug(['hover'], 'restyleChart');
+
+      this.toolTip.nativeElement.innerHTML = this.legendFormatter(
+        this._options.horizontal ?
+          (data.yvals || [''])[0] :
+          (data.xvals || [''])[0]
+        , data.points, point.curveNumber);
+      if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
+        this.renderer.setStyle(this.toolTip.nativeElement,
+          'left',
+          Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px');
+      } else {
+        this.renderer.setStyle(this.toolTip.nativeElement, 'left', (data.event.offsetX + 20) + 'px');
+      }
+      this.renderer.setStyle(this.toolTip.nativeElement, 'top', Math.min(
+        this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height,
+        data.event.offsetY + 20) + 'px');
+      this.LOG.debug(['hover'], 'tooltip');
+    }
   }
 
   relayout($event: any) {

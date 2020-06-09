@@ -77,17 +77,23 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
   protected convert(data: DataModel): Partial<any>[] {
     let gtsList = [];
     if (GTSLib.isArray(data.data)) {
+      data.data = GTSLib.flatDeep(data.data as any[]);
+      this.LOG.debug(['convert', 'isArray']);
       if (data.data.length > 0 && GTSLib.isGts(data.data[0])) {
-        gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
+        this.LOG.debug(['convert', 'isArray 2']);
+        gtsList = GTSLib.flattenGtsIdArray(data.data as any[], 0).res;
       } else {
+        this.LOG.debug(['convert', 'isArray 3']);
         gtsList = data.data as any[];
       }
     } else {
+      this.LOG.debug(['convert', 'not array']);
       gtsList = [data.data];
     }
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     const dataset = [];
     gtsList.forEach((gts, i) => {
+      this.LOG.debug(['convert', 'gts item'], gts);
       if (gts.v) {
         const label = GTSLib.serializeGtsMetadata(gts);
         const c = ColorLib.getColor(gts.id || i, this._options.scheme);

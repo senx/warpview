@@ -374,7 +374,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         this.afterBoundsUpdate = false;
       }
     } else {
-
       this.loading = false;
     }
   }
