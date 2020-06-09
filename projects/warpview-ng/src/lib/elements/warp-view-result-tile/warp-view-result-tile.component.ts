@@ -20,8 +20,13 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   get type(): string {
-    return this.dataModel.globalParams.type || this._type || 'plot';
+    if (this.dataModel && this.dataModel.globalParams) {
+      return this.dataModel.globalParams.type || this._type || 'plot';
+    } else {
+      return this._type || 'plot';
+    }
   }
+
   @Input('standalone') standalone = true;
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
