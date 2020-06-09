@@ -133,6 +133,7 @@ export abstract class WarpViewComponent {
   protected _unit = '';
   protected _data: DataModel;
   protected _autoResize = true;
+
   loading = true;
   noData = false;
   layout: Partial<any> = {

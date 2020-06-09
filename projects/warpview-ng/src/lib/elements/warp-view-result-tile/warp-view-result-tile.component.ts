@@ -20,17 +20,16 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   get type(): string {
-    return this._type;
+    return this.dataModel.globalParams.type || this._type || 'plot';
   }
-
   @Input('standalone') standalone = true;
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
+
   loading = true;
   dataModel: DataModel;
-  private _type;
   graphs = {
     spectrum: ['histogram2dcontour', 'histogram2d'],
     chart: ['line', 'spline', 'step', 'step-after', 'step-before', 'area', 'scatter'],
@@ -54,6 +53,8 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     drops: ['drops']
   };
 
+  private _type;
+
   constructor(
     public el: ElementRef,
     public renderer: Renderer2,
@@ -65,16 +66,18 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   protected update(options: Param, refresh: boolean): void {
     setTimeout(() => this.loading = true);
+    this.LOG.debug(['parseGTS', 'data'], this._data);
     this.dataModel = this._data;
     if (!!this.dataModel) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
       this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options), this._data.globalParams || {}) as Param;
       this.LOG.debug(['parseGTS', 'data'], this._data);
       this.dataModel = this._data;
-      if (this.dataModel.globalParams) {
-        this._unit = this.dataModel.globalParams.unit || this._unit;
-        this._type = this.dataModel.globalParams.type || this._type || 'plot';
+      if (this._options) {
+        this._unit = this._options.unit || this._unit;
+        this._type = this._options.type || this._type || 'plot';
       }
+      this.LOG.debug(['parseGTS', '_type'], this._type);
     }
   }
 
@@ -86,6 +89,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
       this._unit = this.dataModel.globalParams.unit || this._unit;
       this._type = this.dataModel.globalParams.type || this._type || 'plot';
     }
+    this.LOG.debug(['convert', '_type'], this._type);
     return [];
   }
 
