@@ -44,12 +44,12 @@ export class SmallTestsComponent implements OnInit {
 
   tests = [
     {
-      type: 'bar',
+      type: 'plot',
       description: '',
       warpscript: `NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
-$g 'values' STORE
-{ 'data' $values 'globalParams' { 'type' 'plot' } }
+0 10 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
+$g STOP 'values' STORE
+{ 'data' $values 'globalParams' { 'type' 'line' } }
 `
     },
     {

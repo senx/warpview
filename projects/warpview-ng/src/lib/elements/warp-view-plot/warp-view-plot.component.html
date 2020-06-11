@@ -15,7 +15,7 @@
   ~
   -->
 
-<div #mainPlotDiv tabindex="0" (click)="focus($event)">
+<div #mainPlotDiv tabindex="0" (click)="focus($event)" id="focusablePlotDiv">
   <warpview-modal [kbdLastKeyPressed]="kbdLastKeyPressed" modalTitle="TimeClip" #timeClip
                   (warpViewModalClose)="onWarpViewModalClose()"
   >

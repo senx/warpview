@@ -63,7 +63,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   set warpscript(warpScript: string) {
     if (!!warpScript && this._warpScript !== warpScript) {
       this._warpScript = warpScript;
-      this.execute(false);
+      this.execute(true);
     }
   }
 
@@ -81,6 +81,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private _warpScript = '';
   private execUrl = '';
   private timeUnit = 'us';
+  loading = false;
   execResult: string;
 
   constructor(
@@ -112,7 +113,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   /* Listeners */
   @HostListener('document:keyup', ['$event'])
-  @HostListener('keydown', ['$event'])
+  // @HostListener('keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'r') {
       this.execute(false);
@@ -159,8 +160,9 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
 
   private execute(isRefresh: boolean) {
     if (!!this._warpScript && this._warpScript.trim() !== '') {
+      this.LOG.debug(['execute'], isRefresh);
       this.error = undefined;
-      this.loading = !isRefresh;
+      this.loading = isRefresh;
       this.execResult = undefined;
       this.loaderMessage = 'Requesting data';
       this.execUrl = this.url;

@@ -284,6 +284,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         this._options = options;
         this.drawChart(false);
       }
+      this.drawChart(refresh);
     } else {
       this.drawChart(refresh);
     }

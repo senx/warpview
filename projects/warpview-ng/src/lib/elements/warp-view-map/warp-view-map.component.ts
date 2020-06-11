@@ -78,6 +78,9 @@ export class WarpViewMapComponent implements OnInit {
 
   @Input('data') set data(data: any) {
     this.LOG.debug(['onData'], data);
+    this.currentValuesMarkers = [];
+    this.annotationsMarkers = [];
+    this.positionArraysMarkers = [];
     if (!!data) {
       this._data = data;
       this.drawMap(true);
@@ -279,7 +282,9 @@ export class WarpViewMapComponent implements OnInit {
     // https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-150544739
     // @ts-ignore
     const originalInitTile = Leaflet.GridLayer.prototype._initTile;
-    if (originalInitTile.isPatched) { return; }
+    if (originalInitTile.isPatched) {
+      return;
+    }
     Leaflet.GridLayer.include({
       _initTile(tile) {
         originalInitTile.call(this, tile);
