@@ -75,7 +75,8 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     this.dataModel = this._data;
     if (!!this.dataModel) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
-      this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options), this._data.globalParams || {}) as Param;
+      this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options),
+        this._data ? this._data.globalParams || {} : {}) as Param;
       this.LOG.debug(['parseGTS', 'data'], this._data);
       this.dataModel = this._data;
       if (this._options) {
@@ -83,6 +84,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
         this._type = this._options.type || this._type || 'plot';
       }
       this.LOG.debug(['parseGTS', '_type'], this._type);
+      setTimeout(() => this.loading = false);
     }
   }
 
