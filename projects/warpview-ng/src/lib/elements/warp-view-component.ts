@@ -169,20 +169,22 @@ export abstract class WarpViewComponent {
     public sizeService: SizeService,
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
-      const parentSize = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect();
-      if (this._responsive) {
-        this.height = parentSize.height;
-        this.width = parentSize.width;
-      }
-      if (!!this.graph && this._responsive && parentSize.height > 0) {
-        const layout = {
-          width: parentSize.width,
-          height: this._autoResize ? parentSize.height : this.layout.height
-        };
-        if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
-          setTimeout(() => this.layout = {...this.layout, ...layout});
-          this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
-          this.graph.updatePlot();
+      if ((el.nativeElement as HTMLElement).parentElement) {
+        const parentSize = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect();
+        if (this._responsive) {
+          this.height = parentSize.height;
+          this.width = parentSize.width;
+        }
+        if (!!this.graph && this._responsive && parentSize.height > 0) {
+          const layout = {
+            width: parentSize.width,
+            height: this._autoResize ? parentSize.height : this.layout.height
+          };
+          if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
+            setTimeout(() => this.layout = {...this.layout, ...layout});
+            this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
+            this.graph.updatePlot();
+          }
         }
       }
     });

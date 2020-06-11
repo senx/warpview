@@ -382,8 +382,9 @@ export class WarpViewMapComponent implements OnInit {
     }
 
     this.LOG.debug(['displayMap'], 'this.annotationsData');
-    this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers).addTo(this._map);
-
+    if (!!this._map) {
+      this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers).addTo(this._map);
+    }
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
     this.LOG.debug(['displayMap', 'this.positionData'], this.positionData);
@@ -514,6 +515,13 @@ export class WarpViewMapComponent implements OnInit {
       });
       this._heatLayer.addTo(this._map);
     }
+   /* this.LOG.debug(['drawMap'], this.el.nativeElement.getBoundingClientRect());
+    if (this.wrapper.nativeElement.getBoundingClientRect().height === 0) {
+      this.wrapper.nativeElement.style.height = ChartLib.DEFAULT_HEIGHT + 'px';
+    }
+    if (this.el.nativeElement.getBoundingClientRect().width === 0) {
+      this.el.nativeElement.style.height = ChartLib.DEFAULT_WIDTH + 'px';
+    }*/
     this.resizeMe();
     this.chartDraw.emit(true);
   }

@@ -26,7 +26,7 @@
       <h4>Test {{currentTest + 1}}</h4>
       <p [innerHTML]="tests[currentTest].description"></p>
 
-      <div style="height: 600px;min-height: 600px; resize: both; padding: 10px; overflow: hidden;">
+      <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;">
         <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
                        [showLegend]="false" [options]="options"
                        [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
