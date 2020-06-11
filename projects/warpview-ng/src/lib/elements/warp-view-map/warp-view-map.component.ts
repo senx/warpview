@@ -273,6 +273,25 @@ export class WarpViewMapComponent implements OnInit {
     });
   }
 
+  private patchMapTileGapBug() {
+    // Workaround for 1px lines appearing in some browsers due to fractional transforms
+    // and resulting anti-aliasing. adapted from @cmulders' solution:
+    // https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-150544739
+    // @ts-ignore
+    const originalInitTile = Leaflet.GridLayer.prototype._initTile;
+    if (originalInitTile.isPatched) { return; }
+    Leaflet.GridLayer.include({
+      _initTile(tile) {
+        originalInitTile.call(this, tile);
+        const tileSize = this.getTileSize();
+        tile.style.width = tileSize.x + 1.5 + 'px';
+        tile.style.height = tileSize.y + 1 + 'px';
+      }
+    });
+    // @ts-ignore
+    Leaflet.GridLayer.prototype._initTile.isPatched = true;
+  }
+
   private displayMap(data: { gts: any[], params: any[] }, reZoom = false) {
     this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
@@ -402,7 +421,7 @@ export class WarpViewMapComponent implements OnInit {
     }
     this.LOG.debug(['displayMap'], 'this.annotationsData');
 
-    (this._options.map.tiles || []).forEach((t) => { // TODO à tester
+    (this._options.map.tiles || []).forEach((t) => { // TODO to test
       this.LOG.debug(['displayMap'], t);
       if (this._options.map.showTimeRange) {
         this.tileLayerGroup.addLayer(Leaflet.tileLayer(t
@@ -515,14 +534,8 @@ export class WarpViewMapComponent implements OnInit {
       });
       this._heatLayer.addTo(this._map);
     }
-   /* this.LOG.debug(['drawMap'], this.el.nativeElement.getBoundingClientRect());
-    if (this.wrapper.nativeElement.getBoundingClientRect().height === 0) {
-      this.wrapper.nativeElement.style.height = ChartLib.DEFAULT_HEIGHT + 'px';
-    }
-    if (this.el.nativeElement.getBoundingClientRect().width === 0) {
-      this.el.nativeElement.style.height = ChartLib.DEFAULT_WIDTH + 'px';
-    }*/
     this.resizeMe();
+    this.patchMapTileGapBug();
     this.chartDraw.emit(true);
   }
 
