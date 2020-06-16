@@ -15,7 +15,18 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -60,8 +71,9 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewGtsTreeComponent, this._debug);
   }
 

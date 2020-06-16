@@ -21,7 +21,7 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
-  Input,
+  Input, NgZone,
   OnInit,
   Output,
   Renderer2,
@@ -43,7 +43,7 @@ import {HttpResponse} from '@angular/common/http';
   templateUrl: './warp-view-tile.component.html',
   styleUrls: ['./warp-view-tile.component.scss'],
   providers: [HttpErrorHandler],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
@@ -88,9 +88,10 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     public el: ElementRef,
     public sizeService: SizeService,
     public renderer: Renderer2,
-    private warp10Service: Warp10Service
+    public ngZone: NgZone,
+    private warp10Service: Warp10Service,
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewTileComponent, this._debug);
   }
 

@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -11,7 +11,7 @@ import {ResizedEvent} from 'angular-resize-event';
   selector: 'warpview-result-tile',
   templateUrl: './warp-view-result-tile.component.html',
   styleUrls: ['./warp-view-result-tile.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewResultTileComponent extends WarpViewComponent {
 
@@ -64,8 +64,9 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewResultTileComponent, this._debug);
   }
 

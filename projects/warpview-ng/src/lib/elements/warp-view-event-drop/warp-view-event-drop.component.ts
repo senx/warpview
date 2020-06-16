@@ -2,7 +2,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
+  Input, NgZone,
   OnDestroy,
   OnInit,
   Output,
@@ -111,8 +111,9 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewEventDropComponent, this._debug);
   }
 

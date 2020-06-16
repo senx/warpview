@@ -35,7 +35,7 @@
     width: 1px;
     left: -100px;
     position: absolute;
-    background-color: var(--warp-view-bar-color);
+    background-color: transparent;
     backface-visibility: hidden;
     top: 0;
     bottom: 55px;
@@ -43,6 +43,7 @@
     display: none;
     z-index: 0;
     pointer-events: none;
+    border-left: dashed 2px var(--warp-view-bar-color);
   }
 
   .inline {

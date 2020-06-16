@@ -52,7 +52,7 @@ import {Logger} from '../../utils/logger';
   selector: 'warpview-plot',
   templateUrl: './warp-view-plot.component.html',
   styleUrls: ['./warp-view-plot.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, AfterViewInit {
 
@@ -138,9 +138,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
-    private zone: NgZone
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewPlotComponent, this._debug);
   }
 
@@ -232,23 +232,21 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       }
     }
     this.LOG.debug(['warpViewSelectedGTS', 'this._toHide'], this._toHide);
-    this.zone.run(() => {
+    this.ngZone.run(() => {
       this._toHide = [...this._toHide];
     });
   }
 
   handleMouseMove(evt: MouseEvent) {
     evt.preventDefault();
-    this.left = this.left || this.main.nativeElement.getBoundingClientRect().left;
-    if (this.showLine) {
-      if (this.line) {
-        this.renderer.setStyle(this.line.nativeElement, 'left', Math.max(evt.pageX - this.left, 50) + 'px');
-      }
+    if (this.showLine && this.line) {
+      this.line.nativeElement.style.left = Math.max(evt.pageX - this.left, 50) + 'px';
     }
   }
 
   handleMouseEnter(evt: MouseEvent) {
     evt.preventDefault();
+    this.left = this.left || this.main.nativeElement.getBoundingClientRect().left;
     this.showLine = true;
     if (this.line) {
       this.renderer.setStyle(this.line.nativeElement, 'display', 'block');
@@ -256,7 +254,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   handleMouseOut(evt: MouseEvent) {
-    evt.preventDefault();
+   // evt.preventDefault();
     if (this.line) {
       this.showLine = false;
       this.renderer.setStyle(this.line.nativeElement, 'left', '-100px');

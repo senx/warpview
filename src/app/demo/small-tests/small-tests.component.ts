@@ -36,7 +36,7 @@ export class SmallTestsComponent implements OnInit {
       // map: {mapType: 'CARTODB_DARK'},
       showControls: true,
       showGTSTree: true,
-      foldGTSTree: false,
+      foldGTSTree: true,
       showDots: false,
   //    autoRefresh: 5
     }
@@ -46,10 +46,32 @@ export class SmallTestsComponent implements OnInit {
     {
       type: 'plot',
       description: '',
-      warpscript: `NEWGTS 'g' STORE
-0 10 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
-$g STOP 'values' STORE
-{ 'data' $values 'globalParams' { 'type' 'line' } }
+      warpscript: `@training/dataset0
+// warp.store.hbase.puts.committed is the number of datapoints committed to 
+// HBase since the restart of the Store daemon
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH
+[ SWAP mapper.rate 1 0 0 ] MAP 
+'gts' STORE 
+// Keep only 1000 datapoints per GTS
+$gts 1000 LTTB  'gts' STORE
+// Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test
+$gts 5 false ESDTEST 'outliers' STORE 
+// Convert the ticks identified by ESDTEST into an annotation GTS
+
+$gts
+[
+  $outliers <%
+    'tsList' STORE
+    NEWGTS 'newGTS' STORE // create a new GTS
+    $tsList <%
+      'ts' STORE 
+      $newGTS $ts NaN NaN NaN 'anomaly' ADDVALUE DROP
+    %> FOREACH // for each timestamp
+    $newGTS
+  %> FOREACH 
+]
+2 ->LIST
+ZIP
 `
     },
     {

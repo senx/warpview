@@ -95,13 +95,20 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   @Output() unhover = new EventEmitter();
   @Output() relayouting = new EventEmitter();
 
-  public eventNames = ['afterExport', 'afterPlot', 'animated', 'animatingFrame', 'animationInterrupted', 'autoSize',
-    'beforeExport', 'buttonClicked', 'clickAnnotation', 'deselect', 'doubleClick', 'framework', 'hover',
-    'legendClick', 'legendDoubleClick', 'relayout', 'restyle', 'redraw', 'selected', 'selecting', 'sliderChange',
-    'sliderEnd', 'sliderStart', 'transitioning', 'transitionInterrupted', 'unhover', 'relayouting'];
+  public eventNames = [
+    // 'afterExport',
+ //   'afterPlot', // 'animated', 'animatingFrame', 'animationInterrupted', 'autoSize',
+    // 'beforeExport', 'buttonClicked', 'clickAnnotation', 'deselect', 'doubleClick', 'framework',
+    'hover', 'unhover',
+    // 'legendClick', 'legendDoubleClick',
+    'relayout',
+    // 'restyle', 'redraw', 'selected', 'selecting', 'sliderChange',
+    // 'sliderEnd', 'sliderStart', 'transitioning', 'transitionInterrupted', 'relayouting'
+  ];
 
   constructor(
     public iterableDiffers: IterableDiffers,
+    public el: ElementRef,
     public keyValueDiffers: KeyValueDiffers
   ) {
     this.LOG = new Logger(PlotlyComponent, this.debug);
@@ -192,17 +199,13 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     return classes.join(' ');
   }
 
-  restyleChart(propertie: any, curves: any[]) {
-    Plotlyjs.restyle(this.plotlyInstance, propertie, curves);
+  restyleChart(properties: any, curves: any[]) {
+    Plotlyjs.restyle(this.plotlyInstance, properties, curves);
   }
 
   createPlot(): Promise<void> {
     this.LOG.debug(['createPlot'], this.data, this.layout, this.config, this.plotlyInstance);
-    let drawFn = Plotlyjs.newPlot;
-    if (this.plotlyInstance) {
-      drawFn = Plotlyjs.react;
-    }
-    return drawFn(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
+    return Plotlyjs.react(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
       this.plotlyInstance = plotlyInstance;
       this.LOG.debug(['plotlyInstance'], plotlyInstance);
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;

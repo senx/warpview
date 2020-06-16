@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, NgZone, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import moment from 'moment';
@@ -44,8 +44,9 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewDrillDownComponent, this._debug);
   }
 

@@ -22,11 +22,13 @@ import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import * as moment from 'moment-timezone';
-import {ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
+import {ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
+import {interval, Subject} from 'rxjs';
+import {debounce} from 'rxjs/operators';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -37,6 +39,7 @@ export abstract class WarpViewComponent {
 
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
+
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
@@ -133,7 +136,8 @@ export abstract class WarpViewComponent {
   protected _unit = '';
   protected _data: DataModel;
   protected _autoResize = true;
-
+  private highlighted: any;
+  tooltipPosition: any = {top: '-10000px', left: '-1000px'};
   loading = true;
   noData = false;
   layout: Partial<any> = {
@@ -162,11 +166,14 @@ export abstract class WarpViewComponent {
   plotlyData: Partial<any>[];
   protected _hiddenData: number[] = [];
   protected divider: number;
+  unhighliteCurve = new Subject<number[]>();
+  highliteCurve = new Subject<{ on: number[], off: number[] }>();
 
   protected constructor(
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
       if ((el.nativeElement as HTMLElement).parentElement) {
@@ -195,6 +202,7 @@ export abstract class WarpViewComponent {
   protected abstract convert(data: DataModel): Partial<any>[];
 
   protected legendFormatter(x, series, highlighted = -1): string {
+    const displayedCurves = [];
     if (x === null) {
       // This happens when there's no selection and {legend: 'always'} is set.
       return `<br>
@@ -210,8 +218,8 @@ export abstract class WarpViewComponent {
           }
         }
         if (s.curveNumber === highlighted) {
-          labeledData = `<b><i class="chip"
-    style="background-color: ${color};border: 2px solid ${color};"></i> ${labeledData}</b>`;
+          labeledData = `<i class="chip"
+    style="background-color: ${color};border: 2px solid ${color};"></i> ${labeledData}`;
         }
         return labeledData;
       }).join('<br>')}`;
@@ -223,28 +231,35 @@ export abstract class WarpViewComponent {
     }
     html += `<b>${x}</b><br />`;
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
-    //   series.sort((sa, sb) => (sa.isHighlighted && !sb.isHighlighted) ? -1 : 1)
-    //   series.filter(s => s.isVisible && s.yHTML).slice(0, 50)
-    series.forEach((s, i) => {
-      let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + ((this._options.horizontal ? s.x : s.y) || s.r || '');
-      if (s.curveNumber === highlighted) {
-        labeledData = `<b>${labeledData}</b>`;
-      }
-      let color = s.data.line ? s.data.line.color : '';
-      if (!!s.data.marker) {
-        if (GTSLib.isArray(s.data.marker.color)) {
-          color = s.data.marker.color[0];
-        } else {
-          color = s.data.marker.color;
+    series = series.sort((sa, sb) => (sa.curveNumber === highlighted) ? -1 : 1);
+    series
+      // .filter(s => s.isVisible && s.yHTML)
+      .slice(0, 50)
+      .forEach((s, i) => {
+        if (displayedCurves.indexOf(s.curveNumber) <= -1) {
+          displayedCurves.push(s.curveNumber);
+          let value = series[0].data.orientation === 'h' ? s.x : s.y;
+          if (!value && value !== 0) {
+            value = s.r;
+          }
+          let labeledData = GTSLib.formatLabel(s.data.text || '') + ': ' + value;
+          if (s.curveNumber === highlighted) {
+            labeledData = `<b>${labeledData}</b>`;
+          }
+          let color = s.data.line ? s.data.line.color : '';
+          if (!!s.data.marker) {
+            if (GTSLib.isArray(s.data.marker.color)) {
+              color = s.data.marker.color[0];
+            } else {
+              color = s.data.marker.color;
+            }
+          }
+          html += `<i class="chip" style="background-color: ${color};border: 2px solid ${color};"></i>${labeledData}`;
+          if (i < series.length) {
+            html += '<br>';
+          }
         }
-      }
-      html += `<b><i class="chip"
-style="background-color: ${color};border: 2px solid ${color};"></i>
-${labeledData}`;
-      if (i < series.length) {
-        html += '<br>';
-      }
-    });
+      });
     return html;
   }
 
@@ -302,6 +317,17 @@ ${labeledData}`;
       this.loading = false;
       return false;
     }
+    this.highliteCurve.pipe(debounce(() => interval(100))).subscribe(value => {
+      Promise.resolve().then(() => {
+        this.graph.restyleChart({opacity: 0.4}, value.off);
+        this.graph.restyleChart({opacity: 1}, value.on);
+      });
+    });
+    this.unhighliteCurve.pipe(debounce(() => interval(100))).subscribe(value => {
+      Promise.resolve().then(() => {
+        this.graph.restyleChart({opacity: 1}, value);
+      });
+    });
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
@@ -310,17 +336,14 @@ ${labeledData}`;
     this.loading = false;
   }
 
-  unhover(data?: any) {
+  hideTooltip() {
     this.toolTip.nativeElement.style.display = 'none';
-    if (!!data) {
-      this.graph.restyleChart({opacity: 1}, data.points.map(p => p.curveNumber));
-    }
   }
 
-  hover(data: any) {
+  unhover(data?: any) {
+    this.LOG.debug(['unhover'], data);
     let delta = Number.MAX_VALUE;
     let point;
-    this.toolTip.nativeElement.style.display = 'block';
     if (data.points[0] && data.points[0].data.orientation !== 'h') {
       const y = (data.yvals || [''])[0];
       data.points.forEach(p => {
@@ -330,9 +353,8 @@ ${labeledData}`;
           point = p;
         }
       });
-
     } else {
-      const x = (data.xvals || [''])[0];
+      const x: number = (data.xvals || [''])[0];
       data.points.forEach(p => {
         const d = Math.abs(p.x - x);
         if (d < delta) {
@@ -342,27 +364,74 @@ ${labeledData}`;
       });
     }
     if (!!point) {
-      this.graph.restyleChart({opacity: 0.4}, data.points.map(p => p.curveNumber));
-      this.graph.restyleChart({opacity: 1}, [point.curveNumber]);
-      this.LOG.debug(['hover'], 'restyleChart');
+      if (this.highlighted !== point.curveNumber) {
+        this.unhighliteCurve.next([this.highlighted]);
+        this.highlighted = undefined;
+      }
+    }
+  }
 
-      this.toolTip.nativeElement.innerHTML = this.legendFormatter(
+  hover(data: any) {
+    this.LOG.debug(['hover'], data);
+    let delta = Number.MAX_VALUE;
+    let point;
+    const curves = [];
+    this.toolTip.nativeElement.style.display = 'block';
+    if (data.points[0] && data.points[0].data.orientation !== 'h') {
+      const y = (data.yvals || [''])[0];
+      data.points.forEach(p => {
+        curves.push(p.curveNumber);
+        const d = Math.abs(p.y - y);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    } else {
+      const x: number = (data.xvals || [''])[0];
+      data.points.forEach(p => {
+        curves.push(p.curveNumber);
+        const d = Math.abs(p.x - x);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    }
+    if (!!point) {
+      const content = this.legendFormatter(
         this._options.horizontal ?
           (data.yvals || [''])[0] :
           (data.xvals || [''])[0]
         , data.points, point.curveNumber);
+      let left = (data.event.offsetX + 20) + 'px';
       if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-        this.renderer.setStyle(this.toolTip.nativeElement,
-          'left',
-          Math.max(10, data.event.offsetX - this.toolTip.nativeElement.clientWidth) + 'px');
-      } else {
-        this.renderer.setStyle(this.toolTip.nativeElement, 'left', (data.event.offsetX + 20) + 'px');
+        left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
       }
-      this.renderer.setStyle(this.toolTip.nativeElement, 'top', Math.min(
-        this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height,
-        data.event.offsetY + 20) + 'px');
+      const top = Math.min(
+        this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
+        data.event.offsetY - 20) + 'px';
       this.LOG.debug(['hover'], 'tooltip');
+      this.moveTooltip(top, left, content);
+
+      if (this.highlighted !== point.curveNumber) {
+        this.highliteCurve.next({on: [point.curveNumber], off: curves});
+        this.highlighted = point.curveNumber;
+      }
     }
+  }
+
+  getTooltipPosition() {
+    return {
+      top: this.tooltipPosition.top,
+      left: this.tooltipPosition.left,
+    };
+  }
+
+
+  private moveTooltip(top, left, content) {
+    this.tooltipPosition = {top, left};
+    this.renderer.setProperty(this.toolTip.nativeElement, 'innerHTML', content);
   }
 
   relayout($event: any) {

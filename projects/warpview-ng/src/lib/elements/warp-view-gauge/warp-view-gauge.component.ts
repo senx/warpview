@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, Input, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import gauge from 'canvas-gauges';
@@ -46,8 +46,9 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     public el: ElementRef,
     public renderer: Renderer2,
     public sizeService: SizeService,
+    public ngZone: NgZone
   ) {
-    super(el, renderer, sizeService);
+    super(el, renderer, sizeService, ngZone);
     this.LOG = new Logger(WarpViewGaugeComponent, this._debug);
   }
 
