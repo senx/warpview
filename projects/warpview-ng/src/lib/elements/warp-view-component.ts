@@ -27,8 +27,6 @@ import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
-import {Subject} from 'rxjs';
-import {debounce, debounceTime, throttleTime} from 'rxjs/operators';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -166,10 +164,6 @@ export abstract class WarpViewComponent {
     ]
   };
   plotlyData: Partial<any>[];
-  unhighliteCurve = new Subject<number[]>();
-  highliteCurve = new Subject<{ on: number[], off: number[] }>();
-
-  private highlighted: any;
   private hideTooltipTimer: number;
 
   protected constructor(
@@ -230,7 +224,7 @@ export abstract class WarpViewComponent {
 
     let html = '';
     if (!!series[0]) {
-      x = series[0].x;
+      x = series[0].x || series[0].theta;
     }
     html += `<b>${x}</b><br />`;
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
@@ -320,17 +314,6 @@ export abstract class WarpViewComponent {
       this.loading = false;
       return false;
     }
-    this.highliteCurve.pipe(debounceTime(200)).subscribe(value => {
-      Promise.resolve().then(() => {
-        this.graph.restyleChart({opacity: 0.4}, value.off);
-        this.graph.restyleChart({opacity: 1}, value.on);
-      });
-    });
-    this.unhighliteCurve.pipe(debounceTime(200)).subscribe(value => {
-      Promise.resolve().then(() => {
-        this.graph.restyleChart({opacity: 1}, value);
-      });
-    });
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
@@ -348,72 +331,43 @@ export abstract class WarpViewComponent {
     }, 1000);
   }
 
-  unhover(data?: any) {
+  unhover(data?: any, point?: any) {
     this.LOG.debug(['unhover'], data);
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
-    this.hideTooltipTimer = setTimeout(() => {
-  //    this.toolTip.nativeElement.style.display = 'none';
-    }, 1000);
-    let delta = Number.MAX_VALUE;
-    let point;
-    if (data.points[0] && data.points[0].data.orientation !== 'h') {
-      const y = (data.yvals || [''])[0];
-      data.points.forEach(p => {
-        const d = Math.abs(p.y - y);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    } else {
-      const x: number = (data.xvals || [''])[0];
-      data.points.forEach(p => {
-        const d = Math.abs(p.x - x);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    }
-    if (!!point) {
-      if (this.highlighted !== point.curveNumber) {
-        this.unhighliteCurve.next([this.highlighted]);
-        this.highlighted = undefined;
-      }
-    }
   }
 
-  hover(data: any) {
+  hover(data: any, point?: any) {
+    this.LOG.debug(['hover'], data);
+    this.toolTip.nativeElement.style.display = 'block';
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
-    this.LOG.debug(['hover'], data);
     let delta = Number.MAX_VALUE;
-    let point;
     const curves = [];
-    this.toolTip.nativeElement.style.display = 'block';
-    if (data.points[0] && data.points[0].data.orientation !== 'h') {
-      const y = (data.yvals || [''])[0];
-      data.points.forEach(p => {
-        curves.push(p.curveNumber);
-        const d = Math.abs(p.y - y);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    } else {
-      const x: number = (data.xvals || [''])[0];
-      data.points.forEach(p => {
-        curves.push(p.curveNumber);
-        const d = Math.abs(p.x - x);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
+    if (!point) {
+      if (data.points[0] && data.points[0].data.orientation !== 'h') {
+        const y = (data.yvals || [''])[0];
+        data.points.forEach(p => {
+          curves.push(p.curveNumber);
+          const d = Math.abs((p.y || p.r) - y);
+          if (d < delta) {
+            delta = d;
+            point = p;
+          }
+        });
+      } else {
+        const x: number = (data.xvals || [''])[0];
+        data.points.forEach(p => {
+          curves.push(p.curveNumber);
+          const d = Math.abs((p.x || p.r) - x);
+          if (d < delta) {
+            delta = d;
+            point = p;
+          }
+        });
+      }
     }
     if (point) {
       const content = this.legendFormatter(
@@ -430,11 +384,6 @@ export abstract class WarpViewComponent {
         data.event.offsetY - 20) + 'px';
       this.LOG.debug(['hover'], 'tooltip');
       this.moveTooltip(top, left, content);
-
-      if (this.highlighted !== point.curveNumber) {
-        this.highliteCurve.next({on: [point.curveNumber], off: curves});
-        this.highlighted = point.curveNumber;
-      }
     }
   }
 
@@ -444,7 +393,6 @@ export abstract class WarpViewComponent {
       left: this.tooltipPosition.left,
     };
   }
-
 
   private moveTooltip(top, left, content) {
     this.tooltipPosition = {top, left};

@@ -15,7 +15,7 @@
   ~
   -->
 
-<div id="chartContainer" #chartContainer>
+<div id="chartContainer" #chartContainer (mouseleave)="hideTooltip()">
   <button *ngIf="displayExpander && plotlyData && plotlyData.length > 1" class="expander" (click)="toggle()"
           title="collapse/expand">+/-</button>
   <div #toolTip class="tooltip"></div>

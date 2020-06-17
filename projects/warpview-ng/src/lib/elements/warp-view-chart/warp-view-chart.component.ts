@@ -25,6 +25,8 @@ import {ColorLib} from '../../utils/color-lib';
 import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'warpview-chart',
@@ -87,7 +89,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   private marginLeft: number;
   private maxPlottable = 10000;
   parsing = false;
-
+  unhighliteCurve = new Subject<number[]>();
+  highliteCurve = new Subject<{ on: number[], off: number[] }>();
   layout: Partial<any> = {
     showlegend: false,
     autosize: true,
@@ -107,6 +110,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       l: 50
     },
   };
+  private highlighted: any;
 
   update(options, refresh): void {
     this.drawChart(refresh);
@@ -202,6 +206,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.xaxis = x;
     this.layout = {...this.layout};
     this.loading = false;
+    this.highliteCurve.pipe(debounceTime(200)).subscribe(value => {
+      Promise.resolve().then(() => {
+        this.graph.restyleChart({opacity: 0.4}, value.off);
+        this.graph.restyleChart({opacity: 1}, value.on);
+      });
+    });
+    this.unhighliteCurve.pipe(debounceTime(200)).subscribe(value => {
+      Promise.resolve().then(() => {
+        this.graph.restyleChart({opacity: 1}, value);
+      });
+    });
   }
 
   private emitNewBounds(min, max, marginLeft) {
@@ -266,14 +281,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const series: Partial<any> = {
             type: this._type === 'spline' ? 'scatter' : 'scattergl',
             mode: this._type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
-           // name: label,
+            // name: label,
             text: label,
             x: [],
             y: [],
             line: {color},
             hoverinfo: 'none',
-        //    hoverlabel: { bgcolor: color, color: '#fff'},
-        //    hovertemplate : label + ': %{y:.2f}<extra></extra>',
+            //    hoverlabel: { bgcolor: color, color: '#fff'},
+            //    hovertemplate : label + ': %{y:.2f}<extra></extra>',
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
           };
@@ -467,7 +482,38 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   hover(data: any) {
-    super.hover(data);
+    this.LOG.debug(['hover'], data);
+    let delta = Number.MAX_VALUE;
+    // tslint:disable-next-line:no-shadowed-variable
+    let point;
+    const curves = [];
+    this.toolTip.nativeElement.style.display = 'block';
+    if (data.points[0] && data.points[0].data.orientation !== 'h') {
+      const y = (data.yvals || [''])[0];
+      data.points.forEach(p => {
+        curves.push(p.curveNumber);
+        const d = Math.abs(p.y - y);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    } else {
+      const x: number = (data.xvals || [''])[0];
+      data.points.forEach(p => {
+        curves.push(p.curveNumber);
+        const d = Math.abs(p.x - x);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    }
+    if (point && this.highlighted !== point.curveNumber) {
+      this.highliteCurve.next({on: [point.curveNumber], off: curves});
+      this.highlighted = point.curveNumber;
+    }
+    super.hover(data, point);
     this.pointHover.emit(data.event);
     /*setTimeout(() => {
       let pn = -1;
@@ -495,7 +541,33 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   unhover(data: any) {
-    super.unhover(data);
+    let delta = Number.MAX_VALUE;
+    // tslint:disable-next-line:no-shadowed-variable
+    let point;
+    if (data.points[0] && data.points[0].data.orientation !== 'h') {
+      const y = (data.yvals || [''])[0];
+      data.points.forEach(p => {
+        const d = Math.abs(p.y - y);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    } else {
+      const x: number = (data.xvals || [''])[0];
+      data.points.forEach(p => {
+        const d = Math.abs(p.x - x);
+        if (d < delta) {
+          delta = d;
+          point = p;
+        }
+      });
+    }
+    if (!!point && this.highlighted !== point.curveNumber) {
+      this.unhighliteCurve.next([this.highlighted]);
+      this.highlighted = undefined;
+    }
+    super.unhover(data, point);
     /*setTimeout(() => {
       let pn = -1;
       let tn = -1;

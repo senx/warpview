@@ -15,7 +15,7 @@
   ~
   -->
 
-<div id="chartContainer" #chartContainer>
+<div id="chartContainer" #chartContainer (mouseleave)="hideTooltip()">
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <p class="noData" *ngIf="noData">No data to display</p>
   <div *ngIf="!loading && !noData">

@@ -71,6 +71,9 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
       tickPadding: 6,
     },
     indicator: false,
+    label: {
+      text: row => row.name,
+    },
     drop: {
       date: d => new Date(d.date),
       color: d => d.color,
@@ -124,7 +127,7 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 
   ngOnDestroy(): void {
     if (!!this.elemChart) {
-      (this.elemChart as any).destroy();
+      select(this.elemChart.nativeElement).remove();
     }
   }
 

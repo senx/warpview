@@ -34,6 +34,8 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
   layout: Partial<any> = {
     showlegend: false,
     xaxis: {},
+    hovermode: 'closest',
+    hoverdistance: 20,
     yaxis: {},
     margin: {
       t: 10,
