@@ -92,7 +92,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     showlegend: false,
     autosize: true,
     hovermode: 'x',
-    hoverdistance: 1,
+    hoverdistance: 20,
     xaxis: {},
     yaxis: {
       exponentformat: 'none',
@@ -497,6 +497,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   unhover(data: any) {
     super.unhover(data);
+    this.pointHover.emit(data.event);
     /*setTimeout(() => {
       let pn = -1;
       let tn = -1;

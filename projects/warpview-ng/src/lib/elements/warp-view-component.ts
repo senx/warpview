@@ -27,8 +27,8 @@ import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
-import {interval, Subject} from 'rxjs';
-import {debounce} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {debounce, debounceTime, throttleTime} from 'rxjs/operators';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
@@ -136,7 +136,9 @@ export abstract class WarpViewComponent {
   protected _unit = '';
   protected _data: DataModel;
   protected _autoResize = true;
-  private highlighted: any;
+  protected _hiddenData: number[] = [];
+  protected divider: number;
+
   tooltipPosition: any = {top: '-10000px', left: '-1000px'};
   loading = true;
   noData = false;
@@ -164,10 +166,11 @@ export abstract class WarpViewComponent {
     ]
   };
   plotlyData: Partial<any>[];
-  protected _hiddenData: number[] = [];
-  protected divider: number;
   unhighliteCurve = new Subject<number[]>();
   highliteCurve = new Subject<{ on: number[], off: number[] }>();
+
+  private highlighted: any;
+  private hideTooltipTimer: number;
 
   protected constructor(
     public el: ElementRef,
@@ -317,13 +320,13 @@ export abstract class WarpViewComponent {
       this.loading = false;
       return false;
     }
-    this.highliteCurve.pipe(debounce(() => interval(100))).subscribe(value => {
+    this.highliteCurve.pipe(debounceTime(200)).subscribe(value => {
       Promise.resolve().then(() => {
         this.graph.restyleChart({opacity: 0.4}, value.off);
         this.graph.restyleChart({opacity: 1}, value.on);
       });
     });
-    this.unhighliteCurve.pipe(debounce(() => interval(100))).subscribe(value => {
+    this.unhighliteCurve.pipe(debounceTime(200)).subscribe(value => {
       Promise.resolve().then(() => {
         this.graph.restyleChart({opacity: 1}, value);
       });
@@ -337,11 +340,22 @@ export abstract class WarpViewComponent {
   }
 
   hideTooltip() {
-    this.toolTip.nativeElement.style.display = 'none';
+    if (!!this.hideTooltipTimer) {
+      clearTimeout(this.hideTooltipTimer);
+    }
+    this.hideTooltipTimer = setTimeout(() => {
+      this.toolTip.nativeElement.style.display = 'none';
+    }, 1000);
   }
 
   unhover(data?: any) {
     this.LOG.debug(['unhover'], data);
+    if (!!this.hideTooltipTimer) {
+      clearTimeout(this.hideTooltipTimer);
+    }
+    this.hideTooltipTimer = setTimeout(() => {
+      this.toolTip.nativeElement.style.display = 'none';
+    }, 1000);
     let delta = Number.MAX_VALUE;
     let point;
     if (data.points[0] && data.points[0].data.orientation !== 'h') {
@@ -398,7 +412,7 @@ export abstract class WarpViewComponent {
         }
       });
     }
-    if (!!point) {
+    if (point) {
       const content = this.legendFormatter(
         this._options.horizontal ?
           (data.yvals || [''])[0] :
