@@ -354,7 +354,7 @@ export abstract class WarpViewComponent {
       clearTimeout(this.hideTooltipTimer);
     }
     this.hideTooltipTimer = setTimeout(() => {
-      this.toolTip.nativeElement.style.display = 'none';
+  //    this.toolTip.nativeElement.style.display = 'none';
     }, 1000);
     let delta = Number.MAX_VALUE;
     let point;
@@ -386,6 +386,9 @@ export abstract class WarpViewComponent {
   }
 
   hover(data: any) {
+    if (!!this.hideTooltipTimer) {
+      clearTimeout(this.hideTooltipTimer);
+    }
     this.LOG.debug(['hover'], data);
     let delta = Number.MAX_VALUE;
     let point;

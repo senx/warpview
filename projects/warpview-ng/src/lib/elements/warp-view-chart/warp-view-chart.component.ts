@@ -108,7 +108,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     },
   };
 
-
   update(options, refresh): void {
     this.drawChart(refresh);
   }
@@ -497,7 +496,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   unhover(data: any) {
     super.unhover(data);
-    this.pointHover.emit(data.event);
     /*setTimeout(() => {
       let pn = -1;
       let tn = -1;
