@@ -94,12 +94,18 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
             //     hoverinfo: 'none',
           };
           gts.v.forEach(value => {
-            if (value.length > 2) {
+            if (value.length > 2) { // lat lon
               series.x.push(value[1]);
               series.y.push(value[2]);
               if (value.length > 4) {
                 series.z.push(value[3]);
+              } else {
+                series.z.push(0);
               }
+            } else {
+              series.x.push(value[0]);
+              series.y.push(value[1]);
+              series.z.push(0);
             }
           });
           dataset.push(series);

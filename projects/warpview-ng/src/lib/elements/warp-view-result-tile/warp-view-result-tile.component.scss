@@ -1,7 +1,7 @@
 
 @import "../../styles/vars";
 
-warp-view-result-tile, warpview-result-tile {
+:host, warp-view-result-tile, warpview-result-tile {
   width: var(--warp-view-tile-width, 100%);
   max-height: var(--warp-view-tile-height, 100%);
   overflow: auto;

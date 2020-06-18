@@ -16,7 +16,7 @@
  */
 @import "../../styles/vars";
 
-warp-view-tile, warpview-tile {
+:host, warp-view-tile, warpview-tile {
   width: var(--warp-view-tile-width, 100%);
   max-height: var(--warp-view-tile-height, 100%);
   overflow: auto;
@@ -54,7 +54,6 @@ warp-view-tile, warpview-tile {
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;
-
 
         .status {
           position: absolute;

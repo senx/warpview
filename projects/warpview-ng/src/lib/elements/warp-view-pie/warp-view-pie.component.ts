@@ -24,6 +24,7 @@ import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import {Param} from '../../model/param';
+import {GTSLib} from '../../utils/gts.lib';
 
 @Component({
   selector: 'warpview-pie',
@@ -96,7 +97,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    const gtsList = data.data as any[];
+    const gtsList = GTSLib.flatDeep(data.data as any[]);
     const plotData = [] as Partial<any>[];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     const pieData = {
@@ -122,22 +123,27 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
       type: 'pie'
     } as any;
     gtsList.forEach((d: any, i) => {
-      const c = ColorLib.getColor(i, this._options.scheme);
-      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-      pieData.values.push(d[1]);
-      pieData.labels.push(d[0]);
-      pieData.marker.colors.push(ColorLib.transparentize(color));
-      pieData.marker.line.color.push(color);
-      if (this._type === 'donut') {
-        pieData.hole = 0.5;
-      }
-      if (this.unit) {
-        pieData.title = {
-          text: this.unit
-        };
+      if (!GTSLib.isGts(d)) {
+        const c = ColorLib.getColor(i, this._options.scheme);
+        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
+        pieData.values.push(d[1]);
+        pieData.labels.push(d[0]);
+        pieData.marker.colors.push(ColorLib.transparentize(color));
+        pieData.marker.line.color.push(color);
+        if (this._type === 'donut') {
+          pieData.hole = 0.5;
+        }
+        if (this.unit) {
+          pieData.title = {
+            text: this.unit
+          };
+        }
       }
     });
-    plotData.push(pieData);
+    if (pieData.values.length > 0) {
+      plotData.push(pieData);
+    }
+    this.noData = plotData.length === 0;
     return plotData;
   }
 }

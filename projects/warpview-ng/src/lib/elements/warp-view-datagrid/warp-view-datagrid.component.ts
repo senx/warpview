@@ -74,10 +74,12 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
 
   protected convert(data: DataModel): any[] {
     if (GTSLib.isArray(data.data)) {
-      if (data.data.length > 0 && GTSLib.isGts(data.data[0])) {
-        this._tabularData = this.parseData(GTSLib.flatDeep(this._data.data as any[]));
+      const dataList = GTSLib.flatDeep(this._data.data as any[]);
+      this.LOG.debug(['convert', 'isArray'], dataList);
+      if (data.data.length > 0 && GTSLib.isGts(dataList[0])) {
+        this._tabularData = this.parseData(dataList);
       } else {
-        this._tabularData = this.parseCustomData(data.data as any[]);
+        this._tabularData = this.parseCustomData(dataList);
       }
     } else {
       this._tabularData = this.parseCustomData([data.data as any]);
@@ -129,7 +131,9 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
       if (d.v && d.v.length > 0) {
         dataSet.headers.push(this.getHeaderParam(i, d.v[0].length - 1, 'headers', 'Value'));
       }
-      flatData.push(dataSet);
+      if (dataSet.values.length > 0) {
+        flatData.push(dataSet);
+      }
     });
     this.LOG.debug(['parseData', 'flatData'], flatData, this._options.timeMode);
     return flatData;

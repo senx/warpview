@@ -298,6 +298,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private displayMap(data: { gts: any[], params: any[] }, reZoom = false) {
+    this.currentValuesMarkers =  [];
     this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
       this.lowerTimeBound = this._options.map.timeSliderMin / this.divider;
@@ -386,28 +387,26 @@ export class WarpViewMapComponent implements OnInit {
       const d = this.pathData[i];
       if (!!d) {
         const plottedGts: any = this.updateGtsPath(d);
-        if (plottedGts) {
+        if (!!plottedGts) {
           this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
           this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
           this.currentValuesMarkers.push(plottedGts.currentValue);
         }
       }
     }
-    this.LOG.debug(['displayMap'], 'this.pathData');
+    this.LOG.debug(['displayMap'], 'this.pathData', this.pathData);
     size = (this.annotationsData || []).length;
     for (let i = 0; i < size; i++) {
       const d = this.annotationsData[i];
       const plottedGts: any = this.updateGtsPath(d);
-      if (plottedGts) {
+      if (!!plottedGts) {
         this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
         this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
         this.currentValuesMarkers.push(plottedGts.currentValue);
       }
     }
-
-    this.LOG.debug(['displayMap'], 'this.annotationsData');
     if (!!this._map) {
-      this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers).addTo(this._map);
+      this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers || []).addTo(this._map);
     }
     this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
     this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
@@ -608,11 +607,15 @@ export class WarpViewMapComponent implements OnInit {
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`);
     }
-    return {
-      beforeCurrentValue,
-      afterCurrentValue,
-      currentValue,
-    };
+    if(size > 0) {
+      return {
+        beforeCurrentValue,
+        afterCurrentValue,
+        currentValue,
+      };
+    } else {
+      return undefined;
+    }
   }
 
   private addPopup(positionData: any, value: any, marker: any) {

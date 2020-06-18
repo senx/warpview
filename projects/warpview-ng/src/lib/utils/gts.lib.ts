@@ -239,7 +239,7 @@ export class GTSLib {
     // if it's a number it's a GTS to plot
     return (gts.v || []).some(v => {
       // noinspection JSPotentiallyInvalidConstructorUsage
-      return typeof v[v.length - 1] === 'number' || !!v[v.length - 1].constructor.prototype.toFixed;
+      return v.length >= 3 && (typeof v[v.length - 1] === 'number' || !!v[v.length - 1].constructor.prototype.toFixed);
     });
   }
 

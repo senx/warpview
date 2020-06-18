@@ -22,6 +22,8 @@ import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {GTSLib} from '../../utils/gts.lib';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-bubble',
@@ -73,7 +75,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
 
   protected convert(data: DataModel): Partial<any>[] {
     const dataset = [];
-    (data.data as any []).forEach((gts, i) => {
+    GTSLib.flatDeep(data.data as any []).forEach((gts, i) => {
       const label = Object.keys(gts)[0];
       const c = ColorLib.getColor(gts.id || i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
@@ -93,18 +95,37 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
           size: []
         }
       };
-      gts[label].forEach(value => {
-        series.y.push(value[0]);
-        series.x.push(value[1]);
-        series.marker.size.push(value[2]);
-      });
+      if (GTSLib.isGts(gts)) {
+        const ticks = gts.v.map(t => t[0]);
+        const values = gts.v.map(t => t[t.length - 1]);
+        const sizes = new Array(gts.v.length).fill(10);
+        if (this._options.timeMode === 'timestamp') {
+          series.x = ticks;
+        } else {
+          if (this._options.timeZone !== 'UTC') {
+            series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
+          } else {
+            series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
+          }
+        }
+        series.y = values;
+        series.marker.size = sizes;
+      } else {
+        gts[label].forEach(value => {
+          series.y.push(value[0]);
+          series.x.push(value[1]);
+          series.marker.size.push(value[2]);
+        });
+      }
       dataset.push(series);
     });
+    this.noData = dataset.length === 0;
+    this.LOG.debug(['convert', 'dataset'], dataset);
     return dataset;
   }
 
   private buildGraph() {
-    this.LOG.debug(['drawChart', 'this.layout'], this.responsive);
+    this.LOG.debug(['drawChart', 'this.responsive'], this._responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.showlegend = this.showLegend;
