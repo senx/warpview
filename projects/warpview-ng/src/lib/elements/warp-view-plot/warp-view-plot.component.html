@@ -25,6 +25,7 @@
                   (warpViewModalClose)="onWarpViewModalClose()"
   >
     <label for="filterInput">Enter a regular expression to filter GTS.</label>
+    <br />
     <input tabindex="1" type="text" (keypress)="inputTextKeyboardEvents($event)" #filterInput id="filterInput"
            (keydown)="inputTextKeyboardEvents($event)" (keyup)="inputTextKeyboardEvents($event)"
            [value]="gtsFilter.slice(1)"/>

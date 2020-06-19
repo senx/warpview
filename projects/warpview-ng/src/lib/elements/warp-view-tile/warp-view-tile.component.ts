@@ -74,6 +74,8 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   loaderMessage = '';
   error: any;
   status: string;
+  loading = false;
+  execResult: string;
 
   private timer: any;
   private _autoRefresh;
@@ -81,8 +83,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   private _warpScript = '';
   private execUrl = '';
   private timeUnit = 'us';
-  loading = false;
-  execResult: string;
 
   constructor(
     public el: ElementRef,

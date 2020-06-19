@@ -436,7 +436,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   applyFilter() {
     this.gtsFilterCount++;
-    this.gtsFilter = this.gtsFilterCount.toString().slice(0, 1) + this.filterInput.nativeElement.value;
+    this._gtsFilter = this.gtsFilterCount.toString().slice(0, 1) + this.filterInput.nativeElement.value;
     this.modal.close();
   }
 
@@ -455,7 +455,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   onChartDraw($event: any) {
     if (
-      this.chartBounds.tsmin !== Math.min(this.chartBounds.tsmin, $event.tsmin)
+      this.chartBounds
+      && $event
+      && this.chartBounds.tsmin !== Math.min(this.chartBounds.tsmin, $event.tsmin)
       && this.chartBounds.tsmax !== Math.max(this.chartBounds.tsmax, $event.tsmax)
     ) {
       this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, $event.tsmin);
