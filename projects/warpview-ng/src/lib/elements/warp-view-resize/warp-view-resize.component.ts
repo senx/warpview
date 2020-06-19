@@ -15,18 +15,7 @@
  *
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  Renderer2,
-  RendererStyleFlags2,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {Logger} from '../../utils/logger';
 
 /**

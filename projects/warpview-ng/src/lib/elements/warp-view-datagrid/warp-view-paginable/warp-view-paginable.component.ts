@@ -18,7 +18,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Logger} from '../../../utils/logger';
 import {Param} from '../../../model/param';
-import moment from 'moment-timezone';
 import {ChartLib} from '../../../utils/chart-lib';
 import deepEqual from 'deep-equal';
 import {GTSLib} from '../../../utils/gts.lib';

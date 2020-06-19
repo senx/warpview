@@ -298,7 +298,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private displayMap(data: { gts: any[], params: any[] }, reZoom = false) {
-    this.currentValuesMarkers =  [];
+    this.currentValuesMarkers = [];
     this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
       this.lowerTimeBound = this._options.map.timeSliderMin / this.divider;
@@ -607,7 +607,7 @@ export class WarpViewMapComponent implements OnInit {
         {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
         .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`);
     }
-    if(size > 0) {
+    if (size > 0) {
       return {
         beforeCurrentValue,
         afterCurrentValue,

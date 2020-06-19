@@ -34,7 +34,6 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
-import {WarpViewTreeViewComponent} from './warp-view-tree-view/warp-view-tree-view.component';
 import {Subject} from 'rxjs';
 
 /**

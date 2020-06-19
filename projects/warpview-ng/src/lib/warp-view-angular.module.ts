@@ -56,7 +56,7 @@ import {WarpViewBoxComponent} from './elements/warp-view-box/warp-view-box.compo
 import {WarpView3dLineComponent} from './elements/warp-view-3d-line/warp-view-3d-line.component';
 import {WarpViewGlobeComponent} from './elements/warp-view-globe/warp-view-globe.component';
 import {WarpViewEventDropComponent} from './elements/warp-view-event-drop/warp-view-event-drop.component';
-import { WarpViewResultTileComponent } from './elements/warp-view-result-tile/warp-view-result-tile.component';
+import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp-view-result-tile.component';
 
 @NgModule({
   declarations: [

@@ -254,7 +254,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   handleMouseOut(evt: MouseEvent) {
-   // evt.preventDefault();
+    // evt.preventDefault();
     if (this.line) {
       this.showLine = false;
       this.renderer.setStyle(this.line.nativeElement, 'left', '-100px');
