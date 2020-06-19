@@ -130,7 +130,7 @@ export class MapLib {
     const size = (data.gts || []).length;
     for (let i = 0; i < size; i++) {
       const gts = data.gts[i];
-      if (GTSLib.isGtsToPlot(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
+      if (GTSLib.isGtsToPlotOnMap(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         const path: any = {};
         path.path = MapLib.gtsToPath(gts, divider);
         if (data.params && data.params[i] && data.params[i].key) {
