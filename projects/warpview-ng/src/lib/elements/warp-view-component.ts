@@ -38,7 +38,6 @@ export abstract class WarpViewComponent {
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
 
-
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
   }
@@ -165,6 +164,7 @@ export abstract class WarpViewComponent {
   };
   plotlyData: Partial<any>[];
   private hideTooltipTimer: number;
+  private rect: any;
 
   protected constructor(
     public el: ElementRef,
@@ -224,7 +224,7 @@ export abstract class WarpViewComponent {
 
     let html = '';
     if (!!series[0]) {
-      x = series[0].x || series[0].theta;
+      x = series[0].x || series[0].theta;
     }
     html += `<b>${x}</b><br />`;
     // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
@@ -251,7 +251,7 @@ export abstract class WarpViewComponent {
               color = s.data.marker.color;
             }
           }
-          html += `<i class="chip" style="background-color: ${color};border: 2px solid ${color};"></i>${labeledData}`;
+          html += `<i class="chip" style="background-color: ${color};border: 2px solid ${color};"></i>&nbsp;${labeledData}`;
           if (i < series.length) {
             html += '<br>';
           }
@@ -318,8 +318,10 @@ export abstract class WarpViewComponent {
   }
 
   afterPlot(plotlyInstance?: any) {
+    this.LOG.debug(['afterPlot', 'plotlyInstance'], plotlyInstance);
     this.chartDraw.emit();
     this.loading = false;
+    this.rect = this.graph.getBoundingClientRect();
   }
 
   hideTooltip() {
@@ -381,8 +383,7 @@ export abstract class WarpViewComponent {
       }
       const top = Math.min(
         this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-        data.event.offsetY - 20) + 'px';
-      this.LOG.debug(['hover'], 'tooltip');
+        data.event.y - 20 - this.rect.top) + 'px';
       this.moveTooltip(top, left, content);
     }
   }

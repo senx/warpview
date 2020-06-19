@@ -97,7 +97,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   public eventNames = [
     // 'afterExport',
- //   'afterPlot', // 'animated', 'animatingFrame', 'animationInterrupted', 'autoSize',
+    //   'afterPlot', // 'animated', 'animatingFrame', 'animationInterrupted', 'autoSize',
     // 'beforeExport', 'buttonClicked', 'clickAnnotation', 'deselect', 'doubleClick', 'framework',
     'hover', 'unhover',
     // 'legendClick', 'legendDoubleClick',
@@ -105,6 +105,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     // 'restyle', 'redraw', 'selected', 'selecting', 'sliderChange',
     // 'sliderEnd', 'sliderStart', 'transitioning', 'transitionInterrupted', 'relayouting'
   ];
+  rect: any;
 
   constructor(
     public iterableDiffers: IterableDiffers,
@@ -188,6 +189,10 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     return window;
   }
 
+  getBoundingClientRect() {
+    return this.rect;
+  }
+
   getClassName(): string {
     let classes = [this.defaultClassName];
     if (Array.isArray(this.className)) {
@@ -206,6 +211,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   createPlot(): Promise<void> {
     this.LOG.debug(['createPlot'], this.data, this.layout, this.config, this.plotlyInstance);
     return Plotlyjs.react(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
+      this.rect = this.el.nativeElement.getBoundingClientRect();
       this.plotlyInstance = plotlyInstance;
       this.LOG.debug(['plotlyInstance'], plotlyInstance);
       this.getWindow().gd = this.debug ? plotlyInstance : undefined;

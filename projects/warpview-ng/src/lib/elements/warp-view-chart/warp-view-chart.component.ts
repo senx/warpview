@@ -378,6 +378,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   afterPlot(plotlyInstance) {
+    super.afterPlot(plotlyInstance);
     this.marginLeft = parseInt((this.graph.plotEl.nativeElement as HTMLElement).querySelector('g.bglayer > rect').getAttribute('x'), 10);
     this.LOG.debug(['plotly_afterPlot']);
     if (this.chartBounds.tsmin !== this.minTick || this.chartBounds.tsmax !== this.maxTick) {
