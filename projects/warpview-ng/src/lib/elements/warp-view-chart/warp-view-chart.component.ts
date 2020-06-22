@@ -96,12 +96,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     autosize: true,
     hovermode: 'x',
     hoverdistance: 20,
-    xaxis: {},
+    xaxis: {
+      font: {}
+    },
     yaxis: {
       exponentformat: 'none',
       fixedrange: true,
       automargin: true,
-      showline: true
+      showline: true,
+      font: {}
     },
     margin: {
       t: 0,
@@ -162,9 +165,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.xaxis.type = 'date';
       this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
     }
-
-    this.layout.yaxis.color = this.getLabelColor(this.el.nativeElement);
-    this.layout.xaxis.color = this.getLabelColor(this.el.nativeElement);
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
