@@ -38,9 +38,9 @@ import moment from 'moment-timezone';
 export class WarpViewDisplayComponent extends WarpViewComponent implements OnInit, OnDestroy {
   @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
   toDisplay = '';
-  defOptions = ChartLib.mergeDeep(this._options, {
+  defOptions = {
     timeMode: 'custom'
-  }) as Param;
+  } as Param;
 
   private fitties: FittyInstance;
   private timer;
@@ -73,8 +73,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   private drawChart() {
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
     this.initChart(this.el);
-    this.defOptions = ChartLib.mergeDeep(this.defOptions, this._options);
-
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options);
     this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions, this.height);
     this.LOG.debug(['drawChart'], this._data, this.toDisplay);
     this.flexFont();
@@ -82,6 +81,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   protected convert(data: DataModel): any[] {
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options);
     this.LOG.debug(['convert'], this._options.timeMode);
     let display: string;
     if (this._data.data) {
