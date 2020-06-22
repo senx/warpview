@@ -373,7 +373,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       }
     }
     this.parsing = false;
-    this.LOG.debug(['convert'], 'end');
+    this.LOG.debug(['convert'], 'end', dataset);
+    this.noData = dataset.length === 0;
     return dataset;
   }
 

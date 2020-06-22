@@ -400,8 +400,10 @@ export class WarpViewMapComponent implements OnInit {
       const d = this.annotationsData[i];
       const plottedGts: any = this.updateGtsPath(d);
       if (!!plottedGts) {
-        this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
-        this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
+        if (d.render === 'line') {
+          this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
+          this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
+        }
         this.currentValuesMarkers.push(plottedGts.currentValue);
       }
     }
@@ -558,6 +560,28 @@ export class WarpViewMapComponent implements OnInit {
           positions.push(marker);
         }
         break;
+      case 'weightedDots':
+        size = (gts.path || []).length;
+        for (let i = 0; i < size; i++) {
+          const p = gts.path[i];
+          if ((this._hiddenData || []).filter(h => h === gts.key).length === 0) {
+            let v = parseInt(p.val, 10);
+            if (isNaN(v)) {
+              v = 0;
+            }
+            const radius = (v - (gts.minValue || 0)) * 50 / (gts.maxValue || 50);
+            const marker = Leaflet.circleMarker(
+              p, {
+                radius: radius === 0 ? 1 : radius,
+                color: gts.borderColor,
+                fillColor: gts.color, fillOpacity: 0.5,
+                weight: 1
+              });
+            this.addPopup(gts, p.val, marker);
+            positions.push(marker);
+          }
+        }
+        break;
       case 'dots':
       default:
         size = (gts.path || []).length;
@@ -623,7 +647,7 @@ export class WarpViewMapComponent implements OnInit {
     if (!!positionData) {
       let content = '';
       if (positionData.key) {
-        content = `<p><b>${positionData.key}</b>: ${value || ''}</p>`;
+        content = `<p><b>${positionData.key}</b>: ${value || 'na'}</p>`;
       }
       Object.keys(positionData.properties || []).forEach(k => content += `<b>${k}</b>: ${positionData.properties[k]}<br />`);
       marker.bindPopup(content);
