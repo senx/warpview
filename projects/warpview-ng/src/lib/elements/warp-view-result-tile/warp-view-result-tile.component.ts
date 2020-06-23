@@ -11,7 +11,7 @@ import {ResizedEvent} from 'angular-resize-event';
   selector: 'warpview-result-tile',
   templateUrl: './warp-view-result-tile.component.html',
   styleUrls: ['./warp-view-result-tile.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  //encapsulation: ViewEncapsulation.None
 })
 export class WarpViewResultTileComponent extends WarpViewComponent {
 
