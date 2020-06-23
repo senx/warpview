@@ -24,6 +24,7 @@ import {ColorLib} from '../../utils/color-lib';
 import moment from 'moment-timezone';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {Timsort} from '../../utils/timsort';
 
 @Component({
   selector: 'warpview-bar',
@@ -96,6 +97,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     gtsList.forEach((gts, i) => {
       this.LOG.debug(['convert', 'gts item'], gts);
       if (gts.v) {
+        Timsort.sort(gts.v, (a, b) => a[0] - b[0]);
         const label = GTSLib.serializeGtsMetadata(gts);
         const c = ColorLib.getColor(gts.id || i, this._options.scheme);
         const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;

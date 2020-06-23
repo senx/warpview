@@ -27,6 +27,7 @@ import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {Timsort} from '../../utils/timsort';
 
 @Component({
   selector: 'warpview-chart',
@@ -108,7 +109,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     },
     margin: {
       t: 0,
-      b: 25,
+      b: 30,
       r: 10,
       l: 50
     },
@@ -273,6 +274,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       }
       gtsList.forEach((gts: GTS, i) => {
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
+          Timsort.sort(gts.v, (a, b) => a[0] - b[0]);
           const size = gts.v.length;
           this.LOG.debug(['convert'], gts);
           const label = GTSLib.serializeGtsMetadata(gts);
@@ -287,8 +289,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             y: [],
             line: {color},
             hoverinfo: 'none',
-            //    hoverlabel: { bgcolor: color, color: '#fff'},
-            //    hovertemplate : label + ': %{y:.2f}<extra></extra>',
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
           };
