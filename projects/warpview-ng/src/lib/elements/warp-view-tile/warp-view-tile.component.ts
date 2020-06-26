@@ -26,8 +26,7 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild,
-  ViewEncapsulation
+  ViewChild
 } from '@angular/core';
 import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
@@ -44,7 +43,7 @@ import {HttpResponse} from '@angular/common/http';
   templateUrl: './warp-view-tile.component.html',
   styleUrls: ['./warp-view-tile.component.scss'],
   providers: [HttpErrorHandler],
- // encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
@@ -199,8 +198,10 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
                 this.timer = window.setInterval(() => this.execute(true), this._autoRefresh * 1000);
               }
             }
-            this.loading = false;
-            this.execResult = body;
+            setTimeout(() => {
+              this.execResult = body;
+              this.loading = false;
+            });
           } catch (e) {
             this.LOG.error(['execute'], e);
             this.loading = false;

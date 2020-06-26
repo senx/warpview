@@ -97,7 +97,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    const gtsList = GTSLib.flatDeep(data.data as any[]);
+    const gtsList = data.data as any[];
     const plotData = [] as Partial<any>[];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     const pieData = {
