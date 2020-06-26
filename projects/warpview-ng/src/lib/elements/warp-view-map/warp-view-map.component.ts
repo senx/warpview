@@ -297,7 +297,7 @@ export class WarpViewMapComponent implements OnInit {
     Leaflet.GridLayer.prototype._initTile.isPatched = true;
   }
 
-  private displayMap(data: { gts: any[], params: any[] }, reZoom = false) {
+  private displayMap(data: { gts: any[], params: any[] }, reDraw = false) {
     this.currentValuesMarkers = [];
     this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
@@ -339,21 +339,21 @@ export class WarpViewMapComponent implements OnInit {
       if (map.subdomains) {
         mapOpts.subdomains = map.subdomains;
       }
-      if (!!this.tilesLayer && !!this._map) {
+    /*  if (!!this.tilesLayer && !!this._map) {
         this._map.removeLayer(this.tilesLayer);
-      }
+      }*/
       this.tilesLayer = Leaflet.tileLayer(map.link, mapOpts);
     }
 
     if (!!this._map) {
       this.LOG.debug(['displayMap'], 'map exists');
-      this._map.removeLayer(this.tilesLayer);
+   //   this._map.removeLayer(this.tilesLayer);
       this.pathDataLayer.clearLayers();
       this.annotationsDataLayer.clearLayers();
       this.positionDataLayer.clearLayers();
       this.geoJsonLayer.clearLayers();
       this.tileLayerGroup.clearLayers();
-      this.tilesLayer.addTo(this._map);
+  //    this.tilesLayer.addTo(this._map);
     } else {
       this.LOG.debug(['displayMap'], 'build map');
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
@@ -369,6 +369,7 @@ export class WarpViewMapComponent implements OnInit {
       this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
       this._map.on('zoomend', () => {
         if (!this.firstDraw) {
+          this.LOG.debug(['moveend'], this._map.getCenter());
           this.currentZoom = this._map.getZoom();
         }
       });
@@ -493,26 +494,40 @@ export class WarpViewMapComponent implements OnInit {
       // Fit map to curves
       const group = Leaflet.featureGroup([this.geoJsonLayer, this.annotationsDataLayer, this.positionDataLayer, this.pathDataLayer]);
       this.LOG.debug(['displayMap', 'setView'], 'fitBounds', group.getBounds());
+      this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong}, {
+        lat: this._options.map.startLat,
+        lng: this._options.map.startLong
+      });
       this.bounds = group.getBounds();
       setTimeout(() => {
-        this._options.map.startZoom = this.currentZoom || this._options.map.startZoom || 2;
+    //    this._options.map.startZoom = this.currentZoom || this._options.map.startZoom || 2;
         // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
-        this._map.invalidateSize();
+   //     this._map.invalidateSize();
         if (!!this.bounds && this.bounds.isValid()) {
           // FIXME
-          this._map.fitBounds(this.bounds, {
-            padding: [1, 1],
-            animate: false,
-            duration: 0
-          });
+          if ((this.currentLat || this._options.map.startLat) && (this.currentLong || this._options.map.startLong)) {
+            this._map.setView({
+                lat: this.currentLat || this._options.map.startLat || 0,
+                lng: this.currentLong || this._options.map.startLong || 0
+              }, this.currentZoom || this._options.map.startZoom || 10,
+              {animate: false, duration: 0});
+          } else {
+            this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
+         //   this.currentZoom = this._map.getBoundsZoom(this.bounds, false);
+          }
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
+        //  this.currentZoom = this._map.getZoom();
         } else {
           this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
-            lat: this.currentLat || this._options.map.startLat || 0,
-            lng: this.currentLong || this._options.map.startLong || 0
-          }, this.currentZoom || this._options.map.startZoom || 10);
+              lat: this.currentLat || this._options.map.startLat || 0,
+              lng: this.currentLong || this._options.map.startLong || 0
+            }, this.currentZoom || this._options.map.startZoom || 10,
+            {
+              animate: false,
+              duration: 0
+            });
         }
       }, 10);
     } else {
@@ -528,9 +543,6 @@ export class WarpViewMapComponent implements OnInit {
           duration: 0
         }
       );
-      window.setTimeout(() => {
-        this.firstDraw = false;
-      }, 1000);
     }
     if (this.heatData && this.heatData.length > 0) {
       this._heatLayer = (Leaflet as any).heatLayer(this.heatData, {
@@ -540,6 +552,7 @@ export class WarpViewMapComponent implements OnInit {
       });
       this._heatLayer.addTo(this._map);
     }
+    this.firstDraw = false;
     this.resizeMe();
     this.patchMapTileGapBug();
     this.chartDraw.emit(true);
@@ -643,7 +656,6 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private addPopup(positionData: any, value: any, marker: any) {
-    this.LOG.debug(['addPopup'], positionData);
     if (!!positionData) {
       let content = '';
       if (positionData.key) {

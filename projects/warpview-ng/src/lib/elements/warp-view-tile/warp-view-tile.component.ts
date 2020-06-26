@@ -164,7 +164,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.LOG.debug(['execute'], isRefresh);
       this.error = undefined;
-      this.loading = isRefresh;
+      this.loading = !isRefresh;
       this.execResult = undefined;
       this.loaderMessage = 'Requesting data';
       this.execUrl = this.url;
