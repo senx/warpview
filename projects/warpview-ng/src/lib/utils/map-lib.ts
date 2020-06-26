@@ -181,7 +181,7 @@ export class MapLib {
           annotation.render = params.render;
         }
         if (annotation.render === 'marker') {
-          annotation.marker = 'circle';
+          annotation.marker = (data.params && data.params[i]) ? data.params[i].marker : 'circle';
         }
         if (annotation.render === 'weightedDots') {
           MapLib.validateWeightedDotsPositionArray(annotation, params);

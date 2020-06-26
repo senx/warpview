@@ -268,9 +268,9 @@ export class WarpViewMapComponent implements OnInit {
 
   private icon(color: string, marker = '') {
     const c = `${color.slice(1)}`;
-    const m = marker !== '' ? marker : '';
+    const m = marker !== '' ? marker : 'circle';
     return Leaflet.icon({
-      iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-${m}&size=50&hoffset=0&voffset=-1&background=${c}`,
+      iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v4/pin?icon=fa-${m}&iconSize=17&size=40&hoffset=${m === 'circle' ? 0 : -1}&voffset=-4&color=fff&background=${c}`,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
     });
@@ -339,21 +339,16 @@ export class WarpViewMapComponent implements OnInit {
       if (map.subdomains) {
         mapOpts.subdomains = map.subdomains;
       }
-    /*  if (!!this.tilesLayer && !!this._map) {
-        this._map.removeLayer(this.tilesLayer);
-      }*/
       this.tilesLayer = Leaflet.tileLayer(map.link, mapOpts);
     }
 
     if (!!this._map) {
       this.LOG.debug(['displayMap'], 'map exists');
-   //   this._map.removeLayer(this.tilesLayer);
       this.pathDataLayer.clearLayers();
       this.annotationsDataLayer.clearLayers();
       this.positionDataLayer.clearLayers();
       this.geoJsonLayer.clearLayers();
       this.tileLayerGroup.clearLayers();
-  //    this.tilesLayer.addTo(this._map);
     } else {
       this.LOG.debug(['displayMap'], 'build map');
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
@@ -478,7 +473,7 @@ export class WarpViewMapComponent implements OnInit {
       } as any;
       if (m.geometry.type === 'Point') {
         opts.pointToLayer = (geoJsonPoint, latlng) => Leaflet.marker(latlng, {
-          icon: this.icon(color, ''),
+          icon: this.icon(color, (data.params && data.params[i]) ? data.params[i].marker : 'circle'),
           opacity: 1,
         });
       }
@@ -500,11 +495,7 @@ export class WarpViewMapComponent implements OnInit {
       });
       this.bounds = group.getBounds();
       setTimeout(() => {
-    //    this._options.map.startZoom = this.currentZoom || this._options.map.startZoom || 2;
-        // Without the timeout tiles doesn't show, see https://github.com/Leaflet/Leaflet/issues/694
-   //     this._map.invalidateSize();
         if (!!this.bounds && this.bounds.isValid()) {
-          // FIXME
           if ((this.currentLat || this._options.map.startLat) && (this.currentLong || this._options.map.startLong)) {
             this._map.setView({
                 lat: this.currentLat || this._options.map.startLat || 0,
@@ -513,11 +504,11 @@ export class WarpViewMapComponent implements OnInit {
               {animate: false, duration: 0});
           } else {
             this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
-         //   this.currentZoom = this._map.getBoundsZoom(this.bounds, false);
+            //   this.currentZoom = this._map.getBoundsZoom(this.bounds, false);
           }
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
-        //  this.currentZoom = this._map.getZoom();
+          //  this.currentZoom = this._map.getZoom();
         } else {
           this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
