@@ -356,7 +356,7 @@ export class WarpViewMapComponent implements OnInit {
         layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.annotationsDataLayer, this.positionDataLayer],
         zoomAnimation: true,
         maxZoom: 24
-      }).setView([0, 0], 8);
+      });
       this.tilesLayer.addTo(this._map);
       this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
       this.geoJsonLayer.bringToBack();
@@ -501,7 +501,7 @@ export class WarpViewMapComponent implements OnInit {
                 lat: this.currentLat || this._options.map.startLat || 0,
                 lng: this.currentLong || this._options.map.startLong || 0
               }, this.currentZoom || this._options.map.startZoom || 10,
-              {animate: false, duration: 0});
+              {animate: false, duration: 500});
           } else {
             this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
             //   this.currentZoom = this._map.getBoundsZoom(this.bounds, false);
@@ -517,7 +517,7 @@ export class WarpViewMapComponent implements OnInit {
             }, this.currentZoom || this._options.map.startZoom || 10,
             {
               animate: false,
-              duration: 0
+              duration: 500
             });
         }
       }, 10);
