@@ -310,7 +310,7 @@ LMAP
       type: 'datagrid',
       warpscript: `{
 'title' 'Test'
-'columns'  [ 'A' 'B' 'C' 'D' ]
+'columns'  [ 'Name' 'A' 'B' 'C' 'D' ]
 'rows' [
   [ 'label X' 15 56 44 22 ]
   [ 'label Y' 1 5 4 2 ]

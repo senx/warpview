@@ -89,11 +89,11 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
 
   private parseCustomData(data: any[]): { name: string, values: any[], headers: string[] }[] {
     const flatData: { name: string, values: any[], headers: string[] }[] = [];
-    data.forEach((d, i) => {
+    data.forEach(d => {
       const dataSet: { name: string, values: any[], headers: string[] } = {
         name: d.title || '',
         values: d.rows,
-        headers: ['Name'].concat(d.columns),
+        headers: d.columns,
       };
       flatData.push(dataSet);
     });
