@@ -467,6 +467,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.chartDraw.emit();
       this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
     }
+    this.chartDraw.emit($event);
   }
 
   private resizeArea() {

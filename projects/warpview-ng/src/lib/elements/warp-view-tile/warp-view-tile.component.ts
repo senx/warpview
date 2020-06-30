@@ -223,4 +223,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   protected convert(data: DataModel): any[] {
     return [];
   }
+  chartDrawn(event) {
+    this.chartDraw.emit(event);
+  }
 }

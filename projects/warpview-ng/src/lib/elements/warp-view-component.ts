@@ -272,6 +272,7 @@ export abstract class WarpViewComponent {
       this.loading = false;
       this.LOG.debug(['initiChart', 'nodata']);
       this.noData = true;
+      this.chartDraw.emit();
       return false;
     }
     moment.tz.setDefault(this._options.timeZone);
@@ -317,6 +318,7 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     if (!this.plotlyData || this.plotlyData.length === 0) {
       this.loading = false;
+      this.chartDraw.emit();
       return false;
     }
     return !(!this.plotlyData || this.plotlyData.length === 0);
