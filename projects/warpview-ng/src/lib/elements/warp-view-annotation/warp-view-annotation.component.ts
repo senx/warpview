@@ -122,6 +122,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       autorange: false,
       automargin: false,
       showticklabels: true,
+      showgrid: false
     },
     autosize: false,
     autoexpand: false,
@@ -135,7 +136,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       rangemode: 'tozero',
       tickson: 'boundaries',
       automargin: true,
-      showline: true,
+      showline: false,
       zeroline: true
     },
     margin: {
@@ -376,7 +377,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         const c = ColorLib.getColor(gts.id, this._options.scheme);
         const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
         const series: Partial<any> = {
-          type: 'scatter',
+          type: 'scattergl',
           mode: 'markers',
           name: label,
           x: [],
