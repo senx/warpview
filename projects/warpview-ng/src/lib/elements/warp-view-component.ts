@@ -291,8 +291,8 @@ export abstract class WarpViewComponent {
       this.layout.width = this.width || ChartLib.DEFAULT_WIDTH;
       this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
     } else {
-      this.layout.width = parentSize.width;
-      this.layout.height = parentSize.height;
+      this.layout.width = this.width || parentSize.width;
+      this.layout.height = this.height || parentSize.height;
     }
     this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height, this.width, this.height);
     if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {

@@ -247,8 +247,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      this.layout.xaxis.tick0 = this.minTick / this.divider;
-      this.layout.xaxis.range = [this.minTick / this.divider, this.maxTick / this.divider];
+      this.layout.xaxis.tick0 = this.minTick;
+      this.layout.xaxis.range = [this.minTick, this.maxTick];
       this.layout.xaxis.type = 'linear';
     } else {
       this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
@@ -260,6 +260,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.plotlyConfig.scrollZoom = true;
     this.plotlyConfig = {...this.plotlyConfig};
+    this.layout.xaxis.showgrid = false;
     this.layout = {...this.layout};
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
     this.loading = false;
@@ -365,11 +366,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
       timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
     });
-    if (timestampMode || this._options.timeMode === 'timestamp') {
-      this.layout.xaxis.type = 'linear';
-    } else {
-      this.layout.xaxis.type = 'date';
-    }
+    /*  if (timestampMode || this._options.timeMode === 'timestamp') {
+        this.layout.xaxis.type = 'linear';
+      } else {
+        this.layout.xaxis.type = 'date';
+      }*/
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const size = gts.v.length;
@@ -396,21 +397,25 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         };
         this.visibleGtsId.push(gts.id);
         this.gtsId.push(gts.id);
-        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        if (timestampMode || this._options.timeMode && this._options.timeMode === 'timestamp') {
           this.layout.xaxis.type = 'linear';
         } else {
           this.layout.xaxis.type = 'date';
         }
-        const ticks = gts.v.map(t => t[0]);
-        series.text = gts.v.map(t => t[t.length - 1]);
-        series.y = gts.v.map(() => (this.expanded ? i : 0) + 0.5);
+        const ticks = [];
+        series.text = [];
+        series.y = [];
         if (size > 0) {
-          this.minTick = ticks[0];
-          this.maxTick = ticks[0];
-          for (let v = 1; v < size; v++) {
-            const val = ticks[v];
-            this.minTick = (val < this.minTick) ? val : this.minTick;
-            this.maxTick = (val > this.maxTick) ? val : this.maxTick;
+          this.minTick = gts.v[0][0];
+          this.maxTick = gts.v[0][0];
+          for (let v = 0; v < size; v++) {
+            const val = gts.v[v];
+            const t = val[0];
+            ticks.push(t);
+            series.text.push(val[val.length - 1]);
+            series.y.push((this.expanded ? i : 0) + 0.5);
+            this.minTick = (t < this.minTick) ? t : this.minTick;
+            this.maxTick = (t > this.maxTick) ? t : this.maxTick;
           }
         }
         if (timestampMode || this._options.timeMode === 'timestamp') {
@@ -427,6 +432,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         }
       }
     });
+    this.LOG.debug(['convert'], 'forEach value end', this.minTick, this.maxTick);
     if (nonPlottable.length > 0) {
       nonPlottable.forEach(g => {
         g.v.forEach(value => {
@@ -451,9 +457,18 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         this.visibleGtsId.push(-1);
       }
     }
-    if (timestampMode) {
-      this._options.timeMode = 'timestamp';
+    const x = {tick0: undefined, range: []};
+    if (timestampMode || this._options.timeMode && this._options.timeMode === 'timestamp') {
+      x.tick0 = this.minTick;
+      x.range = [this.minTick, this.maxTick];
+    } else {
+      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.range = [
+        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
+        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+      ];
     }
+    this.layout.xaxis = x;
     return dataset;
   }
 
@@ -468,13 +483,19 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
-    const x = {
+    const x: any = {
       tick0: undefined,
-      range: []
+      range: [],
     };
+    if (this._options.showRangeSelector) {
+      x.rangeslider = {
+        bgcolor: 'transparent',
+        thickness: 40 / this.height
+      };
+    }
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = this.minTick / this.divider;
-      x.range = [this.minTick / this.divider, this.maxTick / this.divider];
+      x.range = [this.minTick, this.maxTick];
     } else {
       x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
       x.range = [

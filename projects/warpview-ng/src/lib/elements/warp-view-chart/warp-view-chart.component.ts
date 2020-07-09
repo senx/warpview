@@ -195,7 +195,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const min = this.chartBounds.tsmin || this.minTick;
     const max = this.chartBounds.tsmax || this.maxTick;
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      x.tick0 = min / this.divider;
+      x.tick0 = min;
       x.range = [min, max];
     } else {
       x.tick0 = moment.tz(min / this.divider, this._options.timeZone).toISOString(true);
@@ -433,9 +433,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     min = min || this.minTick / this.divider;
     max = max || this.maxTick / this.divider;
     this.layout.xaxis.autorange = false;
-    this.LOG.debug(['updateBounds'],
-      moment.tz(min, this._options.timeZone).toISOString(),
-      moment.tz(max, this._options.timeZone).toISOString());
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.range = [min, max];
       this.layout.xaxis.tick0 = min;

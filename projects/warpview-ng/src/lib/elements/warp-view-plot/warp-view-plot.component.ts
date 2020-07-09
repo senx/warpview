@@ -453,7 +453,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     return [];
   }
 
-  onChartDraw($event: any) {
+  onChartDraw($event: any, component) {
     if (
       this.chartBounds
       && $event
@@ -465,9 +465,10 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.annotation.setRealBounds(this.chartBounds);
       this.chart.setRealBounds(this.chartBounds);
       this.chartDraw.emit();
-      this.LOG.debug(['onChartDraw', 'this.chartBounds'], this.chartBounds, $event);
+      this.LOG.debug(['onChartDraw', 'this.chartBounds'], component, this.chartBounds, $event);
+    } else {
+      this.chartDraw.emit($event);
     }
-    this.chartDraw.emit($event);
   }
 
   private resizeArea() {
