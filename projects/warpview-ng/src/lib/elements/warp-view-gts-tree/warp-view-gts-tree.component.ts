@@ -78,30 +78,30 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
 
   ngAfterViewInit(): void {
     this.LOG.debug(['componentDidLoad', 'data'], this._data);
-    if (this._data) {
-      this.doRender();
-    }
     if (!!this._options.foldGTSTree && !this.expand) {
       this.foldAll();
     }
     if (!this._options.foldGTSTree) {
       this.initOpen.next();
     }
+    if (this._data) {
+      this.doRender();
+    }
   }
 
   update(options: Param, refresh: boolean): void {
-    this.doRender();
     if (!!this._options.foldGTSTree && !this.expand) {
       this.foldAll();
     }
+    this.doRender();
   }
 
   private doRender() {
     this.LOG.debug(['doRender', 'gtsList'], this._data);
-    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
     if (!this._data) {
       return;
     }
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
     const dataList = GTSLib.getData(this._data).data;
     this.params = this._data.params || [];
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], dataList);

@@ -17,7 +17,7 @@
 
 <div class="list">
   <ul *ngIf="gtsList">
-    <li *ngFor="let gts of gtsList; index as index; first as first" >
+    <li *ngFor="let gts of gtsList; trackBy:identify; index as index; first as first" >
       <warpview-chip
         *ngIf="isGts(gts)"
         [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)" [param]="params[gts.id]"

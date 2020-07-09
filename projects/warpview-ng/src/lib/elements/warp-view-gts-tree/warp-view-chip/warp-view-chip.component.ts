@@ -51,7 +51,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
-    this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
+ //   this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
     if (this._node && this._node.gts && this._node.gts.c) {
       this._node = {
         ...this._node,
@@ -154,7 +154,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
         selected: state,
         label: GTSLib.serializeGtsMetadata(this._node.gts)
       };
-      this.LOG.debug(['switchPlotState'], this._node);
+      //   this.LOG.debug(['switchPlotState'], this._node);
       this.colorizeChip();
       this.warpViewSelectedGTS.emit(this._node);
     }

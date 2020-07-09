@@ -70,9 +70,7 @@ export class WarpViewTreeViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.LOG.debug(['ngOnInit'], this.gtsList);
-    this.gtsList.forEach((g, index) => {
-      this.hide[index + ''] = false;
-    });
+    this.gtsList.forEach((g, index) => this.hide[index + ''] = false);
     this.eventsSubscription = this.events.subscribe(() => this.open());
   }
 
@@ -86,26 +84,25 @@ export class WarpViewTreeViewComponent implements OnInit, OnDestroy {
   }
 
   isHidden(index: number) {
-    if (!!this.hide[index + '']) {
-      return this.hide[index + ''];
-    } else {
-      return false;
-    }
+    return !!this.hide[index + ''] ? !!this.hide[index + ''] : false;
   }
 
   isGts(node) {
     return GTSLib.isGts(node);
   }
 
+
+  identify(index, item) {
+    return index;
+  }
+
   warpViewSelectedGTSHandler(event) {
-    this.LOG.debug(['warpViewSelectedGTS'], event);
+    // this.LOG.debug(['warpViewSelectedGTS'], event);
     this.warpViewSelectedGTS.emit(event);
   }
 
   open() {
-    this.gtsList.forEach((g, index) => {
-      this.hide[index + ''] = true;
-    });
+    this.gtsList.forEach((g, index) => this.hide[index + ''] = true);
     setTimeout(() => this.initOpen.next());
   }
 }
