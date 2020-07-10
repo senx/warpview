@@ -77,7 +77,7 @@
                            [data]="gtsList" [responsive]="true"
                            (boundsDidChange)="boundsDidChange($event)"
                            (chartDraw)="onChartDraw($event, 'annotation')"
-                           [showLegend]='showLegend' [debug]="_debug" [standalone]="false"
+                           [showLegend]='showLegend' [debug]="debug" [standalone]="false"
                            [hiddenData]="_toHide" [options]="_options"
       ></warpview-annotation>
     </div>
