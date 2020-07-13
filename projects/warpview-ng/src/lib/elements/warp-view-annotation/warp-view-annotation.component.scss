@@ -59,7 +59,7 @@
     height: var(--warp-view-chart-height);
   }
 
-  .tooltip {
+  .wv-tooltip {
     position: absolute;
     width: calc(100% - 50px);
     z-index: 999;

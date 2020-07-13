@@ -37,7 +37,7 @@
     height: var(--warp-view-chart-height);
   }
 
-  .tooltip {
+  .wv-tooltip {
     position: absolute;
     background-color: var(--warp-view-chart-legend-bg) !important;
     color: var(--warp-view-chart-legend-color) !important;
