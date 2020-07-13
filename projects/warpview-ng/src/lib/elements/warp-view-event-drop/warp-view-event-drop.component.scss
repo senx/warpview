@@ -23,6 +23,11 @@
   height: 100%;
   width: 100%;
 
+  text.line-label, g.bound text {
+    fill: var(--warp-view-font-color) !important;
+
+  }
+
   #chartContainer {
     @import '../../../../../../node_modules/event-drops/dist/style.css';
     height: 100%;
@@ -30,7 +35,6 @@
     position: relative;
 
   }
-
 
   div.chart {
     width: var(--warp-view-chart-width);

@@ -173,6 +173,7 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 
   protected convert(data: DataModel): any[] {
     this.LOG.debug(['convert'], data);
+    let labelsSize = 0;
     const gtsList = GTSLib.flatDeep(data.data as any[]);
     const dataList = [];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
@@ -182,30 +183,31 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
     gtsList.forEach((gts, i) => {
       const c = ColorLib.getColor(gts.id || i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-      const dataSet = {
-        name: GTSLib.serializeGtsMetadata(gts),
-        color,
-        data: []
-      };
-      (gts.v || []).forEach(value => {
-        const ts = value[0];
+      const gtsName = GTSLib.serializeGtsMetadata(gts);
+      labelsSize = Math.max(gtsName.length * 8);
+      const dataSet = {name: gtsName, color, data: []};
+      const size = (gts.v || []).length;
+      for (let v = 0; v < size; v++) {
+        const point = (gts.v || [])[v];
+        const ts = point[0];
         this.minTick = Math.min(this.minTick, ts);
         this.maxTick = Math.max(this.maxTick, ts);
-        if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-          dataSet.data.push({date: ts, color, value: value[value.length - 1]});
-        } else {
-          dataSet.data.push({
-            date: moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toDate(),
-            color,
-            value: value[value.length - 1],
-            name: dataSet.name
-          });
+        let value = point[point.length - 1];
+        if (isNaN(value)) {
+          value = 1;
         }
-      });
+        dataSet.data.push({
+          date: moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toDate(),
+          color,
+          value,
+          name: dataSet.name
+        });
+      }
       dataList.push(dataSet);
     });
     this.LOG.debug(['convert', 'dataList'], dataList);
-    this.eventConf['range'] = {
+    this.eventConf.label ['width'] = labelsSize;
+    this.eventConf  ['range'] = {
       start: moment.tz(moment.utc(this.minTick / this.divider), this._options.timeZone).toDate(),
       end: moment.tz(moment.utc(this.maxTick / this.divider), this._options.timeZone).toDate(),
     };
