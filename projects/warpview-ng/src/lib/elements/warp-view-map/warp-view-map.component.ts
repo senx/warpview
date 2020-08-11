@@ -30,6 +30,7 @@ import moment from 'moment-timezone';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
 import {Timsort} from '../../utils/timsort';
+import {antPath} from 'leaflet-ant-path';
 
 /**
  *
@@ -485,6 +486,7 @@ export class WarpViewMapComponent implements OnInit {
       }
       geoShape.addTo(this.geoJsonLayer);
     }
+
     if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
       const group = Leaflet.featureGroup([this.geoJsonLayer, this.annotationsDataLayer, this.positionDataLayer, this.pathDataLayer]);
@@ -497,20 +499,21 @@ export class WarpViewMapComponent implements OnInit {
       setTimeout(() => {
         if (!!this.bounds && this.bounds.isValid()) {
           if ((this.currentLat || this._options.map.startLat) && (this.currentLong || this._options.map.startLong)) {
+            this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'already have bounds');
             this._map.setView({
                 lat: this.currentLat || this._options.map.startLat || 0,
                 lng: this.currentLong || this._options.map.startLong || 0
               }, this.currentZoom || this._options.map.startZoom || 10,
               {animate: false, duration: 500});
           } else {
+            this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'this.bounds', this.bounds);
             this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
-            //   this.currentZoom = this._map.getBoundsZoom(this.bounds, false);
           }
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
           //  this.currentZoom = this._map.getZoom();
         } else {
-          this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong});
+          this.LOG.debug(['displayMap', 'setView'], 'invalid bounds', {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
               lat: this.currentLat || this._options.map.startLat || 0,
               lng: this.currentLong || this._options.map.startLong || 0
@@ -608,16 +611,44 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private updateGtsPath(gts: any) {
-    const beforeCurrentValue = Leaflet.polyline(
-      MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
+
+
+    const beforeCurrentValue = antPath(MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
+      "delay": 800,
+      "dashArray": [
+        100,
+        100
+      ],
+      "weight": 5,
+      "color": gts.color,
+      "pulseColor": "#FFFFFF",
+      "paused": false,
+      "reverse": false,
+      "hardwareAccelerated": true
+    });
+    const afterCurrentValue = antPath(MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
+      "delay": 800,
+      "dashArray": [
+        100,
+        100
+      ],
+      "weight": 5,
+      "color": gts.color,
+      "pulseColor": "#FFFFFF",
+      "paused": false,
+      "reverse": false,
+      "hardwareAccelerated": true
+    });
+    /*const beforeCurrentValue = Leaflet.polyline(
+      , {
         color: gts.color,
         opacity: 1,
-      });
-    const afterCurrentValue = Leaflet.polyline(
+      });*/
+    /*const afterCurrentValue = Leaflet.polyline(
       MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
         color: gts.color,
         opacity: 0.7,
-      });
+      });*/
     let currentValue;
     // Let's verify we have a path... No path, no marker
     const size = (gts.path || []).length;

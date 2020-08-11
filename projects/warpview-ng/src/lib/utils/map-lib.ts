@@ -20,7 +20,7 @@ import {ColorLib} from './color-lib';
 import {Logger} from './logger';
 
 export class MapLib {
-  static BASE_RADIUS = 2;
+  static BASE_RADIUS = 1;
   private static LOG: Logger = new Logger(MapLib, true);
 
   static mapTypes: any = {
@@ -186,6 +186,7 @@ export class MapLib {
         if (annotation.render === 'weightedDots') {
           MapLib.validateWeightedDotsPositionArray(annotation, params);
         }
+        annotation.render = annotation.render || 'line';
         this.LOG.debug(['annotationsToLeafletPositions', 'annotations'], annotation);
         annotations.push(annotation);
       }
