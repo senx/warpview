@@ -22,10 +22,10 @@
                 (warpViewModalOpen)="onWarpViewModalOpen()">
   <div class="up-arrow" *ngIf="this.current > 0"></div>
   <ul>
-    <li *ngFor="let g of _gts; index as index"
+    <li *ngFor="let g of _gts; index as index; trackBy:identify"
         [ngClass]="{ selected: current == index, hidden: isHidden(g.id) }"
     >
-      <warpview-chip [node]="{gts: g}" [name]="g.c" [hiddenData]="hiddenData" [options]="_options"></warpview-chip>
+      <warpview-chip [node]="{gts: g}" [hiddenData]="hiddenData" [options]="_options"></warpview-chip>
     </li>
   </ul>
   <div class="down-arrow" *ngIf="current < _gts.length - 1"></div>

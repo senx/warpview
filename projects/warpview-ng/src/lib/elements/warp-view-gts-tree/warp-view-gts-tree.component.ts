@@ -124,7 +124,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   }
 
   toggleVisibility() {
-    this.expand = !this.expand;
+    requestAnimationFrame(() => this.expand = !this.expand);
   }
 
   protected convert(data: DataModel): any[] {

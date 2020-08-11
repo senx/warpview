@@ -21,7 +21,7 @@
      <span class="gtsInfo">
        <span class='gts-classname'>&nbsp; {{_node.gts.c}}</span>
        <span class='gts-separator'>&#x007B; </span>
-       <span *ngFor="let label of toArray(_node.gts.l); index as index; last as last">
+       <span *ngFor="let label of toArray(_node.gts.l); index as index; last as last; trackBy:identify">
          <span class='gts-labelname'>{{label.name}}</span>
          <span class='gts-separator'>=</span>
          <span class='gts-labelvalue'>{{label.value}}</span>
@@ -29,7 +29,7 @@
        </span>
        <span class="gts-separator"> &#x007D; </span>
          <span class='gts-separator'>&#x007B; </span>
-         <span *ngFor="let label of toArray(_node.gts.a); index as index; last as last">
+         <span *ngFor="let label of toArray(_node.gts.a); index as index; last as last; trackBy:identify">
            <span class='gts-attrname'>{{label.name}}</span>
            <span class='gts-separator'>=</span>
            <span class='gts-attrvalue'>{{label.value}}</span>

@@ -54,29 +54,51 @@ export class WarpViewTreeViewComponent implements OnInit, OnDestroy {
   @Input('hidden') hidden = false;
   @Input() events: Observable<void>;
 
-  @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   hide: any = {};
   initOpen: Subject<void> = new Subject<void>();
+  stateChange: Subject<boolean> = new Subject<boolean>();
+
   private LOG: Logger;
   private _debug = false;
   private _hiddenData: number[] = [];
   private eventsSubscription: Subscription;
+  private _kbdLastKeyPressed: string[] = [];
+
+  @Input('kbdLastKeyPressed')
+  set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
+    this.LOG.debug(['kbdLastKeyPressed'], kbdLastKeyPressed);
+    this._kbdLastKeyPressed = kbdLastKeyPressed;
+    if (kbdLastKeyPressed[0] === 'a') {
+      this.stateChange.next(true);
+    }
+    if (kbdLastKeyPressed[0] === 'n') {
+      this.stateChange.next(false);
+    }
+  }
+
+  get kbdLastKeyPressed() {
+    return this._kbdLastKeyPressed;
+  }
 
   constructor() {
     this.LOG = new Logger(WarpViewTreeViewComponent, this.debug);
   }
 
   ngOnInit(): void {
-    this.LOG.debug(['ngOnInit'], this.gtsList);
-    this.gtsList.forEach((g, index) => this.hide[index + ''] = false);
     this.eventsSubscription = this.events.subscribe(() => this.open());
+    this.LOG.debug(['ngOnInit'], this.gtsList);
+    const size = this.gtsList.length;
+    for (let i = 0; i < size; i++) {
+      this.hide[i + ''] = false;
+    }
   }
 
   ngOnDestroy() {
     this.eventsSubscription.unsubscribe();
   }
+
 
   toggleVisibility(index: number) {
     this.LOG.debug(['toggleVisibility'], index, this.hide);
@@ -90,7 +112,6 @@ export class WarpViewTreeViewComponent implements OnInit, OnDestroy {
   isGts(node) {
     return GTSLib.isGts(node);
   }
-
 
   identify(index, item) {
     return index;

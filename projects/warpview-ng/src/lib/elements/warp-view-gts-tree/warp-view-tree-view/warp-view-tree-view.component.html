@@ -17,12 +17,12 @@
 
 <div class="list">
   <ul *ngIf="gtsList">
-    <li *ngFor="let gts of gtsList; trackBy:identify; index as index; first as first" >
+    <li *ngFor="let gts of gtsList; trackBy:identify; index as index; first as first">
       <warpview-chip
         *ngIf="isGts(gts)"
         [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)" [param]="params[gts.id]"
-        [node]="{gts: gts}" [name]="gts.c" [gtsFilter]="gtsFilter" [debug]="debug" [hiddenData]="hiddenData"
-        [kbdLastKeyPressed]="kbdLastKeyPressed"></warpview-chip>
+        [node]="{gts: gts}" [gtsFilter]="gtsFilter" [debug]="debug" [hiddenData]="hiddenData"
+        [events]="stateChange.asObservable()"></warpview-chip>
       <span *ngIf="!isGts(gts)">
         <span *ngIf="gts">
           <span *ngIf="branch">
@@ -42,7 +42,7 @@
               </span>
                   </span>
           </span>
-    <warpview-tree-view [gtsList]="gts" [branch]="true" *ngIf="isHidden(index)"
+    <warpview-tree-view [gtsList]="gts" [branch]="true" *ngIf="hide[index + '']"
                         [debug]="debug" [gtsFilter]="gtsFilter" [params]="params"
                         [events]="initOpen.asObservable()"
                         [options]="options" (warpViewSelectedGTS)="warpViewSelectedGTSHandler($event)"

@@ -15,12 +15,25 @@
  *
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {GTS} from '../../../model/GTS';
 import {Logger} from '../../../utils/logger';
 import {GTSLib} from '../../../utils/gts.lib';
 import {ColorLib} from '../../../utils/color-lib';
 import {Param} from '../../../model/param';
+import {Observable, Subscription} from 'rxjs';
 
 /**
  *
@@ -31,14 +44,15 @@ import {Param} from '../../../model/param';
   styleUrls: ['./warp-view-chip.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class WarpViewChipComponent implements OnInit, AfterViewInit {
+export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
+  private eventsSubscription: Subscription;
 
   @ViewChild('chip', {static: false}) chip: ElementRef;
 
-  @Input('name') name: string;
   @Input('node') node: any;
   @Input('param') param: Param = new Param();
   @Input('options') options: Param = new Param();
+  @Input() events: Observable<boolean>;
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -50,16 +64,12 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   }
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
-    this._hiddenData = hiddenData;
- //   this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
-    if (this._node && this._node.gts && this._node.gts.c) {
-      this._node = {
-        ...this._node,
-        selected: this.hiddenData.indexOf(this._node.gts.id) === -1,
-        label: GTSLib.serializeGtsMetadata(this._node.gts)
-      };
-      this.LOG.debug(['hiddenData'], this._node);
-      this.colorizeChip();
+    if (JSON.stringify(hiddenData) !== JSON.stringify(this._hiddenData)) {
+      this._hiddenData = hiddenData;
+      //   this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
+      if (this._node && this._node.gts && this._node.gts.c) {
+       // this.setState(this.hiddenData.indexOf(this._node.gts.id) === -1);
+      }
     }
   }
 
@@ -70,9 +80,9 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
   @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
     if (this._gtsFilter.slice(1) !== '') {
-      this.setState(new RegExp(this._gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+     // this.setState(new RegExp(this._gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
     } else {
-      this.setState(true);
+   //   this.setState(true);
     }
   }
 
@@ -80,57 +90,50 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
     return this._gtsFilter;
   }
 
-  @Input('kbdLastKeyPressed') set kbdLastKeyPressed(kbdLastKeyPressed: string[]) {
-    this._kbdLastKeyPressed = kbdLastKeyPressed;
-    if (kbdLastKeyPressed[0] === 'a') {
-      this.setState(true);
-    }
-    if (kbdLastKeyPressed[0] === 'n') {
-      this.setState(false);
-    }
-  }
-
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private LOG: Logger;
-  private refreshCounter = 0;
   // the first character triggers change each filter apply to trigger events. it must be discarded.
   private _gtsFilter = 'x';
   private _debug = false;
-  private _kbdLastKeyPressed: string[] = [];
   private _hiddenData: number[] = [];
   _node: any = {
     selected: true,
     gts: GTS,
   };
 
-  constructor() {
+  constructor(private renderer: Renderer2) {
     this.LOG = new Logger(WarpViewChipComponent, this.debug);
   }
 
   ngOnInit(): void {
-    this._node = {...this.node, selected: this.hiddenData.indexOf(this.node.gts.id) === -1};
+    this._node = {...this.node, selected: this._hiddenData.indexOf(this.node.gts.id) === -1};
+    //  this.eventsSubscription = this.events.subscribe(state => this.setState(state));
+  }
+
+  ngOnDestroy() {
+   // this.eventsSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
-    if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
-      || this.hiddenData.indexOf(this._node.gts.id) > -1) {
-      this.setState(false);
-    }
-    this.colorizeChip();
+    /*  if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+        || this.hiddenData.indexOf(this._node.gts.id) > -1) {
+        this.setState(false);
+      } else {
+        this.colorizeChip();
+      }*/
   }
 
   private colorizeChip() {
-    if (this.chip) {
-      if (this._node.selected && this.chip.nativeElement) {
+    if (!!this.chip) {
+      if (!!this._node.selected && this.chip.nativeElement) {
         const c = ColorLib.getColor(this._node.gts.id, this.options.scheme);
         const color = (this.param || {datasetColor: c}).datasetColor || c;
-        this.chip.nativeElement.style.setProperty('background-color', ColorLib.transparentize(color));
-        this.chip.nativeElement.style.setProperty('border-color', color);
+        this.renderer.setStyle(this.chip.nativeElement, 'background-color', color);
+        this.renderer.setStyle(this.chip.nativeElement, 'border-color', color);
       } else {
-        this.chip.nativeElement.style.setProperty('background-color', '#eeeeee');
+        this.renderer.setStyle(this.chip.nativeElement, 'background-color', 'transparent');
       }
-      this.refreshCounter++;
     }
   }
 
@@ -143,20 +146,23 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit {
 
   switchPlotState(event: UIEvent) {
     event.preventDefault();
-    this.setState(!this._node.selected);
+  //  this.setState(!this._node.selected);
     return false;
   }
 
   private setState(state: boolean) {
     if (this._node && this._node.gts) {
-      this._node = {
-        ...this._node,
-        selected: state,
-        label: GTSLib.serializeGtsMetadata(this._node.gts)
-      };
-      //   this.LOG.debug(['switchPlotState'], this._node);
+      this.LOG.debug(['switchPlotState'], state);
       this.colorizeChip();
-      this.warpViewSelectedGTS.emit(this._node);
+      if (this._node.selected !== state) {
+        this._node.selected = !!state;
+        this.LOG.debug(['switchPlotState'], 'emit');
+        this.warpViewSelectedGTS.emit(this._node);
+      }
     }
+  }
+
+  identify(index, item) {
+    return index;
   }
 }

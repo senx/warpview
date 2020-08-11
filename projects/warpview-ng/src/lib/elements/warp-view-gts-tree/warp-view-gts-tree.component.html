@@ -18,6 +18,7 @@
 <div class="wrapper">
   <div class="stack-level" (click)="toggleVisibility()">
     <span [ngClass]="{expanded: this.expand, collapsed: !this.expand}" #root></span> Results
+    <small id="inner-a">List of {{gtsList.length}} item{{gtsList.length > 1 ? 's' : ''}}</small>
   </div>
   <warpview-tree-view [events]="initOpen.asObservable()"
                       [gtsList]="gtsList" [branch]="false" *ngIf="expand" [params]="params"
