@@ -11,6 +11,7 @@
     "moment-timezone",
     "leaflet",
     "leaflet.markercluster",
+    "leaflet-ant-path",
     "leaflet.heat",
     "canvas-gauges",
     "fitty",

@@ -79,7 +79,7 @@ export class WarpViewMapComponent implements OnInit {
 
   @Input('data') set data(data: any) {
     this.LOG.debug(['onData'], data);
-    this.currentValuesMarkers = [];
+    this.pointslayer = [];
     this.annotationsMarkers = [];
     this.positionArraysMarkers = [];
     if (!!data) {
@@ -125,6 +125,7 @@ export class WarpViewMapComponent implements OnInit {
         heatControls: false,
         tiles: [],
         dotsLimit: 1000,
+        animate: false
       },
       timeMode: 'date',
       showRangeSelector: true,
@@ -137,14 +138,13 @@ export class WarpViewMapComponent implements OnInit {
 
   private _map: Leaflet.Map;
   private _hiddenData: number[];
-  private currentValuesMarkers = [];
+  private pointslayer = [];
   private annotationsMarkers = [];
   private positionArraysMarkers = [];
-  private _iconAnchor: Leaflet.PointExpression = [20, 52];
+  private _iconAnchor: Leaflet.PointExpression = [20, 38];
   private _popupAnchor: Leaflet.PointExpression = [0, -50];
   private _heatLayer: any;
   private pathData: any[] = [];
-  private annotationsData: any[] = [];
   private positionData: any[] = [];
   private geoJson: any[] = [];
   private timeStart: number;
@@ -153,7 +153,6 @@ export class WarpViewMapComponent implements OnInit {
   private finalHeight = 0;
   // Layers
   private pathDataLayer = Leaflet.featureGroup();
-  private annotationsDataLayer = Leaflet.featureGroup();
   private positionDataLayer = Leaflet.featureGroup();
   private tileLayerGroup = Leaflet.featureGroup();
   private geoJsonLayer = Leaflet.featureGroup();
@@ -170,7 +169,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._options = ChartLib.mergeDeep(this._options, this.defOptions) as Param;
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
   }
 
   resizeMe() {
@@ -219,7 +218,7 @@ export class WarpViewMapComponent implements OnInit {
 
   private drawMap(reZoom: boolean) {
     this.LOG.debug(['drawMap'], this._data);
-    this._options = ChartLib.mergeDeep<Param>(this._options, this.defOptions);
+    this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
     this.timeStart = this._options.map.timeStart;
     moment.tz.setDefault(this._options.timeZone);
     let gts: any = this._data;
@@ -257,7 +256,7 @@ export class WarpViewMapComponent implements OnInit {
     const size = flattenGTS.length;
     for (let i = 0; i < size; i++) {
       const item = flattenGTS[i];
-      if (item.v) {
+      if (GTSLib.isGts(item)) {
         Timsort.sort(item.v, (a, b) => a[0] - b[0]);
         item.i = i;
         i++;
@@ -271,6 +270,7 @@ export class WarpViewMapComponent implements OnInit {
     const c = `${color.slice(1)}`;
     const m = marker !== '' ? marker : 'circle';
     return Leaflet.icon({
+      // tslint:disable-next-line:max-line-length
       iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v4/pin?icon=fa-${m}&iconSize=17&size=40&hoffset=${m === 'circle' ? 0 : -1}&voffset=-4&color=fff&background=${c}`,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
@@ -299,7 +299,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private displayMap(data: { gts: any[], params: any[] }, reDraw = false) {
-    this.currentValuesMarkers = [];
+    this.pointslayer = [];
     this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
       this.lowerTimeBound = this._options.map.timeSliderMin / this.divider;
@@ -322,12 +322,12 @@ export class WarpViewMapComponent implements OnInit {
     if (data.gts.length === 0) {
       return;
     }
-    this.pathData = MapLib.toLeafletMapPaths(data, this._hiddenData || [], this.divider, this._options.scheme) || [];
-    this.annotationsData = MapLib.annotationsToLeafletPositions(data, this._hiddenData, this.divider, this._options.scheme) || [];
+    this.pathData = MapLib.toLeafletMapPaths(data, this._hiddenData || [], this._options.scheme) || [];
+    this.LOG.debug(['displayMap'], 'this.pathData', this.pathData);
     this.positionData = MapLib.toLeafletMapPositionArray(data, this._hiddenData || [], this._options.scheme) || [];
+    this.LOG.debug(['displayMap'], 'this.positionData', this.positionData);
     this.geoJson = MapLib.toGeoJSON(data);
-    this.LOG.debug(['displayMap'], this.pathData, this.annotationsData, this.positionData);
-
+    this.LOG.debug(['displayMap'], 'this.geoJson', this.geoJson);
     if (this._options.map.mapType !== 'NONE') {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
       const mapOpts: TileLayerOptions = {
@@ -346,7 +346,6 @@ export class WarpViewMapComponent implements OnInit {
     if (!!this._map) {
       this.LOG.debug(['displayMap'], 'map exists');
       this.pathDataLayer.clearLayers();
-      this.annotationsDataLayer.clearLayers();
       this.positionDataLayer.clearLayers();
       this.geoJsonLayer.clearLayers();
       this.tileLayerGroup.clearLayers();
@@ -354,7 +353,7 @@ export class WarpViewMapComponent implements OnInit {
       this.LOG.debug(['displayMap'], 'build map');
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
         preferCanvas: true,
-        layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.annotationsDataLayer, this.positionDataLayer],
+        layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.positionDataLayer],
         zoomAnimation: true,
         maxZoom: 24
       });
@@ -365,64 +364,29 @@ export class WarpViewMapComponent implements OnInit {
       this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
       this._map.on('zoomend', () => {
         if (!this.firstDraw) {
-          this.LOG.debug(['moveend'], this._map.getCenter());
           this.currentZoom = this._map.getZoom();
         }
       });
       this._map.on('moveend', () => {
         if (!this.firstDraw) {
-          this.LOG.debug(['moveend'], this._map.getCenter());
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
         }
       });
     }
-
-    let size = (this.pathData || []).length;
-    this.LOG.debug(['displayMap'], 'build map done', size);
-    for (let i = 0; i < size; i++) {
-      const d = this.pathData[i];
-      if (!!d) {
-        const plottedGts: any = this.updateGtsPath(d);
-        if (!!plottedGts) {
-          this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
-          this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
-          this.currentValuesMarkers.push(plottedGts.currentValue);
-        }
+    // For each path
+    const pathDataSize = (this.pathData || []).length;
+    for (let i = 0; i < pathDataSize; i++) {
+      const path = this.pathData[i];
+      if (!!path) {
+        this.updateGtsPath(path);
       }
     }
-    this.LOG.debug(['displayMap'], 'this.pathData', this.pathData);
-    size = (this.annotationsData || []).length;
-    for (let i = 0; i < size; i++) {
-      const d = this.annotationsData[i];
-      const plottedGts: any = this.updateGtsPath(d);
-      if (!!plottedGts) {
-        if (d.render === 'line') {
-          this.currentValuesMarkers.push(plottedGts.beforeCurrentValue);
-          this.currentValuesMarkers.push(plottedGts.afterCurrentValue);
-        }
-        this.currentValuesMarkers.push(plottedGts.currentValue);
-      }
+    // For each position
+    const positionsSize = (this.positionData || []).length;
+    for (let i = 0; i < positionsSize; i++) {
+      this.updatePositionArray(this.positionData[i]);
     }
-    if (!!this._map) {
-      this.pathDataLayer = Leaflet.featureGroup(this.currentValuesMarkers || []).addTo(this._map);
-    }
-    this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
-    this.LOG.debug(['displayMap', 'this.hiddenData'], this.hiddenData);
-    this.LOG.debug(['displayMap', 'this.positionData'], this.positionData);
-    // Create the positions arrays
-    size = (this.positionData || []).length;
-    for (let i = 0; i < size; i++) {
-      const d = this.positionData[i];
-      this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updatePositionArray(d));
-    }
-    this.LOG.debug(['displayMap'], 'this.po sitionData');
-    size = (this.annotationsData || []).length;
-    for (let i = 0; i < size; i++) {
-      const d = this.annotationsData[i];
-      this.positionArraysMarkers = this.positionArraysMarkers.concat(this.updateAnnotation(d));
-    }
-    this.LOG.debug(['displayMap'], 'this.annotationsData');
 
     (this._options.map.tiles || []).forEach((t) => { // TODO to test
       this.LOG.debug(['displayMap'], t);
@@ -445,22 +409,8 @@ export class WarpViewMapComponent implements OnInit {
     });
     this.LOG.debug(['displayMap'], 'this.tiles');
 
-    this.LOG.debug(['displayMap', 'positionArraysMarkers'], this.positionArraysMarkers);
-    this.LOG.debug(['displayMap', 'annotationsMarkers'], this.annotationsMarkers);
-
-    size = (this.positionArraysMarkers || []).length;
-    for (let i = 0; i < size; i++) {
-      const m = this.positionArraysMarkers[i];
-      m.addTo(this.positionDataLayer);
-    }
-    size = (this.annotationsMarkers || []).length;
-    for (let i = 0; i < size; i++) {
-      const m = this.annotationsMarkers[i];
-      m.addTo(this.annotationsDataLayer);
-    }
-
     this.LOG.debug(['displayMap', 'geoJson'], this.geoJson);
-    size = (this.geoJson || []).length;
+    const size = (this.geoJson || []).length;
     for (let i = 0; i < size; i++) {
       const m = this.geoJson[i];
       const color = ColorLib.getColor(i, this._options.scheme);
@@ -487,9 +437,9 @@ export class WarpViewMapComponent implements OnInit {
       geoShape.addTo(this.geoJsonLayer);
     }
 
-    if (this.pathData.length > 0 || this.positionData.length > 0 || this.annotationsData.length > 0 || this.geoJson.length > 0) {
+    if (this.pathData.length > 0 || this.positionData.length > 0 || this.geoJson.length > 0) {
       // Fit map to curves
-      const group = Leaflet.featureGroup([this.geoJsonLayer, this.annotationsDataLayer, this.positionDataLayer, this.pathDataLayer]);
+      const group = Leaflet.featureGroup([this.geoJsonLayer, this.positionDataLayer, this.pathDataLayer]);
       this.LOG.debug(['displayMap', 'setView'], 'fitBounds', group.getBounds());
       this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong}, {
         lat: this._options.map.startLat,
@@ -511,7 +461,6 @@ export class WarpViewMapComponent implements OnInit {
           }
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
-          //  this.currentZoom = this._map.getZoom();
         } else {
           this.LOG.debug(['displayMap', 'setView'], 'invalid bounds', {lat: this.currentLat, lng: this.currentLong});
           this._map.setView({
@@ -552,8 +501,8 @@ export class WarpViewMapComponent implements OnInit {
     this.chartDraw.emit(true);
   }
 
-  updateAnnotation(gts) {
-    const positions = [];
+  private getGTSDots(gts) {
+    const dots = [];
     let icon;
     let size;
     switch (gts.render) {
@@ -563,8 +512,8 @@ export class WarpViewMapComponent implements OnInit {
         for (let i = 0; i < size; i++) {
           const g = gts.path[i];
           const marker = Leaflet.marker(g, {icon, opacity: 1});
-          marker.bindPopup(g.val.toString());
-          positions.push(marker);
+          this.addPopup(gts, g.val, g.ts, marker);
+          dots.push(marker);
         }
         break;
       case 'weightedDots':
@@ -584,8 +533,8 @@ export class WarpViewMapComponent implements OnInit {
                 fillColor: gts.color, fillOpacity: 0.5,
                 weight: 1
               });
-            this.addPopup(gts, p.val, marker);
-            positions.push(marker);
+            this.addPopup(gts, p.val, p.ts, marker);
+            dots.push(marker);
           }
         }
         break;
@@ -596,189 +545,157 @@ export class WarpViewMapComponent implements OnInit {
           const g = gts.path[i];
           const marker = Leaflet.circleMarker(
             g, {
-              radius: gts.baseRadius,
+              radius: gts.baseRadius || MapLib.BASE_RADIUS,
               color: gts.color,
               fillColor: gts.color,
               fillOpacity: 1
             }
           );
-          marker.bindPopup(g.val.toString());
-          positions.push(marker);
+          this.addPopup(gts, g.val, g.ts, marker);
+          dots.push(marker);
         }
         break;
     }
-    return positions;
+    return dots;
   }
 
   private updateGtsPath(gts: any) {
-
-
-    const beforeCurrentValue = antPath(MapLib.pathDataToLeaflet(gts.path, {to: 0}), {
-      "delay": 800,
-      "dashArray": [
-        100,
-        100
-      ],
-      "weight": 5,
-      "color": gts.color,
-      "pulseColor": "#FFFFFF",
-      "paused": false,
-      "reverse": false,
-      "hardwareAccelerated": true
-    });
-    const afterCurrentValue = antPath(MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
-      "delay": 800,
-      "dashArray": [
-        100,
-        100
-      ],
-      "weight": 5,
-      "color": gts.color,
-      "pulseColor": "#FFFFFF",
-      "paused": false,
-      "reverse": false,
-      "hardwareAccelerated": true
-    });
-    /*const beforeCurrentValue = Leaflet.polyline(
-      , {
-        color: gts.color,
-        opacity: 1,
-      });*/
-    /*const afterCurrentValue = Leaflet.polyline(
-      MapLib.pathDataToLeaflet(gts.path, {from: 0}), {
-        color: gts.color,
-        opacity: 0.7,
-      });*/
-    let currentValue;
-    // Let's verify we have a path... No path, no marker
-    const size = (gts.path || []).length;
-    for (let i = 0; i < size; i++) {
-      const p = gts.path[i];
-      let date;
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        date = parseInt(p.ts, 10);
+    const path = MapLib.pathDataToLeaflet(gts.path);
+    const group = Leaflet.featureGroup();
+    if ((gts.path || []).length > 1 && !!gts.line) {
+      if (!!this._options.map.animate) {
+        group.addLayer(antPath(path || [], {
+          delay: 800, dashArray: [10, 100],
+          weight: 5, color: ColorLib.transparentize(gts.color, 0.5),
+          pulseColor: gts.color,
+          paused: false, reverse: false, hardwareAccelerated: true, hardwareAcceleration: true
+        }));
       } else {
-        date = (moment(parseInt(p.ts, 10))
-          .utc(true).toISOString() || '')
-          .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
+        group.addLayer(Leaflet.polyline(path || [], {color: gts.color, opacity: 0.5}));
       }
-      currentValue = Leaflet.circleMarker([p.lat, p.lon],
-        {radius: MapLib.BASE_RADIUS, color: gts.color, fillColor: gts.color, fillOpacity: 0.7})
-        .bindPopup(`<p>${date}</p><p><b>${gts.key}</b>: ${p.val.toString()}</p>`);
     }
-    if (size > 0) {
-      return {
-        beforeCurrentValue,
-        afterCurrentValue,
-        currentValue,
-      };
-    } else {
-      return undefined;
+    const dots = this.getGTSDots(gts);
+    const size = (dots || []).length;
+    for (let i = 0; i < size; i++) {
+      group.addLayer(dots[i]);
     }
+    this.pathDataLayer.addLayer(group);
   }
 
-  private addPopup(positionData: any, value: any, marker: any) {
+  private addPopup(positionData: any, value: any, ts: any, marker: any) {
     if (!!positionData) {
-      let content = '';
-      if (positionData.key) {
-        content = `<p><b>${positionData.key}</b>: ${value || 'na'}</p>`;
+      let date;
+      if (ts && !this._options.timeMode || this._options.timeMode !== 'timestamp') {
+        date = (moment.tz(ts / this.divider, this._options.timeZone).toISOString(true) || '')
+          .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
       }
+      let content = '';
+      content = `<p>${date}</p><p><b>${positionData.key}</b>: ${value || 'na'}</p>`;
       Object.keys(positionData.properties || []).forEach(k => content += `<b>${k}</b>: ${positionData.properties[k]}<br />`);
       marker.bindPopup(content);
     }
   }
 
   private updatePositionArray(positionData: any) {
-    const positions = [];
-    let polyline;
-    let icon;
-    let result;
-    let inStep;
-    let size;
-    this.LOG.debug(['updatePositionArray'], positionData);
-    switch (positionData.render) {
-      case 'path':
-        polyline = Leaflet.polyline(positionData.positions, {color: positionData.color, opacity: 1});
-        positions.push(polyline);
-        break;
-      case 'marker':
-        icon = this.icon(positionData.color, positionData.marker);
-        size = (positionData.positions || []).length;
-        for (let i = 0; i < size; i++) {
-          const p = positionData.positions[i];
-          if ((this.hiddenData || []).filter(h => h === positionData.key).length === 0) {
+    const group = Leaflet.featureGroup();
+    if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
+      const path = MapLib.updatePositionArrayToLeaflet(positionData.positions);
+      if ((positionData.positions || []).length > 1 && !!positionData.line) {
+        if (!!this._options.map.animate) {
+          group.addLayer(antPath(path || [], {
+            delay: 800, dashArray: [10, 100],
+            weight: 5, color: ColorLib.transparentize(positionData.color, 0.5),
+            pulseColor: positionData.color,
+            paused: false, reverse: false, hardwareAccelerated: true, hardwareAcceleration: true
+          }));
+        } else {
+          group.addLayer(Leaflet.polyline(path || [], {color: positionData.color, opacity: 0.5}));
+        }
+      }
+      let icon;
+      let result;
+      let inStep;
+      let size;
+      this.LOG.debug(['updatePositionArray'], positionData);
+
+      switch (positionData.render) {
+        case 'marker':
+          icon = this.icon(positionData.color, positionData.marker);
+          size = (positionData.positions || []).length;
+          for (let i = 0; i < size; i++) {
+            const p = positionData.positions[i];
             const marker = Leaflet.marker({lat: p[0], lng: p[1]}, {icon, opacity: 1});
-            this.addPopup(positionData, p[2], marker);
-            positions.push(marker);
+            this.addPopup(positionData, p[2], undefined, marker);
+            group.addLayer(marker);
           }
           this.LOG.debug(['updatePositionArray', 'build marker'], icon);
-        }
-        break;
-      case 'coloredWeightedDots':
-        this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
-        result = [];
-        inStep = [];
-        for (let j = 0; j < positionData.numColorSteps; j++) {
-          result[j] = 0;
-          inStep[j] = 0;
-        }
-        size = (positionData.positions || []).length;
-        for (let i = 0; i < size; i++) {
-          const p = positionData.positions[i];
-          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
+          break;
+        case 'coloredWeightedDots':
+          this.LOG.debug(['updatePositionArray', 'coloredWeightedDots'], positionData);
+          result = [];
+          inStep = [];
+          for (let j = 0; j < positionData.numColorSteps; j++) {
+            result[j] = 0;
+            inStep[j] = 0;
+          }
+          size = (positionData.positions || []).length;
+          for (let i = 0; i < size; i++) {
+            const p = positionData.positions[i];
+            const radius = (parseInt(p[2], 10) - (positionData.minValue || 0)) * 50 / (positionData.maxValue || 50);
+
             this.LOG.debug(['updatePositionArray', 'coloredWeightedDots', 'radius'], positionData.baseRadius * p[4]);
             const marker = Leaflet.circleMarker(
               {lat: p[0], lng: p[1]},
               {
-                radius: positionData.baseRadius * (parseInt(p[4], 10) + 1),
-                color: positionData.borderColor,
+                radius,
+                color: positionData.borderColor || positionData.color,
                 fillColor: ColorLib.rgb2hex(
                   positionData.colorGradient[p[5]].r,
                   positionData.colorGradient[p[5]].g,
                   positionData.colorGradient[p[5]].b),
+                fillOpacity: 0.3,
+              });
+            this.addPopup(positionData, p[2], undefined, marker);
+            group.addLayer(marker);
+          }
+          break;
+        case 'weightedDots':
+          size = (positionData.positions || []).length;
+          for (let i = 0; i < size; i++) {
+            const p = positionData.positions[i];
+            const radius = (parseInt(p[2], 10) - (positionData.minValue || 0)) * 50 / (positionData.maxValue || 50);
+            const marker = Leaflet.circleMarker(
+              {lat: p[0], lng: p[1]}, {
+                radius,
+                color: positionData.borderColor || positionData.color,
+                fillColor: positionData.color,
+                weight: 2,
+                fillOpacity: 0.3,
+              });
+            this.addPopup(positionData, p[2], undefined, marker);
+            group.addLayer(marker);
+          }
+          break;
+        case 'dots':
+        default:
+          size = (positionData.positions || []).length;
+          for (let i = 0; i < size; i++) {
+            const p = positionData.positions[i];
+            const marker = Leaflet.circleMarker(
+              {lat: p[0], lng: p[1]}, {
+                radius: positionData.baseRadius || MapLib.BASE_RADIUS,
+                color: positionData.borderColor || positionData.color,
+                fillColor: positionData.color,
+                weight: 2,
                 fillOpacity: 0.7,
               });
-            this.addPopup(positionData, p[2], marker);
-            positions.push(marker);
+            this.addPopup(positionData, p[2] || 'na', undefined, marker);
+            group.addLayer(marker);
           }
-        }
-        break;
-      case 'weightedDots':
-        size = (positionData.positions || []).length;
-        for (let i = 0; i < size; i++) {
-          const p = positionData.positions[i];
-          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
-            const marker = Leaflet.circleMarker(
-              {lat: p[0], lng: p[1]}, {
-                radius: positionData.baseRadius * (parseInt(p[4], 10) + 1),
-                color: positionData.borderColor,
-                fillColor: positionData.color, fillOpacity: 0.7,
-              });
-            this.addPopup(positionData, p[2], marker);
-            positions.push(marker);
-          }
-        }
-        break;
-      case 'dots':
-      default:
-        size = (positionData.positions || []).length;
-        for (let i = 0; i < size; i++) {
-          const p = positionData.positions[i];
-          if ((this._hiddenData || []).filter(h => h === positionData.key).length === 0) {
-            const marker = Leaflet.circleMarker(
-              {lat: p[0], lng: p[1]}, {
-                radius: positionData.baseRadius,
-                color: positionData.borderColor,
-                fillColor: positionData.color,
-                fillOpacity: 1,
-              });
-            this.addPopup(positionData, p[2], marker);
-            positions.push(marker);
-          }
-        }
-        break;
+          break;
+      }
     }
-    return positions;
+    this.positionDataLayer.addLayer(group);
   }
 
   public resize(): Promise<boolean> {

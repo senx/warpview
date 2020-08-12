@@ -66,7 +66,8 @@ export class Param {
     startLat?: number;
     startLong?: number;
     startZoom?: number;
-    timeSpanList?: any[]
+    timeSpanList?: any[],
+    animate?: boolean;
   } = {
     tiles: [],
     showTimeSlider: false,

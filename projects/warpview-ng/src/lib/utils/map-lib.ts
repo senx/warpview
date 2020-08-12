@@ -20,7 +20,7 @@ import {ColorLib} from './color-lib';
 import {Logger} from './logger';
 
 export class MapLib {
-  static BASE_RADIUS = 1;
+  static BASE_RADIUS = 2;
   private static LOG: Logger = new Logger(MapLib, true);
 
   static mapTypes: any = {
@@ -125,14 +125,26 @@ export class MapLib {
     },
   };
 
-  static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
+  static toLeafletMapPaths(data: { gts: any[]; params: any[] }, hiddenData: number[], scheme: string) {
     const paths = [];
     const size = (data.gts || []).length;
     for (let i = 0; i < size; i++) {
       const gts = data.gts[i];
+      let params = (data.params || [])[i];
+      if (!params) {
+        params = {};
+      }
       if (GTSLib.isGtsToPlotOnMap(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         const path: any = {};
-        path.path = MapLib.gtsToPath(gts, divider);
+        path.path = MapLib.gtsToPath(gts);
+        if (!!params.render) {
+          path.render = params.render;
+        }
+        if (!!params.marker) {
+          path.marker = params.marker;
+        }
+        path.line = params.hasOwnProperty('line') ? params.line : true;
+        path.render = path.render || 'dots';
         if (data.params && data.params[i] && data.params[i].key) {
           path.key = data.params[i].key;
         } else {
@@ -149,7 +161,7 @@ export class MapLib {
     return paths;
   }
 
-  static gtsToPath(gts, divider: number = 1000) {
+  static gtsToPath(gts) {
     const path = [];
     const size = (gts.v || []).length;
     for (let i = 0; i < size; i++) {
@@ -157,48 +169,17 @@ export class MapLib {
       const l = v.length;
       if (l >= 4) {
         // timestamp, lat, lon, elev?, value
-        path.push({ts: Math.floor(v[0] / divider), lat: v[1], lon: v[2], val: v[l - 1]});
+        path.push({ts: Math.floor(v[0]), lat: v[1], lon: v[2], val: v[l - 1]});
       }
     }
     return path;
-  }
-
-  static annotationsToLeafletPositions(data: { gts: any[]; params: any[] }, hiddenData: number[], divider: number = 1000, scheme: string) {
-    const annotations = [];
-    const size = (data.gts || []).length;
-    for (let i = 0; i < size; i++) {
-      const gts = data.gts[i];
-      if (GTSLib.isGtsToAnnotate(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
-        this.LOG.debug(['annotationsToLeafletPositions'], gts);
-        const annotation: any = {};
-        let params = (data.params || [])[i];
-        if (!params) {
-          params = {};
-        }
-        annotation.path = MapLib.gtsToPath(gts, divider);
-        MapLib.extractCommonParameters(annotation, params, i, scheme);
-        if (params.render) {
-          annotation.render = params.render;
-        }
-        if (annotation.render === 'marker') {
-          annotation.marker = (data.params && data.params[i]) ? data.params[i].marker : 'circle';
-        }
-        if (annotation.render === 'weightedDots') {
-          MapLib.validateWeightedDotsPositionArray(annotation, params);
-        }
-        annotation.render = annotation.render || 'line';
-        this.LOG.debug(['annotationsToLeafletPositions', 'annotations'], annotation);
-        annotations.push(annotation);
-      }
-    }
-    return annotations;
   }
 
   private static extractCommonParameters(obj, params, index, scheme: string) {
     params = params || {};
     obj.key = params.key || '';
     obj.color = params.color || ColorLib.getColor(index, scheme);
-    obj.borderColor = params.borderColor || '#000';
+    obj.borderColor = params.borderColor;
     obj.properties = params.properties || {};
     if (params.baseRadius === undefined
       || isNaN(parseInt(params.baseRadius, 10))
@@ -271,9 +252,11 @@ export class MapLib {
         const posArray = gts;
         const params = data.params[i] || {};
         MapLib.extractCommonParameters(posArray, params, i, scheme);
-        if (params.render !== undefined) {
-          posArray.render = params.render;
-        }
+        posArray.render = params.render || 'dots';
+
+        posArray.maxValue = params.maxValue || 0;
+        posArray.minValue = params.minValue || 0;
+        posArray.line = params.hasOwnProperty('line') ? params.line : false;
         if (posArray.render === 'weightedDots') {
           MapLib.validateWeightedDotsPositionArray(posArray, params);
         }
@@ -282,6 +265,11 @@ export class MapLib {
         }
         if (posArray.render === 'marker') {
           posArray.marker = params.marker;
+        }
+        if (data.params && data.params[i] && data.params[i].color) {
+          posArray.color = data.params[i].color;
+        } else {
+          posArray.color = ColorLib.getColor(i, scheme);
         }
         this.LOG.debug(['toLeafletMapPositionArray', 'posArray'], posArray);
         positions.push(posArray);
@@ -465,14 +453,10 @@ export class MapLib {
     return [[south, west], [north, east]];
   }
 
-  static pathDataToLeaflet(pathData, options) {
+  static pathDataToLeaflet(pathData: any[]) {
     const path = [];
-    const firstIndex = ((options === undefined) ||
-      (options.from === undefined) ||
-      (options.from < 0)) ? 0 : options.from;
-    const lastIndex = ((options === undefined) || (options.to === undefined) || (options.to >= pathData.length)) ?
-      pathData.length - 1 : options.to;
-    for (let i = firstIndex; i <= lastIndex; i++) {
+    const size = pathData.length;
+    for (let i = 0; i < size; i++) {
       path.push([pathData[i].lat, pathData[i].lon]);
     }
     return path;
@@ -482,12 +466,22 @@ export class MapLib {
     const defShapes = ['Point', 'LineString', 'Polygon', 'MultiPolygon'];
     const geoJsons = [];
     data.gts.forEach(d => {
-      if (d.type && d.type === 'Feature' && d.geometry && d.geometry.type && defShapes.indexOf(d.geometry.type) > -1) {
+      if (d && d.type && d.type === 'Feature' && d.geometry && d.geometry.type && defShapes.indexOf(d.geometry.type) > -1) {
         geoJsons.push(d);
-      } else if (d.type && defShapes.indexOf(d.type) > -1) {
+      } else if (d && d.type && defShapes.indexOf(d.type) > -1) {
         geoJsons.push({type: 'Feature', geometry: d});
       }
     });
     return geoJsons;
+  }
+
+  static updatePositionArrayToLeaflet(positionArray: any[]) {
+    const latLng = [];
+    const size = (positionArray || []).length;
+    for (let i = 0; i < size; i++) {
+      const pos = positionArray[i];
+      latLng.push([pos[0], pos[1]]);
+    }
+    return latLng;
   }
 }
