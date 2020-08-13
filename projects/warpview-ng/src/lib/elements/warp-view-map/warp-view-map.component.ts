@@ -561,7 +561,7 @@ export class WarpViewMapComponent implements OnInit {
   private updateGtsPath(gts: any) {
     const path = MapLib.pathDataToLeaflet(gts.path);
     const group = Leaflet.featureGroup();
-    if ((path || []).length > 1 && !!gts.line) {
+    if ((path || []).length > 1 && !!gts.line && gts.render === 'dots') {
       if (!!this._options.map.animate) {
         group.addLayer(antPath(path || [], {
           delay: 800, dashArray: [10, 100],
