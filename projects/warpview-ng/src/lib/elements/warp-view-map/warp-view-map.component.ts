@@ -407,8 +407,6 @@ export class WarpViewMapComponent implements OnInit {
         }));
       }
     });
-    this.LOG.debug(['displayMap'], 'this.tiles');
-
     this.LOG.debug(['displayMap', 'geoJson'], this.geoJson);
     const size = (this.geoJson || []).length;
     for (let i = 0; i < size; i++) {
@@ -562,7 +560,7 @@ export class WarpViewMapComponent implements OnInit {
   private updateGtsPath(gts: any) {
     const path = MapLib.pathDataToLeaflet(gts.path);
     const group = Leaflet.featureGroup();
-    if ((gts.path || []).length > 1 && !!gts.line) {
+    if ((path || []).length > 1 && !!gts.line) {
       if (!!this._options.map.animate) {
         group.addLayer(antPath(path || [], {
           delay: 800, dashArray: [10, 100],
