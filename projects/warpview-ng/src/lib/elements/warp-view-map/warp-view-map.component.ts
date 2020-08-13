@@ -500,6 +500,7 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private getGTSDots(gts) {
+
     const dots = [];
     let icon;
     let size;
@@ -523,11 +524,11 @@ export class WarpViewMapComponent implements OnInit {
             if (isNaN(v)) {
               v = 0;
             }
-            const radius = (v - (gts.minValue || 0)) * 50 / (gts.maxValue || 50);
+            const radius =  50 * v / ((gts.maxValue || 1) - (gts.minValue || 0));
             const marker = Leaflet.circleMarker(
               p, {
                 radius: radius === 0 ? 1 : radius,
-                color: gts.borderColor,
+                color: gts.borderColor || 'transparent',
                 fillColor: gts.color, fillOpacity: 0.5,
                 weight: 1
               });

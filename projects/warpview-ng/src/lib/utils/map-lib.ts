@@ -136,6 +136,8 @@ export class MapLib {
       }
       if (GTSLib.isGtsToPlotOnMap(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
         const path: any = {};
+        MapLib.extractCommonParameters(path, params, i, scheme);
+
         path.path = MapLib.gtsToPath(gts);
         if (!!params.render) {
           path.render = params.render;
@@ -145,6 +147,12 @@ export class MapLib {
         }
         path.line = params.hasOwnProperty('line') ? params.line : true;
         path.render = path.render || 'dots';
+        if (path.render === 'weightedDots') {
+          MapLib.validateWeightedDotsPositionArray(path, params);
+        }
+        if (path.render === 'coloredWeightedDots') {
+          MapLib.validateWeightedColoredDotsPositionArray(path, params);
+        }
         if (data.params && data.params[i] && data.params[i].key) {
           path.key = data.params[i].key;
         } else {
