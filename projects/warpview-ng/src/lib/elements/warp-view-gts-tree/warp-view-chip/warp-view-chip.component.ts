@@ -66,9 +66,9 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     if (JSON.stringify(hiddenData) !== JSON.stringify(this._hiddenData)) {
       this._hiddenData = hiddenData;
-      //   this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
+      this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
       if (this._node && this._node.gts && this._node.gts.c) {
-       // this.setState(this.hiddenData.indexOf(this._node.gts.id) === -1);
+        this.setState(this.hiddenData.indexOf(this._node.gts.id) === -1);
       }
     }
   }
@@ -80,9 +80,9 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
     if (this._gtsFilter.slice(1) !== '') {
-     // this.setState(new RegExp(this._gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
+      this.setState(new RegExp(this._gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts)));
     } else {
-   //   this.setState(true);
+      this.setState(true);
     }
   }
 
@@ -108,25 +108,25 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this._node = {...this.node, selected: this._hiddenData.indexOf(this.node.gts.id) === -1};
-    //  this.eventsSubscription = this.events.subscribe(state => this.setState(state));
+    this.eventsSubscription = this.events.subscribe(state => this.setState(state));
   }
 
   ngOnDestroy() {
-   // this.eventsSubscription.unsubscribe();
+    this.eventsSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
-    /*  if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
-        || this.hiddenData.indexOf(this._node.gts.id) > -1) {
-        this.setState(false);
-      } else {
-        this.colorizeChip();
-      }*/
+    if (this.gtsFilter.slice(1) !== '' && new RegExp(this.gtsFilter.slice(1), 'gi').test(GTSLib.serializeGtsMetadata(this._node.gts))
+      || this.hiddenData.indexOf(this._node.gts.id) > -1) {
+      this.setState(false);
+    } else {
+      this.colorizeChip();
+    }
   }
 
   private colorizeChip() {
     if (!!this.chip) {
-      if (!!this._node.selected && this.chip.nativeElement) {
+      if (!!this._node.selected) {
         const c = ColorLib.getColor(this._node.gts.id, this.options.scheme);
         const color = (this.param || {datasetColor: c}).datasetColor || c;
         this.renderer.setStyle(this.chip.nativeElement, 'background-color', color);
@@ -146,7 +146,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   switchPlotState(event: UIEvent) {
     event.preventDefault();
-  //  this.setState(!this._node.selected);
+    this.setState(!this._node.selected);
     return false;
   }
 

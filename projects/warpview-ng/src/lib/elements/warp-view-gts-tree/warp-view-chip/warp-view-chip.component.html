@@ -19,7 +19,7 @@
    <span (click)="switchPlotState($event)" *ngIf="_node && _node.gts && _node.gts.l">
      <i class="normal" #chip></i>
      <span class="gtsInfo">
-       <span class='gts-classname'>&nbsp; {{_node.gts.c}}</span>
+       <span class='gts-classname'>&nbsp;{{_node.gts.c}}</span>
        <span class='gts-separator'>&#x007B; </span>
        <span *ngFor="let label of toArray(_node.gts.l); index as index; last as last; trackBy:identify">
          <span class='gts-labelname'>{{label.name}}</span>
