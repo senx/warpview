@@ -25,6 +25,9 @@ import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import {Param} from '../../model/param';
+import {GTSLib} from '../../utils/gts.lib';
+import {Utils} from 'tslint';
+import {GTS} from '../../model/GTS';
 
 @Component({
   selector: 'warpview-gauge',
@@ -93,47 +96,90 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
 
   protected convert(data: DataModel): any[] {
     this.LOG.debug(['convert'], data);
-    const gtsList = data.data as any[];
+    let gtsList = data.data as any[];
     const dataList = [];
-    let max = Number.MIN_VALUE;
+    let overallMax = this._options.maxValue || Number.MIN_VALUE;
     this.LOG.debug(['convert', 'gtsList'], gtsList);
-    if (!gtsList || gtsList.length === 0 || gtsList[0].length < 2) {
+    if (!gtsList || gtsList.length === 0) {
       return;
     }
-    gtsList.forEach(d => max = Math.max(max, d[1]));
+    gtsList = GTSLib.flatDeep(gtsList);
+    const dataStruct = [];
+    if (GTSLib.isGts(gtsList[0])) {
+      gtsList.forEach((gts: GTS, i) => {
+        let max: number =  Number.MIN_VALUE;
+        const values = (gts.v || []);
+        const val = values[values.length - 1] || [];
+        let value = 0;
+        if (val.length > 0) {
+          value = val[val.length - 1];
+        }
+        if (!!data.params && !!data.params[i] && !!data.params[i].maxValue) {
+          max = data.params[i].maxValue;
+        } else {
+          if (overallMax < value) {
+            overallMax = value;
+          }
+        }
+        dataStruct.push({
+          key: GTSLib.serializeGtsMetadata(gts),
+          value,
+          max
+        });
+      });
+    } else {
+      // custom data format
+      gtsList.forEach((gts, i) => {
+        let max: number = Number.MIN_VALUE;
+        if (!!data.params && !!data.params[i] && !!data.params[i].maxValue) {
+          max = data.params[i].maxValue;
+        } else {
+          if (overallMax < gts.value || Number.MIN_VALUE) {
+            overallMax = gts.value || Number.MIN_VALUE;
+          }
+        }
+        dataStruct.push({
+          key: gts.key || '',
+          value: gts.value || Number.MIN_VALUE,
+          max
+        });
+      });
+    }
     let x = 0;
-    let y = -1 / (gtsList.length / 2);
-    gtsList.forEach((gts, i) => {
+    let y = -1 / (dataStruct.length / 2);
+    dataStruct.reverse();
+    this.LOG.debug(['convert', 'dataStruct'], dataStruct);
+    dataStruct.forEach((gts, i) => {
       if (i % 2 !== 0) {
         x = 0.5;
       } else {
         x = 0;
-        y += 1 / (gtsList.length / 2);
+        y += 1 / (dataStruct.length / 2);
       }
-      const c = ColorLib.getColor(gts.id || i, this._options.scheme);
+      const c = ColorLib.getColor(i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-      const domain = gtsList.length > 1 ? {
+      const domain = dataStruct.length > 1 ? {
         x: [x + this.CHART_MARGIN, x + 0.5 - this.CHART_MARGIN],
-        y: [y + this.CHART_MARGIN, y + 1 / (gtsList.length / 2) - this.CHART_MARGIN * 2]
+        y: [y + this.CHART_MARGIN, y + 1 / (dataStruct.length / 2) - this.CHART_MARGIN * 2]
       } : {
         x: [0, 1],
         y: [0, 1]
       };
-      if (this._type === 'bullet' || (!!data.params && !!data.params[i].type && data.params[i].type === 'bullet')) {
+      if (this._type === 'bullet' || (!!data.params && !!data.params[i] && !!data.params[i].type && data.params[i].type === 'bullet')) {
         domain.x = [this.CHART_MARGIN, 1 - this.CHART_MARGIN];
-        domain.y = [(i > 0 ? i / gtsList.length : 0) + this.CHART_MARGIN, (i + 1) / gtsList.length - this.CHART_MARGIN];
+        domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN, (i + 1) / dataStruct.length - this.CHART_MARGIN];
       }
       dataList.push(
         {
           domain,
           align: 'left',
-          value: gts[1],
+          value: gts.value,
           delta: {
-            reference: !!data.params && !!data.params[i].delta ? data.params[i].delta + gts[1] : 0,
+            reference: !!data.params && !!data.params[i] && !!data.params[i].delta ? data.params[i].delta + gts.value : 0,
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
           title: {
-            text: gts[0],
+            text: gts.key,
             align: 'center',
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
@@ -141,13 +187,13 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
           type: 'indicator',
-          mode: !!data.params && !!data.params[i].delta ? 'number+delta+gauge' : 'gauge+number',
+          mode: !!data.params && !!data.params[i] && !!data.params[i].delta ? 'number+delta+gauge' : 'gauge+number',
           gauge: {
             bgcolor: 'transparent',
-            shape: !!data.params && !!data.params[i].type ? data.params[i].type : this._type || 'gauge',
+            shape: !!data.params && !!data.params[i] && !!data.params[i].type ? data.params[i].type : this._type || 'gauge',
             bordercolor: this.getGridColor(this.el.nativeElement),
             axis: {
-              range: [null, max],
+              range: [null, overallMax === Number.MIN_VALUE ? gts.max : overallMax],
               tickcolor: this.getGridColor(this.el.nativeElement),
               tickfont: {color: this.getGridColor(this.el.nativeElement)}
             },

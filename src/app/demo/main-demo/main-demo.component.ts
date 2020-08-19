@@ -605,24 +605,27 @@ Pencode`
       title: 'Gauge chart',
       type: 'gauge',
       warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-LIST-> DROP`
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH`
     }, {
       title: 'Gauge chart',
       type: 'gauge',
-      warpscript: `  @training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-[ $res 0 GET ] 'res' STORE
-$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-LIST-> DROP`
+      warpscript: `0 3 <% 'j' STORE
+    NEWGTS 'serie' $j TOSTRING + RENAME NOW NaN NaN NaN RAND ADDVALUE
+%> FOR 4 ->LIST <%
+  'gts' STORE
+  {
+    'key' $gts NAME
+    'value' $gts VALUES 0 GET
+  } 
+%> F LMAP
+'data' STORE
+{ 'data' $data 'params' [ { 'maxValue' 5 } { 'maxValue' 2 } { 'maxValue' 1 } ] }`
     }, {
       title: 'Bullet chart',
       type: 'bullet',
-      warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH 'res' STORE
-$res <% DROP 'gts' STORE [ $gts NAME $gts VALUES 0 GET ] %> LMAP
-LIST-> DROP`
+      warpscript: `0 3 <% 'j' STORE
+    NEWGTS 'serie' $j TOSTRING + RENAME NOW NaN NaN NaN RAND ADDVALUE
+%> FOR`
     }
     ],
     annotation: [{
