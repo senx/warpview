@@ -20,14 +20,12 @@ export class Param {
   datasetColor?: string;
   fontColor?: string;
   borderColor?: string;
-  gridLineColor?: string;
   showLegend?: boolean;
   responsive?: boolean;
   horizontal = false;
   stacked = false;
   key?: string;
   unit?: string;
-  interpolate?: string;
   type?: string;
   showRangeSelector?: boolean;
   autoRefresh?: number;
@@ -42,6 +40,9 @@ export class Param {
   timeUnit: 'us' | 'ms' | 'ns' = 'us';
   minColor?: string;
   maxColor?: string;
+  startColor?: string;
+  endColor?: string;
+  numColorSteps?: number;
   split?: 'Y' | 'M' | 'D' | 'h' | 'm' | 's';
   popupButtonValidateClass?: string;
   popupButtonValidateLabel?: string;
@@ -53,7 +54,6 @@ export class Param {
     heatBlur?: number;
     heatOpacity?: number;
     heatControls?: boolean;
-    dotsLimit?: number;
     mapType?: string;
     showTimeSlider?: boolean;
     showTimeRange?: boolean;
@@ -83,4 +83,5 @@ export class Param {
     histnorm: 'percent' | 'probability' | 'density' | 'probability density';
     histfunc: 'count' | 'sum' | 'avg' | 'min' | 'max';
   };
+  maxValue: number;
 }

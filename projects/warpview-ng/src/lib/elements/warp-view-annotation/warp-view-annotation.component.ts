@@ -94,7 +94,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   @Output('pointHover') pointHover = new EventEmitter<any>();
-  @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
 

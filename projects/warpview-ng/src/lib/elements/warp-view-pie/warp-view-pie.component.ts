@@ -25,6 +25,7 @@ import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import {Param} from '../../model/param';
 import {GTSLib} from '../../utils/gts.lib';
+import {GTS} from '../../model/GTS';
 
 @Component({
   selector: 'warpview-pie',
@@ -97,7 +98,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    const gtsList = data.data as any[];
+    const gtsList = GTSLib.flatDeep(data.data as any[]);
     const plotData = [] as Partial<any>[];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
     const pieData = {
@@ -122,12 +123,40 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
       },
       type: 'pie'
     } as any;
-    gtsList.forEach((d: any, i) => {
-      if (!GTSLib.isGts(d)) {
+    const dataList = [];
+    this.LOG.debug(['convert', 'gtsList'], gtsList);
+    if (!gtsList || gtsList.length === 0) {
+      return;
+    }
+    const dataStruct = [];
+    if (GTSLib.isGts(gtsList[0])) {
+      gtsList.forEach((gts: GTS, i) => {
+        const values = (gts.v || []);
+        const val = values[values.length - 1] || [];
+        let value = 0;
+        if (val.length > 0) {
+          value = val[val.length - 1];
+        }
+        dataStruct.push({
+          key: GTSLib.serializeGtsMetadata(gts),
+          value
+        });
+      });
+    } else {
+      // custom data format
+      gtsList.forEach((gts, i) => {
+        dataStruct.push({
+          key: gts.key || '',
+          value: gts.value || Number.MIN_VALUE
+        });
+      });
+    }
+    this.LOG.debug(['convert', 'dataStruct'], dataStruct);
+    dataStruct.forEach((d: any, i) => {
         const c = ColorLib.getColor(i, this._options.scheme);
         const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-        pieData.values.push(d[1]);
-        pieData.labels.push(d[0]);
+        pieData.values.push(d.value);
+        pieData.labels.push(d.key);
         pieData.marker.colors.push(ColorLib.transparentize(color));
         pieData.marker.line.color.push(color);
         if (this._type === 'donut') {
@@ -138,7 +167,6 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
             text: this.unit
           };
         }
-      }
     });
     if (pieData.values.length > 0) {
       plotData.push(pieData);

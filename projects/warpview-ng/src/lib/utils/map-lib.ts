@@ -18,6 +18,7 @@
 import {GTSLib} from './gts.lib';
 import {ColorLib} from './color-lib';
 import {Logger} from './logger';
+import {Param} from '../model/param';
 
 export class MapLib {
   static BASE_RADIUS = 2;
@@ -286,14 +287,11 @@ export class MapLib {
     return positions;
   }
 
-  private static validateWeightedColoredDotsPositionArray(posArray: any, params: any) {
+  private static validateWeightedColoredDotsPositionArray(posArray: any, params: Param) {
     if (!MapLib.validateWeightedDotsPositionArray(posArray, params)) {
       return;
     }
-    if (params.minColorValue === undefined ||
-      params.maxColorValue === undefined ||
-      params.startColor === undefined ||
-      params.endColor === undefined) {
+    if (!params.minColor || !params.maxColor || !params.startColor || !params.endColor) {
       MapLib.LOG.error(['validateWeightedColoredDotsPositionArray'], 'When using ' +
         '\'weightedColoredDots\' rendering, \'maxColorValue\', \'minColorValue\', \'startColor\' ' +
         'and \'endColor\' parameters are compulsory');
@@ -301,8 +299,8 @@ export class MapLib {
       return;
     }
 
-    posArray.maxColorValue = params.maxColorValue;
-    posArray.minColorValue = params.minColorValue;
+    posArray.maxColorValue = params.maxColor;
+    posArray.minColorValue = params.minColor;
 
     if (typeof posArray.minColorValue !== 'number' ||
       typeof posArray.maxColorValue !== 'number' ||
@@ -350,9 +348,7 @@ export class MapLib {
       b: parseInt(params.endColor.substring(5, 7), 16),
     };
 
-    if (params.numColorSteps === undefined ||
-      isNaN(parseInt(params.numColorSteps, 10)) ||
-      parseInt(params.numColorSteps, 10) < 0) {
+    if (!params.numColorSteps) {
       posArray.numColorSteps = 5;
     } else {
       posArray.numColorSteps = params.numColorSteps;

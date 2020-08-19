@@ -589,17 +589,15 @@ Pencode`
     pie: [{
       title: 'Pie chart',
       type: 'pie',
-      warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-<% DROP 'gts' STORE [ $gts NAME ' ' + $gts LABELS 'dc' GET +  $gts VALUES 0 GET ] %> LMAP 'values' STORE
-{ 'data' $values }`
+      warpscript: `0 2 <% 'j' STORE
+    NEWGTS 'serie' $j TOSTRING + RENAME NOW NaN NaN NaN RAND ADDVALUE
+%> FOR`
     }, {
       title: 'Donut chart',
       type: 'donut',
-      warpscript: `@training/dataset0
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW -1 ] FETCH
-<% DROP 'gts' STORE [ $gts NAME ' ' + $gts LABELS 'dc' GET + $gts VALUES 0 GET ] %> LMAP 'values' STORE
-{ 'data' $values }`
+      warpscript: `0 2 <% 'j' STORE
+    NEWGTS 'serie' $j TOSTRING + RENAME NOW NaN NaN NaN RAND ADDVALUE
+%> FOR`
     }],
     gauge: [{
       title: 'Gauge chart',
@@ -745,7 +743,7 @@ ZIP // merge into a list of GTS
     ...new Param(), ...{
       gridLineColor: '#000000',
       fontColor: '#000000',
-      map: {mapType: 'CARTODB_DARK'},
+    //  map: {mapType: 'CARTODB_DARK'},
       showControls: true,
       showGTSTree: true,
       foldGTSTree: true,

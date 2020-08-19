@@ -98,12 +98,12 @@ export class WarpViewPaginableComponent implements OnInit {
       return;
     }
     this.pages = [];
-    for (let i = 0; i < (this._data.values || [] ).length / this.elemsCount; i++) {
+    for (let i = 0; i < (this._data.values || [] ).length / this.elemsCount; i++) {
       this.pages.push(i);
     }
-    this.displayedValues = (this._data.values || [] ).slice(
+    this.displayedValues = (this._data.values || [] ).slice(
       Math.max(0, this.elemsCount * this.page),
-      Math.min(this.elemsCount * (this.page + 1), (this._data.values || [] ).length)
+      Math.min(this.elemsCount * (this.page + 1), (this._data.values || [] ).length)
     );
     this.LOG.debug(['drawGridData', '_data'], this._data);
   }

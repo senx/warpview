@@ -163,7 +163,7 @@ export abstract class WarpViewComponent {
     ]
   };
   plotlyData: Partial<any>[];
-  private hideTooltipTimer: number;
+  private hideTooltipTimer: any;
   private rect: any;
 
   protected constructor(
