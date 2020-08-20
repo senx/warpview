@@ -161,10 +161,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.plotlyConfig.scrollZoom = true;
     if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.type = 'linear';
-      this.layout.xaxis.tick0 = this.minTick / this.divider;
+      this.layout.xaxis.tick0 = ((this._options.bounds || {}).minDate || this.minTick) / this.divider;
     } else {
       this.layout.xaxis.type = 'date';
-      this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      this.layout.xaxis.tick0 = moment.tz(((this._options.bounds || {}).minDate || this.minTick) / this.divider, this._options.timeZone).toISOString(true);
     }
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
@@ -192,8 +192,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       range: [],
     };
     this.LOG.debug(['drawChart', 'updateBounds'], this.chartBounds);
-    const min = this.chartBounds.tsmin || this.minTick;
-    const max = this.chartBounds.tsmax || this.maxTick;
+    const min = (this._options.bounds || {} ).minDate || this.chartBounds.tsmin || this.minTick;
+    const max = (this._options.bounds || {} ).maxDate || this.chartBounds.tsmax || this.maxTick;
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = min;
       x.range = [min, max];
@@ -453,7 +453,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.afterBoundsUpdate = true;
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
-    this._options.bounds = this._options.bounds || {};
+      this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
     const x: any = {
