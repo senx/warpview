@@ -42,11 +42,6 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 [See wiki](https://github.com/senx/warpview/wiki/)
 
-
-## Integrations
-
-[See here](https://stenciljs.com/docs/framework-integration)
-
 ## About
 
 - [Warp 10™](https://www.warp10.io)
