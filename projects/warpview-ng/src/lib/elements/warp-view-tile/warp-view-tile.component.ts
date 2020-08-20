@@ -195,7 +195,9 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
                 window.clearInterval(this.timer);
               }
               if (this._autoRefresh && this._autoRefresh > 0) {
-                this.timer = window.setInterval(() => this.execute(true), this._autoRefresh * 1000);
+                this.timer = window.setInterval(() => {
+                  this.execute(true);
+                }, this._autoRefresh * 1000);
               }
             }
             setTimeout(() => {
