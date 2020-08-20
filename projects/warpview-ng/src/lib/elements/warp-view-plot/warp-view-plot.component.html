@@ -67,7 +67,7 @@
     [hiddenData]="_toHide" [options]="_options"
     [kbdLastKeyPressed]="kbdLastKeyPressed"
   ></warpview-gts-tree>
-  <div *ngIf="showChart" #main class="main-container"
+  <div [hidden]="!showChart" #main class="main-container"
        (mouseleave)="handleMouseOut($event)"
        (mousemove)="handleMouseMove($event)"
        (mouseenter)="handleMouseEnter($event)">
@@ -92,7 +92,7 @@
       ></warpview-chart>
     </warpview-resize>
   </div>
-  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="debug">
+  <warpview-resize [hidden]="!showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="debug">
     <div class="map-container">
       <warpview-map [options]="_options" #map [data]="gtsList" [debug]="debug" [responsive]="true"
                     [hiddenData]="_toHide"

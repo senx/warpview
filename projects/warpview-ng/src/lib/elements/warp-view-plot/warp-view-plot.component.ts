@@ -313,6 +313,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   resizeChart(event) {
     this.LOG.debug(['resizeChart'], event);
+    this.initialChartHeight = event;
     this.sizeService.change(new Size(this.width, event));
   }
 
@@ -473,15 +474,18 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   private resizeArea() {
     setTimeout(() => {
-      let h = this.el.nativeElement.getBoundingClientRect().height;
-      if (h > 0) {
-        if (!!this.GTSTree) {
-          h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
+      if (this.showChart) {
+        this.LOG.debug(['resizeArea'], this.el.nativeElement.getBoundingClientRect().height);
+        let h = this.chart.el.nativeElement.getBoundingClientRect().height + 10;
+        if (h > 0) {
+          if (!!this.GTSTree) {
+            h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
+          }
+          if (!!this.controls) {
+            h -= this.controls.nativeElement.getBoundingClientRect().height;
+          }
+          this.initialChartHeight = h;
         }
-        if (!!this.controls) {
-          h -= this.controls.nativeElement.getBoundingClientRect().height;
-        }
-        this.initialChartHeight = h;
       }
     });
   }
