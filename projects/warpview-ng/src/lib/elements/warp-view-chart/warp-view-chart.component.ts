@@ -236,6 +236,8 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   protected convert(data: DataModel): Partial<any>[] {
     this.parsing = true;
+    this.chartBounds.tsmin = undefined;
+    this.chartBounds.tsmax = undefined;
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
     this.LOG.debug(['convert', 'this._hiddenData'], this._hiddenData);
