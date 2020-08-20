@@ -67,8 +67,8 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
     if (JSON.stringify(hiddenData) !== JSON.stringify(this._hiddenData)) {
       this._hiddenData = hiddenData;
       this.LOG.debug(['hiddenData'], hiddenData, this._node, this._node.gts, this._node.gts.c);
-      if (this._node && this._node.gts && this._node.gts.c) {
-        this.setState(this.hiddenData.indexOf(this._node.gts.id) === -1);
+      if (!!this._node && !!this._node.gts && !!this._node.gts.c) {
+        this.setState(this._hiddenData.indexOf(this._node.gts.id) === -1);
       }
     }
   }
@@ -108,9 +108,15 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this._node = {...this.node, selected: this._hiddenData.indexOf(this.node.gts.id) === -1};
+    if(!!this.events) {
+      this.eventsSubscription = this.events.subscribe(state => this.setState(state));
+    }
   }
 
   ngOnDestroy() {
+    if(!!this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
@@ -150,13 +156,13 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private setState(state: boolean) {
     if (this._node && this._node.gts) {
-      this.LOG.debug(['switchPlotState'], state);
-      this.colorizeChip();
+      this.LOG.debug(['switchPlotState'], state, this._node.selected);
       if (this._node.selected !== state) {
         this._node.selected = !!state;
         this.LOG.debug(['switchPlotState'], 'emit');
         this.warpViewSelectedGTS.emit(this._node);
       }
+      this.colorizeChip();
     }
   }
 
