@@ -4,8 +4,8 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 ![WarpView](imgs/warpView.png)
 
-- [Demo & documentation](https://senx.github.io/warpview/)
-- [licence Apache 2](./LICENSE.md)
+- [Documentation](https://github.com/senx/warpview/wiki/)
+- [Licence Apache 2](./LICENSE.md)
 - [Contribute](./CONTRIBUTING.md)
 
 ## Getting started
@@ -13,6 +13,8 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
     npm i @senx/warpview --save
     
     yarn add @senx/warpview
+
+## Usage
 
 ```html
 <html>
@@ -31,7 +33,7 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
       
     </warp-view-tile>
   </div>
-  <script src="https://unpkg.com/@senx/warpview/dist/warpview/elements/warpview-elements.js"></script>
+  <script src="https://unpkg.com/@senx/warpview/warpview/elements/warpview-elements.js"></script>
 </body>
 </html>
 ```
