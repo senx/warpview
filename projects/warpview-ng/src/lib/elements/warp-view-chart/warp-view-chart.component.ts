@@ -153,7 +153,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   drawChart(reparseNewData: boolean = false) {
-    this.LOG.debug(['drawChart', 'this.layout', 'this.options'], this.layout, this._options);
+    this.LOG.debug(['drawChart', 'this.layout', 'this.options'], this.layout, this._options, (this._options.bounds || {}).minDate);
     if (!this.initChart(this.el)) {
       this.LOG.debug(['drawChart', 'initChart'], this._options);
       return;
@@ -164,7 +164,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.xaxis.tick0 = ((this._options.bounds || {}).minDate || this.minTick) / this.divider;
     } else {
       this.layout.xaxis.type = 'date';
-      this.layout.xaxis.tick0 = moment.tz(((this._options.bounds || {}).minDate || this.minTick) / this.divider, this._options.timeZone).toISOString(true);
+      this.layout.xaxis.tick0 = GTSLib.toISOString(((this._options.bounds || {}).minDate || this.minTick), this.divider, this._options.timeZone);
     }
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
@@ -191,19 +191,21 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       tick0: undefined,
       range: [],
     };
-    this.LOG.debug(['drawChart', 'updateBounds'], this.chartBounds);
-    const min = (this._options.bounds || {} ).minDate || this.chartBounds.tsmin || this.minTick;
-    const max = (this._options.bounds || {} ).maxDate || this.chartBounds.tsmax || this.maxTick;
+    this.LOG.debug(['drawChart', 'updateBounds'], this.chartBounds, this._options.bounds);
+    const min = (this._options.bounds || {}).minDate || this.chartBounds.tsmin || this.minTick;
+    const max = (this._options.bounds || {}).maxDate || this.chartBounds.tsmax || this.maxTick;
+    this.LOG.debug(['drawChart', 'updateBounds'], [min, max]);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = min;
       x.range = [min, max];
     } else {
-      x.tick0 = moment.tz(min / this.divider, this._options.timeZone).toISOString(true);
+      x.tick0 = GTSLib.toISOString(min, this.divider, this._options.timeZone);
       x.range = [
-        moment.tz(min / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(max / this.divider, this._options.timeZone).toISOString(true)
+        GTSLib.toISOString(min, this.divider, this._options.timeZone),
+        GTSLib.toISOString(max, this.divider, this._options.timeZone)
       ];
     }
+    this.LOG.debug(['drawChart', 'updateBounds'], x.range);
     this.layout.xaxis = x;
     this.layout = {...this.layout};
     this.loading = false;
@@ -241,6 +243,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options.timeMode);
     this.LOG.debug(['convert', 'this._hiddenData'], this._hiddenData);
+    this.LOG.debug(['convert', 'this._options.timezone'], this._options.timeZone);
     if (GTSLib.isArray(data.data)) {
       let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
       this.maxTick = Number.NEGATIVE_INFINITY;
@@ -338,11 +341,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           if (timestampMode || this._options.timeMode === 'timestamp') {
             series.x = ticks;
           } else {
-            if (this._options.timeZone !== 'UTC') {
-              series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
-            } else {
-              series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
-            }
+            series.x = ticks.map(t => GTSLib.toISOString(t, this.divider, this._options.timeZone));
           }
           series.y = values;
           this.LOG.debug(['convert'], 'forEach value end', this.minTick, this.maxTick);
@@ -440,10 +439,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.xaxis.tick0 = min;
     } else {
       this.layout.xaxis.range = [
-        moment.tz(min, this._options.timeZone).toISOString(),
-        moment.tz(max, this._options.timeZone).toISOString()
+        GTSLib.toISOString(min, this.divider, this._options.timeZone),
+        GTSLib.toISOString(max, this.divider, this._options.timeZone)
       ];
-      this.layout.xaxis.tick0 = moment.tz(min, this._options.timeZone).toISOString();
+      this.layout.xaxis.tick0 = GTSLib.toISOString(min, this.divider, this._options.timeZone);
     }
     this.layout = {...this.layout};
     this.LOG.debug(['updateBounds'], this.layout);
@@ -455,7 +454,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.afterBoundsUpdate = true;
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
-      this._options.bounds = this._options.bounds || {};
+    this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = this.minTick;
     this._options.bounds.maxDate = this.maxTick;
     const x: any = {
@@ -472,10 +471,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       x.tick0 = this.minTick / this.divider;
       x.range = [this.minTick, this.maxTick];
     } else {
-      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.tick0 = GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
       x.range = [
-        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
+        GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
       ];
     }
     this.layout.xaxis = x;

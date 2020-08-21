@@ -196,19 +196,18 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
     this.layout.xaxis.autorange = false;
-    this.LOG.debug(['updateBounds'],
-      moment.tz(min / this.divider, this._options.timeZone).toISOString(),
-      moment.tz(max / this.divider, this._options.timeZone).toISOString());
+    this.LOG.debug(['updateBounds'], GTSLib.toISOString(min, this.divider, this._options.timeZone),
+      GTSLib.toISOString(max, this.divider, this._options.timeZone));
     this.minTick = min;
     this.maxTick = max;
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.tick0 = min / this.divider;
       this.layout.xaxis.range = [min / this.divider, max / this.divider];
     } else {
-      this.layout.xaxis.tick0 = moment.tz(min / this.divider, this._options.timeZone).toISOString();
+      this.layout.xaxis.tick0 = GTSLib.toISOString(min, this.divider, this._options.timeZone);
       this.layout.xaxis.range = [
-        moment.tz(min / this.divider, this._options.timeZone).toISOString(),
-        moment.tz(max / this.divider, this._options.timeZone).toISOString()
+        GTSLib.toISOString(min, this.divider, this._options.timeZone),
+        GTSLib.toISOString(max, this.divider, this._options.timeZone)
       ];
     }
     this.layout.margin.l = marginLeft;
@@ -250,10 +249,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       this.layout.xaxis.range = [this.minTick, this.maxTick];
       this.layout.xaxis.type = 'linear';
     } else {
-      this.layout.xaxis.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      this.layout.xaxis.tick0 =
+        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
       this.layout.xaxis.range = [
-        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
+        GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
       ];
       this.layout.xaxis.type = 'date';
     }
@@ -309,7 +309,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
 <span class="tooltip-date">${this._options.timeMode === 'timestamp'
       ? x
-      : (moment(x).utc().toISOString().replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '') || '')}</span>
+      : (moment.utc(x).toISOString().replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '') || '')}</span>
 <ul>
 <li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.points[0].text}</span></li>
 </ul>
@@ -420,11 +420,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         if (timestampMode || this._options.timeMode === 'timestamp') {
           series.x = ticks;
         } else {
-          if (this._options.timeZone !== 'UTC') {
-            series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
-          } else {
-            series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
-          }
+          series.x = ticks.map(t => GTSLib.toISOString(t, this.divider, this._options.timeZone));
         }
         if (series.x.length > 0) {
           dataset.push(series);
@@ -461,10 +457,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       x.tick0 = this.minTick;
       x.range = [this.minTick, this.maxTick];
     } else {
-      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.tick0 = GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
       x.range = [
-        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
+        GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
       ];
     }
     this.layout.xaxis = x;
@@ -496,10 +492,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       x.tick0 = this.minTick / this.divider;
       x.range = [this.minTick, this.maxTick];
     } else {
-      x.tick0 = moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true);
+      x.tick0 = GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
       x.range = [
-        moment.tz(this.minTick / this.divider, this._options.timeZone).toISOString(true),
-        moment.tz(this.maxTick / this.divider, this._options.timeZone).toISOString(true)
+        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
+        GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
       ];
     }
     this.layout.xaxis = x;

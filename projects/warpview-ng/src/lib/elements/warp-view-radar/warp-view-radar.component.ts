@@ -21,7 +21,6 @@ import {DataModel} from '../../model/dataModel';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {ColorLib} from '../../utils/color-lib';
-import moment from 'moment-timezone';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -126,7 +125,7 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           series.theta.push(ts.toString());
         } else {
-          series.theta.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
+          series.theta.push(GTSLib.toISOString(ts, this.divider, this._options.timeZone));
         }
       });
       dataset.push(series);

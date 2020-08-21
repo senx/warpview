@@ -20,7 +20,6 @@ import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
 import {ColorLib} from '../../utils/color-lib';
 import {GTS} from '../../model/GTS';
-import moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -129,7 +128,7 @@ export class WarpViewPolarComponent extends WarpViewComponent implements OnInit 
         if (this._options.timeMode && this._options.timeMode === 'timestamp') {
           series.theta.push(ts.toString());
         } else {
-          series.theta.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
+          series.theta.push(GTSLib.toISOString(ts, this.divider, this._options.timeZone));
         }
       });
       if (this.unit) {

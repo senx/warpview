@@ -524,7 +524,7 @@ export class WarpViewMapComponent implements OnInit {
             if (isNaN(v)) {
               v = 0;
             }
-            const radius =  50 * v / ((gts.maxValue || 1) - (gts.minValue || 0));
+            const radius = 50 * v / ((gts.maxValue || 1) - (gts.minValue || 0));
             const marker = Leaflet.circleMarker(
               p, {
                 radius: radius === 0 ? 1 : radius,
@@ -585,7 +585,7 @@ export class WarpViewMapComponent implements OnInit {
     if (!!positionData) {
       let date;
       if (ts && !this._options.timeMode || this._options.timeMode !== 'timestamp') {
-        date = (moment.tz(ts / this.divider, this._options.timeZone).toISOString(true) || '')
+        date = (GTSLib.toISOString(ts, this.divider, this._options.timeZone) || '')
           .replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '');
       }
       let content = '';

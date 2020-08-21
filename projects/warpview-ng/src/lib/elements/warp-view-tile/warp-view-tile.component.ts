@@ -202,6 +202,8 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
             }
             setTimeout(() => {
               this.execResult = body;
+              this._options.bounds = {};
+              this._options = {...this._options};
               this.loading = false;
             });
           } catch (e) {

@@ -53,7 +53,7 @@
                      (stateChange)="stateChange($event)" [checked]="showMap"></warpview-toggle>
     <div class="tzcontainer">
       <label for="tzSelector"></label>
-      <select id="tzSelector" class="defaulttz" #tzSelector (change)="tzSelected()">
+      <select id="tzSelector" class="defaulttz" #tzSelector (change)="tzSelected($event)">
         <option *ngFor="let z of getTZ()" [value]="z" [selected]="z === 'UTC'"
                 [ngClass]="{'defaulttz' :z === 'UTC','customtz': z !== 'UTC'}">{{z}}</option>
       </select>

@@ -22,17 +22,15 @@ export class ChartLib {
   static DEFAULT_HEIGHT = 480;
 
   static mergeDeep<T>(base: T, extended: any) {
-    base = base || {} as T;
+    const obj = {... base} as T;
     for (const prop in extended || {}) {
-      if (extended.hasOwnProperty(prop)) {
-        // If property is an object, merge properties
-        if (Object.prototype.toString.call(extended[prop]) === '[object Object]') {
-          base[prop] = ChartLib.mergeDeep<T>(base[prop], extended[prop]);
-        } else {
-          base[prop] = extended[prop];
-        }
+      // If property is an object, merge properties
+      if (Object.prototype.toString.call(extended[prop]) === '[object Object]') {
+        obj[prop] = ChartLib.mergeDeep<T>(obj[prop], extended[prop]);
+      } else {
+        obj[prop] = extended[prop];
       }
     }
-    return base as T;
+    return obj as T;
   }
 }

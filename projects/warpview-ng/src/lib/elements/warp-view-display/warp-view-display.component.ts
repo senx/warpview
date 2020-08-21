@@ -91,10 +91,10 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
     }
     switch (this._options.timeMode) {
       case 'date':
-        this.toDisplay = moment.tz(parseInt(display, 10) / this.divider, this._options.timeZone).toISOString(true);
+        this.toDisplay = GTSLib.toISOString(parseInt(display, 10), this.divider, this._options.timeZone);
         break;
       case 'duration':
-        const start = moment.tz(parseInt(display, 10) / this.divider, this._options.timeZone);
+        const start = GTSLib.toISOString(parseInt(display, 10), this.divider, this._options.timeZone);
         this.displayDuration(start);
         break;
       case 'custom':

@@ -22,7 +22,6 @@ import {Param} from '../../model/param';
 import {ColorLib} from '../../utils/color-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
-import moment from 'moment-timezone';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 
@@ -84,7 +83,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     const dataset: Partial<any>[] = [];
     this.LOG.debug(['convert'], this._options);
     this.visibility = [];
-    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray([ data.data] as any[], 0).res) || [];
+    let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray([data.data] as any[], 0).res) || [];
     this.maxTick = Number.NEGATIVE_INFINITY;
     this.minTick = Number.POSITIVE_INFINITY;
     this.visibleGtsId = [];
@@ -147,7 +146,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
           if (this._options.timeMode && this._options.timeMode === 'timestamp') {
             series.x.push(ts);
           } else {
-            series.x.push(moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toISOString());
+            series.x.push(GTSLib.toISOString(ts, this.divider, this._options.timeZone));
           }
         });
         dataset.push(series);

@@ -94,7 +94,7 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
         gts.v.forEach(value => {
           series.y.push(value[value.length - 1]);
           if (this._type === 'box-date') {
-            series.x.push(moment.tz(moment.utc(value[0] / this.divider), this._options.timeZone).toISOString());
+            series.x.push(GTSLib.toISOString(value[0], this.divider, this._options.timeZone));
           }
         });
         dataset.push(series);

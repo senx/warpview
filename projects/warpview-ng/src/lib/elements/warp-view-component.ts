@@ -96,7 +96,7 @@ export abstract class WarpViewComponent {
     }
     if (!deepEqual(options, this._options)) {
       this.LOG.debug(['onOptions', 'changed'], options);
-      this._options = ChartLib.mergeDeep(this._options, options as Param) as Param;
+      this._options =  options as Param;
       this.update(this._options, false);
     }
   }
@@ -114,7 +114,7 @@ export abstract class WarpViewComponent {
 
   _options: Param = new Param();
   protected LOG: Logger;
-  protected defOptions = ChartLib.mergeDeep(this._options, {
+  protected defOptions = ChartLib.mergeDeep(new Param(), {
     dotsLimit: 1000,
     heatControls: false,
     timeMode: 'date',
@@ -124,7 +124,7 @@ export abstract class WarpViewComponent {
     timeZone: 'UTC',
     timeUnit: 'us',
     showControls: true,
-    bounds: {}
+   // bounds: {}
   }) as Param;
 
   protected _debug = false;
@@ -275,11 +275,13 @@ export abstract class WarpViewComponent {
       this.chartDraw.emit();
       return false;
     }
-    moment.tz.setDefault(this._options.timeZone);
+//    moment.tz.setDefault(this._options.timeZone);
     this.loading = true;
-    this._options = ChartLib.mergeDeep(this.defOptions, this._options || {}) as Param;
+    this.LOG.debug(['initiChart', 'this._options 0'], {... this.defOptions}, {... this._options});
+    this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
+    this.LOG.debug(['initiChart', 'this._options 1'], {... this._options});
     const dataModel = this._data;
-    this._options = ChartLib.mergeDeep(this._options || {}, this._data.globalParams) as Param;
+    this._options = ChartLib.mergeDeep<Param>(this._options || {} as Param, this._data.globalParams) as Param;
     this.LOG.debug(['initiChart', 'this._options'], this._options);
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
@@ -295,6 +297,8 @@ export abstract class WarpViewComponent {
       this.layout.height = this.height || parentSize.height;
     }
     this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height, this.width, this.height);
+
+/*
     if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {
       dataModel.bounds = {
         xmin: Math.floor(this._options.bounds.minDate),
@@ -314,7 +318,9 @@ export abstract class WarpViewComponent {
           moment.tz(dataModel.bounds.xmin / this.divider, this._options.timeZone).toISOString(true),
           moment.tz(dataModel.bounds.xmax / this.divider, this._options.timeZone).toISOString(true)];
       }
+      this.LOG.debug(['initiChart', 'bounds'], this.layout.xaxis.range);
     }
+*/
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     if (!this.plotlyData || this.plotlyData.length === 0) {
       this.loading = false;

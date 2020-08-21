@@ -22,7 +22,6 @@ import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
-import moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-datagrid',
@@ -140,6 +139,6 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   }
 
   formatDate(date: number): string {
-    return this._options.timeMode === 'date' ? moment.tz(date / this.divider, this._options.timeZone).toISOString() : date.toString();
+    return this._options.timeMode === 'date' ? GTSLib.toISOString(date, this.divider, this._options.timeZone) : date.toString();
   }
 }

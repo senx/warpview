@@ -23,7 +23,6 @@ import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {GTSLib} from '../../utils/gts.lib';
-import moment from 'moment-timezone';
 
 @Component({
   selector: 'warpview-bubble',
@@ -102,11 +101,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
         if (this._options.timeMode === 'timestamp') {
           series.x = ticks;
         } else {
-          if (this._options.timeZone !== 'UTC') {
-            series.x = ticks.map(t => moment.utc(t / this.divider).tz(this._options.timeZone).toISOString());
-          } else {
-            series.x = ticks.map(t => moment.utc(t / this.divider).toISOString());
-          }
+          series.x = ticks.map(t => GTSLib.toISOString(t, this.divider, this._options.timeZone));
         }
         series.y = values;
         series.marker.size = sizes;

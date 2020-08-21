@@ -298,9 +298,10 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
   }
 
-  tzSelected() {
+  tzSelected(event) {
     const timeZone = this.tzSelector.nativeElement.value;
     this.LOG.debug(['timezone', 'tzselect'], timeZone);
+    delete this._options.bounds;
     this._options.timeZone = timeZone;
     this.tzSelector.nativeElement.setAttribute('class', timeZone === 'UTC' ? 'defaulttz' : 'customtz');
     this.drawChart();
