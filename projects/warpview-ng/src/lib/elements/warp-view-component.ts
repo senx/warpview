@@ -267,6 +267,7 @@ export abstract class WarpViewComponent {
       this.height = parentSize.height;
       this.width = parentSize.width;
     }
+    this.LOG.debug(['initiChart', 'this.height'], this.height);
     this.LOG.debug(['initiChart', 'this._data'], this._data, this._options);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       this.loading = false;
@@ -275,7 +276,6 @@ export abstract class WarpViewComponent {
       this.chartDraw.emit();
       return false;
     }
-//    moment.tz.setDefault(this._options.timeZone);
     this.loading = true;
     this.LOG.debug(['initiChart', 'this._options 0'], {... this.defOptions}, {... this._options});
     this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
@@ -297,30 +297,6 @@ export abstract class WarpViewComponent {
       this.layout.height = this.height || parentSize.height;
     }
     this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height, this.width, this.height);
-
-/*
-    if (this._options.bounds && this._options.bounds.minDate && this._options.bounds.maxDate) {
-      dataModel.bounds = {
-        xmin: Math.floor(this._options.bounds.minDate),
-        xmax: Math.ceil(this._options.bounds.maxDate),
-        ymin: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 0
-          ? Math.floor(this._options.bounds.yRanges[0])
-          : undefined,
-        ymax: this._options.bounds.yRanges && this._options.bounds.yRanges.length > 1
-          ? Math.ceil(this._options.bounds.yRanges[1])
-          : undefined
-      };
-      this.LOG.debug(['initChart', 'updateBounds'], dataModel.bounds.xmin, dataModel.bounds.xmax);
-      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-        this.layout.xaxis.range = [dataModel.bounds.xmin, dataModel.bounds.xmax];
-      } else {
-        this.layout.xaxis.range = [
-          moment.tz(dataModel.bounds.xmin / this.divider, this._options.timeZone).toISOString(true),
-          moment.tz(dataModel.bounds.xmax / this.divider, this._options.timeZone).toISOString(true)];
-      }
-      this.LOG.debug(['initiChart', 'bounds'], this.layout.xaxis.range);
-    }
-*/
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     if (!this.plotlyData || this.plotlyData.length === 0) {
       this.loading = false;

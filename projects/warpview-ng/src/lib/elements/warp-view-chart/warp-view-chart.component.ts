@@ -142,6 +142,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   public resize(newHeight: number) {
+    this.LOG.debug(['resize'], newHeight);
     this.height = newHeight;
     this.layout.height = this.height;
     if (this._options.showRangeSelector) {
@@ -179,14 +180,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.options'], this.layout, this._options);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    if (this._options.showRangeSelector) {
-      this.layout.xaxis.rangeslider = {
-        bgcolor: 'transparent',
-        thickness: 40 / this.height
-      };
-    } else {
-      this.layout.margin.b = 30;
-    }
+
     const x: any = {
       tick0: undefined,
       range: [],
@@ -195,6 +189,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const min = (this._options.bounds || {}).minDate || this.chartBounds.tsmin || this.minTick;
     const max = (this._options.bounds || {}).maxDate || this.chartBounds.tsmax || this.maxTick;
     this.LOG.debug(['drawChart', 'updateBounds'], [min, max]);
+    if (!!this._options.showRangeSelector) {
+      x.rangeslider = {
+        bgcolor: 'transparent',
+        thickness: 40 / this.height
+      };
+    } else {
+      this.layout.margin.b = 30;
+    }
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = min;
       x.range = [min, max];

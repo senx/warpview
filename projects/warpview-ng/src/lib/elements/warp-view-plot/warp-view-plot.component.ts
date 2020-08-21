@@ -208,8 +208,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         this.chart.updateBounds(event.bounds.min, event.bounds.max);
       }
       this.LOG.debug(['updateBounds'],
-        moment.tz(event.bounds.min, this._options.timeZone).toDate(),
-        moment.tz(event.bounds.max, this._options.timeZone).toDate());
+        GTSLib.toISOString(event.bounds.min, 1, this._options.timeZone),
+        GTSLib.toISOString(event.bounds.max, 1, this._options.timeZone));
       this.line.nativeElement.style.left = '-100px';
     }
   }
@@ -477,7 +477,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     setTimeout(() => {
       if (this.showChart) {
         this.LOG.debug(['resizeArea'], this.el.nativeElement.getBoundingClientRect().height);
-        let h = this.chart.el.nativeElement.getBoundingClientRect().height + 10;
+        let h = this.chart.el.nativeElement.getBoundingClientRect().height;
         if (h > 0) {
           if (!!this.GTSTree) {
             h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
