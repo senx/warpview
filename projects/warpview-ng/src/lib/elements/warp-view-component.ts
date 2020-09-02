@@ -360,7 +360,7 @@ export abstract class WarpViewComponent {
         });
       }
     }
-    if (point) {
+    if (point && !!data.event) {
       const content = this.legendFormatter(
         this._options.horizontal ?
           (data.yvals || [''])[0] :
