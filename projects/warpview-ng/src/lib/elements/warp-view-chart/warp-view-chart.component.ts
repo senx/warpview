@@ -209,7 +209,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     }
     this.LOG.debug(['drawChart', 'updateBounds'], x.range);
     this.layout.xaxis = x;
-    this.layout = {...this.layout};
+    if (reparseNewData) {
+      this.layout = {...this.layout};
+    }
     this.loading = false;
     this.highliteCurve.pipe(debounceTime(200)).subscribe(value => {
       Promise.resolve().then(() => {
@@ -240,14 +242,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   protected initChart(el: ElementRef): boolean {
     const res = super.initChart(el);
-    if(res) {
-      this.resize(this.height)
+    if (!!res) {
+      this.resize(this.height);
     }
     return res;
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    this.parsing = true;
+    this.parsing = !this._options.isRefresh;
     this.chartBounds.tsmin = undefined;
     this.chartBounds.tsmax = undefined;
     const dataset: Partial<any>[] = [];
@@ -430,7 +432,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   sliderChange($event: any) {
     this.LOG.debug(['sliderChange'], $event);
-    console.log($event);
   }
 
   updateBounds(min, max) {

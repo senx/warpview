@@ -25,9 +25,12 @@
   timeMode:  'custom', bgColor: '#D32C2E', fontColor: '#ffffff'}}"></warpview-display>
       </div>
       <div *ngIf="!error" style="height: 100%; width: 100%" [hidden]="loading">
-        <warpview-result-tile [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
+        <warpview-result-tile #resultTile
+                              (warpViewNewOptions)="onWarpViewNewOptions($event)"
+                              [debug]="debug" [type]="type"
+                              [unit]="unit" [options]="_options"
                               (chartDraw)="chartDrawn($event)"
-                              [showLegend]="showLegend" [data]="execResult"></warpview-result-tile>
+                              [showLegend]="showLegend"></warpview-result-tile>
       </div>
     </div>
   </div>

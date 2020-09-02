@@ -92,7 +92,7 @@
       ></warpview-chart>
     </warpview-resize>
   </div>
-  <warpview-resize [hidden]="!showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="debug">
+  <warpview-resize *ngIf="showMap" minHeight="100" [initialHeight]="initialMapHeight" [debug]="debug">
     <div class="map-container">
       <warpview-map [options]="_options" #map [data]="gtsList" [debug]="debug" [responsive]="true"
                     [hiddenData]="_toHide"

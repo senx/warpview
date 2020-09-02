@@ -41,7 +41,6 @@ import moment from 'moment-timezone';
 import {GTSLib} from '../../utils/gts.lib';
 import {GTS} from '../../model/GTS';
 import {DataModel} from '../../model/dataModel';
-import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 
@@ -55,7 +54,6 @@ import {Logger} from '../../utils/logger';
   encapsulation: ViewEncapsulation.None
 })
 export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, AfterViewInit {
-
   @ViewChild('mainPlotDiv', {static: true}) mainPlotDiv: ElementRef;
   @ViewChild('timeClip', {static: true}) timeClip: WarpViewModalComponent;
   @ViewChild('modal', {static: true}) modal: WarpViewModalComponent;
@@ -70,8 +68,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @ViewChild('tzSelector', {static: false}) tzSelector: ElementRef;
   @ViewChild('line', {static: false}) line: ElementRef;
   @ViewChild('main', {static: false}) main: ElementRef;
-  private showLine = false;
-  private left: number;
 
   @Input('type') set type(type: string) {
     this._type = type;
@@ -94,7 +90,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @Input('isAlone') isAlone = false;
   @Input('initialChartHeight') initialChartHeight = 400;
   @Input('initialMapHeight') initialMapHeight = 400;
+
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
+  @Output('warpViewNewOptions') warpViewNewOptions = new EventEmitter<any>();
 
   _options: Param = {
     ...new Param(), ...{
@@ -115,6 +113,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   warningMessage = '';
   loading = false;
   gtsIdList: number[] = [];
+  gtsList: DataModel | GTS[] | string;
 
   private kbdCounter = 0;
   private gtsFilterCount = 0;
@@ -132,7 +131,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   // if one of this key is pressed, default action is prevented.
   private preventDefaultKeyList: string[] = ['Escape', '/'];
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
-  gtsList: DataModel | GTS[] | string;
+  private showLine = false;
+  private left: number;
 
   constructor(
     public el: ElementRef,
@@ -172,7 +172,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         } else {
           this._options.timeMode = 'date';
         }
-        this.drawChart();
+        this.drawChart(true);
         break;
       case 'typeSwitch' :
         if (event.state) {
@@ -180,11 +180,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         } else {
           this._type = 'line';
         }
-        this.drawChart();
+        this.drawChart(true);
         break;
       case 'chartSwitch' :
         this.showChart = event.state;
-        this.drawChart();
+        this.drawChart(false);
         break;
       case 'mapSwitch' :
         this.showMap = event.state;
@@ -193,6 +193,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
         }
         break;
     }
+    this.warpViewNewOptions.emit(this._options);
   }
 
   boundsDidChange(event) {
@@ -263,29 +264,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   update(options, refresh): void {
-    if (options) {
-      let optionChanged = false;
-      Object.keys(options).forEach(opt => {
-        if (this._options.hasOwnProperty(opt)) {
-          optionChanged = optionChanged || !deepEqual(options[opt], this._options[opt]);
-        } else {
-          optionChanged = true; // new unknown option
-        }
-      });
-      if (this.LOG) {
-        this.LOG.debug(['onOptions', 'optionChanged'], optionChanged);
-      }
-      if (optionChanged) {
-        if (this.LOG) {
-          this.LOG.debug(['onOptions', 'options'], options);
-        }
-        this._options = options;
-        this.drawChart(false);
-      }
-      this.drawChart(refresh);
-    } else {
-      this.drawChart(refresh);
-    }
+    this.drawChart(refresh);
   }
 
   inputTextKeyboardEvents(e: KeyboardEvent) {

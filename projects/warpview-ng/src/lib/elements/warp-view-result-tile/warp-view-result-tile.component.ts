@@ -6,6 +6,7 @@ import {Param} from '../../model/param';
 import {DataModel} from '../../model/dataModel';
 import {ChartLib} from '../../utils/chart-lib';
 import {ResizedEvent} from 'angular-resize-event';
+import {GTSLib} from '../../utils/gts.lib';
 
 @Component({
   selector: 'warpview-result-tile',
@@ -27,10 +28,12 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   @Input('standalone') standalone = true;
+
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
+  @Output('warpViewNewOptions') warpViewNewOptions = new EventEmitter<any>();
 
   loading = true;
   dataModel: DataModel;
@@ -58,6 +61,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   };
 
   private _type;
+  private isRefresh = false;
 
   constructor(
     public el: ElementRef,
@@ -70,7 +74,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   protected update(options: Param, refresh: boolean): void {
-    setTimeout(() => this.loading = true);
+    setTimeout(() => this.loading = !refresh);
     this.LOG.debug(['parseGTS', 'data'], this._data);
     this.dataModel = this._data;
     if (!!this.dataModel) {
@@ -89,7 +93,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
-    setTimeout(() => this.loading = true);
+    setTimeout(() => this.loading = !this.isRefresh);
     this.LOG.debug(['convert', 'data'], this._data, data);
     this.dataModel = data;
     if (this.dataModel.globalParams) {
@@ -111,5 +115,19 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     this.LOG.debug(['chartDrawn']);
     setTimeout(() => this.loading = false);
     this.chartDraw.emit();
+  }
+
+  setResult(data: string, isRefresh: boolean) {
+    this.isRefresh = isRefresh;
+    if (data) {
+      this._data = GTSLib.getData(data);
+      this._options.isRefresh = isRefresh;
+      this.update(this._options, isRefresh);
+      this.LOG.debug(['onData'], this._data);
+    }
+  }
+
+  onWarpViewNewOptions(opts) {
+    this.warpViewNewOptions.emit(opts);
   }
 }

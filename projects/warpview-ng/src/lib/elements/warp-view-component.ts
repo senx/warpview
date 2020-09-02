@@ -21,7 +21,6 @@ import {Logger} from '../utils/logger';
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
-import * as moment from 'moment-timezone';
 import {ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
@@ -101,11 +100,11 @@ export abstract class WarpViewComponent {
     }
   }
 
-  @Input('data') set data(data: DataModel | GTS[] | string) {
+  @Input('data') set data(data: string | DataModel | GTS[]) {
     this.LOG.debug(['onData'], data);
     if (data) {
       this._data = GTSLib.getData(data);
-      this.update(this._options, true);
+      this.update(this._options, this._options.isRefresh);
       this.LOG.debug(['onData'], this._data);
     }
   }
@@ -264,7 +263,6 @@ export abstract class WarpViewComponent {
     this.noData = false;
     const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
     if (this._responsive) {
-      console.log((el.nativeElement as HTMLElement));
       if (parentSize.height === 0 || parentSize.width === 0 || this.height !== parentSize.height) {
         this.height = parentSize.height;
         this.width = parentSize.width;
@@ -283,11 +281,11 @@ export abstract class WarpViewComponent {
       this.chartDraw.emit();
       return false;
     }
-    this.loading = true;
     this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep<Param>(this._options || {} as Param, this._data.globalParams) as Param;
     this._options.timeMode = this._options.timeMode || 'date';
+    this.loading = !this._options.isRefresh;
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
     this.plotlyConfig.responsive = this._responsive;

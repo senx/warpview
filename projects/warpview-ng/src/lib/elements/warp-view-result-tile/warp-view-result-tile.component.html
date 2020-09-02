@@ -15,6 +15,7 @@
       <warpview-plot [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                      (chartDraw)="chartDrawn()"
                      [showLegend]="showLegend" [data]="dataModel"
+                     (warpViewNewOptions)="onWarpViewNewOptions($event)"
                      *ngIf="graphs['plot'].indexOf(type) > -1 && dataModel"
                      [responsive]="true"></warpview-plot>
 

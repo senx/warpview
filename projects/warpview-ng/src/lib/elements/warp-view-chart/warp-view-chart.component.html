@@ -16,9 +16,9 @@
   -->
 
 <div id="chartContainer" #chartContainer (mouseleave)="hideTooltip()">
-  <warpview-spinner *ngIf="loading" message="Parsing data chart"></warpview-spinner>
+  <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <p class="noData" *ngIf="noData">No data to display</p>
-  <p class="noData" *ngIf="parsing">Parsing data chart</p>
+  <p class="noData" *ngIf="parsing">Parsing data</p>
   <div *ngIf="!loading && !noData" >
     <warpview-plotly #graph
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig"

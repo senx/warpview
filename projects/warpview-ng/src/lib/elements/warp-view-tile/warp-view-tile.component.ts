@@ -37,6 +37,7 @@ import {SizeService} from '../../services/resize.service';
 import {Warp10Service} from '../../services/warp10.service';
 import {Logger} from '../../utils/logger';
 import {HttpResponse} from '@angular/common/http';
+import {WarpViewResultTileComponent} from '../warp-view-result-tile/warp-view-result-tile.component';
 
 @Component({
   selector: 'warpview-tile',
@@ -47,6 +48,8 @@ import {HttpResponse} from '@angular/common/http';
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
+  @ViewChild('resultTile', {static: false}) resultTile: WarpViewResultTileComponent;
+
   @Output('warpscriptResult') warpscriptResult = new EventEmitter<any>();
   @Output('execStatus') execStatus = new EventEmitter<any>();
   @Output('execError') execError = new EventEmitter<any>();
@@ -202,6 +205,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
             }
             setTimeout(() => {
               this.execResult = body;
+              this.resultTile.setResult(this.execResult, isRefresh);
               this._options.bounds = {};
               this._options = {...this._options};
               this.loading = false;
@@ -227,7 +231,12 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   protected convert(data: DataModel): any[] {
     return [];
   }
+
   chartDrawn(event) {
     this.chartDraw.emit(event);
+  }
+
+  onWarpViewNewOptions(opts: any) {
+    this._options = opts;
   }
 }

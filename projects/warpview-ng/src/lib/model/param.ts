@@ -84,4 +84,5 @@ export class Param {
     histfunc: 'count' | 'sum' | 'avg' | 'min' | 'max';
   };
   maxValue: number;
+  isRefresh?: boolean;
 }
