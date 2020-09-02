@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -20,7 +20,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   get type(): string {
     if (this.dataModel && this.dataModel.globalParams) {
-      return this.dataModel.globalParams.type || this._type || 'plot';
+      return this.dataModel.globalParams.type || this._options.type || this._type || 'plot';
     } else {
       return this._type || 'plot';
     }

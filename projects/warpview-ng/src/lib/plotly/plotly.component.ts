@@ -197,7 +197,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     let classes = [this.defaultClassName];
     if (Array.isArray(this.className)) {
       classes = classes.concat(this.className);
-    } else if (this.className) {
+    } else if (!!this.className) {
       classes.push(this.className);
     }
 

@@ -96,7 +96,7 @@ export abstract class WarpViewComponent {
     }
     if (!deepEqual(options, this._options)) {
       this.LOG.debug(['onOptions', 'changed'], options);
-      this._options =  options as Param;
+      this._options = options as Param;
       this.update(this._options, false);
     }
   }
@@ -124,7 +124,7 @@ export abstract class WarpViewComponent {
     timeZone: 'UTC',
     timeUnit: 'us',
     showControls: true,
-   // bounds: {}
+    // bounds: {}
   }) as Param;
 
   protected _debug = false;
@@ -264,10 +264,17 @@ export abstract class WarpViewComponent {
     this.noData = false;
     const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
     if (this._responsive) {
-      this.height = parentSize.height;
-      this.width = parentSize.width;
+      console.log((el.nativeElement as HTMLElement));
+      if (parentSize.height === 0 || parentSize.width === 0 || this.height !== parentSize.height) {
+        this.height = parentSize.height;
+        this.width = parentSize.width;
+        setTimeout(() => this.initChart(el), 100);
+        return;
+      } else {
+        this.height = parentSize.height;
+        this.width = parentSize.width;
+      }
     }
-    this.LOG.debug(['initiChart', 'this.height'], this.height);
     this.LOG.debug(['initiChart', 'this._data'], this._data, this._options);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       this.loading = false;
@@ -277,12 +284,9 @@ export abstract class WarpViewComponent {
       return false;
     }
     this.loading = true;
-    this.LOG.debug(['initiChart', 'this._options 0'], {... this.defOptions}, {... this._options});
     this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
-    this.LOG.debug(['initiChart', 'this._options 1'], {... this._options});
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep<Param>(this._options || {} as Param, this._data.globalParams) as Param;
-    this.LOG.debug(['initiChart', 'this._options'], this._options);
     this._options.timeMode = this._options.timeMode || 'date';
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
@@ -296,21 +300,17 @@ export abstract class WarpViewComponent {
       this.layout.width = this.width || parentSize.width;
       this.layout.height = this.height || parentSize.height;
     }
-    this.LOG.debug(['initChart', 'initSize'], this.layout.width, this.layout.height, this.width, this.height);
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
-    if (!this.plotlyData || this.plotlyData.length === 0) {
-      this.loading = false;
-      this.chartDraw.emit();
-      return false;
-    }
+    this.loading = false;
+    this.chartDraw.emit();
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
   afterPlot(plotlyInstance?: any) {
     this.LOG.debug(['afterPlot', 'plotlyInstance'], plotlyInstance);
-    this.chartDraw.emit();
     this.loading = false;
     this.rect = this.graph.getBoundingClientRect();
+    this.chartDraw.emit();
   }
 
   hideTooltip() {

@@ -165,7 +165,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.xaxis.tick0 = ((this._options.bounds || {}).minDate || this.minTick) / this.divider;
     } else {
       this.layout.xaxis.type = 'date';
-      this.layout.xaxis.tick0 = GTSLib.toISOString(((this._options.bounds || {}).minDate || this.minTick), this.divider, this._options.timeZone);
+      this.layout.xaxis.tick0 = GTSLib.toISOString((
+        (this._options.bounds || {}).minDate
+        || this.minTick), this.divider, this._options.timeZone);
     }
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.gridcolor = this.getGridColor(this.el.nativeElement);
@@ -177,6 +179,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.width = this.width;
       this.layout.height = this.height;
     }
+    this.resize(this.height);
     this.LOG.debug(['drawChart', 'this.options'], this.layout, this._options);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
@@ -190,10 +193,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const max = (this._options.bounds || {}).maxDate || this.chartBounds.tsmax || this.maxTick;
     this.LOG.debug(['drawChart', 'updateBounds'], [min, max]);
     if (!!this._options.showRangeSelector) {
-      x.rangeslider = {
-        bgcolor: 'transparent',
-        thickness: 40 / this.height
-      };
+      this.resize(this.height);
     } else {
       this.layout.margin.b = 30;
     }
@@ -238,6 +238,14 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     }
   }
 
+  protected initChart(el: ElementRef): boolean {
+    const res = super.initChart(el);
+    if(res) {
+      this.resize(this.height)
+    }
+    return res;
+  }
+
   protected convert(data: DataModel): Partial<any>[] {
     this.parsing = true;
     this.chartBounds.tsmin = undefined;
@@ -252,22 +260,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.minTick = Number.POSITIVE_INFINITY;
       this.visibleGtsId = [];
       this.gtsId = [];
-      const nonPlottable = gtsList.filter(g => {
-        this.LOG.debug(['convert'], GTSLib.isGtsToPlot(g));
-        return (g.v && !GTSLib.isGtsToPlot(g));
-      });
-      gtsList = gtsList.filter(g => {
-        return (g.v && GTSLib.isGtsToPlot(g));
-      });
+      const nonPlottable = gtsList.filter(g => (g.v && !GTSLib.isGtsToPlot(g)));
+      gtsList = gtsList.filter(g => g.v && GTSLib.isGtsToPlot(g));
       // initialize visibility status
       if (this.visibilityStatus === 'unknown') {
         this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
       }
 
-      this.LOG.debug(['convert'], this._options.timeMode);
       let timestampMode = true;
       const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
-      this.LOG.debug(['convert'], 'forEach GTS');
       gtsList.forEach((gts: GTS) => {
         const ticks = gts.v.map(t => t[0]);
         const size = gts.v.length;
@@ -283,7 +284,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         if (gts.v && GTSLib.isGtsToPlot(gts)) {
           Timsort.sort(gts.v, (a, b) => a[0] - b[0]);
           const size = gts.v.length;
-          this.LOG.debug(['convert'], gts);
+          //  this.LOG.debug(['convert'], gts);
           const label = GTSLib.serializeGtsMetadata(gts);
           const c = ColorLib.getColor(gts.id, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
@@ -327,7 +328,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           }
           this.visibleGtsId.push(gts.id);
           this.gtsId.push(gts.id);
-          this.LOG.debug(['convert'], 'forEach value');
+          //  this.LOG.debug(['convert'], 'forEach value');
           const ticks = gts.v.map(t => t[0]);
           const values = gts.v.map(t => t[t.length - 1]);
 
@@ -346,7 +347,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             series.x = ticks.map(t => GTSLib.toISOString(t, this.divider, this._options.timeZone));
           }
           series.y = values;
-          this.LOG.debug(['convert'], 'forEach value end', this.minTick, this.maxTick);
+          //     this.LOG.debug(['convert'], 'forEach value end', this.minTick, this.maxTick);
           dataset.push(series);
         }
       });
@@ -375,16 +376,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         }
       }
     }
-    this.parsing = false;
     this.LOG.debug(['convert'], 'end', dataset);
     this.noData = dataset.length === 0;
+    this.parsing = false;
     return dataset;
   }
 
   afterPlot(plotlyInstance) {
     super.afterPlot(plotlyInstance);
     this.marginLeft = parseInt((this.graph.plotEl.nativeElement as HTMLElement).querySelector('g.bglayer > rect').getAttribute('x'), 10);
-    this.LOG.debug(['plotly_afterPlot']);
+
+    this.LOG.debug(['afterPlot', 'marginLeft'], this.marginLeft);
     if (this.chartBounds.tsmin !== this.minTick || this.chartBounds.tsmax !== this.maxTick) {
       this.chartBounds.tsmin = this.minTick;
       this.chartBounds.tsmax = this.maxTick;

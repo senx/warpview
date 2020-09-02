@@ -300,7 +300,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   tzSelected(event) {
     const timeZone = this.tzSelector.nativeElement.value;
-    this.LOG.debug(['timezone', 'tzselect'], timeZone);
+    this.LOG.debug(['timezone', 'tzselect'], timeZone, event);
     delete this._options.bounds;
     this._options.timeZone = timeZone;
     this.tzSelector.nativeElement.setAttribute('class', timeZone === 'UTC' ? 'defaulttz' : 'customtz');
@@ -313,9 +313,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   resizeChart(event) {
-    this.LOG.debug(['resizeChart'], event);
-    this.initialChartHeight = event;
-    this.sizeService.change(new Size(this.width, event));
+    if (this.initialChartHeight !== event) {
+      this.LOG.debug(['resizeChart'], event);
+      this.initialChartHeight = event;
+      this.sizeService.change(new Size(this.width, event));
+    }
   }
 
   drawChart(firstDraw: boolean = false) {
@@ -471,23 +473,23 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     } else {
       this.chartDraw.emit($event);
     }
+    this.resizeArea();
   }
 
   private resizeArea() {
-    setTimeout(() => {
-      if (this.showChart) {
-        this.LOG.debug(['resizeArea'], this.el.nativeElement.getBoundingClientRect().height);
-        let h = this.chart.el.nativeElement.getBoundingClientRect().height;
-        if (h > 0) {
-          if (!!this.GTSTree) {
-            h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
-          }
-          if (!!this.controls) {
-            h -= this.controls.nativeElement.getBoundingClientRect().height;
-          }
-          this.initialChartHeight = h;
+    if (this.showChart && !!this.chart) {
+      let h = this.chart.el.nativeElement.getBoundingClientRect().height;
+      if (h > 0) {
+        if (!!this.GTSTree) {
+          h -= this.GTSTree.nativeElement.getBoundingClientRect().height;
         }
+        if (!!this.controls) {
+          h -= this.controls.nativeElement.getBoundingClientRect().height;
+        }
+        this.initialChartHeight = h;
+      } else {
+        setTimeout(() => this.resizeArea(), 100);
       }
-    });
+    }
   }
 }
