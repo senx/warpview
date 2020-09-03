@@ -37,7 +37,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "nouislider": "^14.0.3",
-    "plotly.js": "1.55.0"
+    "plotly.js": "1.54.7"
   },
   "peerDependencies": {
     "@angular/animations": "~8.2.9",

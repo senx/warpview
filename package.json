@@ -89,7 +89,7 @@
     "moment-timezone": "^0.5.27",
     "ngx-build-plus": "9.0.4",
     "nouislider": "^14.0.3",
-    "plotly.js": "1.55.0",
+    "plotly.js": "1.54.7",
     "popper": "^1.0.1",
     "prismjs": "^1.20.0",
     "rxjs": "~6.4.0",
