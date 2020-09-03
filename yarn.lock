@@ -10087,7 +10087,7 @@ platform@*, platform@^1.3.4:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.5.tgz#fb6958c696e07e2918d2eeda0f0bc9448d733444"
   integrity sha512-TuvHS8AOIZNAlE77WUDiR4rySV/VMptyMfcfeoMgs4P8apaZM3JrnbzBiixKUv+XR6i+BXrQh8WAnjaSPFO65Q==
 
-plotly.js@^1.55.1:
+plotly.js@^1.55.0:
   version "1.55.1"
   resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.55.1.tgz#0a30b3329e9cc10693df054a3761dd44e379c66c"
   integrity sha512-0FXmA+shz4oKVuZgFjKoP/QpFebjqEot8VYMbU7uDEMqe2+u42LcBC6YmRmFgysv63ipP0J03xXXSUHSmal0bw==

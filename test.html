@@ -33,15 +33,30 @@
         min-height: 600px;
         height: calc(100vh - 80px);
         resize: vertical;">
-        <warp-view-result-tile
-          url="https://warp.senx.io/api/v0/exec"
+        <warp-view-tile
+          url="https://truesea.senx.io/api/v0/exec"
           responsive="true" debug="true"
           showLegend="false"
-          options='{"timeUnit":"us","showDots":false,"foldGTSTree":true,"map":{"mapType":"CARTODB_DARK"}}'
-          data='[{"c":"","l":{},"a":{},"la":0,"v":[[0,0.8690674044191837,0.07100100629031658,0,true],[1,0.43812505435198545,0.6367813982069492,0,true],[2,0.671121384948492,0.18249238841235638,0,true],[3,0.18119579181075096,0.11215933598577976,0,true],[4,0.7790419925004244,0.8710374869406223,0,true],[5,0.22071533370763063,0.9110230207443237,0,true],[6,0.31494883820414543,0.6383511610329151,0,true],[7,0.46342633198946714,0.19559464417397976,0,true],[8,0.7996390108019114,0.25884649716317654,0,true],[9,0.8120904536917806,0.37230527959764004,0,true],[10,0.93050348572433,0.1832079514861107,0,true]]},{"c":"","l":{},"a":{},"la":0,"v":[[0,0.06883998401463032,0.6283821444958448,0,0.31562413108634324],[1,0.6076632533222437,0.39350805804133415,0,0.09701950362867084],[2,0.1407419191673398,0.7537542935460806,0,0.2699615662948096],[3,0.4510226659476757,0.7316264882683754,0,0.4489093883641395],[4,0.653834086842835,0.5207085516303778,0,0.7091340359755648],[5,0.9516696771606803,0.5673009529709816,0,0.7541338663613825],[6,0.02230068203061819,0.1657484471797943,0,0.4913709201722102],[7,0.19960186444222927,0.3035066183656454,0,0.047769700577756424],[8,0.0840182276442647,0.049053579568862915,0,0.4947990135569069],[9,0.47346881590783596,0.8527929335832596,0,0.6623649765098101],[10,0.7547388738021255,0.09388117119669914,0,0.7334934070441379]]}]'
-          type="plot">
+          options='{"timeUnit":"us","showDots":false,"foldGTSTree":true,"map":{"mapType":"OCEANS", "animate": true}}'
+          type="map">
+          '2lTvbkFNUA6EW32NeLEkyIQfnf7mDKocE4DUQMonlP7AmMwuwLeh.yS.Z8UtqWojda8Xgv7pNwRhdjskawpNPJfSyRZmsu.4aAQl3UCA16XCpsiLMRdnhU3LRh3W3.rVLpwRsH7ygz4o.Gy00GBkfqarBYeBElGGb9KlkT0EwQ6iFgcA27BFpF'
+          'RTOKEN' STORE
+          10 'l' STORE
+          <% $RTOKEN AUTHENTICATE %> <% %> <% %> TRY
+          1000000 MAXOPS
+          1000000 MAXGTS
+          1000000 LIMIT
 
-        </warp-view-result-tile>
+          {
+          'end' 1594305603952409
+          'start' 1594305603952409 24 h -
+          'wkt' 48.0 -4.5 30000 @senx/geo/circle
+          } 'map' STORE
+          $map
+          $map @senx/truesea/find
+          'mmsi' PUT
+          @senx/truesea/fetch FLATTEN  [ 0 $l ] SUBLIST
+        </warp-view-tile>
       </div>
     </div>
   </div>
