@@ -35,7 +35,7 @@
     "leaflet.heat": "^0.2.0",
     "leaflet.markercluster": "^1.4.1",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.27",
+    "meoment-timezone": "^0.5.27",
     "nouislider": "^14.0.3",
     "plotly.js": "^1.55.0"
   },
