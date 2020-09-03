@@ -203,6 +203,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this._options.bounds = this._options.bounds || {};
       this._options.bounds.minDate = event.bounds.min;
       this._options.bounds.maxDate = event.bounds.max;
+      this.warpViewNewOptions.emit(this._options);
       if (event.source === 'chart') {
         this.annotation.updateBounds(event.bounds.min, event.bounds.max, event.bounds.marginLeft);
       } else if (event.source === 'annotation') {

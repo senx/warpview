@@ -136,12 +136,9 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     for (let l = 1; l < warpscriptLines.length; l++) {
       const currentLine = warpscriptLines[l];
       if (currentLine === '' || currentLine.search('//') >= 0) {
-        // find and extract // @paramname parameters
+        // find and extract
         let lineOnMatch: RegExpMatchArray | null;
         const re = RegExp(extraParamsPattern);
-        // noinspection JSAssignmentUsedAsCondition
-        // tslint:disable-next-line:no-conditional-assignment JSAssignmentUsedAsCondition
-        // noinspection JSAssignmentUsedAsCondition
         while (lineOnMatch = re.exec(currentLine)) {
           const parameterName = lineOnMatch[1];
           const parameterValue = lineOnMatch[2];
@@ -170,7 +167,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
       this.execResult = undefined;
       this.loaderMessage = 'Requesting data';
       this.execUrl = this.url;
-      //  this.execResult = undefined;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
