@@ -502,11 +502,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         }
       });
     }
+    super.hover(data, point);
     if (point && this.highlighted !== point.curveNumber) {
       this.highliteCurve.next({on: [point.curveNumber], off: curves});
       this.highlighted = point.curveNumber;
     }
-    super.hover(data, point);
     this.pointHover.emit(data.event);
     /*setTimeout(() => {
       let pn = -1;

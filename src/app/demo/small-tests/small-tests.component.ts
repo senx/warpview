@@ -26,52 +26,43 @@ import {Param} from '../../../../projects/warpview-ng/src/lib/model/param';
   styleUrls: ['./small-tests.component.scss']
 })
 export class SmallTestsComponent implements OnInit {
-
+  chartTypes = [
+    'histogram2dcontour', 'histogram2d', 'line', 'spline', 'step', 'step-after', 'step-before', 'area',
+    'scatter', 'pie', 'donut', 'polar', 'radar', 'bar', 'bubble', 'annotation', 'datagrid', 'display',
+    'drilldown', 'image', 'map', 'gauge', 'bullet', 'plot', 'box', 'box-date', 'line3d', 'drops',
+  ].sort().map(t => {
+    return {value: t, label: t};
+  });
+  chartType: string;
   currentTest = 0;
   theme = 'light';
   options: Param = {
     ...new Param(), ...{
-      gridLineColor: '#000000',
       fontColor: '#000000',
-      // map: {mapType: 'CARTODB_DARK'},
+      map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
       showControls: true,
       showGTSTree: true,
       foldGTSTree: true,
       showDots: false,
-  //    autoRefresh: 5
+     // autoRefresh: 5,
+    //  timeMode: 'timestamp',
+      responsive: true
     }
   };
 
   tests = [
     {
-      type: 'plot',
+      type: 'line',
       description: '',
-      warpscript: `@training/dataset0
-// warp.store.hbase.puts.committed is the number of datapoints committed to 
-// HBase since the restart of the Store daemon
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH
-[ SWAP mapper.rate 1 0 0 ] MAP 
-'gts' STORE 
-// Keep only 1000 datapoints per GTS
-$gts 1000 LTTB  'gts' STORE
-// Detect 5 anomalies per GTS using an ESD (Extreme Studentized Deviate) Test
-$gts 5 false ESDTEST 'outliers' STORE 
-// Convert the ticks identified by ESDTEST into an annotation GTS
-
-$gts
-[
-  $outliers <%
-    'tsList' STORE
-    NEWGTS 'newGTS' STORE // create a new GTS
-    $tsList <%
-      'ts' STORE 
-      $newGTS $ts NaN NaN NaN 'anomaly' ADDVALUE DROP
-    %> FOREACH // for each timestamp
-    $newGTS
-  %> FOREACH 
-]
-2 ->LIST
-ZIP
+      warpscript: `
+0 5 <% 'j' STORE
+    NEWGTS 'series' $j TOSTRING + RENAME 'gts' STORE
+    0 10 <%
+        'i' STORE
+        $gts NOW $i STU * - RAND RAND RAND RAND ADDVALUE DROP
+    %> FOR
+    $gts
+%> FOR
 `
     },
     {
@@ -575,16 +566,15 @@ NEWGTS 'fun{{}}}ny,withcommastoo' RENAME { 'la{,}}bel' 'val},},{,ue' } RELABEL  
       this.theme = evt.settings.theme;
       if (evt.settings.theme === 'dark') {
         this.options.map.mapType = 'DEFAULT';
-        this.options.gridLineColor = '#ffffff';
       } else {
         this.options.map.mapType = 'DEFAULT';
-        this.options.gridLineColor = '#000000';
       }
       this.options = {...this.options};
     });
   }
 
   ngOnInit() {
+    this.chartType = this.tests[this.currentTest].type;
   }
 
   manageTheme() {
@@ -593,5 +583,12 @@ NEWGTS 'fun{{}}}ny,withcommastoo' RENAME { 'la{,}}bel' 'val},},{,ue' } RELABEL  
       'bg-light': this.theme === 'light',
       'bg-dark': this.theme === 'dark'
     };
+  }
+
+
+  updateChartType(event) {
+    console.log(this.chartType, event)
+    this.chartType = event;
+    this.tests[this.currentTest].type = this.chartType;
   }
 }

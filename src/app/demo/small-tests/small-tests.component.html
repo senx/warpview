@@ -21,9 +21,19 @@
             [ngClass]="{'active': currentTest === i}" (click)="currentTest = i" [title]="d.description"
     >Test {{i + 1}}</button>
   </nav>
-  <div class="card mb-3" [ngClass]="manageTheme()">
+  <div class="card mb-3" [ngClass]="manageTheme()" style="margin-top: 500px">
     <div class="card-body" [ngClass]="manageTheme()">
       <h4>Test {{currentTest + 1}}</h4>
+      <form class="form-inline ml-3 mt-1">
+        <div class="input-group">
+          <label for="chartType"></label>
+          <select name="chartType" class="form-control form-control-sm" id="chartType"
+                  [(ngModel)]="chartType"
+                  (ngModelChange)="updateChartType($event)">
+            <option *ngFor="let f of chartTypes" [value]="f.value">{{f.label}}</option>
+          </select>
+        </div>
+      </form>
       <p [innerHTML]="tests[currentTest].description"></p>
 
       <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;">

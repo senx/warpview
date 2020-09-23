@@ -328,8 +328,7 @@ export abstract class WarpViewComponent {
   }
 
   hover(data: any, point?: any) {
-    this.LOG.debug(['hover'], data);
-    this.toolTip.nativeElement.style.display = 'block';
+    this.renderer.setStyle(this.toolTip.nativeElement, 'display', 'block');
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
@@ -370,7 +369,7 @@ export abstract class WarpViewComponent {
       }
       const top = Math.min(
         this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-        data.event.y - 20 - this.rect.top) + 'px';
+        data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
       this.moveTooltip(top, left, content);
     }
   }
@@ -385,6 +384,7 @@ export abstract class WarpViewComponent {
   private moveTooltip(top, left, content) {
     this.tooltipPosition = {top, left};
     this.renderer.setProperty(this.toolTip.nativeElement, 'innerHTML', content);
+    this.LOG.debug(['hover - moveTooltip'], new Date().toISOString());
   }
 
   relayout($event: any) {
