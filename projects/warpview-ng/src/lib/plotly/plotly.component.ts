@@ -17,8 +17,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import * as Plotlyjs from 'plotly.js/dist/plotly';
-import {Config, Data, Layout, PlotlyHTMLElement, Plots} from 'plotly.js';
+import * as Plotlyjs from 'plotly.js-dist';
+import {Config, Data, Layout, PlotlyHTMLElement, Plots} from 'plotly.js-dist';
 import {Logger} from '../utils/logger';
 
 export interface Figure {

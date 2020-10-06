@@ -31,7 +31,6 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/plotly.js/dist/plotly.min.js",
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
@@ -157,7 +156,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.elements.json",
             "scripts": [
-              "node_modules/plotly.js/dist/plotly.min.js",
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               },

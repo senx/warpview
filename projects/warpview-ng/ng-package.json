@@ -16,7 +16,9 @@
     "canvas-gauges",
     "fitty",
     "event-drops",
-    "angular-split"
+    "angular-split",
+    "image-size",
+    "plotly.js-dist"
   ],
   "lib": {
     "flatModuleFile": "warpview",
