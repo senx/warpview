@@ -43,12 +43,11 @@ import {WarpViewResultTileComponent} from '../warp-view-result-tile/warp-view-re
   selector: 'warpview-tile',
   templateUrl: './warp-view-tile.component.html',
   styleUrls: ['./warp-view-tile.component.scss'],
-  providers: [HttpErrorHandler],
-  // encapsulation: ViewEncapsulation.None
+  providers: [HttpErrorHandler]
 })
 export class WarpViewTileComponent extends WarpViewComponent implements OnInit, AfterViewInit {
   @ViewChild('warpRef', {static: true}) warpRef: ElementRef;
-  @ViewChild('resultTile', {static: false}) resultTile: WarpViewResultTileComponent;
+  @ViewChild('resultTile') resultTile: WarpViewResultTileComponent;
 
   @Output('warpscriptResult') warpscriptResult = new EventEmitter<any>();
   @Output('execStatus') execStatus = new EventEmitter<any>();

@@ -47,7 +47,7 @@ import {Observable, Subscription} from 'rxjs';
 export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
   private eventsSubscription: Subscription;
 
-  @ViewChild('chip', {static: false}) chip: ElementRef;
+  @ViewChild('chip') chip: ElementRef;
 
   @Input('node') node: any;
   @Input('param') param: Param = new Param();

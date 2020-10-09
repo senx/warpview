@@ -22,6 +22,7 @@ import {WarpViewElementsModule} from '../projects/warpview-ng/src/lib/warp-view-
 import {environment} from './environments/environment';
 import 'zone.js/dist/zone';
 
+// @ts-ignore
 window['global'] = window;
 if (environment.production) {
   enableProdMode();

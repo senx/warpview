@@ -15,7 +15,7 @@
  *
  */
 
-import {EventEmitter} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 export class Size {
   constructor(public width: number, public height: number) {
@@ -23,6 +23,7 @@ export class Size {
 }
 
 
+@Injectable()
 export class SizeService {
   public sizeChanged$: EventEmitter<Size>;
 

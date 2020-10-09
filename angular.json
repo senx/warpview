@@ -17,6 +17,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "nouislider",
+              "css-element-queries",
+              "deep-equal",
+              "rxjs/internal/observable/of",
+              "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard",
+              "leaflet-ant-path",
+              "plotly.js-dist"
+            ],
+            "aot": true,
             "outputPath": "dist/warpview-elements",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -34,8 +45,7 @@
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               }
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
@@ -59,6 +69,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -150,6 +164,16 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "nouislider",
+              "css-element-queries",
+              "deep-equal",
+              "rxjs/internal/observable/of",
+              "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard",
+              "leaflet-ant-path",
+              "plotly.js-dist"
+            ],
             "outputPath": "dist/warpview/elements",
             "index": "src/elements-index.html",
             "main": "src/elements.main.ts",
@@ -167,8 +191,7 @@
                 "bundleName": "polyfill-webcomp",
                 "input": "node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js"
               }
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
@@ -291,7 +314,11 @@
             "tsConfig": "projects/warpview-ng/tsconfig.lib.json",
             "project": "projects/warpview-ng/ng-package.json"
           },
-          "es5BrowserSupport": true
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/warpview-ng/tsconfig.lib.prod.json"
+            }
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -318,6 +345,7 @@
   },
   "defaultProject": "warpview",
   "cli": {
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "analytics": false
   }
 }

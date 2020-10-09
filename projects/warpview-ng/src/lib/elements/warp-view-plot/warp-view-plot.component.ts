@@ -57,17 +57,17 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   @ViewChild('mainPlotDiv', {static: true}) mainPlotDiv: ElementRef;
   @ViewChild('timeClip', {static: true}) timeClip: WarpViewModalComponent;
   @ViewChild('modal', {static: true}) modal: WarpViewModalComponent;
-  @ViewChild('chart', {static: false}) chart: WarpViewChartComponent;
-  @ViewChild('gtsPopupModal', {static: false}) gtsPopupModal: WarpViewGtsPopupComponent;
-  @ViewChild('annotation', {static: false}) annotation: WarpViewAnnotationComponent;
-  @ViewChild('map', {static: false}) map: WarpViewMapComponent;
+  @ViewChild('chart') chart: WarpViewChartComponent;
+  @ViewChild('gtsPopupModal') gtsPopupModal: WarpViewGtsPopupComponent;
+  @ViewChild('annotation') annotation: WarpViewAnnotationComponent;
+  @ViewChild('map') map: WarpViewMapComponent;
   @ViewChild('timeClipElement', {static: true}) timeClipElement: ElementRef;
   @ViewChild('GTSTree', {static: true}) GTSTree: ElementRef;
   @ViewChild('controls', {static: true}) controls: ElementRef;
   @ViewChild('filterInput', {static: true}) filterInput: ElementRef;
-  @ViewChild('tzSelector', {static: false}) tzSelector: ElementRef;
-  @ViewChild('line', {static: false}) line: ElementRef;
-  @ViewChild('main', {static: false}) main: ElementRef;
+  @ViewChild('tzSelector') tzSelector: ElementRef;
+  @ViewChild('line') line: ElementRef;
+  @ViewChild('main') main: ElementRef;
 
   @Input('type') set type(type: string) {
     this._type = type;

@@ -45,8 +45,8 @@ export class WarpViewMapComponent implements OnInit {
 
   @ViewChild('mapDiv', {static: true}) mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild('wrapper', {static: true}) wrapper: ElementRef<HTMLDivElement>;
-  @ViewChild('timeSlider', {static: false}) timeSlider: ElementRef<HTMLDivElement>;
-  @ViewChild('timeRangeSlider', {static: false}) timeRangeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('timeSlider') timeSlider: ElementRef<HTMLDivElement>;
+  @ViewChild('timeRangeSlider') timeRangeSlider: ElementRef<HTMLDivElement>;
 
   @Input('heatData') heatData: any[] = [];
   @Input('responsive') responsive = false;

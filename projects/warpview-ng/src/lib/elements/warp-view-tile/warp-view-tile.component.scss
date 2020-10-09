@@ -35,6 +35,7 @@
     min-height: 50px;
     width: var(--warp-view-tile-width, 100%);
     height: var(--warp-view-tile-height, 100%);
+    position: relative;
 
     .status {
       position: absolute;

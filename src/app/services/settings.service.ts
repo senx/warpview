@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-import {EventEmitter} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 export class Settings {
 
@@ -22,6 +22,7 @@ export class Settings {
   }
 }
 
+@Injectable()
 export class SettingsService {
   public settingsAdded$: EventEmitter<Settings>;
   private settings: Settings;

@@ -18,7 +18,7 @@
 import {AfterViewChecked, Component} from '@angular/core';
 import moment from 'moment';
 import {Logger} from '../../../../projects/warpview-ng/src/lib/utils/logger';
-import {HighlightService} from '../HighlightService';
+import {HighlightService} from '../../services/HighlightService';
 
 @Component({
   selector: 'warpview-getting-started',

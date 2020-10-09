@@ -21,7 +21,7 @@ import {Logger} from '../utils/logger';
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
-import {ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
+import { ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild, Directive } from '@angular/core';
 import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
@@ -29,9 +29,10 @@ import {Config} from 'plotly.js';
 
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
+@Directive()
 export abstract class WarpViewComponent {
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
-  @ViewChild('graph', {static: false}) graph: PlotlyComponent;
+  @ViewChild('graph') graph: PlotlyComponent;
   @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('width') width = ChartLib.DEFAULT_WIDTH;

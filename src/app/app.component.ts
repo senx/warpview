@@ -16,7 +16,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Settings, SettingsService} from '../../projects/warpview-ng/src/lib/services/settings.service';
+import {Settings, SettingsService} from './services/settings.service';
 import {ColorLib} from '../../projects/warpview-ng/src/lib/utils/color-lib';
 
 @Component({

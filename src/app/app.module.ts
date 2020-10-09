@@ -24,12 +24,12 @@ import {MenuComponent} from './demo/menu/menu.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {MainDemoComponent} from './demo/main-demo/main-demo.component';
-import {SettingsService} from '../../projects/warpview-ng/src/lib/services/settings.service';
+import {SettingsService} from './services/settings.service';
 import {SmallTestsComponent} from './demo/small-tests/small-tests.component';
 import {AngularResizedEventModule} from 'angular-resize-event';
 import {FormsModule} from '@angular/forms';
 import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-view-angular.module';
-import {HighlightService} from './demo/HighlightService';
+import {HighlightService} from './services/HighlightService';
 
 @NgModule({
   declarations: [

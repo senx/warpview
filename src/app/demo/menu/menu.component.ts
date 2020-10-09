@@ -16,7 +16,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
+import {SettingsService} from '../../services/settings.service';
 
 @Component({
   selector: 'warpview-menu',

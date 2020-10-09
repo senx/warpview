@@ -18,9 +18,9 @@
 /* tslint:disable:max-line-length */
 import {AfterViewChecked, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
-import {SettingsService} from '../../../../projects/warpview-ng/src/lib/services/settings.service';
+import {SettingsService} from '../../services/settings.service';
 import {Param} from '../../../../projects/warpview-ng/src/lib/model/param';
-import {HighlightService} from '../HighlightService';
+import {HighlightService} from '../../services/HighlightService';
 
 @Component({
   selector: 'warpview-main-demo',
