@@ -25,7 +25,8 @@
               "rxjs/internal/observable/of",
               "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard",
               "leaflet-ant-path",
-              "plotly.js-dist"
+              "plotly.js-dist",
+              "zone.js/dist/zone"
             ],
             "aot": true,
             "outputPath": "dist/warpview-elements",
@@ -172,7 +173,8 @@
               "rxjs/internal/observable/of",
               "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard",
               "leaflet-ant-path",
-              "plotly.js-dist"
+              "plotly.js-dist",
+              "zone.js/dist/zone"
             ],
             "outputPath": "dist/warpview/elements",
             "index": "src/elements-index.html",

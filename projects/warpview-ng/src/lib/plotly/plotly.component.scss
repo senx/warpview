@@ -1,7 +1,7 @@
 
 @import "../styles/vars";
 
-@import "../../../../../node_modules/plotly.js/src/css/vars";
+/*@import "../../../../../node_modules/plotly.js/src/css/vars";
 
 .js-plotly-plot .plotly {
   @import "../../../../../node_modules/plotly.js/src/css/mixins";
@@ -11,8 +11,9 @@
   @import "../../../../../node_modules/plotly.js/src/css/tooltip";
   @import "../../../../../node_modules/plotly.js/src/css/drag";
 }
-@import "../../../../../node_modules/plotly.js/src/css/notifier";
+@import "../../../../../node_modules/plotly.js/src/css/notifier";*/
 
+@import "~plotly.js/src/css/style";
 :host {
   .ylines-above {
     stroke: var(--warp-view-chart-grid-color) !important;

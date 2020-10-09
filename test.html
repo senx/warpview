@@ -34,28 +34,20 @@
         height: calc(100vh - 80px);
         resize: vertical;">
         <warp-view-tile
-          url="https://truesea.senx.io/api/v0/exec"
+          url="https://warp.senx.io/api/v0/exec"
           responsive="true" debug="true"
           showLegend="false"
           options='{"timeUnit":"us","showDots":false,"foldGTSTree":true,"map":{"mapType":"OCEANS", "animate": true}}'
-          type="map">
-          '2lTvbkFNUA6EW32NeLEkyIQfnf7mDKocE4DUQMonlP7AmMwuwLeh.yS.Z8UtqWojda8Xgv7pNwRhdjskawpNPJfSyRZmsu.4aAQl3UCA16XCpsiLMRdnhU3LRh3W3.rVLpwRsH7ygz4o.Gy00GBkfqarBYeBElGGb9KlkT0EwQ6iFgcA27BFpF'
-          'RTOKEN' STORE
-          10 'l' STORE
-          <% $RTOKEN AUTHENTICATE %> <% %> <% %> TRY
-          1000000 MAXOPS
-          1000000 MAXGTS
-          1000000 LIMIT
-
-          {
-          'end' 1594305603952409
-          'start' 1594305603952409 24 h -
-          'wkt' 48.0 -4.5 30000 @senx/geo/circle
-          } 'map' STORE
-          $map
-          $map @senx/truesea/find
-          'mmsi' PUT
-          @senx/truesea/fetch FLATTEN  [ 0 $l ] SUBLIST
+          type="plot">
+          @training/dataset0
+          // 30 days of data (commited datapoints count on our cluster)
+          [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH
+          // detect a counter reset and fix
+          false RESETS 'gts' STORE
+          // compute delta between a point and its previous sibling
+          [ $gts mapper.delta 1 0 0 ] MAP
+          // keep only 1000 points to draw a representative curve instead of having to draw millions points
+          1000 LTTB
         </warp-view-tile>
       </div>
     </div>

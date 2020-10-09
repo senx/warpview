@@ -6,7 +6,7 @@
     "inlineSources": true
   },
   "angularCompilerOptions": {
-
+    "enableIvy": false
   },
   "exclude": [
     "test.ts",
