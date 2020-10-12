@@ -1,26 +1,15 @@
-
 @import "../styles/vars";
-
-/*@import "../../../../../node_modules/plotly.js/src/css/vars";
-
-.js-plotly-plot .plotly {
-  @import "../../../../../node_modules/plotly.js/src/css/mixins";
-  @import "../../../../../node_modules/plotly.js/src/css/base";
-  @import "../../../../../node_modules/plotly.js/src/css/cursor";
-  @import "../../../../../node_modules/plotly.js/src/css/modebar";
-  @import "../../../../../node_modules/plotly.js/src/css/tooltip";
-  @import "../../../../../node_modules/plotly.js/src/css/drag";
-}
-@import "../../../../../node_modules/plotly.js/src/css/notifier";*/
-
 @import "~plotly.js/src/css/style";
+
 :host {
   .ylines-above {
     stroke: var(--warp-view-chart-grid-color) !important;
   }
+
   .xtick > text, .ytick > text {
     fill: var(--warp-view-font-color) !important;
   }
+
   .modebar-btn path {
     fill: var(--warp-view-font-color) !important;
   }

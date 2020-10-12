@@ -16,7 +16,6 @@
  */
 @import "../../styles/vars";
 @import "../../styles/gts";
-// @import "../../styles/tooltip";
 
 :host, warpview-event-drop, warp-view-event-drop {
   display: block;
@@ -29,7 +28,7 @@
   }
 
   #chartContainer {
-    @import '../../../../../../node_modules/event-drops/dist/style.css';
+    @import '~event-drops/dist/style.css';
     height: 100%;
     width: 100%;
     position: relative;
