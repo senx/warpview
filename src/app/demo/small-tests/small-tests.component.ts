@@ -43,7 +43,7 @@ export class SmallTestsComponent implements OnInit {
       showControls: true,
       showGTSTree: true,
       foldGTSTree: true,
-      showDots: false,
+      showDots: true,
      // autoRefresh: 5,
     //  timeMode: 'timestamp',
       responsive: true

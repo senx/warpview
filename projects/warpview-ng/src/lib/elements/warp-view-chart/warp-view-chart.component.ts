@@ -26,7 +26,7 @@ import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {Subject} from 'rxjs';
-import {debounceTime} from 'rxjs/operators';
+import {debounceTime, throttleTime} from 'rxjs/operators';
 import {Timsort} from '../../utils/timsort';
 
 @Component({
@@ -180,16 +180,12 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.layout.margin.b = 30;
     }
     this.layout = {...this.layout};
-    this.highliteCurve.pipe(debounceTime(200)).subscribe(value => {
-      Promise.resolve().then(() => {
+    this.highliteCurve.pipe(throttleTime(200)).subscribe(value => {
         this.graph.restyleChart({opacity: 0.4}, value.off);
         this.graph.restyleChart({opacity: 1}, value.on);
-      });
     });
-    this.unhighliteCurve.pipe(debounceTime(200)).subscribe(value => {
-      Promise.resolve().then(() => {
+    this.unhighliteCurve.pipe(throttleTime(200)).subscribe(value => {
         this.graph.restyleChart({opacity: 1}, value);
-      });
     });
     this.loading = false;
   }
@@ -293,7 +289,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           };
           if (this._type === 'scatter' || size < this.maxPlottable) {
             series.marker = {
-              size: 15,
+              size: 3,
               color: new Array(size).fill(color),
               line: {color, width: 3},
               opacity: new Array(size).fill(this._type === 'scatter' || this._options.showDots ? 1 : 0)

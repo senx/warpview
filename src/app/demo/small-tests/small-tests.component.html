@@ -21,7 +21,7 @@
             [ngClass]="{'active': currentTest === i}" (click)="currentTest = i" [title]="d.description"
     >Test {{i + 1}}</button>
   </nav>
-  <div class="card mb-3" [ngClass]="manageTheme()" style="margin-top: 500px">
+  <div class="card mb-3" [ngClass]="manageTheme()">
     <div class="card-body" [ngClass]="manageTheme()">
       <h4>Test {{currentTest + 1}}</h4>
       <form class="form-inline ml-3 mt-1">
