@@ -1,0 +1,26 @@
+/*
+ *  Copyright 2020 SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+export class BubblingEvents {
+    /**
+     * Angular provides support for custom events via Output properties and the EventEmitter. Unlike DOM events Angular custom events do not bubble.
+     * see : http://blog.davidjs.com/2018/02/angular-custom-event-bubbling/
+     * This class allow to create events that can bubble up outside angular element webcomponents
+     */
+    static emitBubblingEvent(el, eventname, eventdetail) {
+        el.nativeElement.dispatchEvent(new CustomEvent(eventname, { bubbles: true, detail: eventdetail, composed: true }));
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnViYmxpbmdFdmVudC5qcyIsInNvdXJjZVJvb3QiOiIvaG9tZS94YXZpZXIvd29ya3NwYWNlL3dhcnB2aWV3LWVkaXRvci9wcm9qZWN0cy93YXJwdmlldy1lZGl0b3ItbmcvIiwic291cmNlcyI6WyJzcmMvbGliL21vZGVsL2J1YmJsaW5nRXZlbnQudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7Ozs7Ozs7Ozs7O0dBY0c7QUFLSCxNQUFNLE9BQU8sY0FBYztJQUV6Qjs7OztPQUlHO0lBQ0gsTUFBTSxDQUFDLGlCQUFpQixDQUFDLEVBQWMsRUFBRSxTQUFpQixFQUFFLFdBQWlCO1FBQzNFLEVBQUUsQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLElBQUksV0FBVyxDQUFDLFNBQVMsRUFBRSxFQUFFLE9BQU8sRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFLFdBQVcsRUFBRSxRQUFRLEVBQUUsSUFBSSxFQUFFLENBQUMsQ0FBQyxDQUFDO0lBQ3JILENBQUM7Q0FFRiIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiAgQ29weXJpZ2h0IDIwMjAgU2VuWCBTLkEuUy5cbiAqXG4gKiAgTGljZW5zZWQgdW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlIFwiTGljZW5zZVwiKTtcbiAqICB5b3UgbWF5IG5vdCB1c2UgdGhpcyBmaWxlIGV4Y2VwdCBpbiBjb21wbGlhbmNlIHdpdGggdGhlIExpY2Vuc2UuXG4gKiAgWW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBMaWNlbnNlIGF0XG4gKlxuICogICAgaHR0cDovL3d3dy5hcGFjaGUub3JnL2xpY2Vuc2VzL0xJQ0VOU0UtMi4wXG4gKlxuICogIFVubGVzcyByZXF1aXJlZCBieSBhcHBsaWNhYmxlIGxhdyBvciBhZ3JlZWQgdG8gaW4gd3JpdGluZywgc29mdHdhcmVcbiAqICBkaXN0cmlidXRlZCB1bmRlciB0aGUgTGljZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiBcIkFTIElTXCIgQkFTSVMsXG4gKiAgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuXG4gKiAgU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZFxuICogIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLlxuICovXG5cbmltcG9ydCB7RWxlbWVudFJlZn0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5cblxuZXhwb3J0IGNsYXNzIEJ1YmJsaW5nRXZlbnRzIHtcblxuICAvKipcbiAgICogQW5ndWxhciBwcm92aWRlcyBzdXBwb3J0IGZvciBjdXN0b20gZXZlbnRzIHZpYSBPdXRwdXQgcHJvcGVydGllcyBhbmQgdGhlIEV2ZW50RW1pdHRlci4gVW5saWtlIERPTSBldmVudHMgQW5ndWxhciBjdXN0b20gZXZlbnRzIGRvIG5vdCBidWJibGUuXG4gICAqIHNlZSA6IGh0dHA6Ly9ibG9nLmRhdmlkanMuY29tLzIwMTgvMDIvYW5ndWxhci1jdXN0b20tZXZlbnQtYnViYmxpbmcvXG4gICAqIFRoaXMgY2xhc3MgYWxsb3cgdG8gY3JlYXRlIGV2ZW50cyB0aGF0IGNhbiBidWJibGUgdXAgb3V0c2lkZSBhbmd1bGFyIGVsZW1lbnQgd2ViY29tcG9uZW50c1xuICAgKi9cbiAgc3RhdGljIGVtaXRCdWJibGluZ0V2ZW50KGVsOiBFbGVtZW50UmVmLCBldmVudG5hbWU6IHN0cmluZywgZXZlbnRkZXRhaWw/OiBhbnkpIHtcbiAgICBlbC5uYXRpdmVFbGVtZW50LmRpc3BhdGNoRXZlbnQobmV3IEN1c3RvbUV2ZW50KGV2ZW50bmFtZSwgeyBidWJibGVzOiB0cnVlLCBkZXRhaWw6IGV2ZW50ZGV0YWlsLCBjb21wb3NlZDogdHJ1ZSB9KSk7XG4gIH1cblxufVxuIl19

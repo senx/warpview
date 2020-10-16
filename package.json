@@ -1,0 +1,68 @@
+{
+  "name": "@senx/warpview-editor",
+  "version": "2.3.0",
+  "keywords": [
+    "web",
+    "dataviz",
+    "web components",
+    "time series",
+    "warp10",
+    "Warp 10",
+    "WarpScript",
+    "Geo Times Series",
+    "Times Series"
+  ],
+  "description": "WarpView Editor Elements",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/senx/warpview-editor.git"
+  },
+  "author": "SenX <contact@senx.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/senx/warpview-editor/issues"
+  },
+  "homepage": "https://www.warp10.io",
+  "dependencies": {
+    "@giwisoft/wc-split": "1.0.6",
+    "@giwisoft/wc-tabs": "1.0.10",
+    "angular2-uuid": "^1.1.1",
+    "bignumber.js": "^9.0.1",
+    "highlight.js": "^10.2.1",
+    "marked": "^1.2.0",
+    "monaco-editor": "^0.21.2",
+    "resize-observer-polyfill": "^1.5.1",
+    "tslib": "^2.0.3"
+  },
+  "peerDependencies": {
+    "@angular/animations": "~10.1.6",
+    "@angular/common": "~10.1.6",
+    "@angular/core": "~10.1.6",
+    "@angular/elements": "^10.1.6",
+    "@angular/language-service": "~10.1.6",
+    "@angular/platform-browser": "~10.1.6",
+    "@angular/platform-browser-dynamic": "~10.1.6",
+    "@babel/compat-data": "7.11.0",
+    "@types/node": "^14.11.8",
+    "@ungap/custom-elements": "^0.1.6",
+    "@webcomponents/custom-elements": "^1.4.2",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
+    "core-js": "^3.6.5",
+    "dompurify": "^2.1.1",
+    "elements-zone-strategy": "^10.0.0",
+    "fs-extra": "^9.0.1",
+    "rxjs": "~6.6.3",
+    "ts-node": "~9.0.0",
+    "typescript": "~4.0.3",
+    "web-animations-js": "^2.3.2",
+    "zone.js": "~0.10.3"
+  },
+  "main": "bundles/warpview-editor.umd.js",
+  "module": "fesm2015/warpview-editor.js",
+  "es2015": "fesm2015/warpview-editor.js",
+  "esm2015": "esm2015/warpview-editor.js",
+  "fesm2015": "fesm2015/warpview-editor.js",
+  "typings": "warpview-editor.d.ts",
+  "metadata": "warpview-editor.metadata.json",
+  "sideEffects": false
+}
