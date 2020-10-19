@@ -14,10 +14,10 @@
   ~  limitations under the License.
   ~
   -->
-
 <div id="chartContainer" #chartContainer (mouseleave)="hideTooltip()">
   <button *ngIf="displayExpander && plotlyData && plotlyData.length > 1" class="expander" (click)="toggle()"
-          title="collapse/expand">+/-</button>
+          title="collapse/expand">+/-
+  </button>
   <div #toolTip class="wv-tooltip"></div>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <div *ngIf="!loading && !noData">

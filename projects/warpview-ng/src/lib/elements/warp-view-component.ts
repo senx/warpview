@@ -21,7 +21,7 @@ import {Logger} from '../utils/logger';
 import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
-import { ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild, Directive } from '@angular/core';
+import {Directive, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
 import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
@@ -30,6 +30,7 @@ import {Config} from 'plotly.js';
 export type VisibilityState = 'unknown' | 'nothingPlottable' | 'plottablesAllHidden' | 'plottableShown';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export abstract class WarpViewComponent {
   @ViewChild('toolTip', {static: true}) toolTip: ElementRef;
   @ViewChild('graph') graph: PlotlyComponent;
@@ -260,18 +261,20 @@ export abstract class WarpViewComponent {
     return html;
   }
 
-  protected initChart(el: ElementRef): boolean {
+  protected initChart(el: ElementRef, resize = true): boolean {
     this.noData = false;
     const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
     if (this._responsive) {
-      if (parentSize.height === 0 || parentSize.width === 0 || this.height !== parentSize.height) {
-        this.height = parentSize.height;
-        this.width = parentSize.width;
-        setTimeout(() => this.initChart(el), 100);
-        return;
-      } else {
-        this.height = parentSize.height;
-        this.width = parentSize.width;
+      if (resize) {
+        if (parentSize.height === 0 || parentSize.width === 0 || this.height !== parentSize.height) {
+          this.height = parentSize.height;
+          this.width = parentSize.width;
+          setTimeout(() => this.initChart(el), 100);
+          return;
+        } else {
+          this.height = parentSize.height;
+          this.width = parentSize.width;
+        }
       }
     }
     this.LOG.debug(['initiChart', 'this._data'], this._data, this._options);

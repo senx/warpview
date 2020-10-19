@@ -15,18 +15,7 @@
  *
  */
 
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  NgZone,
-  Output,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, NgZone, Output, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
 import {ChartLib} from '../../utils/chart-lib';
@@ -46,7 +35,6 @@ import {ChartBounds} from '../../model/chartBounds';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent {
-  @ViewChild('chartContainer', {static: true}) chartContainer: ElementRef;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
@@ -98,20 +86,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
 
   displayExpander = true;
-
-  // tslint:disable-next-line:variable-name
-  private _type = 'line';
-  private visibility: boolean[] = [];
-  private expanded = false;
-  private _standalone = true;
-  private trimmed;
-  private maxTick = Number.MIN_VALUE;
-  private minTick = Number.MAX_VALUE;
-  private visibleGtsId = [];
-  private gtsId = [];
-  private dataHashset = {};
-  private lineHeight = 30;
-  private chartBounds: ChartBounds = new ChartBounds();
   layout: Partial<any> = {
     showlegend: false,
     hovermode: 'closest',
@@ -146,6 +120,19 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     },
   };
   marginLeft = 50;
+  // tslint:disable-next-line:variable-name
+  private _type = 'line';
+  private visibility: boolean[] = [];
+  private expanded = false;
+  private _standalone = true;
+  private trimmed;
+  private maxTick = Number.MIN_VALUE;
+  private minTick = Number.MAX_VALUE;
+  private visibleGtsId = [];
+  private gtsId = [];
+  private dataHashset = {};
+  private lineHeight = 30;
+  private chartBounds: ChartBounds = new ChartBounds();
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -217,8 +204,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   drawChart(reparseNewData: boolean = false) {
-    if (!this.initChart(this.el)) {
+    if (!this.initChart(this.el, false)) {
       this.el.nativeElement.style.display = 'none';
+      setTimeout(() => this.drawChart(reparseNewData), 200);
       return;
     }
     this.el.nativeElement.style.display = 'block';
@@ -365,11 +353,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
       timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
     });
-    /*  if (timestampMode || this._options.timeMode === 'timestamp') {
-        this.layout.xaxis.type = 'linear';
-      } else {
-        this.layout.xaxis.type = 'date';
-      }*/
+    if (timestampMode || this._options.timeMode === 'timestamp') {
+      this.layout.xaxis.type = 'linear';
+    } else {
+      this.layout.xaxis.type = 'date';
+    }
     gtsList.forEach((gts: GTS, i) => {
       if (gts.v) {
         const size = gts.v.length;

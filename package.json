@@ -45,7 +45,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "gen": "cd projects/warpview-ng/src/lib/elements && ng g component --module=warp-view-angular.module --entryComponent=true --skipTests=true --style=scss --viewEncapsulation=ShadowDom --export=true",
-    "gh": "yarn copy && ng build --prod --base-href /warpview/ && npx ngh --dir=dist/warpview-editor --repo=git@github.com:senx/warpview.git",
+    "gh": "ng build --prod --base-href /warpview/ && npx ngh --dir=dist/warpview --repo=git@github.com:senx/warpview.git",
     "build:elements": "ng build --prod --single-bundle=true --output-hashing=none  --project elements && node scripts/build.js",
     "build:lib2": "ngc -p src/tsconfig.elements-ng.json &&  ./node_modules/node-sass/bin/node-sass ./src/styles.scss ./dist/warpview-ng/style.css",
     "clean": "rm -fr ./elements && rm -fr ./dist",
