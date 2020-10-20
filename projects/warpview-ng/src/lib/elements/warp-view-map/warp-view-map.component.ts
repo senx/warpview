@@ -240,6 +240,7 @@ export class WarpViewMapComponent implements OnInit {
     }
     let dataList: any[];
     let params: any[];
+    this.LOG.debug(['drawMap', 'this._options'], {... this._options});
     if (gts.data) {
       dataList = gts.data as any[];
       this._options = ChartLib.mergeDeep<Param>(gts.globalParams || {}, this._options);
@@ -330,6 +331,7 @@ export class WarpViewMapComponent implements OnInit {
     this.LOG.debug(['displayMap'], 'this.geoJson', this.geoJson);
     if (this._options.map.mapType !== 'NONE') {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
+      this.LOG.debug(['displayMap'], 'map', map);
       const mapOpts: TileLayerOptions = {
         maxZoom: 24,
         maxNativeZoom: 19,
@@ -357,8 +359,6 @@ export class WarpViewMapComponent implements OnInit {
         zoomAnimation: true,
         maxZoom: 24
       });
-      this.tilesLayer.addTo(this._map);
-      this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
       this.geoJsonLayer.bringToBack();
       this.tilesLayer.bringToBack(); // TODO: tester
       this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
@@ -374,6 +374,8 @@ export class WarpViewMapComponent implements OnInit {
         }
       });
     }
+    this.tilesLayer.addTo(this._map);
+    this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
     // For each path
     const pathDataSize = (this.pathData || []).length;
     for (let i = 0; i < pathDataSize; i++) {
