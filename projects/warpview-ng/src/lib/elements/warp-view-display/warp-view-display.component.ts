@@ -95,7 +95,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
         break;
       case 'duration':
         const start = GTSLib.toISOString(parseInt(display, 10), this.divider, this._options.timeZone);
-        this.displayDuration(start);
+        this.displayDuration(moment(start));
         break;
       case 'custom':
       case 'timestamp':
