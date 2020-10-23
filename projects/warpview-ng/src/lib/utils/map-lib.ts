@@ -257,12 +257,11 @@ export class MapLib {
     for (let i = 0; i < size; i++) {
       const gts = data.gts[i];
       if (GTSLib.isPositionArray(gts) && (hiddenData || []).filter(id => id === gts.id).length === 0) {
-        this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params[i]);
+        this.LOG.debug(['toLeafletMapPositionArray'], gts, data.params ? data.params[i] : '');
         const posArray = gts;
-        const params = data.params[i] || {};
+        const params = data.params ? data.params[i] || {} : {};
         MapLib.extractCommonParameters(posArray, params, i, scheme);
         posArray.render = params.render || 'dots';
-
         posArray.maxValue = params.maxValue || 0;
         posArray.minValue = params.minValue || 0;
         posArray.line = params.hasOwnProperty('line') ? params.line : false;

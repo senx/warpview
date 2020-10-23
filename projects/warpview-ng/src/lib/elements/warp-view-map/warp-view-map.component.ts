@@ -374,7 +374,7 @@ export class WarpViewMapComponent implements OnInit {
         }
       });
     }
-    this.tilesLayer.addTo(this._map);
+    this.tilesLayer.addTo(this.tileLayerGroup);
     this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
     // For each path
     const pathDataSize = (this.pathData || []).length;
