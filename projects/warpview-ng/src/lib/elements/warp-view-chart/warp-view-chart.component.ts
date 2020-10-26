@@ -26,7 +26,7 @@ import {VisibilityState, WarpViewComponent} from '../warp-view-component';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {Subject} from 'rxjs';
-import {debounceTime, throttleTime} from 'rxjs/operators';
+import {throttleTime} from 'rxjs/operators';
 import {Timsort} from '../../utils/timsort';
 
 @Component({
@@ -181,11 +181,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     }
     this.layout = {...this.layout};
     this.highliteCurve.pipe(throttleTime(200)).subscribe(value => {
-        this.graph.restyleChart({opacity: 0.4}, value.off);
-        this.graph.restyleChart({opacity: 1}, value.on);
+      this.graph.restyleChart({opacity: 0.4}, value.off);
+      this.graph.restyleChart({opacity: 1}, value.on);
     });
     this.unhighliteCurve.pipe(throttleTime(200)).subscribe(value => {
-        this.graph.restyleChart({opacity: 1}, value);
+      this.graph.restyleChart({opacity: 1}, value);
     });
     this.loading = false;
   }
@@ -275,9 +275,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const label = GTSLib.serializeGtsMetadata(gts);
           const c = ColorLib.getColor(gts.id, this._options.scheme);
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
+          const type = ((data.params || [])[i] || {type: this._type}).type || this._type;
           const series: Partial<any> = {
-            type: this._type === 'spline' ? 'scatter' : 'scattergl',
-            mode: this._type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
+            type: type === 'spline' ? 'scatter' : 'scattergl',
+            mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             // name: label,
             text: label,
             x: [],
@@ -287,7 +288,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
             connectgaps: false,
             visible: !(this._hiddenData.filter(h => h === gts.id).length > 0),
           };
-          if (this._type === 'scatter' || size < this.maxPlottable) {
+          if (type === 'scatter' || size < this.maxPlottable) {
             series.marker = {
               size: 3,
               color: new Array(size).fill(color),
@@ -295,7 +296,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               opacity: new Array(size).fill(this._type === 'scatter' || this._options.showDots ? 1 : 0)
             };
           }
-          switch (this._type) {
+          switch (type) {
             case 'spline':
               series.line.shape = 'spline';
               break;
@@ -411,7 +412,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
     this.loading = false;
     this.afterBoundsUpdate = false;
-
   }
 
   sliderChange($event: any) {
