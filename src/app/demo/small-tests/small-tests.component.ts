@@ -55,16 +55,20 @@ export class SmallTestsComponent implements OnInit {
       type: 'line',
       description: '',
       warpscript: `
- @training/dataset0
-// 30 days of data (commited datapoints count on our cluster)
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH
-// detect a counter reset and fix
-false RESETS 'gts' STORE
-// compute delta between a point and its previous sibling
-[ $gts mapper.delta 1 0 0 ] MAP
-// keep only 1000 points to draw a representative curve instead of having to draw millions points
-1000 LTTB
-`
+@training/dataset0
+$TOKEN AUTHENTICATE
+100000000 MAXOPS
+[
+NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g
+NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g
+] 'data' STORE
+
+{ 'data' $data 'params' [ { 'type' 'line' } { 'type' 'area' } ] }
+      `
     },
     {
       type: 'plot',
