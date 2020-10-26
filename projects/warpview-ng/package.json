@@ -38,8 +38,8 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
     "nouislider": "^14.6.2",
-    "plotly.js": "^1.56.0",
-    "plotly.js-dist": "^1.56.0",
+    "plotly.js": "^1.57.1",
+    "plotly.js-dist": "^1.57.1",
     "tslib": "^2.0.2"
   },
   "peerDependencies": {

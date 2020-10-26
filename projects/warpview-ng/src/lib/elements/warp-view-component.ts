@@ -188,7 +188,7 @@ export abstract class WarpViewComponent {
           if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
             setTimeout(() => this.layout = {...this.layout, ...layout});
             this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
-            this.graph.updatePlot();
+            this.graph.resize(layout);
           }
         }
       }

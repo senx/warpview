@@ -391,25 +391,37 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   relayout(data: any) {
+    let change = false;
     if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
-      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
-      this.chartBounds.msmin = data['xaxis.range'][0];
-      this.chartBounds.msmax = data['xaxis.range'][1];
-      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
-      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
+      if (this.chartBounds.msmin !== data['xaxis.range'][0] || this.chartBounds.msmax !== data['xaxis.range'][1]) {
+        this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
+        change = true;
+        this.chartBounds.msmin = data['xaxis.range'][0];
+        this.chartBounds.msmax = data['xaxis.range'][1];
+        this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
+        this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
+      }
     } else if (data['xaxis.range[0]'] && data['xaxis.range[1]']) {
-      this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range[x]'], data['xaxis.range[0]']);
-      this.chartBounds.msmin = data['xaxis.range[0]'];
-      this.chartBounds.msmax = data['xaxis.range[1]'];
-      this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
-      this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
+      if (this.chartBounds.msmin !== data['xaxis.range[0]'] || this.chartBounds.msmax !== data['xaxis.range[1]']) {
+        this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range[x]'], data['xaxis.range[0]']);
+        change = true;
+        this.chartBounds.msmin = data['xaxis.range[0]'];
+        this.chartBounds.msmax = data['xaxis.range[1]'];
+        this.chartBounds.tsmin = moment.tz(moment(this.chartBounds.msmin), this._options.timeZone).valueOf() * this.divider;
+        this.chartBounds.tsmax = moment.tz(moment(this.chartBounds.msmax), this._options.timeZone).valueOf() * this.divider;
+      }
     } else if (data['xaxis.autorange']) {
-      this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data, this.minTick, this.maxTick);
-      this.chartBounds.tsmin = this.minTick;
-      this.chartBounds.tsmax = this.maxTick;
+      if (this.chartBounds.tsmin !== this.minTick || this.chartBounds.tsmax !== this.maxTick) {
+        this.LOG.debug(['relayout', 'updateBounds', 'autorange'], data, this.minTick, this.maxTick);
+        change = true;
+        this.chartBounds.tsmin = this.minTick;
+        this.chartBounds.tsmax = this.maxTick;
+      }
     }
-    this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
-    this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
+    if (change) {
+      this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
+      this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
+    }
     this.loading = false;
     this.afterBoundsUpdate = false;
   }

@@ -140,7 +140,7 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     if (changes.debug) {
       this.debug = changes.debug.currentValue;
     }
-    if ((revision && !revision.isFirstChange()) || !!changes.layout || !!changes.data || !!changes.config) {
+    if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
       this.updatePlot();
     }
     if (!!changes.debug) {
@@ -287,5 +287,9 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   remove(div: PlotlyHTMLElement) {
     Plotlyjs.purge(div);
     delete this.plotlyInstance;
+  }
+
+  resize(layout: { width: number; height: any }) {
+    Plotlyjs.relayout(this.plotEl.nativeElement, layout);
   }
 }

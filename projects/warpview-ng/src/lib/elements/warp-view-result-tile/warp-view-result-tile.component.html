@@ -1,6 +1,6 @@
 <div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
     <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-    <div style="height: 100%" [hidden]="loading">
+    <div style="height: 100%; width: 100%" [hidden]="loading">
       <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                          [showLegend]="showLegend" [data]="dataModel" (chartDraw)="chartDrawn()"
                          *ngIf="graphs['spectrum'].indexOf(type) > -1 && !!dataModel"
