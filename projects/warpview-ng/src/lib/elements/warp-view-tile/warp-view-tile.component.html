@@ -24,7 +24,7 @@
                           [data]="{ data: error,  globalParams: {
   timeMode:  'custom', bgColor: '#D32C2E', fontColor: '#ffffff'}}"></warpview-display>
       </div>
-      <div *ngIf="!error" style="height: 100%; width: 100%" [hidden]="loading">
+      <div *ngIf="!error" style="height: 100%; width: 100%; padding-bottom: 20px" [hidden]="loading">
         <warpview-result-tile #resultTile
                               (warpViewNewOptions)="onWarpViewNewOptions($event)"
                               [debug]="debug" [type]="type"

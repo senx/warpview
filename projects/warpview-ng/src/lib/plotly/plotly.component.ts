@@ -17,6 +17,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import deepEqual from 'deep-equal';
 import * as Plotlyjs from 'plotly.js-dist';
 import {Config, Data, Layout, PlotlyHTMLElement, Plots} from 'plotly.js-dist';
 import {Logger} from '../utils/logger';
@@ -140,7 +141,9 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     if (changes.debug) {
       this.debug = changes.debug.currentValue;
     }
-    if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
+    if (!!changes.data && !deepEqual(changes.data.currentValue, changes.data.previousValue)) {
+      this.updatePlot();
+    } else if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
       this.updatePlot();
     }
     if (!!changes.debug) {
