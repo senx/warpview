@@ -38,7 +38,7 @@
   "scripts": {
     "ng": "ng",
     "sass": "./node_modules/node-sass/bin/node-sass",
-    "dev": "ng serve",
+    "dev": "node --max_old_space_size=2048 --optimize_for_size --stack_size=2048 ./node_modules/@angular/cli/bin/ng serve",
     "build": "yarn clean && yarn build:lib && yarn build:elements",
     "build:demo": "ng build --prod",
     "test": "ng test",
