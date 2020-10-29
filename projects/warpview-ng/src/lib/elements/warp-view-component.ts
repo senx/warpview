@@ -302,6 +302,7 @@ export abstract class WarpViewComponent {
       this.layout.width = this.width || parentSize.width;
       this.layout.height = this.height || parentSize.height;
     }
+    this.layout.showLegend = !!this._options.showLegend;
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     this.loading = false;
     this.chartDraw.emit();

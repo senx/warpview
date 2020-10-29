@@ -73,6 +73,7 @@
                       [showLegend]="showLegend" [data]="dataModel"
                       *ngIf="graphs['gauge'].indexOf(type) > -1 && !!dataModel"
                       [responsive]="true"></warpview-gauge>
+
       <warpview-annotation [debug]="debug" [unit]="unit" [options]="_options"
                            (chartDraw)="chartDrawn()"
                            [showLegend]="showLegend" [data]="dataModel"

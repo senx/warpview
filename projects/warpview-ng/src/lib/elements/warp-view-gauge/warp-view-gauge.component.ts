@@ -199,6 +199,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
             },
             bar: {
               color: ColorLib.transparentize(color),
+              thickness: 1,
               line: {
                 width: 1,
                 color

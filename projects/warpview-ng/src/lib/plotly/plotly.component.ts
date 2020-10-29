@@ -8,16 +8,12 @@ import {
   IterableDiffers,
   KeyValueDiffer,
   KeyValueDiffers,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
-  SimpleChanges,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import deepEqual from 'deep-equal';
 import * as Plotlyjs from 'plotly.js-dist';
 import {Config, Data, Layout, PlotlyHTMLElement, Plots} from 'plotly.js-dist';
 import {Logger} from '../utils/logger';
@@ -34,10 +30,13 @@ export interface Figure {
   styleUrls: ['./plotly.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom
 })
-export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
+export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   protected defaultClassName = 'js-plotly-plot';
   protected LOG: Logger;
-
+  private _data;
+  private _layout;
+  private _config;
+  private _debug = false;
   public plotlyInstance: PlotlyHTMLElement;
   public resizeHandler?: (instance: PlotlyHTMLElement) => void;
   public layoutDiffer: KeyValueDiffer<string, any>;
@@ -45,16 +44,73 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
   @ViewChild('plot', {static: true}) plotEl: ElementRef;
 
-  @Input() data?: Partial<any>[];
-  @Input() layout?: Partial<any>;
-  @Input() config?: Partial<Config>;
+  /*
+   this.LOG.debug(['ngOnChanges'], changes);
+      const revision: SimpleChange = changes.revision;
+      if (changes.debug) {
+        this.debug = changes.debug.currentValue;
+      }
+      if (!!changes.data && !deepEqual(changes.data.currentValue, changes.data.previousValue)) {
+        this.updatePlot();
+      } else if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
+        this.updatePlot();
+      }
+      if (!!changes.debug) {
+        this.LOG.setDebug(changes.debug.currentValue);
+      }
+      this.updateWindowResizeHandler();
+      this.LOG.debug(['ngOnChanges'], changes);
+   */
+  @Input() set data(data: Partial<any>[]) {
+    this._data = data;
+    this.updatePlot();
+    this.updateWindowResizeHandler();
+  }
+
+  get data(): Partial<any>[] {
+    return this._data;
+  }
+
+  @Input() set layout(layout: Partial<any>) {
+    this._layout = layout;
+    if (!!this._data && !!this.plotEl.nativeElement) {
+      try {
+        Plotlyjs.relayout(this.plotEl.nativeElement, layout);
+        this.updateWindowResizeHandler();
+      } catch (e) {
+        //
+      }
+    }
+  }
+
+  get layout(): Partial<any> {
+    return this._layout;
+  }
+
+  @Input() set config(config: Partial<Config>) {
+    this._config = config;
+    this.updatePlot();
+    this.updateWindowResizeHandler();
+  }
+
+  get config(): Partial<Config> {
+    return this._config;
+  }
+
+  @Input() set debug(debug: boolean) {
+    this._debug = debug;
+  }
+
+  get debug(): boolean {
+    return this._debug;
+  }
+
   @Input() frames?: Partial<any>[];
   @Input() style?: { [key: string]: string };
 
   @Input() divId?: string;
   @Input() revision = 0;
   @Input() className?: string | string[];
-  @Input() debug = false;
   @Input() useResizeHandler = false;
 
   @Input() updateOnLayoutChange = true;
@@ -133,24 +189,6 @@ export class PlotlyComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     const figure = this.createFigure();
     this.purge.emit(figure);
     this.remove(this.plotlyInstance);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.LOG.debug(['ngOnChanges'], changes);
-    const revision: SimpleChange = changes.revision;
-    if (changes.debug) {
-      this.debug = changes.debug.currentValue;
-    }
-    if (!!changes.data && !deepEqual(changes.data.currentValue, changes.data.previousValue)) {
-      this.updatePlot();
-    } else if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
-      this.updatePlot();
-    }
-    if (!!changes.debug) {
-      this.LOG.setDebug(changes.debug.currentValue);
-    }
-    this.updateWindowResizeHandler();
-    this.LOG.debug(['ngOnChanges'], changes);
   }
 
   ngDoCheck() {
