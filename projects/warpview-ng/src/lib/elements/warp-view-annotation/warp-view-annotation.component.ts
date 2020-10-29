@@ -229,7 +229,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.el.nativeElement.style.height = calculatedHeight + 'px';
     this.height = calculatedHeight;
     this.layout.height = this.height;
-    this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight);
+    this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight, this.expanded);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -246,9 +246,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       this.layout.xaxis.type = 'date';
     }
     this.plotlyConfig.scrollZoom = true;
-    this.plotlyConfig = {...this.plotlyConfig};
     this.layout.xaxis.showgrid = false;
-    this.layout = {...this.layout};
+    setTimeout(() => {
+      this.plotlyConfig = {...this.plotlyConfig};
+      this.layout = {...this.layout};
+    });
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
     this.loading = false;
   }
