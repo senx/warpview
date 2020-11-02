@@ -71,12 +71,19 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
       verticalGrid: true,
       tickPadding: 6,
     },
+    line: {
+      height: 20,
+    },
     indicator: false,
     label: {
       text: row => row.name,
     },
+    metaballs: {
+      blurDeviation: 7
+    },
     drop: {
-      date: d => new Date(d.date),
+      radius: 4,
+      date: d => d.date.toDate(),
       color: d => d.color,
       onMouseOver: g => {
         this.LOG.debug(['onMouseOver'], g);
@@ -93,7 +100,7 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
         t.html(`<div class="tooltip-body">
 <b class="tooltip-date">${this._options.timeMode === 'timestamp'
           ? g.date
-          : (moment(g.date.valueOf()).utc().toISOString() || '')}</b>
+          : (g.date.toISOString() || '')}</b>
 <div><i class="chip"  style="background-color: ${ColorLib.transparentize(g.color, 0.7)};border: 2px solid ${g.color};"></i>
 ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 </div></div>`
@@ -173,7 +180,6 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 
   protected convert(data: DataModel): any[] {
     this.LOG.debug(['convert'], data);
-    let labelsSize = 0;
     const gtsList = GTSLib.flatDeep(data.data as any[]);
     const dataList = [];
     this.LOG.debug(['convert', 'gtsList'], gtsList);
@@ -184,8 +190,7 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
       const c = ColorLib.getColor(gts.id || i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
       const gtsName = GTSLib.serializeGtsMetadata(gts);
-      labelsSize = Math.max(gtsName.length * 8);
-      const dataSet = {name: gtsName, color, data: []};
+      const dataSet = {name: '', color, data: []};
       const size = (gts.v || []).length;
       for (let v = 0; v < size; v++) {
         const point = (gts.v || [])[v];
@@ -197,16 +202,16 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
           value = 1;
         }
         dataSet.data.push({
-          date: moment.tz(moment.utc(ts / this.divider), this._options.timeZone).toDate(),
+          date: moment.tz(moment.utc(ts / this.divider), this._options.timeZone),
           color,
           value,
-          name: dataSet.name
+          name: gtsName
         });
       }
       dataList.push(dataSet);
     });
     this.LOG.debug(['convert', 'dataList'], dataList);
-    this.eventConf.label ['width'] = labelsSize;
+    this.eventConf.label ['width'] = 0;
     this.eventConf  ['range'] = {
       start: moment.tz(moment.utc(this.minTick / this.divider), this._options.timeZone).toDate(),
       end: moment.tz(moment.utc(this.maxTick / this.divider), this._options.timeZone).toDate(),
