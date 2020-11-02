@@ -1,0 +1,32 @@
+/*
+ *  Copyright 2020  SenX S.A.S.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+/**
+ *
+ */
+export class Datum {
+}
+/**
+ *
+ */
+export class Summary {
+}
+/**
+ *
+ */
+export class Detail {
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGF0dW0uanMiLCJzb3VyY2VSb290IjoiL2hvbWUveGF2aWVyL3dvcmtzcGFjZS93YXJwLXZpZXcvcHJvamVjdHMvd2FycHZpZXctbmcvIiwic291cmNlcyI6WyJzcmMvbGliL2VsZW1lbnRzL3dhcnAtdmlldy1kcmlsbC1kb3duL21vZGVsL2RhdHVtLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7R0FlRztBQUlIOztHQUVHO0FBQ0gsTUFBTSxPQUFPLEtBQUs7Q0FLakI7QUFFRDs7R0FFRztBQUNILE1BQU0sT0FBTyxPQUFPO0NBTW5CO0FBRUQ7O0dBRUc7QUFDSCxNQUFNLE9BQU8sTUFBTTtDQU1sQiIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiAgQ29weXJpZ2h0IDIwMjAgIFNlblggUy5BLlMuXG4gKlxuICogIExpY2Vuc2VkIHVuZGVyIHRoZSBBcGFjaGUgTGljZW5zZSwgVmVyc2lvbiAyLjAgKHRoZSBcIkxpY2Vuc2VcIik7XG4gKiAgeW91IG1heSBub3QgdXNlIHRoaXMgZmlsZSBleGNlcHQgaW4gY29tcGxpYW5jZSB3aXRoIHRoZSBMaWNlbnNlLlxuICogIFlvdSBtYXkgb2J0YWluIGEgY29weSBvZiB0aGUgTGljZW5zZSBhdFxuICpcbiAqICAgIGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMFxuICpcbiAqICBVbmxlc3MgcmVxdWlyZWQgYnkgYXBwbGljYWJsZSBsYXcgb3IgYWdyZWVkIHRvIGluIHdyaXRpbmcsIHNvZnR3YXJlXG4gKiAgZGlzdHJpYnV0ZWQgdW5kZXIgdGhlIExpY2Vuc2UgaXMgZGlzdHJpYnV0ZWQgb24gYW4gXCJBUyBJU1wiIEJBU0lTLFxuICogIFdJVEhPVVQgV0FSUkFOVElFUyBPUiBDT05ESVRJT05TIE9GIEFOWSBLSU5ELCBlaXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLlxuICogIFNlZSB0aGUgTGljZW5zZSBmb3IgdGhlIHNwZWNpZmljIGxhbmd1YWdlIGdvdmVybmluZyBwZXJtaXNzaW9ucyBhbmRcbiAqICBsaW1pdGF0aW9ucyB1bmRlciB0aGUgTGljZW5zZS5cbiAqXG4gKi9cblxuaW1wb3J0IHtNb21lbnR9IGZyb20gJ21vbWVudCc7XG5cbi8qKlxuICpcbiAqL1xuZXhwb3J0IGNsYXNzIERhdHVtIHtcbiAgZGF0ZTogTW9tZW50O1xuICBzdW1tYXJ5PzogU3VtbWFyeVtdO1xuICB0b3RhbD86IG51bWJlcjtcbiAgZGV0YWlscz86IERldGFpbFtdO1xufVxuXG4vKipcbiAqXG4gKi9cbmV4cG9ydCBjbGFzcyBTdW1tYXJ5IHtcbiAgY29sb3I/OiBzdHJpbmc7XG4gIGlkPzogbnVtYmVyO1xuICBuYW1lOiBzdHJpbmc7XG4gIHRvdGFsOiBudW1iZXI7XG4gIGRhdGU/OiBNb21lbnQ7XG59XG5cbi8qKlxuICpcbiAqL1xuZXhwb3J0IGNsYXNzIERldGFpbCB7XG4gIGNvbG9yPzogc3RyaW5nO1xuICBkYXRlOiBudW1iZXI7XG4gIGlkOiBudW1iZXI7XG4gIG5hbWU6IHN0cmluZztcbiAgdmFsdWU6IG51bWJlcjtcbn1cbiJdfQ==

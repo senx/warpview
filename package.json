@@ -1,0 +1,70 @@
+{
+  "name": "@senx/warpview",
+  "version": "2.0.24",
+  "keywords": [
+    "web",
+    "dataviz",
+    "web components",
+    "time series",
+    "warp10",
+    "Warp 10",
+    "WarpScript",
+    "Geo Times Series",
+    "Times Series"
+  ],
+  "description": "WarpView Elements",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/senx/warpview.git"
+  },
+  "author": "SenX <contact@senx.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/senx/warpview/issues"
+  },
+  "homepage": "https://www.warp10.io",
+  "dependencies": {
+    "angular-resize-event": "^2.0.0",
+    "canvas-gauges": "^2.1.7",
+    "d3": "^5.15.0",
+    "deep-equal": "^2.0.4",
+    "event-drops": "^1.3.0",
+    "fitty": "^2.3.2",
+    "leaflet": "1.7.1",
+    "leaflet-ant-path": "^1.3.0",
+    "leaflet.glify": "^3.0.0",
+    "leaflet.heat": "^0.2.0",
+    "leaflet.markercluster": "^1.4.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.31",
+    "nouislider": "^14.6.2",
+    "plotly.js": "^1.57.1",
+    "plotly.js-dist": "^1.57.1",
+    "tslib": "^2.0.2"
+  },
+  "peerDependencies": {
+    "@angular/animations": "~10.1.5",
+    "@angular/common": "~10.1.5",
+    "@angular/compiler": "~10.1.5",
+    "@angular/core": "~10.1.5",
+    "@angular/elements": "^10.1.5",
+    "@angular/platform-browser": "~10.1.5",
+    "@angular/platform-browser-dynamic": "~10.1.5",
+    "@webcomponents/custom-elements": "^1.4.2",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
+    "classlist.js": "^1.1.20150312",
+    "core-js": "^2.5.4",
+    "document-register-element": "1.14.10",
+    "rxjs": "~6.6.3",
+    "web-animations-js": "^2.3.2",
+    "zone.js": "~0.11.1"
+  },
+  "main": "bundles/warpview.umd.js",
+  "module": "fesm2015/warpview.js",
+  "es2015": "fesm2015/warpview.js",
+  "esm2015": "esm2015/warpview.js",
+  "fesm2015": "fesm2015/warpview.js",
+  "typings": "warpview.d.ts",
+  "metadata": "warpview.metadata.json",
+  "sideEffects": false
+}
