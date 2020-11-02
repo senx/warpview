@@ -31,22 +31,24 @@
 <div id="welcome">
   <h4>Code</h4>
   <pre><code class="language-markup">
-&lt;html>
-  &lt;head>
-    &lt;title>Test&lt;/title>
-    &lt;script src="warpview-elements.js">&lt;/script>
-    <style>
-      warp-view-tile {
-        opacity: 0;
-      }
-      warp-view-tile >div {
-        opacity: 1;
-      }
-    </style>
-  &lt;/head>
-  &lt;body>
-    &lt;warp-view-spinner  message="Spinner sample" />
-  &lt;/body>
+    &lt;html>
+&lt;head>
+  &lt;title>Test&lt;/title>
+
+&lt;/head>
+&lt;body>
+  &lt;warp-view-spinner />
+
+  &lt;div style="width: 100%; height: 800px;">
+    &lt;warp-view-tile url="https:/warp10-backend/api/v0/exec" responsive="true" showLegend="false"
+                    chart-title="">
+
+      // WARPSCRIPT
+
+    &lt;/warp-view-tile>
+  &lt;/div>
+  &lt;script src="https://unpkg.com/@senx/warpview/elements/warpview-elements.js">&lt;/script>
+&lt;/body>
 &lt;/html>
               </code></pre>
   <h4>Result</h4>
