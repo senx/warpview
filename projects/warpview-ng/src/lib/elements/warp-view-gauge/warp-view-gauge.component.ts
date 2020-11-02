@@ -68,7 +68,6 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
-    this._autoResize = false;
   }
 
   update(options, refresh): void {
@@ -84,8 +83,9 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     if (!this.initChart(this.el)) {
       return;
     }
+    this._autoResize = this._type !== 'bullet';
     this.LOG.debug(['drawChart', 'plotlyData'], this.plotlyData, this._type);
-    this.layout.autosize = true;
+    // this.layout.autosize = true;
     this.layout.grid = {
       rows: Math.ceil(this.plotlyData.length / 2),
       columns: 2,
@@ -105,11 +105,9 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       calculatedHeight += this.layout.grid.ygap * calculatedHeight;
       this.el.nativeElement.style.height = calculatedHeight + 'px';
       (this.el.nativeElement as HTMLDivElement).style.height = calculatedHeight + 'px';
-
       this.height = calculatedHeight;
       this.layout.height = this.height;
       this.layout.autosize = false;
-      console.log(this.height, count);
     }
     this.loading = false;
   }
@@ -124,7 +122,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       return;
     }
     gtsList = GTSLib.flatDeep(gtsList);
-    const dataStruct = [];
+    let dataStruct = [];
     if (GTSLib.isGts(gtsList[0])) {
       gtsList.forEach((gts: GTS, i) => {
         let max: number = Number.MIN_VALUE;
@@ -165,36 +163,50 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
         });
       });
     }
-    let x = 0;
-    let y = -1 / (dataStruct.length / 2);
-    dataStruct.reverse();
+    //  dataStruct.reverse();
     this.LOG.debug(['convert', 'dataStruct'], dataStruct);
+    this.layout.annotations = [];
+    let count = Math.ceil(dataStruct.length / 2);
+    if (this._type === 'bullet') {
+      count = dataStruct.length;
+    }
+    const itemHeight = 1 / count;
+    let x = 0;
+    let y = -1 * itemHeight;
+
+    if (this._type === 'bullet') {
+      y = this.CHART_MARGIN;
+    }
     dataStruct.forEach((gts, i) => {
-      if (i % 2 !== 0) {
-        x = 0.5;
+      if (this._type === 'bullet') {
+        y += itemHeight;
       } else {
-        x = 0;
-        y += 1 / (dataStruct.length / 2);
+        if (i % 2 === 0) {
+          y += itemHeight;
+          x = 0;
+        } else {
+          x = 0.5;
+        }
       }
       const c = ColorLib.getColor(i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
       const domain = dataStruct.length > 1 ? {
         x: [x + this.CHART_MARGIN, x + 0.5 - this.CHART_MARGIN],
-        y: [y + this.CHART_MARGIN, y + 1 / (dataStruct.length / 2) - this.CHART_MARGIN * 2]
+        y: [y - itemHeight + this.CHART_MARGIN, y - this.CHART_MARGIN]
       } : {
         x: [0, 1],
         y: [0, 1]
       };
-      if (this._type === 'bullet' || (!!data.params && !!data.params[i] && !!data.params[i].type && data.params[i].type === 'bullet')) {
+      if (this._type === 'bullet') {
         domain.x = [0, 1];
-        domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN * 2, (i + 1) / dataStruct.length - this.CHART_MARGIN * 2];
-        this.layout.annotations = this.layout.annotations || [];
+        domain.y = [y - itemHeight + this.CHART_MARGIN * 2, y - this.CHART_MARGIN * 2];
+        // domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN * 2, (i + 1) / dataStruct.length - this.CHART_MARGIN * 2];
         this.layout.annotations.push({
           xref: 'x domain',
           yref: 'y domain',
           x: 0,
           xanchor: 'left',
-          y: (i + 1) / dataStruct.length,
+          y: (i + 1) / count + this.CHART_MARGIN,
           yanchor: 'top',
           text: gts.key,
           showarrow: false,
@@ -215,7 +227,8 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
           title: {
-            text: '', // gts.key,
+            text: this._type === 'bullet'
+            || (!!data.params && !!data.params[i] && !!data.params[i].type && data.params[i].type === 'bullet') ? '' : gts.key,
             align: 'center',
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },

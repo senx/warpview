@@ -33,7 +33,7 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
       
     </warp-view-tile>
   </div>
-  <script src="https://unpkg.com/@senx/warpview/warpview/elements/warpview-elements.js"></script>
+  <script src="https://unpkg.com/@senx/warpview/elements/warpview-elements.js"></script>
 </body>
 </html>
 ```
