@@ -266,13 +266,19 @@ export abstract class WarpViewComponent {
     const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
     if (this._responsive) {
       if (resize) {
-        if (parentSize.height === 0 || parentSize.width === 0 || this.height !== parentSize.height) {
-          this.height = parentSize.height;
+        if (
+          this._autoResize && (parentSize.height === 0 || this.height !== parentSize.height)
+          || parentSize.width === 0 || this.width !== parentSize.width) {
+          if (this._autoResize) {
+            this.height = parentSize.height;
+          }
           this.width = parentSize.width;
           setTimeout(() => this.initChart(el), 100);
           return;
         } else {
-          this.height = parentSize.height;
+          if (this._autoResize) {
+            this.height = parentSize.height;
+          }
           this.width = parentSize.width;
         }
       }

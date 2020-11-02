@@ -204,9 +204,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   drawChart(reparseNewData: boolean = false) {
-    if (!this.initChart(this.el, false)) {
-      this.el.nativeElement.style.display = 'none';
-      setTimeout(() => this.drawChart(reparseNewData), 200);
+    this.height = 0
+    if (!this.initChart(this.el)) {
       return;
     }
     this.el.nativeElement.style.display = 'block';

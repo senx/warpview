@@ -26,7 +26,6 @@ import {Logger} from '../../utils/logger';
 import {ChartLib} from '../../utils/chart-lib';
 import {Param} from '../../model/param';
 import {GTSLib} from '../../utils/gts.lib';
-import {Utils} from 'tslint';
 import {GTS} from '../../model/GTS';
 
 @Component({
@@ -42,8 +41,20 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   }
 
   private CHART_MARGIN = 0.05;
+  private lineHeight = 50;
   // tslint:disable-next-line:variable-name
   private _type = 'gauge'; // gauge or bullet
+  layout: Partial<any> = {
+    showlegend: false,
+    autosize: false,
+    autoexpand: false,
+    margin: {
+      t: 10,
+      b: 2,
+      r: 10,
+      l: 10
+    },
+  };
 
   constructor(
     public el: ElementRef,
@@ -57,6 +68,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
+    this._autoResize = false;
   }
 
   update(options, refresh): void {
@@ -83,13 +95,21 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     };
     this.layout.margin = {t: 25, r: 25, l: 25, b: 25};
     if (this._type === 'bullet') {
-      this.layout.height = this.plotlyData.length * 100;
-      (this.el.nativeElement as HTMLDivElement).style.height = this.layout.height + 'px';
-      this.layout.margin.l = 300;
+      this.layout.height = 100;
       this.layout.yaxis = {
         automargin: true
       };
-      this.layout.grid = {rows: this.plotlyData.length, columns: 1, pattern: 'independent'};
+      this.layout.grid = {rows: this.plotlyData.length, columns: 1, pattern: 'independent', ygap: 0.5};
+      const count = this.plotlyData.length;
+      let calculatedHeight = this.lineHeight * count + this.layout.margin.t + this.layout.margin.b;
+      calculatedHeight += this.layout.grid.ygap * calculatedHeight;
+      this.el.nativeElement.style.height = calculatedHeight + 'px';
+      (this.el.nativeElement as HTMLDivElement).style.height = calculatedHeight + 'px';
+
+      this.height = calculatedHeight;
+      this.layout.height = this.height;
+      this.layout.autosize = false;
+      console.log(this.height, count);
     }
     this.loading = false;
   }
@@ -107,7 +127,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     const dataStruct = [];
     if (GTSLib.isGts(gtsList[0])) {
       gtsList.forEach((gts: GTS, i) => {
-        let max: number =  Number.MIN_VALUE;
+        let max: number = Number.MIN_VALUE;
         const values = (gts.v || []);
         const val = values[values.length - 1] || [];
         let value = 0;
@@ -166,8 +186,24 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
         y: [0, 1]
       };
       if (this._type === 'bullet' || (!!data.params && !!data.params[i] && !!data.params[i].type && data.params[i].type === 'bullet')) {
-        domain.x = [this.CHART_MARGIN, 1 - this.CHART_MARGIN];
-        domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN, (i + 1) / dataStruct.length - this.CHART_MARGIN];
+        domain.x = [0, 1];
+        domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN * 2, (i + 1) / dataStruct.length - this.CHART_MARGIN * 2];
+        this.layout.annotations = this.layout.annotations || [];
+        this.layout.annotations.push({
+          xref: 'x domain',
+          yref: 'y domain',
+          x: 0,
+          xanchor: 'left',
+          y: (i + 1) / dataStruct.length,
+          yanchor: 'top',
+          text: gts.key,
+          showarrow: false,
+          align: 'left',
+          font: {
+            size: 14,
+            color: this.getLabelColor(this.el.nativeElement)
+          }
+        });
       }
       dataList.push(
         {
@@ -179,7 +215,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
           title: {
-            text: gts.key,
+            text: '', // gts.key,
             align: 'center',
             font: {color: this.getLabelColor(this.el.nativeElement)}
           },
