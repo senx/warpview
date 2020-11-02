@@ -15,7 +15,7 @@
  *
  */
 
-window.addEventListener('load', function() {
+window.addEventListener('DOMContentLoaded', function() {
   const scriptPath = function () {
     let scripts = document.getElementsByTagName('SCRIPT');
     let path = '';

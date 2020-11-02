@@ -44,6 +44,7 @@
     z-index: 0;
     pointer-events: none;
     border-left: dashed 2px var(--warp-view-bar-color);
+    height: calc(100% - 75px);
   }
 
   .inline {
@@ -72,6 +73,7 @@
     max-width: 100%;
     padding-top: 20px;
     margin-bottom: 0;
+    height: auto;
   }
 
   #focusablePlotDiv:focus {

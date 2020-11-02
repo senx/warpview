@@ -120,10 +120,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     },
   };
   marginLeft = 50;
+  expanded = false;
   // tslint:disable-next-line:variable-name
   private _type = 'line';
   private visibility: boolean[] = [];
-  private expanded = false;
   private _standalone = true;
   private trimmed;
   private maxTick = Number.MIN_VALUE;
@@ -204,7 +204,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   drawChart(reparseNewData: boolean = false) {
-    this.height = 0
+    this.layout.margin.l = !!this._standalone ? 10 : 50;
+    this.layout.margin.b = !!this._standalone ? 50 : 1;
+    this.height = this.lineHeight + this.layout.margin.t + this.layout.margin.b;
     if (!this.initChart(this.el)) {
       return;
     }
@@ -222,8 +224,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.xaxis.showticklabels = !!this._standalone;
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
-    this.layout.margin.l = !!this._standalone ? 10 : 50;
-    this.layout.margin.b = !!this._standalone ? 50 : 1;
     const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
     this.el.nativeElement.style.height = calculatedHeight + 'px';
     this.height = calculatedHeight;
@@ -249,9 +249,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     setTimeout(() => {
       this.plotlyConfig = {...this.plotlyConfig};
       this.layout = {...this.layout};
+      this.loading = false;
     });
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
-    this.loading = false;
   }
 
   relayout(data: any) {
@@ -453,6 +453,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       ];
     }
     this.layout.xaxis = x;
+    this.noData = dataset.length === 0;
     return dataset;
   }
 
