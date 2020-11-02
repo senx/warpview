@@ -17,16 +17,14 @@
 
 <!--suppress HtmlUnknownTag -->
 <h1>Warp View</h1>
-<p>This a collection of charting web components dedicated to <a href="https://www.warp10.io"
-                                                                target="_blank">Warp 10™</a>
+<p>This a collection of charting web components dedicated to
+  <a href="https://www.warp10.io" target="_blank">Warp 10™</a>
 </p>
 
 <warpview-toggle text1="Blue pill" text2="Red pill"></warpview-toggle>
 <warpview-slider [min]="min" [max]="max" [value]="min" [step]="-10" [mode]="'date'"
                  [debug]="true"
                  (change)="onSliderChange($event)"></warpview-slider>
-<warpview-range-slider [min]="min" [max]="max" [minValue]="min" [maxValue]="max" [step]="-10"
-                       (change)="onRangeSliderChange($event)"></warpview-range-slider>
 <h2>Usage</h2>
 <div id="welcome">
   <h4>Code</h4>
