@@ -99,9 +99,9 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
               series.y.push(value[2]);
               series.z.push(value[3]);
             } else { // time value
-              series.x.push(value[0]);
-              series.y.push(value[1]);
-              series.z.push(1);
+              series.y.push(value[0]);
+              series.z.push(value[1]);
+              series.x.push(i);
             }
           });
           dataset.push(series);
