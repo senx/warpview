@@ -319,10 +319,10 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const values = gts.v.map(t => t[t.length - 1]);
 
           if (size > 0) {
-            this.minTick = this.minTick || ticks[0];
-            this.maxTick = this.maxTick || ticks[0];
             for (let v = 1; v < size; v++) {
-              const val = ticks[v];
+              const ts = ticks[v];
+              this.minTick = ts <= this.minTick ? ts : this.minTick;
+              this.maxTick = ts >= this.maxTick ? ts : this.maxTick;
             }
           }
           if (timestampMode || this._options.timeMode === 'timestamp') {
@@ -355,7 +355,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         }
       }
     }
-    this.LOG.debug(['convert'], 'end', dataset, GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone), GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone));
+    this.LOG.debug(['convert'], 'end', dataset, this.minTick, this.maxTick,
+      GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
+      GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone));
     this.noData = dataset.length === 0;
     this.parsing = false;
     return dataset;
