@@ -66,12 +66,12 @@ export class WarpViewMapComponent implements OnInit {
 
   @Input('options') set options(options: Param) {
     this.LOG.debug(['onOptions'], options);
-    if (!deepEqual(this._options, options)) {
+    if (!deepEqual(this._options, options, {strict: true})) {
       const reZoom =
         options.map.startZoom !== this._options.map.startZoom
         || options.map.startLat !== this._options.map.startLat
         || options.map.startLong !== this._options.map.startLong;
-      this._options = options;
+      this._options = {...options as Param};
       this.divider = GTSLib.getDivider(this._options.timeUnit);
       this.drawMap(reZoom);
     }

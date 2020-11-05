@@ -21,8 +21,9 @@ export class ChartLib {
   static DEFAULT_WIDTH = 640;
   static DEFAULT_HEIGHT = 480;
 
-  static mergeDeep<T>(base: T, extended: any) {
+  static mergeDeep<T>(base: T, ext: any) {
     const obj = {... base} as T;
+    const extended = {... ext} as T;
     for (const prop in extended || {}) {
       // If property is an object, merge properties
       if (Object.prototype.toString.call(extended[prop]) === '[object Object]') {

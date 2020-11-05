@@ -22,7 +22,6 @@ import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {GTSLib} from '../utils/gts.lib';
 import {Directive, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
-import deepEqual from 'deep-equal';
 import {Size, SizeService} from '../services/resize.service';
 import {PlotlyComponent} from '../plotly/plotly.component';
 import {Config} from 'plotly.js';
@@ -95,11 +94,11 @@ export abstract class WarpViewComponent {
     if (typeof options === 'string') {
       options = JSON.parse(options);
     }
-    if (!deepEqual(options, this._options)) {
-      this.LOG.debug(['onOptions', 'changed'], options);
-      this._options = options as Param;
-      this.update(this._options, false);
-    }
+    // if (!deepEqual(options, this._options, {strict: true})) {
+    this.LOG.debug(['onOptions', 'changed'], options);
+    this._options = ChartLib.mergeDeep<Param>(options as Param, {});
+    this.update(this._options, false);
+    // }
   }
 
   @Input('data') set data(data: string | DataModel | GTS[]) {

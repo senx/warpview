@@ -33,6 +33,14 @@
             <option *ngFor="let f of chartTypes" [value]="f.value">{{f.label}}</option>
           </select>
         </div>
+        <div class="input-group">
+          <label for="mapType"></label>
+          <select name="mapType" class="form-control form-control-sm" id="mapType"
+                  [(ngModel)]="mapType"
+                  (ngModelChange)="updateMapType($event)">
+            <option *ngFor="let f of mapTypes" [value]="f">{{f}}</option>
+          </select>
+        </div>
       </form>
       <p [innerHTML]="tests[currentTest].description"></p>
 

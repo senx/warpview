@@ -56,6 +56,8 @@ import {WarpViewResultTileComponent} from './src/lib/elements/warp-view-result-t
 
 export * from './src/lib/warp-view-angular.module';
 export {Param} from './src/lib/model/param';
+export {MapLib} from './src/lib/utils/map-lib';
+export {ColorLib} from './src/lib/utils/color-lib';
 
 
 export {WarpViewTileComponent} from './src/lib/elements/warp-view-tile/warp-view-tile.component';
