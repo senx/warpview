@@ -180,7 +180,7 @@ export abstract class WarpViewComponent {
           this.height = parentSize.height;
           this.width = parentSize.width;
         }
-        if (!!this.graph && this._responsive && parentSize.height > 0) {
+        if (!!this.graph && this._responsive && parentSize.height > 0 && this._autoResize) {
           const layout = {
             width: parentSize.width,
             height: this._autoResize ? parentSize.height : this.layout.height
@@ -303,10 +303,14 @@ export abstract class WarpViewComponent {
     this.layout.plot_bgcolor = 'rgba(0,0,0,0)';
     if (!this._responsive) {
       this.layout.width = this.width || ChartLib.DEFAULT_WIDTH;
-      this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
+      if (!this.height && this._autoResize) {
+        this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
+      }
     } else {
       this.layout.width = this.width || parentSize.width;
-      this.layout.height = this.height || parentSize.height;
+      if (!this.height && this._autoResize) {
+        this.layout.height = this.height || parentSize.height;
+      }
     }
     this.layout.showLegend = !!this._options.showLegend;
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);

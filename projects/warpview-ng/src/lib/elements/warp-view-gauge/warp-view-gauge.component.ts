@@ -41,7 +41,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   }
 
   private CHART_MARGIN = 0.05;
-  private lineHeight = 50;
+  private lineHeight = 70;
   // tslint:disable-next-line:variable-name
   private _type = 'gauge'; // gauge or bullet
   layout: Partial<any> = {
@@ -90,19 +90,20 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       rows: Math.ceil(this.plotlyData.length / 2),
       columns: 2,
       pattern: 'independent',
-      xgap: 0.2,
-      ygap: 0.2
+      xgap: 0,
+      ygap: 0
     };
     this.layout.margin = {t: 25, r: 25, l: 25, b: 25};
     if (this._type === 'bullet') {
       this.layout.height = 100;
-      this.layout.yaxis = {
-        automargin: true
+      this.layout.yaxis = {automargin: false};
+      this.layout.grid = {
+        rows: this.plotlyData.length, columns: 1, pattern: 'independent',
+        ygap: 0
       };
-      this.layout.grid = {rows: this.plotlyData.length, columns: 1, pattern: 'independent', ygap: 0.5};
       const count = this.plotlyData.length;
       let calculatedHeight = this.lineHeight * count + this.layout.margin.t + this.layout.margin.b;
-      calculatedHeight += this.layout.grid.ygap * calculatedHeight;
+      calculatedHeight += this.layout.grid.ygap * count;
       this.el.nativeElement.style.height = calculatedHeight + 'px';
       (this.el.nativeElement as HTMLDivElement).style.height = calculatedHeight + 'px';
       this.height = calculatedHeight;
@@ -122,7 +123,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       return;
     }
     gtsList = GTSLib.flatDeep(gtsList);
-    let dataStruct = [];
+    const dataStruct = [];
     if (GTSLib.isGts(gtsList[0])) {
       gtsList.forEach((gts: GTS, i) => {
         let max: number = Number.MIN_VALUE;
@@ -172,17 +173,14 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     }
     const itemHeight = 1 / count;
     let x = 0;
-    let y = -1 * itemHeight;
-
-    if (this._type === 'bullet') {
-      y = this.CHART_MARGIN;
-    }
+    let y = 1 + itemHeight;
+    const labelSize = 14.0 / (this.layout.height - (this.layout.margin.t + this.layout.margin.b));
     dataStruct.forEach((gts, i) => {
       if (this._type === 'bullet') {
-        y += itemHeight;
+        y -= itemHeight;
       } else {
         if (i % 2 === 0) {
-          y += itemHeight;
+          y -= itemHeight;
           x = 0;
         } else {
           x = 0.5;
@@ -191,22 +189,21 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       const c = ColorLib.getColor(i, this._options.scheme);
       const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
       const domain = dataStruct.length > 1 ? {
-        x: [x + this.CHART_MARGIN, x + 0.5 - this.CHART_MARGIN],
-        y: [y - itemHeight + this.CHART_MARGIN, y - this.CHART_MARGIN]
+        x: [x + labelSize, x + 0.5 - labelSize],
+        y: [y - itemHeight + labelSize * 2, y - labelSize * 2]
       } : {
         x: [0, 1],
         y: [0, 1]
       };
       if (this._type === 'bullet') {
         domain.x = [0, 1];
-        domain.y = [y - itemHeight + this.CHART_MARGIN * 2, y - this.CHART_MARGIN * 2];
-        // domain.y = [(i > 0 ? i / dataStruct.length : 0) + this.CHART_MARGIN * 2, (i + 1) / dataStruct.length - this.CHART_MARGIN * 2];
+        domain.y = [y - itemHeight + labelSize, y - labelSize * 2];
         this.layout.annotations.push({
           xref: 'x domain',
           yref: 'y domain',
           x: 0,
           xanchor: 'left',
-          y: (i + 1) / count + this.CHART_MARGIN,
+          y: y - labelSize / 2,
           yanchor: 'top',
           text: gts.key,
           showarrow: false,
