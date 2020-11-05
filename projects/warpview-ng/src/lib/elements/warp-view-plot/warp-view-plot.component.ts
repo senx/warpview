@@ -44,9 +44,6 @@ import {DataModel} from '../../model/dataModel';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 
-/**
- *
- */
 @Component({
   selector: 'warpview-plot',
   templateUrl: './warp-view-plot.component.html',
@@ -209,9 +206,9 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       } else if (event.source === 'annotation') {
         this.chart.updateBounds(event.bounds.min, event.bounds.max);
       }
-      this.LOG.debug(['updateBounds'],
-        GTSLib.toISOString(event.bounds.min, 1, this._options.timeZone),
-        GTSLib.toISOString(event.bounds.max, 1, this._options.timeZone));
+      this.LOG.debug(['updateBounds'], this.divider,
+        GTSLib.toISOString(event.bounds.min, this.divider, this._options.timeZone),
+        GTSLib.toISOString(event.bounds.max, this.divider, this._options.timeZone));
       this.line.nativeElement.style.left = '-100px';
     }
   }
@@ -338,6 +335,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     }
     this.gtsList = this._data;
     this._options = {...this._options};
+    this.divider = GTSLib.getDivider(this._options.timeUnit);
 
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
     this.resizeArea();

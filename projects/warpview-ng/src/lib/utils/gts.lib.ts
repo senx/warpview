@@ -355,10 +355,18 @@ export class GTSLib {
   }
 
   static toISOString(timestamp: number, divider: number, timeZone: string) {
-    if(timeZone !== 'UTC') {
+    if (timeZone !== 'UTC') {
       return moment.tz(timestamp / divider, timeZone).format();
     } else {
       return moment(timestamp / divider).toISOString();
+    }
+  }
+
+  static toTimestamp(date: string, divider: number, timeZone: string) {
+    if (timeZone !== 'UTC') {
+      return moment.tz(date, timeZone).utc().valueOf() * divider;
+    } else {
+      return moment.utc(date).valueOf() * divider;
     }
   }
 }
