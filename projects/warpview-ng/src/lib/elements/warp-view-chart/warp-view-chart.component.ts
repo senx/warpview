@@ -275,7 +275,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const type = ((data.params || [])[i] || {type: this._type}).type || this._type;
           const series: Partial<any> = {
-            type: type === 'spline' ? 'scatter' : 'scattergl',
+            type: type ===  'scattergl',
             mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             // name: label,
             text: label,
