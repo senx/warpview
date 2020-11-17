@@ -275,7 +275,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const type = ((data.params || [])[i] || {type: this._type}).type || this._type;
           const series: Partial<any> = {
-            type: type ===  'scattergl',
+            type: type === 'scattergl',
             mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             // name: label,
             text: label,
@@ -454,8 +454,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
     this._options.bounds = this._options.bounds || {};
-    /*  this._options.bounds.minDate = this.minTick;
-      this._options.bounds.maxDate = this.maxTick;*/
     const x: any = {
       tick0: undefined,
       range: [],
@@ -481,113 +479,33 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   hover(data: any) {
-    this.LOG.debug(['hover'], data);
-    let delta = Number.MAX_VALUE;
-    // tslint:disable-next-line:no-shadowed-variable
-    let point;
+    //  this.LOG.debug(['hover'], data);
+    const xaxis = data.points[0].xaxis;
+    const yaxis = data.points[0].yaxis;
+    let toHighlight;
     const curves = [];
-    this.toolTip.nativeElement.style.display = 'block';
-    if (data.points[0] && data.points[0].data.orientation !== 'h') {
-      const y = (data.yvals || [''])[0];
-      data.points.forEach(p => {
-        curves.push(p.curveNumber);
-        const d = Math.abs(p.y - y);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    } else {
-      const x: number = (data.xvals || [''])[0];
-      data.points.forEach(p => {
-        curves.push(p.curveNumber);
-        const d = Math.abs(p.x - x);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    }
-    super.hover(data, point);
-    if (point && this.highlighted !== point.curveNumber) {
-      this.highliteCurve.next({on: [point.curveNumber], off: curves});
-      this.highlighted = point.curveNumber;
-    }
-    this.pointHover.emit(data.event);
-    /*setTimeout(() => {
-      let pn = -1;
-      let tn = -1;
-      let color = [];
-      let line = {};
-      let opacity = [];
-      data.points.forEach(p => {
-        if (!!p.data.marker) {
-          color = p.data.marker.color;
-          opacity = p.data.marker.opacity;
-          line = p.data.marker.line;
-          pn = p.pointNumber;
-          tn = p.curveNumber;
-          if (pn >= 0) {
-            color[pn] = 'transparent';
-            opacity[pn] = 1;
-            const update = {marker: {color, opacity, line, size: 15}};
-            this.graph.restyleChart(update, [tn]);
-            this.LOG.debug(['hover'], 'restyleChart inner', update, [tn]);
-          }
-        }
-      });
-    })*/
+    let delta = Number.MAX_VALUE;
+    let point;
+    data.points.forEach(p => {
+      curves.push(p.curveNumber);
+      const dist = Math.abs(data.yvals[0] - p.y);
+      if (delta > dist) {
+        delta = dist;
+        toHighlight = p.curveNumber;
+        point = p;
+      }
+      data.meta = {
+        x: p.x,
+        y: p.y.toPrecision(3),
+        w: xaxis.l2p(p.x),
+        h: yaxis.l2p(p.y),
+        name: p.data.text
+      };
+    });
+    super.hover(data, toHighlight);
   }
 
   unhover(data: any) {
-    let delta = Number.MAX_VALUE;
-    // tslint:disable-next-line:no-shadowed-variable
-    let point;
-    if (data.points[0] && data.points[0].data.orientation !== 'h') {
-      const y = (data.yvals || [''])[0];
-      data.points.forEach(p => {
-        const d = Math.abs(p.y - y);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    } else {
-      const x: number = (data.xvals || [''])[0];
-      data.points.forEach(p => {
-        const d = Math.abs(p.x - x);
-        if (d < delta) {
-          delta = d;
-          point = p;
-        }
-      });
-    }
-    if (!!point && this.highlighted !== point.curveNumber) {
-      this.unhighliteCurve.next([this.highlighted]);
-      this.highlighted = undefined;
-    }
-    super.unhover(data, point);
-    /*setTimeout(() => {
-      let pn = -1;
-      let tn = -1;
-      let color = [];
-      let line = {};
-      let opacity = [];
-      data.points.forEach(p => {
-        if (!!p.data.marker) {
-          pn = p.pointNumber;
-          tn = p.curveNumber;
-          color = p.data.marker.color;
-          opacity = p.data.marker.opacity;
-          line = p.data.marker.line;
-          if (pn >= 0) {
-            color[pn] = p.data.line.color;
-            opacity[pn] = this._options.showDots ? 1 : 0;
-            const update = {marker: {color, opacity, line, size: 15}};
-            this.graph.restyleChart(update, [tn]);
-          }
-        }
-      });
-    })*/
+    super.unhover(data);
   }
 }

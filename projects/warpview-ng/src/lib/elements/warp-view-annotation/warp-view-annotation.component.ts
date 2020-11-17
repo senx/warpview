@@ -35,6 +35,7 @@ import {ChartBounds} from '../../model/chartBounds';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent {
+  @Input('height') height = 0;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
@@ -122,7 +123,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   marginLeft = 50;
   expanded = false;
   // tslint:disable-next-line:variable-name
-  private _type = 'line';
+  private _type = 'annotation';
   private visibility: boolean[] = [];
   private _standalone = true;
   private trimmed;
@@ -209,6 +210,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.margin.l = !!this._standalone ? 10 : 50;
     this.layout.margin.b = !!this._standalone ? 50 : 1;
     this.height = this.lineHeight + this.layout.margin.t + this.layout.margin.b;
+    this.layout.height = this.height;
+    this.LOG.debug(['drawChart', 'this.height'], this.height);
     if (!this.initChart(this.el)) {
       return;
     }
@@ -251,7 +254,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     setTimeout(() => {
       this.plotlyConfig = {...this.plotlyConfig};
       this.layout = {...this.layout};
-      this.loading = false;
+  //    this.loading = false;
     });
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
   }
@@ -333,7 +336,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   afterPlot(div) {
-    this.loading = false;
+   // this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     if (this.afterBoundsUpdate || this._standalone) {
@@ -359,6 +362,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   protected convert(data: DataModel): Partial<any>[] {
+    this.loading = true;
     const dataset: Partial<any>[] = [];
     let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.maxTick = Number.NEGATIVE_INFINITY;

@@ -335,57 +335,70 @@ export abstract class WarpViewComponent {
   }
 
   unhover(data?: any, point?: any) {
-    this.LOG.debug(['unhover'], data);
+    //   this.LOG.debug(['unhover'], data);
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
   }
 
-  hover(data: any, point?: any) {
+  hover(data: any, highlighted?: number) {
     this.renderer.setStyle(this.toolTip.nativeElement, 'display', 'block');
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
-    let delta = Number.MAX_VALUE;
-    const curves = [];
-    if (!point) {
-      if (data.points[0] && data.points[0].data.orientation !== 'h') {
-        const y = (data.yvals || [''])[0];
-        data.points.forEach(p => {
-          curves.push(p.curveNumber);
-          const d = Math.abs((p.y || p.r) - y);
-          if (d < delta) {
-            delta = d;
-            point = p;
-          }
-        });
-      } else {
-        const x: number = (data.xvals || [''])[0];
-        data.points.forEach(p => {
-          curves.push(p.curveNumber);
-          const d = Math.abs((p.x || p.r) - x);
-          if (d < delta) {
-            delta = d;
-            point = p;
-          }
-        });
-      }
+    const content = this.legendFormatter(
+      this._options.horizontal ?
+        (data.yvals || [''])[0] :
+        (data.xvals || [''])[0]
+      , data.points, highlighted);
+    let left = (data.event.offsetX + 20) + 'px';
+    if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
+      left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
     }
-    if (point && !!data.event) {
-      const content = this.legendFormatter(
-        this._options.horizontal ?
-          (data.yvals || [''])[0] :
-          (data.xvals || [''])[0]
-        , data.points, point.curveNumber);
-      let left = (data.event.offsetX + 20) + 'px';
-      if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-        left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+    const top = Math.min(
+      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
+      data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
+    this.moveTooltip(top, left, content);
+    /*  let delta = Number.MAX_VALUE;
+      const curves = [];
+      if (!point) {
+        if (data.points[0] && data.points[0].data.orientation !== 'h') {
+          const y = (data.yvals || [''])[0];
+          data.points.forEach(p => {
+            curves.push(p.curveNumber);
+            const d = Math.abs((p.y || p.r) - y);
+            if (d < delta) {
+              delta = d;
+              point = p;
+            }
+          });
+        } else {
+          const x: number = (data.xvals || [''])[0];
+          data.points.forEach(p => {
+            curves.push(p.curveNumber);
+            const d = Math.abs((p.x || p.r) - x);
+            if (d < delta) {
+              delta = d;
+              point = p;
+            }
+          });
+        }
       }
-      const top = Math.min(
-        this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-        data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
-      this.moveTooltip(top, left, content);
-    }
+      if (point && !!data.event) {
+        const content = this.legendFormatter(
+          this._options.horizontal ?
+            (data.yvals || [''])[0] :
+            (data.xvals || [''])[0]
+          , data.points, point.curveNumber);
+        let left = (data.event.offsetX + 20) + 'px';
+        if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
+          left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+        }
+        const top = Math.min(
+          this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
+          data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
+        this.moveTooltip(top, left, content);
+      }*/
   }
 
   getTooltipPosition() {
@@ -395,10 +408,17 @@ export abstract class WarpViewComponent {
     };
   }
 
-  private moveTooltip(top, left, content) {
-    this.tooltipPosition = {top, left};
-    this.renderer.setProperty(this.toolTip.nativeElement, 'innerHTML', content);
-    this.LOG.debug(['hover - moveTooltip'], new Date().toISOString());
+  protected moveTooltip(top, left, content) {
+    this.LOG.debug(['hover - moveTooltip'], top, left);
+    //  this.tooltipPosition = {top, left}
+    const div = this.toolTip.nativeElement as HTMLDivElement;
+    div.innerHTML = content;
+    div.style.top = top;
+    div.style.left = left;
+    // this.renderer.setProperty(this.toolTip.nativeElement, 'innerHTML', content);
+    // this.renderer.setStyle(this.toolTip.nativeElement, 'top', top);
+    // this.renderer.setStyle(this.toolTip.nativeElement, 'left', left);
+    // this.LOG.debug(['hover - moveTooltip'], top, left, content);
   }
 
   relayout($event: any) {
