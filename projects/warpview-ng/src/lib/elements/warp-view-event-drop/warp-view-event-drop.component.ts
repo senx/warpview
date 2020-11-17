@@ -104,8 +104,8 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
 ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 </div></div>`
         )
-          .style('left', `${d3.event.offsetX - 30}px`)
-          .style('top', `${d3.event.offsetY + 20}px`);
+          .style('left', `${d3.event.offsetX + 10}px`)
+          .style('top', `${d3.event.offsetY + 10}px`);
       },
       onMouseOut: () => {
         select(this.toolTip.nativeElement)

@@ -320,6 +320,7 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     this.loading = false;
     this.chartDraw.emit();
+    this.noData = (this.plotlyData || []).length === 0;
     return !(!this.plotlyData || this.plotlyData.length === 0);
   }
 
