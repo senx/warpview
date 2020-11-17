@@ -91,8 +91,7 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
           x: d3.event.offsetX,
           y: d3.event.offsetY
         });
-        const t = d3
-          .select(this.toolTip.nativeElement);
+        const t = d3.select(this.toolTip.nativeElement);
         t.transition()
           .duration(200)
           .style('opacity', 1)
@@ -101,7 +100,7 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
 <b class="tooltip-date">${this._options.timeMode === 'timestamp'
           ? g.date
           : (g.date.toISOString() || '')}</b>
-<div><i class="chip"  style="background-color: ${ColorLib.transparentize(g.color, 0.7)};border: 2px solid ${g.color};"></i>
+<div><i class="chip"  style="background-color: ${g.color};border: 2px solid ${g.color};"></i>
 ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
 </div></div>`
         )
@@ -203,7 +202,7 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
         }
         dataSet.data.push({
           date: moment.tz(moment.utc(ts / this.divider), this._options.timeZone),
-          color,
+          color: ColorLib.transparentize(color),
           value,
           name: gtsName
         });

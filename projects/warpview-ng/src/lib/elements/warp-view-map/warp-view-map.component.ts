@@ -101,6 +101,7 @@ export class WarpViewMapComponent implements OnInit {
     return this._hiddenData;
   }
 
+  // tslint:disable-next-line:no-output-native
   @Output('change') change = new EventEmitter();
   @Output('chartDraw') chartDraw = new EventEmitter();
 

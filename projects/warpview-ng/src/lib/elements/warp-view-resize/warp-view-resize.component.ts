@@ -42,6 +42,7 @@ export class WarpViewResizeComponent implements AfterViewInit {
     return this._debug;
   }
 
+  // tslint:disable-next-line:no-output-native
   @Output('resize') resize = new EventEmitter();
 
   private dragging = false;

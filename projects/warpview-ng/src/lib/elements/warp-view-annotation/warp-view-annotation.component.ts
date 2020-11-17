@@ -37,6 +37,12 @@ import {ChartBounds} from '../../model/chartBounds';
 export class WarpViewAnnotationComponent extends WarpViewComponent {
   @Input('height') height = 0;
 
+
+  @Input('type') set type(type: string) {
+    this._type = type;
+    this.drawChart();
+  }
+
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
     this.LOG.debug(['hiddenData', 'previousVisibility'], previousVisibility);
@@ -64,11 +70,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       }
       this.LOG.debug(['hiddendygraphtrig', 'destroy'], 'redraw by visibility change');
     }
-  }
-
-  @Input('type') set type(type: string) {
-    this._type = type;
-    this.drawChart();
   }
 
   @Input('standalone') set standalone(isStandalone: boolean) {
@@ -174,6 +175,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   update(options: Param, refresh: boolean): void {
+    this.loading = true;
     if (!!options) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
     }
@@ -207,6 +209,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   drawChart(reparseNewData: boolean = false) {
+    this.loading = true;
     this.layout.margin.l = !!this._standalone ? 10 : 50;
     this.layout.margin.b = !!this._standalone ? 50 : 1;
     this.height = this.lineHeight + this.layout.margin.t + this.layout.margin.b;
@@ -336,13 +339,12 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   afterPlot(div) {
-   // this.loading = false;
+    this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     if (this.afterBoundsUpdate || this._standalone) {
       this.chartDraw.emit(this.chartBounds);
       this.LOG.debug(['afterPlot'], this.chartBounds, div);
-      this.loading = false;
       this.afterBoundsUpdate = false;
     }
   }
@@ -363,6 +365,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   protected convert(data: DataModel): Partial<any>[] {
     this.loading = true;
+    this.noData = true;
     const dataset: Partial<any>[] = [];
     let gtsList = GTSLib.flatDeep(GTSLib.flattenGtsIdArray(data.data as any[], 0).res);
     this.maxTick = Number.NEGATIVE_INFINITY;

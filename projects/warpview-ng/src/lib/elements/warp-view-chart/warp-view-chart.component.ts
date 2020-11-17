@@ -192,19 +192,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   private emitNewBounds(min, max, marginLeft) {
     this.LOG.debug(['emitNewBounds'], min, max);
     this.boundsDidChange.emit({bounds: {min, max, marginLeft}, source: 'chart'});
-    /* if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-       this.boundsDidChange.emit({bounds: {min, max, marginLeft}, source: 'chart'});
-       this._options.bounds = this._options.bounds || {};
-       this._options.bounds.minDate = min;
-       this._options.bounds.maxDate = max;
-     } else {
-       const minDate = moment.tz(min, this._options.timeZone).valueOf();
-       const maxDate = moment.tz(max, this._options.timeZone).valueOf();
-       this._options.bounds = this._options.bounds || {};
-       this._options.bounds.minDate = minDate;
-       this._options.bounds.maxDate = maxDate;
-       this.boundsDidChange.emit({bounds: {min: minDate, max: maxDate, marginLeft}, source: 'chart'});
-     }*/
   }
 
   protected initChart(el: ElementRef): boolean {
@@ -418,7 +405,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
     }
     this.loading = false;
-    this.afterBoundsUpdate = false;
+    this.afterBoundsUpdate = true;
   }
 
   sliderChange($event: any) {

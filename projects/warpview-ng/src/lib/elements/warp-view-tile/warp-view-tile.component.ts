@@ -73,11 +73,11 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     return this._warpScript;
   }
 
-  loaderMessage = '';
   error: any;
   status: string;
   loading = false;
   execResult: string;
+  loadingExec = false;
 
   private timer: any;
   private _autoRefresh;
@@ -162,14 +162,13 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.LOG.debug(['execute'], isRefresh);
       this.error = undefined;
-      this.loading = !isRefresh;
+      this.loadingExec = !isRefresh;
       this.execResult = undefined;
-      this.loaderMessage = 'Requesting data';
       this.execUrl = this.url;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
       this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
-        this.loading = false;
+        this.loadingExec = false;
         this.LOG.debug(['execute'], response);
         if ((response as HttpResponse<string>).body) {
           try {

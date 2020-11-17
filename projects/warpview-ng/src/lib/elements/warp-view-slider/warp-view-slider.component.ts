@@ -77,6 +77,7 @@ export class WarpViewSliderComponent implements AfterViewInit {
     return this._debug;
   }
 
+  // tslint:disable-next-line:no-output-native
   @Output('change') change = new EventEmitter();
 
   _min: number;

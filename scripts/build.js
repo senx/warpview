@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-const sass = require('node-sass');
+const sass = require('sass');
 const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
@@ -33,18 +33,15 @@ const concat = require('concat');
   await concat(files, './dist/warpview/elements/warpview-elements.js');
   fs.copy('./src/assets/fonts', './dist/warpview/elements/fonts');
   fs.copy('./node_modules/leaflet/dist/images', './dist/warpview/elements/images');
-  sass.render({
+  const result = sass.renderSync({
     file: './projects/warpview-ng/src/lib/styles/warpview.scss',
     outFile: './dist/warpview/elements/warpview-elements.css',
     outputStyle: 'compressed'
-  }, function (err, result) {
-    if (!err) {
-      let compiledScssCode = result.css.toString();
-      // remove comments from the css output
-      compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
-      compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
-      fs.writeFileSync('./dist/warpview/elements/warpview-elements.css', compiledScssCode);
-      concat(css, './dist/warpview/elements/warpview-elements.css');
-    }
   });
+  let compiledScssCode = result.css.toString();
+  // remove comments from the css output
+  compiledScssCode = compiledScssCode.replace(/\/\*[^*]*\*+([^\/][^*]*\*+)*\//gi, '');
+  compiledScssCode = compiledScssCode.replace(/\/src\/assets\/fonts/gi, './fonts');
+  fs.writeFileSync('./dist/warpview/elements/warpview-elements.css', compiledScssCode);
+  concat(css, './dist/warpview/elements/warpview-elements.css');
 })();

@@ -38,7 +38,7 @@
           responsive="true" debug="true"
           showLegend="false"
           options='{"timeUnit":"us","showDots":false,"foldGTSTree":true,"map":{"mapType":"OCEANS", "animate": true}}'
-          type="plot">
+          type="drops">
           @training/dataset0
           // 30 days of data (commited datapoints count on our cluster)
           [ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 30 d ] FETCH

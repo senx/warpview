@@ -120,6 +120,7 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   @Output() initialized = new EventEmitter<PlotlyHTMLElement>();
   @Output() update = new EventEmitter<Figure>();
   @Output() purge = new EventEmitter<Figure>();
+  // tslint:disable-next-line:no-output-native
   @Output() error = new EventEmitter<Error>();
 
   @Output() afterExport = new EventEmitter();
@@ -130,6 +131,7 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   @Output() autoSize = new EventEmitter();
   @Output() beforeExport = new EventEmitter();
   @Output() buttonClicked = new EventEmitter();
+  // tslint:disable-next-line:no-output-native
   @Output() click = new EventEmitter();
   @Output() plotly_click = new EventEmitter();
   @Output() clickAnnotation = new EventEmitter();

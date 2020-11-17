@@ -16,6 +16,7 @@
  */
 @import "../../styles/vars";
 @import "../../styles/gts";
+@import '~event-drops/dist/style.css';
 
 :host, warpview-event-drop, warp-view-event-drop {
   display: block;
@@ -27,7 +28,6 @@
   }
 
   #chartContainer {
-    @import '~event-drops/dist/style.css';
     height: 100%;
     width: 100%;
     position: relative;
@@ -56,6 +56,7 @@
     z-index: 999;
     height: auto !important;
     opacity: 0;
+    display: block;
 
     .chip {
       border-radius: 50%;
@@ -68,6 +69,7 @@
       margin-bottom: auto;
       vertical-align: middle;
       cursor: pointer;
+      padding: 2px
     }
   }
 

@@ -37,6 +37,7 @@ export abstract class WarpViewComponent {
 
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
+  protected drawn = false;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
@@ -94,16 +95,18 @@ export abstract class WarpViewComponent {
     if (typeof options === 'string') {
       options = JSON.parse(options);
     }
-    // if (!deepEqual(options, this._options, {strict: true})) {
-    this.LOG.debug(['onOptions', 'changed'], options);
-    this._options = ChartLib.mergeDeep<Param>(options as Param, {});
-    this.update(this._options, false);
-    // }
+    if (JSON.stringify(options) !== JSON.stringify(this._options)) {
+      this.drawn = false;
+      this.LOG.debug(['onOptions', 'changed'], options);
+      this._options = ChartLib.mergeDeep<Param>(options as Param, {});
+      this.update(this._options, false);
+    }
   }
 
   @Input('data') set data(data: string | DataModel | GTS[]) {
     this.LOG.debug(['onData'], data);
     if (data) {
+      this.drawn = false;
       this._data = GTSLib.getData(data);
       this.update(this._options, this._options.isRefresh);
       this.LOG.debug(['onData'], this._data);
@@ -138,7 +141,7 @@ export abstract class WarpViewComponent {
 
   tooltipPosition: any = {top: '-10000px', left: '-1000px'};
   loading = true;
-  noData = false;
+  noData = true;
   layout: Partial<any> = {
     margin: {
       t: 10,
@@ -261,7 +264,9 @@ export abstract class WarpViewComponent {
   }
 
   protected initChart(el: ElementRef, resize = true): boolean {
-    this.noData = false;
+    if (!!this.drawn) {
+      return true;
+    }
     const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
     if (this._responsive) {
       if (resize) {
@@ -321,6 +326,7 @@ export abstract class WarpViewComponent {
   afterPlot(plotlyInstance?: any) {
     this.LOG.debug(['afterPlot', 'plotlyInstance'], plotlyInstance);
     this.loading = false;
+    this.drawn = true;
     this.rect = this.graph.getBoundingClientRect();
     this.chartDraw.emit();
   }
@@ -359,46 +365,6 @@ export abstract class WarpViewComponent {
       this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
       data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
     this.moveTooltip(top, left, content);
-    /*  let delta = Number.MAX_VALUE;
-      const curves = [];
-      if (!point) {
-        if (data.points[0] && data.points[0].data.orientation !== 'h') {
-          const y = (data.yvals || [''])[0];
-          data.points.forEach(p => {
-            curves.push(p.curveNumber);
-            const d = Math.abs((p.y || p.r) - y);
-            if (d < delta) {
-              delta = d;
-              point = p;
-            }
-          });
-        } else {
-          const x: number = (data.xvals || [''])[0];
-          data.points.forEach(p => {
-            curves.push(p.curveNumber);
-            const d = Math.abs((p.x || p.r) - x);
-            if (d < delta) {
-              delta = d;
-              point = p;
-            }
-          });
-        }
-      }
-      if (point && !!data.event) {
-        const content = this.legendFormatter(
-          this._options.horizontal ?
-            (data.yvals || [''])[0] :
-            (data.xvals || [''])[0]
-          , data.points, point.curveNumber);
-        let left = (data.event.offsetX + 20) + 'px';
-        if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-          left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
-        }
-        const top = Math.min(
-          this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-          data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
-        this.moveTooltip(top, left, content);
-      }*/
   }
 
   getTooltipPosition() {
@@ -410,15 +376,10 @@ export abstract class WarpViewComponent {
 
   protected moveTooltip(top, left, content) {
     this.LOG.debug(['hover - moveTooltip'], top, left);
-    //  this.tooltipPosition = {top, left}
     const div = this.toolTip.nativeElement as HTMLDivElement;
     div.innerHTML = content;
     div.style.top = top;
     div.style.left = left;
-    // this.renderer.setProperty(this.toolTip.nativeElement, 'innerHTML', content);
-    // this.renderer.setStyle(this.toolTip.nativeElement, 'top', top);
-    // this.renderer.setStyle(this.toolTip.nativeElement, 'left', left);
-    // this.LOG.debug(['hover - moveTooltip'], top, left, content);
   }
 
   relayout($event: any) {

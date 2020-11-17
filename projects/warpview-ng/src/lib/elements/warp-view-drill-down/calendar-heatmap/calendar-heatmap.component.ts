@@ -86,6 +86,7 @@ export class CalendarHeatmapComponent implements AfterViewInit {
   @Input('overview') overview = 'global';
 
   @Output('handler') handler = new EventEmitter<any>();
+  // tslint:disable-next-line:no-output-native
   @Output('change') change = new EventEmitter<any>();
 
   private LOG: Logger;

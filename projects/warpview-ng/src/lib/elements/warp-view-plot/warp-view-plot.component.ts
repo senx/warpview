@@ -111,7 +111,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   loading = false;
   gtsIdList: number[] = [];
   gtsList: DataModel | GTS[] | string;
-
+  loadingChart = true;
   private kbdCounter = 0;
   private gtsFilterCount = 0;
   private gtsBrowserIndex = -1;
@@ -164,33 +164,34 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.LOG.debug(['stateChange'], event);
     switch (event.id) {
       case 'timeSwitch' :
+        this.loading = true;
         if (event.state) {
           this._options.timeMode = 'timestamp';
         } else {
           this._options.timeMode = 'date';
         }
-        this.drawChart(true);
+        this.warpViewNewOptions.emit(this._options);
+        setTimeout(() => this.drawChart(true));
         break;
       case 'typeSwitch' :
-        if (event.state) {
-          this._type = 'step';
-        } else {
-          this._type = 'line';
-        }
-        this.drawChart(true);
+        this.loadingChart = true;
+        setTimeout(() => {
+          this._type = event.state ? 'step' : 'line';
+          this.drawChart(false);
+        }, 500);
         break;
       case 'chartSwitch' :
+        this.loadingChart = true;
         this.showChart = event.state;
-        this.drawChart(false);
+        setTimeout(() => this.drawChart(false));
         break;
       case 'mapSwitch' :
         this.showMap = event.state;
         if (this.showMap) {
-          requestAnimationFrame(() => this.map.resize());
+          setTimeout(() => this.map.resize());
         }
         break;
     }
-    this.warpViewNewOptions.emit(this._options);
   }
 
   boundsDidChange(event) {
@@ -451,6 +452,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     } else {
       this.chartDraw.emit($event);
     }
+    this.loadingChart = false;
     this.resizeArea();
   }
 
