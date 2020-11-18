@@ -398,11 +398,9 @@ export class ColorLib {
     } else {
       color2 = color2.substring(1);
     }
-    console.log('valid: c1 => ' + color1 + ', c2 => ' + color2);
     // 3: we have valid input, convert colors to rgb
     color1 = [parseInt(color1[0] + color1[1], 16), parseInt(color1[2] + color1[3], 16), parseInt(color1[4] + color1[5], 16)];
     color2 = [parseInt(color2[0] + color2[1], 16), parseInt(color2[2] + color2[3], 16), parseInt(color2[4] + color2[5], 16)];
-    console.log('hex -> rgba: c1 => [' + color1.join(', ') + '], c2 => [' + color2.join(', ') + ']');
     // 4: blend
     const color3 = [
       (1 - percentage) * color1[0] + percentage * color2[0],
@@ -410,7 +408,6 @@ export class ColorLib {
       (1 - percentage) * color1[2] + percentage * color2[2]
     ];
     const color3Str = '#' + ColorLib.int_to_hex(color3[0]) + ColorLib.int_to_hex(color3[1]) + ColorLib.int_to_hex(color3[2]);
-    console.log(color3Str);
     // return hex
     return color3Str;
   }

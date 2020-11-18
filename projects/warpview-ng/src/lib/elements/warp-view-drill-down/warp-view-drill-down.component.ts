@@ -77,7 +77,7 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
   private drawChart() {
     this.loading = false;
     this.chartDraw.emit();
-    if (!this.initChart(this.el)) {
+    if (!this.initChart(this.el, false, true)) {
       return;
     }
   }
@@ -85,6 +85,7 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
   protected convert(data: DataModel): any[] {
     const dataList = this._data.data as any[];
     this.heatMapData = this.parseData(GTSLib.flatDeep(dataList));
+    this.noData = this.heatMapData.length === 0;
     return [];
   }
 

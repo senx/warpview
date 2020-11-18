@@ -19,9 +19,7 @@
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <p class="noData" *ngIf="noData">No data to display</p>
   <div *ngIf="!loading && !noData">
-    <warpview-paginable
-      *ngFor="let data of _tabularData"
-      [data]="data" [options]="_options"
-      [debug]="debug"></warpview-paginable>
+    <warpview-paginable *ngFor="let d of _tabularData" [data]="d" [options]="_options"
+                        [debug]="debug"></warpview-paginable>
   </div>
 </div>

@@ -263,7 +263,7 @@ export abstract class WarpViewComponent {
     return html;
   }
 
-  protected initChart(el: ElementRef, resize = true): boolean {
+  protected initChart(el: ElementRef, resize = true, customData = false): boolean {
     if (!!this.drawn) {
       return true;
     }
@@ -320,8 +320,12 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     this.loading = false;
     this.chartDraw.emit();
-    this.noData = (this.plotlyData || []).length === 0;
-    return !(!this.plotlyData || this.plotlyData.length === 0);
+    if (!customData) {
+      this.noData = (this.plotlyData || []).length === 0;
+      return !(!this.plotlyData || this.plotlyData.length === 0);
+    } else {
+      return true;
+    }
   }
 
   afterPlot(plotlyInstance?: any) {

@@ -39,9 +39,8 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     this._type = type;
     this.drawChart();
   }
-
-  private CHART_MARGIN = 0.05;
-  private lineHeight = 70;
+  private lineHeight = 80;
+  private gaugeHeight = 200;
   // tslint:disable-next-line:variable-name
   private _type = 'gauge'; // gauge or bullet
   layout: Partial<any> = {
@@ -94,22 +93,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
       ygap: 0
     };
     this.layout.margin = {t: 25, r: 25, l: 25, b: 25};
-    if (this._type === 'bullet') {
-      this.layout.height = 100;
-      this.layout.yaxis = {automargin: false};
-      this.layout.grid = {
-        rows: this.plotlyData.length, columns: 1, pattern: 'independent',
-        ygap: 0
-      };
-      const count = this.plotlyData.length;
-      let calculatedHeight = this.lineHeight * count + this.layout.margin.t + this.layout.margin.b;
-      calculatedHeight += this.layout.grid.ygap * count;
-      this.el.nativeElement.style.height = calculatedHeight + 'px';
-      (this.el.nativeElement as HTMLDivElement).style.height = calculatedHeight + 'px';
-      this.height = calculatedHeight;
-      this.layout.height = this.height;
-      this.layout.autosize = false;
-    }
+
     this.loading = false;
   }
 
@@ -168,13 +152,29 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['convert', 'dataStruct'], dataStruct);
     this.layout.annotations = [];
     let count = Math.ceil(dataStruct.length / 2);
+    this.layout.autosize = true;
+
+    this.layout.grid = {
+      rows: count, columns: 1, pattern: 'independent',
+      ygap: 0
+    };
+    let labelSize = 0.05;
     if (this._type === 'bullet') {
+      this.layout.height = 100;
+      this.layout.yaxis = {automargin: false};
       count = dataStruct.length;
+      this.layout.autosize = false;
+      let calculatedHeight = this.lineHeight * count + this.layout.margin.t + this.layout.margin.b;
+      calculatedHeight += this.layout.grid.ygap * count;
+      this.el.nativeElement.style.height = calculatedHeight + 'px';
+      (this.el.nativeElement as HTMLDivElement).style.height = calculatedHeight + 'px';
+      this.height = calculatedHeight;
+      this.layout.height = this.height;
+      labelSize = 20.0 / (this.layout.height - (this.layout.margin.t + this.layout.margin.b));
     }
     const itemHeight = 1 / count;
     let x = 0;
     let y = 1 + itemHeight;
-    const labelSize = 14.0 / (this.layout.height - (this.layout.margin.t + this.layout.margin.b));
     dataStruct.forEach((gts, i) => {
       if (this._type === 'bullet') {
         y -= itemHeight;
