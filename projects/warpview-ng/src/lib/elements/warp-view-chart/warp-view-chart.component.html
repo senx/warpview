@@ -19,7 +19,10 @@
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
   <p class="noData" *ngIf="noData">No data to display</p>
   <p class="noData" *ngIf="parsing">Parsing data</p>
-  <div *ngIf="!loading && !noData" >
+  <div *ngIf="!loading && !noData"  (mouseleave)="handleMouseOut($event)"
+       (mousemove)="handleMouseMove($event)"
+       (mouseenter)="handleMouseEnter($event)">
+    <div class="bar" #line></div>
     <warpview-plotly #graph
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig"
                      (afterPlot)="afterPlot($event)"

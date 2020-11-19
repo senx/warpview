@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, Renderer2, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {DataModel} from '../../model/dataModel';
 import {GTS} from '../../model/GTS';
 import {GTSLib} from '../../utils/gts.lib';
@@ -35,6 +35,8 @@ import {Timsort} from '../../utils/timsort';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewChartComponent extends WarpViewComponent implements OnInit {
+
+  @ViewChild('line') line: ElementRef;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     const previousVisibility = JSON.stringify(this.visibility);
@@ -88,6 +90,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   private afterBoundsUpdate = false;
   private marginLeft: number;
   private maxPlottable = 10000;
+  private hoverTimeout: any;
   parsing = false;
   unhighliteCurve = new Subject<number[]>();
   highliteCurve = new Subject<{ on: number[], off: number[] }>();
@@ -473,8 +476,18 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const curves = [];
     let delta = Number.MAX_VALUE;
     let point;
+    const annotations = [];
     data.points.forEach(p => {
       curves.push(p.curveNumber);
+      annotations.push({
+        x: p.x,
+        y: p.y,
+        arrowhead: 6,
+        arrowsize: 1,
+        ax: 3,
+        ay: 3,
+        arrowcolor: p.data.line.color
+      });
       const dist = Math.abs(data.yvals[0] - p.y);
       if (delta > dist) {
         delta = dist;
@@ -489,10 +502,47 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         name: p.data.text
       };
     });
+    if (!!this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
+    this.graph.relayoutPlot('annotations', 'remove');
+    this.graph.relayoutPlot('annotations', annotations);
     super.hover(data, toHighlight);
   }
 
   unhover(data: any) {
     super.unhover(data);
+    if (!!this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
+  }
+
+
+  handleMouseMove(evt: MouseEvent) {
+    evt.preventDefault();
+    if (this.standalone && this.line) {
+      this.line.nativeElement.style.left = Math.max(evt.offsetX, 50) + 'px';
+    }
+  }
+
+  handleMouseEnter(evt: MouseEvent) {
+    evt.preventDefault();
+    this.marginLeft = this.marginLeft || this.el.nativeElement.getBoundingClientRect().left;
+    if (this.standalone && this.line) {
+      this.renderer.setStyle(this.line.nativeElement, 'display', 'block');
+      this.renderer.setStyle(this.line.nativeElement, 'bottom', (40 / this.height) + 'px');
+    }
+  }
+
+  handleMouseOut(evt: MouseEvent) {
+    // evt.preventDefault();
+    if (this.standalone && this.line) {
+      this.renderer.setStyle(this.line.nativeElement, 'left', '-100px');
+      this.renderer.setStyle(this.line.nativeElement, 'display', 'none');
+    }
+    if (!!this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
+    setTimeout(() => this.graph.relayoutPlot('annotations', 'remove'), 1000);
   }
 }

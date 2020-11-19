@@ -96,3 +96,7 @@ $w10-danger: #dc3545;
   color: var(--warp-view-chart-legend-color);
   position: relative;
 }
+
+.js-plotly-plot .plotly .cursor-ew-resize {
+  cursor: default !important;
+}

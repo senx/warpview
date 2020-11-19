@@ -307,6 +307,24 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
     });
   }
 
+  relayoutPlot(field: string, update: any) {
+    if (!this.plotlyInstance) {
+      const error = new Error(`Plotly component wasn't initialized`);
+      this.error.emit(error);
+      return;
+    }
+    setTimeout(() => Plotlyjs.relayout(this.plotlyInstance, field, update));
+  }
+
+  addTraces(trace: any) {
+    if (!this.plotlyInstance) {
+      const error = new Error(`Plotly component wasn't initialized`);
+      this.error.emit(error);
+      return;
+    }
+    setTimeout(() => Plotlyjs.addTraces(this.plotlyInstance, trace));
+  }
+
   updateWindowResizeHandler() {
     if (this.useResizeHandler) {
       if (this.resizeHandler === undefined) {

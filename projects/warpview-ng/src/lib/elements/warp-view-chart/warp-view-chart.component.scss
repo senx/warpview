@@ -20,11 +20,29 @@
 :host {
   display: block;
   height: 100%;
+
   #chartContainer {
     height: 100%;
+
     div {
       height: 100%;
     }
+  }
+
+  .bar {
+    width: 1px;
+    left: -100px;
+    position: absolute;
+    background-color: transparent;
+    backface-visibility: hidden;
+    top: 20px;
+    bottom: 55px;
+    overflow: hidden;
+    display: none;
+    z-index: 0;
+    pointer-events: none;
+    border-left: dashed 1px var(--warp-view-bar-color);
+    height: calc(100% - 117px) !important;
   }
 
   div.chart {

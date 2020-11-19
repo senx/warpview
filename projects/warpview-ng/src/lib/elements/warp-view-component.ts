@@ -352,23 +352,22 @@ export abstract class WarpViewComponent {
     }
   }
 
-  hover(data: any, highlighted?: number) {
+  hover(data: any, highlighted = 0) {
     this.renderer.setStyle(this.toolTip.nativeElement, 'display', 'block');
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
+    const p = data.points[highlighted];
     const content = this.legendFormatter(
       this._options.horizontal ?
         (data.yvals || [''])[0] :
         (data.xvals || [''])[0]
       , data.points, highlighted);
-    let left = (data.event.offsetX + 20) + 'px';
+    let left = (p.xaxis.d2p(p.x) + p.xaxis._offset + 20) + 'px';
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-      left = Math.max(0, data.event.offsetX - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+      left = Math.max(0, p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
     }
-    const top = Math.min(
-      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-      data.event.y - 20 - this.el.nativeElement.getBoundingClientRect().top) + 'px';
+    const top = (p.yaxis.l2p(p.y) + p.yaxis._offset) + 'px';
     this.moveTooltip(top, left, content);
   }
 
@@ -380,11 +379,13 @@ export abstract class WarpViewComponent {
   }
 
   protected moveTooltip(top, left, content) {
-    this.LOG.debug(['hover - moveTooltip'], top, left);
     const div = this.toolTip.nativeElement as HTMLDivElement;
-    div.innerHTML = content;
-    div.style.top = top;
-    div.style.left = left;
+    if (div.style.top !== top && div.style.left !== left) {
+      this.LOG.debug(['hover - moveTooltip'], top, left);
+      div.innerHTML = content;
+      div.style.top = top;
+      div.style.left = left;
+    }
   }
 
   relayout($event: any) {
