@@ -365,10 +365,14 @@ export abstract class WarpViewComponent {
       , data.points, highlighted);
     let left = (p.xaxis.d2p(p.x) + p.xaxis._offset + 20) + 'px';
     if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-      left = Math.max(0, p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+      left = Math.max(0,
+        p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
     }
-    const top = (p.yaxis.l2p(p.y) + p.yaxis._offset) + 'px';
-    this.moveTooltip(top, left, content);
+    let top = (p.yaxis.l2p(p.y) + p.yaxis._offset);
+    top = Math.min(
+      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
+      top);
+    this.moveTooltip(top + 'px', left, content);
   }
 
   getTooltipPosition() {
@@ -380,12 +384,10 @@ export abstract class WarpViewComponent {
 
   protected moveTooltip(top, left, content) {
     const div = this.toolTip.nativeElement as HTMLDivElement;
-    if (div.style.top !== top && div.style.left !== left) {
-      this.LOG.debug(['hover - moveTooltip'], top, left);
-      div.innerHTML = content;
-      div.style.top = top;
-      div.style.left = left;
-    }
+    this.LOG.debug(['hover - moveTooltip'], top, left);
+    div.innerHTML = content;
+    div.style.top = top;
+    div.style.left = left;
   }
 
   relayout($event: any) {

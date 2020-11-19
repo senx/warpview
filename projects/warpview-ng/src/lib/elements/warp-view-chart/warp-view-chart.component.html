@@ -22,7 +22,7 @@
   <div *ngIf="!loading && !noData"  (mouseleave)="handleMouseOut($event)"
        (mousemove)="handleMouseMove($event)"
        (mouseenter)="handleMouseEnter($event)">
-    <div class="bar" #line></div>
+    <div class="bar" #line [ngClass]="{'full': !_options.showRangeSelector }"></div>
     <warpview-plotly #graph
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig"
                      (afterPlot)="afterPlot($event)"

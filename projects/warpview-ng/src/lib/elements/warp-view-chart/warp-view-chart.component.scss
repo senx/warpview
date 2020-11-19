@@ -42,7 +42,10 @@
     z-index: 0;
     pointer-events: none;
     border-left: dashed 1px var(--warp-view-bar-color);
-    height: calc(100% - 117px) !important;
+    height: calc(100% - 117px);
+    .full {
+      height: calc(100% - 17px) !important;
+    }
   }
 
   div.chart {
