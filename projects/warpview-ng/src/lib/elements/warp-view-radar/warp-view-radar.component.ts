@@ -85,7 +85,6 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
     }
     this.layout.polar.radialaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.polar.angularaxis.color = this.getGridColor(this.el.nativeElement);
-    this.layout.showlegend = this.showLegend;
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);

@@ -114,7 +114,6 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.zaxis.color = this.getGridColor(this.el.nativeElement);

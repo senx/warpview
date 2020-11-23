@@ -95,7 +95,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   unhighliteCurve = new Subject<number[]>();
   highliteCurve = new Subject<{ on: number[], off: number[] }>();
   layout: Partial<any> = {
-    showlegend: false,
+    legend: {
+      orientation: 'h'
+    },
     autosize: true,
     hovermode: 'x',
     hoverdistance: 20,
@@ -111,7 +113,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     },
     margin: {
       t: 0,
-      b: 30,
+      b: 40,
       r: 10,
       l: 50
     },
@@ -167,7 +169,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.layout.yaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.zerolinecolor = this.getGridColor(this.el.nativeElement);
     this.layout.margin.t = this.standalone ? 20 : 10;
-    this.layout.showlegend = this._showLegend;
     if (!this._responsive) {
       this.layout.width = this.width;
       this.layout.height = this.height;
@@ -267,7 +268,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const series: Partial<any> = {
             type: type === 'scattergl',
             mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
-            // name: label,
+            name: label,
             text: label,
             x: [],
             y: [],

@@ -128,7 +128,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
             x: 1 + gts.id / 20,
             xpad: 0
           },
-          showscale: this.showLegend,
+          showscale: this._options.showLegend,
           colorscale: ColorLib.getColorGradient(gts.id, this._options.scheme),
           autocolorscale: false,
           name: label,
@@ -161,7 +161,6 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    this.layout.showlegend = this.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;

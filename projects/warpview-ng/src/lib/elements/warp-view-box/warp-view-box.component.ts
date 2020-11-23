@@ -108,7 +108,6 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
     this.LOG.debug(['drawChart', 'this.layout'], this.responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    this.layout.showlegend = this.showLegend;
     this.layout.xaxis.showticklabels = this._type === 'box-date';
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);

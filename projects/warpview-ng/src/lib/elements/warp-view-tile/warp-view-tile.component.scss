@@ -61,7 +61,7 @@
 
       .tile {
         width: 100%;
-        height: calc(var(--warp-view-tile-height, 100%) - 40px);
+        height: var(--warp-view-tile-height, 100%);
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;

@@ -44,23 +44,6 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
 
   @ViewChild('plot', {static: true}) plotEl: ElementRef;
 
-  /*
-   this.LOG.debug(['ngOnChanges'], changes);
-      const revision: SimpleChange = changes.revision;
-      if (changes.debug) {
-        this.debug = changes.debug.currentValue;
-      }
-      if (!!changes.data && !deepEqual(changes.data.currentValue, changes.data.previousValue)) {
-        this.updatePlot();
-      } else if (!changes.layout && ((revision && !revision.isFirstChange()) || !!changes.data || !!changes.config)) {
-        this.updatePlot();
-      }
-      if (!!changes.debug) {
-        this.LOG.setDebug(changes.debug.currentValue);
-      }
-      this.updateWindowResizeHandler();
-      this.LOG.debug(['ngOnChanges'], changes);
-   */
   @Input() set data(data: Partial<any>[]) {
     this._data = data;
     this.updatePlot();
@@ -243,7 +226,6 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
     } else if (!!this.className) {
       classes.push(this.className);
     }
-
     return classes.join(' ');
   }
 
@@ -252,8 +234,8 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   createPlot(): Promise<void> {
-    this.LOG.debug(['createPlot'], this.data, this.layout, this.config, this.plotlyInstance);
-    return Plotlyjs.react(this.plotEl.nativeElement, this.data, this.layout, this.config).then(plotlyInstance => {
+    this.LOG.debug(['createPlot'], this._data, this._layout, this._config, this.plotlyInstance);
+    return Plotlyjs.react(this.plotEl.nativeElement, this._data, this._layout, this._config).then(plotlyInstance => {
       this.rect = this.el.nativeElement.getBoundingClientRect();
       this.plotlyInstance = plotlyInstance;
       this.LOG.debug(['plotlyInstance'], plotlyInstance);

@@ -134,7 +134,6 @@ export class WarpViewGlobeComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.layout'], this._responsive);
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
-    this.layout.showlegend = this._showLegend;
     const bounds = MapLib.getBoundsArray(this.geoData, [], [], []);
     this.LOG.debug(['drawChart', 'bounds'], bounds);
     this.layout.geo.lonaxis.color = this.getGridColor(this.el.nativeElement);

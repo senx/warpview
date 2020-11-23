@@ -69,17 +69,6 @@ export abstract class WarpViewComponent {
     return this._debug;
   }
 
-  @Input('showLegend') set showLegend(showLegend: boolean | string) {
-    if (typeof showLegend === 'string') {
-      showLegend = 'true' === showLegend;
-    }
-    this._showLegend = showLegend;
-  }
-
-  get showLegend() {
-    return this._showLegend;
-  }
-
   @Input('responsive') set responsive(responsive: boolean | string) {
     if (typeof responsive === 'string') {
       responsive = 'true' === responsive;
@@ -132,7 +121,6 @@ export abstract class WarpViewComponent {
   }) as Param;
 
   protected _debug = false;
-  protected _showLegend = false;
   protected _responsive = true;
   protected _unit = '';
   protected _data: DataModel;
@@ -231,7 +219,7 @@ export abstract class WarpViewComponent {
       x = series[0].x || series[0].theta;
     }
     html += `<b>${x}</b><br />`;
-    // put the highlighted one(s?) first, keep only visibles, keep only 50 first ones.
+    // put the highlighted one(s?) first, keep only visible, keep only 50 first ones.
     series = series.sort((sa, sb) => (sa.curveNumber === highlighted) ? -1 : 1);
     series
       // .filter(s => s.isVisible && s.yHTML)
@@ -317,7 +305,6 @@ export abstract class WarpViewComponent {
         this.layout.height = this.height || parentSize.height;
       }
     }
-    this.layout.showLegend = !!this._options.showLegend;
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
     this.loading = false;
     this.chartDraw.emit();
@@ -364,16 +351,18 @@ export abstract class WarpViewComponent {
         (data.yvals || [''])[0] :
         (data.xvals || [''])[0]
       , data.points, highlighted);
-    let left = (p.xaxis.d2p(p.x) + p.xaxis._offset + 20) + 'px';
-    if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
-      left = Math.max(0,
-        p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+    if (!!p) {
+      let left = (p.xaxis.d2p(p.x) + p.xaxis._offset + 20) + 'px';
+      if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
+        left = Math.max(0,
+          p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+      }
+      let top = (p.yaxis.l2p(p.y) + p.yaxis._offset);
+      top = Math.min(
+        this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
+        top);
+      this.moveTooltip(top + 'px', left, content);
     }
-    let top = (p.yaxis.l2p(p.y) + p.yaxis._offset);
-    top = Math.min(
-      this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
-      top);
-    this.moveTooltip(top + 'px', left, content);
   }
 
   getTooltipPosition() {
