@@ -511,7 +511,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       arrowcolor: point.data.line.color
     });
     // this.graph.relayoutPlot('annotations', 'remove');
-   // this.graph.relayoutPlot('annotations', annotations);
+    // this.graph.relayoutPlot('annotations', annotations);
     super.hover(data, toHighlight);
   }
 
@@ -534,9 +534,18 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     evt.preventDefault();
     this.marginLeft = this.marginLeft || this.el.nativeElement.getBoundingClientRect().left;
     if (this.standalone && this.line && !this.noData) {
+      const h = this.graph.getElement('.draglayer')[0].getBoundingClientRect().height - 60;
+      this.renderer.setStyle(this.line.nativeElement, 'height', h + 'px');
       this.renderer.setStyle(this.line.nativeElement, 'display', 'block');
       this.renderer.setStyle(this.line.nativeElement, 'bottom', (40 / this.height) + 'px');
     }
+  }
+
+  queryShadow([firstShadowSelector, ...restOfTheShadowSelectors], itemSelector) {
+    const reduceFunction = (currShadow, nextShadowSelector) => currShadow.shadowRoot.querySelector(nextShadowSelector);
+    const firstShadow = document.querySelector(firstShadowSelector);
+    const lastShadow = restOfTheShadowSelectors.reduce(reduceFunction, firstShadow);
+    return lastShadow && lastShadow.querySelector(itemSelector);
   }
 
   handleMouseOut(evt: MouseEvent) {
@@ -548,6 +557,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     if (!!this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
-  //  setTimeout(() => this.graph.relayoutPlot('annotations', 'remove'), 1000);
+    //  setTimeout(() => this.graph.relayoutPlot('annotations', 'remove'), 1000);
   }
 }

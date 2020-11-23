@@ -326,4 +326,8 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   resize(layout: { width: number; height: any }) {
     Plotlyjs.relayout(this.plotEl.nativeElement, layout);
   }
+
+  getElement(s: string) {
+    return this.plotEl.nativeElement.querySelectorAll(s);
+  }
 }
