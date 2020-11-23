@@ -32,5 +32,5 @@ window.addEventListener('DOMContentLoaded', function() {
   const css = document.createElement('link');
   css.setAttribute('rel', 'stylesheet');
   css.setAttribute('href', scriptPath() + '/warpview-elements.css');
-  document.head.appendChild(css);
+  document.head.prepend(css);
 });
