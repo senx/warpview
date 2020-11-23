@@ -119,7 +119,7 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   // @HostListener('keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'r') {
-      this.execute(false);
+      this.execute(true);
     }
   }
 

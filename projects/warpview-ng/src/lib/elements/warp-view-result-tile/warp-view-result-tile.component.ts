@@ -119,7 +119,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   setResult(data: string, isRefresh: boolean) {
     this.isRefresh = isRefresh;
-    if (data) {
+    if (!!data) {
       this._data = GTSLib.getData(data);
       this._options.isRefresh = isRefresh;
       this.update(this._options, isRefresh);

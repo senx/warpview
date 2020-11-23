@@ -32,6 +32,7 @@ export class Param {
   showControls = true;
   showErrors = true;
   showStatus = true;
+  expandAnnotation = false;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;
   timeMode?: 'timestamp' | 'date' | 'custom' | 'duration';

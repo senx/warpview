@@ -37,7 +37,6 @@ import {ChartBounds} from '../../model/chartBounds';
 export class WarpViewAnnotationComponent extends WarpViewComponent {
   @Input('height') height = 0;
 
-
   @Input('type') set type(type: string) {
     this._type = type;
     this.drawChart();
@@ -136,6 +135,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   private lineHeight = 30;
   private chartBounds: ChartBounds = new ChartBounds();
   private afterBoundsUpdate = false;
+  private firstDraw  = true;
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -218,6 +218,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     if (!this.initChart(this.el)) {
       return;
     }
+    if (this.firstDraw) {
+      this.expanded = !!this._options.expandAnnotation;
+    }
     this.el.nativeElement.style.display = 'block';
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
     this.LOG.debug(['drawChart', 'hiddenData'], this._hiddenData);
@@ -257,6 +260,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     setTimeout(() => {
       this.plotlyConfig = {...this.plotlyConfig};
       this.layout = {...this.layout};
+      this.firstDraw = false;
     });
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
   }
