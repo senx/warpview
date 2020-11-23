@@ -73,6 +73,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   private drawChart() {
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
     this.initChart(this.el);
+    this._options.timeMode = this._options.timeMode || 'custom';
     this._options = ChartLib.mergeDeep(this.defOptions, this._options);
     this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions, this.height);
     this.LOG.debug(['drawChart'], this._data, this.toDisplay);

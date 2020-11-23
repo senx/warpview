@@ -521,7 +521,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   handleMouseMove(evt: MouseEvent) {
     evt.preventDefault();
-    if (this.standalone && this.line) {
+    if (this.standalone && this.line && !this.noData) {
       this.line.nativeElement.style.left = Math.max(evt.offsetX, 50) + 'px';
     }
   }
@@ -529,7 +529,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   handleMouseEnter(evt: MouseEvent) {
     evt.preventDefault();
     this.marginLeft = this.marginLeft || this.el.nativeElement.getBoundingClientRect().left;
-    if (this.standalone && this.line) {
+    if (this.standalone && this.line && !this.noData) {
       this.renderer.setStyle(this.line.nativeElement, 'display', 'block');
       this.renderer.setStyle(this.line.nativeElement, 'bottom', (40 / this.height) + 'px');
     }
@@ -537,7 +537,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   handleMouseOut(evt: MouseEvent) {
     // evt.preventDefault();
-    if (this.standalone && this.line) {
+    if (this.standalone && this.line && !this.noData) {
       this.renderer.setStyle(this.line.nativeElement, 'left', '-100px');
       this.renderer.setStyle(this.line.nativeElement, 'display', 'none');
     }

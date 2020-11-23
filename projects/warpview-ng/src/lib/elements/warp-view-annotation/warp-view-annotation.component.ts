@@ -257,7 +257,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     setTimeout(() => {
       this.plotlyConfig = {...this.plotlyConfig};
       this.layout = {...this.layout};
-  //    this.loading = false;
     });
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
   }

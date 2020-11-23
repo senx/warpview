@@ -38,6 +38,7 @@ export abstract class WarpViewComponent {
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
   protected drawn = false;
+  protected _type: string;
 
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this._hiddenData = hiddenData;
@@ -298,7 +299,7 @@ export abstract class WarpViewComponent {
     this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep<Param>(this._options || {} as Param, this._data.globalParams) as Param;
-    this._options.timeMode = this._options.timeMode || 'date';
+    this._options.timeMode = this._options.timeMode || this._type === 'display' ? 'custom' : 'date';
     this.loading = !this._options.isRefresh;
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);
