@@ -54,7 +54,7 @@ export class WarpViewGlobeComponent extends WarpViewComponent implements OnInit 
       }
     }
   };
-  private _type = 'scattergeo';
+  protected _type = 'scattergeo';
   private geoData: { path: { lat: number, lon: number }[] }[] = [];
 
   constructor(

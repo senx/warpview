@@ -78,7 +78,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   @Output('warpViewChartResize') warpViewChartResize = new EventEmitter<any>();
 
   // tslint:disable-next-line:variable-name
-  private _type = 'line';
+  protected _type = 'line';
   private visibility: boolean[] = [];
   private maxTick = 0;
   private minTick = 0;

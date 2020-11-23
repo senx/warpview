@@ -49,7 +49,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
       l: 50
     }
   };
-  private _type = 'histogram2d';
+  protected _type = 'histogram2d';
   private visibility: boolean[] = [];
   private visibilityStatus: VisibilityState = 'unknown';
   private maxTick = 0;

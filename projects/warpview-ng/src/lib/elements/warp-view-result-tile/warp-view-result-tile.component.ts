@@ -60,7 +60,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     drops: ['drops']
   };
 
-  private _type;
+  protected _type;
   private isRefresh = false;
 
   constructor(

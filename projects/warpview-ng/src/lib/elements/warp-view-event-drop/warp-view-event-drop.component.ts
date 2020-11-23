@@ -64,7 +64,7 @@ export class WarpViewEventDropComponent extends WarpViewComponent implements OnI
   private maxTick = Number.MIN_VALUE;
   private minTick = Number.MAX_VALUE;
   private visibleGtsId = [];
-  private _type = 'drops';
+  protected _type = 'drops';
   private eventConf = {
     d3,
     axis: {

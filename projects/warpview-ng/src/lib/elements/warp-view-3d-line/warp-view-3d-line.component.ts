@@ -33,7 +33,7 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
       l: 10
     }
   };
-  private _type = 'line3d';
+  protected _type = 'line3d';
 
   constructor(
     public el: ElementRef,

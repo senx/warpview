@@ -42,7 +42,7 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
 
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
-  private _type = 'pie';
+  protected _type = 'pie';
   layout: Partial<any> = {
     showlegend: true,
     legend: {

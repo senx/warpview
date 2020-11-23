@@ -116,7 +116,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private gtsFilterCount = 0;
   private gtsBrowserIndex = -1;
   private _gtsFilter = 'x';
-  private _type = 'line';
+  protected _type = 'line';
   private chartBounds: ChartBounds = {
     tsmin: Number.MAX_VALUE,
     tsmax: Number.MIN_VALUE,

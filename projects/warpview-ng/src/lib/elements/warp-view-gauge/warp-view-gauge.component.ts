@@ -42,7 +42,7 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
   private lineHeight = 80;
   private gaugeHeight = 200;
   // tslint:disable-next-line:variable-name
-  private _type = 'gauge'; // gauge or bullet
+  protected _type = 'gauge'; // gauge or bullet
   layout: Partial<any> = {
     showlegend: false,
     autosize: false,

@@ -124,7 +124,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   marginLeft = 50;
   expanded = false;
   // tslint:disable-next-line:variable-name
-  private _type = 'annotation';
+  protected _type = 'annotation';
   private visibility: boolean[] = [];
   private _standalone = true;
   private trimmed;

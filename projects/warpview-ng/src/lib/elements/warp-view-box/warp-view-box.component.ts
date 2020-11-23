@@ -36,7 +36,7 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
       l: 10
     }
   };
-  private _type = 'box';
+  protected _type = 'box';
 
   constructor(
     public el: ElementRef,
