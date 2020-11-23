@@ -55,10 +55,10 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   @Input() set layout(layout: Partial<any>) {
-    this._layout = layout;
+    this._layout = {...layout};
     if (!!this._data && !!this.plotEl.nativeElement) {
       try {
-        Plotlyjs.relayout(this.plotEl.nativeElement, layout);
+        Plotlyjs.relayout(this.plotEl.nativeElement, this._layout);
         this.updateWindowResizeHandler();
       } catch (e) {
         //
@@ -183,12 +183,12 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
     let shouldUpdate = false;
     if (this.updateOnLayoutChange) {
       if (this.layoutDiffer) {
-        const layoutHasDiff = this.layoutDiffer.diff(this.layout);
+        const layoutHasDiff = this.layoutDiffer.diff(this._layout);
         if (layoutHasDiff) {
           shouldUpdate = true;
         }
-      } else if (this.layout) {
-        this.layoutDiffer = this.keyValueDiffers.find(this.layout).create();
+      } else if (this._layout) {
+        this.layoutDiffer = this.keyValueDiffers.find(this._layout).create();
       } else {
         this.layoutDiffer = undefined;
       }
@@ -196,12 +196,12 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
 
     if (this.updateOnDataChange) {
       if (this.dataDiffer) {
-        const dataHasDiff = this.dataDiffer.diff(this.data);
+        const dataHasDiff = this.dataDiffer.diff(this._data);
         if (dataHasDiff) {
           shouldUpdate = true;
         }
-      } else if (Array.isArray(this.data)) {
-        this.dataDiffer = this.iterableDiffers.find(this.data).create(this.dataDifferTrackBy);
+      } else if (Array.isArray(this._data)) {
+        this.dataDiffer = this.iterableDiffers.find(this._data).create(this.dataDifferTrackBy);
       } else {
         this.dataDiffer = undefined;
       }
@@ -239,7 +239,7 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
       this.rect = this.el.nativeElement.getBoundingClientRect();
       this.plotlyInstance = plotlyInstance;
       this.LOG.debug(['plotlyInstance'], plotlyInstance);
-      this.getWindow().gd = this.debug ? plotlyInstance : undefined;
+      this.getWindow().gd = this._debug ? plotlyInstance : undefined;
 
       this.eventNames.forEach(name => {
         const eventName = `plotly_${name.toLowerCase()}`;
@@ -273,7 +273,7 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   updatePlot() {
-    this.LOG.debug(['updatePlot'], this.data, this.layout, {...this.config});
+    this.LOG.debug(['updatePlot'], this._data, this._layout, {...this._config});
     if (!this.plotlyInstance) {
       const error = new Error(`Plotly component wasn't initialized`);
       this.error.emit(error);

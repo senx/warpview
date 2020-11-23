@@ -50,7 +50,6 @@ export class WarpViewMapComponent implements OnInit {
 
   @Input('heatData') heatData: any[] = [];
   @Input('responsive') responsive = false;
-  @Input('showLegend') showLegend = true;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
   private bounds: Leaflet.LatLngBounds;

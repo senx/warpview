@@ -36,6 +36,9 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
 
   layout: Partial<any> = {
     showlegend: false,
+    legend: {
+      orientation: 'h'
+    },
     xaxis: {},
     yaxis: {
       exponentformat: 'none',
@@ -184,7 +187,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     this.LOG.debug(['buildGraph', 'this.layout'], this.layout);
     this.LOG.debug(['buildGraph', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.barmode = this._options.stacked ? 'stack' : 'group';
-    this.layout.showLegend = !!this._options.showLegend;
+    this.layout.showlegend = !!this._options.showLegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;

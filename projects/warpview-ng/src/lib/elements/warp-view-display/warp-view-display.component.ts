@@ -73,8 +73,6 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   private drawChart() {
     this.LOG.debug(['drawChart'], this._options, this.defOptions);
     this.initChart(this.el);
-    this._options.timeMode = this._options.timeMode || 'custom';
-    this._options = ChartLib.mergeDeep(this.defOptions, this._options);
     this.LOG.debug(['drawChart', 'afterInit'], this._options, this.defOptions, this.height);
     this.LOG.debug(['drawChart'], this._data, this.toDisplay);
     this.flexFont();
@@ -82,13 +80,18 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
   }
 
   protected convert(data: DataModel): any[] {
-    this._options = ChartLib.mergeDeep(this.defOptions, this._options);
-    this.LOG.debug(['convert'], this._options.timeMode);
-    let display: string;
+    let display: any;
     if (this._data.data) {
       display = GTSLib.isArray(this._data.data) ? this._data.data[0] : this._data.data;
     } else {
       display = GTSLib.isArray(this._data) ? this._data[0] : this._data;
+    }
+    if (display.hasOwnProperty('text')) {
+      if (display.hasOwnProperty('url')) {
+        display = `<a href="${display.url}" target="_blank">${display.text}</a>`;
+      } else {
+        display = display.text;
+      }
     }
     switch (this._options.timeMode) {
       case 'date':

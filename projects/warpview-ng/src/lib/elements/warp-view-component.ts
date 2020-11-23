@@ -110,7 +110,6 @@ export abstract class WarpViewComponent {
   protected defOptions = ChartLib.mergeDeep(new Param(), {
     dotsLimit: 1000,
     heatControls: false,
-    timeMode: 'date',
     showRangeSelector: true,
     gridLineColor: '#8e8e8e',
     showDots: false,
@@ -132,6 +131,7 @@ export abstract class WarpViewComponent {
   loading = true;
   noData = true;
   layout: Partial<any> = {
+    showlegend: false,
     margin: {
       t: 10,
       b: 25,
@@ -276,10 +276,10 @@ export abstract class WarpViewComponent {
         }
       }
     }
-    this.LOG.debug(['initiChart', 'this._data'], this._data, this._options);
+    this.LOG.debug(['initChart', 'this._data'], this._data, this._options);
     if (!this._data || !this._data.data || this._data.data.length === 0 || !this._options) {
       this.loading = false;
-      this.LOG.debug(['initiChart', 'nodata']);
+      this.LOG.debug(['initChart', 'nodata']);
       this.noData = true;
       this.chartDraw.emit();
       return false;
@@ -287,7 +287,11 @@ export abstract class WarpViewComponent {
     this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
     const dataModel = this._data;
     this._options = ChartLib.mergeDeep<Param>(this._options || {} as Param, this._data.globalParams) as Param;
-    this._options.timeMode = this._options.timeMode || this._type === 'display' ? 'custom' : 'date';
+    this.LOG.debug(['initChart', 'this._options.timeMode'], this._options.timeMode);
+    if (!this._options.timeMode) {
+      this._options.timeMode = this._type === 'display' ? 'custom' : 'date';
+    }
+    this.LOG.debug(['initChart', 'this._options.timeMode'], this._options.timeMode, this._options);
     this.loading = !this._options.isRefresh;
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     this.plotlyData = this.convert(dataModel);

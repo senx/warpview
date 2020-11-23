@@ -354,7 +354,20 @@ LMAP
       warpscript: `{
   'data' '<a href="https://warp10.io/" target="_blank">Warp 10</a>'
   'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' 'timeMode' 'custom' }
-}`,
+}` }, {
+      title: 'Data display HTML',
+      type: 'display',
+      warpscript: `{
+  'data' { 'text' 'SenX.io' 'url' 'https://senx.io' }
+  'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' }
+}`
+    }, {
+      title: 'Data only text',
+      type: 'display',
+      warpscript: `{
+  'data' { 'text' 'SenX.io' }
+  'globalParams' { 'bgColor' '#f57f17' 'fontColor' '#bc5100' }
+}`
     }
     ],
     drilldown: [{
@@ -743,7 +756,7 @@ ZIP // merge into a list of GTS
     ...new Param(), ...{
       gridLineColor: '#000000',
       fontColor: '#000000',
-    //  map: {mapType: 'CARTODB_DARK'},
+      //  map: {mapType: 'CARTODB_DARK'},
       showControls: true,
       showGTSTree: true,
       foldGTSTree: true,
