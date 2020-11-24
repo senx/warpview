@@ -145,28 +145,32 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
     } else {
       // custom data format
       gtsList.forEach((gts, i) => {
-        dataStruct.push({
-          key: gts.key || '',
-          value: gts.value || Number.MIN_VALUE
-        });
+        if (gts.hasOwnProperty('key')) {
+          dataStruct.push({
+            key: gts.key || '',
+            value: gts.value || Number.MIN_VALUE
+          });
+        } else {
+          Object.keys(gts).forEach(k => dataStruct.push({key: k, value: gts[k]}));
+        }
       });
     }
     this.LOG.debug(['convert', 'dataStruct'], dataStruct);
     dataStruct.forEach((d: any, i) => {
-        const c = ColorLib.getColor(i, this._options.scheme);
-        const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
-        pieData.values.push(d.value);
-        pieData.labels.push(d.key);
-        pieData.marker.colors.push(ColorLib.transparentize(color));
-        pieData.marker.line.color.push(color);
-        if (this._type === 'donut') {
-          pieData.hole = 0.5;
-        }
-        if (this.unit) {
-          pieData.title = {
-            text: this.unit
-          };
-        }
+      const c = ColorLib.getColor(i, this._options.scheme);
+      const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
+      pieData.values.push(d.value);
+      pieData.labels.push(d.key);
+      pieData.marker.colors.push(ColorLib.transparentize(color));
+      pieData.marker.line.color.push(color);
+      if (this._type === 'donut') {
+        pieData.hole = 0.5;
+      }
+      if (this.unit) {
+        pieData.title = {
+          text: this.unit
+        };
+      }
     });
     if (pieData.values.length > 0) {
       plotData.push(pieData);

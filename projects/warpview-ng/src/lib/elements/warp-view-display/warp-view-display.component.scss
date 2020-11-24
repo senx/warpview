@@ -33,6 +33,10 @@
     display: flex;
     overflow: hidden;
 
+    img {
+      max-width: 100% !important ;
+    }
+
     .value {
       padding: 10px;
       text-align: center;
