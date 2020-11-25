@@ -105,7 +105,6 @@ export abstract class WarpViewComponent {
 
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
 
-  _options: Param = new Param();
   protected LOG: Logger;
   protected defOptions = ChartLib.mergeDeep(new Param(), {
     dotsLimit: 1000,
@@ -130,6 +129,7 @@ export abstract class WarpViewComponent {
   tooltipPosition: any = {top: '-10000px', left: '-1000px'};
   loading = true;
   noData = true;
+  _options: Param = new Param();
   layout: Partial<any> = {
     showlegend: false,
     margin: {

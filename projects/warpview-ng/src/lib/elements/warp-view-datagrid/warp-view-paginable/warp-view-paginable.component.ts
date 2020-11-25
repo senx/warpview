@@ -19,7 +19,6 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {Logger} from '../../../utils/logger';
 import {Param} from '../../../model/param';
 import {ChartLib} from '../../../utils/chart-lib';
-import deepEqual from 'deep-equal';
 import {GTSLib} from '../../../utils/gts.lib';
 
 @Component({
@@ -43,7 +42,8 @@ export class WarpViewPaginableComponent implements OnInit {
   }
 
   @Input('options') set options(options: Param) {
-    if (!deepEqual(options, this._options)) {
+    if (JSON.stringify(options || new Param()) !== JSON.stringify(this._options || new Param())) {
+      this._options = options;
       this.drawGridData();
     }
   }
@@ -66,8 +66,9 @@ export class WarpViewPaginableComponent implements OnInit {
   private LOG: Logger;
   // tslint:disable-next-line:variable-name
   private _debug = false;
+  private _options = new Param();
   // tslint:disable-next-line:variable-name
-  private _options: Param = {
+  private defOptions: Param = {
     ...new Param(), ...{
       timeMode: 'date',
       timeZone: 'UTC',
@@ -92,18 +93,20 @@ export class WarpViewPaginableComponent implements OnInit {
   }
 
   private drawGridData() {
-    this._options = ChartLib.mergeDeep(this._options, this.options) as Param;
     this.LOG.debug(['drawGridData', '_options'], this._options);
     if (!this._data) {
       return;
     }
+    this._options = ChartLib.mergeDeep<Param>(this.defOptions, this._options || {}) as Param;
     this.pages = [];
-    for (let i = 0; i < (this._data.values || [] ).length / this.elemsCount; i++) {
+    for (let i = 0; i < (this._data.values || []).length / this.elemsCount; i++) {
       this.pages.push(i);
     }
-    this.displayedValues = (this._data.values || [] ).slice(
+    this.elemsCount = this._options.elemsCount || this.elemsCount;
+    this.windowed = this._options.windowed || this.windowed;
+    this.displayedValues = (this._data.values || []).slice(
       Math.max(0, this.elemsCount * this.page),
-      Math.min(this.elemsCount * (this.page + 1), (this._data.values || [] ).length)
+      Math.min(this.elemsCount * (this.page + 1), (this._data.values || []).length)
     );
     this.LOG.debug(['drawGridData', '_data'], this._data);
   }

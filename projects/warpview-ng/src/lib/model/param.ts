@@ -86,4 +86,6 @@ export class Param {
   };
   maxValue: number;
   isRefresh?: boolean;
+  elemsCount?: number;
+  windowed?: number;
 }

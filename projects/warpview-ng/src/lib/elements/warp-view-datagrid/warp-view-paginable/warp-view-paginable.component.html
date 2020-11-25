@@ -38,7 +38,7 @@
              [ngClass]="{ index: true, hoverable: page !== c, active: page === c}" (click)="goto(c)">{{c}}</span>
       </span>
       <div class="index disabled" *ngIf="page + windowed < pages.length">...</div>
-      <div class="next hoverable" (click)="next()" *ngIf="page + windowed < (_data.values || []).length - 1">&gt;</div>
+      <div class="next hoverable" (click)="next()" *ngIf="page + windowed < (_data.values || []).length - 1">&gt;</div>
     </div>
   </div>
 </div>
