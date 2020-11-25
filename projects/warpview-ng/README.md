@@ -11,11 +11,9 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 ## Getting started
 
-    npm i @senx/warpview@1.0.52 --save
+    npm i @senx/warpview --save
     
-    yarn add @senx/warpview@1.0.52
-    
-    bower install senx-warpview@1.0.52 --save
+    yarn add @senx/warpview
 
 ```html
 <html>
