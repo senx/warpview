@@ -4,7 +4,8 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 ![WarpView](imgs/warpView.png)
 
-- [Demo & documentation](https://senx.github.io/warpview/)
+- [Demo](https://senx.github.io/warpview/)
+- [Documentation](https://github.com/senx/warpview/wiki/)
 - [licence Apache 2](./LICENSE.md)
 - [Contribute](./CONTRIBUTING.md)
 
@@ -20,17 +21,20 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 <html>
 <head>
   <title>Test</title>
-  <script src="https://unpkg.com/@senx/warpview@1.0.52/dist/warpview.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@senx/warpview/elements/warpview-elements.js"></script>
 </head>
 <body>
-  <warp-view-spinner />
   
   <div style="width: 100%; height: 800px;">
-    <warp-view-tile url="https:/warp10-backend/api/v0/exec" responsive="true" show-legend="false"
-      chart-title="">
-    
-      // WARPSCRIPT
-      
+    <warp-view-tile 
+      url="https:/warp10-backend/api/v0/exec"
+      options='{"showDots":false,"scheme":"WARP10"}' 
+      type="line"
+      responsive="true" 
+      chart-title="Sample"
+    >NEWGTS 'g' STORE
+      0 9 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND ADDVALUE DROP %> FOR
+      $g 
     </warp-view-tile>
   </div>
 </body>

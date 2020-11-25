@@ -4,36 +4,39 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 ![WarpView](imgs/warpView.png)
 
+- [Demo](https://senx.github.io/warpview/)
 - [Documentation](https://github.com/senx/warpview/wiki/)
-- [Licence Apache 2](./LICENSE.md)
+- [licence Apache 2](./LICENSE.md)
 - [Contribute](./CONTRIBUTING.md)
 
 ## Getting started
 
-    npm i @senx/warpview --save
+    npm i @senx/warpview@1.0.52 --save
     
-    yarn add @senx/warpview
-
-## Usage
+    yarn add @senx/warpview@1.0.52
+    
+    bower install senx-warpview@1.0.52 --save
 
 ```html
 <html>
 <head>
   <title>Test</title>
- 
+<script src="https://cdn.jsdelivr.net/npm/@senx/warpview/elements/warpview-elements.js"></script>
 </head>
 <body>
-  <warp-view-spinner />
   
   <div style="width: 100%; height: 800px;">
-    <warp-view-tile url="https:/warp10-backend/api/v0/exec" responsive="true" showLegend="false"
-      chart-title="">
-    
-      // WARPSCRIPT
-      
+    <warp-view-tile 
+      url="https:/warp10-backend/api/v0/exec"
+      options='{"showDots":false,"scheme":"WARP10"}' 
+      type="line"
+      responsive="true" 
+      chart-title="Sample"
+    >NEWGTS 'g' STORE
+      0 9 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND ADDVALUE DROP %> FOR
+      $g 
     </warp-view-tile>
   </div>
-  <script src="https://unpkg.com/@senx/warpview/elements/warpview-elements.js"></script>
 </body>
 </html>
 ```
@@ -41,6 +44,11 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 ## Components
 
 [See wiki](https://github.com/senx/warpview/wiki/)
+
+
+## Integrations
+
+[See here](https://stenciljs.com/docs/framework-integration)
 
 ## About
 
