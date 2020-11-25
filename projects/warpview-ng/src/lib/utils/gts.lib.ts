@@ -288,7 +288,11 @@ export class GTSLib {
 
   static getData(data: any): DataModel {
     if (typeof data === 'string') {
-      return GTSLib.getData(JSON.parse(data as string));
+      if (data.startsWith('[') || data.startsWith('{')) {
+        return GTSLib.getData(JSON.parse(data as string));
+      } else {
+        return {data};
+      }
     } else if (data && data.hasOwnProperty('data')) {
       if (!GTSLib.isArray(data.data)) {
         data.data = [data.data];
@@ -352,7 +356,7 @@ export class GTSLib {
     }
     display += '</span>';
     return display;
-  }
+  };
 
   static toISOString(timestamp: number, divider: number, timeZone: string) {
     if (timeZone !== 'UTC') {
