@@ -45,9 +45,15 @@
       <p [innerHTML]="tests[currentTest].description"></p>
 
       <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;">
+        <warpview-result-tile chart-title="" responsive="true" type="display"
+                               options='{"showDots":false,"showErrors":true,"showStatus":false,"timeMode":"custom"}'
+                                data='"<a href=\"https://warp.senx.io/standalone/http/discovery/runners\" target=\"_blank\"><img src=\"https://at-cdn-s02.audiotool.com/2019/06/23/documents/zszjguwl/0/cover256x256-9616099e5219456c93dcb988f2ee9172.jpg\" alt=\"Telemetry\" width=\"120px\"/></a>"'
+        ></warpview-result-tile>
+
+<!--
         <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
                         [options]="options" chartTitle="tests"
-                       [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
+                       [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>-->
       </div>
     </div>
   </div>

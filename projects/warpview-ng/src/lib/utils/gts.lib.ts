@@ -291,7 +291,7 @@ export class GTSLib {
       if (data.startsWith('[') || data.startsWith('{')) {
         return GTSLib.getData(JSON.parse(data as string));
       } else {
-        return {data};
+        return {data: JSON.parse(`[${data}]`)};
       }
     } else if (data && data.hasOwnProperty('data')) {
       if (!GTSLib.isArray(data.data)) {
