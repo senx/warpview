@@ -71,6 +71,8 @@ export class WarpViewMapComponent implements OnInit {
         || options.map.startLat !== this._options.map.startLat
         || options.map.startLong !== this._options.map.startLong;
       this._options = {...options as Param};
+      this.currentLat = this._options.map.startLat || 0;
+      this.currentLong = this._options.map.startLong || 0;
       this.divider = GTSLib.getDivider(this._options.timeUnit);
       this.drawMap(reZoom);
     }
@@ -454,7 +456,7 @@ export class WarpViewMapComponent implements OnInit {
                 lat: this.currentLat || this._options.map.startLat || 0,
                 lng: this.currentLong || this._options.map.startLong || 0
               }, this.currentZoom || this._options.map.startZoom || 10,
-              {animate: false, duration: 500});
+              {animate: false, duration: 0});
           } else {
             this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'this.bounds', this.bounds);
             this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
