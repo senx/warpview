@@ -272,7 +272,7 @@ export class WarpViewMapComponent implements OnInit {
     const m = marker !== '' ? marker : 'circle';
     return Leaflet.icon({
       // tslint:disable-next-line:max-line-length
-      iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v4/pin?icon=fa-${m}&iconSize=17&size=40&hoffset=${m === 'circle' ? 0 : -1}&voffset=-4&color=fff&background=${c}`,
+      iconUrl: `https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-${m}&iconSize=17&size=40&hoffset=${m === 'circle' ? 0 : -1}&voffset=-4&color=fff&background=${c}`,
       iconAnchor: this._iconAnchor,
       popupAnchor: this._popupAnchor
     });
