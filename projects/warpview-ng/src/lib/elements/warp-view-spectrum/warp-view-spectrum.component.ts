@@ -128,7 +128,7 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
             x: 1 + gts.id / 20,
             xpad: 0
           },
-          showscale: this._options.showLegend,
+          showscale: this._options.showlegend,
           colorscale: ColorLib.getColorGradient(gts.id, this._options.scheme),
           autocolorscale: false,
           name: label,

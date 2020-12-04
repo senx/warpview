@@ -187,7 +187,7 @@ export class WarpViewBarComponent extends WarpViewComponent implements OnInit {
     this.LOG.debug(['buildGraph', 'this.layout'], this.layout);
     this.LOG.debug(['buildGraph', 'this.plotlyConfig'], this.plotlyConfig);
     this.layout.barmode = this._options.stacked ? 'stack' : 'group';
-    this.layout.showlegend = !!this._options.showLegend;
+    this.layout.showlegend = !!this._options.showlegend;
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;
