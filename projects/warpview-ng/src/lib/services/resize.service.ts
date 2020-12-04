@@ -15,7 +15,9 @@
  *
  */
 
-import { EventEmitter, Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 export class Size {
   constructor(public width: number, public height: number) {
@@ -25,13 +27,17 @@ export class Size {
 
 @Injectable()
 export class SizeService {
-  public sizeChanged$: EventEmitter<Size>;
+  private debouncer: Subject<Size> = new Subject<Size>();
+  public sizeChanged$: EventEmitter<Size> = new EventEmitter();
+
 
   constructor() {
-    this.sizeChanged$ = new EventEmitter();
+    this.debouncer
+      .pipe(debounceTime(100))
+      .subscribe((value) => this.sizeChanged$.emit(value));
   }
 
   public change(size: Size): void {
-    this.sizeChanged$.emit(size);
+    this.debouncer.next(size);
   }
 }

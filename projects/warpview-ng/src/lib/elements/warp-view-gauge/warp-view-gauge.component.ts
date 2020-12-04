@@ -18,7 +18,6 @@
 import {Component, ElementRef, Input, NgZone, OnInit, Renderer2, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {DataModel} from '../../model/dataModel';
-import gauge from 'canvas-gauges';
 import {ColorLib} from '../../utils/color-lib';
 import deepEqual from 'deep-equal';
 import {SizeService} from '../../services/resize.service';

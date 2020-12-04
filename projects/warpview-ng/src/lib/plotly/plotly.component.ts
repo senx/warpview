@@ -46,8 +46,11 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
 
   @Input() set data(data: Partial<any>[]) {
     this._data = data;
+    this.LOG.debug(['PlotlyComponent'], data);
     this.updatePlot();
+    this.LOG.debug(['PlotlyComponent'], 'after updatePlot');
     this.updateWindowResizeHandler();
+    this.LOG.debug(['PlotlyComponent'], 'after updateWindowResizeHandler');
   }
 
   get data(): Partial<any>[] {
@@ -80,11 +83,15 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
     return this._config;
   }
 
-  @Input() set debug(debug: boolean) {
+  @Input('debug') set debug(debug: boolean | string) {
+    if (typeof debug === 'string') {
+      debug = 'true' === debug;
+    }
     this._debug = debug;
+    this.LOG.setDebug(debug);
   }
 
-  get debug(): boolean {
+  get debug() {
     return this._debug;
   }
 
@@ -154,7 +161,7 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
     public el: ElementRef,
     public keyValueDiffers: KeyValueDiffers
   ) {
-    this.LOG = new Logger(PlotlyComponent, this.debug);
+    this.LOG = new Logger(PlotlyComponent, this._debug);
   }
 
   ngOnInit() {
@@ -234,33 +241,34 @@ export class PlotlyComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   createPlot(): Promise<void> {
-    this.LOG.debug(['createPlot'], this._data, this._layout, this._config, this.plotlyInstance);
-    return Plotlyjs.react(this.plotEl.nativeElement, this._data, this._layout, this._config).then(plotlyInstance => {
-      this.rect = this.el.nativeElement.getBoundingClientRect();
-      this.plotlyInstance = plotlyInstance;
-      this.LOG.debug(['plotlyInstance'], plotlyInstance);
-      this.getWindow().gd = this._debug ? plotlyInstance : undefined;
+    this.LOG.debug(['createPlot']);
+    return Plotlyjs.react(this.plotEl.nativeElement, this._data, this._layout, this._config)
+      .then(plotlyInstance => {
+        this.LOG.debug(['plotlyInstance'], plotlyInstance);
+        this.rect = this.el.nativeElement.getBoundingClientRect();
+        this.plotlyInstance = plotlyInstance;
+        this.getWindow().gd = this._debug ? plotlyInstance : undefined;
 
-      this.eventNames.forEach(name => {
-        const eventName = `plotly_${name.toLowerCase()}`;
-        // @ts-ignore
-        plotlyInstance.on(eventName, (data: any) => {
-          this.LOG.debug(['plotlyEvent', eventName], data);
-          (this[name] as EventEmitter<any>).emit(data);
+        this.eventNames.forEach(name => {
+          const eventName = `plotly_${name.toLowerCase()}`;
+          // @ts-ignore
+          plotlyInstance.on(eventName, (data: any) => {
+            this.LOG.debug(['plotlyEvent', eventName], data);
+            (this[name] as EventEmitter<any>).emit(data);
+          });
         });
-      });
 
-      plotlyInstance.on('plotly_click', (data: any) => {
-        this.click.emit(data);
-        this.plotly_click.emit(data);
-      });
+        plotlyInstance.on('plotly_click', (data: any) => {
+          this.click.emit(data);
+          this.plotly_click.emit(data);
+        });
 
-      this.updateWindowResizeHandler();
-      this.afterPlot.emit(plotlyInstance);
-    }, err => {
-      console.error('Error while plotting:', err);
-      this.error.emit(err);
-    });
+        this.updateWindowResizeHandler();
+        this.afterPlot.emit(plotlyInstance);
+      }, err => {
+        console.error('Error while plotting:', err);
+        this.error.emit(err);
+      });
   }
 
   createFigure(): Figure {
