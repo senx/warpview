@@ -98,7 +98,7 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
     this.LOG.debug(['parseData'], dataList);
     dataList.forEach((gts, i) => {
       const name = GTSLib.serializeGtsMetadata(gts);
-      gts.v.forEach(v => {
+      (gts.v || []).forEach(v => {
         const refDate = moment.utc(v[0] / 1000).startOf('day').toISOString();
         if (!data[refDate]) {
           data[refDate] = [];

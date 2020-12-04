@@ -106,7 +106,7 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
         series.y = values;
         series.marker.size = sizes;
       } else {
-        gts[label].forEach(value => {
+        (gts[label] || []).forEach(value => {
           series.y.push(value[0]);
           series.x.push(value[1]);
           series.marker.size.push(value[2]);
