@@ -20,7 +20,7 @@ export class Param {
   datasetColor?: string;
   fontColor?: string;
   borderColor?: string;
-  showLegend = false;
+  showlegend = false;
   responsive?: boolean;
   horizontal = false;
   stacked = false;

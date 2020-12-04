@@ -47,7 +47,7 @@ export class SmallTestsComponent implements OnInit {
       map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
       showControls: true,
       showGTSTree: true,
-      showLegend: false,
+      showlegend: false,
       showStatus: false,
       foldGTSTree: true,
       expandAnnotation: true,
@@ -60,13 +60,21 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'line',
+      type: 'plot',
       description: '',
       warpscript: `
-      @training/dataset0 $TOKEN AUTHENTICATE 100000000 MAXOPS
+      @training/dataset0
+// warp.store.hbase.puts.committed is the number of datapoints committed to 
+// HBase since the restart of the Store daemon
+[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH
+[ SWAP mapper.rate 1 0 0 ] MAP 
+'gts' STORE 
+// Keep only 1000 datapoints per GTS
+$gts 1000 LTTB
+    /*  @training/dataset0 $TOKEN AUTHENTICATE 100000000 MAXOPS
 0 3 <% NEWGTS 'g' STORE
 0 100 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND ADDVALUE DROP %> FOR
-$g %> FOR 
+$g %> FOR */ 
  // { 'data' NOW 'globalParams' { 'timeMode' 'duration' } }
 /* NEWGTS 'g' STORE
 0 99 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND 100 * ADDVALUE DROP %> FOR

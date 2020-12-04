@@ -99,7 +99,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
       orientation: 'h',
       y: -0.3
     },
-    showLegend: false,
+    showlegend: false,
     autosize: true,
     hovermode: 'x',
     hoverdistance: 20,
@@ -184,7 +184,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     } else {
       this.layout.margin.b = 30;
     }
-    this.layout.showlegend = !!this._options.showLegend;
+    this.layout.showlegend = !!this._options.showlegend;
     this.layout = {...this.layout};
     this.highliteCurve.pipe(throttleTime(200)).subscribe(value => {
       this.graph.restyleChart({opacity: 0.4}, value.off);
