@@ -358,12 +358,12 @@ export abstract class WarpViewComponent {
         (data.xvals || [''])[0]
       , data.points, highlighted);
     if (!!p) {
-      let left = (p.xaxis.d2p(p.x) + p.xaxis._offset + 20) + 'px';
+      let left = (data.event.clientX - this.el.nativeElement.getBoundingClientRect().x + 20) + 'px';
       if (data.event.offsetX > this.chartContainer.nativeElement.clientWidth / 2) {
         left = Math.max(0,
-          p.xaxis.d2p(p.x) + p.xaxis._offset - this.toolTip.nativeElement.clientWidth - 20) + 'px';
+          data.event.clientX - this.el.nativeElement.getBoundingClientRect().x - this.toolTip.nativeElement.clientWidth - 20) + 'px';
       }
-      let top = (p.yaxis.l2p(p.y) + p.yaxis._offset);
+      let top = data.event.clientY - this.el.nativeElement.getBoundingClientRect().y;
       top = Math.min(
         this.el.nativeElement.getBoundingClientRect().height - this.toolTip.nativeElement.getBoundingClientRect().height - 20,
         top);

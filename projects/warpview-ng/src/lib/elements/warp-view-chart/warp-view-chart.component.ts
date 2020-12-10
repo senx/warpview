@@ -475,7 +475,6 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
   }
 
   hover(data: any) {
-    //  this.LOG.debug(['hover'], data);
     const xaxis = data.points[0].xaxis;
     const yaxis = data.points[0].yaxis;
     let toHighlight;
