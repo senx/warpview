@@ -233,4 +233,8 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   onWarpViewNewOptions(opts: any) {
     this._options = opts;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

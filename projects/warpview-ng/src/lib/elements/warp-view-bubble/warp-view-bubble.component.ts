@@ -127,4 +127,8 @@ export class WarpViewBubbleComponent extends WarpViewComponent implements OnInit
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

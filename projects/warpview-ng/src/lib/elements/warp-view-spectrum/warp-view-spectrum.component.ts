@@ -165,4 +165,8 @@ export class WarpViewSpectrumComponent extends WarpViewComponent {
     this.layout.xaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

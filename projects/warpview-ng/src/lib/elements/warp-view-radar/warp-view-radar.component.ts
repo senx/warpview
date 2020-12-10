@@ -132,4 +132,8 @@ export class WarpViewRadarComponent extends WarpViewComponent implements OnInit 
     this.layout.polar.radialaxis.range = [minVal, maxVal];
     return dataset;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

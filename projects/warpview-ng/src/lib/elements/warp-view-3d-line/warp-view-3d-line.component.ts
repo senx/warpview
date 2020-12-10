@@ -119,4 +119,8 @@ export class WarpView3dLineComponent extends WarpViewComponent implements OnInit
     this.layout.zaxis.color = this.getGridColor(this.el.nativeElement);
     this.loading = false;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

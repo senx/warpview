@@ -472,4 +472,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       }
     }
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

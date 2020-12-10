@@ -136,4 +136,8 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
     this.warpViewSelectedGTS.emit(event);
   }
 
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
+
 }

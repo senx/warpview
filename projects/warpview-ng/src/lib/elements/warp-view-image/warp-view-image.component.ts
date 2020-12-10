@@ -119,4 +119,8 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
   protected convert(data: DataModel): any[] {
     return [];
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

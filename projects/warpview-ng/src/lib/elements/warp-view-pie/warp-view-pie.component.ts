@@ -178,4 +178,8 @@ export class WarpViewPieComponent extends WarpViewComponent implements OnInit {
     this.noData = plotData.length === 0;
     return plotData;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

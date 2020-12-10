@@ -51,7 +51,7 @@ export class SmallTestsComponent implements OnInit {
       showStatus: false,
       foldGTSTree: true,
       expandAnnotation: true,
-      showRangeSelector: false,
+      showRangeSelector: true,
       showDots: false,
       //  autoRefresh: 5,
       //   timeMode: 'duration',
@@ -60,7 +60,7 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'plot',
+      type: 'line',
       description: '',
       warpscript: `
       @training/dataset0

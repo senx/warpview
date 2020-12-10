@@ -127,4 +127,8 @@ export class WarpViewDrillDownComponent extends WarpViewComponent implements Aft
     });
     return details;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

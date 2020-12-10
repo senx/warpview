@@ -142,4 +142,8 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
       this.toDisplay = moment.duration(start.diff(now)).humanize(true);
     }, 1000);
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

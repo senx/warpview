@@ -179,7 +179,7 @@ export abstract class WarpViewComponent {
           if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
             setTimeout(() => this.layout = {...this.layout, ...layout});
             this.LOG.debug(['sizeChanged$'], this.layout.width, this.layout.height);
-            //this.graph.resize(layout);
+            this.resize(layout);
           }
         }
       }
@@ -189,6 +189,8 @@ export abstract class WarpViewComponent {
   protected abstract update(options: Param, refresh: boolean): void;
 
   protected abstract convert(data: DataModel): Partial<any>[];
+
+  protected abstract resize(layout: { width: number; height: any });
 
   protected legendFormatter(x, series, highlighted = -1): string {
     const displayedCurves = [];

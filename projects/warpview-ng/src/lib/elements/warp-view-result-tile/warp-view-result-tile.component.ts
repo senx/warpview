@@ -130,4 +130,8 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
   onWarpViewNewOptions(opts) {
     this.warpViewNewOptions.emit(opts);
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

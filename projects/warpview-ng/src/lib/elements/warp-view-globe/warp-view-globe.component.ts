@@ -144,4 +144,8 @@ export class WarpViewGlobeComponent extends WarpViewComponent implements OnInit 
     this.loading = false;
   }
 
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
+
 }

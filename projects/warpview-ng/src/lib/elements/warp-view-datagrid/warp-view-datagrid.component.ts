@@ -142,4 +142,8 @@ export class WarpViewDatagridComponent extends WarpViewComponent implements OnIn
   formatDate(date: number): string {
     return this._options.timeMode === 'date' ? GTSLib.toISOString(date, this.divider, this._options.timeZone) : date.toString();
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

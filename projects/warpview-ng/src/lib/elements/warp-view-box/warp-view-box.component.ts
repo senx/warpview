@@ -117,4 +117,8 @@ export class WarpViewBoxComponent extends WarpViewComponent implements OnInit {
   hover(data: any) {
 
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

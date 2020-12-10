@@ -523,4 +523,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.xaxis = x;
     this.layout = {...this.layout};
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

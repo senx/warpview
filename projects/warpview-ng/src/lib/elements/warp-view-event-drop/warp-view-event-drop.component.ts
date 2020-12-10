@@ -217,4 +217,8 @@ ${GTSLib.formatLabel(g.name)}: <span class="value">${g.value}</span>
     };
     return dataList;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

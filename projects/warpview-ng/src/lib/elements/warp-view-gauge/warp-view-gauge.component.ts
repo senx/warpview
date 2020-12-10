@@ -257,4 +257,8 @@ export class WarpViewGaugeComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['convert', 'dataList'], dataList);
     return dataList;
   }
+
+  public resize(layout: { width: number; height: any }) {
+    //
+  }
 }

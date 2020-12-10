@@ -147,15 +147,17 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     });
   }
 
-  public resize(newHeight: number) {
-    this.LOG.debug(['resize'], newHeight);
-    this.height = newHeight;
-    this.layout.height = this.height;
-    if (this._options.showRangeSelector) {
-      this.layout.xaxis.rangeslider = {
-        bgcolor: 'transparent',
-        thickness: 40 / this.height
-      };
+  public resize(layout: { width: number; height: any }) {
+    if (!!layout) {
+      this.LOG.debug(['resize'], layout);
+      this.height = layout.height;
+      this.layout.height = this.height;
+      if (this._options.showRangeSelector) {
+        this.layout.xaxis.rangeslider = {
+          bgcolor: 'transparent',
+          thickness: 40 / this.height
+        };
+      }
     }
   }
 
@@ -180,7 +182,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig);
     if (!!this._options.showRangeSelector) {
-      this.resize(this.height);
+      this.resize({height: this.height, width: 0});
     } else {
       this.layout.margin.b = 30;
     }
@@ -221,7 +223,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     }
     this.layout.xaxis = x;
     if (!!res) {
-      this.resize(this.height);
+      this.resize({height: this.height, width: 0});
     }
     return res;
   }
