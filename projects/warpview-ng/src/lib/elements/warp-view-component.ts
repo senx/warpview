@@ -50,7 +50,9 @@ export abstract class WarpViewComponent {
 
   @Input('unit') set unit(unit: string) {
     this._unit = unit;
-    this.update(undefined, false);
+    if (!!this._data) {
+      this.update(undefined, false);
+    }
   }
 
   get unit() {
@@ -89,17 +91,22 @@ export abstract class WarpViewComponent {
       this.drawn = false;
       this.LOG.debug(['onOptions', 'changed'], options);
       this._options = ChartLib.mergeDeep<Param>(options as Param, {});
-      this.update(this._options, false);
+      if (!!this._data) {
+        this.update(this._options, false);
+      }
     }
   }
 
   @Input('data') set data(data: string | DataModel | GTS[]) {
-    this.LOG.debug(['onData'], data);
+    this.LOG.debug(['onData', 'pre', 'WVC'], this._data);
     if (data) {
       this.drawn = false;
-      this._data = GTSLib.getData(data);
-      this.update(this._options, this._options.isRefresh);
-      this.LOG.debug(['onData'], this._data);
+      const newData = GTSLib.getData(data);
+      if (JSON.stringify(newData) !== JSON.stringify(this._data)) {
+        this._data = newData;
+        this.update(this._options, this._options.isRefresh);
+        this.LOG.debug(['onData', 'WVC'], this._data);
+      }
     }
   }
 
@@ -316,10 +323,10 @@ export abstract class WarpViewComponent {
     this.chartDraw.emit();
     if (!customData) {
       this.noData = (this.plotlyData || []).length === 0;
-      return !(!this.plotlyData || this.plotlyData.length === 0);
-    } else {
-      return true;
-    }
+      //    return !(!this.plotlyData || this.plotlyData.length === 0);
+    } // else {
+    return true;
+    // }
   }
 
   afterPlot(plotlyInstance?: any) {

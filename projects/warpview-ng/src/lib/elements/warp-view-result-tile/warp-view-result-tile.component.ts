@@ -82,7 +82,6 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
       this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options),
         this._data ? this._data.globalParams || {} : {}) as Param;
       this.LOG.debug(['parseGTS', 'data'], this._data);
-      this.dataModel = this._data;
       if (this._options) {
         this._unit = this._options.unit || this._unit;
         this._type = this._options.type || this._type || 'plot';
@@ -96,9 +95,9 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     setTimeout(() => this.loading = !this.isRefresh);
     this.LOG.debug(['convert', 'data'], this._data, data);
     this.dataModel = data;
-    if (this.dataModel.globalParams) {
-      this._unit = this.dataModel.globalParams.unit || this._unit;
-      this._type = this.dataModel.globalParams.type || this._type || 'plot';
+    if (data.globalParams) {
+      this._unit = data.globalParams.unit || this._unit;
+      this._type = data.globalParams.type || this._type || 'plot';
     }
     this.LOG.debug(['convert', '_type'], this._type);
     return [];
@@ -123,7 +122,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
       this._data = GTSLib.getData(data);
       this._options.isRefresh = isRefresh;
       this.update(this._options, isRefresh);
-      this.LOG.debug(['onData'], this._data);
+      this.LOG.debug(['setResult'], this._data);
     }
   }
 

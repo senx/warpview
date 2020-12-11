@@ -10933,15 +10933,15 @@ platform@*, platform@^1.3.4:
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.6.tgz#48b4ce983164b209c2d45a107adb31f473a6e7a7"
   integrity sha512-fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg==
 
-plotly.js-dist@^1.58.0:
-  version "1.58.0"
-  resolved "https://registry.yarnpkg.com/plotly.js-dist/-/plotly.js-dist-1.58.0.tgz#9e653045837066418687b6b62157a1b6e459ab1f"
-  integrity sha512-MXhZ0rWe0LoDkU3N6T/pJF14zJxGROInlqjZ1OEl+6uyfE0TdK5zYMCef96CVuW5mvOjaIPPydFvInVGLSH7bA==
+plotly.js-dist@^1.58.2:
+  version "1.58.2"
+  resolved "https://registry.yarnpkg.com/plotly.js-dist/-/plotly.js-dist-1.58.2.tgz#e4d62dfe562ac93023e90fc7dbb978f942bbaf2d"
+  integrity sha512-IJG1Lubiv6wwOM+fIXD5FaufAMbMvP1J7ppiwfQkutXx6AGeRbS8dIBqcrJS5Lmh3/NOWIzjeQD7XkraVW+Trg==
 
-plotly.js@^1.58.0:
-  version "1.58.0"
-  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.58.0.tgz#670bbd3a0b432717a18a3e84f47cc9e13fc77832"
-  integrity sha512-w1Z/eaAUZolh2aZZud/6Gb0SLHRVtGOAzCZIrzMGjKJ9eq7dfpYUdfSWj2W7+AQieU+Lc8OpgxknhCYwbT216A==
+plotly.js@^1.58.2:
+  version "1.58.2"
+  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.58.2.tgz#898a0c04908d7eee508d628eae017e1f4198930c"
+  integrity sha512-CQ1Fg50BafIeFs3PQ8D2byigrmn5UoOMJHgyLBcYoHxxQTI9L85xKl02EkiJxg7KJUgNr//Bt/yu8heAIy10XQ==
   dependencies:
     "@plotly/d3-sankey" "0.7.2"
     "@plotly/d3-sankey-circular" "0.33.1"

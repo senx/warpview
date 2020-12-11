@@ -32,14 +32,19 @@
   #chartContainer {
     height: auto;
     position: relative;
+    padding-top: 30px;
 
     div.upperLine {
       position: absolute;
-      top: 30px;
+      top: 0;
       left: 0;
       height: 0;
       border-bottom: 1px solid var(--warp-view-chart-grid-color, #8e8e8e);
       right: 10px;
+    }
+
+    .annotation-wrapper {
+      position: relative;
     }
   }
 

@@ -20,7 +20,7 @@
   </button>
   <div #toolTip class="wv-tooltip"></div>
   <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
-  <div *ngIf="!loading && !noData">
+  <div *ngIf="!loading && !noData" class="annotation-wrapper">
     <div class="upperLine" [ngStyle]="{left: standalone? '10px': marginLeft + 'px'}"></div>
     <warpview-plotly #graph
                      [data]="plotlyData" [layout]="layout" [config]="plotlyConfig" (afterPlot)="afterPlot($event)"

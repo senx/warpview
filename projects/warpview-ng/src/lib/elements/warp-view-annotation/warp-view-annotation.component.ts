@@ -38,6 +38,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   @Input('height') height = 0;
 
   @Input('type') set type(type: string) {
+    this.LOG.debug(['type'], type);
     this._type = type;
     this.drawChart();
   }
@@ -72,6 +73,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   @Input('standalone') set standalone(isStandalone: boolean) {
+    this.LOG.debug(['standalone'], isStandalone);
     if (this._standalone !== isStandalone) {
       this._standalone = isStandalone;
       this.drawChart();
@@ -106,7 +108,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       dtick: 1,
       gridwidth: 1,
       tick0: 0,
-      nticks: 2,
+      nticks: 1,
       rangemode: 'tozero',
       tickson: 'boundaries',
       automargin: true,
@@ -114,8 +116,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       zeroline: true
     },
     margin: {
-      t: 30,
-      b: 2,
+      t: 2,
+      b: 50,
       r: 10,
       l: 10
     },
@@ -135,7 +137,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   private lineHeight = 30;
   private chartBounds: ChartBounds = new ChartBounds();
   private afterBoundsUpdate = false;
-  private firstDraw  = true;
+  private firstDraw = true;
 
   @HostListener('keydown', ['$event'])
   @HostListener('document:keydown', ['$event'])
@@ -175,6 +177,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   update(options: Param, refresh: boolean): void {
+    this.LOG.debug(['update'], options);
     this.loading = true;
     if (!!options) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
@@ -211,15 +214,15 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   drawChart(reparseNewData: boolean = false) {
     this.loading = true;
     this.layout.margin.l = !!this._standalone ? 10 : 50;
-    this.layout.margin.b = !!this._standalone ? 50 : 1;
-    this.height = this.lineHeight + this.layout.margin.t + this.layout.margin.b;
-    this.layout.height = this.height;
+    this.layout.margin.b = !!this._standalone ? 50 : 2;
+    this.height = this.lineHeight * (this.expanded ? this.gtsId.length : 1) + this.layout.margin.t + this.layout.margin.b;
     this.LOG.debug(['drawChart', 'this.height'], this.height);
-    if (!this.initChart(this.el)) {
-      return;
-    }
     if (this.firstDraw) {
       this.expanded = !!this._options.expandAnnotation;
+    }
+    this.layout.height = this.height;
+    if (!this.initChart(this.el)) {
+      return;
     }
     this.el.nativeElement.style.display = 'block';
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
@@ -235,11 +238,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.xaxis.showticklabels = !!this._standalone;
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
-    const calculatedHeight = (this.expanded ? this.lineHeight * count : this.lineHeight) + this.layout.margin.t + this.layout.margin.b;
+    const calculatedHeight = this.lineHeight * (this.expanded ? count : 1) + this.layout.margin.t + this.layout.margin.b;
     this.el.nativeElement.style.height = calculatedHeight + 'px';
     this.height = calculatedHeight;
     this.layout.height = this.height;
-    this.LOG.debug(['drawChart', 'height'], this.height, count, calculatedHeight, this.expanded);
+    this.LOG.debug(['drawChart', 'height'], this.lineHeight, this.height, count, calculatedHeight, this.expanded, this.layout.margin);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
     this.LOG.debug(['drawChart', 'this.layout'], this.layout);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
@@ -247,8 +250,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       this.layout.xaxis.range = [this.minTick, this.maxTick];
       this.layout.xaxis.type = 'linear';
     } else {
-      this.layout.xaxis.tick0 =
-        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
+      this.layout.xaxis.tick0 = GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
       this.layout.xaxis.range = [
         GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
         GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
@@ -262,7 +264,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       this.layout = {...this.layout};
       this.firstDraw = false;
     });
-    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData);
+    this.LOG.debug(['drawChart', 'this.plotlyConfig'], this.plotlyConfig, this.plotlyData, this.layout);
   }
 
   relayout(data: any) {
@@ -489,8 +491,10 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   toggle() {
-    this.expanded = !this.expanded;
-    this.drawChart();
+    setTimeout(() => {
+      this.expanded = !this.expanded;
+      this.drawChart(false);
+    });
   }
 
   setRealBounds(chartBounds: ChartBounds) {
