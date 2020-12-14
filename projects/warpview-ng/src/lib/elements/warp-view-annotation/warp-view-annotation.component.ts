@@ -27,6 +27,7 @@ import {ColorLib} from '../../utils/color-lib';
 import {SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
 import {ChartBounds} from '../../model/chartBounds';
+import {PlotlyHTMLElement} from 'plotly.js';
 
 @Component({
   selector: 'warpview-annotation',
@@ -35,7 +36,6 @@ import {ChartBounds} from '../../model/chartBounds';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WarpViewAnnotationComponent extends WarpViewComponent {
-  @Input('height') height = 0;
 
   @Input('type') set type(type: string) {
     this.LOG.debug(['type'], type);
@@ -83,6 +83,19 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   get standalone(): boolean {
     return this._standalone;
   }
+
+  constructor(
+    public el: ElementRef,
+    public renderer: Renderer2,
+    public sizeService: SizeService,
+    public ngZone: NgZone
+  ) {
+    super(el, renderer, sizeService, ngZone);
+    this._autoResize = false;
+    this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
+  }
+
+  @Input('height') height = 0;
 
   @Output('pointHover') pointHover = new EventEmitter<any>();
   @Output('chartDraw') chartDraw = new EventEmitter<any>();
@@ -163,17 +176,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         this.toolTip.nativeElement.querySelector('#tooltip-body').classList.remove('full');
       }
     }
-  }
-
-  constructor(
-    public el: ElementRef,
-    public renderer: Renderer2,
-    public sizeService: SizeService,
-    public ngZone: NgZone
-  ) {
-    super(el, renderer, sizeService, ngZone);
-    this._autoResize = false;
-    this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
   }
 
   update(options: Param, refresh: boolean): void {
@@ -269,6 +271,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   relayout(data: any) {
     let change = false;
+    this.LOG.debug(['relayout', 'updateBounds'], data);
     if (data['xaxis.range'] && data['xaxis.range'].length === 2) {
       if (this.chartBounds.msmin !== data['xaxis.range'][0] || this.chartBounds.msmax !== data['xaxis.range'][1]) {
         this.LOG.debug(['relayout', 'updateBounds', 'xaxis.range'], data['xaxis.range']);
@@ -296,6 +299,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       }
     }
     if (change) {
+      this.LOG.debug(['relayout', 'updateBounds'], this.minTick, this.maxTick);
       this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
       this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
     }
@@ -343,10 +347,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.toolTip.nativeElement.style.display = 'none';
   }
 
-  afterPlot(div) {
+  afterPlot(div: PlotlyHTMLElement) {
     this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
+    this.LOG.debug(['afterPlot'], div);
     if (this.afterBoundsUpdate || this._standalone) {
       this.chartDraw.emit(this.chartBounds);
       this.LOG.debug(['afterPlot'], this.chartBounds, div);
@@ -427,8 +432,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         series.text = [];
         series.y = [];
         if (size > 0) {
-          this.minTick = gts.v[0][0];
-          this.maxTick = gts.v[0][0];
           for (let v = 0; v < size; v++) {
             const val = gts.v[v];
             const t = val[0];
@@ -475,15 +478,13 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       }
     }
     const x = {tick0: undefined, range: []};
+    const pad = ChartLib.fraction2r(this.minTick, this.maxTick, 0.067);
     if (timestampMode || this._options.timeMode && this._options.timeMode === 'timestamp') {
-      x.tick0 = this.minTick;
-      x.range = [this.minTick, this.maxTick];
+      x.tick0 = this.minTick - pad;
+      x.range = [x.tick0, this.maxTick + pad];
     } else {
-      x.tick0 = GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone);
-      x.range = [
-        GTSLib.toISOString(this.minTick, this.divider, this._options.timeZone),
-        GTSLib.toISOString(this.maxTick, this.divider, this._options.timeZone)
-      ];
+      x.tick0 = GTSLib.toISOString(this.minTick - pad, this.divider, this._options.timeZone);
+      x.range = [x.tick0, GTSLib.toISOString(this.maxTick + pad, this.divider, this._options.timeZone)];
     }
     this.layout.xaxis = x;
     this.noData = dataset.length === 0;

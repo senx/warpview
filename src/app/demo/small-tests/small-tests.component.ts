@@ -60,7 +60,7 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'annotation',
+      type: 'plot',
       description: '',
       warpscript: `
       {} NOW 365 d @senx/alerting/_fetch
