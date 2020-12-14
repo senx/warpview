@@ -60,16 +60,9 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'annotation',
+      type: 'plot',
       description: '',
       warpscript: `
-      {} NOW 365 d @senx/alerting/_fetch
-[ SWAP [] 'alert' filter.byclass ] FILTER
-10 m 1 'split' TIMESPLIT
-<%
-  RANGECOMPACT
-  MERGE
-%> false LMAP STOP
       @training/dataset0
 // warp.store.hbase.puts.committed is the number of datapoints committed to 
 // HBase since the restart of the Store daemon

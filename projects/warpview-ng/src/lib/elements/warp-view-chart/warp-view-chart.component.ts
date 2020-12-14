@@ -27,6 +27,7 @@ import {Logger} from '../../utils/logger';
 import {Subject} from 'rxjs';
 import {throttleTime} from 'rxjs/operators';
 import {Timsort} from '../../utils/timsort';
+import {ChartLib} from '../../utils/chart-lib';
 
 @Component({
   selector: 'warpview-chart',
@@ -210,16 +211,13 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const min = (this._options.bounds || {}).minDate || this.chartBounds.tsmin || this.minTick;
     const max = (this._options.bounds || {}).maxDate || this.chartBounds.tsmax || this.maxTick;
     this.LOG.debug(['initChart', 'updateBounds'], [min, max]);
-
+    const pad = ChartLib.fraction2r(this.minTick, this.maxTick, 0.067);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
-      x.tick0 = min;
-      x.range = [min, max];
+      x.tick0 = min - pad;
+      x.range = [x.tick0, max + pad];
     } else {
-      x.tick0 = GTSLib.toISOString(min, this.divider, this._options.timeZone);
-      x.range = [
-        GTSLib.toISOString(min, this.divider, this._options.timeZone),
-        GTSLib.toISOString(max, this.divider, this._options.timeZone)
-      ];
+      x.tick0 = GTSLib.toISOString(min - pad, this.divider, this._options.timeZone);
+      x.range = [x.tick0, GTSLib.toISOString(max + pad, this.divider, this._options.timeZone)];
     }
     this.layout.xaxis = x;
     if (!!res) {
