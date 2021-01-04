@@ -18,7 +18,6 @@
 import {Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Param} from '../../model/param';
-import {ChartLib} from '../../utils/chart-lib';
 import {GTSLib} from '../../utils/gts.lib';
 import {DataModel} from '../../model/dataModel';
 import {SizeService} from '../../services/resize.service';
@@ -103,7 +102,7 @@ export class WarpViewDisplayComponent extends WarpViewComponent implements OnIni
         break;
       case 'custom':
       case 'timestamp':
-        this.toDisplay = display;
+        this.toDisplay = decodeURIComponent(escape(display));
     }
     return [];
   }
