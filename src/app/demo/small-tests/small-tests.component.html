@@ -44,13 +44,15 @@
         <button (click)="resizeDiv()">Resize</button>
       </form>
       <p [innerHTML]="tests[currentTest].description"></p>
-      <div #test style="position: absolute; background-color: #00cd00; top: 400px; left: 400px; width: 800px; height: 400px; display: none">
+      <div #test
+           style="position: absolute; background-color: #00cd00; top: 400px; left: 400px; width: 800px; height: 400px; display: none">
 
 
       </div>
-      <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;"> <warpview-tile url="https://warp.senx.io/standalone/api/v0/exec" [responsive]="true" [debug]="true"
-                                                                                                                    [options]="options" chartTitle="tests"
-                                                                                                                    [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
+      <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;">
+        <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
+                       [options]="options" chartTitle="tests"
+                       [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
       </div>
     </div>
   </div>
