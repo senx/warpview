@@ -482,35 +482,34 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const annotations = [];
     data.points.forEach(p => {
       curves.push(p.curveNumber);
-
+    /*  annotations.push({
+        x: p.x,
+        y: p.y,
+        arrowhead: 6,
+        arrowsize: 1,
+        ax: 3,
+        ay: 3,
+        arrowcolor: p.data.line.color
+      });*/
       const dist = Math.abs(data.yvals[0] - p.y);
       if (delta > dist) {
         delta = dist;
         toHighlight = p.curveNumber;
         point = p;
+        data.meta = {
+          x: p.x,
+          y: p.y.toPrecision(3),
+          w: xaxis.l2p(p.x),
+          h: yaxis.l2p(p.y),
+          name: p.data.text
+        };
       }
-      data.meta = {
-        x: p.x,
-        y: p.y.toPrecision(3),
-        w: xaxis.l2p(p.x),
-        h: yaxis.l2p(p.y),
-        name: p.data.text
-      };
     });
     if (!!this.hoverTimeout) {
       clearTimeout(this.hoverTimeout);
     }
-    annotations.push({
-      x: point.x,
-      y: point.y,
-      arrowhead: 6,
-      arrowsize: 1,
-      ax: 3,
-      ay: 3,
-      arrowcolor: point.data.line.color
-    });
-    // this.graph.relayoutPlot('annotations', 'remove');
-    // this.graph.relayoutPlot('annotations', annotations);
+    /*this.graph.relayoutPlot('annotations', 'remove');
+    this.graph.relayoutPlot('annotations', annotations);*/
     super.hover(data, toHighlight);
   }
 

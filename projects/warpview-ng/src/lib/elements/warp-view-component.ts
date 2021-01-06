@@ -358,7 +358,7 @@ export abstract class WarpViewComponent {
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
-    const p = data.points[highlighted];
+    const p = data.points.filter(pt => pt.curveNumber === highlighted)[0];
     const content = this.legendFormatter(
       this._options.horizontal ?
         (data.yvals || [''])[0] :
