@@ -51,7 +51,6 @@ export class SmallTestsComponent implements OnInit {
       showStatus: false,
       foldGTSTree: true,
       expandAnnotation: false,
-      showRangeSelector: true,
       showDots: false,
       //  autoRefresh: 5,
       //   timeMode: 'duration',
@@ -60,25 +59,22 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'plot',
+      type: 'line',
       description: '',
-      warpscript: `
-      @training/dataset0
-// warp.store.hbase.puts.committed is the number of datapoints committed to 
-// HBase since the restart of the Store daemon
-[ $TOKEN '~warp.*committed' { 'cell' 'prod' } $NOW 10 d ] FETCH
-[ SWAP mapper.rate 1 0 0 ] MAP 
-'gts' STORE 
-// Keep only 1000 datapoints per GTS
-$gts 1000 LTTB
-    /*  @training/dataset0 $TOKEN AUTHENTICATE 100000000 MAXOPS
-0 3 <% NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND ADDVALUE DROP %> FOR
-$g %> FOR */ 
- // { 'data' NOW 'globalParams' { 'timeMode' 'duration' } }
-/* NEWGTS 'g' STORE
-0 99 <% 'ts' STORE $g $ts STU * NOW + NaN NaN NaN RAND 100 * ADDVALUE DROP %> FOR
-$g [ 33 66 ] [ 'green' 'orange' 'red' ] QUANTIZE VALUEHISTOGRAM */
+      warpscript: `'prod' 'cell' STORE
+
+'PT60m' DURATION 'duration' STORE
+
+'bNsCVbU0kYktiOc9uXsSeBBSSBYwJVRcG1TsWGUZrQluKDNkRx8XdOhrMABLSbezxsLddvbCF8JZpbwAWxgpaGrmz6kz.pZybWS3w3KLutvOKWcayKqabJGtT0YHcxuEi5_S.eHGxkk' 'TOKEN' STORE
+
+$TOKEN DUP AUTHENTICATE 10000000 LIMIT
+
+'zookeeper.mntr.zk_num_alive_connections'
+'cell' $cell 2 ->MAP
+NOW 'now' STORE
+$now
+$duration
+5 ->LIST FETCH
 `
     },
     {

@@ -116,7 +116,7 @@ export abstract class WarpViewComponent {
   protected defOptions = ChartLib.mergeDeep(new Param(), {
     dotsLimit: 1000,
     heatControls: false,
-    showRangeSelector: true,
+    showRangeSelector: false,
     gridLineColor: '#8e8e8e',
     showDots: false,
     timeZone: 'UTC',
@@ -337,27 +337,21 @@ export abstract class WarpViewComponent {
     this.chartDraw.emit();
   }
 
-  hideTooltip() {
+  hideTooltip(timeout = 1000) {
     if (!!this.hideTooltipTimer) {
       clearTimeout(this.hideTooltipTimer);
     }
     this.hideTooltipTimer = setTimeout(() => {
       this.toolTip.nativeElement.style.display = 'none';
-    }, 1000);
+    }, timeout);
   }
 
   unhover(data?: any, point?: any) {
-    //   this.LOG.debug(['unhover'], data);
-    if (!!this.hideTooltipTimer) {
-      clearTimeout(this.hideTooltipTimer);
-    }
   }
 
   hover(data: any, highlighted = 0) {
     this.renderer.setStyle(this.toolTip.nativeElement, 'display', 'block');
-    if (!!this.hideTooltipTimer) {
-      clearTimeout(this.hideTooltipTimer);
-    }
+    this.hideTooltip(3000);
     const p = data.points.filter(pt => pt.curveNumber === highlighted)[0];
     const content = this.legendFormatter(
       this._options.horizontal ?

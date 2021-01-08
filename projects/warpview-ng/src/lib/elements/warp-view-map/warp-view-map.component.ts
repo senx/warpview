@@ -130,7 +130,7 @@ export class WarpViewMapComponent implements OnInit {
         animate: false
       },
       timeMode: 'date',
-      showRangeSelector: true,
+      showRangeSelector: false,
       gridLineColor: '#8e8e8e',
       showDots: false,
       timeZone: 'UTC',
