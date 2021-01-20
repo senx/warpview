@@ -31,7 +31,7 @@ export class Param {
   autoRefresh?: number;
   showControls = true;
   showErrors = true;
-  showStatus = true;
+  showStatus = false;
   expandAnnotation = false;
   showGTSTree?: boolean;
   foldGTSTree?: boolean;

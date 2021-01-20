@@ -269,7 +269,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const color = ((data.params || [])[i] || {datasetColor: c}).datasetColor || c;
           const type = ((data.params || [])[i] || {type: this._type}).type || this._type;
           const series: Partial<any> = {
-            type: 'scattergl',
+            type: type === 'spline' ? 'scatter' : 'scattergl',
             mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
             name: label,
             text: label,
@@ -482,15 +482,15 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     const annotations = [];
     data.points.forEach(p => {
       curves.push(p.curveNumber);
-    /*  annotations.push({
-        x: p.x,
-        y: p.y,
-        arrowhead: 6,
-        arrowsize: 1,
-        ax: 3,
-        ay: 3,
-        arrowcolor: p.data.line.color
-      });*/
+      /*  annotations.push({
+          x: p.x,
+          y: p.y,
+          arrowhead: 6,
+          arrowsize: 1,
+          ax: 3,
+          ay: 3,
+          arrowcolor: p.data.line.color
+        });*/
       const dist = Math.abs(data.yvals[0] - p.y);
       if (delta > dist) {
         delta = dist;

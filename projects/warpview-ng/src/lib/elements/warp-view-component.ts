@@ -173,15 +173,15 @@ export abstract class WarpViewComponent {
   ) {
     this.sizeService.sizeChanged$.subscribe((size: Size) => {
       if ((el.nativeElement as HTMLElement).parentElement) {
-        const parentSize = (el.nativeElement as HTMLElement).parentElement.getBoundingClientRect();
+        const parentSize = this.getContentBounds((el.nativeElement as HTMLElement).parentElement);
         if (this._responsive) {
-          this.height = parentSize.height;
-          this.width = parentSize.width;
+          this.height = parentSize.h;
+          this.width = parentSize.w;
         }
-        if (!!this.graph && this._responsive && parentSize.height > 0 && this._autoResize) {
+        if (!!this.graph && this._responsive && parentSize.h > 0 && this._autoResize) {
           const layout = {
-            width: parentSize.width,
-            height: this._autoResize ? parentSize.height : this.layout.height
+            width: parentSize.w,
+            height: this._autoResize ? parentSize.h : this.layout.height
           };
           if (this.layout.width !== layout.width || this.layout.height !== layout.height) {
             setTimeout(() => this.layout = {...this.layout, ...layout});
@@ -265,23 +265,23 @@ export abstract class WarpViewComponent {
     if (!!this.drawn) {
       return true;
     }
-    const parentSize = (el.nativeElement as HTMLElement).parentElement.parentElement.getBoundingClientRect();
+    const parentSize = this.getContentBounds((el.nativeElement as HTMLElement).parentElement);
     if (this._responsive) {
       if (resize) {
         if (
-          this._autoResize && (parentSize.height === 0 || this.height !== parentSize.height)
-          || parentSize.width === 0 || this.width !== parentSize.width) {
+          this._autoResize && (parentSize.h === 0 || this.height !== parentSize.h)
+          || parentSize.w === 0 || this.width !== parentSize.w) {
           if (this._autoResize) {
-            this.height = parentSize.height;
+            this.height = parentSize.h;
           }
-          this.width = parentSize.width;
+          this.width = parentSize.w;
           setTimeout(() => this.initChart(el), 100);
           return;
         } else {
           if (this._autoResize) {
-            this.height = parentSize.height;
+            this.height = parentSize.h;
           }
-          this.width = parentSize.width;
+          this.width = parentSize.w;
         }
       }
     }
@@ -313,9 +313,9 @@ export abstract class WarpViewComponent {
         this.layout.height = this.height || ChartLib.DEFAULT_HEIGHT;
       }
     } else {
-      this.layout.width = this.width || parentSize.width;
+      this.layout.width = this.width || parentSize.w;
       if (!this.height && this._autoResize) {
-        this.layout.height = this.height || parentSize.height;
+        this.layout.height = this.height || parentSize.h;
       }
     }
     this.LOG.debug(['initiChart', 'plotlyData'], this.plotlyData);
@@ -402,5 +402,17 @@ export abstract class WarpViewComponent {
   protected getCSSColor(el: HTMLElement, property: string, defColor: string) {
     const color = getComputedStyle(el).getPropertyValue(property).trim();
     return color === '' ? defColor : color;
+  }
+
+
+  protected getContentBounds(el: HTMLElement): { w: number, h: number } {
+    return {
+      h: el.clientHeight
+        - parseInt(getComputedStyle(el, null).getPropertyValue('padding-top'), 10)
+        - parseInt(getComputedStyle(el, null).getPropertyValue('padding-bottom'), 10),
+      w: el.clientWidth
+        - parseInt(getComputedStyle(el, null).getPropertyValue('padding-left'), 10)
+        - parseInt(getComputedStyle(el, null).getPropertyValue('padding-right'), 10)
+    };
   }
 }
