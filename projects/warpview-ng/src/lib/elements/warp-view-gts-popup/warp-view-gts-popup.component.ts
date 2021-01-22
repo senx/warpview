@@ -51,7 +51,6 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   @Input('gtsList') set gtsList(gtsList: DataModel) {
     this._gtsList = gtsList;
     this.LOG.debug(['_gtsList'], this._gtsList);
-
     this.prepareData();
   }
 
@@ -170,8 +169,8 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
 
   private showPopup() {
     this.current = 0;
-    this.prepareData();
     this.modal.open();
+    this.prepareData();
   }
 
   public close() {

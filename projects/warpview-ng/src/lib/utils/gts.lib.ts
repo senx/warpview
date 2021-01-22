@@ -175,11 +175,26 @@ export class GTSLib {
     };
   }
 
-  static flatDeep(arr1: any[]): any[] {
-    if (!GTSLib.isArray(arr1)) {
-      arr1 = [arr1];
+  static flatDeep(arrays: any[]): any[] {
+    const result = [];
+    if (!GTSLib.isArray(arrays)) {
+      arrays = [arrays];
     }
-    return arr1.reduce((acc, val) => Array.isArray(val) ? acc.concat(GTSLib.flatDeep(val)) : acc.concat(val), []);
+    GTSLib.flatten(arrays, result);
+    return result;
+  }
+
+  static flatten(arr, result = []) {
+    const size = arr.length;
+    for (let i = 0; i < size; i++) {
+      const value = arr[i];
+      if (Array.isArray(value)) {
+        GTSLib.flatten(value, result);
+      } else {
+        result.push(value);
+      }
+    }
+    return result;
   }
 
   static flattenGtsIdArray(a: any[], r: number): { res: any[], r: number } {
