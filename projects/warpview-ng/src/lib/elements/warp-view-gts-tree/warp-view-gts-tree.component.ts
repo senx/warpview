@@ -62,8 +62,8 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   @Input('hiddenData') set hiddenData(hiddenData: number[]) {
     this.LOG.debug(['hiddenData'], hiddenData, this.gtsList);
     this._hiddenData = hiddenData;
-    this.dataList.forEach(item => {
-      this._hiddenData.some(id => item.gid === id) ? this.hideChip(item) : this.showChip(item);
+    (this.dataList || []).forEach(item => {
+      (this._hiddenData || []).some(id => item.gid === id) ? this.hideChip(item) : this.showChip(item);
     });
   }
 
@@ -119,7 +119,6 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   public resize(layout: { width: number; height: any }) {
     //
   }
-
 
   orphans() {
     return this.dataList.filter(item => !item.parent);
