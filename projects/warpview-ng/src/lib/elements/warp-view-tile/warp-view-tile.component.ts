@@ -162,63 +162,64 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
     if (!!this._warpScript && this._warpScript.trim() !== '') {
       this.LOG.debug(['execute'], isRefresh);
       this.error = undefined;
-      this.loadingExec = !isRefresh;
+      setTimeout(() => this.loadingExec = !isRefresh);
       this.execResult = undefined;
       this.execUrl = this.url;
       this.detectWarpScriptSpecialComments();
       this.LOG.debug(['execute', 'warpScript'], this._warpScript);
-      this.warp10Service.exec(this._warpScript, this.execUrl).subscribe((response: HttpResponse<string> | string) => {
-        this.loadingExec = false;
-        this.LOG.debug(['execute'], response);
-        if ((response as HttpResponse<string>).body) {
-          try {
-            const body = (response as HttpResponse<string>).body;
-            this.warpscriptResult.emit(body);
-            const headers = (response as HttpResponse<string>).headers;
-            this.status = `Your script execution took
+      this.warp10Service.exec(this._warpScript, this.execUrl)
+        .subscribe((response: HttpResponse<string> | string) => {
+          setTimeout(() => this.loadingExec = false);
+          this.LOG.debug(['execute'], response);
+          if ((response as HttpResponse<string>).body) {
+            try {
+              const body = (response as HttpResponse<string>).body;
+              this.warpscriptResult.emit(body);
+              const headers = (response as HttpResponse<string>).headers;
+              this.status = `Your script execution took
  ${GTSLib.formatElapsedTime(parseInt(headers.get('x-warp10-elapsed'), 10))}
  serverside, fetched
  ${headers.get('x-warp10-fetched')} datapoints and performed
  ${headers.get('x-warp10-ops')}  WarpScript operations.`;
-            this.execStatus.emit({
-              message: this.status,
-              ops: parseInt(headers.get('x-warp10-ops'), 10),
-              elapsed: parseInt(headers.get('x-warp10-elapsed'), 10),
-              fetched: parseInt(headers.get('x-warp10-fetched'), 10),
-            });
-            if (this._autoRefresh !== this._options.autoRefresh) {
-              this._autoRefresh = this._options.autoRefresh;
-              if (this.timer) {
-                window.clearInterval(this.timer);
+              this.execStatus.emit({
+                message: this.status,
+                ops: parseInt(headers.get('x-warp10-ops'), 10),
+                elapsed: parseInt(headers.get('x-warp10-elapsed'), 10),
+                fetched: parseInt(headers.get('x-warp10-fetched'), 10),
+              });
+              if (this._autoRefresh !== this._options.autoRefresh) {
+                this._autoRefresh = this._options.autoRefresh;
+                if (this.timer) {
+                  window.clearInterval(this.timer);
+                }
+                if (this._autoRefresh && this._autoRefresh > 0) {
+                  this.timer = window.setInterval(() => {
+                    this.execute(true);
+                  }, this._autoRefresh * 1000);
+                }
               }
-              if (this._autoRefresh && this._autoRefresh > 0) {
-                this.timer = window.setInterval(() => {
-                  this.execute(true);
-                }, this._autoRefresh * 1000);
-              }
-            }
-            setTimeout(() => {
-              this.execResult = body;
-              this.resultTile.setResult(this.execResult, isRefresh);
-              this._options.bounds = {};
-              this._options = {...this._options};
+              setTimeout(() => {
+                this.execResult = body;
+                this.resultTile.setResult(this.execResult, isRefresh);
+                this._options.bounds = {};
+                this._options = {...this._options};
+                this.loading = false;
+              });
+            } catch (e) {
+              this.LOG.error(['execute'], e);
               this.loading = false;
-            });
-          } catch (e) {
-            this.LOG.error(['execute'], e);
+            }
+          } else {
+            this.LOG.error(['execute'], response);
+            this.error = response;
             this.loading = false;
+            this.execError.emit(response);
           }
-        } else {
-          this.LOG.error(['execute'], response);
-          this.error = response;
+        }, e => {
           this.loading = false;
-          this.execError.emit(response);
-        }
-      }, e => {
-        this.loading = false;
-        this.execError.emit(e);
-        this.LOG.error(['execute'], e);
-      });
+          this.execError.emit(e);
+          this.LOG.error(['execute'], e);
+        });
     }
   }
 

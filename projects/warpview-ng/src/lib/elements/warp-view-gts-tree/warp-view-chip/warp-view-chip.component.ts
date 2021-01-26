@@ -109,7 +109,7 @@ export class WarpViewChipComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this._node = {...this.node, selected: this._hiddenData.indexOf(this.node.gts.id) === -1};
     if (!!this.events) {
-      this.eventsSubscription = this.events.subscribe(state => this.setState(state));
+    //  this.eventsSubscription = this.events.subscribe(state => this.setState(state));
     }
   }
 

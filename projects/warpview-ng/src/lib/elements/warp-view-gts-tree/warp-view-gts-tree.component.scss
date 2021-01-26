@@ -15,12 +15,26 @@
  *
  */
 @import "../../styles/vars";
+@import "../../styles/gts";
 
 :host {
 
   .wrapper {
     text-align: left;
     min-height: 0 !important;
+  }
+
+  .chip {
+    border-radius: 50%;
+    background-color: #bbbbbb;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border: 2px solid #454545;
+    margin-top: auto;
+    margin-bottom: auto;
+    vertical-align: middle;
+    cursor: pointer;
   }
 
   .stack-level {
@@ -48,5 +62,116 @@
     background-image: var(--gts-tree-collapsed-icon);
     background-repeat: no-repeat;
     background-position: center left;
+  }
+
+
+  ul {
+    list-style: none;
+    padding-left: 1.75em;
+
+    li {
+      font-size: 1em;
+      cursor: pointer;
+      color: var(--gts-stack-font-color);
+
+      a {
+        margin-right: 5px;
+        background-position: center left;
+        background-repeat: no-repeat;
+        padding: 5px 10px 1px 20px;
+        color: var(--gts-stack-font-color);
+        text-decoration: none;
+
+        &.plus {
+          background-image: var(--gts-tree-collapsed-icon);
+        }
+
+        &.minus {
+          background-image: var(--gts-tree-expanded-icon);
+        }
+
+        &:active {
+          top: 1px;
+        }
+      }
+
+      /* span {
+         display: inline-block;
+         margin: .25em .5em;
+       }*/
+    }
+  }
+
+  .loader {
+    font-size: 10px;
+    display: inline-block;
+    text-indent: -9999em;
+    width: 12px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--warp-view-spinner-color, $w10-orange);
+    background: -moz-linear-gradient(left, var(--warp-view-spinner-color, $w10-orange) 10%, rgba(0, 0, 0, 0) 42%);
+    background: -webkit-linear-gradient(left, var(--warp-view-spinner-color, $w10-orange) 10%, rgba(0, 0, 0, 0) 42%);
+    background: -o-linear-gradient(left, var(--warp-view-spinner-color, $w10-orange) 10%, rgba(0, 0, 0, 0) 42%);
+    background: -ms-linear-gradient(left, var(--warp-view-spinner-color, $w10-orange) 10%, rgba(0, 0, 0, 0) 42%);
+    background: linear-gradient(to right, var(--warp-view-spinner-color, $w10-orange) 10%, rgba(0, 0, 0, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+
+
+    &:before {
+      width: 50%;
+      height: 50%;
+      background: var(--warp-view-spinner-color, $w10-orange);
+      border-radius: 100% 0 0 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+    }
+
+    &:after {
+      background: #ffffff;
+      width: 75%;
+      height: 75%;
+      border-radius: 50%;
+      content: '';
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    &.hidden {
+      display: none;
+    }
+  }
+
+
+  @-webkit-keyframes load3 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load3 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
   }
 }

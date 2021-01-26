@@ -144,6 +144,16 @@ export class GTSLib {
     return {gts: {c: json.c, l: json.l, a: json.a, v: json.v, id}};
   }
 
+  static uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      // tslint:disable-next-line:no-bitwise
+      const r = Math.random() * 16 | 0;
+      // tslint:disable-next-line:no-bitwise
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   static gtsFromJSONList(jsonList, prefixId) {
     const gtsList = [];
     let id;
@@ -332,7 +342,7 @@ export class GTSLib {
     return timestampDivider;
   }
 
-  static formatLabel = (data: string): string => {
+  static formatLabel(data: string): string {
     const serializedGTS = data.split('{');
     let display = `<span class="gtsInfo"><span class='gts-classname'>${serializedGTS[0]}</span>`;
     if (serializedGTS.length > 1) {
@@ -371,7 +381,7 @@ export class GTSLib {
     }
     display += '</span>';
     return display;
-  };
+  }
 
   static toISOString(timestamp: number, divider: number, timeZone: string) {
     if (timeZone !== 'UTC') {

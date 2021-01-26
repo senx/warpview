@@ -33,7 +33,6 @@ import {CalendarHeatmapComponent} from './elements/warp-view-drill-down/calendar
 import {WarpViewGtsPopupComponent} from './elements/warp-view-gts-popup/warp-view-gts-popup.component';
 import {WarpViewModalComponent} from './elements/warp-view-modal/warp-view-modal.component';
 import {WarpViewGtsTreeComponent} from './elements/warp-view-gts-tree/warp-view-gts-tree.component';
-import {WarpViewTreeViewComponent} from './elements/warp-view-gts-tree/warp-view-tree-view/warp-view-tree-view.component';
 import {WarpViewChipComponent} from './elements/warp-view-gts-tree/warp-view-chip/warp-view-chip.component';
 import {WarpViewImageComponent} from './elements/warp-view-image/warp-view-image.component';
 import {WarpViewMapComponent} from './elements/warp-view-map/warp-view-map.component';
@@ -74,7 +73,6 @@ import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp
     WarpViewGtsPopupComponent,
     WarpViewModalComponent,
     WarpViewGtsTreeComponent,
-    WarpViewTreeViewComponent,
     WarpViewChipComponent,
     WarpViewImageComponent,
     WarpViewMapComponent,
@@ -117,7 +115,6 @@ import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp
     WarpViewGtsPopupComponent,
     WarpViewModalComponent,
     WarpViewGtsTreeComponent,
-    WarpViewTreeViewComponent,
     WarpViewChipComponent,
     WarpViewImageComponent,
     WarpViewMapComponent,
@@ -154,7 +151,6 @@ import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp
     WarpViewGtsPopupComponent,
     WarpViewModalComponent,
     WarpViewGtsTreeComponent,
-    WarpViewTreeViewComponent,
     WarpViewChipComponent,
     WarpViewImageComponent,
     WarpViewMapComponent,
