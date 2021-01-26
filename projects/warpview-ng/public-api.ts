@@ -32,7 +32,6 @@ import {CalendarHeatmapComponent} from './src/lib/elements/warp-view-drill-down/
 import {WarpViewGtsPopupComponent} from './src/lib/elements/warp-view-gts-popup/warp-view-gts-popup.component';
 import {WarpViewModalComponent} from './src/lib/elements/warp-view-modal/warp-view-modal.component';
 import {WarpViewGtsTreeComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-gts-tree.component';
-import {WarpViewTreeViewComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-tree-view/warp-view-tree-view.component';
 import {WarpViewChipComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-chip/warp-view-chip.component';
 import {WarpViewImageComponent} from './src/lib/elements/warp-view-image/warp-view-image.component';
 import {WarpViewMapComponent} from './src/lib/elements/warp-view-map/warp-view-map.component';
@@ -74,7 +73,6 @@ export {CalendarHeatmapComponent} from './src/lib/elements/warp-view-drill-down/
 export {WarpViewGtsPopupComponent} from './src/lib/elements/warp-view-gts-popup/warp-view-gts-popup.component';
 export {WarpViewModalComponent} from './src/lib/elements/warp-view-modal/warp-view-modal.component';
 export {WarpViewGtsTreeComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-gts-tree.component';
-export {WarpViewTreeViewComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-tree-view/warp-view-tree-view.component';
 export {WarpViewChipComponent} from './src/lib/elements/warp-view-gts-tree/warp-view-chip/warp-view-chip.component';
 export {WarpViewImageComponent} from './src/lib/elements/warp-view-image/warp-view-image.component';
 export {WarpViewMapComponent} from './src/lib/elements/warp-view-map/warp-view-map.component';
