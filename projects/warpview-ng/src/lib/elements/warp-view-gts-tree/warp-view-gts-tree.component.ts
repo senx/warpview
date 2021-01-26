@@ -246,7 +246,6 @@ style="background-color: ${this._hiddenData.some(id => id === item.gid) ? 'trans
   }
 
   private hideChip(item) {
-    this.LOG.debug(['hideChip', 'item'], item);
     const li = this.tree.nativeElement.querySelector('#item-' + item.id);
     if (!!li) {
       const chip = li.querySelector('.chip');
@@ -257,7 +256,6 @@ style="background-color: ${this._hiddenData.some(id => id === item.gid) ? 'trans
   }
 
   private showChip(item) {
-    this.LOG.debug(['showChip', 'item'], item);
     const li = this.tree.nativeElement.querySelector('#item-' + item.id);
     if (!!li) {
       const chip = li.querySelector('.chip');

@@ -339,6 +339,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.divider = GTSLib.getDivider(this._options.timeUnit);
 
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
+    this.chartDraw.emit();
     this.resizeArea();
   }
 
@@ -447,7 +448,6 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
       this.annotation.setRealBounds(this.chartBounds);
       this.chart.setRealBounds(this.chartBounds);
-      this.chartDraw.emit();
       this.LOG.debug(['onChartDraw', 'this.chartBounds'], component, this.chartBounds, $event);
     } else {
       this.chartDraw.emit($event);

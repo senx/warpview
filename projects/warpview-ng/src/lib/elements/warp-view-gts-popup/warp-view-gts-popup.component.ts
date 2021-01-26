@@ -180,10 +180,10 @@ export class WarpViewGtsPopupComponent implements AfterViewInit {
   private prepareData() {
     if (this._gtsList && this._gtsList.data) {
       this._gts = GTSLib.flatDeep([this._gtsList.data]);
-      this.displayed = this._gts.slice(
-        Math.max(0, Math.min(this.current - this.maxToShow, this._gts.length - 2 * this.maxToShow)),
-        Math.min(this._gts.length, this.current + this.maxToShow + Math.abs(Math.min(this.current - this.maxToShow, 0)))
-      ) as any[];
+      const size = this._gts.length;
+      const min = Math.max(0, Math.min(this.current - this.maxToShow, size - 2 * this.maxToShow));
+      const max = Math.min(size, this.current + this.maxToShow + Math.abs(Math.min(this.current - this.maxToShow, 0)));
+      this.displayed = this._gts.slice(min, max);
       this.LOG.debug(['prepareData'], this.displayed);
     }
   }
