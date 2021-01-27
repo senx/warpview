@@ -270,7 +270,9 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
           const type = ((data.params || [])[i] || {type: this._type}).type || this._type;
           const series: Partial<any> = {
             type: type === 'spline' ? 'scatter' : 'scattergl',
-            mode: type === 'scatter' ? 'markers' : size > this.maxPlottable ? 'lines' : 'lines+markers',
+            mode: type === 'scatter' || size <= 1
+              ? 'markers'
+              : size > this.maxPlottable ? 'lines' : 'lines+markers',
             name: label,
             text: label,
             x: [],
@@ -285,7 +287,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
               size: 3,
               color: new Array(size).fill(color),
               line: {color, width: 3},
-              opacity: new Array(size).fill(this._type === 'scatter' || this._options.showDots ? 1 : 0)
+              opacity: new Array(size).fill(this._type === 'scatter' || size <= 1 || this._options.showDots ? 1 : 0)
             };
           }
           switch (type) {
