@@ -19,6 +19,7 @@ import {DataModel} from '../model/dataModel';
 import {GTS} from '../model/GTS';
 import {Logger} from './logger';
 import moment from 'moment-timezone';
+import {JsonLib} from './jsonLib';
 
 // @dynamic
 export class GTSLib {
@@ -65,7 +66,7 @@ export class GTSLib {
   static isValidResponse(data) {
     let response;
     try {
-      response = JSON.parse(data);
+      response = new JsonLib().parse(data);
     } catch (e) {
       this.LOG.error(['isValidResponse'], 'Response non JSON compliant', data);
       return false;
@@ -314,9 +315,9 @@ export class GTSLib {
   static getData(data: any): DataModel {
     if (typeof data === 'string') {
       if (data.startsWith('[') || data.startsWith('{')) {
-        return GTSLib.getData(JSON.parse(data as string));
+        return GTSLib.getData(new JsonLib().parse(data as string));
       } else {
-        return {data: JSON.parse(`[${data}]`)};
+        return {data: new JsonLib().parse(`[${data}]`)};
       }
     } else if (data && data.hasOwnProperty('data')) {
       if (!GTSLib.isArray(data.data)) {

@@ -105,7 +105,9 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
       return;
     }
     this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
-    this.dataList = this.generateData(GTSLib.flattenGtsIdArray(GTSLib.getData(this._data).data as any [], 0).res);
+    this.dataList = this.generateData([
+      GTSLib.flattenGtsIdArray(GTSLib.getData(this._data).data as any [], 0).res
+    ]);
     this.addOrphans();
     this.params = this._data.params || [];
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], this.dataList);

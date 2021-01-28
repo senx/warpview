@@ -242,7 +242,7 @@ export class JsonLib {
     }
   }
 
-  public parse(source, reviver) {
+  public parse(source, reviver?) {
     let result;
     this.text = source;
     this.at = 0;
