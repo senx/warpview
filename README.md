@@ -1,4 +1,4 @@
-# Warp View
+changelog.js# Warp View
 
 This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
 
