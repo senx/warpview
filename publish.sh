@@ -1,4 +1,5 @@
 yarn version --new-version $1
+yarn cl
 (cd projects/warpview-ng && yarn version --new-version $1 )
 yarn clean
 yarn build
