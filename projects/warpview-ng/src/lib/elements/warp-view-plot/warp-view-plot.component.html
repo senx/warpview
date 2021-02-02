@@ -85,7 +85,7 @@
                      (resize)="resizeChart($event)"
     >
       <warpview-spinner *ngIf="loadingChart" message="Parsing data"></warpview-spinner>
-      <div [hidden]="loadingChart">
+      <div [hidden]="loadingChart" style="height: 100%;position: relative;">
         <warpview-chart [responsive]="true" [standalone]="false" [data]="gtsList"
                         (boundsDidChange)="boundsDidChange($event)"
                         (chartDraw)="onChartDraw($event, 'chart')"
