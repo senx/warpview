@@ -42,7 +42,10 @@ export class SmallTestsComponent implements OnInit {
   currentTest = 0;
   theme = 'light';
   options: Param = {
-    ...new Param(), ...{
+    ...new Param(),
+    showGTSTree: true,
+    showDots: true,
+    /*...{
       fontColor: '#000000',
       map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
       showControls: true,
@@ -51,36 +54,27 @@ export class SmallTestsComponent implements OnInit {
       showStatus: false,
       foldGTSTree: true,
       expandAnnotation: false,
-      showDots: false,
+      showDots: true,
       //  autoRefresh: 5,
       //   timeMode: 'duration',
       responsive: true
-    }
+    }*/
   };
   tests = [
     {
-      type: 'line',
+      type: 'map',
       description: '',
-      warpscript: `'prod' 'cell' STORE
-
-'PT60m' DURATION 'duration' STORE
-
-'bNsCVbU0kYktiOc9uXsSeBBSSBYwJVRcG1TsWGUZrQluKDNkRx8XdOhrMABLSbezxsLddvbCF8JZpbwAWxgpaGrmz6kz.pZybWS3w3KLutvOKWcayKqabJGtT0YHcxuEi5_S.eHGxkk' 'TOKEN' STORE
-
-$TOKEN DUP AUTHENTICATE 10000000 LIMIT
-
-'zookeeper.mntr.zk_num_alive_connections'
-'cell' $cell 2 ->MAP
-NOW 'now' STORE
-$now
-$duration
-5 ->LIST FETCH
-`
+      warpscript: `
+      NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g
+      `
     },
     {
       type: 'plot',
       description: '',
-      warpscript: `@training/dataset0
+      warpscript: `
+@training/dataset0
 $TOKEN AUTHENTICATE
 100000000 MAXOPS
 NEWGTS 'g' STORE
