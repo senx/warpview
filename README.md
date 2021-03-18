@@ -46,7 +46,7 @@ This a collection of charting [web components](https://en.wikipedia.org/wiki/Web
 
 ## Integrations
 
-[See here](https://stenciljs.com/docs/framework-integration)
+[See here](https://stenciljs.com/docs/overview)
 
 ## About
 
