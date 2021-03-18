@@ -1,6 +1,14 @@
 WarpView
 ---
 
+## v2.0.60
+
+> +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/03300c39987f091b62db7ac7520c0cc99f238af4)*)
+> +  2021/03/18  | fix refresh zoom on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/850496abf9bdf023c7cbaec9410dd905526ad918)*)
+> +  2021/03/18  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b027b696781cfd8fa7421f66acc4c46a9b7953ae)*)
+> +  2021/03/18  | v2.0.59  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a7bc039825edf5da4581d848d1fd5b5a890f2394)*)
+> +  2021/03/05  | docs: fix stencijs link  (*[GitHub](noreply@github.com) | [view commit](https://github.com/senx/warpview/commit/88f61f9efe22256e564299e3892d7761179349da)*)
+
 ## v2.0.59
 
 > +  2021/03/18  | v2.0.59  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/dc1f01e0842dcc253bd2e3551127517b0fb2daba)*)
@@ -48,11 +56,5 @@ WarpView
 > +  2021/01/26  | v2.0.53  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a382966091cb2f4720552c13f54abc33d41f4dd7)*)
 > +  2021/01/26  | fix perf bottleneck  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/09c1217424c135cca6d68b9f87c9542180726390)*)
 > +  2021/01/22  | v2.0.52  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6699bce411031f5a8a32afb947b44404c7e29efa)*)
-
-## v2.0.52
-
-> +  2021/01/22  | v2.0.52  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/60c910fab556e16b45e20593021d0bd636ea2924)*)
-> +  2021/01/22  | fix perf bottleneck  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/e9b9f04af4c8d7a3221540d84bf7bef04dec7b87)*)
-> +  2021/01/20  | v2.0.51  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/837f178cb2b1f38a63ae92c72a7a1bf0e9aff218)*)
 
 
