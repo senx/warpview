@@ -371,6 +371,7 @@ export class WarpViewMapComponent implements OnInit {
       this.tilesLayer.bringToBack(); // TODO: tester
       this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
       this._map.on('zoomend', () => {
+        this.LOG.debug(['displayMap'], 'zoomend', this.firstDraw, this._map.getZoom());
         if (!this.firstDraw) {
           this.currentZoom = this._map.getZoom();
         }
@@ -378,7 +379,6 @@ export class WarpViewMapComponent implements OnInit {
       this._map.on('moveend', () => {
         this.LOG.debug(['displayMap'], 'moveend', this.firstDraw, this._map.getCenter());
         if (!this.firstDraw) {
-
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
         }
@@ -459,7 +459,7 @@ export class WarpViewMapComponent implements OnInit {
           this.bounds = group.getBounds();
           this.currentLat = this.currentLat || this._options.map.startLat || 0;
           this.currentLong = this.currentLong || this._options.map.startLong || 0;
-          this.currentZoom = this.currentZoom || this._options.map.startZoom || 10;
+          this.currentZoom = this.currentZoom || this._options.map.startZoom;
           if (!!this.bounds && this.bounds.isValid()) {
             if (!!this.currentLat && !!this.currentLong) {
               this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'already have bounds');
@@ -474,6 +474,7 @@ export class WarpViewMapComponent implements OnInit {
               this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
               this.currentLat = this._map.getCenter().lat;
               this.currentLong = this._map.getCenter().lng;
+              this.currentZoom = this._map.getZoom();
             }
           } else {
             this.LOG.debug(['displayMap', 'setView'], 'invalid bounds', {lat: this.currentLat, lng: this.currentLong});
