@@ -45,6 +45,7 @@ export class SmallTestsComponent implements OnInit {
     ...new Param(),
     showGTSTree: true,
     showDots: true,
+    autoRefresh: 5,
     /*...{
       fontColor: '#000000',
       map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
@@ -55,7 +56,7 @@ export class SmallTestsComponent implements OnInit {
       foldGTSTree: true,
       expandAnnotation: false,
       showDots: true,
-      //  autoRefresh: 5,
+      autoRefresh: 5,
       //   timeMode: 'duration',
       responsive: true
     }*/
@@ -66,7 +67,7 @@ export class SmallTestsComponent implements OnInit {
       description: '',
       warpscript: `
       NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+0 100 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
 $g
       `
     },

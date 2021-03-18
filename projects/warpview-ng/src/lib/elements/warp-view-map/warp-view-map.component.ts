@@ -53,6 +53,7 @@ export class WarpViewMapComponent implements OnInit {
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
   private bounds: Leaflet.LatLngBounds;
+  private displayInProgress = false;
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -71,8 +72,8 @@ export class WarpViewMapComponent implements OnInit {
         || options.map.startLat !== this._options.map.startLat
         || options.map.startLong !== this._options.map.startLong;
       this._options = {...options as Param};
-      this.currentLat = this._options.map.startLat || 0;
-      this.currentLong = this._options.map.startLong || 0;
+      this.currentLat =  this.currentLat || this._options.map.startLat || 0;
+      this.currentLong = this.currentLong || this._options.map.startLong || 0;
       this.divider = GTSLib.getDivider(this._options.timeUnit);
       this.drawMap(reZoom);
     }
@@ -242,7 +243,7 @@ export class WarpViewMapComponent implements OnInit {
     }
     let dataList: any[];
     let params: any[];
-    this.LOG.debug(['drawMap', 'this._options'], {... this._options});
+    this.LOG.debug(['drawMap', 'this._options'], {...this._options});
     if (gts.data) {
       dataList = gts.data as any[];
       this._options = ChartLib.mergeDeep<Param>(gts.globalParams || {}, this._options);
@@ -302,8 +303,12 @@ export class WarpViewMapComponent implements OnInit {
   }
 
   private displayMap(data: { gts: any[], params: any[] }, reDraw = false) {
+    if (this.displayInProgress) {
+      return;
+    }
+    this.displayInProgress = true;
     this.pointslayer = [];
-    this.LOG.debug(['drawMap'], data, this._options, this._hiddenData || []);
+    this.LOG.debug(['displayMap'], data, this._options, this._hiddenData || []);
     if (!this.lowerTimeBound) {
       this.lowerTimeBound = this._options.map.timeSliderMin / this.divider;
       this.upperTimeBound = this._options.map.timeSliderMax / this.divider;
@@ -323,6 +328,7 @@ export class WarpViewMapComponent implements OnInit {
     this.width = width;
     this.height = height;
     if (data.gts.length === 0) {
+      this.displayInProgress = false;
       return;
     }
     this.pathData = MapLib.toLeafletMapPaths(data, this._hiddenData || [], this._options.scheme) || [];
@@ -370,7 +376,9 @@ export class WarpViewMapComponent implements OnInit {
         }
       });
       this._map.on('moveend', () => {
+        this.LOG.debug(['displayMap'], 'moveend', this.firstDraw, this._map.getCenter());
         if (!this.firstDraw) {
+
           this.currentLat = this._map.getCenter().lat;
           this.currentLong = this._map.getCenter().lng;
         }
@@ -439,68 +447,75 @@ export class WarpViewMapComponent implements OnInit {
       geoShape.addTo(this.geoJsonLayer);
     }
 
-    if (this.pathData.length > 0 || this.positionData.length > 0 || this.geoJson.length > 0) {
-      // Fit map to curves
-      const group = Leaflet.featureGroup([this.geoJsonLayer, this.positionDataLayer, this.pathDataLayer]);
-      this.LOG.debug(['displayMap', 'setView'], 'fitBounds', group.getBounds());
-      this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong}, {
-        lat: this._options.map.startLat,
-        lng: this._options.map.startLong
-      });
-      this.bounds = group.getBounds();
-      setTimeout(() => {
-        if (!!this.bounds && this.bounds.isValid()) {
-          if ((this.currentLat || this._options.map.startLat) && (this.currentLong || this._options.map.startLong)) {
-            this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'already have bounds');
+    setTimeout(() => {
+        if (this.pathData.length > 0 || this.positionData.length > 0 || this.geoJson.length > 0) {
+          // Fit map to curves
+          const group = Leaflet.featureGroup([this.geoJsonLayer, this.positionDataLayer, this.pathDataLayer]);
+          this.LOG.debug(['displayMap', 'setView'], 'fitBounds', group.getBounds());
+          this.LOG.debug(['displayMap', 'setView'], {lat: this.currentLat, lng: this.currentLong}, {
+            lat: this._options.map.startLat,
+            lng: this._options.map.startLong
+          });
+          this.bounds = group.getBounds();
+          this.currentLat = this.currentLat || this._options.map.startLat || 0;
+          this.currentLong = this.currentLong || this._options.map.startLong || 0;
+          this.currentZoom = this.currentZoom || this._options.map.startZoom || 10;
+          if (!!this.bounds && this.bounds.isValid()) {
+            if (!!this.currentLat && !!this.currentLong) {
+              this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'already have bounds');
+              this._map.setView({
+                  lat: this.currentLat || this._options.map.startLat || 0,
+                  lng: this.currentLong || this._options.map.startLong || 0
+                }, this.currentZoom || this._options.map.startZoom || 10,
+                {animate: false, duration: 0});
+            } else {
+              this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'this.bounds',
+                this.bounds, this.currentLat, this.currentLat && !!this.currentLong);
+              this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
+              this.currentLat = this._map.getCenter().lat;
+              this.currentLong = this._map.getCenter().lng;
+            }
+          } else {
+            this.LOG.debug(['displayMap', 'setView'], 'invalid bounds', {lat: this.currentLat, lng: this.currentLong});
             this._map.setView({
                 lat: this.currentLat || this._options.map.startLat || 0,
                 lng: this.currentLong || this._options.map.startLong || 0
               }, this.currentZoom || this._options.map.startZoom || 10,
-              {animate: false, duration: 0});
-          } else {
-            this.LOG.debug(['displayMap', 'setView'], 'fitBounds', 'this.bounds', this.bounds);
-            this._map.fitBounds(this.bounds, {padding: [1, 1], animate: false, duration: 0});
+              {
+                animate: false,
+                duration: 500
+              });
           }
-          this.currentLat = this._map.getCenter().lat;
-          this.currentLong = this._map.getCenter().lng;
+          this.displayInProgress = false;
         } else {
-          this.LOG.debug(['displayMap', 'setView'], 'invalid bounds', {lat: this.currentLat, lng: this.currentLong});
-          this._map.setView({
-              lat: this.currentLat || this._options.map.startLat || 0,
-              lng: this.currentLong || this._options.map.startLong || 0
-            }, this.currentZoom || this._options.map.startZoom || 10,
+          this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.map.startZoom);
+          this._map.setView(
+            [
+              this.currentLat || this._options.map.startLat || 0,
+              this.currentLong || this._options.map.startLong || 0
+            ],
+            this.currentZoom || this._options.map.startZoom || 2,
             {
               animate: false,
-              duration: 500
-            });
+              duration: 0
+            }
+          );
+          this.displayInProgress = false;
         }
-      }, 10);
-    } else {
-      this.LOG.debug(['displayMap', 'lost'], 'lost', this.currentZoom, this._options.map.startZoom);
-      this._map.setView(
-        [
-          this.currentLat || this._options.map.startLat || 0,
-          this.currentLong || this._options.map.startLong || 0
-        ],
-        this.currentZoom || this._options.map.startZoom || 2,
-        {
-          animate: false,
-          duration: 0
+        if (this.heatData && this.heatData.length > 0) {
+          this._heatLayer = (Leaflet as any).heatLayer(this.heatData, {
+            radius: this._options.map.heatRadius,
+            blur: this._options.map.heatBlur,
+            minOpacity: this._options.map.heatOpacity
+          });
+          this._heatLayer.addTo(this._map);
         }
-      );
-    }
-    if (this.heatData && this.heatData.length > 0) {
-      this._heatLayer = (Leaflet as any).heatLayer(this.heatData, {
-        radius: this._options.map.heatRadius,
-        blur: this._options.map.heatBlur,
-        minOpacity: this._options.map.heatOpacity
-      });
-      this._heatLayer.addTo(this._map);
-    }
-    this.firstDraw = false;
-    this.resizeMe();
-    this.patchMapTileGapBug();
-    this.chartDraw.emit(true);
+        this.firstDraw = false;
+        this.resizeMe();
+        this.patchMapTileGapBug();
+        this.chartDraw.emit(true);
+      }
+      , 10);
   }
 
   private getGTSDots(gts) {
