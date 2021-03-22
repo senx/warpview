@@ -1,6 +1,14 @@
 WarpView
 ---
 
+## v2.0.61
+
+> +  2021/03/22  | vv2.0.61  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1001e92a2f97365c2a68d0eb576d8fb1b0854747)*)
+> +  2021/03/22  | vv2.0.61  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/14ec284546fe8567682e76fb67ab7efbc4c727bf)*)
+> +  2021/03/22  | fix chart title  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/9d2cf7d116e778845e3c21b400f370b20f005284)*)
+> +  2021/03/18  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5765dca3e070a8d6cc21050f008e43ffa2ebfc1f)*)
+> +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3b4d93e7bef9fa6425b434aa845015777f342067)*)
+
 ## v2.0.60
 
 > +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/03300c39987f091b62db7ac7520c0cc99f238af4)*)
@@ -50,11 +58,5 @@ WarpView
 > +  2021/01/26  | v2.0.54  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/7b60918537a7f7dc58473c966816b9a473b405f9)*)
 > +  2021/01/26  | fix npe  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6cff17f1fbb9067871595a94da2ebb3bfe475ddb)*)
 > +  2021/01/26  | v2.0.53  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/22cf797eacb6e933f42d5d75e1b851db1f7759a6)*)
-
-## v2.0.53
-
-> +  2021/01/26  | v2.0.53  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a382966091cb2f4720552c13f54abc33d41f4dd7)*)
-> +  2021/01/26  | fix perf bottleneck  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/09c1217424c135cca6d68b9f87c9542180726390)*)
-> +  2021/01/22  | v2.0.52  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6699bce411031f5a8a32afb947b44404c7e29efa)*)
 
 
