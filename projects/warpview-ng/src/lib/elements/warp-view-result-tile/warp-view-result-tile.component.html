@@ -1,5 +1,6 @@
 <div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
     <warpview-spinner *ngIf="loading" message="Parsing data"></warpview-spinner>
+    <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
     <div style="height: 100%; width: 100%" [hidden]="loading">
       <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                          [data]="dataModel" (chartDraw)="chartDrawn()"

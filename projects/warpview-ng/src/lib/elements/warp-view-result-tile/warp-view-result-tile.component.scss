@@ -19,6 +19,8 @@
     min-height: 50px;
     width: var(--warp-view-tile-width, 100%);
     height: var(--warp-view-tile-height, 100%);
+    display: flex;
+    flex-direction: column;
 
     &.full {
       width: 100%;

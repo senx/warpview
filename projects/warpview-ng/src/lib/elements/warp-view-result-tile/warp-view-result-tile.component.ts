@@ -15,6 +15,7 @@ import {GTSLib} from '../../utils/gts.lib';
 })
 export class WarpViewResultTileComponent extends WarpViewComponent {
 
+  @Input('chartTitle') chartTitle;
   @Input('type') set type(type: string) {
     this._type = type;
   }

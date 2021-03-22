@@ -16,7 +16,6 @@
   -->
 <div class="wrapper" [ngClass]="{'full':  responsive}">
   <div class="tilewrapper">
-    <h1 *ngIf="chartTitle">{{chartTitle}}</h1>
     <div [ngClass]="{'tile': true,'notitle':  !chartTitle || chartTitle === ''}">
       <warpview-spinner *ngIf="loadingExec" message="Requesting data"></warpview-spinner>
       <div *ngIf="_options.showErrors && error" style="height: calc(100% - 30px); width: 100%">
@@ -27,7 +26,7 @@
       <div *ngIf="!error" style="height: calc(100% - 20px); width: 100%" [hidden]="loadingExec">
         <warpview-result-tile #resultTile
                               (warpViewNewOptions)="onWarpViewNewOptions($event)"
-                              [debug]="debug" [type]="type"
+                              [debug]="debug" [type]="type" [chartTitle]="chartTitle"
                               [unit]="unit" [options]="_options"
                               (chartDraw)="chartDrawn($event)"
         ></warpview-result-tile>
