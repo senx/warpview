@@ -416,6 +416,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     }
     this.loading = false;
     this.afterBoundsUpdate = true;
+    this.chartDraw.emit();
   }
 
   sliderChange($event: any) {

@@ -305,6 +305,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.loading = false;
     this.afterBoundsUpdate = false;
+    this.chartDraw.emit();
   }
 
   hover(data: any) {

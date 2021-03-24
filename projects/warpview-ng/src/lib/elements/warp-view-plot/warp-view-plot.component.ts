@@ -438,6 +438,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   onChartDraw($event: any, component) {
+    this.LOG.debug(['onChartDraw'], $event);
     if (
       this.chartBounds
       && $event

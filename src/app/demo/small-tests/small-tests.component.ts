@@ -45,7 +45,7 @@ export class SmallTestsComponent implements OnInit {
     ...new Param(),
     showGTSTree: true,
     showDots: true,
-    autoRefresh: 5,
+  //  autoRefresh: 5,
     /*...{
       fontColor: '#000000',
       map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
@@ -63,11 +63,11 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'map',
+      type: 'plot',
       description: '',
       warpscript: `
       NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts RAND RAND RAND RAND ADDVALUE DROP %> FOR
+0 100 <% 'ts' STORE $g NOW $ts 10000 - * RAND RAND RAND RAND ADDVALUE DROP %> FOR
 $g
       `
     },
