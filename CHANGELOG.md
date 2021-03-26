@@ -1,6 +1,11 @@
 WarpView
 ---
 
+## v2.0.62
+
+> +  2021/03/24  | fix plot issue  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8cefb908c9b7fd9e2fad2fb57104eda8b5f5125a)*)
+> +  2021/03/22  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/20975d7984f04d3743510916ac5fd5db1ab4929d)*)
+
 ## v2.0.61
 
 > +  2021/03/22  | vv2.0.61  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1001e92a2f97365c2a68d0eb576d8fb1b0854747)*)
@@ -52,11 +57,5 @@ WarpView
 > +  2021/01/26  | v2.0.55  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d987c3ee56b25353524585ad15fe1faedbe124ec)*)
 > +  2021/01/26  | fix perfs  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/96fa7ec566b3de8e02d6e6651fb8a0c88c7bf722)*)
 > +  2021/01/26  | v2.0.54  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/fb433a76bdb1144e7994b1f6f228eec9fd504052)*)
-
-## v2.0.54
-
-> +  2021/01/26  | v2.0.54  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/7b60918537a7f7dc58473c966816b9a473b405f9)*)
-> +  2021/01/26  | fix npe  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6cff17f1fbb9067871595a94da2ebb3bfe475ddb)*)
-> +  2021/01/26  | v2.0.53  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/22cf797eacb6e933f42d5d75e1b851db1f7759a6)*)
 
 

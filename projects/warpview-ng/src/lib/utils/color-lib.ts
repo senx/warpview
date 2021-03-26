@@ -14,7 +14,29 @@
  *  limitations under the License.
  *
  */
+
 // @dynamic
+export enum Colors {
+  COHESIVE = 'COHESIVE',
+  COHESIVE_2 = 'COHESIVE_2',
+  BELIZE = 'BELIZE',
+  VIRIDIS = 'VIRIDIS',
+  MAGMA = 'MAGMA',
+  INFERNO = 'INFERNO',
+  PLASMA = 'PLASMA',
+  YL_OR_RD = 'YL_OR_RD',
+  YL_GN_BU = 'YL_GN_BU',
+  BU_GN = 'BU_GN',
+  WARP10 = 'WARP10',
+  NINETEEN_EIGHTY_FOUR = 'NINETEEN_EIGHTY_FOUR',
+  ATLANTIS = 'ATLANTIS',
+  DO_ANDROIDS_DREAM = 'DO_ANDROIDS_DREAM',
+  DELOREAN = 'DELOREAN',
+  CTHULHU = 'CTHULHU',
+  ECTOPLASM = 'ECTOPLASM',
+  T_MAX_400_FILM = 'T_MAX_400_FILM',
+}
+
 export class ColorLib {
   static color = {
     COHESIVE: [
@@ -191,7 +213,13 @@ export class ColorLib {
   };
 
   static getColor(i: number, scheme: string) {
-    return ColorLib.color[scheme][i % ColorLib.color[scheme].length];
+    if (!ColorLib.color[scheme]) {
+      scheme = 'WARP10';
+    }
+    return ColorLib.color[scheme][i % 2 === 0
+      ? i % ColorLib.color[scheme].length
+      : ColorLib.color[scheme].length - i % ColorLib.color[scheme].length
+      ];
   }
 
   static getColorGradient(id: number, scheme: string) {
