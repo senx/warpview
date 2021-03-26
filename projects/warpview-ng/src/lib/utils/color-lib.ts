@@ -218,7 +218,7 @@ export class ColorLib {
     }
     return ColorLib.color[scheme][i % 2 === 0
       ? i % ColorLib.color[scheme].length
-      : ColorLib.color[scheme].length - i % ColorLib.color[scheme].length
+      : ColorLib.color[scheme].length - i % ColorLib.color[scheme].length - 1
       ];
   }
 
