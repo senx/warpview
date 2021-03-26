@@ -3,6 +3,14 @@ WarpView
 
 ## v2.0.63
 
+> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6f91d16091733b8cf86ef9a704dee527f05fffa2)*)
+> +  2021/03/26  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6e3ecb86bdfaa930b02b99894a4b35c76f5b5ebb)*)
+> +  2021/03/26  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/14984fbfac596b2c3bb0152ed43d732de0d5d20c)*)
+> +  2021/03/26  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5ae1cc67de28f726b5714cd5d5d5d0af7f21b6a5)*)
+> +  2021/03/26  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/feea5f4b464d16b43ddebfb7232eebe615f2dab0)*)
+> +  2021/03/26  | build  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a6049edb4427db6471ab2677cf2d60f14bff0aeb)*)
+> +  2021/03/26  | update copyright  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/dd0ebd9fb361b5a91f8991659e4707b1eadb4ecf)*)
+> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/998c62b7b31ee6d8441b75007dba7bf62d25a72a)*)
 > +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/bf545634a61027dd3dceb2928e9a7d157bf73700)*)
 > +  2021/03/26  | refreshed color schemes  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/22418e46f416ed635dc8a1f93562efc10b61020b)*)
 > +  2021/03/26  | refreshed color schemes  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/ab3a62fa697d147504212286ee8d2f7d8c1fa829)*)
