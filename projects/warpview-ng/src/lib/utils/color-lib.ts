@@ -92,7 +92,8 @@ export class ColorLib {
   }
 
   static getColorScale(scheme: string) {
-    return ColorLib.color[scheme].map((c, i) => [i, c]);
+    const scale = ColorLib.color[scheme].map((c, i) => [i, c]);
+    return scale;
   }
 
   static hexToRgb(hex) {
