@@ -1,6 +1,12 @@
 WarpView
 ---
 
+## v2.0.64
+
+> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/cfef5bebe548425c731878fa2384717a99549bbe)*)
+> +  2021/03/26  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/35cdca142128d60e803a3da073a7163ddc903483)*)
+> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a80ad811fcf0f767cad9a30089621c1362b03ef0)*)
+
 ## v2.0.63
 
 > +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6f91d16091733b8cf86ef9a704dee527f05fffa2)*)
@@ -64,10 +70,5 @@ WarpView
 > +  2021/01/28  | fix perfs  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b10e6d9fd912f113994ad2d51ea7fa1ebd81c945)*)
 > +  2021/01/27  | fix perfs  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5392be088bd468e79d82ab29e653ebd152ea9a29)*)
 > +  2021/01/27  | v2.0.56  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0bd5651d2a08a926ee9b2ca94047f5f5d4308a5e)*)
-
-## v2.0.56
-
-> +  2021/01/27  | v2.0.56  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/fdd499cc1c7b9189f4461225356c29a90cd1d26c)*)
-> +  2021/01/26  | v2.0.55  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d532885b200cdb8c1a9086b0501319df59993710)*)
 
 
