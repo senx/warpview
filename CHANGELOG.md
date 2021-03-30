@@ -3,7 +3,8 @@ WarpView
 
 ## v2.0.64
 
-> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/cfef5bebe548425c731878fa2384717a99549bbe)*)
+> +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/4f6db32625f91bd530fdbc76359e2a20e481093a)*)
+> +  2021/03/30  | fix tiles on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8b221c2be89929cd5bbc5543274f25c7a29ab76)*)
 > +  2021/03/26  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/35cdca142128d60e803a3da073a7163ddc903483)*)
 > +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a80ad811fcf0f767cad9a30089621c1362b03ef0)*)
 
