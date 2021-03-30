@@ -63,12 +63,20 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'plot',
+      type: 'map',
       description: '',
       warpscript: `
       NEWGTS 'g' STORE
 0 100 <% 'ts' STORE $g NOW $ts 10000 - * RAND RAND RAND RAND ADDVALUE DROP %> FOR
-$g
+{
+  'data' $g
+  'globalParams' {
+    'map' {
+      'mapType' 'NONE'
+      'tiles' [ 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png' ]
+    }
+  }
+}
       `
     },
     {

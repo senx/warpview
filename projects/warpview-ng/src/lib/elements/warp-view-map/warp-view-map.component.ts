@@ -72,7 +72,7 @@ export class WarpViewMapComponent implements OnInit {
         || options.map.startLat !== this._options.map.startLat
         || options.map.startLong !== this._options.map.startLong;
       this._options = {...options as Param};
-      this.currentLat =  this.currentLat || this._options.map.startLat || 0;
+      this.currentLat = this.currentLat || this._options.map.startLat || 0;
       this.currentLong = this.currentLong || this._options.map.startLong || 0;
       this.divider = GTSLib.getDivider(this._options.timeUnit);
       this.drawMap(reZoom);
@@ -246,7 +246,7 @@ export class WarpViewMapComponent implements OnInit {
     this.LOG.debug(['drawMap', 'this._options'], {...this._options});
     if (gts.data) {
       dataList = gts.data as any[];
-      this._options = ChartLib.mergeDeep<Param>(gts.globalParams || {}, this._options);
+      this._options = ChartLib.mergeDeep<Param>(this._options, gts.globalParams || {});
       this.timeSpan = this.timeSpan || this._options.map.timeSpan;
       params = gts.params;
     } else {
@@ -368,7 +368,10 @@ export class WarpViewMapComponent implements OnInit {
         maxZoom: 24
       });
       this.geoJsonLayer.bringToBack();
-      this.tilesLayer.bringToBack(); // TODO: tester
+      if (this.tilesLayer) {
+        this.tilesLayer.bringToBack(); // TODO: tester
+        this.tilesLayer.addTo(this.tileLayerGroup);
+      }
       this._map.on('load', () => this.LOG.debug(['displayMap', 'load'], this._map.getCenter().lng, this.currentLong, this._map.getZoom()));
       this._map.on('zoomend', () => {
         this.LOG.debug(['displayMap'], 'zoomend', this.firstDraw, this._map.getZoom());
@@ -384,7 +387,6 @@ export class WarpViewMapComponent implements OnInit {
         }
       });
     }
-    this.tilesLayer.addTo(this.tileLayerGroup);
     this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
     // For each path
     const pathDataSize = (this.pathData || []).length;
@@ -400,9 +402,9 @@ export class WarpViewMapComponent implements OnInit {
       this.updatePositionArray(this.positionData[i]);
     }
 
-    (this._options.map.tiles || []).forEach((t) => { // TODO to test
+    (this._options.map.tiles || []).forEach((t) => {
       this.LOG.debug(['displayMap'], t);
-      if (this._options.map.showTimeRange) {
+      if (!!this._options.map.showTimeRange) {
         this.tileLayerGroup.addLayer(Leaflet.tileLayer(t
             .replace('{start}', moment(this.timeStart).toISOString())
             .replace('{end}', moment(this.timeEnd).toISOString()), {
