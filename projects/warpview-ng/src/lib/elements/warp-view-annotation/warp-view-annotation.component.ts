@@ -242,7 +242,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.displayExpander = (this.plotlyData.length > 1);
     const count = this.plotlyData.filter(d => d.y.length > 0).length;
     const calculatedHeight = this.lineHeight * (this.expanded ? count : 1) + this.layout.margin.t + this.layout.margin.b;
-    this.el.nativeElement.style.height = calculatedHeight + 'px';
+    this.el.nativeElement.style.height = (calculatedHeight + 30) + 'px';
     this.height = calculatedHeight;
     this.layout.height = this.height;
     this.LOG.debug(['drawChart', 'height'], this.lineHeight, this.height, count, calculatedHeight, this.expanded, this.layout.margin);
