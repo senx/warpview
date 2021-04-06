@@ -71,8 +71,8 @@ export class SmallTestsComponent implements OnInit {
       NEWGTS 'a' STORE
 0 100 <%
   'ts' STORE
-  $v $ts  NaN NaN NaN RAND ADDVALUE DROP
-  $a $ts  NaN NaN NaN    T ADDVALUE DROP
+  $v NOW $ts STU * - NaN NaN NaN RAND ADDVALUE DROP
+  $a NOW $ts STU * - NaN NaN NaN    T ADDVALUE DROP
 %> FOR
 [ $v $a ]`
     },

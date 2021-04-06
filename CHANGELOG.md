@@ -1,10 +1,17 @@
 WarpView
 ---
 
+## v2.0.65
+
+> +  2021/04/06  | fix annotation/chart sync with zoom in timestamp mode  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/ac14e2bbe405b3806c6612cd18b81b573b6f614f)*)
+> +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8063fa328389b123aef2d96f0f0f60b22ded407)*)
+
 ## v2.0.64
 
 > +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/4f6db32625f91bd530fdbc76359e2a20e481093a)*)
 > +  2021/03/30  | fix tiles on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8b221c2be89929cd5bbc5543274f25c7a29ab76)*)
+> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/e6c33258cf1c0abb42d83e7653ee584892aa3b8f)*)
+> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/cfef5bebe548425c731878fa2384717a99549bbe)*)
 > +  2021/03/26  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/35cdca142128d60e803a3da073a7163ddc903483)*)
 > +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a80ad811fcf0f767cad9a30089621c1362b03ef0)*)
 
@@ -64,12 +71,5 @@ WarpView
 > +  2021/02/02  | add changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/32658ea5afe70deb0c64e5a90bbb48d72c8c8d3c)*)
 > +  2021/02/02  | plot resizing fix  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6cafb08d94f91ac765f5648b30935a5d34ade5a4)*)
 > +  2021/01/28  | v2.0.57  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/87a5672ec57829d082617933fba4d2ab1ed74bb1)*)
-
-## v2.0.57
-
-> +  2021/01/28  | v2.0.57  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a6a9395024ca6e9443bdd909ee48be0c135ac9f3)*)
-> +  2021/01/28  | fix perfs  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b10e6d9fd912f113994ad2d51ea7fa1ebd81c945)*)
-> +  2021/01/27  | fix perfs  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5392be088bd468e79d82ab29e653ebd152ea9a29)*)
-> +  2021/01/27  | v2.0.56  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0bd5651d2a08a926ee9b2ca94047f5f5d4308a5e)*)
 
 
