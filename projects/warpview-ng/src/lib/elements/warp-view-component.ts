@@ -274,9 +274,13 @@ export abstract class WarpViewComponent {
           if (this._autoResize) {
             this.height = parentSize.h;
           }
+          this.LOG.debug(['initChart'], 'setTimeout', this.height,  parentSize.h);
           this.width = parentSize.w;
-          setTimeout(() => this.initChart(el), 100);
-          return;
+          setTimeout(() => {
+            this.LOG.debug(['initChart'], 'setTimeout');
+            return this.initChart(el)
+          }, 100);
+          return false;
         } else {
           if (this._autoResize) {
             this.height = parentSize.h;
@@ -323,10 +327,8 @@ export abstract class WarpViewComponent {
     this.chartDraw.emit();
     if (!customData) {
       this.noData = (this.plotlyData || []).length === 0;
-      //    return !(!this.plotlyData || this.plotlyData.length === 0);
-    } // else {
+    }
     return true;
-    // }
   }
 
   afterPlot(plotlyInstance?: any) {

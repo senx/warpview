@@ -412,7 +412,11 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     if (change) {
       this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
       this.LOG.debug(['relayout', 'updateBounds'], GTSLib.toISOString(this.chartBounds.tsmin, this.divider, this._options.timeZone));
-      this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        this.emitNewBounds(this.chartBounds.msmin, this.chartBounds.msmax, this.marginLeft);
+      } else {
+        this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax, this.marginLeft);
+      }
     }
     this.loading = false;
     this.afterBoundsUpdate = true;

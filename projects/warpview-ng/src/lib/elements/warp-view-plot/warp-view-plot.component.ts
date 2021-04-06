@@ -195,7 +195,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   boundsDidChange(event) {
-    this.LOG.debug(['updateBounds'], event);
+    this.LOG.debug(['updateBounds', 'boundsDidChange'], event);
     this._options.bounds = this._options.bounds || {};
     if (this._options.bounds.minDate !== event.bounds.min && this._options.bounds.maxDate !== event.bounds.max) {
       this._options.bounds = this._options.bounds || {};
@@ -207,9 +207,11 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       } else if (event.source === 'annotation') {
         this.chart.updateBounds(event.bounds.min, event.bounds.max);
       }
-      this.LOG.debug(['updateBounds'], this.divider,
+
+      this.LOG.debug(['updateBounds', 'boundsDidChange', 'date'], this.divider,
         GTSLib.toISOString(event.bounds.min, this.divider, this._options.timeZone),
         GTSLib.toISOString(event.bounds.max, this.divider, this._options.timeZone));
+      this.LOG.debug(['updateBounds', 'boundsDidChange', 'timestamp'], event.bounds.min, event.bounds.max);
       this.line.nativeElement.style.left = '-100px';
     }
   }
@@ -438,7 +440,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   }
 
   onChartDraw($event: any, component) {
-    this.LOG.debug(['onChartDraw'], $event);
+    this.LOG.debug(['onChartDraw'], $event, component);
     if (
       this.chartBounds
       && $event

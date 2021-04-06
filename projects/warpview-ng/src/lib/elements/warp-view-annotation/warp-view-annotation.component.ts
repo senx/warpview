@@ -84,6 +84,13 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     return this._standalone;
   }
 
+
+  @Input('height') height = 0;
+
+  @Output('pointHover') pointHover = new EventEmitter<any>();
+  @Output('chartDraw') chartDraw = new EventEmitter<any>();
+  @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
+
   constructor(
     public el: ElementRef,
     public renderer: Renderer2,
@@ -94,12 +101,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this._autoResize = false;
     this.LOG = new Logger(WarpViewAnnotationComponent, this._debug);
   }
-
-  @Input('height') height = 0;
-
-  @Output('pointHover') pointHover = new EventEmitter<any>();
-  @Output('chartDraw') chartDraw = new EventEmitter<any>();
-  @Output('boundsDidChange') boundsDidChange = new EventEmitter<any>();
 
   displayExpander = true;
   layout: Partial<any> = {
@@ -301,7 +302,11 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     if (change) {
       this.LOG.debug(['relayout', 'updateBounds'], this.minTick, this.maxTick);
       this.LOG.debug(['relayout', 'updateBounds'], this.chartBounds);
-      this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
+      if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+        this.emitNewBounds(this.chartBounds.msmin, this.chartBounds.msmax);
+      } else {
+        this.emitNewBounds(this.chartBounds.tsmin, this.chartBounds.tsmax);
+      }
     }
     this.loading = false;
     this.afterBoundsUpdate = false;
@@ -352,15 +357,16 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.loading = false;
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
-    this.LOG.debug(['afterPlot'], div);
+    this.LOG.debug(['afterPlot'], 'div', div);
     if (this.afterBoundsUpdate || this._standalone) {
       this.chartDraw.emit(this.chartBounds);
-      this.LOG.debug(['afterPlot'], this.chartBounds, div);
+      this.LOG.debug(['afterPlot'], 'chartBounds', this.chartBounds, div);
       this.afterBoundsUpdate = false;
     }
   }
 
   private emitNewBounds(min, max) {
+    this.LOG.debug(['emitNewBounds'], min, max);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.boundsDidChange.emit({bounds: {min, max}, source: 'annotation'});
     } else {
@@ -424,7 +430,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         };
         this.visibleGtsId.push(gts.id);
         this.gtsId.push(gts.id);
-        if (timestampMode || this._options.timeMode && this._options.timeMode === 'timestamp') {
+        if (timestampMode || !!this._options.timeMode && this._options.timeMode === 'timestamp') {
           this.layout.xaxis.type = 'linear';
         } else {
           this.layout.xaxis.type = 'date';
@@ -478,9 +484,9 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         this.visibleGtsId.push(-1);
       }
     }
-    const x = {tick0: undefined, range: []};
+    const x = {...this.layout.xaxis, tick0: undefined, range: []};
     const pad = ChartLib.fraction2r(this.minTick, this.maxTick, 0.067);
-    if (timestampMode || this._options.timeMode && this._options.timeMode === 'timestamp') {
+    if (timestampMode || !!this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = this.minTick - pad;
       x.range = [x.tick0, this.maxTick + pad];
     } else {
@@ -500,6 +506,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   setRealBounds(chartBounds: ChartBounds) {
+    this.LOG.debug(['setRealBounds'], chartBounds, this._options.timeMode);
     this.afterBoundsUpdate = true;
     this.minTick = chartBounds.tsmin;
     this.maxTick = chartBounds.tsmax;
@@ -516,7 +523,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
         thickness: 40 / this.height
       };
     }
-    if (this._options.timeMode && this._options.timeMode === 'timestamp') {
+    if (!!this._options.timeMode && this._options.timeMode === 'timestamp') {
       x.tick0 = this.minTick / this.divider;
       x.range = [this.minTick, this.maxTick];
     } else {

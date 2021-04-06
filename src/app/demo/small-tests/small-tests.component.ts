@@ -45,6 +45,8 @@ export class SmallTestsComponent implements OnInit {
     ...new Param(),
     showGTSTree: true,
     showDots: true,
+    responsive: true,
+    timeMode: 'timestamp',
   //  autoRefresh: 5,
     /*...{
       fontColor: '#000000',
@@ -57,27 +59,22 @@ export class SmallTestsComponent implements OnInit {
       expandAnnotation: false,
       showDots: true,
       autoRefresh: 5,
-      //   timeMode: 'duration',
-      responsive: true
+      timeMode: 'duration',
     }*/
   };
   tests = [
     {
-      type: 'map',
+      type: 'plot',
       description: '',
       warpscript: `
-      NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g NOW $ts 10000 - * RAND RAND RAND RAND ADDVALUE DROP %> FOR
-{
-  'data' $g
-  'globalParams' {
-    'map' {
-      'mapType' 'NONE'
-      'tiles' [ 'http://a.tile.stamen.com/toner/{z}/{x}/{y}.png' ]
-    }
-  }
-}
-      `
+      NEWGTS 'v' STORE
+      NEWGTS 'a' STORE
+0 100 <%
+  'ts' STORE
+  $v $ts  NaN NaN NaN RAND ADDVALUE DROP
+  $a $ts  NaN NaN NaN    T ADDVALUE DROP
+%> FOR
+[ $v $a ]`
     },
     {
       type: 'plot',
