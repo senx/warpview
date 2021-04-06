@@ -1,5 +1,5 @@
 <!--
-  ~  Copyright 2020 SenX S.A.S.
+  ~  Copyright 2021  SenX S.A.S.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
   ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
+  ~
   -->
 
 <!DOCTYPE html>
@@ -20,22 +21,43 @@
 
 <head>
   <meta charset="utf-8">
-  <base href="/warpview-editor/">
+  <base href="/warpview/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Warp View Editor</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link rel="stylesheet" href="styles.d99a39c3a98fc6cb7675.css"></head>
-<body>
-<app-root></app-root>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <title>Warp View</title>
+  <style>
 
-<script type="text/javascript">
-  // obviously, angular events does not bubble outside of angular.
-  document.addEventListener("warpViewEditorLoaded", function (ev) {
-    console.log("editorloaded event fired", ev.detail)
-  })
-</script>
-<script src="runtime.0190d08f78786dcf9c99.js" defer></script><script src="polyfills-es5.c6cb9b332b984ab314d3.js" nomodule defer></script><script src="polyfills.27e3dbca7a813f07f5b2.js" defer></script><script src="scripts.d864237782b9feb8a8c4.js" defer></script><script src="main.b545899d619aa94b93c7.js" defer></script></body>
+    :root {
+      --jumbotron-padding-y: 3rem;
+    }
+
+    .card {
+      padding: 0;
+    }
+
+    .card-body {
+      min-height: calc(100vh - 132px);
+    }
+
+    .jumbotron p:last-child {
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    footer p {
+      margin-bottom: .25rem;
+    }
+
+    body {
+      --warp-view-tile-height: calc(100vh - 42px);
+    }
+  </style>
+<link rel="stylesheet" href="styles.40a305f3463a76db0446.css"></head>
+<body>
+<warpview-root></warpview-root>
+
+<script src="runtime.0aa0e333466a3cff8b30.js" defer></script><script src="polyfills-es5.1e9190447f11f78ddef8.js" nomodule defer></script><script src="polyfills.526c3e2665308044e284.js" defer></script><script src="scripts.dc357b0f6dff293d5fa6.js" defer></script><script src="main.074ea195f5d00028b2e2.js" defer></script></body>
 </html>
