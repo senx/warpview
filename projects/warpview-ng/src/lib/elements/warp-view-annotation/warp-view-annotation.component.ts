@@ -125,7 +125,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
       nticks: 1,
       rangemode: 'tozero',
       tickson: 'boundaries',
-      automargin: true,
+      automargin: false,
+      autorange: false,
       showline: false,
       zeroline: true
     },
@@ -219,8 +220,8 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.margin.l = !!this._standalone ? 10 : 50;
     this.layout.margin.b = !!this._standalone ? 50 : 2;
     this.height = this.lineHeight * (this.expanded ? this.gtsId.length : 1) + this.layout.margin.t + this.layout.margin.b;
-    this.LOG.debug(['drawChart', 'this.height'], this.height);
-    if (this.firstDraw) {
+    this.LOG.debug(['drawChart', 'this.height'], this.height, this.expanded);
+    if (this.firstDraw && reparseNewData) {
       this.expanded = !!this._options.expandAnnotation;
     }
     this.layout.height = this.height;
@@ -247,7 +248,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.layout.height = this.height;
     this.LOG.debug(['drawChart', 'height'], this.lineHeight, this.height, count, calculatedHeight, this.expanded, this.layout.margin);
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
-    this.LOG.debug(['drawChart', 'this.layout'], this.layout);
+    this.LOG.debug(['drawChart', 'this.layout'], this.layout, this.expanded);
     if (this._options.timeMode && this._options.timeMode === 'timestamp') {
       this.layout.xaxis.tick0 = this.minTick;
       this.layout.xaxis.range = [this.minTick, this.maxTick];
@@ -495,14 +496,15 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
     this.layout.xaxis = x;
     this.noData = dataset.length === 0;
+    const count = dataset.filter(d => d.y.length > 0).length;
+    this.layout.yaxis.range = [0, this.expanded ? count : 1];
     return dataset;
   }
 
   toggle() {
-    setTimeout(() => {
-      this.expanded = !this.expanded;
-      this.drawChart(false);
-    });
+    this.LOG.debug(['this.expanded'], !!this.expanded);
+    this.expanded = !this.expanded;
+    this.drawChart(false);
   }
 
   setRealBounds(chartBounds: ChartBounds) {

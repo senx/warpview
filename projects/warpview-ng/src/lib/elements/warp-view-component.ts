@@ -278,7 +278,7 @@ export abstract class WarpViewComponent {
           this.width = parentSize.w;
           setTimeout(() => {
             this.LOG.debug(['initChart'], 'setTimeout');
-            return this.initChart(el)
+            return this.initChart(el);
           }, 100);
           return false;
         } else {

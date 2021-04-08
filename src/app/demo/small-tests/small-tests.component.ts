@@ -66,15 +66,14 @@ export class SmallTestsComponent implements OnInit {
     {
       type: 'plot',
       description: '',
-      warpscript: `
-      NEWGTS 'v' STORE
-      NEWGTS 'a' STORE
-0 100 <%
-  'ts' STORE
-  $v NOW $ts STU * - NaN NaN NaN RAND ADDVALUE DROP
-  $a NOW $ts STU * - NaN NaN NaN    T ADDVALUE DROP
-%> FOR
-[ $v $a ]`
+      warpscript: `0 100 <% 'j' STORE
+  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
+  0 30 <%
+    'i' STORE
+    $gts NOW RAND 100000 * -  NaN NaN NaN "t" ADDVALUE DROP
+  %> FOR
+  $gts
+%> FOR`
     },
     {
       type: 'plot',
