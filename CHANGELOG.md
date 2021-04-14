@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.70
+
+> +  2021/04/14  | v2.0.70  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/72dfd160d722765a99e2e66907a7df14335e228d)*)
+> +  2021/04/14  | allow to set maxZoom and maxNativeZoom on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/41bfeec68e0d4cd3d87056204997716fb7b45023)*)
+> +  2021/04/14  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2542a266d32314f91353977bf478fe4706a4f573)*)
+> +  2021/04/14  | v2.0.69  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5a6c55de31c88a3ea9a72ac676dac55edfe213de)*)
+
 ## v2.0.69
 
 > +  2021/04/14  | v2.0.69  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a160a43235bc756eb7adbe5d1434d1426c86261f)*)
@@ -58,10 +65,5 @@ WarpView
 > +  2021/03/26  | better color handling  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0a24637de85d459bf6e0ece5a60c23cc5e5c3aa0)*)
 > +  2021/03/25  | v2.0.62  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/be3d8467eab828125f0c3c32a567bbf64cf94d58)*)
 > +  2021/03/25  | v2.0.62  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5c36bbc0abe3d2c35843c5a0db05e67cf4f07c61)*)
-
-## v2.0.62
-
-> +  2021/03/24  | fix plot issue  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8cefb908c9b7fd9e2fad2fb57104eda8b5f5125a)*)
-> +  2021/03/22  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/20975d7984f04d3743510916ac5fd5db1ab4929d)*)
 
 
