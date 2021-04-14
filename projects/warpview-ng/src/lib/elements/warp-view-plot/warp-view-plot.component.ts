@@ -339,7 +339,10 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this.gtsList = this._data;
     this._options = {...this._options};
     this.divider = GTSLib.getDivider(this._options.timeUnit);
-
+    if (this.showChart) {
+      this.annotation.update(this._options, false);
+      this.chart.update(this._options, false);
+    }
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
     this.chartDraw.emit();
     this.resizeArea();

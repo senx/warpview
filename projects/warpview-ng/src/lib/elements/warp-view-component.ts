@@ -274,12 +274,13 @@ export abstract class WarpViewComponent {
           if (this._autoResize) {
             this.height = parentSize.h;
           }
-          this.LOG.debug(['initChart'], 'setTimeout', this.height,  parentSize.h);
           this.width = parentSize.w;
-          setTimeout(() => {
-            this.LOG.debug(['initChart'], 'setTimeout');
-            return this.initChart(el);
-          }, 100);
+          if (this.height >= 0) {
+            setTimeout(() => {
+              this.LOG.debug(['initChart'], 'setTimeout');
+              return this.initChart(el);
+            }, 100);
+          }
           return false;
         } else {
           if (this._autoResize) {

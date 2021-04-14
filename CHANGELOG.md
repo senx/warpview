@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.68
+
+> +  2021/04/08  | v2.0.68  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/7e289919f667dbefa9d7b47690f8743f7c4d8d2b)*)
+> +  2021/04/08  | fix annotation  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/c0c132bad1faf11b7b60c62ad8cc6da8f9e51a36)*)
+> +  2021/04/06  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/c5132bcc526b6e66b1319d1bf81c0e245196d6fa)*)
+> +  2021/04/06  | v2.0.67  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/390ee423aafeed9f14ab925da7e2ae36daab942b)*)
+
 ## v2.0.67
 
 > +  2021/04/06  | v2.0.67  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/432e6902ed65fb2d3032187c329b2cb6c686a0ac)*)
@@ -58,13 +65,5 @@ WarpView
 > +  2021/03/22  | fix chart title  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/9d2cf7d116e778845e3c21b400f370b20f005284)*)
 > +  2021/03/18  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5765dca3e070a8d6cc21050f008e43ffa2ebfc1f)*)
 > +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3b4d93e7bef9fa6425b434aa845015777f342067)*)
-
-## v2.0.60
-
-> +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/03300c39987f091b62db7ac7520c0cc99f238af4)*)
-> +  2021/03/18  | fix refresh zoom on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/850496abf9bdf023c7cbaec9410dd905526ad918)*)
-> +  2021/03/18  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b027b696781cfd8fa7421f66acc4c46a9b7953ae)*)
-> +  2021/03/18  | v2.0.59  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a7bc039825edf5da4581d848d1fd5b5a890f2394)*)
-> +  2021/03/05  | docs: fix stencijs link  (*[GitHub](noreply@github.com) | [view commit](https://github.com/senx/warpview/commit/88f61f9efe22256e564299e3892d7761179349da)*)
 
 

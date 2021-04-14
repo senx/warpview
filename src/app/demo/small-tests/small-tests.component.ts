@@ -70,7 +70,7 @@ export class SmallTestsComponent implements OnInit {
   NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
   0 30 <%
     'i' STORE
-    $gts NOW RAND 100000 * -  NaN NaN NaN "t" ADDVALUE DROP
+    $gts NOW RAND 100000 * -  RAND RAND NaN RAND ADDVALUE DROP
   %> FOR
   $gts
 %> FOR`

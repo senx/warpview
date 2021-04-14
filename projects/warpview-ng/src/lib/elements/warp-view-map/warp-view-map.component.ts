@@ -52,8 +52,6 @@ export class WarpViewMapComponent implements OnInit {
   @Input('responsive') responsive = false;
   @Input('width') width = ChartLib.DEFAULT_WIDTH;
   @Input('height') height = ChartLib.DEFAULT_HEIGHT;
-  private bounds: Leaflet.LatLngBounds;
-  private displayInProgress = false;
 
   @Input('debug') set debug(debug: boolean) {
     this._debug = debug;
@@ -160,6 +158,8 @@ export class WarpViewMapComponent implements OnInit {
   private tileLayerGroup = Leaflet.featureGroup();
   private geoJsonLayer = Leaflet.featureGroup();
   private tilesLayer: Leaflet.TileLayer;
+  private bounds: Leaflet.LatLngBounds;
+  private displayInProgress = false;
 
   constructor(public el: ElementRef, public sizeService: SizeService, private renderer: Renderer2) {
     this.LOG = new Logger(WarpViewMapComponent, this.debug);
@@ -337,6 +337,7 @@ export class WarpViewMapComponent implements OnInit {
     this.LOG.debug(['displayMap'], 'this.positionData', this.positionData);
     this.geoJson = MapLib.toGeoJSON(data);
     this.LOG.debug(['displayMap'], 'this.geoJson', this.geoJson);
+    this.LOG.debug(['displayMap'], 'mapType', this._options.map.mapType);
     if (this._options.map.mapType !== 'NONE') {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
       this.LOG.debug(['displayMap'], 'map', map);
@@ -359,6 +360,7 @@ export class WarpViewMapComponent implements OnInit {
       this.positionDataLayer.clearLayers();
       this.geoJsonLayer.clearLayers();
       this.tileLayerGroup.clearLayers();
+      this.tilesLayer.addTo(this.tileLayerGroup);
     } else {
       this.LOG.debug(['displayMap'], 'build map');
       this._map = Leaflet.map(this.mapDiv.nativeElement, {
