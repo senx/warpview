@@ -64,16 +64,20 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'plot',
+      type: 'map',
       description: '',
-      warpscript: `0 100 <% 'j' STORE
-  NEWGTS 'serie' $j TOSTRING + RENAME 'gts' STORE
-  0 30 <%
-    'i' STORE
-    $gts NOW RAND 100000 * -  RAND RAND NaN RAND ADDVALUE DROP
-  %> FOR
-  $gts
-%> FOR`
+      warpscript: `
+{
+  'data' NEWGTS
+  'globalParams' {
+    'map' {
+      'mapType' 'DEFAULT'
+      'tiles' [ 
+        'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
+       ]
+    }
+  }
+}`
     },
     {
       type: 'plot',

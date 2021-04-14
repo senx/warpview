@@ -69,6 +69,8 @@ export class Param {
     startZoom?: number;
     timeSpanList?: any[],
     animate?: boolean;
+    maxNativeZoom?: number;
+    maxZoom?: number;
   } = {
     tiles: [],
     showTimeSlider: false,

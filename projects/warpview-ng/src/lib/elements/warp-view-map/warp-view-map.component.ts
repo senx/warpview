@@ -342,8 +342,8 @@ export class WarpViewMapComponent implements OnInit {
       const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
       this.LOG.debug(['displayMap'], 'map', map);
       const mapOpts: TileLayerOptions = {
-        maxZoom: 24,
-        maxNativeZoom: 19,
+        maxNativeZoom: this._options.map.maxNativeZoom || 19,
+        maxZoom: this._options.map.maxZoom || 40
       };
       if (map.attribution) {
         mapOpts.attribution = map.attribution;
@@ -367,7 +367,7 @@ export class WarpViewMapComponent implements OnInit {
         preferCanvas: true,
         layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.positionDataLayer],
         zoomAnimation: true,
-        maxZoom: 24
+        maxZoom: this._options.map.maxZoom || 40
       });
       this.geoJsonLayer.bringToBack();
       if (this.tilesLayer) {
@@ -411,15 +411,15 @@ export class WarpViewMapComponent implements OnInit {
             .replace('{start}', moment(this.timeStart).toISOString())
             .replace('{end}', moment(this.timeEnd).toISOString()), {
             subdomains: 'abcd',
-            maxNativeZoom: 19,
-            maxZoom: 40
+            maxNativeZoom: this._options.map.maxNativeZoom || 19,
+            maxZoom: this._options.map.maxZoom || 40
           }
         ));
       } else {
         this.tileLayerGroup.addLayer(Leaflet.tileLayer(t, {
           subdomains: 'abcd',
-          maxNativeZoom: 19,
-          maxZoom: 40
+          maxNativeZoom: this._options.map.maxNativeZoom || 19,
+          maxZoom: this._options.map.maxZoom || 40
         }));
       }
     });
