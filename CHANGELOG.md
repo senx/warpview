@@ -1,6 +1,12 @@
 WarpView
 ---
 
+## v2.0.69
+
+> +  2021/04/14  | v2.0.69  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a160a43235bc756eb7adbe5d1434d1426c86261f)*)
+> +  2021/04/14  | fix redraw issue  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d881f2ff7819eca65f225c0f10aa731eede0d865)*)
+> +  2021/04/08  | v2.0.68  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/12fbb8d4c4b39514e56fb8af6e052ac84d0e9a49)*)
+
 ## v2.0.68
 
 > +  2021/04/08  | v2.0.68  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/7e289919f667dbefa9d7b47690f8743f7c4d8d2b)*)
@@ -57,13 +63,5 @@ WarpView
 
 > +  2021/03/24  | fix plot issue  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8cefb908c9b7fd9e2fad2fb57104eda8b5f5125a)*)
 > +  2021/03/22  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/20975d7984f04d3743510916ac5fd5db1ab4929d)*)
-
-## v2.0.61
-
-> +  2021/03/22  | vv2.0.61  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1001e92a2f97365c2a68d0eb576d8fb1b0854747)*)
-> +  2021/03/22  | vv2.0.61  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/14ec284546fe8567682e76fb67ab7efbc4c727bf)*)
-> +  2021/03/22  | fix chart title  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/9d2cf7d116e778845e3c21b400f370b20f005284)*)
-> +  2021/03/18  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5765dca3e070a8d6cc21050f008e43ffa2ebfc1f)*)
-> +  2021/03/18  | v2.0.60  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3b4d93e7bef9fa6425b434aa845015777f342067)*)
 
 
