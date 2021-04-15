@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.71
+
+> +  2021/04/15  | v2.0.71  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/86deef7e55f3d884e8c48f5c14087cee5e9dd9de)*)
+> +  2021/04/15  | allow to set maxZoom and maxNativeZoom on each custom tiles  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0964f06ae9ea7febcdf533acc1408ed0938a43da)*)
+> +  2021/04/14  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/e61a7cb680c161fb6fef71821a3e8eb11b42e268)*)
+> +  2021/04/14  | v2.0.70  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b5fc38813989d340522785921cb25d56020439a8)*)
+
 ## v2.0.70
 
 > +  2021/04/14  | v2.0.70  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/72dfd160d722765a99e2e66907a7df14335e228d)*)
@@ -47,23 +54,5 @@ WarpView
 > +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/cfef5bebe548425c731878fa2384717a99549bbe)*)
 > +  2021/03/26  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/35cdca142128d60e803a3da073a7163ddc903483)*)
 > +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a80ad811fcf0f767cad9a30089621c1362b03ef0)*)
-
-## v2.0.63
-
-> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6f91d16091733b8cf86ef9a704dee527f05fffa2)*)
-> +  2021/03/26  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/6e3ecb86bdfaa930b02b99894a4b35c76f5b5ebb)*)
-> +  2021/03/26  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/14984fbfac596b2c3bb0152ed43d732de0d5d20c)*)
-> +  2021/03/26  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5ae1cc67de28f726b5714cd5d5d5d0af7f21b6a5)*)
-> +  2021/03/26  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/feea5f4b464d16b43ddebfb7232eebe615f2dab0)*)
-> +  2021/03/26  | build  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a6049edb4427db6471ab2677cf2d60f14bff0aeb)*)
-> +  2021/03/26  | update copyright  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/dd0ebd9fb361b5a91f8991659e4707b1eadb4ecf)*)
-> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/998c62b7b31ee6d8441b75007dba7bf62d25a72a)*)
-> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/bf545634a61027dd3dceb2928e9a7d157bf73700)*)
-> +  2021/03/26  | refreshed color schemes  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/22418e46f416ed635dc8a1f93562efc10b61020b)*)
-> +  2021/03/26  | refreshed color schemes  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/ab3a62fa697d147504212286ee8d2f7d8c1fa829)*)
-> +  2021/03/26  | better color handling  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a2aeee9db5791cc91c3b85289b2a8e8f27ac0f66)*)
-> +  2021/03/26  | better color handling  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0a24637de85d459bf6e0ece5a60c23cc5e5c3aa0)*)
-> +  2021/03/25  | v2.0.62  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/be3d8467eab828125f0c3c32a567bbf64cf94d58)*)
-> +  2021/03/25  | v2.0.62  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5c36bbc0abe3d2c35843c5a0db05e67cf4f07c61)*)
 
 
