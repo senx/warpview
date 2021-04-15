@@ -1,6 +1,12 @@
 WarpView
 ---
 
+## v2.0.72
+
+> +  2021/04/15  | v2.0.72  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8140cf323e6b8efdc52bc4d2354f8710468cc303)*)
+> +  2021/04/15  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/33a90a8834da5c1de84dcfb255fda6b05991e9d3)*)
+> +  2021/04/15  | v2.0.71  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f23de4751f5462a53dbcac1d028e20ce63b25592)*)
+
 ## v2.0.71
 
 > +  2021/04/15  | v2.0.71  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/86deef7e55f3d884e8c48f5c14087cee5e9dd9de)*)
@@ -45,14 +51,5 @@ WarpView
 
 > +  2021/04/06  | fix annotation/chart sync with zoom in timestamp mode  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/ac14e2bbe405b3806c6612cd18b81b573b6f614f)*)
 > +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8063fa328389b123aef2d96f0f0f60b22ded407)*)
-
-## v2.0.64
-
-> +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/4f6db32625f91bd530fdbc76359e2a20e481093a)*)
-> +  2021/03/30  | fix tiles on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8b221c2be89929cd5bbc5543274f25c7a29ab76)*)
-> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/e6c33258cf1c0abb42d83e7653ee584892aa3b8f)*)
-> +  2021/03/30  | v2.0.64  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/cfef5bebe548425c731878fa2384717a99549bbe)*)
-> +  2021/03/26  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/35cdca142128d60e803a3da073a7163ddc903483)*)
-> +  2021/03/26  | v2.0.63  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a80ad811fcf0f767cad9a30089621c1362b03ef0)*)
 
 

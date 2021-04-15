@@ -72,6 +72,7 @@ export class SmallTestsComponent implements OnInit {
   'globalParams' {
     'type' 'map'
     'map' {
+      'mapType' 'DEFAULT'
       'tiles' [
         {
           'url' 'http://127.0.0.1:8082/tile_coords/{z}/{x}/{y}.png'

@@ -367,7 +367,7 @@ export class WarpViewMapComponent implements OnInit {
         preferCanvas: true,
         layers: [this.tileLayerGroup, this.geoJsonLayer, this.pathDataLayer, this.positionDataLayer],
         zoomAnimation: true,
-        maxZoom: this._options.map.maxZoom || 40
+        maxZoom: this._options.map.maxZoom || 19
       });
       this.geoJsonLayer.bringToBack();
       if (this.tilesLayer) {
@@ -408,15 +408,15 @@ export class WarpViewMapComponent implements OnInit {
       this.LOG.debug(['displayMap'], t);
       const tile: { url?: string, subdomains: string, maxNativeZoom: number, maxZoom: number } = {
         subdomains: 'abcd',
-        maxNativeZoom: this._options.map.maxNativeZoom || 19,
-        maxZoom: this._options.map.maxZoom || 40
+        maxZoom: this._options.map.maxZoom || 19,
+        maxNativeZoom: this._options.map.maxNativeZoom || 19
       };
       if (typeof t === 'string') {
         tile.url = t;
       } else if (typeof t === 'object') {
         tile.url = t.url;
+        tile.maxZoom = this._options.map.maxZoom || 19;
         tile.maxNativeZoom = t.maxNativeZoom || this._options.map.maxNativeZoom || 19;
-        tile.maxZoom = t.maxZoom || this._options.map.maxZoom || 40;
       }
       if (!!this._options.map.showTimeRange) {
         this.tileLayerGroup.addLayer(Leaflet.tileLayer(tile.url
@@ -424,14 +424,14 @@ export class WarpViewMapComponent implements OnInit {
             .replace('{end}', moment(this.timeEnd).toISOString()), {
             subdomains: tile.subdomains,
             maxNativeZoom: tile.maxNativeZoom || 19,
-            maxZoom: tile.maxZoom || 40
+            maxZoom: this._options.map.maxZoom || 19
           }
         ));
       } else {
         this.tileLayerGroup.addLayer(Leaflet.tileLayer(tile.url, {
           subdomains: tile.subdomains,
           maxNativeZoom: tile.maxNativeZoom || 19,
-          maxZoom: tile.maxZoom || 40
+          maxZoom: this._options.map.maxZoom || 19
         }));
       }
     });
