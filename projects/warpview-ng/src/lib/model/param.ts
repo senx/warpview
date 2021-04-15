@@ -50,7 +50,7 @@ export class Param {
   timeZone = 'UTC';
   properties?: any;
   map?: {
-    tiles?: string[];
+    tiles?: any[] ;
     heatRadius?: number;
     heatBlur?: number;
     heatOpacity?: number;

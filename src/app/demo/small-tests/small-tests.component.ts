@@ -70,11 +70,17 @@ export class SmallTestsComponent implements OnInit {
 {
   'data' NEWGTS
   'globalParams' {
+    'type' 'map'
     'map' {
-      'mapType' 'DEFAULT'
-      'tiles' [ 
-        'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
+      'tiles' [
+        {
+          'url' 'http://127.0.0.1:8082/tile_coords/{z}/{x}/{y}.png'
+          'maxZoom' 40
+          'maxNativeZoom' 40
+        }
        ]
+       'maxZoom' 40
+       'maxNativeZoom' 19
     }
   }
 }`
