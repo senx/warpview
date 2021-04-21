@@ -1,12 +1,6 @@
 WarpView
 ---
 
-## v2.0.74
-
-> +  2021/04/21  | v2.0.74  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/40d1a2549c95599b584a85b0816e818c04fae5f5)*)
-> +  2021/04/21  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/32b289b173633aa049a522186ea0e81575f9057b)*)
-> +  2021/04/21  | v2.0.73  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8ed6a1d5072a949774812db47ef9c05cb823948c)*)
-
 ## v2.0.73
 
 > +  2021/04/21  | v2.0.73  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/31f9968f3dfd2572e2367aeec67adc18c51a39d7)*)
@@ -52,5 +46,12 @@ WarpView
 > +  2021/04/06  | v2.0.67  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/432e6902ed65fb2d3032187c329b2cb6c686a0ac)*)
 > +  2021/04/06  | fix annotation/chart padding on plot  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/11d0a121cb723d53de9275af60a3085b4f9ac482)*)
 > +  2021/04/06  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b899dba8d1f9fd3b9c8923f4ebc075ac9632f831)*)
+
+## v2.0.66
+
+> +  2021/04/06  | v2.0.66  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3e9308541d054f935c40f9bc66a72e3d01878cd3)*)
+> +  2021/04/06  | fix annotation/chart padding on plot  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b8ac44c4beb67999ec6fc7885e06087b6cc818e4)*)
+> +  2021/04/06  | v2.0.65  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d502120ff8b1630a246891da33c6265041e39fa6)*)
+> +  2021/04/06  | v2.0.65  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d3a3ee71451f063be4b092461e293bca8f799266)*)
 
 
