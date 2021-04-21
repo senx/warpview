@@ -64,27 +64,18 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'map',
+      type: 'line',
       description: '',
       warpscript: `
-{
-  'data' NEWGTS
-  'globalParams' {
-    'type' 'map'
-    'map' {
-      'mapType' 'DEFAULT'
-      'tiles' [
-        {
-          'url' 'http://127.0.0.1:8082/tile_coords/{z}/{x}/{y}.png'
-          'maxZoom' 40
-          'maxNativeZoom' 40
-        }
-       ]
-       'maxZoom' 40
-       'maxNativeZoom' 19
-    }
-  }
-}`
+@training/dataset0
+$TOKEN AUTHENTICATE
+100000000 MAXOPS
+NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g
+NEWGTS 'g' STORE
+0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
+$g`
     },
     {
       type: 'plot',

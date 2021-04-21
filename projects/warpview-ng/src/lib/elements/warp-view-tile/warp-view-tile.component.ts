@@ -78,7 +78,6 @@ export class WarpViewTileComponent extends WarpViewComponent implements OnInit, 
   loading = false;
   execResult: string;
   loadingExec = false;
-
   private timer: any;
   private _autoRefresh;
   private _gtsFilter = '';

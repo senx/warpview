@@ -49,9 +49,9 @@
 
 
       </div>
-      <div style="height: 600px; resize: both; padding: 10px; min-height: 120px; overflow: hidden;">
-        <warpview-tile url="https://warp.senx.io/standalone/api/v0/exec" [responsive]="true" [debug]="true"
-                       [options]="options" chartTitle="tests"
+      <div style="height: 200px; overflow: hidden;">
+        <warpview-tile url="https://warp.senx.io/api/v0/exec" [responsive]="true" [debug]="true"
+                       [options]="options"
                        [type]="tests[currentTest].type" [warpscript]="tests[currentTest].warpscript"></warpview-tile>
       </div>
     </div>

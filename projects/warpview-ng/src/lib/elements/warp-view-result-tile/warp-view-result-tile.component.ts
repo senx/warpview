@@ -15,7 +15,7 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, Output, Renderer2, ViewChild} from '@angular/core';
 import {WarpViewComponent} from '../warp-view-component';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
@@ -30,9 +30,10 @@ import {GTSLib} from '../../utils/gts.lib';
   templateUrl: './warp-view-result-tile.component.html',
   styleUrls: ['./warp-view-result-tile.component.scss']
 })
-export class WarpViewResultTileComponent extends WarpViewComponent {
-
+export class WarpViewResultTileComponent extends WarpViewComponent implements AfterViewInit {
+  @ViewChild('title', {static: true}) title: ElementRef;
   @Input('chartTitle') chartTitle;
+
   @Input('type') set type(type: string) {
     this._type = type;
   }
@@ -55,6 +56,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
 
   loading = true;
   dataModel: DataModel;
+  innerHeight: number;
   graphs = {
     spectrum: ['histogram2dcontour', 'histogram2d'],
     chart: ['line', 'spline', 'step', 'step-after', 'step-before', 'area', 'scatter'],
@@ -91,6 +93,16 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
     this.LOG = new Logger(WarpViewResultTileComponent, this._debug);
   }
 
+  ngAfterViewInit(): void {
+    const chartDiv = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement);
+    if (!!this.title && !!this.chartTitle) {
+      const titleDiv = this.getContentBounds(this.title.nativeElement);
+      this.innerHeight = chartDiv.h - titleDiv.h - 10;
+    } else {
+      this.innerHeight = chartDiv.h - 10;
+    }
+  }
+
   protected update(options: Param, refresh: boolean): void {
     setTimeout(() => this.loading = !refresh);
     this.LOG.debug(['parseGTS', 'data'], this._data);
@@ -118,12 +130,21 @@ export class WarpViewResultTileComponent extends WarpViewComponent {
       this._type = data.globalParams.type || this._type || 'plot';
     }
     this.LOG.debug(['convert', '_type'], this._type);
+    const chartDiv = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement);
+    if (!!this.title) {
+      const titleDiv = this.getContentBounds(this.title.nativeElement);
+      console.log({chartDiv, titleDiv});
+      this.innerHeight = chartDiv.h - titleDiv.h;
+    } else {
+      this.innerHeight = chartDiv.h;
+    }
+    // this.innerHeight = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement).h - (this.chartTitle ? this.getContentBounds(this.title.nativeElement).h : 0);
     return [];
   }
 
   onResized(event: ResizedEvent) {
     this.width = event.newWidth;
-    this.height = event.newHeight;
+    this.height = event.newHeight; // - (this.chartTitle ? this.getContentBounds(this.title.nativeElement).h : 0);
     this.LOG.debug(['onResized'], event.newWidth, event.newHeight);
     this.sizeService.change(new Size(this.width, this.height));
   }
