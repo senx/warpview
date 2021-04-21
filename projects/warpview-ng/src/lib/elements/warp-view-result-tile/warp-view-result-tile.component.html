@@ -16,9 +16,9 @@
   -->
 
 <div class="wrapper" [ngClass]="{'full':  responsive}" (resized)="onResized($event)">
-  <warpview-spinner [ngStyle]="{maxHeight: innerHeight + 'px'}" *ngIf="loading" message="Parsing data"></warpview-spinner>
+  <warpview-spinner [ngStyle]="{maxHeight: innerHeight + 'px', height: innerHeight + 'px'}" *ngIf="loading" message="Parsing data"></warpview-spinner>
     <h1 #title>{{chartTitle}}</h1>
-    <div style="width: 100%" [hidden]="loading" [ngStyle]="{maxHeight: innerHeight + 'px'}">
+    <div style="width: 100%" [hidden]="loading" [ngStyle]="{maxHeight: innerHeight + 'px', height: innerHeight + 'px'}">
       <warpview-spectrum [debug]="debug" [type]="type" [unit]="unit" [options]="_options"
                          [data]="dataModel" (chartDraw)="chartDrawn()"
                          *ngIf="graphs['spectrum'].indexOf(type) > -1 && !!dataModel"

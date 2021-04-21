@@ -64,18 +64,9 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'line',
+      type: 'display',
       description: '',
-      warpscript: `
-@training/dataset0
-$TOKEN AUTHENTICATE
-100000000 MAXOPS
-NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
-$g
-NEWGTS 'g' STORE
-0 100 <% 'ts' STORE $g $ts NaN NaN NaN RAND ADDVALUE DROP %> FOR
-$g`
+      warpscript: `2`
     },
     {
       type: 'plot',

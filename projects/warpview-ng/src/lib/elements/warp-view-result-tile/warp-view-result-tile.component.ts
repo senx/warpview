@@ -97,9 +97,9 @@ export class WarpViewResultTileComponent extends WarpViewComponent implements Af
     const chartDiv = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement);
     if (!!this.title && !!this.chartTitle) {
       const titleDiv = this.getContentBounds(this.title.nativeElement);
-      this.innerHeight = chartDiv.h - titleDiv.h - 10;
+      this.innerHeight = chartDiv.h - titleDiv.h - 20;
     } else {
-      this.innerHeight = chartDiv.h - 10;
+      this.innerHeight = chartDiv.h - 20;
     }
   }
 
