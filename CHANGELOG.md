@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.73
+
+> +  2021/04/21  | v2.0.73  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/31f9968f3dfd2572e2367aeec67adc18c51a39d7)*)
+> +  2021/04/21  | fix scrollbar on dashboards  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2981511dbb0559641ebd8d42b3c62f447a651b46)*)
+> +  2021/04/15  | allow to set maxZoom and maxNativeZoom on each custom tiles  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/88d20156734ee8a47749bdc6d28bf45b26199c23)*)
+> +  2021/04/15  | v2.0.72  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0809bfb139223d8711a1e614af937f4d4943a3ad)*)
+
 ## v2.0.72
 
 > +  2021/04/15  | v2.0.72  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8140cf323e6b8efdc52bc4d2354f8710468cc303)*)
@@ -46,10 +53,5 @@ WarpView
 > +  2021/04/06  | fix annotation/chart padding on plot  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b8ac44c4beb67999ec6fc7885e06087b6cc818e4)*)
 > +  2021/04/06  | v2.0.65  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d502120ff8b1630a246891da33c6265041e39fa6)*)
 > +  2021/04/06  | v2.0.65  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d3a3ee71451f063be4b092461e293bca8f799266)*)
-
-## v2.0.65
-
-> +  2021/04/06  | fix annotation/chart sync with zoom in timestamp mode  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/ac14e2bbe405b3806c6612cd18b81b573b6f614f)*)
-> +  2021/03/30  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f8063fa328389b123aef2d96f0f0f60b22ded407)*)
 
 
