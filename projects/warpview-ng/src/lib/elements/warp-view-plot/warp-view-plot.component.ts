@@ -340,8 +340,12 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
     this._options = {...this._options};
     this.divider = GTSLib.getDivider(this._options.timeUnit);
     if (this.showChart) {
-      this.annotation.update(this._options, false);
-      this.chart.update(this._options, false);
+      if (!!this.annotation) {
+        this.annotation.update(this._options, false);
+      }
+      if (!!this.chart) {
+        this.chart.update(this._options, false);
+      }
     }
     this.LOG.debug(['drawCharts', 'parsed'], this._data, this._options);
     this.chartDraw.emit();
@@ -350,7 +354,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   focus(event: any) {
     // read the first 4 letters of id of all elements in the click tree
-    const idListClicked = event.path.map(el => (el.id || '').slice(0, 4));
+    const idListClicked = event.target.id.slice(0, 4);
     // if not alone on the page, and click is not on the timezone selector and not on the map, force focus.
     if (!this.isAlone && idListClicked.indexOf('tzSe') < 0 && idListClicked.indexOf('map-') < 0) {
       this.mainPlotDiv.nativeElement.focus();

@@ -64,9 +64,9 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'display',
+      type: 'plot',
       description: '',
-      warpscript: `2`
+      warpscript: `NEWGTS`
     },
     {
       type: 'plot',
