@@ -1,6 +1,12 @@
 WarpView
 ---
 
+## v2.0.77
+
+> +  2021/05/17  | v2.0.77  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b6ebcd3378a341936342ae54860f5d26ac525c09)*)
+> +  2021/05/17  | fix timestmap/date switch  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/41e8319c9eee08e9098a34041fccfe50d0c07378)*)
+> +  2021/05/17  | v2.0.76  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/23b77fa01c4a5a51430ede75a7827feeb37faed7)*)
+
 ## v2.0.76
 
 > +  2021/05/17  | v2.0.76  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1791ed525c0c2654ae01002ad790009b614b4ca8)*)
@@ -49,11 +55,5 @@ WarpView
 > +  2021/04/14  | allow to set maxZoom and maxNativeZoom on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/41bfeec68e0d4cd3d87056204997716fb7b45023)*)
 > +  2021/04/14  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2542a266d32314f91353977bf478fe4706a4f573)*)
 > +  2021/04/14  | v2.0.69  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5a6c55de31c88a3ea9a72ac676dac55edfe213de)*)
-
-## v2.0.69
-
-> +  2021/04/14  | v2.0.69  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a160a43235bc756eb7adbe5d1434d1426c86261f)*)
-> +  2021/04/14  | fix redraw issue  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/d881f2ff7819eca65f225c0f10aa731eede0d865)*)
-> +  2021/04/08  | v2.0.68  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/12fbb8d4c4b39514e56fb8af6e052ac84d0e9a49)*)
 
 

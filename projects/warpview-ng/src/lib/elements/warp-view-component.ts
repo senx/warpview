@@ -105,7 +105,7 @@ export abstract class WarpViewComponent {
       const newData = GTSLib.getData(data);
       if (JSON.stringify(newData) !== JSON.stringify(this._data)) {
         this._data = newData;
-        this.update(this._options, this._options.isRefresh);
+        this.update(this._options, true);
         this.LOG.debug(['onData', 'WVC'], this._data);
       }
     }
