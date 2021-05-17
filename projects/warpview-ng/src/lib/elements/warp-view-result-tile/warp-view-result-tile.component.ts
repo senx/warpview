@@ -109,7 +109,7 @@ export class WarpViewResultTileComponent extends WarpViewComponent implements Af
     this.dataModel = this._data;
     if (!!this.dataModel) {
       this._options = ChartLib.mergeDeep(this._options, options) as Param;
-      this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, options),
+      this._options = ChartLib.mergeDeep(ChartLib.mergeDeep(this.defOptions, this._options),
         this._data ? this._data.globalParams || {} : {}) as Param;
       this.LOG.debug(['parseGTS', 'data'], this._data);
       if (this._options) {

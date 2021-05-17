@@ -181,11 +181,6 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   }
 
   update(options: Param, refresh: boolean): void {
-    this.LOG.debug(['update'], options);
-    this.loading = true;
-    if (!!options) {
-      this._options = ChartLib.mergeDeep(this._options, options) as Param;
-    }
     this.drawChart(refresh);
   }
 

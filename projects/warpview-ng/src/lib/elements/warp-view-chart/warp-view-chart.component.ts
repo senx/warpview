@@ -27,6 +27,7 @@ import {Logger} from '../../utils/logger';
 import {Subject} from 'rxjs';
 import {throttleTime} from 'rxjs/operators';
 import {ChartLib} from '../../utils/chart-lib';
+import {Param} from '../../model/param';
 
 @Component({
   selector: 'warpview-chart',

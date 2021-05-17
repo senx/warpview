@@ -83,14 +83,15 @@ export abstract class WarpViewComponent {
   }
 
   @Input('options') set options(options: Param | string) {
-    this.LOG.debug(['onOptions'], options);
+    this.LOG.debug(['onOptions'], options, {...this._options});
     if (typeof options === 'string') {
       options = JSON.parse(options);
     }
     if (JSON.stringify(options) !== JSON.stringify(this._options)) {
       this.drawn = false;
-      this.LOG.debug(['onOptions', 'changed'], options);
-      this._options = ChartLib.mergeDeep<Param>(options as Param, {});
+      this.LOG.debug(['onOptions', 'changed'], options, {...this._options});
+      this._options = ChartLib.mergeDeep<Param>(this._options, options as Param);
+      this.LOG.debug(['onOptions', 'changed 2'], {...this._options});
       if (!!this._data) {
         this.update(this._options, false);
       }
