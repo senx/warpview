@@ -195,7 +195,7 @@ export abstract class WarpViewComponent {
 
   protected abstract update(options: Param, refresh: boolean): void;
 
-  protected abstract convert(data: DataModel): Partial<any>[];
+  protected abstract convert(data: DataModel, firstDraw?: boolean): Partial<any>[];
 
   protected abstract resize(layout: { width: number; height: any });
 
@@ -261,7 +261,7 @@ export abstract class WarpViewComponent {
     return html;
   }
 
-  protected initChart(el: ElementRef, resize = true, customData = false): boolean {
+  protected initChart(el: ElementRef, resize = true, customData = false, firstDraw = false): boolean {
     if (!!this.drawn) {
       return true;
     }
@@ -278,7 +278,7 @@ export abstract class WarpViewComponent {
           if (this.height >= 0) {
             setTimeout(() => {
               this.LOG.debug(['initChart'], 'setTimeout');
-              return this.initChart(el);
+              return this.initChart(el, resize, customData, firstDraw);
             }, 100);
           }
           return false;
@@ -308,7 +308,7 @@ export abstract class WarpViewComponent {
     this.LOG.debug(['initChart', 'this._options.timeMode'], this._options.timeMode, this._options);
     this.loading = !this._options.isRefresh;
     this.divider = GTSLib.getDivider(this._options.timeUnit);
-    this.plotlyData = this.convert(dataModel);
+    this.plotlyData = this.convert(dataModel, firstDraw);
     this.plotlyConfig.responsive = this._responsive;
     this.layout.paper_bgcolor = 'rgba(0,0,0,0)';
     this.layout.plot_bgcolor = 'rgba(0,0,0,0)';

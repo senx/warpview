@@ -163,7 +163,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
 
   drawChart(reparseNewData: boolean = false) {
     this.LOG.debug(['drawChart', 'this.layout', 'this.options'], this.layout, this._options, (this._options.bounds || {}).minDate);
-    if (!this.initChart(this.el)) {
+    if (!this.initChart(this.el, false, false, reparseNewData)) {
       this.LOG.debug(['drawChart', 'initChart', 'empty'], this._options);
       return;
     }
@@ -203,7 +203,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     this.boundsDidChange.emit({bounds: {min, max, marginLeft}, source: 'chart'});
   }
 
-  protected initChart(el: ElementRef): boolean {
+  protected initChart(el: ElementRef, resize = true, customData = false, firstDraw = false): boolean {
     const res = super.initChart(el);
     const x: any = {tick0: undefined, range: []};
     this.LOG.debug(['initChart', 'updateBounds'], this.chartBounds, this._options.bounds);
@@ -225,7 +225,7 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
     return res;
   }
 
-  protected convert(data: DataModel): Partial<any>[] {
+  protected convert(data: DataModel, firstDraw = false): Partial<any>[] {
     this.parsing = !this._options.isRefresh;
     this.chartBounds.tsmin = undefined;
     this.chartBounds.tsmax = undefined;
@@ -246,14 +246,16 @@ export class WarpViewChartComponent extends WarpViewComponent implements OnInit 
         this.visibilityStatus = gtsList.length > 0 ? 'plottableShown' : 'nothingPlottable';
       }
 
-      let timestampMode = true;
-      const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
-      gtsList.forEach((gts: GTS) => {
-        const ticks = gts.v.map(t => t[0]);
-        const size = gts.v.length;
-        timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
-        timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
-      });
+      let timestampMode = firstDraw;
+      if (firstDraw) {
+        const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+        gtsList.forEach((gts: GTS) => {
+          const ticks = gts.v.map(t => t[0]);
+          const size = gts.v.length;
+          timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
+          timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
+        });
+      }
       if (timestampMode || this._options.timeMode === 'timestamp') {
         this.layout.xaxis.type = 'linear';
       } else {
