@@ -359,6 +359,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.chartBounds.tsmin = this.minTick;
     this.chartBounds.tsmax = this.maxTick;
     this.LOG.debug(['afterPlot'], 'div', div);
+    this.chartDraw.emit(this.chartBounds);
     if (this.afterBoundsUpdate || this._standalone) {
       this.chartDraw.emit(this.chartBounds);
       this.LOG.debug(['afterPlot'], 'chartBounds', this.chartBounds, div);

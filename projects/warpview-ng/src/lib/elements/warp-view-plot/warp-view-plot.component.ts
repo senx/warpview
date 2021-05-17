@@ -43,6 +43,7 @@ import {GTS} from '../../model/GTS';
 import {DataModel} from '../../model/dataModel';
 import {Size, SizeService} from '../../services/resize.service';
 import {Logger} from '../../utils/logger';
+import {BehaviorSubject, forkJoin} from 'rxjs';
 
 @Component({
   selector: 'warpview-plot',
@@ -130,6 +131,8 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
   private preventDefaultKeyListInModals: string[] = ['Escape', 'ArrowUp', 'ArrowDown', ' ', '/'];
   private showLine = false;
   private left: number;
+  private annotationScale = new BehaviorSubject(undefined);
+  private chartScale = new BehaviorSubject(undefined);
 
   constructor(
     public el: ElementRef,
@@ -143,6 +146,25 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   ngOnInit(): void {
     this._options = this._options || this.defOptions;
+    forkJoin({annotation: this.annotationScale, chart: this.chartScale})
+      .subscribe(r => {
+        const min = Math.min(r.annotation.min, r.chart.min);
+        const max = Math.max(r.annotation.max, r.chart.max);
+        this.LOG.debug(['ngOnInit', 'this.chartBounds'], {min, max}, r);
+        if (
+          this.chartBounds
+          && this.chartBounds.tsmin !== Math.min(this.chartBounds.tsmin, min)
+          && this.chartBounds.tsmax !== Math.max(this.chartBounds.tsmax, max)
+        ) {
+          this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, min);
+          this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, max);
+          this.annotation.setRealBounds(this.chartBounds);
+          this.chart.setRealBounds(this.chartBounds);
+          this.LOG.debug(['ngOnInit', 'this.chartBounds'], this.chartBounds);
+        } else {
+          this.chartDraw.emit();
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -171,7 +193,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
           this._options.timeMode = 'date';
         }
         this.warpViewNewOptions.emit(this._options);
-        setTimeout(() => this.drawChart(true));
+        setTimeout(() => this.drawChart(false));
         break;
       case 'typeSwitch' :
         this.loadingChart = true;
@@ -448,19 +470,12 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
 
   onChartDraw($event: any, component) {
     this.LOG.debug(['onChartDraw'], $event, component);
-    if (
-      this.chartBounds
-      && $event
-      && this.chartBounds.tsmin !== Math.min(this.chartBounds.tsmin, $event.tsmin)
-      && this.chartBounds.tsmax !== Math.max(this.chartBounds.tsmax, $event.tsmax)
-    ) {
-      this.chartBounds.tsmin = Math.min(this.chartBounds.tsmin, $event.tsmin);
-      this.chartBounds.tsmax = Math.max(this.chartBounds.tsmax, $event.tsmax);
-      this.annotation.setRealBounds(this.chartBounds);
-      this.chart.setRealBounds(this.chartBounds);
-      this.LOG.debug(['onChartDraw', 'this.chartBounds'], component, this.chartBounds, $event);
-    } else {
-      this.chartDraw.emit($event);
+    if ('annotation' === component && $event) {
+      this.annotationScale.next({min: $event.tsmin, max: $event.tsmax});
+      this.annotationScale.complete();
+    } else if ('chart' === component && $event) {
+      this.chartScale.next({min: $event.tsmin, max: $event.tsmax});
+      this.chartScale.complete();
     }
     this.loadingChart = false;
     this.resizeArea();
