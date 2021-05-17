@@ -231,7 +231,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.el.nativeElement.style.display = 'block';
     this.LOG.debug(['drawChart', 'this.plotlyData'], this.plotlyData);
     this.LOG.debug(['drawChart', 'hiddenData'], this._hiddenData);
-    this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds);
+    this.LOG.debug(['drawChart', 'this._options.bounds'], this._options.bounds, this._options.timeMode);
     this.layout.yaxis.color = this.getGridColor(this.el.nativeElement);
     this.layout.yaxis.gridcolor = this.getGridColor(this.el.nativeElement);
     this.layout.yaxis.showline = !!this._standalone;
@@ -382,7 +382,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     }
   }
 
-  protected convert(data: DataModel): Partial<any>[] {
+  protected convert(data: DataModel, firstDraw = false): Partial<any>[] {
     this.loading = true;
     this.noData = true;
     const dataset: Partial<any>[] = [];
@@ -393,14 +393,17 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.gtsId = [];
     const nonPlottable = gtsList.filter(g => g.v && GTSLib.isGtsToPlot(g));
     gtsList = gtsList.filter(g => g.v && !GTSLib.isGtsToPlot(g));
-    let timestampMode = true;
-    const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
-    gtsList.forEach((gts: GTS) => {
-      const ticks = gts.v.map(t => t[0]);
-      const size = gts.v.length;
-      timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
-      timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
-    });
+
+    let timestampMode = firstDraw;
+    if (firstDraw) {
+      const tsLimit = 100 * GTSLib.getDivider(this._options.timeUnit);
+      gtsList.forEach((gts: GTS) => {
+        const ticks = gts.v.map(t => t[0]);
+        const size = gts.v.length;
+        timestampMode = timestampMode && (ticks[0] > -tsLimit && ticks[0] < tsLimit);
+        timestampMode = timestampMode && (ticks[size - 1] > -tsLimit && ticks[size - 1] < tsLimit);
+      });
+    }
     if (timestampMode || this._options.timeMode === 'timestamp') {
       this.layout.xaxis.type = 'linear';
     } else {
@@ -499,6 +502,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     this.noData = dataset.length === 0;
     const count = dataset.filter(d => d.y.length > 0).length;
     this.layout.yaxis.range = [0, this.expanded ? count : 1];
+    this.LOG.debug(['convert end'], dataset, timestampMode || !!this._options.timeMode && this._options.timeMode === 'timestamp');
     return dataset;
   }
 

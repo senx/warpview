@@ -388,7 +388,7 @@ export class GTSLib {
     if (timeZone !== 'UTC') {
       return moment.tz(timestamp / divider, timeZone).format();
     } else {
-      return moment(timestamp / divider).toISOString();
+      return moment.utc(timestamp / divider).toISOString();
     }
   }
 
