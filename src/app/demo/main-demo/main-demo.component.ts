@@ -508,7 +508,7 @@ ZIP // merge into a list of GTS
   }
 '>
 JSON->`
-      }, {
+      }, /*{
         title: 'Time Span',
         type: 'map',
         warpscript: `<'
@@ -542,7 +542,7 @@ JSON->`
   }
 '>
 JSON->`
-      }
+      }*/
     ],
     image: [{
       title: 'Images',
