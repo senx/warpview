@@ -1,6 +1,15 @@
 WarpView
 ---
 
+## v2.0.79
+
+> +  2021/05/18  | v2.0.79  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/c083331c8e62e7fc732bf12dd68c9d49fa0b5591)*)
+> +  2021/05/18  | remove bad sample  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8d0d2d8a403aa149688ed5accf2e24a1b91c93a9)*)
+> +  2021/05/18  | fix image display  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/aaa287b6a09aa580cd52128fe00d73ae6848f3a4)*)
+> +  2021/05/18  | deps update  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/a952b19cc7521082431359e40ac01e188f31d0d3)*)
+> +  2021/05/18  | add scale on map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1d38d691ede380150c2766876ef5f32820a1a384)*)
+> +  2021/05/17  | v2.0.78  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/27c7184a4d4c1ae3b184e82e554c96cc39b20435)*)
+
 ## v2.0.78
 
 > +  2021/05/17  | v2.0.78  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/36d521b77a2f4ba92f8dd52242c7fa88cefb339c)*)
@@ -47,12 +56,5 @@ WarpView
 > +  2021/04/15  | v2.0.72  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8140cf323e6b8efdc52bc4d2354f8710468cc303)*)
 > +  2021/04/15  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/33a90a8834da5c1de84dcfb255fda6b05991e9d3)*)
 > +  2021/04/15  | v2.0.71  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/f23de4751f5462a53dbcac1d028e20ce63b25592)*)
-
-## v2.0.71
-
-> +  2021/04/15  | v2.0.71  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/86deef7e55f3d884e8c48f5c14087cee5e9dd9de)*)
-> +  2021/04/15  | allow to set maxZoom and maxNativeZoom on each custom tiles  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/0964f06ae9ea7febcdf533acc1408ed0938a43da)*)
-> +  2021/04/14  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/e61a7cb680c161fb6fef71821a3e8eb11b42e268)*)
-> +  2021/04/14  | v2.0.70  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b5fc38813989d340522785921cb25d56020439a8)*)
 
 
