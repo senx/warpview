@@ -17,6 +17,7 @@
 @import "../../styles/vars";
 
 :host {
+  height: 100%;
   div {
     height: var(--warp-view-chart-height);
     width: var(--warp-view-chart-width);

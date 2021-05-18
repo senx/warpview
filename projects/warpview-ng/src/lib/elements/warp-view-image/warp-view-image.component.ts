@@ -97,7 +97,7 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     } else if (gts.data && GTSLib.isEmbeddedImage(gts.data)) {
       this.toDisplay.push(gts.data as string);
     }
-    this.LOG.debug(['drawChart', 'this.data', 'this.toDisplay'], this.data, this.toDisplay);
+    this.LOG.debug(['drawChart', 'this.data', 'this.toDisplay'], this._data, this.toDisplay);
     this.loading = false;
     this.chartDraw.emit();
   }
@@ -107,7 +107,7 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
     if (!this._options) {
       return {};
     } else {
-      const style: any = {'background-color': this._options.bgColor || 'transparent', width: this.width, height: 'auto'};
+      const style: any = {'background-color': this._options.bgColor || 'transparent', width: '100%', height: 'auto'};
       if (this._options.fontColor) {
         style.color = this._options.fontColor;
       }
@@ -117,7 +117,7 @@ export class WarpViewImageComponent extends WarpViewComponent implements AfterVi
   }
 
   protected convert(data: DataModel): any[] {
-    return [];
+    return this.toDisplay;
   }
 
   public resize(layout: { width: number; height: any }) {
