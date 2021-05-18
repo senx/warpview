@@ -42,7 +42,7 @@ import '@webcomponents/custom-elements/custom-elements.min';
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
+import 'zone.js'; // Included with Angular CLI.
 
 (window as any).global = window;
 /** IE9, IE10 and IE11 requires all of the following polyfills.

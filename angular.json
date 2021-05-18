@@ -28,7 +28,6 @@
               "plotly.js-dist",
               "zone.js/dist/zone"
             ],
-            "aot": true,
             "outputPath": "dist/warpview-elements",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -47,7 +46,13 @@
                 "input": "node_modules/document-register-element/build/document-register-element.js",
                 "inject": true
               }
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -61,10 +66,8 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",

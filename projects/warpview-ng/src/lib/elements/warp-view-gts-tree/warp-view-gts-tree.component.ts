@@ -175,7 +175,7 @@ style="background-color: ${this._hiddenData.some(id => id === item.gid) ? 'trans
       const ul = this.renderer.createElement('ul');
       parentLi.appendChild(ul);
       setTimeout(() => {
-        (() => new Promise(resolve => {
+        (() => new Promise<void>(resolve => {
           const id = parentLi.id.replace('item-', '');
           const kids = this.getChildren(id);
           const size = kids.length;

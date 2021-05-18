@@ -78,8 +78,8 @@ export class WarpViewRangeSliderComponent extends WarpViewSliderComponent implem
         uiSlider.on('end', event => {
           this.LOG.debug(['onChange'], event);
           this.change.emit({
-            min: parseInt(event[0], 10),
-            max: parseInt(event[1], 10)
+            min: parseInt('' + event[0], 10),
+            max: parseInt('' + event[1], 10)
           });
         });
       } else {

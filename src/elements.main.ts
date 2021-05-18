@@ -20,7 +20,7 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {WarpViewElementsModule} from '../projects/warpview-ng/src/lib/warp-view-elements.module';
 import {environment} from './environments/environment';
-import 'zone.js/dist/zone';
+import 'zone.js';
 
 // @ts-ignore
 window['global'] = window;
