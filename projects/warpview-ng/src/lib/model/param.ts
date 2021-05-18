@@ -71,6 +71,7 @@ export class Param {
     animate?: boolean;
     maxNativeZoom?: number;
     maxZoom?: number;
+    hideScale?: boolean;
   } = {
     tiles: [],
     showTimeSlider: false,

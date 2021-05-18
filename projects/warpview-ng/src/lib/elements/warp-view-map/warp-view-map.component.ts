@@ -388,6 +388,9 @@ export class WarpViewMapComponent implements OnInit {
           this.currentLong = this._map.getCenter().lng;
         }
       });
+      if (!this._options.map.hideScale) {
+        Leaflet.control.scale().addTo(this._map);
+      }
     }
     this.LOG.debug(['displayMap'], 'build map', this.tilesLayer);
     // For each path
