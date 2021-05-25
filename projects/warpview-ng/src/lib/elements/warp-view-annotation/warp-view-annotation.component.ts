@@ -186,6 +186,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
 
   updateBounds(min, max, marginLeft) {
     this.LOG.debug(['updateBounds'], min, max, this._options);
+    this._options.bounds = this._options.bounds || {};
     this._options.bounds.minDate = min;
     this._options.bounds.maxDate = max;
     this.layout.xaxis.autorange = false;
