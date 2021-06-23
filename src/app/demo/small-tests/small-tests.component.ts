@@ -47,7 +47,7 @@ export class SmallTestsComponent implements OnInit {
     showDots: true,
     responsive: true,
     timeMode: 'timestamp',
-  //  autoRefresh: 5,
+    autoRefresh: 5,
     /*...{
       fontColor: '#000000',
       map: {mapType: 'GRAYSCALE', animate: true}, //, startLat: 39.8364989, startLong: -98.3276331, startZoom: 4},
@@ -64,9 +64,13 @@ export class SmallTestsComponent implements OnInit {
   };
   tests = [
     {
-      type: 'map',
+      type: 'plot',
       description: '',
-      warpscript: `NEWGTS`
+      warpscript: `NEWGTS 'macro' RENAME
+           0.0 'v' STORE
+           1 50
+           <% NaN NaN NaN $v RAND 0.5 - + DUP 'v' STORE ADDVALUE %>
+           FOR`
     },
     {
       type: 'plot',
