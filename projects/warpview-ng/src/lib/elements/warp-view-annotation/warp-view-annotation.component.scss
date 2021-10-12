@@ -72,7 +72,6 @@
     top: -1000px;
 
     .tooltip-body {
-      background-color: #ffffffcc;
       padding-left: 10px;
       padding-right: 10px;
       width: auto;
@@ -82,7 +81,8 @@
       height: 50px;
       overflow: visible;
       margin: 1px;
-      color: var(--warp-view-annotationtooltip-font-color);
+      background-color: var(--warp-view-tooltip-bg) !important;
+      color: var(--warp-view-tooltip-color) !important;
 
       ul {
         list-style: none;

@@ -18,8 +18,8 @@
 @import "./gts";
 
 .wv-tooltip {
-  background-color: var(--warp-view-chart-legend-bg) !important;
-  color: var(--warp-view-chart-legend-color) !important;
+  background-color: var(--warp-view-tooltip-bg) !important;
+  color: var(--warp-view-tooltip-color) !important;
   text-align: left;
   position: absolute;
   display: none;

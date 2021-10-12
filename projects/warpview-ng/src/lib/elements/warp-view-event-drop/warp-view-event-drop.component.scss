@@ -41,8 +41,8 @@
 
   .wv-tooltip {
     position: absolute;
-    background-color: var(--warp-view-chart-legend-bg) !important;
-    color: var(--warp-view-chart-legend-color) !important;
+    background-color: var(--warp-view-tooltip-bg) !important;
+    color: var(--warp-view-tooltip-color) !important;
     line-height: 1.4rem;
     padding: 10px;
     border: 1px solid grey;
