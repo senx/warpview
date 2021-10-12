@@ -313,6 +313,7 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
   hover(data: any) {
     this.LOG.debug(['hover'], data);
     const tooltip = this.toolTip.nativeElement;
+    const color = data.points[0].fullData.marker.color
     this.pointHover.emit({
       x: data.event.offsetX,
       y: data.event.offsetY
@@ -327,16 +328,14 @@ export class WarpViewAnnotationComponent extends WarpViewComponent {
     tooltip.style.display = 'block';
     tooltip.style.paddingLeft = (this._standalone ? 0 : 40) + 'px';
     tooltip.style.top = (
-      (this.expanded ? count - 1 - (data.points[0].y + 0.5) : -1) * (this.lineHeight) + this.layout.margin.t
-    ) + 6 + 'px';
+      ((this.expanded ? count - data.points[0].y : 0.5) * this.lineHeight) + this.layout.margin.t
+    ) + 'px';
     tooltip.classList.remove('right', 'left');
     tooltip.innerHTML = `<div class="tooltip-body trimmed" id="tooltip-body">
 <span class="tooltip-date">${this._options.timeMode === 'timestamp'
       ? x
       : (moment.utc(x).toISOString().replace('Z', this._options.timeZone === 'UTC' ? 'Z' : '') || '')}</span>
-<ul>
-<li>${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.points[0].text}</span></li>
-</ul>
+<i class="chip" style="background-color: ${color};border: 2px solid ${color};"></i>&nbsp;${GTSLib.formatLabel(data.points[0].data.name)}: <span class="value">${data.points[0].text}</span>
       </div>`;
     if (data.event.offsetX > layout.width / 2) {
       tooltip.classList.add('left');
