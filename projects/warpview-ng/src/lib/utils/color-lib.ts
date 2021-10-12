@@ -91,10 +91,6 @@ export class ColorLib {
     ];
   }
 
-  static getColorScale(scheme: string) {
-    return ColorLib.color[scheme].map((c, i) => [i, c]);
-  }
-
   static hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [
@@ -106,14 +102,6 @@ export class ColorLib {
 
   static transparentize(color, alpha = 0.5): string {
     return 'rgba(' + ColorLib.hexToRgb(color).concat(alpha).join(',') + ')';
-  }
-
-  static generateColors(num, scheme) {
-    const color = [];
-    for (let i = 0; i < num; i++) {
-      color.push(ColorLib.getColor(i, scheme));
-    }
-    return color;
   }
 
   static generateTransparentColors(num, scheme) {
@@ -290,9 +278,8 @@ export class ColorLib {
       (1 - percentage) * color1[1] + percentage * color2[1],
       (1 - percentage) * color1[2] + percentage * color2[2]
     ];
-    const color3Str = '#' + ColorLib.int_to_hex(color3[0]) + ColorLib.int_to_hex(color3[1]) + ColorLib.int_to_hex(color3[2]);
     // return hex
-    return color3Str;
+    return '#' + ColorLib.int_to_hex(color3[0]) + ColorLib.int_to_hex(color3[1]) + ColorLib.int_to_hex(color3[2]);
   }
 
   /*
