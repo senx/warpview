@@ -48,7 +48,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   @ViewChild('tree', {static: true}) tree: ElementRef;
 
   @Input('kbdLastKeyPressed') kbdLastKeyPressed: string[] = [];
-  private dataList: any[];
+  @Input('inPlot') inPlot = false;
 
   @Input('gtsFilter') set gtsFilter(gtsFilter: string) {
     this._gtsFilter = gtsFilter;
@@ -74,6 +74,7 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
   @Output('warpViewSelectedGTS') warpViewSelectedGTS = new EventEmitter<any>();
 
   private _gtsFilter = 'x';
+  private dataList: any[];
   gtsList: any[] = [];
   params: Param[] = [] as Param[];
   initOpen: Subject<void> = new Subject<void>();
@@ -105,9 +106,8 @@ export class WarpViewGtsTreeComponent extends WarpViewComponent implements After
       return;
     }
     this._options = ChartLib.mergeDeep(this.defOptions, this._options) as Param;
-    this.dataList = this.generateData([
-      GTSLib.flattenGtsIdArray(GTSLib.getData(this._data).data as any [], 0).res
-    ]);
+    const d = GTSLib.flattenGtsIdArray(GTSLib.getData(this._data).data as any [], 0).res;
+    this.dataList = this.generateData(this.inPlot ? d : [d]);
     this.addOrphans();
     this.params = this._data.params || [];
     this.LOG.debug(['doRender', 'gtsList', 'dataList'], this.dataList);

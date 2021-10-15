@@ -64,7 +64,7 @@
     *ngIf="_options.showGTSTree"
     [data]="gtsList" id="tree" [gtsFilter]="gtsFilter" [debug]="debug" #GTSTree
     (warpViewSelectedGTS)="warpViewSelectedGTS($event)"
-    [hiddenData]="_toHide" [options]="_options"
+    [hiddenData]="_toHide" [options]="_options" [inPlot]="true"
     [kbdLastKeyPressed]="kbdLastKeyPressed"
   ></warpview-gts-tree>
   <div [hidden]="!showChart" #main class="main-container"

@@ -55,8 +55,12 @@ export class ColorLib {
     YL_GN_BU: ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'],
     BU_GN: ['#f7fcfd', '#ebf7fa', '#dcf2f2', '#c8eae4', '#aadfd2', '#88d1bc', '#68c2a3', '#4eb485', '#37a266',
       '#228c49', '#0d7635', '#025f27'],
-    WARP10: ['#ff9900', '#004eff', '#00ACC1', '#E53935', '#7CB342', '#F4511E', '#039BE5', '#D81B60', '#C0CA33',
-      '#6D4C41', '#8E24AA', '#FDD835', '#5E35B1', '#00897B', '#FFB300', '#3949AB', '#43A047', '#1E88E5'],
+    WARP10: [
+      '#ff9900', '#E53935', '#F4511E', '#D81B60',
+      '#00ACC1', '#1E88E5', '#43A047', '#FFB300',
+      '#6D4C41', '#FDD835', '#00897B', '#3949AB',
+      '#5E35B1', '#8E24AA', '#C0CA33', '#039BE5',
+      '#7CB342', '#004eff'],
     NINETEEN_EIGHTY_FOUR: ['#fc9ca2', '#fb747d', '#fa4c58', '#f92432', '#e30613', '#c70512', '#9f040e', '#77030b', '#500207'],
     ATLANTIS: ['#edf2fb', '#e2eafc', '#d7e3fc', '#ccdbfd', '#c1d3fe', '#b6ccfe', '#abc4ff'],
     DO_ANDROIDS_DREAM: ['#d8f3dc', '#b7e4c7', '#95d5b2', '#74c69d', '#52b788', '#40916c', '#2d6a4f', '#1b4332',
@@ -64,7 +68,10 @@ export class ColorLib {
     DELOREAN: ['#b98b73', '#cb997e', '#ddbea9', '#ffe8d6', '#d4c7b0', '#b7b7a4', '#a5a58d', '#6b705c', '#3f4238'],
     CTHULHU: ['#004c6d', '#006083', '#007599', '#008bad', '#00a1c1', '#00b8d3', '#00cfe3', '#00e7f2', '#00ffff'],
     ECTOPLASM: ['#006466', '#065a60', '#0b525b', '#144552', '#1b3a4b', '#212f45', '#272640', '#312244', '#3e1f47', '#4d194d'],
-    T_MAX_400_FILM: ['#f8f9fa', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd', '#6c757d', '#495057', '#343a40', '#212529']
+    T_MAX_400_FILM: ['#f8f9fa', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd', '#6c757d', '#495057', '#343a40', '#212529'],
+    MATRIX: ['#025f27', '#025f27', '#0d7635', '#228c49', '#37a266', '#4eb485', '#68c2a3', '#88d1bc'],
+    CHARTANA: ['#77BE69', '#FADE2B', '#F24865', '#5694F2',
+      '#FF9830', '#B876D9'],
   };
 
   static getColor(i: number, scheme: string) {
@@ -73,7 +80,7 @@ export class ColorLib {
     }
     return ColorLib.color[scheme][i % 2 === 0
       ? i % ColorLib.color[scheme].length
-      : ColorLib.color[scheme].length - i % ColorLib.color[scheme].length - 1
+      : ColorLib.color[scheme].length - i % ColorLib.color[scheme].length
       ];
   }
 
