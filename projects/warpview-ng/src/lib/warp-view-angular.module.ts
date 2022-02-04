@@ -47,7 +47,7 @@ import {WarpViewResizeComponent} from './elements/warp-view-resize/warp-view-res
 import {WarpViewSliderComponent} from './elements/warp-view-slider/warp-view-slider.component';
 import {WarpViewRangeSliderComponent} from './elements/warp-view-range-slider/warp-view-range-slider.component';
 import {FormsModule} from '@angular/forms';
-import {AngularResizedEventModule} from 'angular-resize-event';
+import {AngularResizeEventModule} from 'angular-resize-event';
 import {SizeService} from './services/resize.service';
 import {WarpViewSpectrumComponent} from './elements/warp-view-spectrum/warp-view-spectrum.component';
 import {PlotlyComponent} from './plotly/plotly.component';
@@ -97,7 +97,7 @@ import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp
   imports: [
     CommonModule,
     HttpClientModule,
-    AngularResizedEventModule,
+    AngularResizeEventModule,
     FormsModule
   ],
   exports: [
@@ -135,43 +135,7 @@ import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp
     WarpViewEventDropComponent,
     WarpViewResultTileComponent
   ],
-  providers: [HttpErrorHandler, SizeService],
-  entryComponents: [
-    WarpViewTileComponent,
-    WarpViewChartComponent,
-    WarpViewSpinnerComponent,
-    WarpViewToggleComponent,
-    WarpViewBarComponent,
-    WarpViewBubbleComponent,
-    WarpViewDatagridComponent,
-    WarpViewPaginableComponent,
-    WarpViewDisplayComponent,
-    WarpViewDrillDownComponent,
-    CalendarHeatmapComponent,
-    WarpViewGtsPopupComponent,
-    WarpViewModalComponent,
-    WarpViewGtsTreeComponent,
-    WarpViewChipComponent,
-    WarpViewImageComponent,
-    WarpViewMapComponent,
-    WarpViewHeatmapSlidersComponent,
-    WarpViewPieComponent,
-    WarpViewGaugeComponent,
-    WarpViewAnnotationComponent,
-    WarpViewPolarComponent,
-    WarpViewRadarComponent,
-    WarpViewPlotComponent,
-    WarpViewResizeComponent,
-    WarpViewSliderComponent,
-    WarpViewRangeSliderComponent,
-    WarpViewSpectrumComponent,
-    PlotlyComponent,
-    WarpViewBoxComponent,
-    WarpView3dLineComponent,
-    WarpViewGlobeComponent,
-    WarpViewEventDropComponent,
-    WarpViewResultTileComponent
-  ]
+  providers: [HttpErrorHandler, SizeService]
 })
 export class WarpViewAngularModule {
 }

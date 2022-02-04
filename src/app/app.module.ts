@@ -32,24 +32,23 @@ import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-vie
 import {HighlightService} from './services/HighlightService';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    GettingStartedComponent,
-    MenuComponent,
-    MainDemoComponent,
-    SmallTestsComponent,
-  ],
-  imports: [
-    BrowserModule,
-    CommonModule,
-    AngularResizedEventModule,
-    AppRoutingModule,
-    FormsModule,
-    WarpViewAngularModule
-  ],
-  providers: [SettingsService, HighlightService],
-  bootstrap: [AppComponent],
-  entryComponents: [AppComponent]
+    declarations: [
+        AppComponent,
+        GettingStartedComponent,
+        MenuComponent,
+        MainDemoComponent,
+        SmallTestsComponent,
+    ],
+    imports: [
+        BrowserModule,
+        CommonModule,
+        AngularResizedEventModule,
+        AppRoutingModule,
+        FormsModule,
+        WarpViewAngularModule
+    ],
+    providers: [SettingsService, HighlightService],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

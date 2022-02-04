@@ -29,7 +29,7 @@
     "../../src/polyfills.ts"
   ],
   "angularCompilerOptions": {
-    "enableIvy": false,
+    "compilationMode": "partial",
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
     "fullTemplateTypeCheck": true,

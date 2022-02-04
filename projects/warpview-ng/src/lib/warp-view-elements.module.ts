@@ -45,14 +45,13 @@ import {WarpViewEventDropComponent} from './elements/warp-view-event-drop/warp-v
 import {WarpViewResultTileComponent} from './elements/warp-view-result-tile/warp-view-result-tile.component';
 
 @NgModule({
-  declarations: [],
-  imports: [
-    WarpViewAngularModule,
-    BrowserModule,
-  ],
-  exports: [],
-  providers: [],
-  entryComponents: []
+    declarations: [],
+    imports: [
+        WarpViewAngularModule,
+        BrowserModule,
+    ],
+    exports: [],
+    providers: []
 })
 export class WarpViewElementsModule {
   constructor(private injector: Injector) {

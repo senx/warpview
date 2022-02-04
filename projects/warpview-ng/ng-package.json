@@ -23,24 +23,7 @@
   ],
   "lib": {
     "flatModuleFile": "warpview",
-    "umdId": "warpview",
-    "amdId": "warpview",
     "entryFile": "./public-api.ts",
-    "umdModuleIds": {
-      "plotly.js": "plotly.js",
-      "moment-timezone": "moment-timezone",
-      "deep-equal": "deep-equal",
-      "fitty": "fitty",
-      "moment": "moment",
-      "d3": "d3",
-      "d3-selection": "d3-selection",
-      "leaflet": "leaflet",
-      "leaflet-ant-path": "leaflet-ant-path",
-      "nouislider": "nouislider",
-      "angular-resize-event": "angular-resize-event",
-      "plotly.js-dist": "plotly.js-dist",
-      "event-drops": "event-drops"
-    },
     "styleIncludePaths": [
       "../../node_modules"
     ]

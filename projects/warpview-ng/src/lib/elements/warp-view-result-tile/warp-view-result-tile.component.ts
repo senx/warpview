@@ -138,14 +138,13 @@ export class WarpViewResultTileComponent extends WarpViewComponent implements Af
     } else {
       this.innerHeight = chartDiv.h;
     }
-    // this.innerHeight = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement).h - (this.chartTitle ? this.getContentBounds(this.title.nativeElement).h : 0);
     return [];
   }
 
   onResized(event: ResizedEvent) {
-    this.width = event.newWidth;
-    this.height = event.newHeight; // - (this.chartTitle ? this.getContentBounds(this.title.nativeElement).h : 0);
-    this.LOG.debug(['onResized'], event.newWidth, event.newHeight);
+    this.width = event.newRect.width;
+    this.height = event.newRect.height;
+    this.LOG.debug(['onResized'], event.newRect.width, event.newRect.height);
     this.sizeService.change(new Size(this.width, this.height));
   }
 
