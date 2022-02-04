@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.83
+
+> +  2021/10/15  | v2.0.83  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/636cceefcf925943bddac49dfb67ceab1478a26d)*)
+> +  2021/10/15  | fix GTSTree and color palette  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/5b285e087c20b80a4132ceeaf8b5fcd118bc18a5)*)
+> +  2021/10/12  | changelog  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3cab843e31836eb1b445a39775215a181cfab22f)*)
+> +  2021/10/12  | v2.0.82  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2895274d847f1ea9a80b7fe32b2c96542885df74)*)
+
 ## v2.0.82
 
 > +  2021/10/12  | v2.0.82  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/33906a3f953babfa7baf39bd1988f6d3cb2f8fdc)*)
@@ -53,10 +60,5 @@ WarpView
 > +  2021/05/17  | fix timestmap/date switch  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8ecb726355da172999817ed9310b64b5a82d5b8f)*)
 > +  2021/05/17  | fix scales sync  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/63fb5a9ab3b987df7255e1e825e9e99c538d19cd)*)
 > +  2021/05/11  | v2.0.75  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2b5c73b57b28ffe47fda442096e6fcb0c1a5e243)*)
-
-## v2.0.75
-
-> +  2021/05/11  | v2.0.75  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/66fa878ee67e614548c163069be81c648d25356b)*)
-> +  2021/05/11  | fix click handler  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/05f56927c2a44415fac5009afe0036ab42122d32)*)
 
 

@@ -339,7 +339,7 @@ export class WarpViewMapComponent implements OnInit {
     this.LOG.debug(['displayMap'], 'this.geoJson', this.geoJson);
     this.LOG.debug(['displayMap'], 'mapType', this._options.map.mapType);
     if (this._options.map.mapType !== 'NONE') {
-      const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'];
+      const map = MapLib.mapTypes[this._options.map.mapType || 'DEFAULT'] || MapLib.mapTypes['DEFAULT'];
       this.LOG.debug(['displayMap'], 'map', map);
       const mapOpts: TileLayerOptions = {
         maxNativeZoom: this._options.map.maxNativeZoom || 19,
