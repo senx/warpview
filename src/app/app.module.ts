@@ -15,7 +15,7 @@
  *
  */
 
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -26,29 +26,30 @@ import {CommonModule} from '@angular/common';
 import {MainDemoComponent} from './demo/main-demo/main-demo.component';
 import {SettingsService} from './services/settings.service';
 import {SmallTestsComponent} from './demo/small-tests/small-tests.component';
-import {AngularResizedEventModule} from 'angular-resize-event';
+import {AngularResizeEventModule} from 'angular-resize-event';
 import {FormsModule} from '@angular/forms';
 import {WarpViewAngularModule} from '../../projects/warpview-ng/src/lib/warp-view-angular.module';
 import {HighlightService} from './services/HighlightService';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        GettingStartedComponent,
-        MenuComponent,
-        MainDemoComponent,
-        SmallTestsComponent,
-    ],
-    imports: [
-        BrowserModule,
-        CommonModule,
-        AngularResizedEventModule,
-        AppRoutingModule,
-        FormsModule,
-        WarpViewAngularModule
-    ],
-    providers: [SettingsService, HighlightService],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    GettingStartedComponent,
+    MenuComponent,
+    MainDemoComponent,
+    SmallTestsComponent,
+  ],
+  imports: [
+    BrowserModule,
+    CommonModule,
+    AngularResizeEventModule,
+    AppRoutingModule,
+    FormsModule,
+    WarpViewAngularModule
+  ],
+  providers: [SettingsService, HighlightService],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 }
