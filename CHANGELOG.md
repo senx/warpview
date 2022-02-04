@@ -1,6 +1,13 @@
 WarpView
 ---
 
+## v2.0.84
+
+> +  2022/02/04  | v2.0.84  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/9104211d7e63436140a2043e4b0392fc6fb34ba1)*)
+> +  2022/02/04  | deps update  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/c4d5dbb4688936a8440e58050be9148ce60e7705)*)
+> +  2022/02/04  | fix attribution in map  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/3239726e14654b69171fa729ca06649d21712f1a)*)
+> +  2021/10/15  | v2.0.83  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/adecc49e40658c1066d038a815eacce7157beead)*)
+
 ## v2.0.83
 
 > +  2021/10/15  | v2.0.83  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/636cceefcf925943bddac49dfb67ceab1478a26d)*)
@@ -52,13 +59,5 @@ WarpView
 > +  2021/05/17  | v2.0.77  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/b6ebcd3378a341936342ae54860f5d26ac525c09)*)
 > +  2021/05/17  | fix timestmap/date switch  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/41e8319c9eee08e9098a34041fccfe50d0c07378)*)
 > +  2021/05/17  | v2.0.76  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/23b77fa01c4a5a51430ede75a7827feeb37faed7)*)
-
-## v2.0.76
-
-> +  2021/05/17  | v2.0.76  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/1791ed525c0c2654ae01002ad790009b614b4ca8)*)
-> +  2021/05/17  | fix timestmap/date switch  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/00cb8b895f08df98a98decdd4d0770d6f3d2c238)*)
-> +  2021/05/17  | fix timestmap/date switch  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/8ecb726355da172999817ed9310b64b5a82d5b8f)*)
-> +  2021/05/17  | fix scales sync  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/63fb5a9ab3b987df7255e1e825e9e99c538d19cd)*)
-> +  2021/05/11  | v2.0.75  (*[xavier](marin.xavier@gmail.com) | [view commit](https://github.com/senx/warpview/commit/2b5c73b57b28ffe47fda442096e6fcb0c1a5e243)*)
 
 
