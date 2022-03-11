@@ -198,7 +198,7 @@ export class WarpViewPlotComponent extends WarpViewComponent implements OnInit, 
       case 'typeSwitch' :
         this.loadingChart = true;
         setTimeout(() => {
-          this._type = event.state ? 'step' : 'line';
+          this._type = event.state ? 'step-after' : 'line';
           this.drawChart(false);
         }, 500);
         break;
