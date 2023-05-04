@@ -95,12 +95,14 @@ export class WarpViewResultTileComponent extends WarpViewComponent implements Af
 
   ngAfterViewInit(): void {
     const chartDiv = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement);
-    if (!!this.title && !!this.chartTitle) {
-      const titleDiv = this.getContentBounds(this.title.nativeElement);
-      this.innerHeight = chartDiv.h - titleDiv.h - 20;
-    } else {
-      this.innerHeight = chartDiv.h - 20;
-    }
+    setTimeout(() => {
+      if (!!this.title && !!this.chartTitle) {
+        const titleDiv = this.getContentBounds(this.title.nativeElement);
+        this.innerHeight = chartDiv.h - titleDiv.h - 20;
+      } else {
+        this.innerHeight = chartDiv.h - 20;
+      }
+    });
   }
 
   protected update(options: Param, refresh: boolean): void {
@@ -131,13 +133,15 @@ export class WarpViewResultTileComponent extends WarpViewComponent implements Af
     }
     this.LOG.debug(['convert', '_type'], this._type);
     const chartDiv = this.getContentBounds((this.el.nativeElement as HTMLElement).parentElement);
-    if (!!this.title) {
-      const titleDiv = this.getContentBounds(this.title.nativeElement);
-      console.log({chartDiv, titleDiv});
-      this.innerHeight = chartDiv.h - titleDiv.h;
-    } else {
-      this.innerHeight = chartDiv.h;
-    }
+    setTimeout(() => {
+      if (!!this.title) {
+        const titleDiv = this.getContentBounds(this.title.nativeElement);
+        console.log({chartDiv, titleDiv});
+        this.innerHeight = chartDiv.h - titleDiv.h;
+      } else {
+        this.innerHeight = chartDiv.h;
+      }
+    });
     return [];
   }
 

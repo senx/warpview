@@ -1,4 +1,7 @@
-changelog.js# Warp View
+# Warp View
+
+
+> ⛔️ DEPRECATED - You should use [Discovery](https://discovery.warp10.io) instead 
 
 This a collection of charting [web components](https://en.wikipedia.org/wiki/Web_Components) dedicated to [Warp 10™](https://www.warp10.io)
 
